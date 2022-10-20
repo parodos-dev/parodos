@@ -115,7 +115,7 @@ app:
 
 1. ${APP_URL} is the host url of this backstage app
 2. ${KEYCLOAK_URL} is the host url of Keycloak for the authentication
-3. other ${***_URL} is the host url of the backend api to fetch data for this ui. e.g. ${DEPLOY_URL} is the api url of deploy service.
+3. Other entries, such as ${DEPLOY_URL}, are the routes to Parodos backend services
 
 These values will be determined based on how these components are deploy. An example of the above configuration can be found in ./local-demo.sh
 
