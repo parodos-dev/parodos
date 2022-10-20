@@ -1,0 +1,8 @@
+export APP_URL='http://localhost:9000'
+export KEYCLOAK_URL='http://localhost:3434'
+export NOTIFICATION_URL='http://localhost:8088'
+export DEPLOY_URL='http://localhost:8083'
+export INFRASTRUCTURE_URL='http://localhost:8080'
+export EVENT_URL='http://localhost:8084'
+export BACKEND_URL='http://localhost:9001'
+export BACKEND_PORT='9001'
