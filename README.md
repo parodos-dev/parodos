@@ -8,6 +8,8 @@ However, for many enterprise environments (specifically regulated one), the sour
 - Providing a necessary safeguard
 - Difficult to change or remove
 
+For more thoughts and opinions on the challenges in making changes to an existing software culture in an enterprise environment, please review the following blog: https://www.redhat.com/en/blog/modernization-why-is-it-hard
+
 Although frameworks and ecosystems might exist to help build developer portals, getting some of these approved for production use in certain Enterprise, especially if they have a large ecosystem written by disparate developers, might be difficult. Also, some enterprises may struggle with Javascript heavy approaches. That is not to say such libraries, frameworks and platforms are not suited for the task. On the contrary they might be just what is needed, but a chasm might exist to fully adopt in an enterprise.
 
 Parodos is ancient Greek and translates to 'a side-entrance to the stage'. In this theme, Parodos provides the building blocks to create simple custom application(s) that streamlines different workflows associated with enterprise software teams getting code to production in an enterprise environment and currently limited by legacy constraints as to what technology they can use. In doing so, enterprises might be able to begin to move in a direction that is less hindered by legacy constraints and more open to the adopt new technology/frameworks and libraries.
