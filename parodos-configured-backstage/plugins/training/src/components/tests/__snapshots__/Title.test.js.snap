@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Title Title should match stored snapshot 1`] = `
+<p
+  className="MuiTypography-root sc-bdnxRM gnxvEH MuiTypography-body1"
+>
+  Title
+</p>
+`;

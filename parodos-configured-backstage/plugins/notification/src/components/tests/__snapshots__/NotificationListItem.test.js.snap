@@ -1,0 +1,197 @@
+/*
+ *  Copyright (c) 2022 Red Hat Developer
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+/**
+ * @author Richard Wang (Github: RichardW98)
+ */
+
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NotificationListItem NotificationListItem should match stored snapshot 1`] = `
+<div
+  className="sc-iCoGMd inxYQS css-zkfaav"
+>
+  <span
+    aria-disabled={false}
+    className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+    onBlur={[Function]}
+    onClick={[Function]}
+    onDragLeave={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    tabIndex={null}
+  >
+    <span
+      className="MuiIconButton-label"
+    >
+      <input
+        checked={false}
+        className="PrivateSwitchBase-input-4"
+        data-indeterminate={false}
+        onChange={[Function]}
+        type="checkbox"
+      />
+      <svg
+        aria-hidden={true}
+        className="MuiSvgIcon-root"
+        focusable="false"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+        />
+      </svg>
+    </span>
+  </span>
+  <div
+    className="css-1aldbke"
+  >
+    <div
+      className="MuiPaper-root MuiAccordion-root sc-gtsrHT beDcRV MuiAccordion-rounded MuiPaper-elevation1 MuiPaper-rounded"
+      selected={false}
+    >
+      <div
+        aria-disabled={false}
+        aria-expanded={false}
+        className="MuiButtonBase-root MuiAccordionSummary-root"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        role="button"
+        tabIndex={0}
+      >
+        <div
+          className="MuiAccordionSummary-content"
+        >
+          <div
+            className="sc-dlnjwi DTPRZ css-g0gwx2"
+          >
+            <div
+              className="css-1aldbke"
+            >
+              <p
+                bold={true}
+                className="MuiTypography-root sc-hKFxyN gvJIyT MuiTypography-body1"
+              />
+            </div>
+            <div
+              className="css-1aldbke"
+            >
+              <p
+                className="MuiTypography-root sc-eCApnc jXLZdw MuiTypography-body1"
+                hideOnMobile={true}
+              />
+            </div>
+            <div
+              className="css-1aldbke"
+            >
+              <p
+                className="MuiTypography-root sc-eCApnc bDOkvI MuiTypography-body1"
+              >
+                Wednesday, May 26, 2021 9:48 AM
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          aria-disabled={false}
+          aria-hidden={true}
+          className="MuiButtonBase-root MuiIconButton-root MuiAccordionSummary-expandIcon MuiIconButton-edgeEnd"
+          onBlur={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          role={null}
+          tabIndex={null}
+        >
+          <span
+            className="MuiIconButton-label"
+          >
+            <svg
+              aria-hidden={true}
+              className="MuiSvgIcon-root"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+          </span>
+        </div>
+      </div>
+      <div
+        className="MuiCollapse-container MuiCollapse-hidden"
+        style={
+          Object {
+            "minHeight": "0px",
+          }
+        }
+      >
+        <div
+          className="MuiCollapse-wrapper"
+        >
+          <div
+            className="MuiCollapse-wrapperInner"
+          >
+            <div
+              role="region"
+            >
+              <div
+                className="MuiAccordionDetails-root"
+              >
+                <div
+                  className="sc-jSFjdj bSVbox"
+                >
+                  <p
+                    className="MuiTypography-root sc-gKAaRy fmtzkR MuiTypography-body1"
+                  >
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a tempor massa. Suspendisse potenti. Sed felis turpis, feugiat vel iaculis in, faucibus tempus justo. Etiam auctor malesuada urna eget fringilla.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
