@@ -97,7 +97,7 @@ export default function PipelineStageAction({
                 <Typography variant={'body1'}>View error log</Typography>
               </Button>
             ) : (
-              <Link href="#" color="inherit">
+              <Link href="plugins/deploy/src/components/components/RunDetail/RunDetailContent/TabPanels/ProcessesPanel/Pipeline/PipelineStepper/PipelineStep/PipelineStageAction/index#" color="inherit">
                 <Typography variant={'body1'} color={'secondary'}>
                   Run details
                 </Typography>
