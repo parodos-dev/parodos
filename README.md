@@ -93,10 +93,6 @@ No, Parodos is the scaffolding to build a custom application that can be stand-a
 
 In this case a workflow will be packaged as a single Jar containing both the React and Java
 
-### Stand Alone Microservices
-
-In this case the UI can be deployed separately from the API layer. This can be useful when it comes should the UI or API need to be scaled independently, or the teams working on these concerns wish to release independent of one another.
-
 ### Backstage Plugin
 
 In this case the React UI can be deployed as a Backstage plugin. This is useful when trying Parados workflows together, or when leveraging other components in the Backstage ecosystem
