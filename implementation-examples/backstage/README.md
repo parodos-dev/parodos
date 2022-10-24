@@ -185,8 +185,6 @@ These values will be determined based on how these components are deploy. An exa
 
 ## Authors
 
-Richard Wang (ricwang@redhat.com)
-
-Luke Shannon (lshannon@redhat.com)
-
-Bill Bensing (wbensing@redhat.com)
+* Richard Wang (ricwang@redhat.com)
+* Luke Shannon (GitHub: @BillBensing)
+* Bill Bensing (GitHub: @BillBensing | LinkedIn:https://www.linkedin.com/in/billbensing/ | Twitter: @BillBensing)

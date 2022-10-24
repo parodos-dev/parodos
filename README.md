@@ -102,3 +102,21 @@ In this case the UI can be deployed separately from the API layer. This can be u
 In this case the React UI can be deployed as a Backstage plugin. This is useful when trying Parados workflows together, or when leveraging other components in the Backstage ecosystem
 
 More details to come as the project evolves
+
+# Using the Repository
+
+This repository is a mono-repo containing all possibly code.  The directories are as follows: 
+
+* **./docs** - Contains all documentation that is not specific to anyone component of parodos.
+* **./implementation-examples** - Contains example implementation and integrations of parodos with other technologies.
+* **./services** - RESTful services ready for usage.
+* **./usecases** - Individual tasks which make up the units of work for a workflow.
+* **./workflow-engine** - The engine which powers the workflow execution.
+* **./workflows** - Pre-configured workflows composed of units of work from the usecases.
+
+
+# Authors
+
+Bill Bensing (GitHub: @BillBensing | LinkedIn:https://www.linkedin.com/in/billbensing/ | Twitter: @BillBensing)
+
+Luke Shannon (GitHub: lshannon)
