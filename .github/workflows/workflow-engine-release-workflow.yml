@@ -6,8 +6,8 @@ on:
   push:
     branches:
       - '**'
-    paths:
-      - 'workflow-engine/**'
+#    paths:
+#      - 'workflow-engine/**'
 jobs:
   build:
     runs-on: ubuntu-latest
