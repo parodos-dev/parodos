@@ -15,9 +15,13 @@ In the meantime, we have only brought in the following concepts:
 - WorkContext: Resource passed into Work (can contain arguments for execution or the results of the work)
 - WorkReport: Returned from Work after its execution, useful in determining if the Work execution was successful
 
-Should Parodos decide to replace Easy Flow, these contracts provide a good measure of the needs of the project.
+Should Parodos decide to replace Easy Flow, these contracts provide a good measure of the needs of Parodos.
 
 To learn more about how to use these Workflows, please refer to the Wiki:
 https://github.com/j-easy/easy-flows/wiki
 
 Big thank you to Mahmoud Ben Hassine (https://github.com/fmbenhassine) for creating this project.
+
+# Author
+
+Luke Shannon (Github: lshannon)
