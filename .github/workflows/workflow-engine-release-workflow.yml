@@ -29,6 +29,6 @@ jobs:
       run: mvn -B package --file ./workflow-engine/pom.xml
 
     - name: Maven Deploy - GitHub Maven Repo
-      run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml --file ./workflow-engine/pom.xml
+      run: mvn deploy -X -s $GITHUB_WORKSPACE/settings.xml --file ./workflow-engine/pom.xml
       env:
         GITHUB_TOKEN: ${{ github.token }}
