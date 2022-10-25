@@ -7,8 +7,8 @@ on:
     branches:
       - '**'
     paths:
-      - workflow-engine/**
-      - .github/workflows/workflow-engine-release-workflow.yaml
+      - 'workflow-engine/**'
+      - '.github/workflows/workflow-engine-release-workflow.yaml'
 jobs:
   build:
     runs-on: ubuntu-latest
