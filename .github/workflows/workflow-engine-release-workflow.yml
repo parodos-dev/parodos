@@ -4,12 +4,12 @@
 name: Parodos Workflow Engine - Release Workflow
 
 on:
-  paths:
-    - "workflow-engine/**"
-    - ".github/workflows/workflow-engine-release-workflow.yaml"
   push:
     branches:
       - '*'
+    paths:
+      - "workflow-engine/**"
+      - ".github/workflows/workflow-engine-release-workflow.yaml"
 jobs:
   build:
     runs-on: ubuntu-latest
