@@ -6,7 +6,7 @@ There are existing Workflow engines in Java, but many to be very complex (BPMN i
 
 ## Comments On Easy Flow Usage
 
-Easy-Flows is under an MIT license, so we can use it in Parodos but its also in Read Only mode with no further development planned. As result, Parodos will use this for it's initial launch. Based on the feedback of this launch, a choice will need to be made for this project. Do we build upon what Easy-Flow started,create a new Workflow Management tool or integrate a different library? Care must be taken in this decision as such libraries are a slippery slope to implement and the requirements for Parodos are verys simple.
+Easy-Flows is under an MIT license, so we can use it in Parodos but its also in Read Only mode with no further development planned. As result, Parodos will use this for it's initial launch. Based on the feedback of this launch, a choice will need to be made for this project. Do we build upon what Easy-Flow started,create a new Workflow Management tool or integrate a different library? Care must be taken in this decision as such libraries are a slippery slope to implement and the requirements for Parodos are very simple.
 
 In the meantime, we have only brought in the following concepts:
 
@@ -15,9 +15,13 @@ In the meantime, we have only brought in the following concepts:
 - WorkContext: Resource passed into Work (can contain arguments for execution or the results of the work)
 - WorkReport: Returned from Work after its execution, useful in determining if the Work execution was successful
 
-Should Parodos decide to replace Easy Flow, these contracts provide a good measure of the needs of the project.
+Should Parodos decide to replace Easy Flow, these contracts provide a good measure of the needs of Parodos.
 
 To learn more about how to use these Workflows, please refer to the Wiki:
 https://github.com/j-easy/easy-flows/wiki
 
 Big thank you to Mahmoud Ben Hassine (https://github.com/fmbenhassine) for creating this project.
+
+# Author
+
+Luke Shannon (Github: lshannon)
