@@ -6,7 +6,7 @@ There are existing Workflow engines in Java, but many to be very complex (BPMN i
 
 ## Comments On Easy Flow Usage
 
-Easy-Flows is under an MIT license, so we can use it in Parodos but its also in Read Only mode with no further development planned. As result, Parodos will use this for it's initial launch. Based on the feedback of this launch, a choice will need to be made for this project. Do we build upon what Easy-Flow started,create a new Workflow Management tool or integrate a different library? Care must be taken in this decision as such libraries are a slippery slope to implement and the requirements for Parodos are verys simple.
+Easy-Flows is under an MIT license, so we can use it in Parodos but its also in Read Only mode with no further development planned. As result, Parodos will use this for it's initial launch. Based on the feedback of this launch, a choice will need to be made for this project. Do we build upon what Easy-Flow started,create a new Workflow Management tool or integrate a different library? Care must be taken in this decision as such libraries are a slippery slope to implement and the requirements for Parodos are very simple.
 
 In the meantime, we have only brought in the following concepts:
 
