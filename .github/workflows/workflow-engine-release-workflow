@@ -9,8 +9,7 @@ on:
     - ".github/workflows/workflow-engine-release-workflow.yaml"
   push:
     branches:
-        - '*'
-
+      - '*'
 jobs:
   build:
     runs-on: ubuntu-latest
