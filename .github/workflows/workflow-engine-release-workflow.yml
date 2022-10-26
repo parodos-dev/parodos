@@ -1,0 +1,34 @@
+# This workflow will build a package using Maven and then publish it to GitHub packages when a release is created
+# For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#apache-maven-with-a-settings-path
+
+name: Release Workflow - Parodos Workflow Engine
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'workflow-engine/**'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up JDK 8
+      uses: actions/setup-java@v3
+      with:
+        java-version: '8'
+        distribution: 'temurin'
+        server-id: redhat-developer-parodos         # Value of the distributionManagement/repository/id field of the pom.xml
+        settings-path: ${{ github.workspace }}      # location for the settings.xml file
+
+    - name: Maven Build
+      run: mvn -B package --file ./workflow-engine/pom.xml
+
+    - name: Maven Deploy - GitHub Maven Repo
+      run: mvn deploy -X -s $GITHUB_WORKSPACE/settings.xml --file ./workflow-engine/pom.xml
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
