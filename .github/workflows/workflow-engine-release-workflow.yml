@@ -5,9 +5,9 @@ name: Parodos Workflow Engine - Release Workflow
 on:
   push:
     branches:
-      - '**'
-#    paths:
-#      - 'workflow-engine/**'
+      - 'main'
+    paths:
+      - 'workflow-engine/**'
 jobs:
   build:
     runs-on: ubuntu-latest

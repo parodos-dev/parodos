@@ -5,7 +5,7 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>workflow-engine</name>
 
-<distributionManagement>
+  <distributionManagement>
     <repository>
         <id>redhat-developer-parodos</id>
         <name>Red Hat Developer - Parodos - Apache Maven Packages</name>
