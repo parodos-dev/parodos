@@ -24,20 +24,17 @@
 package com.redhat.parodos.workflows.engine;
 
 
+import com.redhat.parodos.workflows.workflow.WorkFlow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
-import com.redhat.parodos.workflows.workflow.WorkFlow;
-
 
 class WorkFlowEngineImpl implements WorkFlowEngine {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkFlowEngineImpl.class);
 
     public WorkReport run(WorkFlow workFlow, WorkContext workContext) {
         LOGGER.info("Running workflow ''{}''", workFlow.getName());
         return workFlow.execute(workContext);
     }
-
 }

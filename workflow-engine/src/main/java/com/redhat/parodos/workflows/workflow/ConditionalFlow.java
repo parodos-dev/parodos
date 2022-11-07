@@ -25,10 +25,10 @@ package com.redhat.parodos.workflows.workflow;
 
 import java.util.UUID;
 
+import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.NoOpWork;
 import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.work.WorkContext;
-import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkReportPredicate;
 
 /**

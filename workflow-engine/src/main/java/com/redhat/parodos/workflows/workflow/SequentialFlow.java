@@ -23,16 +23,16 @@
  */
 package com.redhat.parodos.workflows.workflow;
 
-import static com.redhat.parodos.workflows.work.WorkStatus.FAILED;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
+import com.redhat.parodos.workflows.work.WorkStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A sequential flow executes a set of work units in sequence.
@@ -59,7 +59,7 @@ public class SequentialFlow extends AbstractWorkFlow {
         WorkReport workReport = null;
         for (Work work : workUnits) {
             workReport = work.execute(workContext);
-            if (workReport != null && FAILED.equals(workReport.getStatus())) {
+            if (workReport != null && WorkStatus.FAILED.equals(workReport.getStatus())) {
                 LOGGER.info("Work unit ''{}'' has failed, skipping subsequent work units", work.getName());
                 break;
             }

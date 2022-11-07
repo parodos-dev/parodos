@@ -1,39 +1,41 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.redhat.parodos.workflow</groupId>
-  <artifactId>ParodosWorkFlowEngine</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>ParodosWorkFlowEngine</name>
-  <properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <slf4j.version>1.7.30</slf4j.version>
-        <java.version>1.8</java.version>
-        <junit.version>4.13.1</junit.version>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.redhat.parodos</groupId>
+    <artifactId>workflow-engine</artifactId>
+    <name>workflow-engine</name>
+    <version>0.0.1-SNAPSHOT</version>
+
+    <properties>
+        <java.version>11</java.version>
         <assertj.version>3.17.2</assertj.version>
-        <mockito.version>3.5.13</mockito.version>
+        <junit.version>4.13.1</junit.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
-	</properties>
-	<licenses>
+        <mockito.version>3.5.13</mockito.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <slf4j.version>1.7.30</slf4j.version>
+    </properties>
+
+    <licenses>
         <license>
             <name>MIT License</name>
             <url>http://opensource.org/licenses/mit-license.php</url>
         </license>
     </licenses>
-	<dependencies>
-		 <dependency>
+
+    <dependencies>
+        <!-- START Slf4j Dependencies -->
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>${slf4j.version}</version>
-            <scope>test</scope>
-        </dependency>
+        <!-- END Slf4j Dependencies -->
+
+        <!-- START Test Dependencies -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -52,8 +54,16 @@
             <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
-	</dependencies>
-	<build>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- END Test Dependencies -->
+    </dependencies>
+
+    <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
