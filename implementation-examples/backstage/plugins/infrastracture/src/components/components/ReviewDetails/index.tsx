@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 
 /**
@@ -33,24 +33,24 @@ const ReviewDetails = ({
   selectedOrganizationState,
   selectedRepoState,
   currentVersionState,
-  pcfUpgradesState,
-  newPlatformState,
-  newVMState,
+  upgradeState,
+  migrateState,
+  newState,
   setGlobalMigrationPlanState,
 }) => {
   const getLabelForMigration = () => {
-    if (!pcfUpgradesState && !newPlatformState && !newVMState) {
+    if (!upgradeState && !migrateState && !newState) {
       return '';
     }
-    if (!!pcfUpgradesState) {
-      if (currentVersionState === pcfUpgradesState) {
-        return `Keeping ${currentVersionState}`;
+    if (!!upgradeState) {
+      if (currentVersionState === upgradeState) {
+        return `Keeping ${currentVersionState.displayName}`;
       }
-      return `Migrating from ${currentVersionState} to ${pcfUpgradesState}`;
-    } else if (newVMState) {
-      return `${newVMState}`;
+      return `Migrating from ${currentVersionState.displayName} to ${upgradeState.displayName}`;
+    } else if (newState) {
+      return `${newState.displayName}`;
     }
-    return `Migrating from ${currentVersionState} to ${newPlatformState}`;
+    return `Migrating from ${currentVersionState.displayName} to ${migrateState.displayName}`;
   };
 
   return (

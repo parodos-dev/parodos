@@ -23,7 +23,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import ExtensionIcon from '@material-ui/icons/Extension';
-import LibraryBooks from '@material-ui/icons/LibraryBooks';
+import { default as LibraryBooksIcon } from '@material-ui/icons/LibraryBooks';
 import { Sidebar } from '@backstage/core-components';
 import { NavLink } from 'react-router-dom';
 import {
@@ -98,7 +98,11 @@ const RootApp = ({ children, logout }) => {
               to="infrastructure"
               text="Infrastructure"
             />
-            <SidebarItem icon={LibraryBooks} to="training" text="Training" />
+            <SidebarItem
+              icon={LibraryBooksIcon}
+              to="training"
+              text="Training"
+            />
             {/* End global nav */}
             <SidebarDivider />
             <SidebarScrollWrapper>
@@ -162,7 +166,7 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
         }
       })
       .catch(e => {
-        console.error('Authenticated Failed: ' + e);
+        console.error('Authentication Failed: ' + e);
       });
   }, []);
 
@@ -170,7 +174,7 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
     console.log(keycloak);
     const logoutOptions = { redirectUri: 'https://github.com/logout' };
     keycloak.logout(logoutOptions).then((success: any) => {
-      console.log('logout success!', success);
+      console.log('Logout succeeded', success);
       sessionStorage.setItem('access_token', '');
     });
   }

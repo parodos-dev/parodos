@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 
 /**
@@ -97,7 +97,7 @@ export default function PipelineStageAction({
                 <Typography variant={'body1'}>View error log</Typography>
               </Button>
             ) : (
-              <Link href="plugins/deploy/src/components/components/RunDetail/RunDetailContent/TabPanels/ProcessesPanel/Pipeline/PipelineStepper/PipelineStep/PipelineStageAction/index#" color="inherit">
+              <Link href="#" color="inherit">
                 <Typography variant={'body1'} color={'secondary'}>
                   Run details
                 </Typography>

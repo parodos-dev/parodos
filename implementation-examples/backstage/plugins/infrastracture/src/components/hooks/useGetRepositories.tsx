@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 
 /**
@@ -33,10 +33,11 @@ const useGetRepositories = () => {
   const getRepositories = async ({ orgName }) => {
     try {
       setIsLoadingState(true);
-      const repoResponse = await axios.get(
-        `${url}/api/workloadmetadata/id/SAMPLE/org/${orgName}`,
-      );
-      setRepositoriesState(repoResponse.data);
+      // const repoResponse = await axios.get(
+      //   `${url}/api/workloadmetadata/id/SAMPLE/org/${orgName}`,
+      // );
+      // setRepositoriesState(repoResponse.data);
+      setRepositoriesState(['demo']);
     } catch (error) {
       toastContext.handleOpenToast(
         `Oops! Something went wrong. Please try again`,

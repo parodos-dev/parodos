@@ -21,15 +21,15 @@
 
 import React, { useContext, useEffect, useState } from 'react';
 import {
-    Box,
-    Button,
-    Dialog,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Grid,
-    IconButton,
-    Typography,
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Grid,
+  IconButton,
+  Typography,
 } from '@material-ui/core';
 import { RunDetailContext } from '../../../../../../../../../contexts/projects/runDetail';
 import CloseIcon from '@material-ui/icons/Close';
@@ -37,72 +37,72 @@ import { useStyles } from '../../../../../../../../common/dialog/SimpleDialog/st
 import useGetErrorLog from '../../../../../../../../../hooks/useGetErrorLog';
 
 export default function ErrorLogDialog({ handleClose, stageName }) {
-    const runDetailContext = useContext(RunDetailContext);
-    const classes = useStyles();
-    const [errorLog, setErrorLog] = useState('');
-    const getErrorlog = useGetErrorLog();
-    const descriptionElementRef = React.useRef(null);
-    useEffect(() => {
-        if (runDetailContext.openErrorLog) {
-            getErrorlog
-                .getLogError(
-                    runDetailContext.projectId(),
-                    runDetailContext.selectedBranch(),
-                )
-                .then(errLog => setErrorLog(errLog));
-            const { current: descriptionElement } = descriptionElementRef;
-            if (descriptionElement !== null) {
-                descriptionElement.focus();
-            }
-        }
-    }, [runDetailContext.openErrorLog]);
+  const runDetailContext = useContext(RunDetailContext);
+  const classes = useStyles();
+  const [errorLog, setErrorLog] = useState('');
+  const getErrorlog = useGetErrorLog();
+  const descriptionElementRef = React.useRef(null);
+  useEffect(() => {
+    if (runDetailContext.openErrorLog) {
+      getErrorlog
+        .getLogError(
+          runDetailContext.projectId(),
+          runDetailContext.selectedBranch(),
+        )
+        .then(errLog => setErrorLog(errLog));
+      const { current: descriptionElement } = descriptionElementRef;
+      if (descriptionElement !== null) {
+        descriptionElement.focus();
+      }
+    }
+  }, [runDetailContext.openErrorLog]);
 
-    return (
-        <Dialog
-            open={runDetailContext.openErrorLog}
-            onClose={handleClose}
-            scroll={'paper'}
-            aria-labelledby="scroll-dialog-title"
-            aria-describedby="scroll-dialog-description"
-            maxWidth="md"
+  return (
+    <Dialog
+      open={runDetailContext.openErrorLog}
+      onClose={handleClose}
+      scroll={'paper'}
+      aria-labelledby="scroll-dialog-title"
+      aria-describedby="scroll-dialog-description"
+      maxWidth="md"
+    >
+      <DialogTitle id="scroll-dialog-title">
+        <div>
+          <Typography
+            variant={'h5'}
+          >{`Error log for ${stageName.toUpperCase()}`}</Typography>
+        </div>
+        <IconButton
+          aria-label="close"
+          className={classes.closeButton}
+          onClick={handleClose}
         >
-            <DialogTitle id="scroll-dialog-title">
-                <div>
-                    <Typography
-                        variant={'h5'}
-                    >{`Error log for ${stageName.toUpperCase()}`}</Typography>
-                </div>
-                <IconButton
-                    aria-label="close"
-                    className={classes.closeButton}
-                    onClick={handleClose}
-                >
-                    <CloseIcon />
-                </IconButton>
-            </DialogTitle>
-            <DialogContent dividers={true}>
-                <DialogContentText
-                    id="scroll-dialog-description"
-                    ref={descriptionElementRef}
-                    tabIndex={-1}
-                    style={{ whiteSpace: 'pre-line' }}
-                >
-                    {errorLog}
-                </DialogContentText>
-            </DialogContent>
-            <Box m={3}>
-                <Grid item container display={'flex'} alignItems="center">
-                    <Button
-                        onClick={handleClose}
-                        variant={'contained'}
-                        color={'secondary'}
-                    >
-                        <Typography variant={'body2'} color={'white'}>
-                            CLOSE
-                        </Typography>
-                    </Button>
-                </Grid>
-            </Box>
-        </Dialog>
-    );
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent dividers={true}>
+        <DialogContentText
+          id="scroll-dialog-description"
+          ref={descriptionElementRef}
+          tabIndex={-1}
+          style={{ whiteSpace: 'pre-line' }}
+        >
+          {errorLog}
+        </DialogContentText>
+      </DialogContent>
+      <Box m={3}>
+        <Grid item container display={'flex'} alignItems="center">
+          <Button
+            onClick={handleClose}
+            variant={'contained'}
+            color={'secondary'}
+          >
+            <Typography variant={'body2'} color={'white'}>
+              CLOSE
+            </Typography>
+          </Button>
+        </Grid>
+      </Box>
+    </Dialog>
+  );
 }

@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 
 /**
@@ -24,7 +24,7 @@ import axios from 'axios';
 import ToastContext from '../context/toast';
 import { getUrl } from '../util/getUrl';
 
-const useSubmitMigrationRequest = ({
+const useSubmitInfrastructureRequest = ({
   selectedOrganizationState,
   selectedRepoState,
 }) => {
@@ -33,20 +33,26 @@ const useSubmitMigrationRequest = ({
   const [repositoriesState, setRepositoriesState] = useState([]);
   const url = getUrl();
 
-  const submitRequest = async ({ migrationPlan }) => {
+  const submitRequest = async ({ migrationPlan, params }) => {
     try {
       setIsLoadingState(true);
       migrationPlan = {
-        ...migrationPlan,
-        org: selectedOrganizationState,
-        repo: selectedRepoState,
+        workFlowId: migrationPlan.workFlowId,
+        workFlowParameters: {
+          ...params,
+          PROJECT_NAME: `${selectedOrganizationState}/${selectedRepoState}`,
+          org: selectedOrganizationState,
+          repo: selectedRepoState,
+          WORKFLOW_TYPE: 'INFRASTRUCTURE',
+        },
       };
-      console.log('migrationplan:', migrationPlan);
-      const repoResponse = await axios.post(
-        `${url}/api/migrate/execute`,
-        migrationPlan,
-      );
+      const repoResponse = await axios.post(`${url}/api/v1/workflows/infrastructures/`, migrationPlan);
       setRepositoriesState(repoResponse.data);
+
+      toastContext.handleOpenToast(
+        `Transitioning your session to deploy flow...`,
+        'success',
+      );
     } catch (error) {
       toastContext.handleOpenToast(
         `Oops! Something went wrong. Please try again`,
@@ -63,4 +69,4 @@ const useSubmitMigrationRequest = ({
   };
 };
 
-export default useSubmitMigrationRequest;
+export default useSubmitInfrastructureRequest;

@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 
 /**
@@ -25,29 +25,25 @@ import ToastContext from '../context/toast';
 import axios from 'axios';
 import { getUrl } from '../util/getUrl';
 
-const useGetMigrationOptions = () => {
+const useGetInfrastructureOptions = () => {
   const toastContext = useContext(ToastContext);
   const [isLoadingState, setIsLoadingState] = useState(false);
   const [migrationOptionsState, setMigrationOptionsState] = useState({});
   const url = getUrl();
 
-  const getMigrationOptions = async ({
-    setShouldShowMigrationTitleState,
-    orgName,
-    repo,
-  }) => {
+  const getMigrationOptions = async ({ orgName, repo }) => {
     try {
       setIsLoadingState(true);
-      const migrationOptionsResponse = await axios.get(
-        `${url}/api/asses/org/${orgName}/repo/${repo}`,
+      const assessmentRequestBody = {
+        workFlowId: 'assessmentWorkFlow_ASSESSMENT_WORKFLOW',
+        workFlowParameters: {},
+      };
+      const migrationOptionsResponse = await axios.post(
+        `${url}/api/v1/workflows/assessments/`,
+        assessmentRequestBody,
       );
-      const optionsAvailable = R.pathOr(
-        true,
-        ['data', 'optionsAvailable'],
-        migrationOptionsResponse,
-      );
-      setShouldShowMigrationTitleState(optionsAvailable);
       setMigrationOptionsState(migrationOptionsResponse.data);
+      return migrationOptionsResponse.data;
     } catch (error) {
       toastContext.handleOpenToast(
         `Oops! Something went wrong. Please try again`,
@@ -64,4 +60,4 @@ const useGetMigrationOptions = () => {
   };
 };
 
-export default useGetMigrationOptions;
+export default useGetInfrastructureOptions;

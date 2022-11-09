@@ -1,10 +1,10 @@
 {
   "extends": "@backstage/cli/config/tsconfig.json",
   "include": [
-    "implementation-examples/backstage/packages/*/src",
-    "implementation-examples/backstage/plugins/*/src",
-    "implementation-examples/backstage/plugins/*/dev",
-    "implementation-examples/backstage/plugins/*/migrations"
+    "packages/*/src",
+    "plugins/*/src",
+    "plugins/*/dev",
+    "plugins/*/migrations"
   ],
   "exclude": ["node_modules"],
   "compilerOptions": {

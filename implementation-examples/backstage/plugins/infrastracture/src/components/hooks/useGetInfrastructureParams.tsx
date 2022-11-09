@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 
 /**
@@ -21,38 +21,23 @@
 
 import { useContext, useState } from 'react';
 import ToastContext from '../context/toast';
-import axios from 'axios';
 import { getUrl } from '../util/getUrl';
+import axios from 'axios';
 
-const useGetMigrationPlan = ({
-  selectedOrganizationState,
-  selectedRepoState,
-  currentVersionState,
-  pcfUpgradesState,
-  newPlatformState,
-  newVMState,
-}) => {
+const useGetInfrastructureParams = () => {
   const toastContext = useContext(ToastContext);
   const [isLoadingState, setIsLoadingState] = useState(false);
+  const [infrastructureParams, setInfrastructureParams] = useState([]);
   const url = getUrl();
 
-  const getMigrationPlan = async ({ setGlobalMigrationPlanState }) => {
+  const getInfrastructureParams = async ({ workflowName }) => {
     try {
       setIsLoadingState(true);
-      const requestBody = {
-        selectedPlatform: pcfUpgradesState
-          ? pcfUpgradesState
-          : newPlatformState,
-        currentPlatform: currentVersionState,
-        selectedVM: newVMState,
-        orgName: selectedOrganizationState,
-        repo: selectedRepoState,
-      };
-      const migrationPlanResponse = await axios.post(
-        `${url}/api/migrate/plan`,
-        requestBody,
+      const response = await axios.get(
+        `${url}/api/v1/workflows/infrastructures/${workflowName}/parameters`,
       );
-      setGlobalMigrationPlanState(migrationPlanResponse.data);
+      setInfrastructureParams(response.data);
+      return response.data;
     } catch (error) {
       toastContext.handleOpenToast(
         `Oops! Something went wrong. Please try again`,
@@ -63,9 +48,10 @@ const useGetMigrationPlan = ({
   };
 
   return {
-    getMigrationPlan,
+    getInfrastructureParams,
     isLoading: isLoadingState,
+    infrastructureParams: infrastructureParams,
   };
 };
 
-export default useGetMigrationPlan;
+export default useGetInfrastructureParams;
