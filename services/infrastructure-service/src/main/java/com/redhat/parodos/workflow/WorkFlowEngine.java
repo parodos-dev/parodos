@@ -15,7 +15,12 @@
  */
 package com.redhat.parodos.workflow;
 
+import java.time.OffsetDateTime;
 import org.springframework.stereotype.Component;
+import com.redhat.parodos.security.SecurityUtils;
+import com.redhat.parodos.workflow.execution.WorkFlowTransactionDto;
+import com.redhat.parodos.workflow.execution.WorkTransactionService;
+import com.redhat.parodos.workflows.WorkFlowConstants;
 import com.redhat.parodos.workflows.engine.WorkFlowEngineBuilder;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -34,7 +39,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class WorkFlowEngine {
 	
-    /**
+    private final WorkTransactionService existingInfrastructureService;
+    private final SecurityUtils securityUtils;
+	
+    public WorkFlowEngine(WorkTransactionService existingInfrastructureService, SecurityUtils securityUtils) {
+		this.existingInfrastructureService = existingInfrastructureService;
+		this.securityUtils = securityUtils;
+	}
+
+	/**
      * 
      * Runs all the All Tasks that have be packaged into a WorkFlow with the provided Context
      * 
@@ -42,11 +55,30 @@ public class WorkFlowEngine {
      * @param workFlow the list of steps that need to be done to create the InfrastructureOption
      * @return workReport indicating if the WorkFlow was successful it also contains the updated WorkContext
      * 
-     * @author lukeshannon
+     * @author Luke Shannon (Github: lshannon)
      */
     public WorkReport executeWorkFlows(WorkContext workContext, WorkFlow workFlow) {
     	log.debug("Running the WorkFlow: {} with Context: {}", workFlow.getName(), workContext.toString());
-        return WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(workFlow, workContext);
+    	WorkReport report = WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(workFlow, workContext);
+    	String userName = getUserName();
+    	report.getWorkContext().put(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCE, existingInfrastructureService.createWorkFlowTransactionEntity(
+    			WorkFlowTransactionDto.builder()
+    			.createdAt(OffsetDateTime.now())
+    			.executedBy(userName)
+    			.workflowType((String)workContext.get(WorkFlowConstants.WORKFLOW_TYPE))
+    			.status(report.getStatus().toString())
+    			.projectName((String)workContext.get(WorkFlowConstants.PROJECT_NAME))
+    			.build()));
+        return report;
     }
+
+	private String getUserName() {
+		String userName = securityUtils.getUsername();
+    	if (userName == null) {
+    		log.error("Setting the username to a default");
+    		userName = "N/A";
+    	}
+		return userName;
+	}
     
 }

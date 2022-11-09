@@ -5,25 +5,17 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <changeSet id="1" author="luke" runOnChange="true">
-        <createTable tableName="EXISTING_INFRASTRUCTURE">
+        <createTable tableName="work_flow_transaction">
             <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="project_name" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="onboarded_by" type="varchar(255)"/>
-            <column name="infrastructure_option_display_name" type="varchar(255)"/>
+            <column name="project_name" type="varchar(255)"/>
+            <column name="executed_by" type="varchar(255)"/>
+            <column name="details" type="varchar(255)"/>
             <column name="status" type="varchar(255)"/>
             <column name="workflow_type" type="varchar(255)"/>
-            <column name="taskLog" type="clob"/>
             <column name="created_at" type="timestamp" defaultValue="${now}"/>
             <column name="object_version" type="bigint"/>
-        </createTable>
-        <createTable tableName="EXISTING_INFRASTRUCTURE_TASK_LOG">
-            <column name="existing_infrastructure_id" type="${uuidType}"/>
-            <column name="comment_date" type="timestamp" defaultValue="${now}"/>
-            <column name="comment" type="varchar(255)"/>
         </createTable>
     </changeSet>
     

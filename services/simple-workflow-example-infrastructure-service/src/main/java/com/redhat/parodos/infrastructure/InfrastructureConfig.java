@@ -1,11 +1,25 @@
+/*
+ * Copyright (c) 2022 Red Hat Developer
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.redhat.parodos.infrastructure;
-
-import static com.redhat.parodos.infrastructure.task.InfrastructureTaskAware.INFRASTRUCTURE_TASK_WORKFLOW;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.redhat.parodos.infrastructure.option.InfrastructureOption;
+import com.redhat.parodos.workflows.WorkFlowConstants;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 
@@ -29,7 +43,7 @@ public class InfrastructureConfig {
 	@Bean(name = "awesomeToolStack")
 	InfrastructureOption awesomeToolStack() {
 		return new InfrastructureOption
-				.Builder("Awesome Tool Stack With Correct Permissions And Config", "AwesomeToolsAndEnvironment" + INFRASTRUCTURE_TASK_WORKFLOW)
+				.Builder("Awesome Tool Stack With Correct Permissions And Config", "awesomeToolStackWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
 				.displayName("Managed Environment")
 				.addToDetails("Charge Back: .30/hr")
 				.addToDetails("Team must supply their own logging solution")
@@ -55,10 +69,10 @@ public class InfrastructureConfig {
 
 	// There will be lots of beans of InfrastructureTask type - names and qualifiers
 	// will make sure the right tasks are put into the workflow
-	@Bean(name= "awesomeToolStackWorkFlow" + INFRASTRUCTURE_TASK_WORKFLOW)
+	@Bean(name= "awesomeToolStackWorkFlow" +  WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
 	WorkFlow superAwesomeTechnologyStackWorkflow(@Qualifier("restApiTask") CallCustomRestAPITask restApiTask, @Qualifier("anotherTask") AnotherTask anotherTask) {
 		return SequentialFlow.Builder.aNewSequentialFlow()
-				.named("AwesomeToolsAndEnvironment_" + INFRASTRUCTURE_TASK_WORKFLOW)
+				.named("AwesomeToolsAndEnvironment_" +  WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
 				.execute(restApiTask)
 				.then(anotherTask)
 				.build();

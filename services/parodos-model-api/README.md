@@ -3,18 +3,21 @@
 This project contains all the dependencies to externally create and configure:
 
 - InfrastructureOption(s)
-- AssessmentWorkflow(s)
-- InfrastructureEventWorkflow(s)
+- BaseWorkFlowTask(s)
+
+The following is a UML diagram of the Object Model.
+
+![UML](readme-images/uml.png)
 
 # Adding The Client Library To A Project
 
 ```xml
 
-<dependency>
-			<groupId>com.redhat.parodos.workflow</groupId>
-			<artifactId>workflow-engine</artifactId>
-			<version>${parodos.version}</version>
-		</dependency>
+	<dependency>
+		<groupId>com.redhat.parodos.workflow</groupId>
+		<artifactId>workflow-engine</artifactId>
+		<version>${parodos.version}</version>
+	</dependency>
 
 ```
 
@@ -58,7 +61,7 @@ Note: All examples in this document will be based on usage of the Infrastructure
 	@Bean(name = "awesomeToolStack")
 	InfrastructureOption awesomeToolStack() {
 		return new InfrastructureOption
-				.Builder("Awesome Tool Stack With Correct Permissions And Config", "AwesomeToolsAndEnvironment" + INFRASTRUCTURE_TASK_WORKFLOW)
+				.Builder("Awesome Tool Stack With Correct Permissions And Config", "awesomeToolStackWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
 				.displayName("Managed Environment")
 				.addToDetails("Charge Back: .30/hr")
 				.addToDetails("Team must supply their own logging solution")
@@ -67,7 +70,6 @@ Note: All examples in this document will be based on usage of the Infrastructure
 				.addToDetails("After developing with these tools for 1 hour you will feel better about your life")
 				.setDescription("Managed Environment complete with CI/CD and configured Pipelines").build();
 	}
-
 
 ```
 
@@ -83,7 +85,7 @@ The following is a basic AssessmentTask (for BeanWorkflowRegistryImpl consumptio
 
 ```java
 
-public class SimpleAssessment implements AssessmentTask, AssessmentWorkFlowAware {
+public class SimpleAssessment implements BaseWorkFlowTask {
 	
 	//We only have one InfrastructureOption to recommend - but this could also be a list or a Map of Options
 	private final InfrastructureOption myOption;
@@ -95,13 +97,18 @@ public class SimpleAssessment implements AssessmentTask, AssessmentWorkFlowAware
 	//This will return the same InfrastructureOptions
 	public WorkReport execute(WorkContext workContext) {
 		log.info("This is my assessment - it always recommends the InfrastructureOption 'Awesome Tool Stack With Correct Permissions And Config'");
-		log.info("Here is the arguments for the assessment: {}", workContext.get(ASSESSMENT_REQUEST));
 		log.info("Putting the recommended InfrastructureOption in the InfrastructureOptions wrapper and placing it in the WorkContext");
-		workContext.put(RESULTING_INFRASTRUCTURE_OPTIONS, 
+		workContext.put(WorkFlowConstants.RESULTING_INFRASTRUCTURE_OPTIONS, 
 				new InfrastructureOptions.Builder()
 				.addNewOption(myOption)
 				.build());
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
+	}
+
+	//Supply the a parameter to describe what is needed for this workflow, but also for the UI to render a control to capture it
+	@Override
+	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
+		return List.of(WorkFlowTaskParameter.builder().key("DOG_NAME").description("String value with the name of a cool dog").build());
 	}
 	
 }
@@ -118,21 +125,21 @@ The following is an example of combining the previous AssessmentTask into a Work
 ```java
 
 @Configuration
-public class AssessmentConfig implements AssessmentWorkFlowAware {
+public class AssessmentConfig  {
 	
 	//There might be many AssessmentTasks, using names and qualifiers ensure the right assessments under up in the correct workflow
 	@Bean(name= "simpleAssessment")
-	AssessmentTask simpleAssessment(@Qualifier("awesomeToolStack") InfrastructureOption awesomeToolsOption) {
+	BaseWorkFlowTask simpleAssessment(@Qualifier("awesomeToolStack") InfrastructureOption awesomeToolsOption) {
 		return new SimpleAssessment(awesomeToolsOption);
 	}
 
 	//There might be many AssessmentTasks, using names and qualifiers ensure the right assessments under up in the correct workflow
-	@Bean(name="assessmentWorkFlow" + ASSESSMENT_WORKFLOW)
-	WorkFlow assessmentWorkFlow(@Qualifier("simpleAssessment") AssessmentTask  simpleAssessment) {
+	@Bean(name="assessmentWorkFlow" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
+	WorkFlow assessmentWorkFlow(@Qualifier("simpleAssessment") BaseWorkFlowTask simpleAssessment) {
 		return SequentialFlow
 				.Builder
 				.aNewSequentialFlow()
-				.named("MyAssessment_" + ASSESSMENT_WORKFLOW)
+				.named("MyAssessment_" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
 				.execute(simpleAssessment)
 				.build();
 	}
@@ -154,47 +161,62 @@ The following is an infrastructure event to make a call to an API while passing 
 
 ```java
 
-public class CallCustomRestAPITask implements InfrastructureTask, InfrastructureTaskAware {
-	
-	static public final String PAYLOAD_PASSED_IN_FROM_SERVICE = "PAYLOAD_PASSED_IN_FROM_SERVICE";
-	static public final String URL_PASSED_IN_FROM_SERVICE = "URL_PASSED_IN_FROM_SERVICE";
-	
-	/**
-	 * Executed by the InfrastructureTask engine as part of the Workflow
-	 * 
-	 */
-	public WorkReport execute(WorkContext workContext) {
-		try {
-		String urlString = getValueFromRequestParams(workContext,URL_PASSED_IN_FROM_SERVICE);
-		String payload = getValueFromRequestParams(workContext,PAYLOAD_PASSED_IN_FROM_SERVICE);
-		log.info("Running Task REST API Call: urlString: {} payload: {} ", urlString, payload );
-		RestTemplate restTemplate = new RestTemplate();
-	    ResponseEntity<String> result = restTemplate.postForEntity(urlString, payload, String.class);
-		if (result.getStatusCode().is2xxSuccessful()) {
-			log.info("Rest call completed: {}", result.getBody());
-			return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
-		}
-		log.error("Call to the API was not successful. Response: {}", result.getStatusCode());
-		} catch (Exception e) {
-			log.error("There was an issue with the REST call: {}", e.getMessage());
-			
-		}
-		return new DefaultWorkReport(WorkStatus.FAILED, workContext);
-	}
+public class CallCustomRestAPITask implements BaseWorkFlowTask {
 
-	@SuppressWarnings("unchecked")
-	private String getValueFromRequestParams(WorkContext workContext, String key) throws MissingArguementsException {
-		if (((Map<String,String>)workContext.get(INFRASTRUCTURE_TASK_WORKFLOW_DETAILS)).get(key) == null) {
-			throw new MissingArguementsException("For this task the WorkContext required key: " + key + " and a cooresponding value");
-		}
-		return (String) ((Map<String,String>)workContext.get(INFRASTRUCTURE_TASK_WORKFLOW_DETAILS)).get(key);
-	}
+    static public final String PAYLOAD_PASSED_IN_FROM_SERVICE = "PAYLOAD_PASSED_IN_FROM_SERVICE";
+    static public final String URL_PASSED_IN_FROM_SERVICE = "URL_PASSED_IN_FROM_SERVICE";
+
+    /**
+     * Executed by the InfrastructureTask engine as part of the Workflow
+     */
+    public WorkReport execute(WorkContext workContext) {
+        try {
+            String urlString = getValueFromRequestParams(workContext, URL_PASSED_IN_FROM_SERVICE);
+            String payload = getValueFromRequestParams(workContext, PAYLOAD_PASSED_IN_FROM_SERVICE);
+            log.info("Running Task REST API Call: urlString: {} payload: {} ", urlString, payload);
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> result = restTemplate.postForEntity(urlString, payload, String.class);
+            if (result.getStatusCode().is2xxSuccessful()) {
+                log.info("Rest call completed: {}", result.getBody());
+                return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
+            }
+            log.error("Call to the API was not successful. Response: {}", result.getStatusCode());
+        } catch (Exception e) {
+            log.error("There was an issue with the REST call: {}", e.getMessage());
+
+        }
+        return new DefaultWorkReport(WorkStatus.FAILED, workContext);
+    }
+
+    private String getValueFromRequestParams(WorkContext workContext, String key) throws MissingParameterException {
+        if (workContext.get(key) == null) {
+            throw new MissingParameterException("For this task the WorkContext required key: " + key + " and a coresponding value");
+        }
+        return (String) workContext.get(key);
+    }
+
+    @Override
+    public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
+        return List.of(
+				WorkFlowTaskParameter.builder()
+						.key(URL_PASSED_IN_FROM_SERVICE)
+						.description("The Url of the service (ie: https://httpbin.org/post")
+						.optional(false)
+						.type(WorkFlowTaskParameterType.URL)
+						.build(),
+				WorkFlowTaskParameter.builder()
+						.key(PAYLOAD_PASSED_IN_FROM_SERVICE)
+						.description("Json of what to provide for data. (ie: 'Hello!')")
+						.optional(false)
+						.type(WorkFlowTaskParameterType.PASSWORD)
+						.build());
+    }
 }
 
 
 ```
 
-Similar Tasks can be created. A tip on creating such Task; Avoid overly complex logic. These tasks are intended for making API calls, posting messages on Queues and/or executing existing scripts where the true logic to create InfrastructureOption(s) resides.
+Similar Tasks can be created. A tip on creating such Task; __Avoid overly complex logic. These tasks are intended for making API calls, posting messages on Queues and/or executing existing scripts where the true logic to create InfrastructureOption(s) resides__.
 
 
 ## InfrastructureTaskWorkflow
@@ -209,6 +231,21 @@ The following is an example of an InfrastructureTaskWorFlow (that can  be regist
 
 @Configuration
 public class InfrastructureConfig {
+
+	// There will be lots of beans of InfrastructureOption types - names and
+	// qualifiers will make sure the right tasks are put into the workflow
+	@Bean(name = "awesomeToolStack")
+	InfrastructureOption awesomeToolStack() {
+		return new InfrastructureOption
+				.Builder("Awesome Tool Stack With Correct Permissions And Config", "awesomeToolStackWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+				.displayName("Managed Environment")
+				.addToDetails("Charge Back: .30/hr")
+				.addToDetails("Team must supply their own logging solution")
+				.addToDetails("SLA: 99.999 (based on Azure's SLA)")
+				.addToDetails("24/7 support with a 2 hour response time")
+				.addToDetails("After developing with these tools for 1 hour you will feel better about your life")
+				.setDescription("Managed Environment complete with CI/CD and configured Pipelines").build();
+	}
 
 	// There will be lots of beans of InfrastructureTask type - names and qualifiers
 	// will make sure the right tasks are put into the workflow
@@ -226,10 +263,10 @@ public class InfrastructureConfig {
 
 	// There will be lots of beans of InfrastructureTask type - names and qualifiers
 	// will make sure the right tasks are put into the workflow
-	@Bean(name= "awesomeToolStackWorkFlow" + INFRASTRUCTURE_TASK_WORKFLOW)
+	@Bean(name= "awesomeToolStackWorkFlow" +  WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
 	WorkFlow superAwesomeTechnologyStackWorkflow(@Qualifier("restApiTask") CallCustomRestAPITask restApiTask, @Qualifier("anotherTask") AnotherTask anotherTask) {
 		return SequentialFlow.Builder.aNewSequentialFlow()
-				.named("AwesomeToolsAndEnvironment_" + INFRASTRUCTURE_TASK_WORKFLOW)
+				.named("AwesomeToolsAndEnvironment_" +  WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
 				.execute(restApiTask)
 				.then(anotherTask)
 				.build();
@@ -242,6 +279,12 @@ public class InfrastructureConfig {
 
 Provided all the code was created in accordance with the above examples, simply generate a Jar file and place this in the classpath of the Infrastructure Service. Upon start up it will register the configured Task(s) and WorkFlow(s).
 
+Future versions of Parodos will include other options for creating and registering WorkFlowTasks and WorkFlows
+
 ## Demo Implementation
 
 For a full example show how to configure all these Task(s) and WorkFlows(s), please refer to the 'simple-workflow-example-infrastructure-service'
+
+# Authors
+
+Luke Shannon (Github: lshannnon)

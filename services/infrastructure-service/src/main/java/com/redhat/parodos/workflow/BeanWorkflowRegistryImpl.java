@@ -20,8 +20,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Component;
+
 import com.redhat.parodos.workflows.workflow.WorkFlow;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -31,13 +34,14 @@ import lombok.extern.slf4j.Slf4j;
  * @author Luke Shannon (Github: lshannon)
  *
  */
-@Component
 @Slf4j
-public class BeanWorkflowRegistryImpl implements WorkFlowRegistry<String> {
+@Component
+public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
     
+	//Spring will populate this through classpath scanning when the Context starts up
 	private final Map<String,WorkFlow> workFlows;
 
-    public BeanWorkflowRegistryImpl(Map<String,WorkFlow> workFlows) {
+    public BeanWorkFlowRegistryImpl(Map<String,WorkFlow> workFlows) {
         this.workFlows = workFlows;
         if (workFlows == null) {
             log.error("No workflows were registered. Initializing an empty collection of workflows so the application can start");
@@ -58,14 +62,13 @@ public class BeanWorkflowRegistryImpl implements WorkFlowRegistry<String> {
 	}
 	
 	@Override
-	public Collection<String> getRegisteredWorkFlowNamesByWorkType(String typeName) {
-		return workFlows.keySet().stream().filter(k -> k.contains(typeName)).collect(Collectors.toList());
+	public Collection<String> getWorkFlowIdsByWorkType(String workFlowType) {
+		return workFlows.keySet().stream().filter(k -> k.contains(workFlowType)).collect(Collectors.toList());
 	}
 
 	@Override
 	public Map<String, WorkFlow> getAllRegisteredWorkFlows() {
 		return workFlows;
 	}
-    
    
 }

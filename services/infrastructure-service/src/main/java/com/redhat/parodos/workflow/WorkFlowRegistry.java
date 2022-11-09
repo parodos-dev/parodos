@@ -37,5 +37,5 @@ public interface WorkFlowRegistry<T> {
     
     WorkFlow getWorkFlowById(T id);
     
-    Collection<T> getRegisteredWorkFlowNamesByWorkType(String typeName);
+    Collection<T> getWorkFlowIdsByWorkType(String workFlowType);
 }
