@@ -15,16 +15,15 @@
  */
 package com.redhat.parodos.assessment;
 
-import java.util.List;
 import com.redhat.parodos.infrastructure.option.InfrastructureOption;
 import com.redhat.parodos.infrastructure.option.InfrastructureOptions;
-import com.redhat.parodos.workflows.BaseWorkFlowTask;
 import com.redhat.parodos.workflows.WorkFlowConstants;
-import com.redhat.parodos.workflows.WorkFlowTaskParameter;
+import com.redhat.parodos.workflows.WorkFlowTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -34,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  */
 @Slf4j
-public class SimpleAssessment implements BaseWorkFlowTask {
+public class SimpleAssessment implements WorkFlowTask {
 	
 	//We only have one InfrastructureOption to recommend - but this could also be a list or a Map of Options
 	private final InfrastructureOption myOption;
@@ -52,12 +51,6 @@ public class SimpleAssessment implements BaseWorkFlowTask {
 				.addNewOption(myOption)
 				.build());
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
-	}
-
-	//Supply the a parameter to describe what is needed for this workflow, but also for the UI to render a control to capture it
-	@Override
-	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
-		return List.of(WorkFlowTaskParameter.builder().key("DOG_NAME").description("String value with the name of a cool dog").build());
 	}
 	
 }

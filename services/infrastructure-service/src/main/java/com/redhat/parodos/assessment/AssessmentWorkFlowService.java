@@ -53,6 +53,7 @@ public class AssessmentWorkFlowService implements WorkFlowService {
     @Override
     public WorkReport execute(WorkFlowExecuteRequestDto workFlowRequestDto) {
         WorkContext context = workFlowDelegate.getWorkContextWithParameters(workFlowRequestDto);
+        context.put(WorkFlowConstants.WORKFLOW_TYPE, "ASSESSMENT");
         WorkFlow assessmentWorkFlow = workFlowDelegate.getWorkFlowById(workFlowRequestDto.getWorkFlowId());
         if (assessmentWorkFlow != null) {
             return executeAssessments(context, assessmentWorkFlow);

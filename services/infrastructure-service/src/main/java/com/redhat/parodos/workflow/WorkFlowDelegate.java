@@ -23,7 +23,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
-import com.redhat.parodos.workflows.BaseWorkFlowTask;
+import com.redhat.parodos.workflows.WorkFlowTask;
 import com.redhat.parodos.workflows.WorkFlowExecuteRequestDto;
 import com.redhat.parodos.workflows.WorkFlowTaskParameter;
 import com.redhat.parodos.workflows.work.WorkContext;
@@ -53,7 +53,7 @@ public class WorkFlowDelegate {
 		List<WorkFlowTaskParameter> listOfParameters = new ArrayList<>();
 		Field field = ReflectionUtils.findField(workFlow.getClass(), WORK_UNITS, java.util.List.class);
 		ReflectionUtils.makeAccessible(field);
-		for (BaseWorkFlowTask work : (java.util.List<BaseWorkFlowTask>) ReflectionUtils.getField(field,workFlow)) {
+		for (WorkFlowTask work : (List<WorkFlowTask>) ReflectionUtils.getField(field,workFlow)) {
 			listOfParameters.addAll(work.getWorkFlowTaskParameters());
 		}
 		return listOfParameters;
@@ -78,7 +78,7 @@ public class WorkFlowDelegate {
 	public WorkContext getWorkContextWithParameters(WorkFlowExecuteRequestDto workFlowRequestDto) {
 		WorkContext context = new WorkContext();
         for (String key : workFlowRequestDto.getWorkFlowParameters().keySet()) {
-        	context.put(key, workFlowRequestDto.getWorkFlowParameters().get(key));
+        	context.put(key, workFlowRequestDto.getWorkFlowParameters().get(key).trim());
         }
 		return context;
 	}

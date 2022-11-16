@@ -50,7 +50,6 @@ public class InfrastructureWorkFlowService implements WorkFlowService {
     /**
      * Executes an InfrastrcutureTaskWorkflow
      *
-     * @param workFlowName   name of the Workflow to run
      * @param requestDetails arguments that can be passed into the InfrastructureTask tasks
      * @return ExistingInfrastructureDto containing the data from the persisted entity
      */
@@ -80,6 +79,7 @@ public class InfrastructureWorkFlowService implements WorkFlowService {
 	 */
     private WorkReport executeOptionTasks(WorkFlow workFlow, WorkFlowExecuteRequestDto requestDetails) {
     	WorkContext workContext = workFlowDelegate.getWorkContextWithParameters(requestDetails);
+    	workContext.put(WorkFlowConstants.WORKFLOW_TYPE, "INFRASTRUCTURE");
     	WorkReport report = workFlowEngine.executeWorkFlows(workContext, workFlow);
     	if (report != null && report.getStatus() == WorkStatus.FAILED) {
     		log.error("The Infrastructure Task workflow failed. Check the logs for errors coming for the Tasks in this workflow. Checking is there is a Rollback");
@@ -88,12 +88,11 @@ public class InfrastructureWorkFlowService implements WorkFlowService {
         return report;
     }
     
-    private WorkReport checkForRollBackWorkFlow(WorkContext workContext) {
+    private void checkForRollBackWorkFlow(WorkContext workContext) {
     	if (workContext.get(WorkFlowConstants.ROLL_BACK_WORKFLOW_NAME) != null && !((String)workContext.get(WorkFlowConstants.ROLL_BACK_WORKFLOW_NAME)).isEmpty()) {
     		workFlowEngine.executeWorkFlows(workContext,workFlowDelegate.getWorkFlowById((String)workContext.get(WorkFlowConstants.ROLL_BACK_WORKFLOW_NAME)));
     	}
     	log.debug("A rollback workflow could not be found the WorkContext: {}", workContext.toString());
-    	return null;
     }
     
     public Collection<String> getInfraStructureTaskWorkFlows(String workFlowType) {

@@ -37,6 +37,16 @@
 			<artifactId>parodos-model-api</artifactId>
 			<version>${parodos.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.36</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.24</version>
+        </dependency>
 	</dependencies>
 
     <build>

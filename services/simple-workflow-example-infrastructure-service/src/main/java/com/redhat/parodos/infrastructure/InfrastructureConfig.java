@@ -66,6 +66,12 @@ public class InfrastructureConfig {
 	AnotherTask anotherTask() {
 		return new AnotherTask();
 	}
+	
+	// This is an optional Task that can be added if there is a Basic Auth secured RestEnd Point to test against
+	@Bean(name = "secureAPIGetTest")
+	SecureAPIGetTest secureAPIGetTest() {
+		return new SecureAPIGetTest();
+	}
 
 	// There will be lots of beans of InfrastructureTask type - names and qualifiers
 	// will make sure the right tasks are put into the workflow

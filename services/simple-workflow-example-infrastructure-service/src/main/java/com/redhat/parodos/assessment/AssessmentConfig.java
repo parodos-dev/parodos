@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.redhat.parodos.infrastructure.option.InfrastructureOption;
-import com.redhat.parodos.workflows.BaseWorkFlowTask;
+import com.redhat.parodos.workflows.WorkFlowTask;
 import com.redhat.parodos.workflows.WorkFlowConstants;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
@@ -35,13 +35,13 @@ public class AssessmentConfig  {
 	
 	//There might be many AssessmentTasks, using names and qualifiers ensure the right assessments under up in the correct workflow
 	@Bean(name= "simpleAssessment")
-	BaseWorkFlowTask simpleAssessment(@Qualifier("awesomeToolStack") InfrastructureOption awesomeToolsOption) {
+	WorkFlowTask simpleAssessment(@Qualifier("awesomeToolStack") InfrastructureOption awesomeToolsOption) {
 		return new SimpleAssessment(awesomeToolsOption);
 	}
 
 	//There might be many AssessmentTasks, using names and qualifiers ensure the right assessments under up in the correct workflow
 	@Bean(name="assessmentWorkFlow" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
-	WorkFlow assessmentWorkFlow(@Qualifier("simpleAssessment") BaseWorkFlowTask simpleAssessment) {
+	WorkFlow assessmentWorkFlow(@Qualifier("simpleAssessment") WorkFlowTask simpleAssessment) {
 		return SequentialFlow
 				.Builder
 				.aNewSequentialFlow()

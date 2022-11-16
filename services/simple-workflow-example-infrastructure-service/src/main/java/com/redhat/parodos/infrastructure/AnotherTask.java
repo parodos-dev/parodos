@@ -17,7 +17,8 @@ package com.redhat.parodos.infrastructure;
 
 import java.util.List;
 
-import com.redhat.parodos.workflows.BaseWorkFlowTask;
+import com.redhat.parodos.workflows.WorkFlowTask;
+import com.redhat.parodos.workflows.WorkContextDelegate;
 import com.redhat.parodos.workflows.WorkFlowTaskParameter;
 import com.redhat.parodos.workflows.WorkFlowTaskParameterType;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
@@ -34,13 +35,16 @@ import lombok.extern.slf4j.Slf4j;
  *
  */
 @Slf4j
-public class AnotherTask implements BaseWorkFlowTask {
-
+public class AnotherTask implements WorkFlowTask {
+	
+	private static final String TICKET_SERVICE_NAME = "TICKET_SERVICE_NAME";
+	
 	/**
 	 * This is a simple example and only writes a Log
 	 */
 	public WorkReport execute(WorkContext workContext) {
-		log.info("Executing another Task. This one does nothing...in practise this could open a Ticket in Jira, inject into Github. Sky is the limit");
+		String ticketServiceName = WorkContextDelegate.getOptionalValueFromRequestParams(workContext, TICKET_SERVICE_NAME, "defaultTicketService");
+		log.info("Executing another Task. This one does nothing...in practise this could open a Ticket in Jira, inject into Github. Sky is the limit. Here is the optional parameter {} : {}", TICKET_SERVICE_NAME, ticketServiceName);
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
@@ -48,7 +52,7 @@ public class AnotherTask implements BaseWorkFlowTask {
 	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
 		return List.of(
 				WorkFlowTaskParameter.builder()
-						.key("TicketServiceName")
+						.key(TICKET_SERVICE_NAME)
 						.description("Name of the ticket service to integrate with")
 						.type(WorkFlowTaskParameterType.TEXT)
 						.optional(true)

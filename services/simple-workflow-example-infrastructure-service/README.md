@@ -56,7 +56,6 @@ To run the InfrastructureTaskWorkFlow registered, post the following JSON into t
   "workFlowParameters": {
     "PAYLOAD_PASSED_IN_FROM_SERVICE": "Json String",
     "URL_PASSED_IN_FROM_SERVICE": "https://httpbin.org/post",
-    "WORKFLOW_TYPE" : "INFRASTRUCTURE",
     "PROJECT_NAME": "Test"
   },
   "workFlowId": "awesomeToolStackWorkFlow_INFRASTRUCTURE_WORKFLOW"

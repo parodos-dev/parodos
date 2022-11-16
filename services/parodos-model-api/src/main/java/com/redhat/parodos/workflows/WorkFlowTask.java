@@ -15,8 +15,8 @@
  */
 package com.redhat.parodos.workflows;
 
+import java.util.ArrayList;
 import java.util.List;
-
 import com.redhat.parodos.workflows.work.Work;
 
 /**
@@ -25,8 +25,12 @@ import com.redhat.parodos.workflows.work.Work;
  * @author Luke Shannon (Github: lshannon)
  *
  */
-public interface BaseWorkFlowTask extends Work {
+public interface WorkFlowTask extends Work {
 	
-	List<WorkFlowTaskParameter> getWorkFlowTaskParameters();
+	default List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
+		return new ArrayList<>();
+	}
+	
+	
 
 }

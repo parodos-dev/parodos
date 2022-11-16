@@ -15,8 +15,12 @@
  */
 package com.redhat.parodos.infrastructure;
 
+import java.util.Base64;
 import java.util.List;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -32,32 +36,28 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * An example of a task that calls a REST endpoint. It gets all its arguments passed in from the Service using the WorkContext
- * <p>
- * The InfrastructureTaskEngine will need to put the following arguments into the WorkContext for this task:
- * <p>
- * TOKEN_PASSED_IN_FROM_SERVICE: The rest API needs a token
- * PAYLOAD_PASSED_IN_FROM_SERVICE: The payload to send
- * URL_PASSED_IN_FROM_SERVICE: The URL of the service
+ * An example of a task that calls a Rest Endpoint with a BasicAuth Header
  *
  * @author Luke Shannon (Github: lshannon)
  */
 @Slf4j
-public class CallCustomRestAPITask implements WorkFlowTask {
+public class SecureAPIGetTest implements WorkFlowTask {
 
-    static public final String PAYLOAD_PASSED_IN_FROM_SERVICE = "PAYLOAD_PASSED_IN_FROM_SERVICE";
-    static public final String URL_PASSED_IN_FROM_SERVICE = "URL_PASSED_IN_FROM_SERVICE";
+    static public final String SECURED_URL = "SECURED_URL";
+    static public final String USERNAME = "USERNAME";
+    static public final String PASSWORD = "PASSWORD";
 
     /**
      * Executed by the InfrastructureTask engine as part of the Workflow
      */
     public WorkReport execute(WorkContext workContext) {
         try {
-            String urlString = WorkContextDelegate.getRequiredValueFromRequestParams(workContext, URL_PASSED_IN_FROM_SERVICE);
-            String payload = WorkContextDelegate.getRequiredValueFromRequestParams(workContext, PAYLOAD_PASSED_IN_FROM_SERVICE);
-            log.info("Running Task REST API Call: urlString: {} payload: {} ", urlString, payload);
+            String urlString = WorkContextDelegate.getRequiredValueFromRequestParams(workContext, SECURED_URL);
+            String username = WorkContextDelegate.getRequiredValueFromRequestParams(workContext, USERNAME);
+            String password = WorkContextDelegate.getRequiredValueFromRequestParams(workContext, PASSWORD);
+            log.info("Calling: urlString: {} username: {}", urlString, username);
             RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<String> result = restTemplate.postForEntity(urlString, payload, String.class);
+            ResponseEntity<String> result = restTemplate.exchange(urlString, HttpMethod.GET, getRequestWithHeaders(username, password), String.class);
             if (result.getStatusCode().is2xxSuccessful()) {
                 log.info("Rest call completed: {}", result.getBody());
                 return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
@@ -69,21 +69,37 @@ public class CallCustomRestAPITask implements WorkFlowTask {
         }
         return new DefaultWorkReport(WorkStatus.FAILED, workContext);
     }
-
+    
+    HttpEntity<String> getRequestWithHeaders(String username, String password) {
+    	String plainCreds = username+":"+ password;
+    	byte[] plainCredsBytes = plainCreds.getBytes();
+    	byte[] base64CredsBytes = Base64.getEncoder().encode(plainCredsBytes);
+    	String base64Creds = new String(base64CredsBytes);
+    	HttpHeaders headers = new HttpHeaders();
+    	headers.add("Authorization", "Basic " + base64Creds);
+    	return new HttpEntity<String>(headers);
+    }
+    
     @Override
     public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
         return List.of(
 				WorkFlowTaskParameter.builder()
-						.key(URL_PASSED_IN_FROM_SERVICE)
-						.description("The Url of the service (ie: https://httpbin.org/post")
+						.key(SECURED_URL)
+						.description("The URL of the Secured API you wish to call")
 						.optional(false)
 						.type(WorkFlowTaskParameterType.URL)
 						.build(),
 				WorkFlowTaskParameter.builder()
-						.key(PAYLOAD_PASSED_IN_FROM_SERVICE)
-						.description("Json of what to provide for data. (ie: 'Hello!')")
-						.optional(false)
-						.type(WorkFlowTaskParameterType.PASSWORD)
-						.build());
+                        .key(USERNAME)
+                        .description("Please enter your username authentication")
+                        .optional(false)
+                        .type(WorkFlowTaskParameterType.TEXT)
+                        .build(),
+				WorkFlowTaskParameter.builder()
+                        .key(PASSWORD)
+                        .description("Please enter your password for authentication (it will not be stored)")
+                        .optional(false)
+                        .type(WorkFlowTaskParameterType.PASSWORD)
+                        .build());
     }
 }

@@ -23,6 +23,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import java.util.List;
+
+import com.redhat.parodos.workflows.WorkFlowConstants;
+import com.redhat.parodos.workflows.WorkFlowTaskParameter;
+import com.redhat.parodos.workflows.WorkFlowTaskParameterType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -101,12 +105,29 @@ class InfrastructureWorkFlowServiceTest {
     }
 
     @Test
+    void execute_whenWorkFlowIsFailed_shouldReturn_Rollback() {
+        WorkFlowExecuteRequestDto dto = new WorkFlowExecuteRequestDto();
+        WorkContext workContext = new WorkContext();
+        workContext.put(WorkFlowConstants.ROLL_BACK_WORKFLOW_NAME, "test_success_INFRASTRUCTURE_TASK_WORKFLOW");
+        dto.setWorkFlowId("test_fail_INFRASTRUCTURE_TASK_WORKFLOW");
+        when(workFlowDelegate.getWorkContextWithParameters(any())).thenReturn(workContext);
+        when(workFlowDelegate.getWorkFlowById(any())).thenReturn(workFlows.get(0));
+        when(workFlowEngine.executeWorkFlows(any(), any())).thenReturn(new DefaultWorkReport(WorkStatus.FAILED, workContext));
+        assertEquals(WorkStatus.FAILED, infrastructureWorkFlowService.execute(dto).getStatus());
+        verify(workFlowEngine, times(2)).executeWorkFlows(any(), any());
+    }
+
+
+
+    @Test
     void execute_whenWorkFlowIsCompleted_shouldReturn_entity() {
+    	Mockito.when(workFlowDelegate.getWorkContextWithParameters(any())).thenReturn(new WorkContext());
         WorkFlowExecuteRequestDto dto = new WorkFlowExecuteRequestDto();
         dto.setWorkFlowId("test_success_INFRASTRUCTURE_TASK_WORKFLOW");
         when(workFlowDelegate.getWorkFlowById(any())).thenReturn(workFlows.get(1));
         WorkContext workContext = new WorkContext();
         when(workFlowEngine.executeWorkFlows(any(), any())).thenReturn(new DefaultWorkReport(WorkStatus.COMPLETED, workContext));
+        when(workFlowDelegate.getWorkContextWithParameters(any())).thenReturn(workContext);
         assertEquals(WorkStatus.COMPLETED, infrastructureWorkFlowService.execute(dto).getStatus());
         verify(workFlowEngine, times(1)).executeWorkFlows(any(), any());
     }
@@ -118,6 +139,26 @@ class InfrastructureWorkFlowServiceTest {
         assertThat(infrastructureWorkFlowService.getInfraStructureTaskWorkFlows("test-type"))
                 .hasSize(1)
                 .contains("test-flow");
+    }
+
+    @Test
+    void getWorkFlowParametersForWorkFlow_whenWorkflowIsFound_thenReturn_workflowParameters() {
+        String id = "test_id";
+        when(workFlowDelegate.getWorkFlowParametersForWorkFlow(id)).thenReturn(List.of(
+                WorkFlowTaskParameter.builder()
+                        .key("param_1")
+                        .type(WorkFlowTaskParameterType.TEXT)
+                        .optional(false)
+                        .build(),
+                WorkFlowTaskParameter.builder()
+                        .key("param_2")
+                        .type(WorkFlowTaskParameterType.PASSWORD)
+                        .optional(true)
+                        .build()));
+        assertThat(infrastructureWorkFlowService.getWorkFlowParametersForWorkFlow(id))
+                .hasSize(2)
+                .extracting(WorkFlowTaskParameter::getKey)
+                .containsExactlyInAnyOrder("param_1", "param_2");
     }
 
     private static class TestFailedWork implements Work {
