@@ -12,26 +12,29 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 
 /**
  * @author Luke Shannon (Github: lshannon)
  */
 
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
+  Box,
   Button,
   Checkbox,
-  FormControlLabel,
+  FormControlLabel, Grid,
+  TextField,
   Typography,
 } from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
 import { Flex } from 'rebass';
 import * as R from 'ramda';
 import ToastContext from '../../context/toast';
-import useGetMigrationPlan from '../../hooks/useGetMigrationPlan';
-import useSubmitMigrationRequest from '../../hooks/useSubmitMigrationRequest';
+import useGetInfrastructurePlan from '../../hooks/useGetInfrastructurePlan';
+import useSubmitInfrastructureRequest from '../../hooks/useSubmitInfrastructureRequest';
+import useGetInfrastructureParams from '../../hooks/useGetInfrastructureParams';
 
 const ProceedToOnboarding = ({
   scheduleSessionState,
@@ -42,46 +45,83 @@ const ProceedToOnboarding = ({
   selectedOrganizationState,
   selectedRepoState,
   currentVersionState,
-  pcfUpgradesState,
-  newPlatformState,
-  newVMState,
+  upgradeState,
+  migrateState,
+  newState,
   setGlobalMigrationPlanState,
 }) => {
-  const getMigrationPlanHook = useGetMigrationPlan({
+  const getMigrationPlanHook = useGetInfrastructurePlan({
     selectedOrganizationState,
     selectedRepoState,
     currentVersionState,
-    pcfUpgradesState,
-    newPlatformState,
-    newVMState,
+    upgradeState,
+    migrateState,
+    newState,
   });
   const toastContext = useContext(ToastContext);
   const navigate = useNavigate();
-  const postSubmitMigrationRequest = useSubmitMigrationRequest({
+  const postSubmitMigrationRequest = useSubmitInfrastructureRequest({
     selectedOrganizationState,
     selectedRepoState,
   });
-  const artifactsToCreate = R.pathOr(
-    [],
-    ['artifactsToCreate'],
-    globalMigrationPlanState,
-  );
+  const artifactsToCreate = R.pathOr([], ['details'], globalMigrationPlanState);
   const prURL = R.pathOr([], ['prLink'], globalMigrationPlanState);
+  const getInfrastructureParamsHook = useGetInfrastructureParams();
+  const [params, setParams] = useState({});
+  const [formValid, setFormValid] = useState(false);
 
   useEffect(() => {
-    getMigrationPlanHook.getMigrationPlan({ setGlobalMigrationPlanState });
+    // getMigrationPlanHook.getMigrationPlan({ setGlobalMigrationPlanState });
+    console.log(globalMigrationPlanState.workFlowId);
+    getInfrastructureParamsHook.getInfrastructureParams({
+      workflowName: globalMigrationPlanState.workFlowId,
+    });
   }, []);
+
+  const handleParamOnChange = (event, name) => {
+    setFormValid(event.target.form.reportValidity());
+    setParams({
+      ...params,
+      [name]: event.target.value,
+    });
+  };
 
   return (
     <div>
       <ul style={{ marginBottom: '25px' }}>
-        {artifactsToCreate.map(artifact => (
-          <li style={{ marginBottom: '10px' }} key={artifact}>
+        {artifactsToCreate.map((artifact, index) => (
+          <li style={{ marginBottom: '10px' }} key={index}>
             <div dangerouslySetInnerHTML={{ __html: artifact }} />
           </li>
         ))}
       </ul>
       <Typography paragraph>
+        <b>Parameters</b>
+      </Typography>
+      <Box>
+        <form>
+          {getInfrastructureParamsHook.infrastructureParams.map(
+            (param, index) => (
+                <Box key={`param_${index}`}>
+              <Grid item md={4}>
+                <TextField
+                  required={!param.optional}
+                  style={{width: "100%", marginBottom: 20}}
+                  id={`param_${index}`}
+                  label={param.key}
+                  helperText={param.description}
+                  type={param.type.toLowerCase()}
+                  onChange={() => handleParamOnChange(event, param.key)}
+                />
+                <span className="validity"></span>
+              </Grid>
+                </Box>
+            ),
+          )}
+        </form>
+      </Box>
+
+      <Typography paragraph style={{ marginTop: 50 }}>
         <b>Next Steps</b>
       </Typography>
       <Typography paragraph>
@@ -122,15 +162,12 @@ const ProceedToOnboarding = ({
             onClick={async () => {
               await postSubmitMigrationRequest.submitRequest({
                 migrationPlan: globalMigrationPlanState,
+                params: params,
               });
               setCurrentStepState(0);
-              toastContext.handleOpenToast(
-                `Transitioning your session to onboarding flow...`,
-                'success',
-              );
               navigate('/deploy');
             }}
-            disabled={postSubmitMigrationRequest.isLoading}
+            disabled={postSubmitMigrationRequest.isLoading || !formValid}
           >
             Submit
           </Button>

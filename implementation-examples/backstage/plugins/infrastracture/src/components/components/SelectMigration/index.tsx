@@ -12,14 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 
 /**
  * @author Luke Shannon (Github: lshannon)
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as R from 'ramda';
 import { Flex } from 'rebass';
 import Card from '@material-ui/core/Card';
@@ -29,66 +29,53 @@ import FormGroup from '@material-ui/core/FormGroup';
 import Radio from '@material-ui/core/Radio';
 import { Button, Grid } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
-import useGetMigrationOptions from '../../hooks/useGetMigrationOptions';
+import useGetInfrastructureOptions from '../../hooks/useGetInfrastructureOptions';
 
 const SelectMigration = ({
   currentStepState,
   setCurrentStepState,
-  pcfUpgradesState,
-  setPcfUpgradesState,
-  newPlatformState,
-  setNewPlatformState,
-  newVMState,
-  setNewVMState,
+  upgradeState,
+  setUpgradeState,
+  migrateState,
+  setMigrateState,
+  newState,
+  setNewState,
   setCurrentVersionState,
   setShouldShowMigrationTitleState,
   selectedOrganizationState,
   selectedRepoState,
+  globalMigrationPlanState,
+  setGlobalMigrationPlanState,
 }) => {
-  const getMigrationOptions = useGetMigrationOptions();
+  const getMigrationOptions = useGetInfrastructureOptions();
+  const [currentVersion, setCurrentVersion] = useState(false);
+  const [upgradeOptions, setUpgradeOptions] = useState([]);
+  const [migrationOptions, setMigrationOptions] = useState([]);
+  const [newOptions, setNewOptions] = useState([]);
+  const [optionsAvailable, setOptionsAvailable] = useState([]);
 
   useEffect(() => {
-    getMigrationOptions.getMigrationOptions({
-      setShouldShowMigrationTitleState,
-      orgName: selectedOrganizationState,
-      repo: selectedRepoState,
-    });
+    getMigrationOptions
+      .getMigrationOptions({
+        orgName: selectedOrganizationState,
+        repo: selectedRepoState,
+      })
+      .then(data => {
+        const current = R.pathOr(false, ['currentVersion'], data);
+        const upgrade = R.pathOr([], ['upgradeOptions'], data);
+        const migrate = R.pathOr([], ['migrationOptions'], data);
+        const newOpt = R.pathOr([], ['newOptions'], data);
+        setCurrentVersion(current);
+        setUpgradeOptions(upgrade);
+        setMigrationOptions(migrate);
+        setNewOptions(newOpt);
+        setOptionsAvailable(newOpt || upgrade || migrate);
+        setShouldShowMigrationTitleState(newOpt || upgrade || migrate);
+      });
   }, []);
-
-  const optionsAvailable = R.pathOr(
-    '',
-    ['migrationOptions', 'optionsAvailable'],
-    getMigrationOptions,
-  );
-  const currentPlatform = R.pathOr(
-    '',
-    ['migrationOptions', 'platformName'],
-    getMigrationOptions,
-  );
-  const currentVersion = R.pathOr(
-    '',
-    ['migrationOptions', 'currentVersion'],
-    getMigrationOptions,
-  );
-  const upgradeOptions = R.pathOr(
-    [],
-    ['migrationOptions', 'upgradeOptions'],
-    getMigrationOptions,
-  );
-  const migrationOptions = R.pathOr(
-    [],
-    ['migrationOptions', 'migrationPlatform'],
-    getMigrationOptions,
-  );
-  const vmUpdateOptions = R.pathOr(
-    [],
-    ['migrationOptions', 'vmUpdateOptions'],
-    getMigrationOptions,
-  );
-
   useEffect(() => {
-    if (currentVersion && !newPlatformState && !newVMState) {
-      setPcfUpgradesState(currentVersion);
+    if (currentVersion && !migrateState && !newState) {
+      setUpgradeState(currentVersion);
       setCurrentVersionState(currentVersion);
     }
   }, [currentVersion]);
@@ -104,32 +91,26 @@ const SelectMigration = ({
             <Card>
               <CardContent>
                 <FormGroup>
-                  <FormControlLabel
-                    defaultChecked
-                    onChange={event => {
-                      setNewPlatformState(null);
-                      setPcfUpgradesState(event.target.value);
-                      setNewVMState(null);
-                    }}
-                    checked={pcfUpgradesState === currentVersion}
-                    value={currentVersion}
-                    control={<Radio />}
-                    label={`${currentVersion} (Current)`}
-                  />
-                  {upgradeOptions.map(upgradeOption => (
+                  {currentVersion ? (
                     <FormControlLabel
+                      defaultChecked
                       onChange={event => {
-                        setNewPlatformState(null);
-                        setPcfUpgradesState(event.target.value);
-                        setNewVMState(null);
+                        setMigrateState(null);
+                        setUpgradeState(currentVersion);
+                        setNewState(null);
+                        setGlobalMigrationPlanState(currentVersion);
                       }}
-                      key={upgradeOption}
-                      checked={pcfUpgradesState === upgradeOption}
-                      value={upgradeOption}
+                      checked={
+                        globalMigrationPlanState.displayName ===
+                        currentVersion.displayName
+                      }
+                      value={currentVersion.displayName}
                       control={<Radio />}
-                      label={upgradeOption}
+                      label={`${currentVersion.displayName} (Current)`}
                     />
-                  ))}
+                  ) : (
+                    <Typography variant={'body1'}>N/A</Typography>
+                  )}
                 </FormGroup>
               </CardContent>
             </Card>
@@ -141,21 +122,25 @@ const SelectMigration = ({
             <Card>
               <CardContent>
                 <FormGroup>
-                  {vmUpdateOptions?.length == 0 ? (
+                  {upgradeOptions.length == 0 ? (
                     <Typography variant={'body1'}>N/A</Typography>
                   ) : (
-                    vmUpdateOptions.map(vmUpdateOption => (
+                    upgradeOptions.map(upgradeOption => (
                       <FormControlLabel
-                        key={vmUpdateOption}
                         onChange={event => {
-                          setPcfUpgradesState(null);
-                          setNewPlatformState(null);
-                          setNewVMState(event.target.value);
+                          setUpgradeState(upgradeOption);
+                          setMigrateState(null);
+                          setNewState(null);
+                          setGlobalMigrationPlanState(upgradeOption);
                         }}
-                        checked={newVMState === vmUpdateOption}
-                        value={vmUpdateOption}
+                        key={upgradeOption.displayName}
+                        checked={
+                          globalMigrationPlanState.displayName ===
+                          upgradeOption.displayName
+                        }
+                        value={upgradeOption.displayName}
                         control={<Radio />}
-                        label={vmUpdateOption}
+                        label={upgradeOption.displayName}
                       />
                     ))
                   )}
@@ -170,20 +155,61 @@ const SelectMigration = ({
             <Card>
               <CardContent>
                 <FormGroup>
-                  {migrationOptions.map(migrationOption => (
-                    <FormControlLabel
-                      key={migrationOption}
-                      onChange={event => {
-                        setPcfUpgradesState(null);
-                        setNewPlatformState(event.target.value);
-                        setNewVMState(null);
-                      }}
-                      checked={newPlatformState === migrationOption}
-                      value={migrationOption}
-                      control={<Radio />}
-                      label={migrationOption}
-                    />
-                  ))}
+                  {newOptions.length == 0 ? (
+                    <Typography variant={'body1'}>N/A</Typography>
+                  ) : (
+                    newOptions.map(newOption => (
+                      <FormControlLabel
+                        key={newOption.displayName}
+                        onChange={event => {
+                          setUpgradeState(null);
+                          setMigrateState(null);
+                          setNewState(newOption);
+                          setGlobalMigrationPlanState(newOption);
+                        }}
+                        checked={
+                          globalMigrationPlanState.displayName ===
+                          newOption.displayName
+                        }
+                        value={newOption.displayName}
+                        control={<Radio />}
+                        label={newOption.displayName}
+                      />
+                    ))
+                  )}
+                </FormGroup>
+              </CardContent>
+            </Card>
+          </Flex>
+          <Flex flex={1} flexDirection="column" ml="20px">
+            <Typography paragraph>
+              <b>Migrate</b>
+            </Typography>
+            <Card>
+              <CardContent>
+                <FormGroup>
+                  {migrationOptions.length == 0 ? (
+                    <Typography variant={'body1'}>N/A</Typography>
+                  ) : (
+                    migrationOptions.map(migrationOption => (
+                      <FormControlLabel
+                        key={migrationOption.displayName}
+                        onChange={event => {
+                          setUpgradeState(null);
+                          setMigrateState(migrationOption);
+                          setNewState(null);
+                          setGlobalMigrationPlanState(migrationOption);
+                        }}
+                        checked={
+                          globalMigrationPlanState.displayName ===
+                          migrationOption
+                        }
+                        value={migrationOption.displayName}
+                        control={<Radio />}
+                        label={migrationOption.displayName}
+                      />
+                    ))
+                  )}
                 </FormGroup>
               </CardContent>
             </Card>
@@ -199,11 +225,7 @@ const SelectMigration = ({
             {/*  Create a Ticket*/}
             {/*</Button>*/}
           </Grid>
-          <Grid
-            container
-            style={{ marginTop: '20px', marginLeft: '50px' }}
-            justifyContent={'left'}
-          >
+          <Grid container style={{ marginTop: '20px', marginLeft: '50px' }}>
             <Typography align="center" variant="h5" paragraph>
               <span>
                 - We have assessed your project and it violates Factor 3 of the
@@ -263,6 +285,7 @@ const SelectMigration = ({
               }}
               variant="contained"
               onClick={() => setCurrentStepState(currentStepState + 1)}
+              disabled={!upgradeState && !migrateState && !newState}
             >
               Next
             </Button>

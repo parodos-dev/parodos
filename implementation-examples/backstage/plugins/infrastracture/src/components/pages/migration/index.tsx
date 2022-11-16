@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 
 /**
@@ -57,9 +57,9 @@ const Migration = () => {
   const [selectedOrganizationState, setSelectedOrganizationState] =
     useState('');
   const [selectedRepoState, setSelectedRepoState] = useState('');
-  const [pcfUpgradesState, setPcfUpgradesState] = useState('');
-  const [newPlatformState, setNewPlatformState] = useState('');
-  const [newVMState, setNewVMState] = useState('');
+  const [upgradeState, setUpgradeState] = useState('');
+  const [migrateState, setMigrateState] = useState('');
+  const [newState, setNewState] = useState('');
   const [currentVersionState, setCurrentVersionState] = useState('');
   const [scheduleSessionState, setScheduleSessionState] = useState(true);
   const [globalMigrationPlanState, setGlobalMigrationPlanState] = useState({});
@@ -116,7 +116,7 @@ const Migration = () => {
         renderTitle: () =>
           shouldShowMigrationTitleState && (
             <Typography variant="h5" paragraph>
-              <b>Select migration option</b>
+              <b>Select infrastructure option</b>
             </Typography>
           ),
         renderDescription: () =>
@@ -132,7 +132,7 @@ const Migration = () => {
       return {
         renderTitle: () => (
           <Typography variant="h5" paragraph>
-            <b>Review the details of your migration</b>
+            <b>Review the details of your request</b>
           </Typography>
         ),
         renderDescription: () => (
@@ -146,7 +146,7 @@ const Migration = () => {
       return {
         renderTitle: () => (
           <Typography variant="h5" paragraph>
-            <b>Ready for onboarding!</b>
+            <b>Ready for proceeding!</b>
           </Typography>
         ),
         renderDescription: () => (
@@ -198,16 +198,18 @@ const Migration = () => {
         <SelectMigration
           currentStepState={currentStepState}
           setCurrentStepState={setCurrentStepState}
-          pcfUpgradesState={pcfUpgradesState}
-          setPcfUpgradesState={setPcfUpgradesState}
-          newPlatformState={newPlatformState}
-          setNewPlatformState={setNewPlatformState}
-          newVMState={newVMState}
-          setNewVMState={setNewVMState}
+          upgradeState={upgradeState}
+          setUpgradeState={setUpgradeState}
+          migrateState={migrateState}
+          setMigrateState={setMigrateState}
+          newState={newState}
+          setNewState={setNewState}
           setCurrentVersionState={setCurrentVersionState}
           setShouldShowMigrationTitleState={setShouldShowMigrationTitleState}
           selectedOrganizationState={selectedOrganizationState}
           selectedRepoState={selectedRepoState}
+          globalMigrationPlanState={globalMigrationPlanState}
+          setGlobalMigrationPlanState={setGlobalMigrationPlanState}
         />
       );
     }
@@ -220,9 +222,9 @@ const Migration = () => {
           selectedOrganizationState={selectedOrganizationState}
           selectedRepoState={selectedRepoState}
           currentVersionState={currentVersionState}
-          pcfUpgradesState={pcfUpgradesState}
-          newPlatformState={newPlatformState}
-          newVMState={newVMState}
+          upgradeState={upgradeState}
+          newPlatformState={migrateState}
+          newState={newState}
           setGlobalMigrationPlanState={setGlobalMigrationPlanState}
         />
       );
@@ -237,9 +239,9 @@ const Migration = () => {
           selectedOrganizationState={selectedOrganizationState}
           selectedRepoState={selectedRepoState}
           currentVersionState={currentVersionState}
-          pcfUpgradesState={pcfUpgradesState}
-          newPlatformState={newPlatformState}
-          newVMState={newVMState}
+          upgradeState={upgradeState}
+          migrateState={migrateState}
+          newState={newState}
           setGlobalMigrationPlanState={setGlobalMigrationPlanState}
         />
       );

@@ -26,35 +26,35 @@ import { RunDetailContext } from '../contexts/projects/runDetail';
 import { getUrl } from '../utils/getUrl';
 
 const useGetErrorLog = () => {
-    const toastContext = useContext(ToastContext);
-    const runDetailContext = useContext(RunDetailContext);
-    const [isLoadingState, setIsLoadingState] = useState(true);
-    const url = getUrl();
+  const toastContext = useContext(ToastContext);
+  const runDetailContext = useContext(RunDetailContext);
+  const [isLoadingState, setIsLoadingState] = useState(true);
+  const url = getUrl();
 
-    const getLogError = async (projectId, branch) => {
-        try {
-            if (runDetailContext.pipeline === {}) {
-                setIsLoadingState(true);
-            }
-            const logErrorResponse = await get(
-                `/api/v1/pipeline/${projectId.projectId}/branches/${branch}/errorlog`,
-                url,
-            );
-            runDetailContext.setLogError(logErrorResponse.data);
-            return logErrorResponse.data;
-        } catch (error) {
-            toastContext.handleOpenToast(
-                `Oops! Something went wrong. Please try again`,
-            );
-        } finally {
-            setIsLoadingState(false);
-        }
-    };
+  const getLogError = async (projectId, branch) => {
+    try {
+      if (runDetailContext.pipeline === {}) {
+        setIsLoadingState(true);
+      }
+      const logErrorResponse = await get(
+        `/api/v1/pipeline/${projectId.projectId}/branches/${branch}/errorlog`,
+        url,
+      );
+      runDetailContext.setLogError(logErrorResponse.data);
+      return logErrorResponse.data;
+    } catch (error) {
+      toastContext.handleOpenToast(
+        `Oops! Something went wrong. Please try again`,
+      );
+    } finally {
+      setIsLoadingState(false);
+    }
+  };
 
-    return {
-        getLog: getLogError,
-        isLoading: isLoadingState,
-    };
+  return {
+    getLog: getLogError,
+    isLoading: isLoadingState,
+  };
 };
 
 export default useGetErrorLog;

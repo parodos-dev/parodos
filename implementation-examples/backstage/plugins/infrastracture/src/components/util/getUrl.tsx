@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 
 /**
@@ -24,7 +24,7 @@ import { configApiRef, useApi } from '@backstage/core-plugin-api';
 export const getUrl = (): string => {
   const config = useApi(configApiRef);
   const url = config
-    .getConfigArray('app.support.items')[4]
+    .getConfigArray('app.support.items')[3]
     .getConfigArray('links')[0]
     .getString('url');
   console.log('migrate url:', url);

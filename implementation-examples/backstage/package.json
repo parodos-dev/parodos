@@ -19,10 +19,10 @@
     "test:all": "lerna run test -- --coverage",
     "lint": "backstage-cli repo lint --since origin/main",
     "lint:all": "backstage-cli repo lint",
-    "prettier:check": "prettier --check ../../parodos-configured-backstage",
+    "prettier:check": "prettier --check .",
     "create-plugin": "backstage-cli create-plugin --scope internal",
     "remove-plugin": "backstage-cli remove-plugin",
-    "format": "prettier --write ../../parodos-configured-backstage"
+    "format": "prettier --write ."
   },
   "workspaces": {
     "packages": [

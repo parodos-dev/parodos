@@ -6,7 +6,7 @@ The user interfaces for the Parodos workflows can be ran as Backstage plugins. U
 
 The following is a high level summary of the Parodos and Backstage integration:
 
-![architecture](../../docs/readme-images/backstage-configured-parodos.png)
+![architecture](./readme-images/backstage-configured-parodos.png)
 
 The following outlines this integration in detail.
 
@@ -29,6 +29,7 @@ docker run -p 3434:8080 --name keycloak  -d -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_
 docker start keycloak
 
 ```
+
 You can check if the docker image is in place with this command:
 
 ```sh
@@ -44,6 +45,7 @@ The result should look something like this:
 quay.io/keycloak/keycloak                17.0.1           8cd848839dcc   7 months ago   578MB
 
 ```
+
 Once Keycloak is running locally, the following steps will configure it to use Github at Indentity provider for the Parodos configured Backstage authenticate with.
 
 ### Keycloak Configuration
@@ -51,20 +53,20 @@ Once Keycloak is running locally, the following steps will configure it to use G
 GitHub is used as the identity provider of KeyCloak in the Parodos demo. To configure KeyCloak for integration with that Parodos configured Backstage, please follow these steps:
 
 1. Log into Keycloak. Locally it will be http://localhost:3434. Click the link that says Administrative Console on the landing page. In the login form put the following credenditals; username:admin, password: admin
-2. Hover over term 'Master' in the upper left. A dropdown will appear to 'Add Realm'. Click on that option ![step1](../../docs/readme-images/new-realm.png)
-3. Fill out the details on the new realm by providing a name (in this case Parodos) ![step2](../../docs/readme-images/parodos-realm.png)
-4. Go to the identity provider of the realm and create 'github' indendity provider ![step3](../../docs/readme-images/kc-1.png)
-5. Copy the redirect URI ![step4](../../docs/readme-images/kc-2.png)
+2. Hover over term 'Master' in the upper left. A dropdown will appear to 'Add Realm'. Click on that option <br/> ![step1](./readme-images/new-realm.png)
+3. Fill out the details on the new realm by providing a name (in this case Parodos) ![step2](./readme-images/parodos-realm.png)
+4. Go to the identity provider of the realm and create 'github' indendity provider ![step3](./readme-images/kc-1.png)
+5. Copy the redirect URI ![step4](./readme-images/kc-2.png)
 6. In GitHub, go to Settings/Developer settings and click "new OAuth app", and paste the value from step 4 (http://localhody:3434/realms/Parodos) to "Authorization callback URL", then paste the same value in "Homepage URL" and cut "/broker/github/endpoint" at the end (http://localhost:3434/realms/Parodos/broker/github/endpoint)
-7. In Github/Settings/Developer click "Register Application" ![step5](../../docs/readme-images/kc-3.png)
-8. In Github/Settings/Developer click "Generate a new client secret" and copy the value (do not close or refresh this page as the secret will not be viewable again) ![step6](../../docs/readme-images/kc-4.png)
-9. Go back to Keycloak and add the "Client Secret" and "Client Id" from Github, then save![step5](../../docs/readme-images/kc-5.png)
-10. Go to Keycloak/Clients and create a new Client ![step7](../../docs/readme-images/kc-6.png)
-11. Add the redirect Urls (http://localhost:9000, http://localhost:9000/, http://localhost:9000/*, https://github.com/logout) and Web Origins (http://localhost:9000) ![step8](../../docs/readme-images/kc-7.png)
-12. Go to Keycloak Authentication and click "Config" in the dropdown of Actions on line of "Identity Provider Redirector" ![step9](../../docs/readme-images/kc-8.png)
-13. Fill in the name of the identity provider for github, then save ![step10](../../docs/readme-images/kc-9.png)
+7. In Github/Settings/Developer click "Register Application" ![step5](./readme-images/kc-3.png)
+8. In Github/Settings/Developer click "Generate a new client secret" and copy the value (do not close or refresh this page as the secret will not be viewable again) ![step6](./readme-images/kc-4.png)
+9. Go back to Keycloak and add the "Client Secret" and "Client Id" from Github, then save![step5](./readme-images/kc-5.png)
+10. Go to Keycloak/Clients and create a new Client ![step7](./readme-images/kc-6.png)
+11. Add the redirect Urls (http://localhost:9000, http://localhost:9000/, http://localhost:9000/\*, https://github.com/logout) and Web Origins (http://localhost:9000) ![step8](./readme-images/kc-7.png)
+12. Go to Keycloak Authentication and click "Config" in the dropdown of Actions on line of "Identity Provider Redirector" ![step9](./readme-images/kc-8.png)
+13. Fill in the name of the identity provider for github, then save ![step10](./readme-images/kc-9.png)
 
-The Parodos realm and client is configured in [keycloak config](packagespp/src/components/Root/Root.tsx?#L149-L150)
+The Parodos realm and client is configured in [keycloak config](./packages/app/src/components/Root/Root.tsx?#L149-L150)
 
 ```javascript
 ...
@@ -80,13 +82,13 @@ To run this Backstage install locally, execute the following commands:
 
 Notes:
 
-- 'yarn install' will take about 21 seconds. Even if there are errors, wait for the following message ✨  Done in 21.24s.
+- 'yarn install' will take about 21 seconds. Even if there are errors, wait for the following message ✨ Done in 21.24s.
 - 'yarn tsc || true' will generate some errors, this is expected
 - local-demo.sh is a script that sets all the required environment variables for this configuration of Backstage to start
 
 ```sh
 
-nvm use 14 
+nvm use 14
 yarn install
 yarn tsc || true
 source local-demo.sh
@@ -185,6 +187,6 @@ These values will be determined based on how these components are deploy. An exa
 
 ## Authors
 
-* Richard Wang (richardw98)
-* Luke Shannon (GitHub: @lshannon)
-* Bill Bensing (GitHub: @BillBensing | LinkedIn:https://www.linkedin.com/in/billbensing/ | Twitter: @BillBensing)
+Richard Wang (ricwang@redhat.com)
+
+Luke Shannon (lshannon@redhat.com)

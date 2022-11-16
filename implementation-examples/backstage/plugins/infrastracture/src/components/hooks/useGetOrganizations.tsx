@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 
 /**
@@ -33,10 +33,11 @@ const useGetOrganizations = () => {
   const getOrganizations = async () => {
     try {
       setIsLoadingState(true);
-      const organizationsResponse = await axios.get(
-        `${url}/api/workloadmetadata/SAMPLE/orgs`,
-      );
-      setOrganizationsState(organizationsResponse.data);
+      // const organizationsResponse = await axios.get(
+      //   `${url}/api/workloadmetadata/SAMPLE/orgs`,
+      // );
+      // setOrganizationsState(organizationsResponse.data);
+      setOrganizationsState(['org-abc-123']);
     } catch (error) {
       toastContext.handleOpenToast(
         `Oops! Something went wrong. Please try again`,

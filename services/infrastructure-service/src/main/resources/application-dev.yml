@@ -1,0 +1,4 @@
+logging:
+  level:
+    ROOT: INFO
+    com.redhat.parodos: DEBUG
