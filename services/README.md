@@ -18,7 +18,7 @@ This is the model used by the infrastructure service. It is a seperate package a
 
 A stand alone project that can be added to the infrastructure service classpath to provide some samples of what WorkFlows could look like. This is basically a 'Hello Wold' for the infrastructure-service
 
-**workflow-engin**
+**workflow-engine**
 
 The current library for exeucting WorkFlow(s) in Parodos service
 

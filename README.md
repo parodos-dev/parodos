@@ -2,7 +2,7 @@
 
 Building developer portals provides a centralized place to improve the experience for developers trying to build and release code in large environments. 
 
-However, for many enterprise environments (specifically regulated one), the source of some of this friction against positive developer experience is entangled with long standing processes/tools tied to audit/compliance/regulation. These components are often:
+For many enterprise environments, especially regulated ones, the source of some friction with a positive developer experience is that they are entangled with long standing processes and tools which are tied to audit, compliance anb regulation. These components are often:
 
 - Unique to the enterprise
 - Providing a necessary safeguard
@@ -95,7 +95,7 @@ In this case a workflow will be packaged as a single Jar containing both the Rea
 
 ### Backstage Plugin
 
-In this case the React UI can be deployed as a Backstage plugin. This is useful when trying Parados workflows together, or when leveraging other components in the Backstage ecosystem
+In this case the React UI can be deployed as a Backstage plugin. This is useful when trying Parodos workflows together, or when leveraging other components in the Backstage ecosystem
 
 More details to come as the project evolves
 
