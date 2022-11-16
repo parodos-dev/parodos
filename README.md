@@ -95,7 +95,7 @@ In this case a workflow will be packaged as a single Jar containing both the Rea
 
 ### Backstage Plugin
 
-In this case the React UI can be deployed as a Backstage plugin. This is useful when trying Parados workflows together, or when leveraging other components in the Backstage ecosystem
+In this case the React UI can be deployed as a Backstage plugin. This is useful when trying Parodos workflows together, or when leveraging other components in the Backstage ecosystem
 
 More details to come as the project evolves
 
