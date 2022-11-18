@@ -1,0 +1,122 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="1" author="r.w">
+        <createTable tableName="notification_group">
+            <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="groupname" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="object_version" type="bigint"/>
+        </createTable>
+
+        <createTable tableName="notification_message">
+            <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="subject" type="text"/>
+            <column name="created_on" type="timestamp"/>
+            <column name="message_type" type="varchar(255)"/>
+            <column name="body" type="text"/>
+            <column name="fromuser" type="varchar(255)"/>
+            <column name="object_version" type="bigint"/>
+        </createTable>
+
+        <createTable tableName="notification_message_groupnames">
+            <column name="notification_message_id" type="${uuidType}">
+                <constraints nullable="false"
+                             foreignKeyName="fk_notification_message_groupnames_notification_message_id"
+                             referencedTableName="notification_message"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="groupnames" type="varchar(255)"/>
+        </createTable>
+
+        <createTable tableName="notification_message_usernames">
+            <column name="notification_message_id" type="${uuidType}">
+                <constraints nullable="false"
+                             foreignKeyName="fk_notification_message_usernames_notification_message_id"
+                             referencedTableName="notification_message"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="usernames" type="varchar(255)"/>
+        </createTable>
+
+        <createTable tableName="notification_record">
+            <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="read" type="boolean"/>
+            <column name="tags" type="varchar(255)"/>
+            <column name="folder" type="varchar(255)"/>
+            <column name="notificationmessage_id" type="${uuidType}">
+                <constraints foreignKeyName="fk_notification_record_notificationmessage_id"
+                             referencedTableName="notification_message"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="object_version" type="bigint"/>
+        </createTable>
+
+        <createTable tableName="notification_record_tags">
+            <column name="notification_record_id" type="${uuidType}">
+                <constraints nullable="false"
+                             foreignKeyName="fk_notification_record_tag_notification_record_id"
+                             referencedTableName="notification_record"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="tags" type="varchar(255)"/>
+        </createTable>
+
+        <createTable tableName="notification_user">
+            <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="username" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="object_version" type="bigint"/>
+        </createTable>
+
+        <createTable tableName="user_group">
+            <column name="notificationuser_id" type="${uuidType}">
+                <constraints nullable="false"
+                             foreignKeyName="fk_user_group_notificationuser_id"
+                             referencedTableName="notification_user"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="notificationgroup_id" type="${uuidType}">
+                <constraints nullable="false"
+                             foreignKeyName="fk_user_groups_notification_notificationgroup_id"
+                             referencedTableName="notification_group"
+                             referencedColumnNames="id"/>
+            </column>
+        </createTable>
+        <createTable tableName="user_notificationrecord">
+            <column name="notificationuser_id" type="${uuidType}">
+                <constraints nullable="false"
+                             foreignKeyName="fk_user_notificationrecord_notificationuser_id"
+                             referencedTableName="notification_user"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="notificationrecord_id" type="${uuidType}">
+                <constraints nullable="false"
+                             foreignKeyName="fk_user_notificationrecord_notificationrecord_id"
+                             referencedTableName="notification_record"
+                             referencedColumnNames="id"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="r.w" context="local">
+        <loadData
+                file="db/data/user.csv"
+                separator=";"
+                tableName="notification_user">
+        </loadData>
+    </changeSet>
+</databaseChangeLog>
