@@ -1,12 +1,12 @@
 import React from 'react';
 import { createDevApp } from '@backstage/dev-utils';
-import { MigratePage, migratePlugin } from '../src/plugin';
+import { InfrastructurePage, infrastructurePlugin } from '../src/plugin';
 
 createDevApp()
-  .registerPlugin(migratePlugin)
+  .registerPlugin(infrastructurePlugin)
   .addPage({
-    element: <MigratePage />,
+    element: <InfrastructurePage />,
     title: 'Root Page',
-    path: '/migrate',
+    path: '/infrastructure',
   })
   .render();

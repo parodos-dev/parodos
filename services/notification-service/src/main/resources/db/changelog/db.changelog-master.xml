@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <property name="uuidType" value="uuid" dbms="h2, postgresql"/>
+    <property name="uuidFunction" value="gen_random_uuid()" dbms="postgresql"/>
+    <property name="uuidFunction" value="random_uuid()" dbms="h2"/>
+
+    <include file="/db/changelog/db.changelog-tables.xml"/>
+</databaseChangeLog>

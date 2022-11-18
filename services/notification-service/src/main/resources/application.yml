@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: parodos-notification-service
+
+  jackson:
+    default-property-inclusion: non_null
+  main:
+    lazy-initialization: true

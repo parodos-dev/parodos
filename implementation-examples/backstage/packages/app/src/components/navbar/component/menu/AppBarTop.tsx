@@ -105,7 +105,7 @@ export default function AppbarTop({ logout }: any) {
     const interval = setInterval(async () => {
       try {
         await axios
-          .get(`${url}/api/v1/notifications/unread`, {
+          .get(`${url}/api/v1/notifications/count?state=UNREAD`, {
             headers: {
               Authorization: 'Bearer ' + sessionStorage.getItem('access_token'),
             },

@@ -1,0 +1,38 @@
+# ===================================================================
+# Spring Boot configuration for the "dev" profile.
+#
+# This configuration overrides the application.yml file and should be
+# only used for development purpose.
+# ===================================================================
+
+logging:
+  level:
+    ROOT: INFO
+    com.redhat.parodos.notification: DEBUG
+
+spring:
+  jackson:
+    serialization:
+      indent-output: true
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+
+  datasource:
+    url: jdbc:h2:mem:notification_service
+    driverClassName: org.h2.Driver
+    username: postgres
+    password: postgres
+
+server:
+  port: ${SERVER_PORT:8088}
+
+# ===================================================================
+# Application specific properties
+# Add your own application properties here, see the
+# ApplicationProperties class to have type-safe configuration
+# ===================================================================
+

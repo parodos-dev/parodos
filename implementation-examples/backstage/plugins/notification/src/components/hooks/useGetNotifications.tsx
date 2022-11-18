@@ -32,29 +32,18 @@ const useGetNotifications = () => {
   const [isLoadingState, setIsLoadingState] = useState(false);
 
   const apiKeywordForTab = {
-    ALL: 'all',
-    UNREAD: 'unread',
-    ARCHIVED: 'archived',
+    ALL: '',
+    UNREAD: 'UNREAD',
+    ARCHIVED: 'ARCHIVED',
   };
 
   const getNotifications = async () => {
     try {
       setIsLoadingState(true);
-      //TO-DO: Replace with value from single-spa
-      const username = 'dev';
-      // fetch(`/api/v1/notifications/${apiKeywordForTab[notificationsContext.currentTab]}/${username}`, {
-      //   mode: 'no-cors',
-      //   headers: {
-      //     'authorization': "bearer" + kcToken
-      //   }
-      // })
-      //   .then((response) => response.json())
-      //   .then((data) => console.log(data))
-      //   .catch( error => console.error('error:', error));
       const getAllNotificationResponse = await axios.get(
-        `/api/v1/notifications/${
+        `/api/v1/notifications?state=${
           apiKeywordForTab[notificationsContext.currentTab]
-        }/${username}`,
+        }`,
       );
       const notificationListFromResponse = R.pathOr(
         [],
