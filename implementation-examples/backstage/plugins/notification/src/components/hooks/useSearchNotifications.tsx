@@ -37,7 +37,7 @@ const useSearchNotifications = () => {
       //TO-DO: Replace with value from single-spa
       const username = 'dev';
       const searchResultsResponse = await axios.get(
-        `/api/v1/notifications/${username}/search?searchTerm=${encodeURI(
+        `/api/v1/notifications?searchTerm=${encodeURI(
           searchText,
         )}`,
       );
