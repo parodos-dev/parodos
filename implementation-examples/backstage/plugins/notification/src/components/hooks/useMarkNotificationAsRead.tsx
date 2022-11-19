@@ -44,15 +44,11 @@ const useMarkNotificationAsRead = () => {
         });
       await Promise.all(
         notificationIds.map(async notificationId => {
-          await axios.put(
-            `/api/v1/notifications/${notificationId}`,
-              null,
-              {
-                params: {
-                  operation: "READ"
-                }
-              }
-          );
+          await axios.put(`/api/v1/notifications/${notificationId}`, null, {
+            params: {
+              operation: 'READ',
+            },
+          });
         }),
       );
       const newListOfNotifications = notificationsContext.allNotifications.map(

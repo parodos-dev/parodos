@@ -35,15 +35,11 @@ const useArchiveNotifications = () => {
       setIsLoadingState(true);
       await Promise.all(
         notificationIds.map(async notificationId => {
-          await axios.put(
-            `/api/v1/notifications/${notificationId}`,
-              null,
-              {
-                params: {
-                  operation: "ARCHIVE"
-                }
-              }
-          );
+          await axios.put(`/api/v1/notifications/${notificationId}`, null, {
+            params: {
+              operation: 'ARCHIVE',
+            },
+          });
         }),
       );
       const newListOfNotifications =

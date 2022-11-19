@@ -20,24 +20,32 @@
  */
 
 import { useContext, useState } from 'react';
-import axios from 'axios';
 import ToastContext from '../context/toast';
 import { getUrl } from '../util/getUrl';
+import axios from 'axios';
+import { WorkFlowTaskParameter } from '../types/workFlowTaskParameter';
 
-const useGetRepositories = () => {
+type Props = {
+  workflow: string;
+  workflowName: string;
+};
+
+const useGetWorkFlowParams = () => {
   const toastContext = useContext(ToastContext);
-  const [isLoadingState, setIsLoadingState] = useState(false);
-  const [repositoriesState, setRepositoriesState] = useState([]);
+  const [isLoadingState, setIsLoadingState] = useState<boolean | any>(false);
+  const [workFlowParams, setWorkFlowParams] = useState<WorkFlowTaskParameter[]>(
+    [],
+  );
   const url = getUrl();
 
-  const getRepositories = async ({ orgName }) => {
+  const getWorkFlowParams = async (params: Props) => {
     try {
       setIsLoadingState(true);
-      // const repoResponse = await axios.get(
-      //   `${url}/api/workloadmetadata/id/SAMPLE/org/${orgName}`,
-      // );
-      // setRepositoriesState(repoResponse.data);
-      setRepositoriesState(['demo']);
+      const response = await axios.get(
+        `${url}/api/v1/workflows/${params.workflow}/${params.workflowName}/parameters`,
+      );
+      setWorkFlowParams(response.data);
+      return response.data;
     } catch (error) {
       toastContext.handleOpenToast(
         `Oops! Something went wrong. Please try again`,
@@ -48,10 +56,10 @@ const useGetRepositories = () => {
   };
 
   return {
-    getRepositories,
+    getWorkFlowParams,
     isLoading: isLoadingState,
-    repositories: repositoriesState,
+    workFlowParams: workFlowParams,
   };
 };
 
-export default useGetRepositories;
+export default useGetWorkFlowParams;
