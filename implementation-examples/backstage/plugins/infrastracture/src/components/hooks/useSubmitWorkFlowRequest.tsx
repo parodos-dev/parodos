@@ -16,35 +16,41 @@
  */
 
 /**
- * @author Richard Wang (Github: RichardW98)
+ * @author Luke Shannon (Github: lshannon)
  */
 
 import { useContext, useState } from 'react';
-import { useAxios } from '../config/axios';
-import * as R from 'ramda';
+import axios from 'axios';
 import ToastContext from '../context/toast';
-import { NotificationContext } from '../context/notifications';
+import { getUrl } from '../util/getUrl';
+import { constants } from '../util/constant';
 
-const useSearchNotifications = () => {
-  const axios = useAxios();
-  const [isLoadingState, setIsLoadingState] = useState(false);
+const useSubmitWorkFlowRequest = () => {
   const toastContext = useContext(ToastContext);
-  const notificationsContext = useContext(NotificationContext);
+  const [isLoadingState, setIsLoadingState] = useState(false);
+  const [repositoriesState, setRepositoriesState] = useState([]);
+  const url = getUrl();
 
-  const searchNotifications = async searchText => {
+  const submitRequest = async ({ migrationPlan, params }) => {
     try {
       setIsLoadingState(true);
-      //TO-DO: Replace with value from single-spa
-      const username = 'dev';
-      const searchResultsResponse = await axios.get(
-        `/api/v1/notifications?searchTerm=${encodeURI(searchText)}`,
+      migrationPlan = {
+        workFlowId: migrationPlan.workFlowId,
+        workFlowParameters: {
+          ...params,
+          WORKFLOW_TYPE: constants.INFRASTRUCTURE_WORKFLOW_TYPE,
+        },
+      };
+      const repoResponse = await axios.post(
+        `${url}/api/v1/workflows/infrastructures/`,
+        migrationPlan,
       );
-      const notificationListFromResponse = R.pathOr(
-        [],
-        ['data', '_embedded', 'notificationrecords'],
-        searchResultsResponse,
+      setRepositoriesState(repoResponse.data);
+
+      toastContext.handleOpenToast(
+        `Transitioning your session to deploy flow...`,
+        'success',
       );
-      notificationsContext.setAllNotifications(notificationListFromResponse);
     } catch (error) {
       toastContext.handleOpenToast(
         `Oops! Something went wrong. Please try again`,
@@ -55,9 +61,10 @@ const useSearchNotifications = () => {
   };
 
   return {
-    searchNotifications,
+    submitRequest,
     isLoading: isLoadingState,
+    repositories: repositoriesState,
   };
 };
 
-export default useSearchNotifications;
+export default useSubmitWorkFlowRequest;

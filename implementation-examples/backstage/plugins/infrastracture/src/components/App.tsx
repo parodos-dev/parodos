@@ -22,7 +22,7 @@
 import React, { useContext, useEffect } from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
-import Migration from './pages/migration';
+import Infrastructure from './pages/infrastructure';
 import ToastContext, { ToastProvider } from './context/toast';
 import { Box, ThemeProvider } from '@material-ui/core';
 import { parodosTheme } from './theme';
@@ -58,7 +58,7 @@ function App() {
           {toastContext.toastConfig.message}
         </MuiAlert>
       </Snackbar>
-      <Migration />
+      <Infrastructure />
     </div>
   );
 }

@@ -16,35 +16,36 @@
  */
 
 /**
- * @author Richard Wang (Github: RichardW98)
+ * @author Luke Shannon (Github: lshannon)
  */
 
 import { useContext, useState } from 'react';
-import { useAxios } from '../config/axios';
-import * as R from 'ramda';
 import ToastContext from '../context/toast';
-import { NotificationContext } from '../context/notifications';
+import { getUrl } from '../util/getUrl';
+import axios from 'axios';
+import { WorkFlowTaskParameter } from '../types/workFlowTaskParameter';
 
-const useSearchNotifications = () => {
-  const axios = useAxios();
-  const [isLoadingState, setIsLoadingState] = useState(false);
+type Props = {
+  workflow: string;
+  workflowName: string;
+};
+
+const useGetWorkFlowParams = () => {
   const toastContext = useContext(ToastContext);
-  const notificationsContext = useContext(NotificationContext);
+  const [isLoadingState, setIsLoadingState] = useState<boolean | any>(false);
+  const [workFlowParams, setWorkFlowParams] = useState<WorkFlowTaskParameter[]>(
+    [],
+  );
+  const url = getUrl();
 
-  const searchNotifications = async searchText => {
+  const getWorkFlowParams = async (params: Props) => {
     try {
       setIsLoadingState(true);
-      //TO-DO: Replace with value from single-spa
-      const username = 'dev';
-      const searchResultsResponse = await axios.get(
-        `/api/v1/notifications?searchTerm=${encodeURI(searchText)}`,
+      const response = await axios.get(
+        `${url}/api/v1/workflows/${params.workflow}/${params.workflowName}/parameters`,
       );
-      const notificationListFromResponse = R.pathOr(
-        [],
-        ['data', '_embedded', 'notificationrecords'],
-        searchResultsResponse,
-      );
-      notificationsContext.setAllNotifications(notificationListFromResponse);
+      setWorkFlowParams(response.data);
+      return response.data;
     } catch (error) {
       toastContext.handleOpenToast(
         `Oops! Something went wrong. Please try again`,
@@ -55,9 +56,10 @@ const useSearchNotifications = () => {
   };
 
   return {
-    searchNotifications,
+    getWorkFlowParams,
     isLoading: isLoadingState,
+    workFlowParams: workFlowParams,
   };
 };
 
-export default useSearchNotifications;
+export default useGetWorkFlowParams;
