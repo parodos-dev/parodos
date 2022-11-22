@@ -59,6 +59,7 @@ const AssessmentDetails = (props: Props) => {
       ...params,
       [name]: event.target.value,
     });
+    event.target.focus();
   };
 
   return (
