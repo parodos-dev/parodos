@@ -82,7 +82,7 @@ const SelectInfrastructureOption = ({
   return (
     <div>
       {optionsAvailable ? (
-        <Flex flex={2} style={{ width: '755px' }}>
+        <Flex flex={2} style={{ width: '1000px' }}>
           <Flex flex={1} flexDirection="column" mr="20px">
             <Typography paragraph>
               <b>{`Current Environment`}</b>
@@ -92,6 +92,7 @@ const SelectInfrastructureOption = ({
                 <FormGroup>
                   {currentVersion ? (
                     <FormControlLabel
+                      style={{ marginBottom: 20 }}
                       defaultChecked
                       onChange={event => {
                         setMigrateState(null);
@@ -126,6 +127,7 @@ const SelectInfrastructureOption = ({
                   ) : (
                     upgradeOptions.map(upgradeOption => (
                       <FormControlLabel
+                        style={{ marginBottom: 20 }}
                         onChange={event => {
                           setUpgradeState(upgradeOption);
                           setMigrateState(null);
@@ -159,6 +161,7 @@ const SelectInfrastructureOption = ({
                   ) : (
                     newOptions.map(newOption => (
                       <FormControlLabel
+                        style={{ marginBottom: 20 }}
                         key={newOption.displayName}
                         onChange={event => {
                           setUpgradeState(null);
@@ -192,6 +195,7 @@ const SelectInfrastructureOption = ({
                   ) : (
                     migrationOptions.map(migrationOption => (
                       <FormControlLabel
+                        style={{ marginBottom: 20 }}
                         key={migrationOption.displayName}
                         onChange={event => {
                           setUpgradeState(null);
@@ -201,7 +205,7 @@ const SelectInfrastructureOption = ({
                         }}
                         checked={
                           globalMigrationPlanState.displayName ===
-                          migrationOption
+                          migrationOption.displayName
                         }
                         value={migrationOption.displayName}
                         control={<Radio />}
