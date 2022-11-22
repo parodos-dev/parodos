@@ -85,6 +85,7 @@ const Submission = ({
       ...params,
       [name]: event.target.value,
     });
+    event.target.focus();
   };
 
   return (
