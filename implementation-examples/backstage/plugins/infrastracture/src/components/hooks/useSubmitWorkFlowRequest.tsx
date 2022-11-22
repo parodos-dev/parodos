@@ -38,6 +38,7 @@ const useSubmitWorkFlowRequest = () => {
         workFlowId: migrationPlan.workFlowId,
         workFlowParameters: {
           ...params,
+          OPTION_TYPE: migrationPlan.identifier,
           WORKFLOW_TYPE: constants.INFRASTRUCTURE_WORKFLOW_TYPE,
         },
       };

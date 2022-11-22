@@ -39,6 +39,7 @@ import useGetWorkFlowParams from '../../hooks/useGetWorkFlowParams';
 import { constants } from '../../util/constant';
 
 const Submission = ({
+  assessmentParams,
   scheduleSessionState,
   setScheduleSessionState,
   globalMigrationPlanState,
@@ -162,7 +163,7 @@ const Submission = ({
             onClick={async () => {
               await postSubmitMigrationRequest.submitRequest({
                 migrationPlan: globalMigrationPlanState,
-                params: params,
+                params: { ...params, ...assessmentParams },
               });
               setCurrentStepState(0);
               navigate('/deploy');
