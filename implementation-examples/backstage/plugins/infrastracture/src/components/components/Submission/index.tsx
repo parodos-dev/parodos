@@ -91,37 +91,48 @@ const Submission = ({
 
   return (
     <div>
-      <ul style={{ marginBottom: '25px' }}>
-        {artifactsToCreate.map((artifact, index) => (
-          <li style={{ marginBottom: '10px' }} key={index}>
-            <div dangerouslySetInnerHTML={{ __html: artifact }} />
-          </li>
-        ))}
-      </ul>
-      <Typography paragraph>
-        <b>Parameters</b>
-      </Typography>
-      <Box>
-        <form>
-          {getInfrastructureParamsHook.workFlowParams.map((param, index) => (
-            <Box key={`param_${index}`}>
-              <Grid item md={4}>
-                <TextField
-                  required={!param.optional}
-                  style={{ width: '100%', marginBottom: 20 }}
-                  id={`param_${index}`}
-                  label={param.key}
-                  helperText={param.description}
-                  type={param.type.toLowerCase()}
-                  onChange={() => handleParamOnChange(event, param.key)}
-                />
-                <span className="validity"></span>
-              </Grid>
-            </Box>
-          ))}
-        </form>
-      </Box>
-
+      <Grid container>
+        <Grid item md={6}>
+          <ul style={{ marginBottom: '25px' }}>
+            {artifactsToCreate.map((artifact, index) => (
+              <li style={{ marginBottom: '10px' }} key={index}>
+                <div dangerouslySetInnerHTML={{ __html: artifact }} />
+              </li>
+            ))}
+          </ul>
+        </Grid>
+        <Grid item md={6}>
+          <Grid container justifyContent={"center"} alignItems={"center"}>
+            <Grid item md={8}>
+          <Typography paragraph style={{ marginTop: -70}}>
+            <b>Parameters</b>
+          </Typography>
+            </Grid>
+          <Grid item md={8}>
+            <form>
+              {getInfrastructureParamsHook.workFlowParams.map(
+                (param, index) => (
+                  <Box key={`param_${index}`}>
+                    <Grid item md={12}>
+                      <TextField
+                        required={!param.optional}
+                        style={{ width: '100%', marginBottom: 20 }}
+                        id={`param_${index}`}
+                        label={param.key}
+                        helperText={param.description}
+                        type={param.type.toLowerCase()}
+                        onChange={() => handleParamOnChange(event, param.key)}
+                      />
+                      <span className="validity"></span>
+                    </Grid>
+                  </Box>
+                ),
+              )}
+            </form>
+          </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
       <Typography paragraph style={{ marginTop: 50 }}>
         <b>Next Steps</b>
       </Typography>
