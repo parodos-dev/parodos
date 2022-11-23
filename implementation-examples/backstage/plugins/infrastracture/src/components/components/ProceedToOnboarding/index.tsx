@@ -24,7 +24,8 @@ import {
   Box,
   Button,
   Checkbox,
-  FormControlLabel, Grid,
+  FormControlLabel,
+  Grid,
   TextField,
   Typography,
 } from '@material-ui/core';
@@ -102,20 +103,20 @@ const ProceedToOnboarding = ({
         <form>
           {getInfrastructureParamsHook.infrastructureParams.map(
             (param, index) => (
-                <Box key={`param_${index}`}>
-              <Grid item md={4}>
-                <TextField
-                  required={!param.optional}
-                  style={{width: "100%", marginBottom: 20}}
-                  id={`param_${index}`}
-                  label={param.key}
-                  helperText={param.description}
-                  type={param.type.toLowerCase()}
-                  onChange={() => handleParamOnChange(event, param.key)}
-                />
-                <span className="validity"></span>
-              </Grid>
-                </Box>
+              <Box key={`param_${index}`}>
+                <Grid item md={4}>
+                  <TextField
+                    required={!param.optional}
+                    style={{ width: '100%', marginBottom: 20 }}
+                    id={`param_${index}`}
+                    label={param.key}
+                    helperText={param.description}
+                    type={param.type.toLowerCase()}
+                    onChange={() => handleParamOnChange(event, param.key)}
+                  />
+                  <span className="validity"></span>
+                </Grid>
+              </Box>
             ),
           )}
         </form>

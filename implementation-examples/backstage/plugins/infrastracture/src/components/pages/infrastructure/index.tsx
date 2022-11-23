@@ -192,6 +192,7 @@ const Infrastructure = () => {
     if (currentStepState === 3) {
       return (
         <Submission
+          assessmentParams={assessmentParams}
           scheduleSessionState={scheduleSessionState}
           setScheduleSessionState={setScheduleSessionState}
           globalMigrationPlanState={globalMigrationPlanState}
