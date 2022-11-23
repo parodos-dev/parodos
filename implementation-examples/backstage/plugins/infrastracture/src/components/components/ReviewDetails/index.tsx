@@ -36,7 +36,6 @@ const ReviewDetails = ({
   upgradeState,
   migrateState,
   newState,
-  setGlobalMigrationPlanState,
 }) => {
   const getLabelForMigration = () => {
     if (!upgradeState && !migrateState && !newState) {
@@ -60,11 +59,11 @@ const ReviewDetails = ({
           <ListItemAvatar>
             <Avatar />
           </ListItemAvatar>
-          <ListItemText
-            primary={
-              <b>{`${selectedOrganizationState} / ${selectedRepoState}`}</b>
-            }
-          />
+          {/*<ListItemText*/}
+          {/*  primary={*/}
+          {/*    <b>{`${selectedOrganizationState} / ${selectedRepoState}`}</b>*/}
+          {/*  }*/}
+          {/*/>*/}
           <ListItemText primary={<div>{getLabelForMigration()}</div>} />
         </ListItem>
       </Card>
@@ -76,7 +75,7 @@ const ReviewDetails = ({
       </Typography>
       <Typography>
         Parodos will create the required files and direct you to complete the
-        Onboarding process.
+        process.
       </Typography>
       <Flex justifyContent="center" mt="100px">
         <Flex mr="20px">

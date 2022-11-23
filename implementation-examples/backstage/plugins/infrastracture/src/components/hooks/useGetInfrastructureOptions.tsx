@@ -20,10 +20,10 @@
  */
 
 import { useContext, useState } from 'react';
-import * as R from 'ramda';
 import ToastContext from '../context/toast';
 import axios from 'axios';
 import { getUrl } from '../util/getUrl';
+import { constants } from '../util/constant';
 
 const useGetInfrastructureOptions = () => {
   const toastContext = useContext(ToastContext);
@@ -31,12 +31,12 @@ const useGetInfrastructureOptions = () => {
   const [migrationOptionsState, setMigrationOptionsState] = useState({});
   const url = getUrl();
 
-  const getMigrationOptions = async ({ orgName, repo }) => {
+  const getInfrastructureOptions = async (params: {}) => {
     try {
       setIsLoadingState(true);
       const assessmentRequestBody = {
-        workFlowId: 'assessmentWorkFlow_ASSESSMENT_WORKFLOW',
-        workFlowParameters: {},
+        workFlowId: constants.ASSESSMENT_WORKFLOW_NAME,
+        workFlowParameters: params,
       };
       const migrationOptionsResponse = await axios.post(
         `${url}/api/v1/workflows/assessments/`,
@@ -54,7 +54,7 @@ const useGetInfrastructureOptions = () => {
   };
 
   return {
-    getMigrationOptions,
+    getInfrastructureOptions: getInfrastructureOptions,
     isLoading: isLoadingState,
     migrationOptions: migrationOptionsState,
   };

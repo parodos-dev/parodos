@@ -23,21 +23,36 @@ import { useContext, useState } from 'react';
 import axios from 'axios';
 import ToastContext from '../context/toast';
 import { getUrl } from '../util/getUrl';
+import { constants } from '../util/constant';
 
-const useGetRepositories = () => {
+const useSubmitWorkFlowRequest = () => {
   const toastContext = useContext(ToastContext);
   const [isLoadingState, setIsLoadingState] = useState(false);
   const [repositoriesState, setRepositoriesState] = useState([]);
   const url = getUrl();
 
-  const getRepositories = async ({ orgName }) => {
+  const submitRequest = async ({ migrationPlan, params }) => {
     try {
       setIsLoadingState(true);
-      // const repoResponse = await axios.get(
-      //   `${url}/api/workloadmetadata/id/SAMPLE/org/${orgName}`,
-      // );
-      // setRepositoriesState(repoResponse.data);
-      setRepositoriesState(['demo']);
+      migrationPlan = {
+        workFlowId: migrationPlan.workFlowId,
+        workFlowParameters: {
+          ...params,
+          OPTION_TYPE: migrationPlan.identifier,
+          OPTION_NAME: migrationPlan.displayName,
+          WORKFLOW_TYPE: constants.INFRASTRUCTURE_WORKFLOW_TYPE,
+        },
+      };
+      const repoResponse = await axios.post(
+        `${url}/api/v1/workflows/infrastructures/`,
+        migrationPlan,
+      );
+      setRepositoriesState(repoResponse.data);
+
+      toastContext.handleOpenToast(
+        `Transitioning your session to deploy flow...`,
+        'success',
+      );
     } catch (error) {
       toastContext.handleOpenToast(
         `Oops! Something went wrong. Please try again`,
@@ -48,10 +63,10 @@ const useGetRepositories = () => {
   };
 
   return {
-    getRepositories,
+    submitRequest,
     isLoading: isLoadingState,
     repositories: repositoriesState,
   };
 };
 
-export default useGetRepositories;
+export default useSubmitWorkFlowRequest;

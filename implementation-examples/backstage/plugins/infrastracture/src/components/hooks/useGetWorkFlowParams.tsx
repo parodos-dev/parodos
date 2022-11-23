@@ -20,24 +20,32 @@
  */
 
 import { useContext, useState } from 'react';
-import axios from 'axios';
 import ToastContext from '../context/toast';
 import { getUrl } from '../util/getUrl';
+import axios from 'axios';
+import { WorkFlowTaskParameter } from '../types/workFlowTaskParameter';
 
-const useGetOrganizations = () => {
+type Props = {
+  workflow: string;
+  workflowName: string;
+};
+
+const useGetWorkFlowParams = () => {
   const toastContext = useContext(ToastContext);
-  const [isLoadingState, setIsLoadingState] = useState(false);
-  const [organizationsState, setOrganizationsState] = useState([]);
+  const [isLoadingState, setIsLoadingState] = useState<boolean | any>(false);
+  const [workFlowParams, setWorkFlowParams] = useState<WorkFlowTaskParameter[]>(
+    [],
+  );
   const url = getUrl();
 
-  const getOrganizations = async () => {
+  const getWorkFlowParams = async (params: Props) => {
     try {
       setIsLoadingState(true);
-      // const organizationsResponse = await axios.get(
-      //   `${url}/api/workloadmetadata/SAMPLE/orgs`,
-      // );
-      // setOrganizationsState(organizationsResponse.data);
-      setOrganizationsState(['org-abc-123']);
+      const response = await axios.get(
+        `${url}/api/v1/workflows/${params.workflow}/${params.workflowName}/parameters`,
+      );
+      setWorkFlowParams(response.data);
+      return response.data;
     } catch (error) {
       toastContext.handleOpenToast(
         `Oops! Something went wrong. Please try again`,
@@ -48,10 +56,10 @@ const useGetOrganizations = () => {
   };
 
   return {
-    getOrganizations,
+    getWorkFlowParams,
     isLoading: isLoadingState,
-    organizations: organizationsState,
+    workFlowParams: workFlowParams,
   };
 };
 
-export default useGetOrganizations;
+export default useGetWorkFlowParams;
