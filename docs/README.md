@@ -60,7 +60,9 @@ For the Backstage.io configuration, please review the implementations/backstage 
 
 The follow is for more a 'production' footprint. For evaluation purposes a lesser footprint can be used for each of these services.
 
-| Service      | CPU | Memory |
+
+| Service | CPU Core | Memory |
+| ------------ | ----------- |
 | infrastructure-service | 2+ | 2GB+ |
 | notification-service | 2+ | 2GB+ |
 | project-history-service | 2+ | 2 GB+ |
