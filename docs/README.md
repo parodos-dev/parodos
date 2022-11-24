@@ -62,7 +62,7 @@ The follow is for more a 'production' footprint. For evaluation purposes a lesse
 
 
 | Service | CPU Core | Memory |
-| ------------ | ----------- |
+| --------| ---------|--------|
 | infrastructure-service | 2+ | 2GB+ |
 | notification-service | 2+ | 2GB+ |
 | project-history-service | 2+ | 2 GB+ |
