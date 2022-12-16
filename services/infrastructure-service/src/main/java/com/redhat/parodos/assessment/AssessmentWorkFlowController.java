@@ -44,7 +44,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/v1/workflows/assessments")
 @Slf4j
 public class AssessmentWorkFlowController {
-	
 	private final AssessmentWorkFlowService assessmentWorkFlowService;
 	
 	public AssessmentWorkFlowController(AssessmentWorkFlowService assessmentWorkFlowService) {

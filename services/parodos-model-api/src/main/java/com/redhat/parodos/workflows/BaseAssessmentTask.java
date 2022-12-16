@@ -13,22 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow;
+package com.redhat.parodos.workflows;
 
-import java.util.List;
-
-import com.redhat.parodos.workflows.WorkFlowTaskParameter;
-import com.redhat.parodos.workflows.work.WorkReport;
+import com.redhat.parodos.infrastructure.option.InfrastructureOption;
 
 /**
- * Contract for WorkFlow Services
+ * 
+ * Base Class for Assessment WorkFlowTasks
  * 
  * @author Luke Shannon (Github: lshannon)
  *
  */
-public interface WorkFlowService<T> {
+public abstract class BaseAssessmentTask implements WorkFlowTask {
 	
-	WorkReport execute(T arguments);
-	List<WorkFlowTaskParameter> getWorkFlowParametersForWorkFlow(String id);
+	/**
+	 * These are the options this AssessmentTasks can return
+	 */
+	InfrastructureOption infrastructureOptions;
 
+	public BaseAssessmentTask(InfrastructureOption infrastructureOptions) {
+		this.infrastructureOptions = infrastructureOptions;
+	}
+
+	public InfrastructureOption getInfrastructureOptions() {
+		return infrastructureOptions;
+	}
+	
 }

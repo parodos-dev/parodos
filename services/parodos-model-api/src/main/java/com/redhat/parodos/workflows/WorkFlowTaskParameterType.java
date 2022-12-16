@@ -22,7 +22,6 @@ package com.redhat.parodos.workflows;
  *
  */
 public enum WorkFlowTaskParameterType {
-	
     PASSWORD,
     TEXT,
     EMAIL,

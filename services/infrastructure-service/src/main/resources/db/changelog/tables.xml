@@ -4,16 +4,21 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="1" author="luke" runOnChange="true">
-        <createTable tableName="work_flow_transaction">
+    <changeSet id="1" author="luke" runAlways="true" runOnChange="true">
+        <createTable tableName="workflow_transaction">
             <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="project_name" type="varchar(255)"/>
-            <column name="executed_by" type="varchar(255)"/>
             <column name="details" type="varchar(255)"/>
-            <column name="status" type="varchar(255)"/>
+            <column name="workflow_id" type="varchar(255)"/>
             <column name="workflow_type" type="varchar(255)"/>
+            <column name="workflow_checker_id" type="varchar(255)"/>
+            <column name="workflow_checker_arguments" type="varchar(255)"/>
+            <column name="status" type="varchar(255)"/>
+            <column name="executed_by" type="varchar(255)"/>
+            <column name="next_workflow_id" type="varchar(255)"/>
+            <column name="next_workflow_arguments" type="varchar(255)"/>
             <column name="created_at" type="timestamp" defaultValue="${now}"/>
             <column name="object_version" type="bigint"/>
         </createTable>

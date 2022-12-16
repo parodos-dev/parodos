@@ -40,9 +40,10 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Service
-public class AssessmentWorkFlowService implements WorkFlowService {
+public class AssessmentWorkFlowService implements WorkFlowService<WorkFlowExecuteRequestDto> {
 	
-    private final WorkFlowEngine workFlowEngine;
+    private static final String ASSESSMENT = "ASSESSMENT";
+	private final WorkFlowEngine workFlowEngine;
     private final WorkFlowDelegate workFlowDelegate;
     
     public AssessmentWorkFlowService(BeanWorkFlowRegistryImpl workFlowRegistry, WorkFlowEngine workFlowEngine, WorkFlowDelegate workFlowDelegate) {
@@ -53,7 +54,7 @@ public class AssessmentWorkFlowService implements WorkFlowService {
     @Override
     public WorkReport execute(WorkFlowExecuteRequestDto workFlowRequestDto) {
         WorkContext context = workFlowDelegate.getWorkContextWithParameters(workFlowRequestDto);
-        context.put(WorkFlowConstants.WORKFLOW_TYPE, "ASSESSMENT");
+        context.put(WorkFlowConstants.WORKFLOW_TYPE, ASSESSMENT);
         WorkFlow assessmentWorkFlow = workFlowDelegate.getWorkFlowById(workFlowRequestDto.getWorkFlowId());
         if (assessmentWorkFlow != null) {
             return executeAssessments(context, assessmentWorkFlow);
@@ -85,8 +86,6 @@ public class AssessmentWorkFlowService implements WorkFlowService {
     public Collection<String> getAssessmentWorkFlowIds() {
     	return workFlowDelegate.getWorkFlowIdsByWorkFlowType(WorkFlowConstants.ASSESSMENT_WORKFLOW);
     }
-
-	
-        
+	   
     
 }

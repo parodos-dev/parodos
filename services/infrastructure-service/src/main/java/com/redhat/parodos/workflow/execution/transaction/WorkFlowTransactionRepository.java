@@ -13,22 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow;
+package com.redhat.parodos.workflow.execution.transaction;
 
-import java.util.List;
-
-import com.redhat.parodos.workflows.WorkFlowTaskParameter;
-import com.redhat.parodos.workflows.work.WorkReport;
+import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * Contract for WorkFlow Services
+ * Repository for persistence of WorkFlowExecutionEntity references
  * 
  * @author Luke Shannon (Github: lshannon)
  *
  */
-public interface WorkFlowService<T> {
-	
-	WorkReport execute(T arguments);
-	List<WorkFlowTaskParameter> getWorkFlowParametersForWorkFlow(String id);
-
+public interface WorkFlowTransactionRepository extends JpaRepository<WorkFlowTransactionEntity, UUID> {
 }

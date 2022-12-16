@@ -15,8 +15,8 @@
         <module>workflow-engine</module>
         <module>parodos-model-api</module>
         <module>infrastructure-service</module>
+        <module>workflow-examples</module>
         <module>notification-service</module>
-        <module>simple-workflow-example-infrastructure-service</module>
     </modules>
 
 </project>

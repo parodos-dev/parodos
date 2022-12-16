@@ -15,21 +15,38 @@
  */
 package com.redhat.parodos.workflows;
 
-import java.util.ArrayList;
-import java.util.List;
-import com.redhat.parodos.workflows.work.Work;
+import java.util.Map;
 
 /**
- * Basic Contract for Work in the Infrastructure Service
+ * A base class to build WorkFlowChecker references with
  * 
  * @author Luke Shannon (Github: lshannon)
  *
  */
-public interface WorkFlowTask extends Work {
+public abstract class BaseWorkFlowChecker implements WorkFlowChecker {
 	
-	default List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
-		return new ArrayList<>();
+	String nextWorkFlowId;
+	Map<String,String> nextWorkFlowArguments;
+	
+	public BaseWorkFlowChecker(String nextWorkFlowId, Map<String, String> nextWorkFlowArguments) {
+		super();
+		this.nextWorkFlowId = nextWorkFlowId;
+		this.nextWorkFlowArguments = nextWorkFlowArguments;
+	}
+	
+	public BaseWorkFlowChecker(String nextWorkFlowId) {
+		super();
+		this.nextWorkFlowId = nextWorkFlowId;
 	}
 
-	default String getWorkFlowType() { return ""; }
+	public String getNextWorkFlowId() {
+		return nextWorkFlowId;
+	}
+
+	public Map<String, String> getNextWorkFlowArguments() {
+		return nextWorkFlowArguments;
+	}
+	
+	
+
 }

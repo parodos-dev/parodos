@@ -29,17 +29,22 @@ import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
+import com.redhat.parodos.workflows.workflow.ParallelFlowReport;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Executes the InfrastructureTask WorkFlow and other related tasks
+ * Executes an InfrastructureTask WorkFlow and other related tasks
+ * 
+ * @author Luke Shannon (Github: lshannon)
  */
 @Service
 @Slf4j
-public class InfrastructureWorkFlowService implements WorkFlowService {
-    
-    private final WorkFlowEngine workFlowEngine;
+public class InfrastructureWorkFlowService implements WorkFlowService<WorkFlowExecuteRequestDto> {
+	
+	
+    private static final String INFRASTRUCTURE = "INFRASTRUCTURE";
+	private final WorkFlowEngine workFlowEngine;
     private final WorkFlowDelegate workFlowDelegate;
 
     public InfrastructureWorkFlowService(WorkFlowEngine workFlowEngine, BeanWorkFlowRegistryImpl classPathWorkFlowRegistry, WorkFlowDelegate workFlowDelegate) {
@@ -48,7 +53,7 @@ public class InfrastructureWorkFlowService implements WorkFlowService {
     }
 
     /**
-     * Executes an InfrastrcutureTaskWorkflow
+     * Executes an InfrastrcutureTaskWorkFlow
      *
      * @param requestDetails arguments that can be passed into the InfrastructureTask tasks
      * @return ExistingInfrastructureDto containing the data from the persisted entity
@@ -70,6 +75,7 @@ public class InfrastructureWorkFlowService implements WorkFlowService {
 	
 
 	/**
+	 * 
 	 * Executes a Workflow and returns the WorkReport (which contains the WorkContext)
 	 * 
 	 * @param workFlow the workflow to execute
@@ -79,15 +85,36 @@ public class InfrastructureWorkFlowService implements WorkFlowService {
 	 */
     private WorkReport executeOptionTasks(WorkFlow workFlow, WorkFlowExecuteRequestDto requestDetails) {
     	WorkContext workContext = workFlowDelegate.getWorkContextWithParameters(requestDetails);
-    	workContext.put(WorkFlowConstants.WORKFLOW_TYPE, "INFRASTRUCTURE");
+    	workContext.put(WorkFlowConstants.WORKFLOW_TYPE, INFRASTRUCTURE);
     	WorkReport report = workFlowEngine.executeWorkFlows(workContext, workFlow);
-    	if (report != null && report.getStatus() == WorkStatus.FAILED) {
-    		log.error("The Infrastructure Task workflow failed. Check the logs for errors coming for the Tasks in this workflow. Checking is there is a Rollback");
-    		checkForRollBackWorkFlow(workContext);
+    	//check if its a ParallelWork Flow
+    	if (report.getClass().equals(ParallelFlowReport.class)) {
+    		//check all the reports
+    		for (WorkReport innerReport : ((ParallelFlowReport)report).getReports()) {
+    			//process each report
+    			processWorkReport(workContext, innerReport);
+    		}
+    	} else {
+    		//just process the single report
+    		processWorkReport(workContext, report);
     	}
         return report;
     }
+
+    /*
+     * Check if the report failed, if it did log it
+     */
+	private void processWorkReport(WorkContext workContext, WorkReport report) {
+		if (report != null && report.getStatus() == WorkStatus.FAILED) {
+    		log.error("The Infrastructure Task workflow failed. Check the logs for errors coming for the Tasks in this workflow. Checking is there is a Rollback");
+    		//if a rollback WorkFlow is configured, we will run it
+    		checkForRollBackWorkFlow(workContext);
+    	}
+	}
     
+	/*
+	 * If there is a rollback workflow, run it
+	 */
     private void checkForRollBackWorkFlow(WorkContext workContext) {
     	if (workContext.get(WorkFlowConstants.ROLL_BACK_WORKFLOW_NAME) != null && !((String)workContext.get(WorkFlowConstants.ROLL_BACK_WORKFLOW_NAME)).isEmpty()) {
     		workFlowEngine.executeWorkFlows(workContext,workFlowDelegate.getWorkFlowById((String)workContext.get(WorkFlowConstants.ROLL_BACK_WORKFLOW_NAME)));
@@ -95,9 +122,13 @@ public class InfrastructureWorkFlowService implements WorkFlowService {
     	log.debug("A rollback workflow could not be found the WorkContext: {}", workContext.toString());
     }
     
-    public Collection<String> getInfraStructureTaskWorkFlows(String workFlowType) {
+    /**
+     * Gets all the @see Workflow for InfrastructureTasks
+     * 
+     * @param workFlowType
+     * @return
+     */
+    public Collection<String> getInfrastructureTaskWorkFlows(String workFlowType) {
     	return workFlowDelegate.getWorkFlowIdsByWorkFlowType(workFlowType);
     }
-
-	
 }

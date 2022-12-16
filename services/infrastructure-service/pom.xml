@@ -99,7 +99,7 @@
 		</dependency>
 		<dependency>
 			 <groupId>com.redhat.parodos</groupId>
-			 <artifactId>simple-workflow-example-infrastructure-service</artifactId>
+			 <artifactId>workflow-examples</artifactId>
 			 <version>${parodos.version}</version>
 		</dependency>
 		<!-- END Parodos Library Dependencies -->
@@ -142,6 +142,13 @@
 			<scope>test</scope>
 		</dependency>
 		<!-- START Test Dependencies -->
+
+		<!-- START Paging Results Dependencies -->
+		<dependency>
+			<groupId>org.springframework.hateoas</groupId>
+			<artifactId>spring-hateoas</artifactId>
+		</dependency>
+		<!-- END Paging Results Dependencies -->
 	</dependencies>
 
 	<dependencyManagement>

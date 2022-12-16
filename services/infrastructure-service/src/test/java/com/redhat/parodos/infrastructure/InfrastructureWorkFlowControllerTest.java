@@ -15,15 +15,22 @@
  */
 package com.redhat.parodos.infrastructure;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.redhat.parodos.workflow.execution.WorkFlowTransactionEntity;
-import com.redhat.parodos.workflows.WorkFlowConstants;
-import com.redhat.parodos.workflows.WorkFlowTaskParameter;
-import com.redhat.parodos.workflows.WorkFlowTaskParameterType;
-import com.redhat.parodos.workflows.work.DefaultWorkReport;
-import com.redhat.parodos.workflows.work.WorkContext;
-import com.redhat.parodos.workflows.work.WorkReport;
-import com.redhat.parodos.workflows.work.WorkStatus;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.assertj.core.util.Arrays;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -34,21 +41,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import static com.redhat.parodos.workflows.WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCE;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.redhat.parodos.workflow.execution.transaction.WorkFlowTransactionEntity;
+import com.redhat.parodos.workflows.WorkFlowConstants;
+import com.redhat.parodos.workflows.WorkFlowTaskParameter;
+import com.redhat.parodos.workflows.WorkFlowTaskParameterType;
+import com.redhat.parodos.workflows.work.DefaultWorkReport;
+import com.redhat.parodos.workflows.work.WorkContext;
+import com.redhat.parodos.workflows.work.WorkReport;
+import com.redhat.parodos.workflows.work.WorkStatus;
 
 /**
  * Test class for InfrastructureWorkFlowController
@@ -69,10 +70,10 @@ class InfrastructureWorkFlowControllerTest {
 
     @Test
     void executeWorkFlow_success_shouldReturn_Uri() throws Exception {
-        String uuid = "a871ba7b-e27b-40ba-b28d-17092a83b213";
-        when(entity.getId()).thenReturn(UUID.fromString(uuid));
+        List<UUID> uuids = new ArrayList<>();
+        uuids.add(UUID.randomUUID());
         WorkContext workContext = new WorkContext();
-        workContext.put(WORKFLOW_EXECUTION_ENTITY_REFERENCE, entity);
+        workContext.put(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES, uuids);
         WorkReport workReport = new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 
         when(infrastructureWorkFlowService.execute(any())).thenReturn(workReport);
@@ -81,21 +82,20 @@ class InfrastructureWorkFlowControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(new ObjectMapper().writeValueAsString(Map.of("workFlowId", "test", "workFlowParameters", Map.of()))))
                 .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "/api/v1/workflows/transactions/" + uuid));
+                .andExpect(status().isOk());
         verify(infrastructureWorkFlowService, times(1)).execute(any());
     }
 
     @Test
     void getInfraStructureTaskWorkFlows_success_shouldReturn_Workflows() throws Exception {
-        when(infrastructureWorkFlowService.getInfraStructureTaskWorkFlows(WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)).thenReturn(List.of("test_workflow"));
+        when(infrastructureWorkFlowService.getInfrastructureTaskWorkFlows(WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)).thenReturn(List.of("test_workflow"));
         mockMvc.perform(
                         get("/api/v1/workflows/infrastructures/"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", Matchers.hasSize(1)))
                 .andExpect(jsonPath("$", Matchers.contains("test_workflow")));
-        verify(infrastructureWorkFlowService, times(1)).getInfraStructureTaskWorkFlows(any());
+        verify(infrastructureWorkFlowService, times(1)).getInfrastructureTaskWorkFlows(any());
     }
 
     @Test
