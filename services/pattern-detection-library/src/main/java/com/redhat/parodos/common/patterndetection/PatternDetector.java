@@ -44,7 +44,7 @@ public class PatternDetector {
 	 * 
 	 * Takes a @see WorkContext and a List of @Pattern reference, performs a Scan on code/configuration to determine if the @see Clue references are present to detect one of the desired @Pattern
 	 * 
-	 * @param WorkContext context contains inputs for the scan, and is passed around components of the scan to capture all outputs generated during the scan
+	 * @param context contains inputs for the scan, and is passed around components of the scan to capture all outputs generated during the scan
 	 * 
 	 * @return DetectionResults contains the detected @see Clue(s) and detected @see Pattern(s)
 	 * 
@@ -56,7 +56,7 @@ public class PatternDetector {
 			Date startTime = new Date();
 			//put all the Patterns into a ParallelFlow - they will all execute at the same time
 			WorkFlow workflow = ParallelFlow.Builder.aNewParallelFlow()
-					.execute((Work[]) desiredPatterns)
+					.execute(desiredPatterns)
 					.with(ScanningThreadPool.getThreadPoolExecutor())
 					.build();
 			//get the end report
@@ -74,8 +74,4 @@ public class PatternDetector {
 			throw new PatternDetectionConfigurationException("The Scan for Patterns could not be started due to a misconfiguration. Please review the log files");
 		}
 	}
-	
-	
-	
-
 }

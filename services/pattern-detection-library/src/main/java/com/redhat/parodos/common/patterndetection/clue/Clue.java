@@ -32,8 +32,6 @@ import com.redhat.parodos.workflows.work.WorkReport;
  *
  */
 public interface Clue extends Work {
-	
-	boolean isContinueToRunIfDetected();
 
 	WorkReport execute(WorkContext workContext);
 

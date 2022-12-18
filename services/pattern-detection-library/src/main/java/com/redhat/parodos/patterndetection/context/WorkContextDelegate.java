@@ -75,7 +75,7 @@ public class WorkContextDelegate {
 	/**
 	 * Compares the DETECT_PATTERNS to the DESIRED_PATTERNS to see if all were detected
 	 * 
-	 * @param context WorkContext passed in at the start of the Scan
+	 * @param report WorkReport passed in at the start of the Scan
 	 * @return true is all Patterns were detect, false is not all the Patterns were detected
 	 */
 	public boolean areAllPatternsDetected(WorkReport report) {

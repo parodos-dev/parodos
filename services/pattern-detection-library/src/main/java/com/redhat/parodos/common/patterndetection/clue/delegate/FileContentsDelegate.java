@@ -49,10 +49,7 @@ public class FileContentsDelegate {
 		      filePaths = walk.filter(Files::isRegularFile)
 		          .map(Path::toString).collect(Collectors.toList());
 		    }
-		    if (filePaths == null) {
-		      return new ArrayList<>();
-		    }
-		    return filePaths;
+		return filePaths;
 	}
 
 	private boolean doesTargetDirectoryExist(String basePath) {

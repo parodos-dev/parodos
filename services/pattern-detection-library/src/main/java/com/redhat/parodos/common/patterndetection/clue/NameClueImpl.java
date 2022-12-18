@@ -29,7 +29,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  * Implementation of a Clue that scans the names of Files/Folder for text patterns. Supports Regular Expression
- * 
+ *
  * @author Luke Shannon (Github: lshannon)
  *
  */
@@ -51,13 +51,9 @@ public class NameClueImpl extends AbstractClue {
 				filesToScan = workContextDelegate.getFilesToScan(workContext);
 			}
 			for (File thisFile : filesToScan) {
-				boolean matched = false;
-				if (this.targetFileNameRegexPattern != null) {
-					matched = targetFileNameRegexPattern.matcher(thisFile.getName()).matches();
-				}
-				else { 
-					matched = nameMatchingDelegate.doesNameMatch(thisFile.getName());
-				}
+				boolean matched = targetFileNameRegexPattern != null ?
+						targetFileNameRegexPattern.matcher(thisFile.getName()).matches() :
+						nameMatchingDelegate.doesNameMatch(thisFile.getName());
 				if (matched) {
 					workContextDelegate.markClueAsDetected(this, thisFile, workContext);
 				}
@@ -67,12 +63,12 @@ public class NameClueImpl extends AbstractClue {
 	}
 
 	public static class Builder extends AbstractClue.Builder<NameClueImpl.Builder> {
-		
+
 		private String fileNamePatternString;
 
 		Builder() {
 		}
-		
+
 		@Override
 		public Builder targetFileNamePatternString(String fileNamePatternString) {
 			this.fileNamePatternString = fileNamePatternString;
@@ -83,10 +79,8 @@ public class NameClueImpl extends AbstractClue {
 			NameClueImpl instance = super.build(new NameClueImpl());
 			if (fileNamePatternString != null) {
 				instance.setTargetFileNameRegexPattern(Pattern.compile(fileNamePatternString));
-			} else {
-				if (super.getNameMatchingDelegate().getTargetFileNameRegexPattern() == null) {
-					throw new ClueConfigurationException("Name Clue " + instance.getName() +  " must contain a fileNamePatternString or a NameMatchingDelegate.targetFileNamePatternString");
-				}
+			} else if (super.getNameMatchingDelegate().getTargetFileNameRegexPattern() == null) {
+				throw new ClueConfigurationException("Name Clue " + instance.getName() +  " must contain a fileNamePatternString or a NameMatchingDelegate.targetFileNamePatternString");
 			}
 			return instance;
 		}
