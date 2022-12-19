@@ -17,7 +17,7 @@
         <module>infrastructure-service</module>
         <module>notification-service</module>
         <module>pattern-detection-library</module>
-        <module>workflow-examples</module>
+        <module>simple-workflow-example-infrastructure-service</module>
     </modules>
 
 </project>

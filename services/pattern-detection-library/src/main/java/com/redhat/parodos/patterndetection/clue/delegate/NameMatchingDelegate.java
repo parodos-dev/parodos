@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.common.patterndetection.clue.delegate;
+package com.redhat.parodos.patterndetection.clue.delegate;
 
 import java.io.File;
 import java.util.Optional;

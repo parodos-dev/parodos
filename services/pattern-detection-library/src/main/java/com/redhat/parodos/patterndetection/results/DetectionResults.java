@@ -19,7 +19,7 @@ import java.io.File;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import com.redhat.parodos.common.patterndetection.clue.Clue;
+import com.redhat.parodos.patterndetection.clue.Clue;
 import com.redhat.parodos.patterndetection.pattern.Pattern;
 import lombok.Builder;
 import lombok.Data;
