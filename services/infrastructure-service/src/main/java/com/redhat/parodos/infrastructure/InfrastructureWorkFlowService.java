@@ -53,7 +53,7 @@ public class InfrastructureWorkFlowService implements WorkFlowService<WorkFlowEx
     }
 
     /**
-     * Executes an InfrastrcutureTaskWorkFlow
+     * Executes an InfrastructureTaskWorkFlow
      *
      * @param requestDetails arguments that can be passed into the InfrastructureTask tasks
      * @return ExistingInfrastructureDto containing the data from the persisted entity
@@ -88,9 +88,9 @@ public class InfrastructureWorkFlowService implements WorkFlowService<WorkFlowEx
     	workContext.put(WorkFlowConstants.WORKFLOW_TYPE, INFRASTRUCTURE);
     	WorkReport report = workFlowEngine.executeWorkFlows(workContext, workFlow);
     	//check if its a ParallelWork Flow
-    	if (report.getClass().equals(ParallelFlowReport.class)) {
+    	if (report instanceof ParallelFlowReport) {
     		//check all the reports
-    		for (WorkReport innerReport : ((ParallelFlowReport)report).getReports()) {
+    		for (WorkReport innerReport : ((ParallelFlowReport) report).getReports()) {
     			//process each report
     			processWorkReport(workContext, innerReport);
     		}

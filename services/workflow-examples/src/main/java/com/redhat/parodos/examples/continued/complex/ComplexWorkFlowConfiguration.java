@@ -52,12 +52,12 @@ public class ComplexWorkFlowConfiguration {
         return new OnboardingAssessment(awesomeToolsOption);
     }
 	
-    @Bean(name = "onoardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
+    @Bean(name = "onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
     WorkFlow assessmentWorkFlow(@Qualifier("onboardingAssessmentTask") WorkFlowTask onboardingAssessmentTask) {
         return SequentialFlow
                 .Builder
                 .aNewSequentialFlow()
-                .named("onoardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
+                .named("onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
                 .execute(onboardingAssessmentTask)
                 .build();
     }
@@ -65,17 +65,17 @@ public class ComplexWorkFlowConfiguration {
     //End Assessment Logic
     
     //Start Onboarding Logic
-    @Bean(name = "certWorkFlowTask")
+    @Bean
     LoggingWorkFlowTask certWorkFlowTask() {
     	return new LoggingWorkFlowTask();
     }
     
-    @Bean(name = "adGroupWorkFlowTask")
+    @Bean
     LoggingWorkFlowTask adGroupWorkFlowTask() {
     	return new LoggingWorkFlowTask();
     }
     
-    @Bean(name = "dynatraceWorkFlowTask")
+    @Bean
     LoggingWorkFlowTask dynatraceWorkFlowTask(@Qualifier("onboardingWorkFlowCheckWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW) WorkFlow onboardingWorkFlowChecker) {
     	LoggingWorkFlowTask loggingWorkFlow = new LoggingWorkFlowTask();
     	loggingWorkFlow.setWorkFlowChecker(onboardingWorkFlowChecker);
@@ -83,11 +83,11 @@ public class ComplexWorkFlowConfiguration {
     }
     
     
-    @Bean(name = "oboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
-    WorkFlow superAwesomeTechnologyStackWorkflow(@Qualifier("certWorkFlowTask") LoggingWorkFlowTask certWorkFlowTask, LoggingWorkFlowTask adGroupWorkFlowTask, LoggingWorkFlowTask dynatraceWorkFlowTask) {
+    @Bean(name = "onboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+    WorkFlow superAwesomeTechnologyStackWorkflow(LoggingWorkFlowTask certWorkFlowTask, LoggingWorkFlowTask adGroupWorkFlowTask, LoggingWorkFlowTask dynatraceWorkFlowTask) {
         return ParallelFlow.Builder
         		.aNewParallelFlow()
-        		.named("oboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+        		.named("onboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
         		.execute(certWorkFlowTask,adGroupWorkFlowTask,dynatraceWorkFlowTask)
         		.with(Executors.newFixedThreadPool(3))
         		.build();
@@ -96,7 +96,7 @@ public class ComplexWorkFlowConfiguration {
     // End Onboarding Logic
     
     //Start Name Space Logic
-    @Bean(name = "nameSpaceWorkFlowTask")
+    @Bean
     LoggingWorkFlowTask nameSpaceWorkFlowTask(@Qualifier("namespaceWorkFlowCheckWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW) WorkFlow gateThree) {
     	LoggingWorkFlowTask loggingWorkFlow = new LoggingWorkFlowTask();
     	loggingWorkFlow.setWorkFlowChecker(gateThree);
@@ -104,11 +104,11 @@ public class ComplexWorkFlowConfiguration {
     }
     
     @Bean(name = "nameSpaceWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
-    WorkFlow superAwesomeTechnologyStackWorkflow(@Qualifier("nameSpaceWorkFlowTask") LoggingWorkFlowTask nameSpace) {
+    WorkFlow superAwesomeTechnologyStackWorkflow(LoggingWorkFlowTask nameSpaceWorkFlowTask) {
         return SequentialFlow.Builder
         		.aNewSequentialFlow()
         		.named( "nameSpaceWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
-        		.execute(nameSpace)
+        		.execute(nameSpaceWorkFlowTask)
         		.build();
     }
     //End Name Space Logic

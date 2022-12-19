@@ -14,7 +14,7 @@ Assesses applications/code, provides InfrastructureOptions suitable for the user
 
 This is the model used by the infrastructure service. It is a seperate package allowing for projects to be created configuring Infrastructure Workflows outside of the infrastructure-service code base
 
-**workflow-examplese**
+**workflow-examples**
 
 A stand alone project that can be added to the infrastructure service classpath to provide some samples of what WorkFlows could look like. This is basically a 'Hello Wold' for the infrastructure-service
 
