@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import com.redhat.parodos.workflow.execution.WorkFlowStatus;
 import org.springframework.stereotype.Component;
 import com.redhat.parodos.security.SecurityUtils;
 import com.redhat.parodos.workflow.execution.transaction.WorkFlowTransactionDTO;
@@ -66,8 +68,23 @@ public class WorkFlowEngine {
      */
     public WorkReport executeWorkFlows(WorkContext workContext, WorkFlow workFlow) {
     	log.info("Running the WorkFlow: {} with Context: {}", workFlow.getName(), workContext.toString());
+
+		// Create the entity
+		workTransactionService.createWorkFlowTransactionEntity(
+				WorkFlowTransactionDTO.builder()
+						.status(WorkFlowStatus.IN_PROGRESS.name())
+						.projectName((String) workContext.get(WorkFlowConstants.PROJECT_NAME))
+						.workFlowId(workFlow.getName())
+						.executedBy(getUserName())
+						.workFlowType((String) workContext.get(WorkFlowConstants.WORKFLOW_TYPE))
+						.createdAt(OffsetDateTime.now())
+						.build());
+
+		workContext.put(WorkFlowConstants.TRANSACTION_REPOSITORY, workTransactionService);
+
     	//get the report - might be a Parallel report (meaning the report has a collection of reports within)
     	WorkReport report = WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(workFlow, workContext);
+
     	//process each report
     	processParallelReport(report, workFlow);
         return report;
@@ -113,7 +130,7 @@ public class WorkFlowEngine {
         // Check if there are runtime arguments captured for the next workflow by the WorkFlowChecker
         Map<String, String> nextWorkFlowArguments = obtainNextWorkFlowArguments(report);
         
-        //Create the entity
+        //TODO remove - Create the entity
         WorkFlowTransactionEntity entity = workTransactionService.createWorkFlowTransactionEntity(
                 WorkFlowTransactionDTO.builder()
                         .status(report.getStatus().toString())
@@ -127,6 +144,8 @@ public class WorkFlowEngine {
                         .nextWorkFlowArguments(nextWorkFlowArguments)
                         .createdAt(OffsetDateTime.now())
                         .build());
+
+		//TODO - Update the entity
         log.info("Generating transaction entity ID: {}", entity.getId());
 
         //Check if this is the first WorkFlow Transaction Entity To Be Put In The Context

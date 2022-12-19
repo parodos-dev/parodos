@@ -58,6 +58,9 @@ public class WorkFlowConstants {
 	//These arguments are for passing values from the WorkFlowChecker to the next WorkFlow to run
 	public static final String NEXT_WORKFLOW_ARGUMENTS = "NEXT_WORKFLOW_ARGUMENTS";
 
+	//TransactionRepository
+	public static final String TRANSACTION_REPOSITORY = "TRANSACTION_REPOSITORY";
+
 	//Ensures this class is only used to obtain the constants
 	private WorkFlowConstants() {
 	}

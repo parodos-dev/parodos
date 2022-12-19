@@ -45,7 +45,7 @@ public class WorkTransactionService {
     /**
      * Creates a new ExistingInfrastructureEntity from a DTO
      * 
-     * @param existingInfraStructure DTO constructed from a client (i.e: the UI)
+     * @param workFlowExecutionDTO DTO constructed from a client (i.e: the UI)
      * @return ExistingInfrastructureDto from the new persisted ExistingInfrastructureEntity, returns null if this fails
      * 
      */

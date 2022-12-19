@@ -24,5 +24,6 @@ package com.redhat.parodos.workflow.execution;
 public enum WorkFlowStatus {
     SUCCESS,
     FAILED,
-    CANCELLED
+    CANCELLED,
+    IN_PROGRESS
 }
