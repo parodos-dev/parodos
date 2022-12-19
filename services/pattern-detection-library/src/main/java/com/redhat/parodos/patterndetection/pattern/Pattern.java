@@ -17,7 +17,7 @@ package com.redhat.parodos.patterndetection.pattern;
 
 import java.util.List;
 
-import com.redhat.parodos.common.patterndetection.clue.Clue;
+import com.redhat.parodos.patterndetection.clue.Clue;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 
 /**

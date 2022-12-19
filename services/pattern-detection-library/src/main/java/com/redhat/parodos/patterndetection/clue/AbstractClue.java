@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.common.patterndetection.clue;
+package com.redhat.parodos.patterndetection.clue;
 
 import java.util.UUID;
-import com.redhat.parodos.common.patterndetection.clue.delegate.NameMatchingDelegate;
+import com.redhat.parodos.patterndetection.clue.delegate.NameMatchingDelegate;
 import com.redhat.parodos.patterndetection.context.WorkContextDelegate;
 import lombok.Data;
 

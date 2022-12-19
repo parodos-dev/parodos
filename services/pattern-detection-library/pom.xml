@@ -78,9 +78,9 @@
 			<version>${guava.version}</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.jeasy</groupId>
-		    <artifactId>easy-flows</artifactId>
-		    <version>${easy.flow.version}</version>
+			<groupId>com.redhat.parodos</groupId>
+			<artifactId>workflow-engine</artifactId>
+			<version>${parodos.version}</version>
 		</dependency>
 	</dependencies>
 	<build>

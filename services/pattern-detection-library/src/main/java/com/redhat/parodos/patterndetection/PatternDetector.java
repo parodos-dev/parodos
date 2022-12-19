@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.common.patterndetection;
+package com.redhat.parodos.patterndetection;
 
 import java.util.Date;
 import com.redhat.parodos.patterndetection.context.WorkContextDelegate;
 import com.redhat.parodos.patterndetection.exceptions.PatternDetectionConfigurationException;
 import com.redhat.parodos.patterndetection.pattern.Pattern;
 import com.redhat.parodos.patterndetection.results.DetectionResults;
-import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.workflow.ParallelFlow;

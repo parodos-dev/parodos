@@ -34,8 +34,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.redhat.parodos.common.patterndetection.ScanningThreadPool;
-import com.redhat.parodos.common.patterndetection.clue.Clue;
+import com.redhat.parodos.patterndetection.ScanningThreadPool;
+import com.redhat.parodos.patterndetection.clue.Clue;
 import com.redhat.parodos.patterndetection.exceptions.PatternDetectionConfigurationException;
 import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.work.WorkContext;

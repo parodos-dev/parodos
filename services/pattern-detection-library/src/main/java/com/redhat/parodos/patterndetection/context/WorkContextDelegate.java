@@ -29,7 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import com.redhat.parodos.common.patterndetection.clue.Clue;
+import com.redhat.parodos.patterndetection.clue.Clue;
 import com.redhat.parodos.patterndetection.pattern.Pattern;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;

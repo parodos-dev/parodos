@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.common.patterndetection.clue;
+package com.redhat.parodos.patterndetection.clue;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-import com.redhat.parodos.common.patterndetection.clue.delegate.FileContentsDelegate;
+import com.redhat.parodos.patterndetection.clue.delegate.FileContentsDelegate;
 import com.redhat.parodos.patterndetection.exceptions.PatternDetectionConfigurationException;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
