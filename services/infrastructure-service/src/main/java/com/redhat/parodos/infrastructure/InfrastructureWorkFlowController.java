@@ -61,7 +61,7 @@ public class InfrastructureWorkFlowController {
     public ResponseEntity<List<UUID>> executeWorkFlow(@RequestBody WorkFlowExecuteRequestDto workFlowExecuteRequestDto) {
     	WorkReport report = infrastructureWorkFlowService.execute(workFlowExecuteRequestDto);
     	if (report != null) {
-    		if (report.getClass().equals(ParallelFlowReport.class)) {
+    		if (report instanceof ParallelFlowReport) {
     			for (WorkReport innerReport : ((ParallelFlowReport)report).getReports() ) {
         			if (innerReport.getClass().equals(ParallelFlowReport.class)) {
         				return ResponseEntity.ok((List<UUID>)innerReport.getWorkContext().get(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES));

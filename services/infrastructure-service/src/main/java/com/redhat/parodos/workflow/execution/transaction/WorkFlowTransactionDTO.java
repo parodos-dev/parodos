@@ -61,6 +61,5 @@ public class WorkFlowTransactionDTO extends RepresentationModel<WorkFlowTransact
     
     private Map<String, String> workFlowCheckerArguments;
 
-    @Column(updatable = false)
     private OffsetDateTime createdAt;
 }

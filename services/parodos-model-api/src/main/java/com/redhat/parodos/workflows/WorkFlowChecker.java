@@ -30,7 +30,7 @@ public interface WorkFlowChecker extends WorkFlowTask  {
 	/**
 	 * Method to check if a WorkFlow that is in a holding status, i.e: waiting for an external process to occur, has achieved its status and can trigger the next WorkFlow
 	 * 
-	 * @param args
+	 * @param context
 	 * @return
 	 */
 	 WorkReport checkWorkFlowStatus(WorkContext context);

@@ -43,7 +43,7 @@ public class MockApprovalWorkFlowChecker extends BaseWorkFlowChecker {
 	public WorkReport checkWorkFlowStatus(WorkContext context) {
 		log.info("Mocking a check if the downstream conditions are met before {} can run", getNextWorkFlowId());
 		context.put(WorkFlowConstants.NEXT_WORKFLOW_ID, getNextWorkFlowId());
-		context.put(WorkFlowConstants.NEXT_WORKFLOW_ARGUMENTS, new HashMap<String,String>(Map.of("ARG_FROM_EXTERNAL_PROCESS", "approvalId")));
+		context.put(WorkFlowConstants.NEXT_WORKFLOW_ARGUMENTS, Map.of("ARG_FROM_EXTERNAL_PROCESS", "approvalId"));
 		log.info("{} can run", getNextWorkFlowId());
 		return new DefaultWorkReport(WorkStatus.COMPLETED, context);
 	}

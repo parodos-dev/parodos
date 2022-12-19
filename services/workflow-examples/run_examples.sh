@@ -42,7 +42,7 @@ echo "******** Running The Complex WorkFlow ********"
 echo "                                               "
 echo "                                               "
 echo "Running the Assessment to see what WorkFlows are eligable for this situation:"
-INFRASTRUCTURE_OPTION="$(curl -X 'POST' 'http://localhost:8080/api/v1/workflows/assessments/'  -H 'accept: */*' -H 'Content-Type: application/json' -d '{ "workFlowParameters": { "INPUT": "some value"}, "workFlowId": "onoardingAssessment_ASSESSMENT_WORKFLOW"}')"
+INFRASTRUCTURE_OPTION="$(curl -X 'POST' 'http://localhost:8080/api/v1/workflows/assessments/'  -H 'accept: */*' -H 'Content-Type: application/json' -d '{ "workFlowParameters": { "INPUT": "some value"}, "workFlowId": "onboardingAssessment_ASSESSMENT_WORKFLOW"}')"
 echo "The Following Option Is Available: $INFRASTRUCTURE_OPTION"
 echo "                                               "
 echo "                                               "
@@ -51,7 +51,7 @@ TRANSACTION_ONE="$(curl -X 'POST' \
   -H 'accept: */*' \
   -H 'Content-Type: application/json' \
   -d '{
-  "workFlowId": "oboardingWorkFlow_INFRASTRUCTURE_WORKFLOW"
+  "workFlowId": "onboardingWorkFlow_INFRASTRUCTURE_WORKFLOW"
 }')"
 echo "                                               "
 echo "                                               "
