@@ -129,7 +129,7 @@ public class ComplexWorkFlowConfiguration {
     WorkFlow superAwesomeTechnologyStackWorkflow(@Qualifier("loadBalancerFlowTask") LoggingWorkFlowTask networkingFlowTask,@Qualifier("failOverWorkFlowTask") LoggingWorkFlowTask failOverWorkFlowTask ) {
         return SequentialFlow.Builder
         		.aNewSequentialFlow()
-        		.named( "nameSpaceWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+        		.named( "networkingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
         		.execute(networkingFlowTask)
         		.then(failOverWorkFlowTask)
         		.build();

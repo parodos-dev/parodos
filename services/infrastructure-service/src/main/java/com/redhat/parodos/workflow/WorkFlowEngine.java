@@ -15,18 +15,11 @@
  */
 package com.redhat.parodos.workflow;
 
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import com.redhat.parodos.workflow.execution.WorkFlowStatus;
-import org.springframework.stereotype.Component;
 import com.redhat.parodos.security.SecurityUtils;
+import com.redhat.parodos.workflow.execution.WorkFlowStatus;
 import com.redhat.parodos.workflow.execution.transaction.WorkFlowTransactionDTO;
 import com.redhat.parodos.workflow.execution.transaction.WorkFlowTransactionEntity;
+import com.redhat.parodos.workflow.execution.transaction.WorkFlowTransactionRepository;
 import com.redhat.parodos.workflow.execution.transaction.WorkTransactionService;
 import com.redhat.parodos.workflows.WorkFlowConstants;
 import com.redhat.parodos.workflows.engine.WorkFlowEngineBuilder;
@@ -36,6 +29,14 @@ import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.workflow.ParallelFlowReport;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Executes a @see WorkFlow
@@ -45,146 +46,137 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class WorkFlowEngine {
-	
+
     private final WorkTransactionService workTransactionService;
+    private final WorkFlowTransactionRepository workFlowTransactionRepository;
     private final SecurityUtils securityUtils;
 
-    public WorkFlowEngine(WorkTransactionService workTransactionService, SecurityUtils securityUtils) {
-        this.workTransactionService = workTransactionService;
+    public WorkFlowEngine(WorkTransactionService workTransactionService,
+						  WorkFlowTransactionRepository workFlowTransactionRepository,
+						  SecurityUtils securityUtils) {
+		this.workTransactionService = workTransactionService;
+		this.workFlowTransactionRepository = workFlowTransactionRepository;
         this.securityUtils = securityUtils;
     }
 
     /**
      * Runs all the All Tasks that have be packaged into a WorkFlow with the provided Context. At the end of execution a WorkFlowTransaction reference is created.
      * This is intended to keep track of the @see WorFlowTask execution for audit purposes, but to provide a link to a @see WorkFlowChecker.
-     * 
-     * When a @see WorkFlowChecker is linked to a WorkFlowTransaction it implies the WorkFlowTask that just executed has ended in waiting state (i.e: 
+     * <p>
+     * When a @see WorkFlowChecker is linked to a WorkFlowTransaction it implies the WorkFlowTask that just executed has ended in waiting state (i.e:
      *
      * @param workContext common objects passed across Work units. Each task stores the result
      * @param workFlow    the list of steps that need to be done to create the InfrastructureOption
      * @return workReport indicating if the WorkFlow was successful it also contains the updated WorkContext
-     * 
      * @author Luke Shannon (Github: lshannon)
      */
     public WorkReport executeWorkFlows(WorkContext workContext, WorkFlow workFlow) {
-    	log.info("Running the WorkFlow: {} with Context: {}", workFlow.getName(), workContext.toString());
+        log.info("Running the WorkFlow: {} with Context: {}", workFlow.getName(), workContext.toString());
 
-		// Create the entity
-		workTransactionService.createWorkFlowTransactionEntity(
-				WorkFlowTransactionDTO.builder()
-						.status(WorkFlowStatus.IN_PROGRESS.name())
-						.projectName((String) workContext.get(WorkFlowConstants.PROJECT_NAME))
-						.workFlowId(workFlow.getName())
-						.executedBy(getUserName())
-						.workFlowType((String) workContext.get(WorkFlowConstants.WORKFLOW_TYPE))
-						.createdAt(OffsetDateTime.now())
-						.build());
+        // Create the entity
+        WorkFlowTransactionEntity workFlowTransactionEntity = workTransactionService.createWorkFlowTransactionEntity(
+                WorkFlowTransactionDTO.builder()
+                        .status(WorkFlowStatus.IN_PROGRESS.name())
+                        .projectName((String) workContext.get(WorkFlowConstants.PROJECT_NAME))
+                        .workFlowId(workFlow.getName())
+                        .executedBy(getUserName())
+                        .workFlowType((String) workContext.get(WorkFlowConstants.WORKFLOW_TYPE))
+                        .createdAt(OffsetDateTime.now())
+                        .build());
 
-		workContext.put(WorkFlowConstants.TRANSACTION_REPOSITORY, workTransactionService);
+        //get the report - might be a Parallel report (meaning the report has a collection of reports within)
+        WorkReport report = WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(workFlow, workContext);
 
-    	//get the report - might be a Parallel report (meaning the report has a collection of reports within)
-    	WorkReport report = WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(workFlow, workContext);
-
-    	//process each report
-    	processParallelReport(report, workFlow);
+        //process each report
+        processParallelReport(report, workFlow, workFlowTransactionEntity);
         return report;
     }
-    
+
     /*
      * Recursively process each report to make sure we get to the shared WorkContext and update it
-     * 
+     *
      */
-    private void processParallelReport(WorkReport report, WorkFlow workFlow) {
-    	//If this is DefaultWorkReport than there is only one Result to deal with
-    	if (report.getClass().equals(DefaultWorkReport.class)) {
-        	processReport(workFlow, report);
-    	}
-    	if (report.getClass().equals(ParallelFlowReport.class)) {
-    		for (WorkReport innerReport : ((ParallelFlowReport)report).getReports() ) {
-    			if (innerReport.getClass().equals(ParallelFlowReport.class)) {
-    				//its another Parallel - recurse
-    				processParallelReport(innerReport, workFlow);
-    			}
-    			//its a normal report in a Parallel list - process
-    			processReport(workFlow, innerReport);
-    		}
-    	} else {
-    		log.error("Report {} is of unknown type", report);
-    	}
+    private void processParallelReport(WorkReport report, WorkFlow workFlow, WorkFlowTransactionEntity workFlowTransactionEntity) {
+        //If this is DefaultWorkReport than there is only one Result to deal with
+        if (report.getClass().equals(DefaultWorkReport.class)) {
+            processReport(workFlow, report, workFlowTransactionEntity);
+        }
+        if (report.getClass().equals(ParallelFlowReport.class)) {
+            for (WorkReport innerReport : ((ParallelFlowReport) report).getReports()) {
+                if (innerReport.getClass().equals(ParallelFlowReport.class)) {
+                    //its another Parallel - recurse
+                    processParallelReport(innerReport, workFlow, workFlowTransactionEntity);
+                }
+                //its a normal report in a Parallel list - process
+                processReport(workFlow, innerReport, workFlowTransactionEntity);
+            }
+        } else {
+            log.error("Report {} is of unknown type", report);
+        }
     }
 
     /*
      * Create the WorkFlowTransactionDTO and puts it in the Context of the Report
      */
-	@SuppressWarnings("unchecked")
-	private void processReport(WorkFlow workFlow, WorkReport report) {
-		// Check if there is a workflow checker
-        String workFlowCheckerID = obtainerWorkFlowCheckerId(report);
+    @SuppressWarnings("unchecked")
+    private void processReport(WorkFlow workFlow, WorkReport report, WorkFlowTransactionEntity workFlowTransactionEntity) {
+        // Check if there is a workflow checker
+        workFlowTransactionEntity.setWorkFlowCheckerId(obtainWorkFlowCheckerId(report));
 
         // Check if there were any arguments for the WorkFlowChecker
-        Map<String, String> workFlowCheckerArguments = obtainWorkFlowCheckerArguments(report);
+        workFlowTransactionEntity.setWorkFlowCheckerArguments(obtainWorkFlowCheckerArguments(report));
 
         // Check if there is a next workflow to run - this value would be set by a WorkFlowChecker
-        String nextWorkFlowId = obtainerNextWorkFlowId(report);
-        
-        // Check if there are runtime arguments captured for the next workflow by the WorkFlowChecker
-        Map<String, String> nextWorkFlowArguments = obtainNextWorkFlowArguments(report);
-        
-        //TODO remove - Create the entity
-        WorkFlowTransactionEntity entity = workTransactionService.createWorkFlowTransactionEntity(
-                WorkFlowTransactionDTO.builder()
-                        .status(report.getStatus().toString())
-                        .projectName((String) report.getWorkContext().get(WorkFlowConstants.PROJECT_NAME))
-                        .workFlowId(workFlow.getName())
-                        .executedBy(getUserName())
-                        .workFlowType((String) report.getWorkContext().get(WorkFlowConstants.WORKFLOW_TYPE))
-                        .workFlowCheckerId(workFlowCheckerID)
-                        .workFlowCheckerArguments(workFlowCheckerArguments)
-                        .nextWorkFlowId(nextWorkFlowId)
-                        .nextWorkFlowArguments(nextWorkFlowArguments)
-                        .createdAt(OffsetDateTime.now())
-                        .build());
+        workFlowTransactionEntity.setNextWorkFlowId(obtainerNextWorkFlowId(report));
 
-		//TODO - Update the entity
+        // Check if there are runtime arguments captured for the next workflow by the WorkFlowChecker
+        workFlowTransactionEntity.setNextWorkFlowArguments(obtainNextWorkFlowArguments(report));
+
+        // Check workflow status
+        workFlowTransactionEntity.setStatus(report.getStatus().toString());
+
+        // Update workflow transaction entity
+        WorkFlowTransactionEntity entity = workFlowTransactionRepository.saveAndFlush(workFlowTransactionEntity);
+
         log.info("Generating transaction entity ID: {}", entity.getId());
 
         //Check if this is the first WorkFlow Transaction Entity To Be Put In The Context
         if (report.getWorkContext().get(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES) != null) {
-        	((ArrayList<UUID>)report.getWorkContext().get(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES)).add(entity.getId());
+            ((ArrayList<UUID>) report.getWorkContext().get(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES)).add(entity.getId());
         } else {
-        	report.getWorkContext().put(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES, new ArrayList<UUID>(Arrays.asList(entity.getId())));
+            report.getWorkContext().put(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES, new ArrayList<UUID>(Arrays.asList(entity.getId())));
         }
-	}
+    }
 
-	@SuppressWarnings("unchecked")
-	private Map<String, String> obtainNextWorkFlowArguments(WorkReport report) {
-		if (report.getWorkContext().get(WorkFlowConstants.NEXT_WORKFLOW_ARGUMENTS) != null) {
-        	return (Map<String, String>) report.getWorkContext().get(WorkFlowConstants.NEXT_WORKFLOW_ARGUMENTS);
+    @SuppressWarnings("unchecked")
+    private Map<String, String> obtainNextWorkFlowArguments(WorkReport report) {
+        if (report.getWorkContext().get(WorkFlowConstants.NEXT_WORKFLOW_ARGUMENTS) != null) {
+            return (Map<String, String>) report.getWorkContext().get(WorkFlowConstants.NEXT_WORKFLOW_ARGUMENTS);
         }
-		return new HashMap<>();
-	}
+        return new HashMap<>();
+    }
 
-	private String obtainerNextWorkFlowId(WorkReport report) {
-		if (report.getWorkContext().get(WorkFlowConstants.NEXT_WORKFLOW_ID) != null) {
-        	return (String) report.getWorkContext().get(WorkFlowConstants.NEXT_WORKFLOW_ID);
+    private String obtainerNextWorkFlowId(WorkReport report) {
+        if (report.getWorkContext().get(WorkFlowConstants.NEXT_WORKFLOW_ID) != null) {
+            return (String) report.getWorkContext().get(WorkFlowConstants.NEXT_WORKFLOW_ID);
         }
-		return null;
-	}
+        return null;
+    }
 
-	@SuppressWarnings("unchecked")
-	private Map<String, String> obtainWorkFlowCheckerArguments(WorkReport report) {
-		if (report.getWorkContext().get(WorkFlowConstants.WORKFLOW_CHECKER_ARGUMENTS) != null) {
-        	return (Map<String, String>) report.getWorkContext().get(WorkFlowConstants.WORKFLOW_CHECKER_ARGUMENTS);
+    @SuppressWarnings("unchecked")
+    private Map<String, String> obtainWorkFlowCheckerArguments(WorkReport report) {
+        if (report.getWorkContext().get(WorkFlowConstants.WORKFLOW_CHECKER_ARGUMENTS) != null) {
+            return (Map<String, String>) report.getWorkContext().get(WorkFlowConstants.WORKFLOW_CHECKER_ARGUMENTS);
         }
-		return new HashMap<>();
-	}
+        return new HashMap<>();
+    }
 
-	private String obtainerWorkFlowCheckerId(WorkReport report) {
-		if (report.getWorkContext().get(WorkFlowConstants.WORKFLOW_CHECKER_ID) != null) {
-        	return (String) report.getWorkContext().get(WorkFlowConstants.WORKFLOW_CHECKER_ID);
+    private String obtainWorkFlowCheckerId(WorkReport report) {
+        if (report.getWorkContext().get(WorkFlowConstants.WORKFLOW_CHECKER_ID) != null) {
+            return (String) report.getWorkContext().get(WorkFlowConstants.WORKFLOW_CHECKER_ID);
         }
-		return null;
-	}
+        return null;
+    }
 
     private String getUserName() {
         String userName = securityUtils.getUsername();

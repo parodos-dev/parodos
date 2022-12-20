@@ -18,11 +18,14 @@ package com.redhat.parodos.workflow.execution.transaction;
 import com.redhat.parodos.workflow.execution.AbstractEntity;
 import com.redhat.parodos.workflow.execution.WorkFlowStatus;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 /**
@@ -33,11 +36,17 @@ import java.util.UUID;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@Entity(name = "workflow_task_transaction")
+@Entity(name = "task_transaction")
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class WorkFlowTaskTransactionEntity extends AbstractEntity {
+public class TaskTransactionEntity extends AbstractEntity {
     private UUID workflowId;
+
     private String taskName;
+
     private WorkFlowStatus taskStatus;
+
+    @Column(updatable = false)
+    private OffsetDateTime createdAt;
 }
