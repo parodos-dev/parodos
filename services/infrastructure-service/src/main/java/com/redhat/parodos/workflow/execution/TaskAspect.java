@@ -84,6 +84,17 @@ public class TaskAspect {
 
     }
 
+    /**
+     * write to db must be synchronized among pointcuts
+     *
+     * @param workFlowTransactionEntity
+     * @param taskName
+     * @param workContext
+     * @param status
+     * @param isBeforeExecute
+     * @param isExceptionThrown
+     * @return
+     */
     @Synchronized
     private WorkFlowTransactionEntity updateTaskPersistence(WorkFlowTransactionEntity workFlowTransactionEntity, String taskName, WorkContext workContext, WorkFlowStatus status, boolean isBeforeExecute, boolean isExceptionThrown) {
         if (isBeforeExecute) {
