@@ -283,7 +283,7 @@ Future versions of Parodos will include other options for creating and registeri
 
 ## Demo Implementation
 
-For a full example show how to configure all these Task(s) and WorkFlows(s), please refer to the 'simple-workflow-example-infrastructure-service'
+For a full example show how to configure all these Task(s) and WorkFlows(s), please refer to the 'workflow-examples'
 
 # Authors
 

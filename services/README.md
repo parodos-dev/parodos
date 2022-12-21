@@ -33,4 +33,4 @@ mvn clean install
 
 ```
 
-This will build the dependencies and install them into your local mvn directory. This last part is important as the Parodos 'workflow-engine' is not in Maven Central. If you wish to use it in a project like the simple-workflow-example-infrastructure-service, you will need to build it locally.
+This will build the dependencies and install them into your local mvn directory. This last part is important as the Parodos 'workflow-engine' is not in Maven Central. If you wish to use it in a project like the workflow-examples, you will need to build it locally.
