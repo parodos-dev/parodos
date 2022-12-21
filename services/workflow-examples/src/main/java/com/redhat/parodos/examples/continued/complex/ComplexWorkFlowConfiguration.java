@@ -48,12 +48,12 @@ public class ComplexWorkFlowConfiguration {
 	
 	//Determines what InfrastructureOption if available based on Input
 	@Bean(name = "onboardingAssessmentTask")
-    WorkFlowTask onboardingAssessment(@Qualifier("onboardingOption") InfrastructureOption awesomeToolsOption) {
+    OnboardingAssessment onboardingAssessment(@Qualifier("onboardingOption") InfrastructureOption awesomeToolsOption) {
         return new OnboardingAssessment(awesomeToolsOption);
     }
 	
     @Bean(name = "onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
-    WorkFlow assessmentWorkFlow(@Qualifier("onboardingAssessmentTask") WorkFlowTask onboardingAssessmentTask) {
+    WorkFlow assessmentWorkFlow(@Qualifier("onboardingAssessmentTask") OnboardingAssessment onboardingAssessmentTask) {
         return SequentialFlow
                 .Builder
                 .aNewSequentialFlow()

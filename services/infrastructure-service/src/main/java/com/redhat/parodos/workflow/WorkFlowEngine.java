@@ -32,11 +32,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Executes a @see WorkFlow
@@ -52,10 +49,10 @@ public class WorkFlowEngine {
     private final SecurityUtils securityUtils;
 
     public WorkFlowEngine(WorkTransactionService workTransactionService,
-						  WorkFlowTransactionRepository workFlowTransactionRepository,
-						  SecurityUtils securityUtils) {
-		this.workTransactionService = workTransactionService;
-		this.workFlowTransactionRepository = workFlowTransactionRepository;
+                          WorkFlowTransactionRepository workFlowTransactionRepository,
+                          SecurityUtils securityUtils) {
+        this.workTransactionService = workTransactionService;
+        this.workFlowTransactionRepository = workFlowTransactionRepository;
         this.securityUtils = securityUtils;
     }
 
@@ -84,11 +81,13 @@ public class WorkFlowEngine {
                         .createdAt(OffsetDateTime.now())
                         .build());
 
+        workContext.put(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES, workFlowTransactionEntity.getId());
+
         //get the report - might be a Parallel report (meaning the report has a collection of reports within)
         WorkReport report = WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(workFlow, workContext);
 
         //process each report
-        processParallelReport(report, workFlow, workFlowTransactionEntity);
+        processReport(report, workFlowTransactionEntity);
         return report;
     }
 
@@ -96,30 +95,29 @@ public class WorkFlowEngine {
      * Recursively process each report to make sure we get to the shared WorkContext and update it
      *
      */
-    private void processParallelReport(WorkReport report, WorkFlow workFlow, WorkFlowTransactionEntity workFlowTransactionEntity) {
-        //If this is DefaultWorkReport than there is only one Result to deal with
-        if (report.getClass().equals(DefaultWorkReport.class)) {
-            processReport(workFlow, report, workFlowTransactionEntity);
-        }
-        if (report.getClass().equals(ParallelFlowReport.class)) {
-            for (WorkReport innerReport : ((ParallelFlowReport) report).getReports()) {
-                if (innerReport.getClass().equals(ParallelFlowReport.class)) {
-                    //its another Parallel - recurse
-                    processParallelReport(innerReport, workFlow, workFlowTransactionEntity);
-                }
-                //its a normal report in a Parallel list - process
-                processReport(workFlow, innerReport, workFlowTransactionEntity);
-            }
-        } else {
-            log.error("Report {} is of unknown type", report);
-        }
-    }
+//    private void processParallelReport(WorkReport report, WorkFlow workFlow) {
+//        //If this is DefaultWorkReport than there is only one Result to deal with
+//        if (report instanceof DefaultWorkReport) {
+//            processReport(workFlow, report);
+//        } else if (report instanceof ParallelFlowReport) {
+//            for (WorkReport innerReport : ((ParallelFlowReport) report).getReports()) {
+//                if (innerReport.getClass().equals(ParallelFlowReport.class)) {
+//                    //its another Parallel - recurse
+//                    processParallelReport(innerReport, workFlow);
+//                }
+//                //its a normal report in a Parallel list - process
+//                processReport(workFlow, innerReport);
+//            }
+//        } else {
+//            log.error("Report {} is of unknown type", report);
+//        }
+//    }
 
     /*
      * Create the WorkFlowTransactionDTO and puts it in the Context of the Report
      */
     @SuppressWarnings("unchecked")
-    private void processReport(WorkFlow workFlow, WorkReport report, WorkFlowTransactionEntity workFlowTransactionEntity) {
+    private void processReport(WorkReport report, WorkFlowTransactionEntity workFlowTransactionEntity) {
         // Check if there is a workflow checker
         workFlowTransactionEntity.setWorkFlowCheckerId(obtainWorkFlowCheckerId(report));
 
@@ -141,11 +139,11 @@ public class WorkFlowEngine {
         log.info("Generating transaction entity ID: {}", entity.getId());
 
         //Check if this is the first WorkFlow Transaction Entity To Be Put In The Context
-        if (report.getWorkContext().get(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES) != null) {
-            ((ArrayList<UUID>) report.getWorkContext().get(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES)).add(entity.getId());
-        } else {
-            report.getWorkContext().put(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES, new ArrayList<UUID>(Arrays.asList(entity.getId())));
-        }
+//        if (report.getWorkContext().get(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES) != null) {
+//            ((ArrayList<UUID>) report.getWorkContext().get(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES)).add(entity.getId());
+//        } else {
+//            report.getWorkContext().put(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES, new ArrayList<UUID>(Arrays.asList(entity.getId())));
+//        }
     }
 
     @SuppressWarnings("unchecked")

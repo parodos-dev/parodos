@@ -15,7 +15,10 @@
  */
 package com.redhat.parodos.workflow.execution.transaction;
 
+import java.util.List;
 import java.util.UUID;
+
+import lombok.Synchronized;
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
@@ -23,6 +26,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Converts DTO to Entities and provides persistence operations for WorkFlowTransactionEntities
@@ -50,17 +54,26 @@ public class WorkTransactionService {
      * 
      */
     public WorkFlowTransactionEntity createWorkFlowTransactionEntity(WorkFlowTransactionDTO workFlowExecutionDTO) {
-    	WorkFlowTransactionEntity entity = convertToEntity(workFlowExecutionDTO);
-        return workFlowTransactionRepository.save(entity);
+        WorkFlowTransactionEntity entity = convertToEntity(workFlowExecutionDTO);
+        return workFlowTransactionRepository.saveAndFlush(entity);
     }
-    
+
+    public WorkFlowTransactionEntity getWorkFlowTransactionEntity(String uuid) {
+            return workFlowTransactionRepository.findById(UUID.fromString(uuid)).get();
+    }
+
+    @Synchronized
+    public WorkFlowTransactionEntity updateWorkFlowTransactionEntity(WorkFlowTransactionEntity workFlowTransactionEntity) {
+        return workFlowTransactionRepository.saveAndFlush(workFlowTransactionEntity);
+    }
+
     /**
      * Get an entity and convert it to a DTO
      * 
      * @param uuid for referencing a Entity
      * @return ExistingInfrastructureDto for transmission
      */
-    public WorkFlowTransactionDTO getWorkFlowTransactionEntity(String uuid) {
+    public WorkFlowTransactionDTO getWorkFlowTransactionDTO(String uuid) {
         try {
             WorkFlowTransactionEntity entity = workFlowTransactionRepository.findById(UUID.fromString(uuid)).get();
             return convertToDto(entity);

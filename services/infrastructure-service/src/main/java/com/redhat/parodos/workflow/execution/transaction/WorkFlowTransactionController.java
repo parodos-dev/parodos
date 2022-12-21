@@ -49,7 +49,7 @@ public class WorkFlowTransactionController {
 
     @GetMapping("/{id}")
     public ResponseEntity<WorkFlowTransactionDTO> getTransactionRecord(@PathVariable String id) {
-        return ResponseEntity.ok(workTransactionService.getWorkFlowTransactionEntity(id));
+        return ResponseEntity.ok(workTransactionService.getWorkFlowTransactionDTO(id));
     }
 
     @GetMapping("/")

@@ -58,9 +58,6 @@ echo "                                               "
 echo "Running the onboarding WorkFlow (executes 3 tasks in Parallel with a WorkFlowChecker"
 transaction_id="$(process_response "$TRANSACTION_ONE")"
 echo "Executing the WorkFlowChecker (onboardingWorkFlowCheck). It is hard coded to return 'true'"
-curl -X 'GET' \
-  "http://localhost:8080/api/v1/workflowchecker/$transaction_id" \
-  -H 'accept: */*'
 echo "                                               "
 echo "                                               "
 

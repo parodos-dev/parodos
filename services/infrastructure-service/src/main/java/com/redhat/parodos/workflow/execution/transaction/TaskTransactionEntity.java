@@ -25,15 +25,15 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.time.OffsetDateTime;
-import java.util.UUID;
 
 /**
  * Entity for persisting Existing Tasks execution status.
  *
  * @author Richard Wang (Github: RichardW98)
  */
-
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity(name = "task_transaction")
@@ -41,7 +41,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskTransactionEntity extends AbstractEntity {
-    private UUID workflowId;
+    @ManyToOne
+    @JoinColumn(name = "workflow_transaction_id", nullable = false)
+    private WorkFlowTransactionEntity workFlowTransaction;
 
     private String taskName;
 
@@ -49,4 +51,6 @@ public class TaskTransactionEntity extends AbstractEntity {
 
     @Column(updatable = false)
     private OffsetDateTime createdAt;
+
+    private OffsetDateTime endAt;
 }

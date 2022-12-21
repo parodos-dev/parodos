@@ -60,7 +60,7 @@ public class WorkFlowCheckerService implements WorkFlowService<String> {
 
 	@Override
 	public WorkReport execute(String workFlowTransactionId) {
-		WorkFlowTransactionDTO workFlowTransaction = workTransactionService.getWorkFlowTransactionEntity(workFlowTransactionId);
+		WorkFlowTransactionDTO workFlowTransaction = workTransactionService.getWorkFlowTransactionDTO(workFlowTransactionId);
 		if (workFlowTransaction != null) {
 			WorkFlow workFlow = workFlowDelegate.getWorkFlowById(workFlowTransaction.getWorkFlowCheckerId());
 			if (workFlow != null) {

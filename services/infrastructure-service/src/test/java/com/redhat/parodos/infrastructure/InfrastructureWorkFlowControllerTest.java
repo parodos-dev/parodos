@@ -73,7 +73,7 @@ class InfrastructureWorkFlowControllerTest {
         List<UUID> uuids = new ArrayList<>();
         uuids.add(UUID.randomUUID());
         WorkContext workContext = new WorkContext();
-        workContext.put(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES, uuids);
+        workContext.put(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES, uuids.get(0));
         WorkReport workReport = new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 
         when(infrastructureWorkFlowService.execute(any())).thenReturn(workReport);

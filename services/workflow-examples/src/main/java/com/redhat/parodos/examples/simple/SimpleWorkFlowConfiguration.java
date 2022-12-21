@@ -22,6 +22,7 @@ public class SimpleWorkFlowConfiguration {
 	@Bean(name = "simpleSequentialWorkFlow_" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
 	WorkFlow simpleSequentialWorkFlowTask() {
 		return SequentialFlow.Builder.aNewSequentialFlow()
+				.named("simpleSequentialWorkFlow_" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
 				.execute(new RestAPIWorkFlowTask())
 				.then(new LoggingWorkFlowTask())
 				.build();
@@ -32,6 +33,7 @@ public class SimpleWorkFlowConfiguration {
 	WorkFlow simpleParallelWorkFlowTask() {
 		return ParallelFlow.Builder
 				.aNewParallelFlow()
+				.named("simpleParallelWorkFlow_" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
 				.execute(new LoggingWorkFlowTask(), new LoggingWorkFlowTask(), new LoggingWorkFlowTask())
 				.with(Executors.newFixedThreadPool(3))
 				.build();
