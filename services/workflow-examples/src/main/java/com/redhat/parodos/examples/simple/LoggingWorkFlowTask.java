@@ -32,6 +32,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LoggingWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
+	public LoggingWorkFlowTask(String name) {
+		super(name);
+	}
+
 	@Override
 	public WorkReport execute(WorkContext workContext) {
 		log.info("Writing a message to the logs from: {}", getName());

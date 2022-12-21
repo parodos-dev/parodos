@@ -49,7 +49,7 @@ public class ComplexWorkFlowConfiguration {
 	//Determines what InfrastructureOption if available based on Input
 	@Bean(name = "onboardingAssessmentTask")
     OnboardingAssessment onboardingAssessment(@Qualifier("onboardingOption") InfrastructureOption awesomeToolsOption) {
-        return new OnboardingAssessment(awesomeToolsOption);
+        return new OnboardingAssessment(awesomeToolsOption, "OnboardingAssessment");
     }
 	
     @Bean(name = "onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
@@ -67,17 +67,17 @@ public class ComplexWorkFlowConfiguration {
     //Start Onboarding Logic
     @Bean
     LoggingWorkFlowTask certWorkFlowTask() {
-    	return new LoggingWorkFlowTask();
+    	return new LoggingWorkFlowTask("certWorkFlowTask");
     }
     
     @Bean
     LoggingWorkFlowTask adGroupWorkFlowTask() {
-    	return new LoggingWorkFlowTask();
+    	return new LoggingWorkFlowTask("adGroupWorkFlowTask");
     }
     
     @Bean
     LoggingWorkFlowTask dynatraceWorkFlowTask(@Qualifier("onboardingWorkFlowCheckWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW) WorkFlow onboardingWorkFlowChecker) {
-    	LoggingWorkFlowTask loggingWorkFlow = new LoggingWorkFlowTask();
+    	LoggingWorkFlowTask loggingWorkFlow = new LoggingWorkFlowTask("dynatraceWorkFlowTask");
     	loggingWorkFlow.setWorkFlowChecker(onboardingWorkFlowChecker);
     	return loggingWorkFlow;
     }
@@ -98,7 +98,7 @@ public class ComplexWorkFlowConfiguration {
     //Start Name Space Logic
     @Bean
     LoggingWorkFlowTask nameSpaceWorkFlowTask(@Qualifier("namespaceWorkFlowCheckWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW) WorkFlow gateThree) {
-    	LoggingWorkFlowTask loggingWorkFlow = new LoggingWorkFlowTask();
+    	LoggingWorkFlowTask loggingWorkFlow = new LoggingWorkFlowTask("nameSpaceWorkFlowTask");
     	loggingWorkFlow.setWorkFlowChecker(gateThree);
     	return loggingWorkFlow;
     }
@@ -117,12 +117,12 @@ public class ComplexWorkFlowConfiguration {
     
     @Bean(name = "loadBalancerFlowTask")
     LoggingWorkFlowTask loadBalancerFlowTask() {
-    	return new LoggingWorkFlowTask();
+    	return new LoggingWorkFlowTask("loadBalancerFlowTask");
     }
     
     @Bean(name = "failOverWorkFlowTask")
     LoggingWorkFlowTask failOverWorkFlowTask() {
-    	return new LoggingWorkFlowTask();
+    	return new LoggingWorkFlowTask("failOverWorkFlowTask");
     }
     
     @Bean(name = "networkingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
@@ -142,7 +142,7 @@ public class ComplexWorkFlowConfiguration {
     
     @Bean(name = "onboardingWorkFlowCheck")
     MockApprovalWorkFlowChecker gateTwo() {
-    	return new MockApprovalWorkFlowChecker("nameSpaceWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW);
+    	return new MockApprovalWorkFlowChecker("nameSpaceWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW, "onboardingWorkFlowCheck");
     }
     
     @Bean(name = "onboardingWorkFlowCheckWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
@@ -160,7 +160,7 @@ public class ComplexWorkFlowConfiguration {
     
     @Bean(name = "namespaceWorkFlowCheck")
     MockApprovalWorkFlowChecker gateThree() {
-    	return new MockApprovalWorkFlowChecker("networkingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW);
+    	return new MockApprovalWorkFlowChecker("networkingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW, "namespaceWorkFlowCheck");
     }
     
     @Bean(name = "namespaceWorkFlowCheckWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)

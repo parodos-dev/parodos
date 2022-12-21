@@ -16,6 +16,8 @@
 package com.redhat.parodos.examples.simple;
 
 import java.util.List;
+import java.util.UUID;
+
 import com.redhat.parodos.workflows.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflows.MissingParameterException;
 import com.redhat.parodos.workflows.WorkContextDelegate;
@@ -37,7 +39,11 @@ import lombok.extern.slf4j.Slf4j;
 public class LoggingMessageWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	
 	private String MESSAGE = "MESSAGE";
-	
+
+	public LoggingMessageWorkFlowTask(String name) {
+		super(name);
+	}
+
 	@Override
 	public WorkReport execute(WorkContext workContext) {
 		try {

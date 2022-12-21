@@ -37,8 +37,8 @@ public class OnboardingAssessment extends BaseAssessmentTask {
 
 	private static final String INPUT = "INPUT";
 
-	public OnboardingAssessment(InfrastructureOption infrastructureOption) {
-		super(infrastructureOption);
+	public OnboardingAssessment(InfrastructureOption infrastructureOption, String name) {
+		super(infrastructureOption, name);
 	}
 
 	@Override

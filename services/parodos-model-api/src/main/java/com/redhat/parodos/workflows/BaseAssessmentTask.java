@@ -16,6 +16,7 @@
 package com.redhat.parodos.workflows;
 
 import com.redhat.parodos.infrastructure.option.InfrastructureOption;
+import lombok.Getter;
 
 /**
  * 
@@ -31,8 +32,12 @@ public abstract class BaseAssessmentTask implements WorkFlowTask {
 	 */
 	InfrastructureOption infrastructureOptions;
 
-	public BaseAssessmentTask(InfrastructureOption infrastructureOptions) {
+	@Getter
+	private final String name;
+
+	public BaseAssessmentTask(InfrastructureOption infrastructureOptions, String name) {
 		this.infrastructureOptions = infrastructureOptions;
+		this.name = name;
 	}
 
 	public InfrastructureOption getInfrastructureOptions() {

@@ -48,6 +48,10 @@ public class RestAPIWorkFlowTask extends BaseInfrastructureWorkFlowTask {
     public static final String PAYLOAD_PASSED_IN_FROM_SERVICE = "PAYLOAD_PASSED_IN_FROM_SERVICE";
     public static final String URL_PASSED_IN_FROM_SERVICE = "URL_PASSED_IN_FROM_SERVICE";
 
+    public RestAPIWorkFlowTask(String name) {
+        super(name);
+    }
+
     /**
      * Executed by the InfrastructureTask engine as part of the Workflow
      */
