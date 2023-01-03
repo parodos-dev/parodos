@@ -21,7 +21,7 @@ package com.redhat.parodos.workflow.execution;
  * @author Luke Shannon (Github: lshannon)
  *
  */
-public enum WorkFlowStatus {
+public enum Status {
     SUCCESS,
     FAILED,
     CANCELLED,

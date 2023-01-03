@@ -1,6 +1,6 @@
 package com.redhat.parodos.workflow;
 
-import com.redhat.parodos.workflow.execution.WorkFlowStatus;
+import com.redhat.parodos.workflow.execution.Status;
 import com.redhat.parodos.workflow.execution.transaction.WorkFlowTransactionRepository;
 import com.redhat.parodos.workflows.WorkFlowConstants;
 import com.redhat.parodos.workflows.work.WorkContext;
@@ -31,7 +31,7 @@ public class WorkFlowRunAfterStartup {
         log.info("retrieving workflows to be continued ...");
         workFlowTransactionRepository.findAll()
                 .stream()
-                .filter(entity -> WorkFlowStatus.IN_PROGRESS.name().equals(entity.getStatus()))
+                .filter(entity -> Status.IN_PROGRESS.name().equals(entity.getStatus()))
                 .forEach(workFlowTransactionEntity -> {
                 // this logic is the same for all workflows
                     WorkContext context = new WorkContext();

@@ -15,7 +15,7 @@
  */
 package com.redhat.parodos.workflow.execution.transaction;
 
-import com.redhat.parodos.workflow.execution.WorkFlowStatus;
+import com.redhat.parodos.workflow.execution.Status;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
@@ -29,16 +29,16 @@ import javax.persistence.Converter;
  */
 
 @Converter(autoApply = true)
-public class WorkFlowStatusConverter  implements AttributeConverter<WorkFlowStatus, String> {
+public class WorkFlowStatusConverter  implements AttributeConverter<Status, String> {
 
     @Override
-    public String convertToDatabaseColumn(WorkFlowStatus status) {
+    public String convertToDatabaseColumn(Status status) {
         return status.name();
     }
 
     @Override
-    public WorkFlowStatus convertToEntityAttribute(String dbData) {
-        return WorkFlowStatus.valueOf(dbData);
+    public Status convertToEntityAttribute(String dbData) {
+        return Status.valueOf(dbData);
     }
 
 }

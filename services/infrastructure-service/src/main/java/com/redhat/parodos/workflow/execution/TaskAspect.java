@@ -63,23 +63,23 @@ public class TaskAspect {
         String taskName = ((WorkFlowTask)proceedingJoinPoint.getTarget()).getName();
         WorkFlowTransactionEntity workFlowTransactionEntity = workTransactionService.getWorkFlowTransactionEntity(String.valueOf(workContext.get(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES)));
         log.info("Before invoking execute() on task: {}", taskName);
-        WorkFlowStatus status = getTaskStatus(workFlowTransactionEntity, taskName);
+        Status status = getTaskStatus(workFlowTransactionEntity, taskName);
         if (status == null) {
-            workFlowTransactionEntity = updateTaskPersistence(workFlowTransactionEntity, taskName, workContext, WorkFlowStatus.IN_PROGRESS, true, false);
-        } else if (!WorkFlowStatus.IN_PROGRESS.equals(status)) {
+            workFlowTransactionEntity = updateTaskPersistence(workFlowTransactionEntity, taskName, workContext, Status.IN_PROGRESS, true, false);
+        } else if (!Status.IN_PROGRESS.equals(status)) {
             log.info("task status found: {}", taskName);
-            return new DefaultWorkReport(status.equals(WorkFlowStatus.SUCCESS) ? WorkStatus.COMPLETED : WorkStatus.FAILED, workContext);
+            return new DefaultWorkReport(status.equals(Status.SUCCESS) ? WorkStatus.COMPLETED : WorkStatus.FAILED, workContext);
         }
         WorkReport report = null;
         try {
             report = (WorkReport) proceedingJoinPoint.proceed();
         } catch (Throwable e) {
             log.error("task {} is failed!", taskName);
-            updateTaskPersistence(workFlowTransactionEntity, taskName, workContext, WorkFlowStatus.FAILED, false, true);
+            updateTaskPersistence(workFlowTransactionEntity, taskName, workContext, Status.FAILED, false, true);
         }
         log.info("task {} is successful!", taskName);
         updateTaskPersistence(workFlowTransactionEntity, taskName, report.getWorkContext(),
-                report.getStatus().equals(WorkStatus.COMPLETED) ? WorkFlowStatus.SUCCESS : WorkFlowStatus.FAILED,
+                report.getStatus().equals(WorkStatus.COMPLETED) ? Status.SUCCESS : Status.FAILED,
                 false, false);
         return report;
 
@@ -97,14 +97,14 @@ public class TaskAspect {
      * @return
      */
     @Synchronized
-    private WorkFlowTransactionEntity updateTaskPersistence(WorkFlowTransactionEntity workFlowTransactionEntity, String taskName, WorkContext workContext, WorkFlowStatus status, boolean isBeforeExecute, boolean isExceptionThrown) {
+    private WorkFlowTransactionEntity updateTaskPersistence(WorkFlowTransactionEntity workFlowTransactionEntity, String taskName, WorkContext workContext, Status status, boolean isBeforeExecute, boolean isExceptionThrown) {
         if (isBeforeExecute) {
             // Create the task entity
             log.info("adding task: {}", taskName);
             workFlowTransactionEntity.getTaskTransactions().add(
                     TaskTransactionEntity.builder()
                             .workFlowTransactionEntity(workFlowTransactionEntity)
-                            .taskStatus(WorkFlowStatus.IN_PROGRESS)
+                            .taskStatus(Status.IN_PROGRESS)
                             .taskName(taskName)
                             .createdAt(OffsetDateTime.now())
                             .build()
@@ -120,12 +120,12 @@ public class TaskAspect {
                         entity.setEndAt(OffsetDateTime.now());
                     });
             if (isExceptionThrown)
-                workFlowTransactionEntity.setStatus(WorkFlowStatus.FAILED.name());
+                workFlowTransactionEntity.setStatus(Status.FAILED.name());
         }
         return workTransactionService.updateWorkFlowTransactionEntity(workFlowTransactionEntity);
     }
 
-    private WorkFlowStatus getTaskStatus(WorkFlowTransactionEntity workFlowTransactionEntity, String taskName) {
+    private Status getTaskStatus(WorkFlowTransactionEntity workFlowTransactionEntity, String taskName) {
         log.info("checking task status: {} in Workflow: {}", taskName, workFlowTransactionEntity.getId());
         return workFlowTransactionEntity.getTaskTransactions().stream()
                 .filter(taskTransactionEntity -> taskName.equals(taskTransactionEntity.getTaskName()))

@@ -16,7 +16,7 @@
 package com.redhat.parodos.workflow.execution.transaction;
 
 import com.redhat.parodos.workflow.execution.AbstractEntity;
-import com.redhat.parodos.workflow.execution.WorkFlowStatus;
+import com.redhat.parodos.workflow.execution.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -47,7 +47,7 @@ public class TaskTransactionEntity extends AbstractEntity {
 
     private String taskName;
 
-    private WorkFlowStatus taskStatus;
+    private Status taskStatus;
 
     @Column(updatable = false)
     private OffsetDateTime createdAt;

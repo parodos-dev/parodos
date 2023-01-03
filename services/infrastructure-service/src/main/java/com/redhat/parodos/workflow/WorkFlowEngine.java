@@ -16,17 +16,15 @@
 package com.redhat.parodos.workflow;
 
 import com.redhat.parodos.security.SecurityUtils;
-import com.redhat.parodos.workflow.execution.WorkFlowStatus;
+import com.redhat.parodos.workflow.execution.Status;
 import com.redhat.parodos.workflow.execution.transaction.WorkFlowTransactionDTO;
 import com.redhat.parodos.workflow.execution.transaction.WorkFlowTransactionEntity;
 import com.redhat.parodos.workflow.execution.transaction.WorkFlowTransactionRepository;
 import com.redhat.parodos.workflow.execution.transaction.WorkTransactionService;
 import com.redhat.parodos.workflows.WorkFlowConstants;
 import com.redhat.parodos.workflows.engine.WorkFlowEngineBuilder;
-import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
-import com.redhat.parodos.workflows.workflow.ParallelFlowReport;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -73,7 +71,7 @@ public class WorkFlowEngine {
         // Create the entity
         WorkFlowTransactionEntity workFlowTransactionEntity = workTransactionService.createWorkFlowTransactionEntity(
                 WorkFlowTransactionDTO.builder()
-                        .status(WorkFlowStatus.IN_PROGRESS.name())
+                        .status(Status.IN_PROGRESS.name())
                         .projectName((String) workContext.get(WorkFlowConstants.PROJECT_NAME))
                         .workFlowId(workFlow.getName())
                         .executedBy(getUserName())
