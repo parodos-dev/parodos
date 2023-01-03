@@ -15,6 +15,8 @@
  */
 package com.redhat.parodos.workflows;
 
+import lombok.Getter;
+
 import java.util.Map;
 
 /**
@@ -27,16 +29,21 @@ public abstract class BaseWorkFlowChecker implements WorkFlowChecker {
 	
 	String nextWorkFlowId;
 	Map<String,String> nextWorkFlowArguments;
-	
-	public BaseWorkFlowChecker(String nextWorkFlowId, Map<String, String> nextWorkFlowArguments) {
+
+	@Getter
+	private final String name;
+
+	public BaseWorkFlowChecker(String nextWorkFlowId, Map<String, String> nextWorkFlowArguments, String name) {
 		super();
+		this.name = name;
 		this.nextWorkFlowId = nextWorkFlowId;
 		this.nextWorkFlowArguments = nextWorkFlowArguments;
 	}
 	
-	public BaseWorkFlowChecker(String nextWorkFlowId) {
+	public BaseWorkFlowChecker(String nextWorkFlowId, String name) {
 		super();
 		this.nextWorkFlowId = nextWorkFlowId;
+		this.name = name;
 	}
 
 	public String getNextWorkFlowId() {

@@ -15,7 +15,6 @@
  */
 package com.redhat.parodos.examples.continued.complex;
 
-import java.util.HashMap;
 import java.util.Map;
 import com.redhat.parodos.workflows.BaseWorkFlowChecker;
 import com.redhat.parodos.workflows.WorkFlowConstants;
@@ -23,6 +22,7 @@ import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -34,9 +34,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MockApprovalWorkFlowChecker extends BaseWorkFlowChecker {
 
-
-	public MockApprovalWorkFlowChecker(String nextWorkFlowId) {
-		super(nextWorkFlowId);
+	public MockApprovalWorkFlowChecker(String nextWorkFlowId, String name) {
+		super(nextWorkFlowId, name);
 	}
 
 	@Override

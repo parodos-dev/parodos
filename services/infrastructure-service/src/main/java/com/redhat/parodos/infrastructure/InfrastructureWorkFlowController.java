@@ -58,17 +58,17 @@ public class InfrastructureWorkFlowController {
      */
     @SuppressWarnings("unchecked")
 	@PostMapping("/")
-    public ResponseEntity<List<UUID>> executeWorkFlow(@RequestBody WorkFlowExecuteRequestDto workFlowExecuteRequestDto) {
+    public ResponseEntity<UUID> executeWorkFlow(@RequestBody WorkFlowExecuteRequestDto workFlowExecuteRequestDto) {
     	WorkReport report = infrastructureWorkFlowService.execute(workFlowExecuteRequestDto);
     	if (report != null) {
     		if (report instanceof ParallelFlowReport) {
     			for (WorkReport innerReport : ((ParallelFlowReport)report).getReports() ) {
         			if (innerReport.getClass().equals(ParallelFlowReport.class)) {
-        				return ResponseEntity.ok((List<UUID>)innerReport.getWorkContext().get(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES));
+        				return ResponseEntity.ok((UUID)innerReport.getWorkContext().get(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES));
         			}
         		}
     		}
-    		return ResponseEntity.ok((List<UUID>)report.getWorkContext().get(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES));
+    		return ResponseEntity.ok((UUID)report.getWorkContext().get(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES));
     	}
     	return ResponseEntity.badRequest().build();
     }

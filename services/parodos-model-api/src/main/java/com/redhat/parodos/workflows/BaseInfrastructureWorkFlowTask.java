@@ -16,6 +16,7 @@
 package com.redhat.parodos.workflows;
 
 import com.redhat.parodos.workflows.workflow.WorkFlow;
+import lombok.Getter;
 
 /**
  * Base Class for an InfrastrcutureWorkFlowTask.
@@ -37,6 +38,13 @@ public abstract class BaseInfrastructureWorkFlowTask implements WorkFlowTask {
 	
 	public void setWorkFlowChecker(WorkFlow gateTwo) {
 		this.workFlowChecker = gateTwo;
+	}
+
+	@Getter
+	private final String name;
+
+	public BaseInfrastructureWorkFlowTask(String name) {
+		this.name = name;
 	}
 	
 }

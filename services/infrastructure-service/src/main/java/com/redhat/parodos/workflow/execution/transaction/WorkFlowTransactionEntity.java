@@ -16,10 +16,16 @@
 package com.redhat.parodos.workflow.execution.transaction;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 
 import com.redhat.parodos.workflow.execution.AbstractEntity;
 import lombok.AllArgsConstructor;
@@ -69,4 +75,7 @@ public class WorkFlowTransactionEntity extends AbstractEntity {
     
     @Column(updatable = false)
     private OffsetDateTime createdAt;
+
+    @OneToMany(mappedBy = "workFlowTransactionEntity", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<TaskTransactionEntity> taskTransactions = Collections.synchronizedList(new ArrayList<>());
 }
