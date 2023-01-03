@@ -23,9 +23,7 @@ import java.util.Map;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
-import javax.persistence.Embeddable;
 import javax.persistence.Entity;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 
@@ -78,6 +76,6 @@ public class WorkFlowTransactionEntity extends AbstractEntity {
     @Column(updatable = false)
     private OffsetDateTime createdAt;
 
-    @OneToMany(mappedBy = "workFlowTransaction", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "workFlowTransactionEntity", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<TaskTransactionEntity> taskTransactions = Collections.synchronizedList(new ArrayList<>());
 }

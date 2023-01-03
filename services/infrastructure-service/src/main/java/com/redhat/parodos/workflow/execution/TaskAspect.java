@@ -64,11 +64,12 @@ public class TaskAspect {
         WorkFlowTransactionEntity workFlowTransactionEntity = workTransactionService.getWorkFlowTransactionEntity(String.valueOf(workContext.get(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES)));
         log.info("Before invoking execute() on task: {}", taskName);
         WorkFlowStatus status = getTaskStatus(workFlowTransactionEntity, taskName);
-        if (status != null) {
+        if (status == null) {
+            workFlowTransactionEntity = updateTaskPersistence(workFlowTransactionEntity, taskName, workContext, WorkFlowStatus.IN_PROGRESS, true, false);
+        } else if (!WorkFlowStatus.IN_PROGRESS.equals(status)) {
             log.info("task status found: {}", taskName);
             return new DefaultWorkReport(status.equals(WorkFlowStatus.SUCCESS) ? WorkStatus.COMPLETED : WorkStatus.FAILED, workContext);
         }
-        workFlowTransactionEntity = updateTaskPersistence(workFlowTransactionEntity, taskName, workContext, WorkFlowStatus.IN_PROGRESS, true, false);
         WorkReport report = null;
         try {
             report = (WorkReport) proceedingJoinPoint.proceed();
@@ -102,7 +103,7 @@ public class TaskAspect {
             log.info("adding task: {}", taskName);
             workFlowTransactionEntity.getTaskTransactions().add(
                     TaskTransactionEntity.builder()
-                            .workFlowTransaction(workFlowTransactionEntity)
+                            .workFlowTransactionEntity(workFlowTransactionEntity)
                             .taskStatus(WorkFlowStatus.IN_PROGRESS)
                             .taskName(taskName)
                             .createdAt(OffsetDateTime.now())
@@ -127,7 +128,7 @@ public class TaskAspect {
     private WorkFlowStatus getTaskStatus(WorkFlowTransactionEntity workFlowTransactionEntity, String taskName) {
         log.info("checking task status: {} in Workflow: {}", taskName, workFlowTransactionEntity.getId());
         return workFlowTransactionEntity.getTaskTransactions().stream()
-                .filter(taskTransactionEntity -> taskName.equals(taskTransactionEntity.getTaskName()) && !WorkFlowStatus.IN_PROGRESS.equals(taskTransactionEntity.getTaskStatus()))
+                .filter(taskTransactionEntity -> taskName.equals(taskTransactionEntity.getTaskName()))
                 .findFirst()
                 .map(TaskTransactionEntity::getTaskStatus)
                 .orElse(null);

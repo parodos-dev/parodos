@@ -43,7 +43,7 @@ import java.time.OffsetDateTime;
 public class TaskTransactionEntity extends AbstractEntity {
     @ManyToOne
     @JoinColumn(name = "workflow_transaction_id", nullable = false)
-    private WorkFlowTransactionEntity workFlowTransaction;
+    private WorkFlowTransactionEntity workFlowTransactionEntity;
 
     private String taskName;
 
