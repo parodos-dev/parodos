@@ -141,7 +141,7 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- START Test Dependencies -->
+        <!-- END Test Dependencies -->
 
         <!-- START Paging Results Dependencies -->
         <dependency>
@@ -150,12 +150,12 @@
         </dependency>
         <!-- END Paging Results Dependencies -->
 
-        <!-- START AOP -->
+        <!-- START AOP Dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
-        <!-- START AOP -->
+        <!-- END AOP Dependencies -->
     </dependencies>
 
     <dependencyManagement>

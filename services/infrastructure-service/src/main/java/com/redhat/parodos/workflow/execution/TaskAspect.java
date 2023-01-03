@@ -127,8 +127,7 @@ public class TaskAspect {
     private WorkFlowStatus getTaskStatus(WorkFlowTransactionEntity workFlowTransactionEntity, String taskName) {
         log.info("checking task status: {} in Workflow: {}", taskName, workFlowTransactionEntity.getId());
         return workFlowTransactionEntity.getTaskTransactions().stream()
-                .filter(taskTransactionEntity -> taskName.equals(taskTransactionEntity.getTaskName()))
-                .filter(taskTransactionEntity -> !WorkFlowStatus.IN_PROGRESS.equals(taskTransactionEntity.getTaskStatus()))
+                .filter(taskTransactionEntity -> taskName.equals(taskTransactionEntity.getTaskName()) && !WorkFlowStatus.IN_PROGRESS.equals(taskTransactionEntity.getTaskStatus()))
                 .findFirst()
                 .map(TaskTransactionEntity::getTaskStatus)
                 .orElse(null);
