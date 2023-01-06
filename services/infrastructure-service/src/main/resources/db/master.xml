@@ -17,4 +17,5 @@
     <property name="uuidFunction" value="random_uuid()" dbms="h2"/>
 
     <include file="/db/changelog/tables.xml"/>
+    
 </databaseChangeLog>

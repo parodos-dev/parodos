@@ -13,22 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow;
-
-import java.util.List;
-
-import com.redhat.parodos.workflows.WorkFlowTaskParameter;
-import com.redhat.parodos.workflows.work.WorkReport;
+package com.redhat.parodos.workflow.execution;
 
 /**
- * Contract for WorkFlow Services
+ * Different status that a WorkFlow execution can have
  * 
  * @author Luke Shannon (Github: lshannon)
  *
  */
-public interface WorkFlowService<T> {
-	
-	WorkReport execute(T arguments);
-	List<WorkFlowTaskParameter> getWorkFlowParametersForWorkFlow(String id);
-
+public enum Status {
+    SUCCESS,
+    FAILED,
+    CANCELLED,
+    IN_PROGRESS
 }

@@ -15,10 +15,9 @@
  */
 package com.redhat.parodos.infrastructure;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,12 +26,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.redhat.parodos.workflow.execution.WorkFlowTransactionEntity;
 import com.redhat.parodos.workflows.WorkFlowConstants;
 import com.redhat.parodos.workflows.WorkFlowExecuteRequestDto;
 import com.redhat.parodos.workflows.WorkFlowTaskParameter;
 import com.redhat.parodos.workflows.work.WorkReport;
-import lombok.extern.slf4j.Slf4j;
+import com.redhat.parodos.workflows.workflow.ParallelFlowReport;
 
 /**
  * 
@@ -44,7 +42,6 @@ import lombok.extern.slf4j.Slf4j;
 @CrossOrigin(origins = "*", maxAge = 1800)
 @RestController
 @RequestMapping("/api/v1/workflows/infrastructures")
-@Slf4j
 public class InfrastructureWorkFlowController {
 	
     private final InfrastructureWorkFlowService infrastructureWorkFlowService;
@@ -59,28 +56,51 @@ public class InfrastructureWorkFlowController {
      * @param workFlowExecuteRequestDto
      * @return
      */
-    @PostMapping("/")
-    public ResponseEntity<URI> executeWorkFlow(@RequestBody WorkFlowExecuteRequestDto workFlowExecuteRequestDto) {
+    @SuppressWarnings("unchecked")
+	@PostMapping("/")
+    public ResponseEntity<UUID> executeWorkFlow(@RequestBody WorkFlowExecuteRequestDto workFlowExecuteRequestDto) {
     	WorkReport report = infrastructureWorkFlowService.execute(workFlowExecuteRequestDto);
     	if (report != null) {
-    		try {
-				return ResponseEntity.created(new URI("/api/v1/workflows/transactions/" + ((WorkFlowTransactionEntity)report.getWorkContext().get(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCE)).getId())).build();
-			} catch (URISyntaxException e) {
-				log.error("Workflow did not successfully execute. Please refer to the logs: {}", e.getMessage());
-			}
+    		if (report instanceof ParallelFlowReport) {
+    			for (WorkReport innerReport : ((ParallelFlowReport)report).getReports() ) {
+        			if (innerReport.getClass().equals(ParallelFlowReport.class)) {
+        				return ResponseEntity.ok((UUID)innerReport.getWorkContext().get(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES));
+        			}
+        		}
+    		}
+    		return ResponseEntity.ok((UUID)report.getWorkContext().get(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES));
     	}
     	return ResponseEntity.badRequest().build();
     }
     
+    /*
+     * Recursively process each report to ensure all the sub reports of each ParallelFlowReport are processed
+     */
+//    private void processParallelReport(WorkReport report, List<UUID> createdURI) {
+//    	//check if the report is a Parallel
+//    	if (report.getClass().equals(ParallelFlowReport.class)) {
+//    		for (WorkReport innerReport : ((ParallelFlowReport)report).getReports() ) {
+//    			if (innerReport.getClass().equals(ParallelFlowReport.class)) {
+//    				processParallelReport(innerReport, createdURI);
+//    			}
+// 
+//				createdURI.add(((WorkFlowTransactionDTO)innerReport.getWorkContext().get(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCE)).getId());
+//    		}
+//    		
+//    	}
+//    	log.info("Got Transaction: {}", ((WorkFlowTransactionDTO)report.getWorkContext().get(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCE)).getId());
+//    	createdURI.add(((WorkFlowTransactionDTO)report.getWorkContext().get(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCE)).getId());
+//    }
+//    
 
     /**
-	 * Gets All the IntrastructureTaskWorkFlows
+	 * Gets All the InfrastructureTaskWorkFlows
 	 * 
-	 * @return Registered IntrastructureTaskWorkFlows
+	 * @return Registered InfrastructureTaskWorkFlows
 	 */
 	@GetMapping("/")
 	public ResponseEntity<Collection<String>> getInfraStructureTaskWorkFlows() {
-		return ResponseEntity.ok(infrastructureWorkFlowService.getInfraStructureTaskWorkFlows(WorkFlowConstants.INFRASTRUCTURE_WORKFLOW));
+		return ResponseEntity.ok(infrastructureWorkFlowService.getInfrastructureTaskWorkFlows(WorkFlowConstants.INFRASTRUCTURE_WORKFLOW));
 	}
 	
 	

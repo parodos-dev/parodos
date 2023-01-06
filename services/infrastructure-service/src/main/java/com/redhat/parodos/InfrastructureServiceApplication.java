@@ -17,6 +17,8 @@ package com.redhat.parodos;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 /**
@@ -27,6 +29,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
  */
 @SpringBootApplication
 @EnableWebSecurity
+@EnableAspectJAutoProxy
 public class InfrastructureServiceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(InfrastructureServiceApplication.class, args);

@@ -30,7 +30,6 @@ public interface WorkFlowTask extends Work {
 	default List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
 		return new ArrayList<>();
 	}
-	
-	
 
+	default String getWorkFlowType() { return ""; }
 }

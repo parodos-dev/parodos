@@ -42,7 +42,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class InfrastructureOption {
-	
 	private String identifier;
 	private String displayName;
 	private String description;

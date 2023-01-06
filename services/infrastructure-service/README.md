@@ -15,7 +15,7 @@ mvn clean install
 ```
 Note: We are running 'install', not package. The reason for this is to generate the WorkEngine dependencies into your local maven repository. This is not a dependencies that exists in Maven Central at this time.
 
-The 'simple-workflow-example-infrastructure-service' dependency can be found in the pom.xml of the infrastructure-service. This is a demo configuration to test the service. It should be removed once actual Tasks and WorkFlows start getting created. **Note:** Future release of this service will include WorkFlowTask/WorkFlow creation/configuration options that do not require having to write Java code.
+The 'workflow-examples' dependency can be found in the pom.xml of the infrastructure-service. This is a demo configuration to test the service. It should be removed once actual Tasks and WorkFlows start getting created. **Note:** Future release of this service will include WorkFlowTask/WorkFlow creation/configuration options that do not require having to write Java code.
 
 To start the application run the following from the root folder of 'infrastructure-service'.
 
@@ -78,7 +78,7 @@ The BeanWorkflowRegistryImpl will load all Spring Beans of type: com.redhat.paro
 
 ## Configuring WorkFlows In The Infrastructure Service
 
-Using the BeanWorkflowRegistryImpl Tasks and WorkFlows can be created using @Bean and @Configuration annotations of the Spring Framework. This can be done as part of the Infrastructure Service's code base, or in a separate Jar that can add to the class path of the Infrastructure Service. Please review the Parodos project 'simple-workflow-example-infrastructure-service' for more details.
+Using the BeanWorkflowRegistryImpl Tasks and WorkFlows can be created using @Bean and @Configuration annotations of the Spring Framework. This can be done as part of the Infrastructure Service's code base, or in a separate Jar that can add to the class path of the Infrastructure Service. Please review the Parodos project 'workflow-examples' for more details.
 
 The following sections review the Domain Model and concepts in the application.
 

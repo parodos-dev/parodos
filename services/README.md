@@ -14,7 +14,7 @@ Assesses applications/code, provides InfrastructureOptions suitable for the user
 
 This is the model used by the infrastructure service. It is a seperate package allowing for projects to be created configuring Infrastructure Workflows outside of the infrastructure-service code base
 
-**simple-workflow-example-infrastructure-service**
+**workflow-examples**
 
 A stand alone project that can be added to the infrastructure service classpath to provide some samples of what WorkFlows could look like. This is basically a 'Hello Wold' for the infrastructure-service
 
@@ -33,4 +33,4 @@ mvn clean install
 
 ```
 
-This will build the dependencies and install them into your local mvn directory. This last part is important as the Parodos 'workflow-engine' is not in Maven Central. If you wish to use it in a project like the simple-workflow-example-infrastructure-service, you will need to build it locally.
+This will build the dependencies and install them into your local mvn directory. This last part is important as the Parodos 'workflow-engine' is not in Maven Central. If you wish to use it in a project like the workflow-examples, you will need to build it locally.

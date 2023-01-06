@@ -19,12 +19,11 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
-
-import com.redhat.parodos.workflows.WorkFlowTask;
+import com.redhat.parodos.workflow.execution.transaction.WorkFlowTransactionDTO;
 import com.redhat.parodos.workflows.WorkFlowExecuteRequestDto;
+import com.redhat.parodos.workflows.WorkFlowTask;
 import com.redhat.parodos.workflows.WorkFlowTaskParameter;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
@@ -37,7 +36,7 @@ import com.redhat.parodos.workflows.workflow.WorkFlow;
  */
 @Component
 public class WorkFlowDelegate {
-
+	
 	private static final String WORK_UNITS = "workUnits";
 	private final BeanWorkFlowRegistryImpl workFlowRegistry;
 
@@ -77,10 +76,20 @@ public class WorkFlowDelegate {
 	
 	public WorkContext getWorkContextWithParameters(WorkFlowExecuteRequestDto workFlowRequestDto) {
 		WorkContext context = new WorkContext();
-        for (String key : workFlowRequestDto.getWorkFlowParameters().keySet()) {
-        	context.put(key, workFlowRequestDto.getWorkFlowParameters().get(key).trim());
+		//a workflow might run with no parameters
+		if (workFlowRequestDto.getWorkFlowParameters() != null && workFlowRequestDto.getWorkFlowParameters().keySet() != null) {
+	        for (String key : workFlowRequestDto.getWorkFlowParameters().keySet()) {
+	        	context.put(key, workFlowRequestDto.getWorkFlowParameters().get(key).trim());
+	        }
+		}
+		return context;
+	}
+	
+	public WorkContext getWorkContextWithParameters(WorkFlowTransactionDTO workFlowTransactionDTO) {
+		WorkContext context = new WorkContext();
+		for (String key : workFlowTransactionDTO.getWorkFlowCheckerArguments().keySet()) {
+        	context.put(key, workFlowTransactionDTO.getWorkFlowCheckerArguments().get(key).trim());
         }
 		return context;
 	}
-
 }
