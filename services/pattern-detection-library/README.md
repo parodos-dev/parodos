@@ -1,10 +1,10 @@
-# Patter Detection
+# Pattern Detection Library
 
 This is a Java Library that can be used to detect different 'Patterns' in code/configuration that can be used during the Assessment phase of the Parodos infrastructure-service to help determine if a specific Infrastructure Option should be assigned (ie: .NET applications, Java and J2EE Java all have different options)
 
 ## Introduction
 
-Can be embedded into any Service to detect a desired 'Pattern'.
+This library can be used by any Parodos Service, or Infrastructure workflow to detect a desired 'Pattern'.
 
 ## Domain Model
 
@@ -23,25 +23,6 @@ BasicPatternImpl controllerMavenPattern = BasicPatternImpl.Builder
 				.addThisToAllAreRequiredClues(mavenConfig)
 				.addThisToAllAreRequiredClues(reactConfig)
 				.build();
-
-```
-
-It can also be externally configured:
-
-```json
-
-name = "fullStackJavascriptFrameworkState"
-needAllOfTheseClues = [
-	"java-clue",
-	"mavenFrontEndPlugin-clue",
-	"node-clue"
-]
-needOneOfTheseClue = [
-	"javascript-react-clue",
-	"javascript-angular-clue"
-]
-
-
 ```
 
 **Clue**
@@ -62,18 +43,22 @@ A clue can be configured in Java like this:
 
 ```java
 
-ContentsClueImpl.Builder.builder().name("restcontroller").targetFileExtensionPatternString(".java").targetContentPatternString("@RestController").build();
-
-NameClueImpl.Builder.builder().name("maven").targetFileNamePatternString("pom.xml").build();
+ContentsClueImpl.Builder
+	.builder()
+	.name("restcontroller")
+	.targetFileExtensionPatternString(".java")
+	.targetContentPatternString("@RestController")
+	.build();
 
 ```
 
-Or externally like this:
+This clue looks for a .java file that contains the annotation '@RestController'. By default the engine will stop scanning for this Clue after it's been detected. However, the clue can be configured to continue to scan resulting in positive match and the list of all files that met the Clue criteria.
 
-```json
+Another example, one that looks for a pom.xml looks like this:
 
-name = "isJavaProject"
-targetFileExtensionPatternString = ".java"
+```java
+
+NameClueImpl.Builder.builder().name("maven").targetFileNamePatternString("pom.xml").build();
 
 ```
 
