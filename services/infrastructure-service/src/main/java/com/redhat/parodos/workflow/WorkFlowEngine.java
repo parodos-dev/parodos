@@ -37,6 +37,7 @@ import java.util.Map;
  * Executes a @see WorkFlow
  *
  * @author Luke Shannon (Github: lshannon)
+ * @author Richard Wang (Github: richardw98)
  */
 @Component
 @Slf4j
@@ -90,31 +91,8 @@ public class WorkFlowEngine {
     }
 
     /*
-     * Recursively process each report to make sure we get to the shared WorkContext and update it
-     *
-     */
-//    private void processParallelReport(WorkReport report, WorkFlow workFlow) {
-//        //If this is DefaultWorkReport than there is only one Result to deal with
-//        if (report instanceof DefaultWorkReport) {
-//            processReport(workFlow, report);
-//        } else if (report instanceof ParallelFlowReport) {
-//            for (WorkReport innerReport : ((ParallelFlowReport) report).getReports()) {
-//                if (innerReport.getClass().equals(ParallelFlowReport.class)) {
-//                    //its another Parallel - recurse
-//                    processParallelReport(innerReport, workFlow);
-//                }
-//                //its a normal report in a Parallel list - process
-//                processReport(workFlow, innerReport);
-//            }
-//        } else {
-//            log.error("Report {} is of unknown type", report);
-//        }
-//    }
-
-    /*
      * Create the WorkFlowTransactionDTO and puts it in the Context of the Report
      */
-    @SuppressWarnings("unchecked")
     private void processReport(WorkReport report, WorkFlowTransactionEntity workFlowTransactionEntity) {
         // Check if there is a workflow checker
         workFlowTransactionEntity.setWorkFlowCheckerId(obtainWorkFlowCheckerId(report));
@@ -136,14 +114,11 @@ public class WorkFlowEngine {
 
         log.info("Generating transaction entity ID: {}", entity.getId());
 
-        //Check if this is the first WorkFlow Transaction Entity To Be Put In The Context
-//        if (report.getWorkContext().get(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES) != null) {
-//            ((ArrayList<UUID>) report.getWorkContext().get(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES)).add(entity.getId());
-//        } else {
-//            report.getWorkContext().put(WorkFlowConstants.WORKFLOW_EXECUTION_ENTITY_REFERENCES, new ArrayList<UUID>(Arrays.asList(entity.getId())));
-//        }
     }
 
+    /*
+     * Gets the arguments for the NEXT WORKFLOW from the WorkContext
+     */
     @SuppressWarnings("unchecked")
     private Map<String, String> obtainNextWorkFlowArguments(WorkReport report) {
         if (report.getWorkContext().get(WorkFlowConstants.NEXT_WORKFLOW_ARGUMENTS) != null) {
@@ -152,6 +127,9 @@ public class WorkFlowEngine {
         return new HashMap<>();
     }
 
+    /*
+     * Gets the NEXT WORKFLOW ID from the WorkContext
+     */
     private String obtainerNextWorkFlowId(WorkReport report) {
         if (report.getWorkContext().get(WorkFlowConstants.NEXT_WORKFLOW_ID) != null) {
             return (String) report.getWorkContext().get(WorkFlowConstants.NEXT_WORKFLOW_ID);
@@ -159,6 +137,9 @@ public class WorkFlowEngine {
         return null;
     }
 
+    /*
+     * Gets the WORKFLOW CHECKER Arguments from the WorkContext
+     */
     @SuppressWarnings("unchecked")
     private Map<String, String> obtainWorkFlowCheckerArguments(WorkReport report) {
         if (report.getWorkContext().get(WorkFlowConstants.WORKFLOW_CHECKER_ARGUMENTS) != null) {
@@ -167,6 +148,9 @@ public class WorkFlowEngine {
         return new HashMap<>();
     }
 
+    /*
+     * Gets the WORKFLOW CHECKER ID from the WorkContext
+     */
     private String obtainWorkFlowCheckerId(WorkReport report) {
         if (report.getWorkContext().get(WorkFlowConstants.WORKFLOW_CHECKER_ID) != null) {
             return (String) report.getWorkContext().get(WorkFlowConstants.WORKFLOW_CHECKER_ID);
