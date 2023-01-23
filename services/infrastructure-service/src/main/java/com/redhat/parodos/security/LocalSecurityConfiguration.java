@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+
 /**
  * Turn off security for Local testing only. Do not enable this profile in production
  * 
@@ -35,5 +36,4 @@ public class LocalSecurityConfiguration {
       http.mvcMatcher("/").anonymous();
           return http.build();
    }
-   
 }
