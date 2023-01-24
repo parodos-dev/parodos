@@ -23,7 +23,7 @@ import lombok.experimental.SuperBuilder;
  *
  * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
- * @author Annel Ketcha (Github: anludk
+ * @author Annel Ketcha (Github: anludke)
  */
 @Getter
 @SuperBuilder

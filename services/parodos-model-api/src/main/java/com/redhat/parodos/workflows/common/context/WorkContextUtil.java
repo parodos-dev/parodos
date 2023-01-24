@@ -22,7 +22,7 @@ import com.redhat.parodos.workflows.work.WorkContext;
  *
  * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
- * @author Annel Ketcha (Github: anludk
+ * @author Annel Ketcha (Github: anludke)
  */
 public class WorkContextUtil {
     private static String spaceChar = " ";
