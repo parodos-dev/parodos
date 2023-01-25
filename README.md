@@ -2,7 +2,7 @@
 
 Building developer portals provides a centralized place to improve the experience for developers trying to build and release code in large environments. 
 
-For many enterprise environments, especially regulated ones, the source of some friction with a positive developer experience is that they are entangled with long standing processes and tools which are tied to audit, compliance anb regulation. These components are often:
+For many enterprise environments, especially regulated ones, the source of some friction with a positive developer experience is that they are entangled with long standing processes and tools which are tied to audit, compliance and regulation. These components are often:
 
 - Unique to the enterprise
 - Providing a necessary safeguard
@@ -10,7 +10,7 @@ For many enterprise environments, especially regulated ones, the source of some 
 
 For more thoughts and opinions on the challenges in making changes to an existing software culture in an enterprise environment, please review the following blog: https://www.redhat.com/en/blog/modernization-why-is-it-hard
 
-Although frameworks and ecosystems might exist to help build developer portals, getting some of these approved for production use in certain Enterprise, especially if they have a large ecosystem written by disparate developers, might be difficult. Also, some enterprises may struggle with Javascript heavy approaches. That is not to say such libraries, frameworks and platforms are not suited for the task. On the contrary they might be just what is needed, but a chasm might exist to fully adopt in an enterprise.
+Although frameworks and ecosystems might exist to help build developer portals, getting some of these approved for production use in certain enterprises, especially if they have a large ecosystem written by disparate developers, might be difficult. Also, some enterprises may struggle with Javascript heavy approaches. That is not to say such libraries, frameworks and platforms are not suited for the task. On the contrary they might be just what is needed, but a chasm might exist to fully adopt in an enterprise.
 
 Parodos is ancient Greek and translates to 'a side-entrance to the stage'. In this theme, Parodos provides the building blocks to create simple custom application(s) that streamlines different workflows associated with enterprise software teams getting code to production in an enterprise environment and currently limited by legacy constraints as to what technology they can use. In doing so, enterprises might be able to begin to move in a direction that is less hindered by legacy constraints and more open to the adopt new technology/frameworks and libraries.
 
@@ -52,7 +52,7 @@ This workflow provides the following configurable steps:
 
 ### Deployment Workflow
 
-This workflow provides an abstraction from the underlying tooling allowing a developer too:
+This workflow provides an abstraction from the underlying tooling allowing a developer to:
 
 - Observe the status of a build
 - Determine where the build is running
@@ -74,7 +74,7 @@ A simple view of training that is assigned and why it has been assigned. The ide
 
 A simple system for posting events related to an artifact (generally a packaged version of a the code base) to a central system that can be easily displayed
 
-** These workflows integrate with existing tools and processes in an enterprise environment, none of the outcomes listed above can be achieved by Parodos without integrating with existing tools. **
+**These workflows integrate with existing tools and processes in an enterprise environment, none of the outcomes listed above can be achieved by Parodos without integrating with existing tools.**
 
 ## Using A Parodos Workflow
 
