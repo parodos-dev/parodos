@@ -78,11 +78,11 @@ The current library for exeucting WorkFlow(s) in Parodos service
 
 Simple API for posting read-only messages related to downstream processes. The Parodos Backstage plugins provide a UI to display these messages. This service might be useful for those team members who might not have access to other commonly used communication systems (like Slack). It also provides a means of providing the users with updates in the same interface where the workflow is being executed
 
-For more information on each of these, please review the README location in the root folder of each component.
-
 **pattern-detection-library**
 
 A java library that can be used in AssessmentTasks to identify application/configuration patterns that can be associated with specific workflows (ie: Batch applications might have a different pipeline and environments than a .NET based MVC application).
+
+For more information on each of these, please review the README location in the root folder of each component.
 
 
 ## Building the Code
