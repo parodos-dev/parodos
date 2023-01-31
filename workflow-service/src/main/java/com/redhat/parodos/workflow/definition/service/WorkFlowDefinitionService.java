@@ -35,5 +35,5 @@ public interface WorkFlowDefinitionService {
 
     WorkFlowDefinitionEntity getWorkFlowDefinitionByName(String workFlowDefinitionName);
 
-    List<String> getWholeWorkFlow(String workFlowDefinitionName);
+    List<String> getSubsequentWorkFlow(String workFlowDefinitionName);
 }

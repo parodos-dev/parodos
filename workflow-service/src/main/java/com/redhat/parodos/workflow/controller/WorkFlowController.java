@@ -76,9 +76,9 @@ public class WorkFlowController {
         this.objectMapper = objectMapper;
     }
 
-    @GetMapping("/{workFlowName}/whole-workflow")
+    @GetMapping("/{workFlowName}/subsequences")
     public Object getWholeWorFlow(@PathVariable String workFlowName) {
-        return workFlowDefinitionService.getWholeWorkFlow(workFlowName);
+        return workFlowDefinitionService.getSubsequentWorkFlow(workFlowName);
     }
 
 

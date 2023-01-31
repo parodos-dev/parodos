@@ -61,7 +61,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
     }
 
     @Override
-    public List<String> getWholeWorkFlow(String workFlowDefinitionName) {
+    public List<String> getSubsequentWorkFlow(String workFlowDefinitionName) {
         return getNextWorkFlow(workFlowDefinitionRepository.findByName(workFlowDefinitionName).get(0));
     }
 
