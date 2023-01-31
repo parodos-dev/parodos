@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.redhat.parodos.workflows.cli</groupId>
 	<artifactId>workflow-cli</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>${revision}</version>
 	<name>workflow-cli</name>
 	<description>A CLI to generate Parodos Workflow Projects</description>
 	<properties>

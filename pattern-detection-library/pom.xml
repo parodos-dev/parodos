@@ -4,8 +4,15 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.redhat.parodos</groupId>
 	<artifactId>pattern-detection-library</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>${revision}</version>
 	<name>pattern-detection-library</name>
+
+	<parent>
+        <groupId>com.redhat.parodos</groupId>
+        <artifactId>parados-parent</artifactId>
+        <version>${revision}</version>
+    </parent>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting>UTF-8</project.reporting>
@@ -18,11 +25,11 @@
 		<junit.version>5.7.2</junit.version>
 		<guava.version>20.0</guava.version>
 		<toml.version>0.7.2</toml.version>
-		<parodos.version>0.0.1-SNAPSHOT</parodos.version>
 		<easy.flow.version>0.3</easy.flow.version>
 		<jackson.dataformat.version>2.13.4</jackson.dataformat.version>
 		<jackson.databind.version>2.13.4</jackson.databind.version>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -37,7 +44,7 @@
 		<dependency>
 			<groupId>com.redhat.parodos</groupId>
 			<artifactId>workflow-engine</artifactId>
-			<version>${parodos.version}</version>
+			<version>${revision}</version>
 		</dependency>
 		<dependency>
 		    <groupId>com.fasterxml.jackson.core</groupId>
@@ -80,7 +87,7 @@
 		<dependency>
 			<groupId>com.redhat.parodos</groupId>
 			<artifactId>workflow-engine</artifactId>
-			<version>${parodos.version}</version>
+			<version>${revision}</version>
 		</dependency>
 	</dependencies>
 	<build>

@@ -67,12 +67,13 @@ public interface WorkFlowRegistry<T> {
 
 ```
 
-The BeanWorkflowRegistryImpl will load all Spring Beans of type: com.redhat.parodos.workflows.workflow.WorkFlow into the registry which will in turn make them available for their respective Services (they must be in the package 'com.redhat.parodos' to be detected). See the next section for more details. WorkflowTasks and Workflows can be created using @Bean and @Configuration annotations of the Spring Framework. This can be done as part of the workflow-service's code base, or in a separate Jar that can add to the class path of the Infrastructure Service. 
+The BeanWorkflowRegistryImpl will load all Spring Beans of type: com.redhat.parodos.workflows.workflow.WorkFlow into the registry which will in turn make them available for their respective Services (they must be in the package 'com.redhat.parodos' to be detected). WorkflowTasks and Workflows can be created using @Bean and @Configuration annotations of the Spring Framework. 
+
+This can be done as part of the workflow-service's code base, or in a separate Jar that can add to the class path of the workflow-service. 
 
 Please review the Parodos project 'workflow-examples' for more details.
 
 ![Infrastructure](readme-images/6.png)
-
 
 ## Service Endpoints
 

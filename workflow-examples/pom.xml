@@ -2,18 +2,23 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.redhat.parodos</groupId>
   <artifactId>workflow-examples</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>${revision}</version>
   <name>workflow-examples</name>
+
+        <parent>
+            <groupId>com.redhat.parodos</groupId>
+            <artifactId>parados-parent</artifactId>
+            <version>${revision}</version>
+        </parent>
   
-  <properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>11</java.version>
-		<parodos.version>0.0.1-SNAPSHOT</parodos.version>
-		<spring.framework.version>5.3.10</spring.framework.version>
-		<maven-release-plugin.version>2.5.3</maven-release-plugin.version>
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
-	</properties>
+        <properties>
+            <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+            <java.version>11</java.version>
+            <spring.framework.version>5.3.10</spring.framework.version>
+            <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+            <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+            <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+        </properties>
 	
 		<dependencies>
 		<dependency>
@@ -29,12 +34,12 @@
 		 <dependency>
 			<groupId>com.redhat.parodos</groupId>
 			<artifactId>workflow-engine</artifactId>
-			<version>${parodos.version}</version>
+			<version>${revision}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.redhat.parodos</groupId>
 			<artifactId>parodos-model-api</artifactId>
-			<version>${parodos.version}</version>
+			<version>${revision}</version>
 		</dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

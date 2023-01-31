@@ -4,13 +4,19 @@
     <groupId>com.redhat.parodos</groupId>
     <artifactId>parodos-model-api</artifactId>
     <name>parodos-model-api</name>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${revision}</version>
     <description>Parodos Model Api</description>
+
+
+    <parent>
+        <groupId>com.redhat.parodos</groupId>
+        <artifactId>parados-parent</artifactId>
+        <version>${revision}</version>
+    </parent>
 
     <properties>
         <java.version>11</java.version>
         <lombok.version>1.18.24</lombok.version>
-        <parodos.version>0.0.1-SNAPSHOT</parodos.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
@@ -23,7 +29,7 @@
         <dependency>
             <groupId>com.redhat.parodos</groupId>
             <artifactId>workflow-engine</artifactId>
-            <version>${parodos.version}</version>
+            <version>${revision}</version>
         </dependency>
         <!-- END Parodos Workflow Dependencies -->
 
