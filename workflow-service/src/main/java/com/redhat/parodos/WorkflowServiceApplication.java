@@ -17,7 +17,6 @@ package com.redhat.parodos;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -32,8 +31,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @EnableScheduling
 @EnableWebSecurity
 @EnableAspectJAutoProxy
-public class InfrastructureServiceApplication {
+public class WorkflowServiceApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(InfrastructureServiceApplication.class, args);
+		SpringApplication.run(WorkflowServiceApplication.class, args);
 	}
 }

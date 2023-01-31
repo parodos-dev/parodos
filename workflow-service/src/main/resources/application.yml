@@ -1,6 +1,6 @@
 spring:
   application:
-    name: infrastructure-service
+    name: workflow-service
   jackson:
     serialization:
       indent-output: true
@@ -9,7 +9,7 @@ spring:
       ddl-auto: none
       
   datasource:
-    url: jdbc:h2:mem:infrastructure_service
+    url: jdbc:h2:mem:workflow_service
     driverClassName: org.h2.Driver
     username: postgres
     password: postgres

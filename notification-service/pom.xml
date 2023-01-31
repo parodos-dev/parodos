@@ -3,10 +3,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.redhat.parodos</groupId>
 	<artifactId>notification-service</artifactId>
 	<name>notification-service</name>
-	<version>${revision}</version>
 	<description>Notification Service to sent out notification messages</description>
 
 

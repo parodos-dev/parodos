@@ -81,11 +81,6 @@
       <artifactId>guava</artifactId>
       <version>${guava.version}</version>
     </dependency>
-    <dependency>
-      <groupId>com.redhat.parodos</groupId>
-      <artifactId>workflow-engine</artifactId>
-      <version>${revision}</version>
-    </dependency>
   </dependencies>
   <build>
     <pluginManagement>
