@@ -74,7 +74,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
                 .findAny()
                 .map(WorkFlowCheckerDefinitionEntity::getNextWorkFlow)
                 .ifPresent(nextWorkFlow ->
-                        workFlows.addAll(this.getWholeWorkFlow(nextWorkFlow.getName()))
+                        workFlows.addAll(this.getNextWorkFlow(nextWorkFlow))
                 );
 
         return workFlows;
