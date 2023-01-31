@@ -34,4 +34,6 @@ public interface WorkFlowDefinitionService {
     List<WorkFlowTaskDefinitionEntity> getWorkFlowTaskDefinitionById(UUID workFlowDefinitionId);
 
     WorkFlowDefinitionEntity getWorkFlowDefinitionByName(String workFlowDefinitionName);
+
+    List<String> getSubsequentWorkFlow(String workFlowDefinitionName);
 }

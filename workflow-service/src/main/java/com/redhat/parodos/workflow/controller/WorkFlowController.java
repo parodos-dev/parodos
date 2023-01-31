@@ -76,6 +76,12 @@ public class WorkFlowController {
         this.objectMapper = objectMapper;
     }
 
+    @GetMapping("/{workFlowName}/subsequences")
+    public Object getWholeWorFlow(@PathVariable String workFlowName) {
+        return workFlowDefinitionService.getSubsequentWorkFlow(workFlowName);
+    }
+
+
     @GetMapping("/")
     public ResponseEntity<Collection<WorkFlowDefinitionResponseDTO>> getWorkFlowDefinitions() {
         List<WorkFlowDefinitionEntity> workFlowDefinitionEntityList = workFlowDefinitionService.getWorkFlowDefinitions();
