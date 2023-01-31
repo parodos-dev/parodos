@@ -76,6 +76,12 @@ public class WorkFlowController {
         this.objectMapper = objectMapper;
     }
 
+    @GetMapping("/{workFlowName}/whole-workflow")
+    public Object getWholeWorFlow(@PathVariable String workFlowName) {
+        return workFlowDefinitionService.getWholeWorkFlow(workFlowName);
+    }
+
+
     @GetMapping("/")
     public ResponseEntity<Collection<WorkFlowDefinitionResponseDTO>> getWorkFlowDefinitions() {
         List<WorkFlowDefinitionEntity> workFlowDefinitionEntityList = workFlowDefinitionService.getWorkFlowDefinitions();

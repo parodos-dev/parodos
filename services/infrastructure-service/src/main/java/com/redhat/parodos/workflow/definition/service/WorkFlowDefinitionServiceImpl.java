@@ -15,13 +15,16 @@
  */
 package com.redhat.parodos.workflow.definition.service;
 
+import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerDefinitionEntity;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinitionEntity;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinitionEntity;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -56,4 +59,25 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
     public WorkFlowDefinitionEntity getWorkFlowDefinitionByName(String workFlowDefinitionName) {
         return workFlowDefinitionRepository.findByName(workFlowDefinitionName).get(0);
     }
+
+    @Override
+    public List<String> getWholeWorkFlow(String workFlowDefinitionName) {
+        return getNextWorkFlow(workFlowDefinitionRepository.findByName(workFlowDefinitionName).get(0));
+    }
+
+    private List<String> getNextWorkFlow(WorkFlowDefinitionEntity entityRef) {
+        List<String> workFlows = new ArrayList<>();
+        workFlows.add(entityRef.getName());
+        entityRef.getTasks().stream()
+                .map(WorkFlowTaskDefinitionEntity::getWorkFlowCheckerDefinitionEntity)
+                .filter(Objects::nonNull)
+                .findAny()
+                .map(WorkFlowCheckerDefinitionEntity::getNextWorkFlow)
+                .ifPresent(nextWorkFlow ->
+                        workFlows.addAll(this.getWholeWorkFlow(nextWorkFlow.getName()))
+                );
+
+        return workFlows;
+    }
 }
+
