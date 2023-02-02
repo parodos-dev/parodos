@@ -15,14 +15,6 @@
  */
 package com.redhat.parodos.examples.continued.complex;
 
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.Executors;
-
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
 import com.redhat.parodos.examples.simple.LoggingWorkFlowTaskExecution;
 import com.redhat.parodos.workflow.WorkFlowCheckerDefinition;
 import com.redhat.parodos.workflow.WorkFlowDefinition;
@@ -34,6 +26,13 @@ import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
 import com.redhat.parodos.workflows.workflow.ParallelFlow;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.Executors;
 
 /**
  * A more complex WorkFlow
@@ -45,11 +44,8 @@ public class ComplexWorkFlowConfiguration {
     //Start Assessment Logic
     //Infrastructure Option for Onboarding
     @Bean(name = "onboardingOption")
-    WorkFlowOption onboardingOption() {
-        return new WorkFlowOption.Builder("onboardingOption", "onboardingWorkFlowDefinition")
-                .displayName("onboardingWorkFlowDefinition")
-                .addToDetails("An example of a WorkFlow with Status checks")
-                .build();
+    WorkFlowOption onboardingOptions(@Qualifier("onboardingWorkFlowDefinition") WorkFlowDefinition onboardingWorkFlowDefinition) {
+        return new WorkFlowOption.Builder(onboardingWorkFlowDefinition).build();
     }
 
     //start assessment task
@@ -71,8 +67,8 @@ public class ComplexWorkFlowConfiguration {
     }
 
     @Bean(name = "onboardingAssessmentTaskExecution")
-    OnboardingAssessmentTaskExecution onboardingAssessmentTaskExecution(@Qualifier("onboardingAssessmentTaskDefinition") WorkFlowTaskDefinition onboardingAssessmentTaskDefinition, @Qualifier("onboardingOption") WorkFlowOption onboardingOptions) {
-        return new OnboardingAssessmentTaskExecution(onboardingOptions, onboardingAssessmentTaskDefinition);
+    OnboardingAssessmentTaskExecution onboardingAssessmentTaskExecution(@Qualifier("onboardingAssessmentTaskDefinition") WorkFlowTaskDefinition onboardingAssessmentTaskDefinition, @Qualifier("onboardingOption") WorkFlowOption onboardingOption) {
+        return new OnboardingAssessmentTaskExecution(onboardingOption, onboardingAssessmentTaskDefinition);
     }
     //end assessment task
 
@@ -249,7 +245,7 @@ public class ComplexWorkFlowConfiguration {
     //start cert  task
     @Bean(name = "failOverWorkFlowTaskDefinition")
     WorkFlowTaskDefinition failOverWorkFlowTaskDefinition(@Qualifier("loadBalancerWorkFlowTaskDefinition") WorkFlowTaskDefinition loadBalancerWorkFlowTaskDefinition) {
-        WorkFlowTaskDefinition failOverWorkFlowTaskDefinition =  WorkFlowTaskDefinition.builder()
+        WorkFlowTaskDefinition failOverWorkFlowTaskDefinition = WorkFlowTaskDefinition.builder()
                 .name("failOverWorkFlowTaskDefinition")
                 .description("failOver workflow task")
                 .previousTask(loadBalancerWorkFlowTaskDefinition)

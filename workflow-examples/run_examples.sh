@@ -69,7 +69,7 @@ run_complex_flow() {
   ASSESSMENT_WORKFLOW_ID=$(get_workflow_id "onboardingAssessmentDefinition")
   echo "ASSESSMENT_WORKFLOW_ID: $ASSESSMENT_WORKFLOW_ID"
   echo "Running the Assessment to see what WorkFlows are eligable for this situation:"
-  INFRASTRUCTURE_OPTION=$(curl -X 'POST' -s "http://localhost:8080/api/v1/workflows/$ASSESSMENT_WORKFLOW_ID/executions" -H 'accept: */*' -H 'Content-Type: application/json' -d '[]' | jq -r '.output.newOptions[0].workFlowId')
+  INFRASTRUCTURE_OPTION=$(curl -X 'POST' -s "http://localhost:8080/api/v1/workflows/$ASSESSMENT_WORKFLOW_ID/executions" -H 'accept: */*' -H 'Content-Type: application/json' -d '[]' | jq -r '.output.newOptions[0].name')
   echo "The Following Option Is Available: $INFRASTRUCTURE_OPTION"
   echo "                                               "
   echo "                                               "
