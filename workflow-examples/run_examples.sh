@@ -31,7 +31,7 @@ run_simple_flow() {
   echo "******** Running The Simple Sequence Flow ********"
   echo "                                                  "
   echo "                                                  "
-  workflow_id=get_workflow_id "simpleSequentialWorkFlowDefinition"
+  workflow_id=$(get_workflow_id "simpleSequentialWorkFlowDefinition")
   curl -X 'POST' -v \
     "http://localhost:8080/api/v1/workflows/$workflow_id/executions" \
     -H 'accept: */*' \

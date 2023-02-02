@@ -20,7 +20,9 @@ import com.redhat.parodos.workflow.WorkFlowCheckerDefinition;
 import com.redhat.parodos.workflow.WorkFlowDefinition;
 import com.redhat.parodos.workflow.WorkFlowType;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
-import com.redhat.parodos.workflow.task.WorkFlowTaskDefinition;
+import com.redhat.parodos.workflow.task.assessment.AssessmentTaskDefinition;
+import com.redhat.parodos.workflow.task.checker.WorkFlowCheckerTaskDefinition;
+import com.redhat.parodos.workflow.task.infrastructure.InfrastructureTaskDefinition;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
 import com.redhat.parodos.workflows.workflow.ParallelFlow;
@@ -50,8 +52,8 @@ public class ComplexWorkFlowConfiguration {
 
     //start assessment task
     @Bean(name = "onboardingAssessmentTaskDefinition")
-    WorkFlowTaskDefinition onboardingAssessmentTaskDefinition() {
-        return WorkFlowTaskDefinition.builder()
+    AssessmentTaskDefinition onboardingAssessmentTaskDefinition() {
+        return AssessmentTaskDefinition.builder()
                 .name("onboardingAssessmentTaskDefinition")
                 .description("onboarding Assessment Task")
                 .parameters(List.of(
@@ -67,14 +69,14 @@ public class ComplexWorkFlowConfiguration {
     }
 
     @Bean(name = "onboardingAssessmentTaskExecution")
-    OnboardingAssessmentTaskExecution onboardingAssessmentTaskExecution(@Qualifier("onboardingAssessmentTaskDefinition") WorkFlowTaskDefinition onboardingAssessmentTaskDefinition, @Qualifier("onboardingOption") WorkFlowOption onboardingOption) {
+    OnboardingAssessmentTaskExecution onboardingAssessmentTaskExecution(@Qualifier("onboardingAssessmentTaskDefinition") AssessmentTaskDefinition onboardingAssessmentTaskDefinition, @Qualifier("onboardingOption") WorkFlowOption onboardingOption) {
         return new OnboardingAssessmentTaskExecution(onboardingOption, onboardingAssessmentTaskDefinition);
     }
     //end assessment task
 
     //start assessment workflow
     @Bean(name = "onboardingAssessmentDefinition")
-    WorkFlowDefinition onboardingAssessmentDefinition(@Qualifier("onboardingAssessmentTaskDefinition") WorkFlowTaskDefinition onboardingAssessmentTaskDefinition) {
+    WorkFlowDefinition onboardingAssessmentDefinition(@Qualifier("onboardingAssessmentTaskDefinition") AssessmentTaskDefinition onboardingAssessmentTaskDefinition) {
         return WorkFlowDefinition.builder()
                 .name("onboardingAssessmentDefinition")
                 .description("Onbaoarding assessment workflow")
@@ -100,8 +102,8 @@ public class ComplexWorkFlowConfiguration {
     //Start Onboarding Logic
     //start cert  task
     @Bean(name = "certWorkFlowTaskDefinition")
-    WorkFlowTaskDefinition certWorkFlowTaskDefinition() {
-        return WorkFlowTaskDefinition.builder()
+    InfrastructureTaskDefinition certWorkFlowTaskDefinition() {
+        return InfrastructureTaskDefinition.builder()
                 .name("certWorkFlowTaskDefinition")
                 .description("A cert workflow task")
                 .parameters(List.of(WorkFlowTaskParameter.builder()
@@ -114,15 +116,15 @@ public class ComplexWorkFlowConfiguration {
     }
 
     @Bean(name = "certWorkFlowTaskExecution")
-    LoggingWorkFlowTaskExecution certWorkFlowTaskExecution(@Qualifier("certWorkFlowTaskDefinition") WorkFlowTaskDefinition certWorkFlowTaskDefinition) {
+    LoggingWorkFlowTaskExecution certWorkFlowTaskExecution(@Qualifier("certWorkFlowTaskDefinition") InfrastructureTaskDefinition certWorkFlowTaskDefinition) {
         return new LoggingWorkFlowTaskExecution(certWorkFlowTaskDefinition);
     }
     //end cert task
 
     //start adGroup  task
     @Bean(name = "adGroupWorkFlowTaskDefinition")
-    WorkFlowTaskDefinition adGroupWorkFlowTaskDefinition(@Qualifier("onboardingWorkFlowCheckDefinition") WorkFlowCheckerDefinition onboardingWorkFlowCheckDefinition) {
-        return WorkFlowTaskDefinition.builder()
+    InfrastructureTaskDefinition adGroupWorkFlowTaskDefinition(@Qualifier("onboardingWorkFlowCheckDefinition") WorkFlowCheckerDefinition onboardingWorkFlowCheckDefinition) {
+        return InfrastructureTaskDefinition.builder()
                 .name("adGroupWorkFlowTaskDefinition")
                 .description("adGroup workflow task")
                 .parameters(List.of(WorkFlowTaskParameter.builder()
@@ -136,15 +138,15 @@ public class ComplexWorkFlowConfiguration {
     }
 
     @Bean(name = "adGroupWorkFlowTaskExecution")
-    LoggingWorkFlowTaskExecution adGroupWorkFlowTaskExecution(@Qualifier("adGroupWorkFlowTaskDefinition") WorkFlowTaskDefinition adGroupWorkFlowTaskDefinition) {
+    LoggingWorkFlowTaskExecution adGroupWorkFlowTaskExecution(@Qualifier("adGroupWorkFlowTaskDefinition") InfrastructureTaskDefinition adGroupWorkFlowTaskDefinition) {
         return new LoggingWorkFlowTaskExecution(adGroupWorkFlowTaskDefinition);
     }
 
     //end adGroup task
     //start dynatrace  task
     @Bean(name = "dynatraceWorkFlowTaskDefinition")
-    WorkFlowTaskDefinition dynatraceWorkFlowTaskDefinition(@Qualifier("onboardingWorkFlowCheckDefinition") WorkFlowCheckerDefinition onboardingWorkFlowCheckDefinition) {
-        return WorkFlowTaskDefinition.builder()
+    InfrastructureTaskDefinition dynatraceWorkFlowTaskDefinition(@Qualifier("onboardingWorkFlowCheckDefinition") WorkFlowCheckerDefinition onboardingWorkFlowCheckDefinition) {
+        return InfrastructureTaskDefinition.builder()
                 .name("dynatraceWorkFlowTaskDefinition")
                 .description("dynatrace workflow task")
                 .workFlowCheckerDefinition(onboardingWorkFlowCheckDefinition)
@@ -152,14 +154,14 @@ public class ComplexWorkFlowConfiguration {
     }
 
     @Bean(name = "dynatraceWorkFlowTaskExecution")
-    LoggingWorkFlowTaskExecution dynatraceWorkFlowTaskExecution(@Qualifier("dynatraceWorkFlowTaskDefinition") WorkFlowTaskDefinition dynatraceWorkFlowTaskDefinition) {
+    LoggingWorkFlowTaskExecution dynatraceWorkFlowTaskExecution(@Qualifier("dynatraceWorkFlowTaskDefinition") InfrastructureTaskDefinition dynatraceWorkFlowTaskDefinition) {
         return new LoggingWorkFlowTaskExecution(dynatraceWorkFlowTaskDefinition);
     }
     //end dynatrace task
 
     //start onboarding infrastructure workflow
     @Bean(name = "onboardingWorkFlowDefinition")
-    WorkFlowDefinition onboardingWorkFlowDefinition(@Qualifier("certWorkFlowTaskDefinition") WorkFlowTaskDefinition certWorkFlowTaskDefinition, @Qualifier("adGroupWorkFlowTaskDefinition") WorkFlowTaskDefinition adGroupWorkFlowTaskDefinition, @Qualifier("dynatraceWorkFlowTaskDefinition") WorkFlowTaskDefinition dynatraceWorkFlowTaskDefinition) {
+    WorkFlowDefinition onboardingWorkFlowDefinition(@Qualifier("certWorkFlowTaskDefinition") InfrastructureTaskDefinition certWorkFlowTaskDefinition, @Qualifier("adGroupWorkFlowTaskDefinition") InfrastructureTaskDefinition adGroupWorkFlowTaskDefinition, @Qualifier("dynatraceWorkFlowTaskDefinition") InfrastructureTaskDefinition dynatraceWorkFlowTaskDefinition) {
         return WorkFlowDefinition.builder()
                 .name("onboardingWorkFlowDefinition")
                 .description("onboarding parallel workflow test")
@@ -188,8 +190,8 @@ public class ComplexWorkFlowConfiguration {
     //Start Name Space Logic
     //start nameSpace  task
     @Bean(name = "namespaceWorkFlowTaskDefinition")
-    WorkFlowTaskDefinition namespaceWorkFlowTaskDefinition(@Qualifier("namespaceWorkFlowCheckDefinition") WorkFlowCheckerDefinition namespaceWorkFlowCheckDefinition) {
-        return WorkFlowTaskDefinition.builder()
+    InfrastructureTaskDefinition namespaceWorkFlowTaskDefinition(@Qualifier("namespaceWorkFlowCheckDefinition") WorkFlowCheckerDefinition namespaceWorkFlowCheckDefinition) {
+        return InfrastructureTaskDefinition.builder()
                 .name("namespaceWorkFlowTaskDefinition")
                 .description("namespace workflow task")
                 .workFlowCheckerDefinition(namespaceWorkFlowCheckDefinition)
@@ -197,14 +199,14 @@ public class ComplexWorkFlowConfiguration {
     }
 
     @Bean(name = "namespaceWorkFlowTaskExecution")
-    LoggingWorkFlowTaskExecution namespaceWorkFlowTaskExecution(@Qualifier("namespaceWorkFlowTaskDefinition") WorkFlowTaskDefinition namespaceWorkFlowTaskDefinition) {
+    LoggingWorkFlowTaskExecution namespaceWorkFlowTaskExecution(@Qualifier("namespaceWorkFlowTaskDefinition") InfrastructureTaskDefinition namespaceWorkFlowTaskDefinition) {
         return new LoggingWorkFlowTaskExecution(namespaceWorkFlowTaskDefinition);
     }
     //end nameSpace task
 
     //Start nameSpace workflow
     @Bean(name = "nameSpaceWorkFlowDefinition")
-    WorkFlowDefinition nameSpaceWorkFlowDefinition(@Qualifier("namespaceWorkFlowTaskDefinition") WorkFlowTaskDefinition namespaceWorkFlowTaskDefinition) {
+    WorkFlowDefinition nameSpaceWorkFlowDefinition(@Qualifier("namespaceWorkFlowTaskDefinition") InfrastructureTaskDefinition namespaceWorkFlowTaskDefinition) {
         return WorkFlowDefinition.builder()
                 .name("nameSpaceWorkFlowDefinition")
                 .description("namespace workflow test")
@@ -229,23 +231,23 @@ public class ComplexWorkFlowConfiguration {
     //Start Load Balancer Logic
     //start loadBalancer  task
     @Bean(name = "loadBalancerWorkFlowTaskDefinition")
-    WorkFlowTaskDefinition loadBalancerWorkFlowTaskDefinition() {
-        return WorkFlowTaskDefinition.builder()
+    InfrastructureTaskDefinition loadBalancerWorkFlowTaskDefinition() {
+        return InfrastructureTaskDefinition.builder()
                 .name("loadBalancerWorkFlowTaskDefinition")
                 .description("A loadBalancer workflow task")
                 .build();
     }
 
     @Bean(name = "loadBalancerWorkFlowTaskExecution")
-    LoggingWorkFlowTaskExecution loadBalancerWorkFlowTaskExecution(@Qualifier("loadBalancerWorkFlowTaskDefinition") WorkFlowTaskDefinition loadBalancerWorkFlowTaskDefinition) {
+    LoggingWorkFlowTaskExecution loadBalancerWorkFlowTaskExecution(@Qualifier("loadBalancerWorkFlowTaskDefinition") InfrastructureTaskDefinition loadBalancerWorkFlowTaskDefinition) {
         return new LoggingWorkFlowTaskExecution(loadBalancerWorkFlowTaskDefinition);
     }
     //end cert task
 
     //start cert  task
     @Bean(name = "failOverWorkFlowTaskDefinition")
-    WorkFlowTaskDefinition failOverWorkFlowTaskDefinition(@Qualifier("loadBalancerWorkFlowTaskDefinition") WorkFlowTaskDefinition loadBalancerWorkFlowTaskDefinition) {
-        WorkFlowTaskDefinition failOverWorkFlowTaskDefinition = WorkFlowTaskDefinition.builder()
+    InfrastructureTaskDefinition failOverWorkFlowTaskDefinition(@Qualifier("loadBalancerWorkFlowTaskDefinition") InfrastructureTaskDefinition loadBalancerWorkFlowTaskDefinition) {
+        InfrastructureTaskDefinition failOverWorkFlowTaskDefinition = InfrastructureTaskDefinition.builder()
                 .name("failOverWorkFlowTaskDefinition")
                 .description("failOver workflow task")
                 .previousTask(loadBalancerWorkFlowTaskDefinition)
@@ -255,7 +257,7 @@ public class ComplexWorkFlowConfiguration {
     }
 
     @Bean(name = "failOverWorkFlowTaskExecution")
-    LoggingWorkFlowTaskExecution failOverWorkFlowTaskExecution(@Qualifier("failOverWorkFlowTaskDefinition") WorkFlowTaskDefinition failOverWorkFlowTaskDefinition) {
+    LoggingWorkFlowTaskExecution failOverWorkFlowTaskExecution(@Qualifier("failOverWorkFlowTaskDefinition") InfrastructureTaskDefinition failOverWorkFlowTaskDefinition) {
         return new LoggingWorkFlowTaskExecution(failOverWorkFlowTaskDefinition);
     }
     //end cert task
@@ -263,7 +265,7 @@ public class ComplexWorkFlowConfiguration {
     //Start networking Logic
     //Start networking workflow
     @Bean(name = "networkingWorkFlowDefinition")
-    WorkFlowDefinition networkingWorkFlowDefinition(@Qualifier("loadBalancerWorkFlowTaskDefinition") WorkFlowTaskDefinition loadBalancerWorkFlowTaskDefinition, @Qualifier("failOverWorkFlowTaskDefinition") WorkFlowTaskDefinition failOverWorkFlowTaskDefinition) {
+    WorkFlowDefinition networkingWorkFlowDefinition(@Qualifier("loadBalancerWorkFlowTaskDefinition") InfrastructureTaskDefinition loadBalancerWorkFlowTaskDefinition, @Qualifier("failOverWorkFlowTaskDefinition") InfrastructureTaskDefinition failOverWorkFlowTaskDefinition) {
         return WorkFlowDefinition.builder()
                 .name("networkingWorkFlowDefinition")
                 .description("networking workflow test")
@@ -290,22 +292,22 @@ public class ComplexWorkFlowConfiguration {
     //Start onboardingWorkFlowCheck Logic
     //Start onboardingWorkFlowCheck Task
     @Bean(name = "onboardingWorkFlowCheckTaskDefinition")
-    WorkFlowTaskDefinition gateTwo() {
-        return WorkFlowTaskDefinition.builder()
+    WorkFlowCheckerTaskDefinition gateTwo() {
+        return WorkFlowCheckerTaskDefinition.builder()
                 .name("onboardingWorkFlowCheckTaskDefinition")
                 .description("onboarding workflow Checker task test")
                 .build();
     }
 
     @Bean(name = "onboardingWorkFlowCheckTaskExecution")
-    MockApprovalWorkFlowCheckerTaskExecution onboardingWorkFlowCheckTaskExecution(@Qualifier("onboardingWorkFlowCheckTaskDefinition") WorkFlowTaskDefinition gateTwo) {
+    MockApprovalWorkFlowCheckerTaskExecution onboardingWorkFlowCheckTaskExecution(@Qualifier("onboardingWorkFlowCheckTaskDefinition") WorkFlowCheckerTaskDefinition gateTwo) {
         return new MockApprovalWorkFlowCheckerTaskExecution(gateTwo);
     }
     //End onboardingWorkFlowCheck Task
 
     //Start onboardingWorkFlowCheck Workflow
     @Bean(name = "onboardingWorkFlowCheckDefinition")
-    WorkFlowCheckerDefinition onboardingWorkFlowCheckDefinition(@Qualifier("onboardingWorkFlowCheckTaskDefinition") WorkFlowTaskDefinition onboardingWorkFlowCheckTaskDefinition, @Qualifier("nameSpaceWorkFlowDefinition") WorkFlowDefinition namespaceWorkFlowDefinition) {
+    WorkFlowCheckerDefinition onboardingWorkFlowCheckDefinition(@Qualifier("onboardingWorkFlowCheckTaskDefinition") WorkFlowCheckerTaskDefinition onboardingWorkFlowCheckTaskDefinition, @Qualifier("nameSpaceWorkFlowDefinition") WorkFlowDefinition namespaceWorkFlowDefinition) {
         return WorkFlowCheckerDefinition.builder()
                 .name("onboardingWorkFlowCheckDefinition")
                 .description("onboarding workflow checker test")
@@ -334,22 +336,22 @@ public class ComplexWorkFlowConfiguration {
     //Start namespaceWorkFlowCheck Logic
     //Start namespaceWorkFlowCheck Task
     @Bean(name = "namespaceWorkFlowCheckTaskDefinition")
-    WorkFlowTaskDefinition gateThree() {
-        return WorkFlowTaskDefinition.builder()
+    WorkFlowCheckerTaskDefinition gateThree() {
+        return WorkFlowCheckerTaskDefinition.builder()
                 .name("namespaceWorkFlowCheckTaskDefinition")
                 .description("namespace workflow Checker task test")
                 .build();
     }
 
     @Bean(name = "namespaceWorkFlowCheckTaskExecution")
-    MockApprovalWorkFlowCheckerTaskExecution namespaceWorkFlowCheckTaskExecution(@Qualifier("namespaceWorkFlowCheckTaskDefinition") WorkFlowTaskDefinition gateThree) {
+    MockApprovalWorkFlowCheckerTaskExecution namespaceWorkFlowCheckTaskExecution(@Qualifier("namespaceWorkFlowCheckTaskDefinition") WorkFlowCheckerTaskDefinition gateThree) {
         return new MockApprovalWorkFlowCheckerTaskExecution(gateThree);
     }
 
     //End namespaceWorkFlowCheck Task
     //Start namespaceWorkFlowCheck Workflow
     @Bean(name = "namespaceWorkFlowCheckDefinition")
-    WorkFlowCheckerDefinition namespaceWorkFlowCheckDefinition(@Qualifier("namespaceWorkFlowCheckTaskDefinition") WorkFlowTaskDefinition namespaceWorkFlowCheckTaskDefinition, @Qualifier("networkingWorkFlowDefinition") WorkFlowDefinition namespaceWorkFlowDefinition) {
+    WorkFlowCheckerDefinition namespaceWorkFlowCheckDefinition(@Qualifier("namespaceWorkFlowCheckTaskDefinition") WorkFlowCheckerTaskDefinition namespaceWorkFlowCheckTaskDefinition, @Qualifier("networkingWorkFlowDefinition") WorkFlowDefinition namespaceWorkFlowDefinition) {
         return WorkFlowCheckerDefinition.builder()
                 .name("namespaceWorkFlowCheckDefinition")
                 .description("namespace workflow checker test")
