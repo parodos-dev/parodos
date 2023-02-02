@@ -15,24 +15,26 @@
  */
 package com.redhat.parodos.workflow.execution.aspect;
 
-import com.redhat.parodos.workflow.WorkFlowDelegate;
-import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
-import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecutionEntity;
-import com.redhat.parodos.workflow.execution.service.WorkFlowExecutionServiceImpl;
-import com.redhat.parodos.workflows.common.context.WorkContextUtil;
-import com.redhat.parodos.workflows.common.enums.WorkFlowTaskStatus;
-import com.redhat.parodos.workflows.execution.task.WorkFlowTask;
-import com.redhat.parodos.workflows.work.WorkContext;
-import com.redhat.parodos.workflows.work.WorkReport;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Date;
+import java.util.UUID;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.UUID;
+import com.redhat.parodos.workflow.WorkFlowDelegate;
+import com.redhat.parodos.workflow.context.WorkContextDelegate;
+import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
+import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecutionEntity;
+import com.redhat.parodos.workflow.execution.service.WorkFlowExecutionServiceImpl;
+import com.redhat.parodos.workflow.task.WorkFlowTask;
+import com.redhat.parodos.workflow.task.WorkFlowTaskStatus;
+import com.redhat.parodos.workflows.work.WorkContext;
+import com.redhat.parodos.workflows.work.WorkReport;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Aspect pointcut to perform state management for WorkFlowTask executions
@@ -82,32 +84,32 @@ public class WorkFlowTaskExecutionAspect {
         } catch (Throwable e) {
             log.error("Workflow task execution {} has failed!", workFlowTaskName);
         }
-        WorkContextUtil.write(workContext,
-                WorkContextUtil.ProcessType.WORKFLOW_TASK_EXECUTION,
+        WorkContextDelegate.write(workContext,
+        		WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
                 workFlowTaskName,
-                WorkContextUtil.Resource.STATUS,
+                WorkContextDelegate.Resource.STATUS,
                 report.getStatus().name());
 
-        WorkFlowTaskExecutionEntity workFlowTaskExecutionEntity = workFlowExecutionService.getWorkFlowTask(UUID.fromString(WorkContextUtil.read(workContext,
-                WorkContextUtil.ProcessType.WORKFLOW_EXECUTION,
-                WorkContextUtil.Resource.ID).toString()),
-                UUID.fromString(WorkContextUtil.read(workContext,
-                WorkContextUtil.ProcessType.WORKFLOW_TASK_DEFINITION,
+        WorkFlowTaskExecutionEntity workFlowTaskExecutionEntity = workFlowExecutionService.getWorkFlowTask(UUID.fromString(WorkContextDelegate.read(workContext,
+        		WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+        		WorkContextDelegate.Resource.ID).toString()),
+                UUID.fromString(WorkContextDelegate.read(workContext,
+                		WorkContextDelegate.ProcessType.WORKFLOW_TASK_DEFINITION,
                 workFlowTaskName,
-                WorkContextUtil.Resource.ID).toString()));
+                WorkContextDelegate.Resource.ID).toString()));
 
         if (workFlowTaskExecutionEntity == null) {
-            workFlowExecutionService.saveWorkFlowTask(WorkContextUtil.read(workContext,
-                        WorkContextUtil.ProcessType.WORKFLOW_TASK_EXECUTION,
+            workFlowExecutionService.saveWorkFlowTask(WorkContextDelegate.read(workContext,
+            		WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
                         workFlowTaskName,
-                        WorkContextUtil.Resource.ARGUMENTS).toString(),
-                UUID.fromString(WorkContextUtil.read(workContext,
-                        WorkContextUtil.ProcessType.WORKFLOW_TASK_DEFINITION,
+                        WorkContextDelegate.Resource.ARGUMENTS).toString(),
+                UUID.fromString(WorkContextDelegate.read(workContext,
+                		WorkContextDelegate.ProcessType.WORKFLOW_TASK_DEFINITION,
                         workFlowTaskName,
-                        WorkContextUtil.Resource.ID).toString()),
-                UUID.fromString(WorkContextUtil.read(workContext,
-                        WorkContextUtil.ProcessType.WORKFLOW_EXECUTION,
-                        WorkContextUtil.Resource.ID).toString()),
+                        WorkContextDelegate.Resource.ID).toString()),
+                UUID.fromString(WorkContextDelegate.read(workContext,
+                		WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+                		WorkContextDelegate.Resource.ID).toString()),
                 WorkFlowTaskStatus.valueOf(report.getStatus().name()));
         }
         else {

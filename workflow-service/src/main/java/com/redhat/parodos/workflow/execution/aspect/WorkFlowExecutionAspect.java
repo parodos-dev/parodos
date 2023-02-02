@@ -15,28 +15,29 @@
  */
 package com.redhat.parodos.workflow.execution.aspect;
 
-import com.redhat.parodos.security.SecurityUtils;
-import com.redhat.parodos.workflow.WorkFlowDelegate;
-import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinitionEntity;
-import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
-import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionEntity;
-import com.redhat.parodos.workflow.execution.scheduler.WorkFlowSchedulerServiceImpl;
-import com.redhat.parodos.workflow.execution.service.WorkFlowExecutionServiceImpl;
-import com.redhat.parodos.workflows.common.enums.WorkFlowStatus;
-import com.redhat.parodos.workflows.common.context.WorkContextUtil;
-import com.redhat.parodos.workflows.definition.WorkFlowCheckerDefinition;
-import com.redhat.parodos.workflows.definition.WorkFlowDefinition;
-import com.redhat.parodos.workflows.work.WorkContext;
-import com.redhat.parodos.workflows.work.WorkReport;
-import com.redhat.parodos.workflows.work.WorkStatus;
-import com.redhat.parodos.workflows.workflow.WorkFlow;
 import java.util.Date;
-import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
+import com.redhat.parodos.security.SecurityUtils;
+import com.redhat.parodos.workflow.WorkFlowCheckerDefinition;
+import com.redhat.parodos.workflow.WorkFlowDefinition;
+import com.redhat.parodos.workflow.WorkFlowDelegate;
+import com.redhat.parodos.workflow.WorkFlowStatus;
+import com.redhat.parodos.workflow.context.WorkContextDelegate;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinitionEntity;
+import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
+import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionEntity;
+import com.redhat.parodos.workflow.execution.scheduler.WorkFlowSchedulerServiceImpl;
+import com.redhat.parodos.workflow.execution.service.WorkFlowExecutionServiceImpl;
+import com.redhat.parodos.workflows.work.WorkContext;
+import com.redhat.parodos.workflows.work.WorkReport;
+import com.redhat.parodos.workflows.work.WorkStatus;
+import com.redhat.parodos.workflows.workflow.WorkFlow;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Aspect pointcut to perform state management for WorkFlow executions
@@ -96,18 +97,18 @@ public class WorkFlowExecutionAspect {
                 workFlowDefinitionEntity.getId(),
                 WorkFlowStatus.IN_PROGRESS);
         // update work context
-        WorkContextUtil.write(workContext,
-                WorkContextUtil.ProcessType.WORKFLOW_DEFINITION,
-                WorkContextUtil.Resource.ID,
+        WorkContextDelegate.write(workContext,
+        		WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION,
+        		WorkContextDelegate.Resource.ID,
                 workFlowDefinitionEntity.getId().toString());
-        WorkContextUtil.write(workContext,
-                WorkContextUtil.ProcessType.WORKFLOW_EXECUTION,
-                WorkContextUtil.Resource.ID,
+        WorkContextDelegate.write(workContext,
+        		WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+        		WorkContextDelegate.Resource.ID,
                 workFlowExecutionEntity.getId().toString());
-        workFlowDefinitionEntity.getTasks().forEach(workFlowTaskDefinitionEntity -> WorkContextUtil.write(workContext,
-                WorkContextUtil.ProcessType.WORKFLOW_TASK_EXECUTION,
+        workFlowDefinitionEntity.getTasks().forEach(workFlowTaskDefinitionEntity -> WorkContextDelegate.write(workContext,
+        		WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
                 workFlowTaskDefinitionEntity.getName(),
-                WorkContextUtil.Resource.ID,
+                WorkContextDelegate.Resource.ID,
                 workFlowTaskDefinitionEntity.getId().toString()));
         try {
             report = (WorkReport) proceedingJoinPoint.proceed();

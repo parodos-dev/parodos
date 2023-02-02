@@ -15,10 +15,29 @@
  */
 package com.redhat.parodos.workflow.controller;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.redhat.parodos.workflow.WorkFlowDefinition;
 import com.redhat.parodos.workflow.WorkFlowDelegate;
+import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.dto.EmbeddedTaskResponseDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowTaskDefinitionResponseDTO;
@@ -29,26 +48,7 @@ import com.redhat.parodos.workflow.definition.service.WorkFlowTaskDefinitionServ
 import com.redhat.parodos.workflow.execution.dto.WorkFlowExecutionResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowTaskExecutionRequestDTO;
 import com.redhat.parodos.workflow.execution.service.WorkFlowExecutionServiceImpl;
-import com.redhat.parodos.workflows.common.context.WorkContextUtil;
-import com.redhat.parodos.workflows.definition.WorkFlowDefinition;
 import com.redhat.parodos.workflows.work.WorkReport;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * controller
@@ -57,7 +57,6 @@ import java.util.stream.Collectors;
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
-@Slf4j
 @CrossOrigin(origins = "*", maxAge = 1800)
 @RestController
 @RequestMapping("/api/v1/workflows")
@@ -130,26 +129,34 @@ public class WorkFlowController {
     @PostMapping("/{workFlowDefinitionId}/executions")
     public ResponseEntity<WorkFlowExecutionResponseDTO> executeWorkFlow(@PathVariable String workFlowDefinitionId,
                                                                         @RequestBody List<WorkFlowTaskExecutionRequestDTO> workFlowTaskExecutionRequestDTOList) {
-        Map<String, Map<String, String>> workFlowTaskArguments = new HashMap<>();
-        workFlowTaskExecutionRequestDTOList.forEach(arg -> {
-            Map<String, String> tasksValuesMap = new HashMap<>();
-            arg.getArguments().forEach(i -> tasksValuesMap.put(i.getKey(), i.getValue()));
-            workFlowTaskArguments.put(arg.getTaskName(), tasksValuesMap);
-        });
+        
+    	Map<String, Map<String, String>> workFlowTaskArguments = getWorkflowTaskArguments(workFlowTaskExecutionRequestDTOList);
+        
         WorkFlowDefinition workFlowDefinition = workFlowDelegate.getWorkFlowDefinitionById(UUID.fromString(workFlowDefinitionId));
         WorkReport workReport = workFlowExecutionService.execute(workFlowDefinition,
                 workFlowDelegate.getWorkFlowExecutionByName(workFlowDefinition.getName()),
                 workFlowTaskArguments);
         return ResponseEntity.ok(WorkFlowExecutionResponseDTO.builder()
-                .workFlowExecutionId(WorkContextUtil.read(
+                .workFlowExecutionId(WorkContextDelegate.read(
                         workReport.getWorkContext(),
-                        WorkContextUtil.ProcessType.WORKFLOW_EXECUTION,
-                        WorkContextUtil.Resource.ID).toString())
-                .output(WorkContextUtil.read(workReport.getWorkContext(),
-                        WorkContextUtil.ProcessType.WORKFLOW_EXECUTION,
-                        WorkContextUtil.Resource.INFRASTRUCTURE_OPTIONS))
+                        WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+                        WorkContextDelegate.Resource.ID).toString())
+                .output(WorkContextDelegate.read(workReport.getWorkContext(),
+                		WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+                		WorkContextDelegate.Resource.INFRASTRUCTURE_OPTIONS))
                 .build());
     }
+
+	private Map<String, Map<String, String>> getWorkflowTaskArguments(
+			List<WorkFlowTaskExecutionRequestDTO> workFlowTaskExecutionRequestDTOList) {
+		Map<String, Map<String, String>> workFlowTaskArguments = new HashMap<>();
+        workFlowTaskExecutionRequestDTOList.forEach(arg -> {
+            Map<String, String> tasksValuesMap = new HashMap<>();
+            arg.getArguments().forEach(i -> tasksValuesMap.put(i.getKey(), i.getValue()));
+            workFlowTaskArguments.put(arg.getTaskName(), tasksValuesMap);
+        });
+		return workFlowTaskArguments;
+	}
 
     private EmbeddedTaskResponseDTO getEmbeddedTask(UUID workFlowTaskDefinitionId) {
         if (null == workFlowTaskDefinitionId)

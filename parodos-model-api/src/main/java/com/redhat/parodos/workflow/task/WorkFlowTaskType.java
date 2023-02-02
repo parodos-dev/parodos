@@ -13,26 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow.registry;
-
-
-import com.redhat.parodos.workflow.WorkFlowDefinition;
-import com.redhat.parodos.workflows.workflow.WorkFlow;
-
-import java.util.UUID;
+package com.redhat.parodos.workflow.task;
 
 /**
- * Contract for Registering and Obtaining Workflows. Implementations could use the classpath, Spring Bean registry, a Database or some other custom means.
- *
- * For the WorkFlowRegistery in-memory collection the Key: BeanId, Value: WorkFlow
+ * A type for a WorkflowTask
  *
  * @author Luke Shannon (Github: lshannon)
+ * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
-public interface WorkFlowRegistry<T> {
-    WorkFlow getWorkFlowExecutionByName(T workFlowName);
-
-    WorkFlowDefinition getWorkFlowDefinitionById(UUID workFlowId);
-
-    UUID getWorkFlowTaskDefinitionId(T workFlowName, T workFlowTaskName);
+public enum WorkFlowTaskType {
+    ASSESSMENT,
+    CHECKER,
+    INFRASTRUCTURE
 }

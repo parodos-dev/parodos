@@ -15,11 +15,11 @@
  */
 package com.redhat.parodos.examples.continued.complex;
 
-import com.redhat.parodos.assessment.BaseAssessmentTask;
-import com.redhat.parodos.infrastructure.option.InfrastructureOption;
-import com.redhat.parodos.infrastructure.option.InfrastructureOptions;
-import com.redhat.parodos.workflows.common.context.WorkContextUtil;
-import com.redhat.parodos.workflows.definition.task.WorkFlowTaskDefinition;
+import com.redhat.parodos.workflow.context.WorkContextDelegate;
+import com.redhat.parodos.workflow.option.WorkFlowOption;
+import com.redhat.parodos.workflow.option.WorkFlowOptions;
+import com.redhat.parodos.workflow.task.WorkFlowTaskDefinition;
+import com.redhat.parodos.workflow.task.assessment.BaseAssessmentTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -33,7 +33,7 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 public class OnboardingAssessmentTaskExecution extends BaseAssessmentTask {
     private final WorkFlowTaskDefinition onboardingAssessmentTaskDefinition;
 
-    public OnboardingAssessmentTaskExecution(InfrastructureOption infrastructureOption, WorkFlowTaskDefinition onboardingAssessmentTaskDefinition) {
+    public OnboardingAssessmentTaskExecution(WorkFlowOption infrastructureOption, WorkFlowTaskDefinition onboardingAssessmentTaskDefinition) {
         super(infrastructureOption);
         this.onboardingAssessmentTaskDefinition = onboardingAssessmentTaskDefinition;
     }
@@ -45,10 +45,10 @@ public class OnboardingAssessmentTaskExecution extends BaseAssessmentTask {
 
     @Override
     public WorkReport execute(WorkContext workContext) {
-        WorkContextUtil.write(workContext,
-                WorkContextUtil.ProcessType.WORKFLOW_EXECUTION,
-                WorkContextUtil.Resource.INFRASTRUCTURE_OPTIONS,
-                new InfrastructureOptions.Builder()
+    	WorkContextDelegate.write(workContext,
+    			WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+    			WorkContextDelegate.Resource.INFRASTRUCTURE_OPTIONS,
+                new WorkFlowOptions.Builder()
                         .addNewOption(getInfrastructureOptions())
                         .build());
         return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);

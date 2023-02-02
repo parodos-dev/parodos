@@ -13,47 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow.execution.entity;
+package com.redhat.parodos.workflow.task.parameter;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-
-import com.redhat.parodos.workflow.WorkFlowStatus;
-
-import java.util.Date;
-import java.util.UUID;
-
 /**
- * workflow execution entity
- *
+ * An input to a @see WorkFlowTask. The @see WorkFlowTaskParameterType is used by the UI to render inputs to collect the values from users running the workflow
+ * 
  * @author Luke Shannon (Github: lshannon)
- * @author Richard Wang (Github: richardw98)
- * @author Annel Ketcha (Github: anludke)
+ *
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Entity(name = "workflow_execution")
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class WorkFlowExecutionEntity extends AbstractEntity {
-    private String executedBy;
-
-    private String executedFor;
-
-    private WorkFlowStatus status;
-
-    @Column(updatable = false)
-    private Date startDate;
-
-    private Date endDate;
-
-    @Column(name="workflow_definition_id")
-    private UUID workFlowDefinitionId;
+@NoArgsConstructor
+public class WorkFlowTaskParameter {
+	private String key;
+	private String description;
+	private boolean optional;
+	private WorkFlowTaskParameterType type;
 }

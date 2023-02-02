@@ -15,12 +15,13 @@
  */
 package com.redhat.parodos.examples.continued.complex;
 
-import com.redhat.parodos.workflows.definition.task.WorkFlowTaskDefinition;
-import com.redhat.parodos.workflows.execution.task.BaseWorkFlowCheckerTask;
+import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
+import com.redhat.parodos.workflow.task.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -29,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Luke Shannon (Github: lshannon)
  */
 @Slf4j
-public class MockApprovalWorkFlowCheckerTaskExecution extends BaseWorkFlowCheckerTask {
+public class MockApprovalWorkFlowCheckerTaskExecution extends BaseWorkFlowTask {
     private final WorkFlowTaskDefinition mockApprovalWorkFlowCheckerTaskDefinition;
 
     public MockApprovalWorkFlowCheckerTaskExecution(WorkFlowTaskDefinition mockApprovalWorkFlowCheckerTaskDefinition) {
@@ -46,4 +47,10 @@ public class MockApprovalWorkFlowCheckerTaskExecution extends BaseWorkFlowChecke
 		log.info("Mocking a successful workflow checker task");
         return new DefaultWorkReport(WorkStatus.COMPLETED, context);
     }
+
+	@Override
+	public WorkReport execute(WorkContext workContext) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

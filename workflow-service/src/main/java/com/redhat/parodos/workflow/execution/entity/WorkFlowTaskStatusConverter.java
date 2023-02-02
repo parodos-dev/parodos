@@ -15,10 +15,10 @@
  */
 package com.redhat.parodos.workflow.execution.entity;
 
-import com.redhat.parodos.workflows.common.enums.WorkFlowTaskStatus;
-
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
+
+import com.redhat.parodos.workflow.task.WorkFlowTaskStatus;
 
 /**
  * Converts WorkFlow task status into values that can be persisted into a DB column

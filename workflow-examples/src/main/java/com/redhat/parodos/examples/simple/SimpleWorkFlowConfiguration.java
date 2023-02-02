@@ -18,12 +18,13 @@ package com.redhat.parodos.examples.simple;
 import java.util.Date;
 import java.util.List;
 
-import com.redhat.parodos.workflows.definition.WorkFlowCheckerDefinition;
-import com.redhat.parodos.workflows.definition.WorkFlowDefinition;
-import com.redhat.parodos.workflows.common.enums.WorkFlowType;
-import com.redhat.parodos.workflows.definition.task.WorkFlowTaskDefinition;
-import com.redhat.parodos.workflows.definition.task.WorkFlowTaskParameter;
-import com.redhat.parodos.workflows.definition.task.WorkFlowTaskParameterType;
+import com.redhat.parodos.workflow.WorkFlowCheckerDefinition;
+import com.redhat.parodos.workflow.WorkFlowDefinition;
+import com.redhat.parodos.workflow.WorkFlowType;
+import com.redhat.parodos.workflow.task.WorkFlowTaskDefinition;
+import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
+import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

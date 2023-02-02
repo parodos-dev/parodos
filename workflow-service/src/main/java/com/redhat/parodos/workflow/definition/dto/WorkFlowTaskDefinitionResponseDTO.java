@@ -16,8 +16,9 @@
 package com.redhat.parodos.workflow.definition.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.redhat.parodos.workflows.common.enums.WorkFlowTaskOutput;
-import com.redhat.parodos.workflows.definition.task.WorkFlowTaskParameter;
+import com.redhat.parodos.workflow.task.WorkFlowTaskOutput;
+import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
+
 import lombok.Builder;
 import lombok.Data;
 

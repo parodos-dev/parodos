@@ -17,14 +17,14 @@ package com.redhat.parodos.workflow.registry;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.redhat.parodos.workflow.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerDefinitionEntity;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerDefinitionPK;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinitionEntity;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinitionEntity;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
-import com.redhat.parodos.workflows.definition.WorkFlowDefinition;
-import com.redhat.parodos.workflows.definition.task.WorkFlowTaskDefinition;
+import com.redhat.parodos.workflow.task.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

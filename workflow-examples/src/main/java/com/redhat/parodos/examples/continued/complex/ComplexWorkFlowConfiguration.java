@@ -15,23 +15,25 @@
  */
 package com.redhat.parodos.examples.continued.complex;
 
-import com.redhat.parodos.examples.simple.LoggingWorkFlowTaskExecution;
-import com.redhat.parodos.infrastructure.option.InfrastructureOption;
-import com.redhat.parodos.workflows.common.enums.WorkFlowType;
-import com.redhat.parodos.workflows.definition.WorkFlowCheckerDefinition;
-import com.redhat.parodos.workflows.definition.WorkFlowDefinition;
-import com.redhat.parodos.workflows.definition.task.WorkFlowTaskDefinition;
-import com.redhat.parodos.workflows.definition.task.WorkFlowTaskParameter;
-import com.redhat.parodos.workflows.definition.task.WorkFlowTaskParameterType;
-import com.redhat.parodos.workflows.workflow.ParallelFlow;
-import com.redhat.parodos.workflows.workflow.SequentialFlow;
-import com.redhat.parodos.workflows.workflow.WorkFlow;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executors;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.redhat.parodos.examples.simple.LoggingWorkFlowTaskExecution;
+import com.redhat.parodos.workflow.WorkFlowCheckerDefinition;
+import com.redhat.parodos.workflow.WorkFlowDefinition;
+import com.redhat.parodos.workflow.WorkFlowType;
+import com.redhat.parodos.workflow.option.WorkFlowOption;
+import com.redhat.parodos.workflow.task.WorkFlowTaskDefinition;
+import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
+import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
+import com.redhat.parodos.workflows.workflow.ParallelFlow;
+import com.redhat.parodos.workflows.workflow.SequentialFlow;
+import com.redhat.parodos.workflows.workflow.WorkFlow;
 
 /**
  * A more complex WorkFlow
@@ -43,8 +45,8 @@ public class ComplexWorkFlowConfiguration {
     //Start Assessment Logic
     //Infrastructure Option for Onboarding
     @Bean(name = "onboardingOption")
-    InfrastructureOption onboardingOption() {
-        return new InfrastructureOption.Builder("onboardingOption", "onboardingWorkFlowDefinition")
+    WorkFlowOption onboardingOption() {
+        return new WorkFlowOption.Builder("onboardingOption", "onboardingWorkFlowDefinition")
                 .displayName("onboardingWorkFlowDefinition")
                 .addToDetails("An example of a WorkFlow with Status checks")
                 .build();
@@ -69,7 +71,7 @@ public class ComplexWorkFlowConfiguration {
     }
 
     @Bean(name = "onboardingAssessmentTaskExecution")
-    OnboardingAssessmentTaskExecution onboardingAssessmentTaskExecution(@Qualifier("onboardingAssessmentTaskDefinition") WorkFlowTaskDefinition onboardingAssessmentTaskDefinition, @Qualifier("onboardingOption") InfrastructureOption onboardingOptions) {
+    OnboardingAssessmentTaskExecution onboardingAssessmentTaskExecution(@Qualifier("onboardingAssessmentTaskDefinition") WorkFlowTaskDefinition onboardingAssessmentTaskDefinition, @Qualifier("onboardingOption") WorkFlowOption onboardingOptions) {
         return new OnboardingAssessmentTaskExecution(onboardingOptions, onboardingAssessmentTaskDefinition);
     }
     //end assessment task

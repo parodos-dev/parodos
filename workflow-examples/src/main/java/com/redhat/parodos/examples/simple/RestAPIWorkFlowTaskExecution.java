@@ -15,8 +15,8 @@
  */
 package com.redhat.parodos.examples.simple;
 
-import com.redhat.parodos.workflows.definition.task.WorkFlowTaskDefinition;
-import com.redhat.parodos.workflows.execution.task.BaseWorkFlowTaskExecution;
+import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
+import com.redhat.parodos.workflow.task.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Getter
-public class RestAPIWorkFlowTaskExecution extends BaseWorkFlowTaskExecution {
+public class RestAPIWorkFlowTaskExecution extends BaseWorkFlowTask {
     private final WorkFlowTaskDefinition restAPIWorkFlowTaskDefinition;
 
     public RestAPIWorkFlowTaskExecution(final WorkFlowTaskDefinition restAPIWorkFlowTaskDefinition) {

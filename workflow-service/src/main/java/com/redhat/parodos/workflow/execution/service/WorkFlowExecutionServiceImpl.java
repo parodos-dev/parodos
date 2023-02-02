@@ -15,15 +15,16 @@
  */
 package com.redhat.parodos.workflow.execution.service;
 
+import com.redhat.parodos.workflow.WorkFlowDefinition;
 import com.redhat.parodos.workflow.WorkFlowDelegate;
+import com.redhat.parodos.workflow.WorkFlowStatus;
 import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
+import com.redhat.parodos.workflow.execution.dto.WorkFlowTaskExecutionRequestDTO;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionEntity;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecutionEntity;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowExecutionRepository;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskExecutionRepository;
-import com.redhat.parodos.workflows.common.enums.WorkFlowStatus;
-import com.redhat.parodos.workflows.common.enums.WorkFlowTaskStatus;
-import com.redhat.parodos.workflows.definition.WorkFlowDefinition;
+import com.redhat.parodos.workflow.task.WorkFlowTaskStatus;
 import com.redhat.parodos.workflows.engine.WorkFlowEngineBuilder;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
@@ -34,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -113,4 +115,15 @@ public class WorkFlowExecutionServiceImpl implements WorkFlowExecutionService {
     public WorkFlowTaskExecutionEntity updateWorkFlowTask(WorkFlowTaskExecutionEntity workFlowTaskExecutionEntity) {
         return workFlowTaskExecutionRepository.save(workFlowTaskExecutionEntity);
     }
+    
+    public Map<String, Map<String, String>> getWorkflowTaskArguments(
+			List<WorkFlowTaskExecutionRequestDTO> workFlowTaskExecutionRequestDTOList) {
+		Map<String, Map<String, String>> workFlowTaskArguments = new HashMap<>();
+        workFlowTaskExecutionRequestDTOList.forEach(arg -> {
+            Map<String, String> tasksValuesMap = new HashMap<>();
+            arg.getArguments().forEach(i -> tasksValuesMap.put(i.getKey(), i.getValue()));
+            workFlowTaskArguments.put(arg.getTaskName(), tasksValuesMap);
+        });
+		return workFlowTaskArguments;
+	}
 }

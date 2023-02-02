@@ -15,11 +15,11 @@
  */
 package com.redhat.parodos.workflow.execution.service;
 
+import com.redhat.parodos.workflow.WorkFlowDefinition;
+import com.redhat.parodos.workflow.WorkFlowStatus;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionEntity;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecutionEntity;
-import com.redhat.parodos.workflows.common.enums.WorkFlowStatus;
-import com.redhat.parodos.workflows.common.enums.WorkFlowTaskStatus;
-import com.redhat.parodos.workflows.definition.WorkFlowDefinition;
+import com.redhat.parodos.workflow.task.WorkFlowTaskStatus;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import java.util.Map;
