@@ -13,32 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow.task.assessment;
-
-import java.util.List;
+package com.redhat.parodos.workflow.task.infrastructure;
 
 import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
+import com.redhat.parodos.workflow.task.WorkFlowTaskDefinition;
+import com.redhat.parodos.workflow.task.WorkFlowTaskType;
+import lombok.Getter;
+import lombok.experimental.SuperBuilder;
+
+import java.util.List;
 
 /**
  *
- * Base Class for Assessment WorkFlowTasks. An implementation of this class would do an Assessment and return options
+ * Base Class for Infrastructure WorkFlowTasks. An implementation of this class would do an Infrastructure and return a
  *
  * @author Luke Shannon (Github: lshannon)
  *
  */
-public abstract class BaseAssessmentTask implements WorkFlowTask {
+@Getter
+@SuperBuilder
+public class InfrastructureTaskDefinition extends WorkFlowTaskDefinition {
 
-	/**
-	 * These are the options this AssessmentTasks can return
-	 */
-	List<WorkFlowOption> workflowOptions;
-
-	public BaseAssessmentTask(List<WorkFlowOption> workflowOptions) {
-		this.workflowOptions = workflowOptions;
-	}
-
-	public List<WorkFlowOption> getWorkFlowOptions() {
-		return workflowOptions;
+	public WorkFlowTaskType getWorkFlowType() {
+		return WorkFlowTaskType.INFRASTRUCTURE;
 	}
 }

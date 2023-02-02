@@ -25,6 +25,8 @@ import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 
+import java.util.List;
+
 /**
  * Simple Assessment to determine if Onboarding is appropriate
  *
@@ -34,7 +36,7 @@ public class OnboardingAssessmentTaskExecution extends BaseAssessmentTask {
     private final WorkFlowTaskDefinition onboardingAssessmentTaskDefinition;
 
     public OnboardingAssessmentTaskExecution(WorkFlowOption infrastructureOption, WorkFlowTaskDefinition onboardingAssessmentTaskDefinition) {
-        super(infrastructureOption);
+        super(List.of(infrastructureOption));
         this.onboardingAssessmentTaskDefinition = onboardingAssessmentTaskDefinition;
     }
 
@@ -45,11 +47,11 @@ public class OnboardingAssessmentTaskExecution extends BaseAssessmentTask {
 
     @Override
     public WorkReport execute(WorkContext workContext) {
-    	WorkContextDelegate.write(workContext,
-    			WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-    			WorkContextDelegate.Resource.INFRASTRUCTURE_OPTIONS,
+        WorkContextDelegate.write(workContext,
+                WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+                WorkContextDelegate.Resource.INFRASTRUCTURE_OPTIONS,
                 new WorkFlowOptions.Builder()
-                        .addNewOption(getInfrastructureOptions())
+                        .addNewOption(getWorkFlowOptions().get(0))
                         .build());
         return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
     }

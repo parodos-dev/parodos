@@ -15,15 +15,6 @@
  */
 package com.redhat.parodos.workflow.execution.aspect;
 
-import java.util.Date;
-import java.util.UUID;
-
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.stereotype.Component;
-
 import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
@@ -33,8 +24,15 @@ import com.redhat.parodos.workflow.task.WorkFlowTask;
 import com.redhat.parodos.workflow.task.WorkFlowTaskStatus;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
-
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
+
+import java.util.Date;
+import java.util.UUID;
 
 /**
  * Aspect pointcut to perform state management for WorkFlowTask executions
@@ -61,7 +59,7 @@ public class WorkFlowTaskExecutionAspect {
     /**
      * the "execute()" method of all subclasses of WorkFlowTask are targeted
      */
-    @Pointcut("execution(* com.redhat.parodos.workflows.execution.task.WorkFlowTask+.execute(..))")
+    @Pointcut("execution(* com.redhat.parodos.workflow.task.WorkFlowTask+.execute(..))")
     public void pointcutScopeTask() {
     }
 
@@ -85,34 +83,33 @@ public class WorkFlowTaskExecutionAspect {
             log.error("Workflow task execution {} has failed!", workFlowTaskName);
         }
         WorkContextDelegate.write(workContext,
-        		WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
+                WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
                 workFlowTaskName,
                 WorkContextDelegate.Resource.STATUS,
                 report.getStatus().name());
 
         WorkFlowTaskExecutionEntity workFlowTaskExecutionEntity = workFlowExecutionService.getWorkFlowTask(UUID.fromString(WorkContextDelegate.read(workContext,
-        		WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-        		WorkContextDelegate.Resource.ID).toString()),
+                        WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+                        WorkContextDelegate.Resource.ID).toString()),
                 UUID.fromString(WorkContextDelegate.read(workContext,
-                		WorkContextDelegate.ProcessType.WORKFLOW_TASK_DEFINITION,
-                workFlowTaskName,
-                WorkContextDelegate.Resource.ID).toString()));
+                        WorkContextDelegate.ProcessType.WORKFLOW_TASK_DEFINITION,
+                        workFlowTaskName,
+                        WorkContextDelegate.Resource.ID).toString()));
 
         if (workFlowTaskExecutionEntity == null) {
             workFlowExecutionService.saveWorkFlowTask(WorkContextDelegate.read(workContext,
-            		WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
-                        workFlowTaskName,
-                        WorkContextDelegate.Resource.ARGUMENTS).toString(),
-                UUID.fromString(WorkContextDelegate.read(workContext,
-                		WorkContextDelegate.ProcessType.WORKFLOW_TASK_DEFINITION,
-                        workFlowTaskName,
-                        WorkContextDelegate.Resource.ID).toString()),
-                UUID.fromString(WorkContextDelegate.read(workContext,
-                		WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-                		WorkContextDelegate.Resource.ID).toString()),
-                WorkFlowTaskStatus.valueOf(report.getStatus().name()));
-        }
-        else {
+                            WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
+                            workFlowTaskName,
+                            WorkContextDelegate.Resource.ARGUMENTS).toString(),
+                    UUID.fromString(WorkContextDelegate.read(workContext,
+                            WorkContextDelegate.ProcessType.WORKFLOW_TASK_DEFINITION,
+                            workFlowTaskName,
+                            WorkContextDelegate.Resource.ID).toString()),
+                    UUID.fromString(WorkContextDelegate.read(workContext,
+                            WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+                            WorkContextDelegate.Resource.ID).toString()),
+                    WorkFlowTaskStatus.valueOf(report.getStatus().name()));
+        } else {
             workFlowTaskExecutionEntity.setStatus(WorkFlowTaskStatus.valueOf(report.getStatus().name()));
             workFlowTaskExecutionEntity.setLastUpdateDate(new Date());
             workFlowExecutionService.updateWorkFlowTask(workFlowTaskExecutionEntity);

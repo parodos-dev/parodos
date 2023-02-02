@@ -15,8 +15,8 @@
  */
 package com.redhat.parodos.examples.simple;
 
-import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
 import com.redhat.parodos.workflow.task.WorkFlowTaskDefinition;
+import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Getter
-public class LoggingWorkFlowTaskExecution extends BaseWorkFlowTask {
+public class LoggingWorkFlowTaskExecution extends BaseInfrastructureWorkFlowTask {
     private final WorkFlowTaskDefinition loggingWorkFlowTaskDefinition;
 
     public LoggingWorkFlowTaskExecution(final WorkFlowTaskDefinition loggingWorkFlowTaskDefinition) {
@@ -46,13 +46,13 @@ public class LoggingWorkFlowTaskExecution extends BaseWorkFlowTask {
     }
 
     @Override
-	public WorkReport execute(WorkContext workContext) {
+    public WorkReport execute(WorkContext workContext) {
         log.info(">>> Executing loggingWorkFlowTaskExecution");
         log.info(">>> Get in workContext arguments for the task: {}", workContext.get(loggingWorkFlowTaskDefinition.getName()));
         if (getGetWorkFlowChecker() != null) {
-                log.info(">>> workflow task has a workflow checker");
+            log.info(">>> workflow task has a workflow checker");
         }
         log.info("Mocking a failed workflow checker task");
-		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
-	}
+        return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
+    }
 }

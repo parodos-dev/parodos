@@ -22,6 +22,8 @@ import com.redhat.parodos.workflow.WorkFlowCheckerDefinition;
 import com.redhat.parodos.workflow.WorkFlowDefinition;
 import com.redhat.parodos.workflow.WorkFlowType;
 import com.redhat.parodos.workflow.task.WorkFlowTaskDefinition;
+import com.redhat.parodos.workflow.task.checker.WorkFlowCheckerTaskDefinition;
+import com.redhat.parodos.workflow.task.infrastructure.InfrastructureTaskDefinition;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
 
@@ -43,8 +45,8 @@ public class SimpleWorkFlowConfiguration {
 
 	//Task 1
 	@Bean(name = "restAPIWorkFlowTaskDefinition")
-	WorkFlowTaskDefinition restAPIWorkFlowTaskDefinition() {
-		return WorkFlowTaskDefinition.builder()
+	InfrastructureTaskDefinition restAPIWorkFlowTaskDefinition() {
+		return InfrastructureTaskDefinition.builder()
 				.name("restAPIWorkFlowTaskDefinition")
 				.description("A rest api workflow task test")
 				.parameters(List.of(WorkFlowTaskParameter.builder()
@@ -65,8 +67,8 @@ public class SimpleWorkFlowConfiguration {
 
 	//Task 2
 	@Bean(name = "loggingWorkFlowTaskDefinition")
-	WorkFlowTaskDefinition loggingWorkFlowTaskDefinition(@Qualifier("restAPIWorkFlowTaskDefinition") WorkFlowTaskDefinition restAPIWorkFlowTaskDefinition, @Qualifier("simpleWorkFlowCheckerDefinition") WorkFlowCheckerDefinition simpleWorkFlowCheckerDefinition) {
-		WorkFlowTaskDefinition loggingWorkFlowTaskDefinition = WorkFlowTaskDefinition.builder()
+	InfrastructureTaskDefinition loggingWorkFlowTaskDefinition(@Qualifier("restAPIWorkFlowTaskDefinition") InfrastructureTaskDefinition restAPIWorkFlowTaskDefinition, @Qualifier("simpleWorkFlowCheckerDefinition") WorkFlowCheckerDefinition simpleWorkFlowCheckerDefinition) {
+		InfrastructureTaskDefinition loggingWorkFlowTaskDefinition = InfrastructureTaskDefinition.builder()
 				.name("loggingWorkFlowTaskDefinition")
 				.description("A logging workflow task test")
 				.parameters(List.of(WorkFlowTaskParameter.builder()
@@ -91,22 +93,22 @@ public class SimpleWorkFlowConfiguration {
 
 	//Start simpleWorkFlowChecker Task
 	@Bean(name = "simpleWorkFlowCheckerTaskDefinition")
-	WorkFlowTaskDefinition simpleWorkFlowCheckerTaskDefinition() {
-		return WorkFlowTaskDefinition.builder()
+	WorkFlowCheckerTaskDefinition simpleWorkFlowCheckerTaskDefinition() {
+		return WorkFlowCheckerTaskDefinition.builder()
 				.name("simpleWorkFlowCheckerTaskDefinition")
 				.description("A  workflow Checker task test")
 				.build();
 	}
 
     @Bean(name = "simpleWorkFlowCheckerTaskExecution")
-	SimpleWorkFlowCheckerTaskExecution simpleWorkFlowCheckerTaskExecution(@Qualifier("simpleWorkFlowCheckerTaskDefinition") WorkFlowTaskDefinition simpleWorkFlowCheckerTaskDefinition) {
+	SimpleWorkFlowCheckerTaskExecution simpleWorkFlowCheckerTaskExecution(@Qualifier("simpleWorkFlowCheckerTaskDefinition") WorkFlowCheckerTaskDefinition simpleWorkFlowCheckerTaskDefinition) {
     	return new SimpleWorkFlowCheckerTaskExecution(simpleWorkFlowCheckerTaskDefinition);
     }
 	//End simpleWorkFlowChecker Task
 
 	//Start simpleWorkFlowChecker Workflow
 	@Bean(name = "simpleWorkFlowCheckerDefinition")
-	WorkFlowCheckerDefinition simpleWorkFlowCheckerDefinition(@Qualifier("simpleWorkFlowCheckerTaskDefinition") WorkFlowTaskDefinition simpleWorkFlowCheckerTaskDefinition, @Qualifier("simpleNextSequentialWorkFlowDefinition") WorkFlowDefinition simpleNextSequentialWorkFlowDefinition){
+	WorkFlowCheckerDefinition simpleWorkFlowCheckerDefinition(@Qualifier("simpleWorkFlowCheckerTaskDefinition") WorkFlowCheckerTaskDefinition simpleWorkFlowCheckerTaskDefinition, @Qualifier("simpleNextSequentialWorkFlowDefinition") WorkFlowDefinition simpleNextSequentialWorkFlowDefinition){
 		return WorkFlowCheckerDefinition.builder()
 				.name("simpleWorkFlowCheckerDefinition")
 				.description("A simple workflow checker test")
@@ -132,8 +134,8 @@ public class SimpleWorkFlowConfiguration {
 
 	//Simple workflow
 	@Bean(name = "simpleSequentialWorkFlowDefinition")
-	WorkFlowDefinition simpleSequentialWorkFlowDefinition(@Qualifier("loggingWorkFlowTaskDefinition") WorkFlowTaskDefinition loggingWorkFlowTaskDefinition,
-														  @Qualifier("restAPIWorkFlowTaskDefinition") WorkFlowTaskDefinition restAPIWorkFlowTaskDefinition){
+	WorkFlowDefinition simpleSequentialWorkFlowDefinition(@Qualifier("loggingWorkFlowTaskDefinition") InfrastructureTaskDefinition loggingWorkFlowTaskDefinition,
+														  @Qualifier("restAPIWorkFlowTaskDefinition") InfrastructureTaskDefinition restAPIWorkFlowTaskDefinition){
 		return WorkFlowDefinition.builder()
 				.name("simpleSequentialWorkFlowDefinition")
 				.description("A simple sequential workflow test")
@@ -160,7 +162,7 @@ public class SimpleWorkFlowConfiguration {
 	//Simple next workflow
 	@Bean(name = "simpleNextSequentialWorkFlowDefinition")
 	WorkFlowDefinition simpleNextSequentialWorkFlowDefinition(
-			@Qualifier("restAPIWorkFlowTaskDefinition") WorkFlowTaskDefinition restAPIWorkFlowTaskDefinition){
+			@Qualifier("restAPIWorkFlowTaskDefinition") InfrastructureTaskDefinition restAPIWorkFlowTaskDefinition){
 		return WorkFlowDefinition.builder()
 				.name("simpleNextSequentialWorkFlowDefinition")
 				.description("A simple sequential workflow test")
