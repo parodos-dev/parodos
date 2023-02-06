@@ -13,15 +13,12 @@
     </parent>
 
     <properties>
-        <java.version>11</java.version>
         <common.io.version>2.11.0</common.io.version>
         <model.mapper.version>3.1.0</model.mapper.version>
         <spring-cloud.version>2020.0.4</spring-cloud.version>
         <springdoc-openapi-ui.version>1.6.4</springdoc-openapi-ui.version>
         <spring.plugin.version>2.0.0.RELEASE</spring.plugin.version>
         <hypersistence-utils.version>3.1.0</hypersistence-utils.version>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
         <springframework.boot.version>2.5.5</springframework.boot.version>
     </properties>
 

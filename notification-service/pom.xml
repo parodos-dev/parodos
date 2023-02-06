@@ -15,7 +15,6 @@
     </parent>
 
 	<properties>
-		<java.version>11</java.version>
 		<spring-cloud.version>2020.0.4</spring-cloud.version>
 		<springdoc-openapi-ui.version>1.5.10</springdoc-openapi-ui.version>
 		<postgres.socket.factory.version>1.2.0</postgres.socket.factory.version>
@@ -150,15 +149,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>3.0.0-M5</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>integration-test</goal>
-							<goal>verify</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>

@@ -13,18 +13,18 @@
   <name>pattern-detection-library</name>
   <properties>
     <maven.compiler.release>11</maven.compiler.release>
+    <slf4j-simple.version>1.7.30</slf4j-simple.version>
     <slf4j-api.version>1.7.30</slf4j-api.version>
+    <jackson.databind.version>2.13.4</jackson.databind.version>
+    <jackson.dataformat.version>2.13.4</jackson.dataformat.version>
     <guava.version>20.0</guava.version>
     <easy.flow.version>0.3</easy.flow.version>
+    <lombok.version>1.18.22</lombok.version>
+    <toml.version>0.7.2</toml.version>
     <commons-lang3.version>3.10</commons-lang3.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <junit.version>5.7.2</junit.version>
     <commons-io.version>2.6</commons-io.version>
-    <slf4j-simple.version>1.7.30</slf4j-simple.version>
-    <jackson.databind.version>2.13.4</jackson.databind.version>
-    <jackson.dataformat.version>2.13.4</jackson.dataformat.version>
-    <lombok.version>1.18.22</lombok.version>
-    <toml.version>0.7.2</toml.version>
     <project.reporting>UTF-8</project.reporting>
   </properties>
   <dependencies>
@@ -82,14 +82,4 @@
       <version>${guava.version}</version>
     </dependency>
   </dependencies>
-  <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.1</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-  </build>
 </project>
