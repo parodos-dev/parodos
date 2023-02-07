@@ -16,7 +16,7 @@
 package com.redhat.parodos.workflow.registry;
 
 
-import com.redhat.parodos.workflow.WorkFlowDefinition;
+//import com.redhat.parodos.workflow.WorkFlowDefinition;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 
 import java.util.UUID;
@@ -32,7 +32,7 @@ import java.util.UUID;
 public interface WorkFlowRegistry<T> {
     WorkFlow getWorkFlowExecutionByName(T workFlowName);
 
-    WorkFlowDefinition getWorkFlowDefinitionById(UUID workFlowId);
+//    WorkFlowDefinition getWorkFlowDefinitionById(UUID workFlowId);
 
     UUID getWorkFlowTaskDefinitionId(T workFlowName, T workFlowTaskName);
 }

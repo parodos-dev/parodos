@@ -35,7 +35,11 @@ public abstract class BaseInfrastructureWorkFlowTask implements WorkFlowTask {
 		return workFlowChecker;
 	}
 
-	public void setWorkFlowChecker(WorkFlowCheckerTask gateTwo) {
-		this.workFlowChecker = gateTwo;
+	public void setWorkFlowChecker(WorkFlowCheckerTask workFlowCheckerTask) {
+		this.workFlowChecker = workFlowCheckerTask;
+	}
+
+	public String getName() {
+		return this.getClass().getName();
 	}
 }

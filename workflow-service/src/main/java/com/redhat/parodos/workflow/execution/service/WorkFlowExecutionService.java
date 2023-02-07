@@ -15,8 +15,9 @@
  */
 package com.redhat.parodos.workflow.execution.service;
 
-import com.redhat.parodos.workflow.WorkFlowDefinition;
+//import com.redhat.parodos.workflow.WorkFlowDefinition;
 import com.redhat.parodos.workflow.WorkFlowStatus;
+//import com.redhat.parodos.workflow.annotation.WorkFlowDefinition;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionEntity;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecutionEntity;
 import com.redhat.parodos.workflow.task.WorkFlowTaskStatus;
@@ -33,7 +34,7 @@ import java.util.UUID;
  * @author Annel Ketcha (Github: anludke)
  */
 public interface WorkFlowExecutionService {
-    WorkReport execute(WorkFlowDefinition workFlowDefinition, WorkFlow workFlow, Map<String, Map<String, String>> workFlowTaskArguments);
+    WorkReport execute(WorkFlow workFlow, Map<String, Map<String, String>> workFlowTaskArguments);
 
     WorkFlowExecutionEntity getWorkFlowById(UUID workFlowExecutionId);
 

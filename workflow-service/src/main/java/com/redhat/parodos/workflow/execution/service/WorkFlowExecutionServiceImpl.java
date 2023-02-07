@@ -15,9 +15,10 @@
  */
 package com.redhat.parodos.workflow.execution.service;
 
-import com.redhat.parodos.workflow.WorkFlowDefinition;
+//import com.redhat.parodos.workflow.WorkFlowDefinition;
 import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.WorkFlowStatus;
+//import com.redhat.parodos.workflow.annotation.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowTaskExecutionRequestDTO;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionEntity;
@@ -63,10 +64,10 @@ public class WorkFlowExecutionServiceImpl implements WorkFlowExecutionService {
     }
 
     @Override
-    public WorkReport execute(WorkFlowDefinition workFlowDefinition, WorkFlow workFlow, Map<String, Map<String, String>> workFlowTaskArguments) {
-        log.info("execute WorkFlowDefinition: {}, workFlow: {}", workFlowDefinition, workFlow);
+    public WorkReport execute(WorkFlow workFlow, Map<String, Map<String, String>> workFlowTaskArguments) {
+        log.info("execute workFlow: {}", workFlow);
         if (null != workFlow) {
-            WorkContext workContext = workFlowDelegate.getWorkFlowContext(workFlowDefinition, workFlowTaskArguments);
+            WorkContext workContext = workFlowDelegate.getWorkFlowContext(workFlowTaskArguments);
             return WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(workFlow, workContext);
         } else {
             return new DefaultWorkReport(WorkStatus.FAILED, new WorkContext());

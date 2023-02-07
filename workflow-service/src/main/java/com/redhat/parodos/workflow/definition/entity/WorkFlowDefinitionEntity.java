@@ -16,23 +16,21 @@
 package com.redhat.parodos.workflow.definition.entity;
 
 import com.redhat.parodos.workflow.execution.entity.AbstractEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * entity
@@ -41,16 +39,14 @@ import java.util.Set;
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
+
 @Data
-//@EqualsAndHashCode(callSuper = false)
 @Entity(name = "workflow_definition")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class WorkFlowDefinitionEntity extends AbstractEntity {
     private String name;
-
-    private String description;
 
     private String type;
 
@@ -61,14 +57,16 @@ public class WorkFlowDefinitionEntity extends AbstractEntity {
 
     private Date modifyDate;
 
-    @OneToMany(mappedBy = "workFlowDefinitionEntity", fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    private List<WorkFlowTaskDefinitionEntity> tasks = Collections.synchronizedList(new ArrayList<>());
+    @OneToMany(mappedBy = "workFlowDefinitionEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<WorkFlowTaskDefinitionEntity> workFlowTaskDefinitionEntities = new ArrayList<>();
 
     @OneToMany(mappedBy = "checkWorkFlow", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private Set<WorkFlowCheckerDefinitionEntity> workFlowCheckerDefinitionEntities = new HashSet<>();
 
     @OneToOne(mappedBy = "nextWorkFlow", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private WorkFlowCheckerDefinitionEntity workFlowCheckerDefinitionEntity;
+
+    private String commitId;
 }
 
 

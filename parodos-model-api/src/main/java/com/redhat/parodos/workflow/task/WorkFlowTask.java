@@ -15,7 +15,10 @@
  */
 package com.redhat.parodos.workflow.task;
 
+import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import com.redhat.parodos.workflows.work.Work;
+
+import java.util.List;
 
 /**
  * Basic Contract for Work in the Infrastructure Service
@@ -24,4 +27,6 @@ import com.redhat.parodos.workflows.work.Work;
  *
  */
 public interface WorkFlowTask extends Work {
+    List<WorkFlowTaskParameter> getParameters();
+    List<WorkFlowTaskOutput> getOutputs();
 }

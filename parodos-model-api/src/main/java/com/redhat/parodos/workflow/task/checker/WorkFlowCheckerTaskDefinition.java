@@ -15,9 +15,7 @@
  */
 package com.redhat.parodos.workflow.task.checker;
 
-import com.redhat.parodos.workflow.task.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.task.WorkFlowTaskType;
-
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
@@ -29,10 +27,8 @@ import lombok.experimental.SuperBuilder;
  */
 @Getter
 @SuperBuilder
-public class WorkFlowCheckerTaskDefinition extends WorkFlowTaskDefinition {
-	
+public class WorkFlowCheckerTaskDefinition {
 	 public WorkFlowTaskType getWorkFlowType() {
 	    	return WorkFlowTaskType.CHECKER;
 	    }
-
 }

@@ -18,12 +18,10 @@ package com.redhat.parodos.workflow.definition.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.redhat.parodos.workflow.task.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
-
-import lombok.Builder;
-import lombok.Data;
-
 import java.util.List;
 import java.util.UUID;
+import lombok.Builder;
+import lombok.Data;
 
 /**
  * response dto
@@ -39,19 +37,11 @@ public class WorkFlowTaskDefinitionResponseDTO {
 
     private String name;
 
-    private String description;
-
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<WorkFlowTaskParameter> parameters;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<WorkFlowTaskOutput> outputs;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private EmbeddedTaskResponseDTO previousTask;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private EmbeddedTaskResponseDTO nextTask;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private UUID workFlowChecker;

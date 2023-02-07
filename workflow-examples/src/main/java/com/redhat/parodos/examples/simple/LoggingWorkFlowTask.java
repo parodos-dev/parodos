@@ -15,43 +15,50 @@
  */
 package com.redhat.parodos.examples.simple;
 
-import com.redhat.parodos.workflow.task.WorkFlowTaskDefinition;
+import com.redhat.parodos.workflow.task.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
+import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
+import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import lombok.Getter;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * rest api task execution
+ * logging task execution
  *
  * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
+
 @Slf4j
-@Getter
-public class RestAPIWorkFlowTaskExecution extends BaseInfrastructureWorkFlowTask {
-    private final WorkFlowTaskDefinition restAPIWorkFlowTaskDefinition;
-
-    public RestAPIWorkFlowTaskExecution(final WorkFlowTaskDefinition restAPIWorkFlowTaskDefinition) {
-        this.restAPIWorkFlowTaskDefinition = restAPIWorkFlowTaskDefinition;
-    }
-
-    @Override
-    public String getName() {
-        return this.restAPIWorkFlowTaskDefinition.getName();
-    }
-
-    /**
-     * Executed by the InfrastructureTask engine as part of the Workflow
-     */
+public class LoggingWorkFlowTask extends BaseInfrastructureWorkFlowTask {
     @Override
     public WorkReport execute(WorkContext workContext) {
-        log.info("### Mocking a RestAPIWorkFlowTaskExecution");
-        log.info("### Getting in workContext arguments for the task: {}", workContext.get(restAPIWorkFlowTaskDefinition.getName()));
+        log.info(">>> Executing loggingWorkFlowTaskExecution");
+        if (getGetWorkFlowChecker() != null) {
+            log.info(">>> workflow task has a workflow checker");
+        }
+
+        log.info("Mocking a failed workflow checker task");
         return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
+    }
+
+    @Override
+    public List<WorkFlowTaskParameter> getParameters() {
+        return List.of(WorkFlowTaskParameter.builder()
+                .key("api-server")
+                .description("The api server")
+                .type(WorkFlowTaskParameterType.URL)
+                .optional(false)
+                .build());
+    }
+
+    @Override
+    public List<WorkFlowTaskOutput> getOutputs() {
+        return List.of(WorkFlowTaskOutput.OTHER);
     }
 }

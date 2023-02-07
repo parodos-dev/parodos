@@ -5,16 +5,39 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <changeSet id="1" author="luke" runAlways="true" runOnChange="true">
-        <createTable tableName="workflow_definition">
+        <createTable tableName="user">
+            <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="varchar(255)"/>
+            <column name="first_name" type="varchar(255)"/>
+            <column name="last_name" type="varchar(255)"/>
+            <column name="email" type="varchar(255)"/>
+            <column name="object_version" type="bigint"/>
+        </createTable>
+
+        <createTable tableName="project">
             <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="varchar(255)"/>
             <column name="description" type="varchar(255)"/>
+            <column name="user_id" type="${uuidType}">
+                <constraints nullable="false" foreignKeyName="fk_project_user" references="user(id)"/>
+            </column>
+            <column name="object_version" type="bigint"/>
+        </createTable>
+
+        <createTable tableName="workflow_definition">
+            <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
             <column name="type" type="varchar(255)"/>
             <column name="author" type="varchar(255)"/>
             <column name="create_date" type="timestamp" defaultValue="${now}"/>
             <column name="modify_date" type="timestamp" defaultValue="${now}"/>
+            <column name="commit_id" type="varchar(255)"/>
             <column name="object_version" type="bigint"/>
         </createTable>
 
@@ -23,16 +46,14 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="varchar(255)"/>
-            <column name="description" type="varchar(255)"/>
             <column name="parameters" type="varchar(4000)"/>
             <column name="outputs" type="varchar(4000)"/>
-            <column name="previous_task" type="varchar(255)"/>
-            <column name="next_task" type="varchar(255)"/>
             <column name="create_date" type="timestamp" defaultValue="${now}"/>
             <column name="modify_date" type="timestamp" defaultValue="${now}"/>
             <column name="workflow_definition_id" type="${uuidType}">
                 <constraints nullable="false" foreignKeyName="fk_workflow_task_definition_workflow_definition" references="workflow_definition(id)"/>
             </column>
+            <column name="commit_id" type="varchar(255)"/>
             <column name="object_version" type="bigint"/>
         </createTable>
 
@@ -43,8 +64,7 @@
             <column name="workflow_definition_id" type="${uuidType}">
                 <constraints nullable="false" foreignKeyName="fk_workflow_execution_workflow_definition" references="workflow_definition(id)"/>
             </column>
-            <column name="executed_by" type="varchar(255)"/>
-            <column name="executed_for" type="varchar(255)"/>
+            <column name="project_id" type="varchar(255)"/>
             <column name="status" type="varchar(255)"/>
             <column name="start_date" type="timestamp" defaultValue="${now}"/>
             <column name="end_date" type="timestamp" defaultValue="${now}"/>
@@ -69,6 +89,7 @@
             <column name="last_update_date" type="timestamp" defaultValue="${now}"/>
             <column name="object_version" type="bigint"/>
         </createTable>
+
         <createTable tableName="workflow_checker_definition">
             <column name="task_id" type="${uuidType}" defaultValue="${uuidFunction}">
                 <constraints nullable="false" foreignKeyName="fk_workflow_checker_definition_task_definition_id" references="workflow_task_definition(id)"/>
@@ -81,6 +102,7 @@
                 <constraints nullable="false" foreignKeyName="fk_workflow_checker_definition_next_workflow_id" references="workflow_definition(id)"/>
             </column>
         </createTable>
+
         <addPrimaryKey
                 columnNames="workflow_checker_id, task_id"
                 constraintName="pk_workflow_checker_definition"

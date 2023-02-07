@@ -15,44 +15,45 @@
  */
 package com.redhat.parodos.examples.simple;
 
-import com.redhat.parodos.workflow.task.WorkFlowTaskDefinition;
+import com.redhat.parodos.workflow.task.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
+import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
+import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import lombok.Getter;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * logging task execution
+ * rest api task execution
  *
  * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
 @Slf4j
-@Getter
-public class LoggingWorkFlowTaskExecution extends BaseInfrastructureWorkFlowTask {
-    private final WorkFlowTaskDefinition loggingWorkFlowTaskDefinition;
+public class RestAPIWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
-    public LoggingWorkFlowTaskExecution(final WorkFlowTaskDefinition loggingWorkFlowTaskDefinition) {
-        this.loggingWorkFlowTaskDefinition = loggingWorkFlowTaskDefinition;
-    }
-
-    @Override
-    public String getName() {
-        return this.loggingWorkFlowTaskDefinition.getName();
-    }
-
+    /**
+     * Executed by the InfrastructureTask engine as part of the Workflow
+     */
     @Override
     public WorkReport execute(WorkContext workContext) {
-        log.info(">>> Executing loggingWorkFlowTaskExecution");
-        log.info(">>> Get in workContext arguments for the task: {}", workContext.get(loggingWorkFlowTaskDefinition.getName()));
-        if (getGetWorkFlowChecker() != null) {
-            log.info(">>> workflow task has a workflow checker");
-        }
-        log.info("Mocking a failed workflow checker task");
+        log.info("### Mocking a RestAPIWorkFlowTaskExecution");
         return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
+    }
+
+    public List<WorkFlowTaskParameter> getParameters() {
+        return List.of(WorkFlowTaskParameter.builder()
+                .key("username")
+                .description("The username")
+                .type(WorkFlowTaskParameterType.TEXT)
+                .optional(false).build());
+    }
+
+    public List<WorkFlowTaskOutput> getOutputs() {
+        return List.of(WorkFlowTaskOutput.OTHER);
     }
 }

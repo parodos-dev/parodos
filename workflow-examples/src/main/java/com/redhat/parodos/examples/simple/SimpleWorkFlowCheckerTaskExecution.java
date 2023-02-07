@@ -1,50 +1,49 @@
-/*
- * Copyright (c) 2022 Red Hat Developer
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.redhat.parodos.examples.simple;
-
-import com.redhat.parodos.workflow.task.WorkFlowTaskDefinition;
-import com.redhat.parodos.workflow.task.checker.WorkFlowCheckerTask;
-import com.redhat.parodos.workflows.work.DefaultWorkReport;
-import com.redhat.parodos.workflows.work.WorkContext;
-import com.redhat.parodos.workflows.work.WorkReport;
-import com.redhat.parodos.workflows.work.WorkStatus;
-import lombok.extern.slf4j.Slf4j;
-
-/**
- * A simple example of a WorkFlowChecker that always returns true
- *
- * @author Luke Shannon (Github: lshannon)
- */
-@Slf4j
-public class SimpleWorkFlowCheckerTaskExecution implements WorkFlowCheckerTask {
-
-    private final WorkFlowTaskDefinition simpleWorkFlowCheckerTaskDefinition;
-
-    public SimpleWorkFlowCheckerTaskExecution(final WorkFlowTaskDefinition simpleWorkFlowCheckerTaskDefinition) {
-        this.simpleWorkFlowCheckerTaskDefinition = simpleWorkFlowCheckerTaskDefinition;
-    }
-
-    @Override
-    public String getName() {
-        return this.simpleWorkFlowCheckerTaskDefinition.getName();
-    }
-
-    @Override
-    public WorkReport checkWorkFlowStatus(WorkContext context) {
-        log.info("Mocking a failed workflow checker task");
-        return new DefaultWorkReport(WorkStatus.FAILED, context);
-    }
-}
+///*
+// * Copyright (c) 2022 Red Hat Developer
+// *
+// * Licensed under the Apache License, Version 2.0 (the "License");
+// * you may not use this file except in compliance with the License.
+// * You may obtain a copy of the License at
+// *
+// *      https://www.apache.org/licenses/LICENSE-2.0
+// *
+// * Unless required by applicable law or agreed to in writing, software
+// * distributed under the License is distributed on an "AS IS" BASIS,
+// * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// * See the License for the specific language governing permissions and
+// * limitations under the License.
+// */
+//package com.redhat.parodos.examples.simple;
+//
+//import com.redhat.parodos.workflow.task.WorkFlowTaskDefinition;
+//import com.redhat.parodos.workflow.task.checker.WorkFlowCheckerTask;
+//import com.redhat.parodos.workflows.work.DefaultWorkReport;
+//import com.redhat.parodos.workflows.work.WorkContext;
+//import com.redhat.parodos.workflows.work.WorkReport;
+//import com.redhat.parodos.workflows.work.WorkStatus;
+//import lombok.extern.slf4j.Slf4j;
+//
+///**
+// * A simple example of a WorkFlowChecker that always returns true
+// *
+// * @author Luke Shannon (Github: lshannon)
+// */
+//@Slf4j
+//public class SimpleWorkFlowCheckerTaskExecution implements WorkFlowCheckerTask {
+//    private final WorkFlowTaskDefinition simpleWorkFlowCheckerTaskDefinition;
+//
+//    public SimpleWorkFlowCheckerTaskExecution(final WorkFlowTaskDefinition simpleWorkFlowCheckerTaskDefinition) {
+//        this.simpleWorkFlowCheckerTaskDefinition = simpleWorkFlowCheckerTaskDefinition;
+//    }
+//
+//    @Override
+//    public String getName() {
+//        return this.simpleWorkFlowCheckerTaskDefinition.getName();
+//    }
+//
+//    @Override
+//    public WorkReport checkWorkFlowStatus(WorkContext context) {
+//        log.info("Mocking a failed workflow checker task");
+//        return new DefaultWorkReport(WorkStatus.FAILED, context);
+//    }
+//}

@@ -17,9 +17,11 @@ package com.redhat.parodos.workflow;
 
 import java.util.Map;
 import java.util.UUID;
+
+//import com.redhat.parodos.workflow.annotation.WorkFlowDefinition;
 import org.springframework.stereotype.Component;
 
-import com.redhat.parodos.workflow.WorkFlowDefinition;
+//import com.redhat.parodos.workflow.WorkFlowDefinition;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.registry.BeanWorkFlowRegistryImpl;
 import com.redhat.parodos.workflows.work.WorkContext;
@@ -43,34 +45,34 @@ public class WorkFlowDelegate {
         this.workFlowRegistry = workFlowRegistry;
     }
 
-    public WorkContext getWorkFlowContext(WorkFlowDefinition workFlowDefinition, Map<String, Map<String, String>> workFlowTaskParameterValues) {
+    public WorkContext getWorkFlowContext(Map<String, Map<String, String>> workFlowTaskParameterValues) {
         WorkContext workContext = new WorkContext();
-        workFlowDefinition.getTasks().forEach(workFlowTaskDefinition -> {
-            log.info("****** workflow task name: {}, parameter values: {}", workFlowTaskDefinition.getName(), workFlowTaskParameterValues.get(workFlowTaskDefinition.getName()));
-            WorkContextDelegate.write(workContext,
-            		WorkContextDelegate.ProcessType.WORKFLOW_TASK_DEFINITION,
-                    workFlowTaskDefinition.getName(),
-                    WorkContextDelegate.Resource.NAME,
-                    workFlowTaskDefinition.getName());
-            WorkContextDelegate.write(workContext,
-            		WorkContextDelegate.ProcessType.WORKFLOW_TASK_DEFINITION,
-                    workFlowTaskDefinition.getName(),
-                    WorkContextDelegate.Resource.ID,
-                    getWorkFlowTaskDefinitionId(workFlowDefinition.getName(),
-                            workFlowTaskDefinition.getName()));
-            WorkContextDelegate.write(workContext,
-            		WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
-                    workFlowTaskDefinition.getName(),
-                    WorkContextDelegate.Resource.ARGUMENTS,
-                    workFlowTaskParameterValues.get(workFlowTaskDefinition.getName()) == null ?
-                            Map.of() : workFlowTaskParameterValues.get(workFlowTaskDefinition.getName()));
-        });
+//        workFlowDefinition.getTasks().forEach(workFlowTaskDefinition -> {
+//            log.info("****** workflow task name: {}, parameter values: {}", workFlowTaskDefinition.getName(), workFlowTaskParameterValues.get(workFlowTaskDefinition.getName()));
+//            WorkContextDelegate.write(workContext,
+//            		WorkContextDelegate.ProcessType.WORKFLOW_TASK_DEFINITION,
+//                    workFlowTaskDefinition.getName(),
+//                    WorkContextDelegate.Resource.NAME,
+//                    workFlowTaskDefinition.getName());
+//            WorkContextDelegate.write(workContext,
+//            		WorkContextDelegate.ProcessType.WORKFLOW_TASK_DEFINITION,
+//                    workFlowTaskDefinition.getName(),
+//                    WorkContextDelegate.Resource.ID,
+//                    getWorkFlowTaskDefinitionId(workFlowDefinition.getName(),
+//                            workFlowTaskDefinition.getName()));
+//            WorkContextDelegate.write(workContext,
+//            		WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
+//                    workFlowTaskDefinition.getName(),
+//                    WorkContextDelegate.Resource.ARGUMENTS,
+//                    workFlowTaskParameterValues.get(workFlowTaskDefinition.getName()) == null ?
+//                            Map.of() : workFlowTaskParameterValues.get(workFlowTaskDefinition.getName()));
+//        });
         return workContext;
     }
 
-    public WorkFlowDefinition getWorkFlowDefinitionById(UUID workFlowId) {
-        return workFlowRegistry.getWorkFlowDefinitionById(workFlowId);
-    }
+//    public WorkFlowDefinition getWorkFlowDefinitionById(UUID workFlowId) {
+//        return workFlowRegistry.getWorkFlowDefinitionById(workFlowId);
+//    }
 
     public WorkFlow getWorkFlowExecutionByName(String workFlowName) {
         return workFlowRegistry.getWorkFlowExecutionByName(workFlowName);

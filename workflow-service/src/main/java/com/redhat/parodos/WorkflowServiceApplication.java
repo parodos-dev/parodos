@@ -23,16 +23,15 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 
 /**
  * Main entry point into the application
- * 
- * @author Luke Shannon (Github: lshannon)
  *
+ * @author Luke Shannon (Github: lshannon)
  */
 @SpringBootApplication
 @EnableScheduling
 @EnableWebSecurity
 @EnableAspectJAutoProxy
 public class WorkflowServiceApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(WorkflowServiceApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(WorkflowServiceApplication.class, args);
+    }
 }

@@ -15,14 +15,9 @@
  */
 package com.redhat.parodos.workflow.task.infrastructure;
 
-import com.redhat.parodos.workflow.option.WorkFlowOption;
-import com.redhat.parodos.workflow.task.WorkFlowTask;
-import com.redhat.parodos.workflow.task.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.task.WorkFlowTaskType;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
-
-import java.util.List;
 
 /**
  *
@@ -33,7 +28,7 @@ import java.util.List;
  */
 @Getter
 @SuperBuilder
-public class InfrastructureTaskDefinition extends WorkFlowTaskDefinition {
+public class InfrastructureTaskDefinition {
 
 	public WorkFlowTaskType getWorkFlowType() {
 		return WorkFlowTaskType.INFRASTRUCTURE;

@@ -18,7 +18,7 @@ package com.redhat.parodos.workflow.option;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.redhat.parodos.workflow.WorkFlowDefinition;
+//import com.redhat.parodos.workflow.WorkFlowDefinition;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -48,29 +48,29 @@ import lombok.Setter;
 @Setter
 public class WorkFlowOption {
 	
-	private WorkFlowDefinition workFlowDefinition;
+//	private WorkFlowDefinition workFlowDefinition;
 	private String name;
 	private String description;
 	private List<String> details;
 	private String workFlowId;
 
 	private WorkFlowOption(Builder builder, List<String> details) {
-		this.description = builder.workFlowDefinition.getDescription();
+//		this.description = builder.workFlowDefinition.getDescription();
 		this.details = builder.details;
-		this.workFlowId = builder.workFlowDefinition.getId();
-		this.name = builder.workFlowDefinition.getName();
+//		this.workFlowId = builder.workFlowDefinition.getId();
+//		this.name = builder.workFlowDefinition.getName();
 		this.details = builder.details;
 	}
 
 	public static class Builder {
 		
-		private WorkFlowDefinition workFlowDefinition;
+//		private WorkFlowDefinition workFlowDefinition;
 		
 		private List<String> details = new ArrayList<>();
 
-		public Builder(WorkFlowDefinition workFlowDefinition) {
-			this.workFlowDefinition = workFlowDefinition;
-		}
+//		public Builder(WorkFlowDefinition workFlowDefinition) {
+//			this.workFlowDefinition = workFlowDefinition;
+//		}
 
 		public Builder setDetails(List<String> details) {
 			this.details = details;
