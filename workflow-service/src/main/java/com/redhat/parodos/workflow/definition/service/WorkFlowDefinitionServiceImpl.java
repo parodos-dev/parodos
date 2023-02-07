@@ -20,8 +20,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.workflow.WorkFlowType;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowTaskDefinitionResponseDTO;
-import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinitionEntity;
-import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinitionEntity;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
@@ -69,7 +69,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 
     @Override
     public List<WorkFlowTaskDefinitionResponseDTO> getWorkFlowTaskDefinitionById(UUID workFlowDefinitionId) {
-        return modelMapper.map(workFlowTaskDefinitionRepository.findByWorkFlowDefinitionEntity(workFlowDefinitionRepository.findById(workFlowDefinitionId).get()), new TypeToken<List<WorkFlowTaskDefinitionResponseDTO>>() {}.getType());
+        return modelMapper.map(workFlowTaskDefinitionRepository.findByWorkFlowDefinition(workFlowDefinitionRepository.findById(workFlowDefinitionId).get()), new TypeToken<List<WorkFlowTaskDefinitionResponseDTO>>() {}.getType());
     }
 
     @Override
@@ -80,14 +80,14 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
     @Override
     public WorkFlowDefinitionResponseDTO save(String workFlowName, WorkFlowType workFlowType, Map<String, WorkFlowTask> hmWorkFlowTasks) {
         // prepare workflow entity
-        WorkFlowDefinitionEntity workFlowDefinitionEntity = WorkFlowDefinitionEntity.builder()
+        WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder()
                 .name(workFlowName)
                 .type(workFlowType.name())
                 .createDate(new Date())
                 .modifyDate(new Date())
                 .build();
         // set workflow task entities
-        workFlowDefinitionEntity.setWorkFlowTaskDefinitionEntities(hmWorkFlowTasks.entrySet().stream().map( entry -> WorkFlowTaskDefinitionEntity.builder()
+        workFlowDefinition.setWorkFlowTaskDefinitions(hmWorkFlowTasks.entrySet().stream().map(entry -> WorkFlowTaskDefinition.builder()
                 .name(entry.getKey())
                 .parameters(writeValueAsString(entry.getValue().getParameters().stream()
                         .map(workFlowTaskParameter -> {
@@ -100,11 +100,11 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
                         })
                         .collect(Collectors.toList())))
                 .outputs(writeValueAsString(entry.getValue().getOutputs()))
-                .workFlowDefinitionEntity(workFlowDefinitionEntity)
+                .workFlowDefinition(workFlowDefinition)
                 .createDate(new Date())
                 .modifyDate(new Date())
                 .build()).collect(Collectors.toList()));
-        return modelMapper.map(workFlowDefinitionRepository.save(workFlowDefinitionEntity), WorkFlowDefinitionResponseDTO.class);
+        return modelMapper.map(workFlowDefinitionRepository.save(workFlowDefinition), WorkFlowDefinitionResponseDTO.class);
     }
 
     private String writeValueAsString(Object objectValue) {

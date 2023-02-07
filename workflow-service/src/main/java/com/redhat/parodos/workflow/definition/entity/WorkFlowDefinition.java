@@ -27,10 +27,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 
 /**
  * entity
@@ -40,12 +38,13 @@ import lombok.NoArgsConstructor;
  * @author Annel Ketcha (Github: anludke)
  */
 
-@Data
 @Entity(name = "workflow_definition")
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class WorkFlowDefinitionEntity extends AbstractEntity {
+public class WorkFlowDefinition extends AbstractEntity {
     private String name;
 
     private String type;
@@ -57,14 +56,14 @@ public class WorkFlowDefinitionEntity extends AbstractEntity {
 
     private Date modifyDate;
 
-    @OneToMany(mappedBy = "workFlowDefinitionEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<WorkFlowTaskDefinitionEntity> workFlowTaskDefinitionEntities = new ArrayList<>();
+    @OneToMany(mappedBy = "workFlowDefinition", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<WorkFlowTaskDefinition> workFlowTaskDefinitions = new ArrayList<>();
 
     @OneToMany(mappedBy = "checkWorkFlow", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private Set<WorkFlowCheckerDefinitionEntity> workFlowCheckerDefinitionEntities = new HashSet<>();
+    private Set<WorkFlowCheckerDefinition> workFlowCheckerDefinitions = new HashSet<>();
 
     @OneToOne(mappedBy = "nextWorkFlow", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private WorkFlowCheckerDefinitionEntity workFlowCheckerDefinitionEntity;
+    private WorkFlowCheckerDefinition workFlowCheckerDefinition;
 
     private String commitId;
 }

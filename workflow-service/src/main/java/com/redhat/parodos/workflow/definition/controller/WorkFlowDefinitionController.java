@@ -16,9 +16,7 @@
 package com.redhat.parodos.workflow.definition.controller;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
@@ -26,8 +24,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,9 +33,7 @@ import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowTaskDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
 import com.redhat.parodos.workflow.definition.service.WorkFlowTaskDefinitionServiceImpl;
-import com.redhat.parodos.workflow.execution.dto.WorkFlowExecutionResponseDTO;
-import com.redhat.parodos.workflow.execution.dto.WorkFlowTaskExecutionRequestDTO;
-import com.redhat.parodos.workflow.execution.service.WorkFlowExecutionServiceImpl;
+import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 
 /**
  * controller
@@ -55,7 +49,7 @@ public class WorkFlowDefinitionController {
     private final WorkFlowDefinitionServiceImpl workFlowDefinitionService;
     private final WorkFlowTaskDefinitionServiceImpl workFlowTaskDefinitionService;
 
-    public WorkFlowDefinitionController(WorkFlowDefinitionServiceImpl workFlowDefinitionService, WorkFlowTaskDefinitionServiceImpl workFlowTaskDefinitionService, WorkFlowExecutionServiceImpl workFlowExecutionService, WorkFlowDelegate workFlowDelegate, ModelMapper modelMapper, ObjectMapper objectMapper) {
+    public WorkFlowDefinitionController(WorkFlowDefinitionServiceImpl workFlowDefinitionService, WorkFlowTaskDefinitionServiceImpl workFlowTaskDefinitionService, WorkFlowServiceImpl workFlowExecutionService, WorkFlowDelegate workFlowDelegate, ModelMapper modelMapper, ObjectMapper objectMapper) {
         this.workFlowDefinitionService = workFlowDefinitionService;
         this.workFlowTaskDefinitionService = workFlowTaskDefinitionService;
 
@@ -67,9 +61,9 @@ public class WorkFlowDefinitionController {
     }
 
 
-//    @GetMapping("/{workFlowDefinitionId}/tasks")
-//    public ResponseEntity<Collection<WorkFlowTaskDefinitionResponseDTO>> getWorkFlowTaskDefinitions(@PathVariable String workFlowDefinitionId) {
-//        List<WorkFlowTaskDefinitionResponseDTO> workFlowTaskDefinitionResponseDTOs = workFlowDefinitionService.getWorkFlowTaskDefinitionById(UUID.fromString(workFlowDefinitionId));
-//        return null;
-//    }
+    @GetMapping("/{workFlowDefinitionId}/tasks")
+    public ResponseEntity<Collection<WorkFlowTaskDefinitionResponseDTO>> getWorkFlowTaskDefinitions(@PathVariable String workFlowDefinitionId) {
+        List<WorkFlowTaskDefinitionResponseDTO> workFlowTaskDefinitionResponseDTOs = workFlowDefinitionService.getWorkFlowTaskDefinitionById(UUID.fromString(workFlowDefinitionId));
+        return null;
+    }
 }

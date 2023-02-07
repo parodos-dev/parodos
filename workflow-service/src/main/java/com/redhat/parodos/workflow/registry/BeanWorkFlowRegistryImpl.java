@@ -15,7 +15,7 @@
  */
 package com.redhat.parodos.workflow.registry;
 
-import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinitionEntity;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +40,7 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
     // WorkFlow Maps with db id and entities
     private final Map<String, WorkFlow> workFlowExecutionNameMap = new HashMap<>();
     // WorkFlow Task Maps with db id and entities
-    private final Map<String, WorkFlowTaskDefinitionEntity> workFlowDefinitionTaskNameMap = new HashMap<>();
+    private final Map<String, WorkFlowTaskDefinition> workFlowDefinitionTaskNameMap = new HashMap<>();
     private final Map<String, UUID> workFlowDefinitionTaskIdMap = new HashMap<>();
 
     public BeanWorkFlowRegistryImpl(Map<String, WorkFlow> workFlows) {

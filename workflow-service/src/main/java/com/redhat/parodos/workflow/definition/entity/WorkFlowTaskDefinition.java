@@ -15,6 +15,7 @@
  */
 package com.redhat.parodos.workflow.definition.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.redhat.parodos.workflow.execution.entity.AbstractEntity;
 import java.util.Date;
 import javax.persistence.CascadeType;
@@ -24,10 +25,8 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 
 /**
  * task entity
@@ -36,13 +35,14 @@ import lombok.NoArgsConstructor;
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
-@Data
-//@EqualsAndHashCode(callSuper = false)
+
 @Entity(name = "workflow_task_definition")
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class WorkFlowTaskDefinitionEntity extends AbstractEntity {
+public class WorkFlowTaskDefinition extends AbstractEntity {
     private String name;
 
     private String parameters;
@@ -56,11 +56,11 @@ public class WorkFlowTaskDefinitionEntity extends AbstractEntity {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "workflow_definition_id")
-//    @JsonIgnore
-    private WorkFlowDefinitionEntity workFlowDefinitionEntity;
+    @JsonIgnore
+    private WorkFlowDefinition workFlowDefinition;
 
     @OneToOne(mappedBy = "task", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
-    private WorkFlowCheckerDefinitionEntity workFlowCheckerDefinitionEntity;
+    private WorkFlowCheckerDefinition workFlowCheckerDefinition;
 
     private String commitId;
 }

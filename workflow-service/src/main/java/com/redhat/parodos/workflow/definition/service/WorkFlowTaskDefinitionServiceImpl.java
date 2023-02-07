@@ -15,7 +15,7 @@
  */
 package com.redhat.parodos.workflow.definition.service;
 
-import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinitionEntity;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +37,7 @@ public class WorkFlowTaskDefinitionServiceImpl implements WorkFlowTaskDefinition
     }
 
     @Override
-    public WorkFlowTaskDefinitionEntity getWorkFlowTaskDefinitionById(UUID id) {
+    public WorkFlowTaskDefinition getWorkFlowTaskDefinitionById(UUID id) {
         return workFlowTaskDefinitionRepository.findById(id).get();
     }
 }

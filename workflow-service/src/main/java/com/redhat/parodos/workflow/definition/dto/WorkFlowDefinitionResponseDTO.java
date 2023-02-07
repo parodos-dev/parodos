@@ -30,7 +30,6 @@ import lombok.*;
  * @author Annel Ketcha (Github: anludke)
  */
 
-@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -48,11 +47,11 @@ public class WorkFlowDefinitionResponseDTO {
     private Date modifyDate;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<EmbeddedTaskResponseDTO> tasks;
+    private List<TaskResponseDTO> tasks;
 
     @Builder
     @Data
-    public static class EmbeddedTaskResponseDTO {
+    public static class TaskResponseDTO {
         private UUID id;
         private String name;
     }

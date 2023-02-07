@@ -15,7 +15,7 @@
  */
 package com.redhat.parodos.workflow.definition.service;
 
-import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinitionEntity;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 
 import java.util.UUID;
 
@@ -27,5 +27,5 @@ import java.util.UUID;
  * @author Annel Ketcha (Github: anludke)
  */
 public interface WorkFlowTaskDefinitionService {
-    WorkFlowTaskDefinitionEntity getWorkFlowTaskDefinitionById(UUID id);
+    WorkFlowTaskDefinition getWorkFlowTaskDefinitionById(UUID id);
 }

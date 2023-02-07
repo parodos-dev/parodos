@@ -18,8 +18,6 @@ package com.redhat.parodos.workflow.definition.service;
 import com.redhat.parodos.workflow.WorkFlowType;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowTaskDefinitionResponseDTO;
-import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinitionEntity;
-import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinitionEntity;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
 
 import java.util.List;
