@@ -63,8 +63,8 @@ public class WorkFlowDefinitionEntity extends AbstractEntity {
     @OneToMany(mappedBy = "checkWorkFlow", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private Set<WorkFlowCheckerDefinitionEntity> workFlowCheckerDefinitionEntities = new HashSet<>();
 
-    @OneToOne(mappedBy = "nextWorkFlow", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private WorkFlowCheckerDefinitionEntity workFlowCheckerDefinitionEntity;
+    @OneToMany(mappedBy = "nextWorkFlow", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    private Set<WorkFlowCheckerDefinitionEntity> workFlowCheckerDefinitionEntity = new HashSet<>();
 
     private String commitId;
 }

@@ -63,7 +63,7 @@ public class WorkFlowCheckerDefinitionEntity {
     @Column(name = "cron_expression")
     private String cronExpression;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     @JoinColumn(name = "next_workflow_id")
     private WorkFlowDefinitionEntity nextWorkFlow;
 }

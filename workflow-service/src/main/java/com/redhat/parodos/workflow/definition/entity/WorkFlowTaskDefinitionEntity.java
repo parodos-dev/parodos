@@ -56,7 +56,6 @@ public class WorkFlowTaskDefinitionEntity extends AbstractEntity {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "workflow_definition_id")
-//    @JsonIgnore
     private WorkFlowDefinitionEntity workFlowDefinitionEntity;
 
     @OneToOne(mappedBy = "task", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
