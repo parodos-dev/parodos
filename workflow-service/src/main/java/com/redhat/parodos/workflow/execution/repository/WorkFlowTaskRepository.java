@@ -13,36 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow.execution.dto;
+package com.redhat.parodos.workflow.execution.repository;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecutionEntity;
 import java.util.List;
+import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * workflow task execution request dto
+ * workflow task execution repository
  *
  * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
-@Builder
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class WorkFlowTaskExecutionRequestDTO {
-    String taskName;
-    List<ArgumentRequestDTO> arguments;
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ArgumentRequestDTO {
-        String key;
-        String value;
-    }
+public interface WorkFlowTaskRepository extends JpaRepository<WorkFlowTaskExecutionEntity, UUID> {
+    List<WorkFlowTaskExecutionEntity> findByWorkFlowExecutionId(UUID workFlowExecutionId);
+    List<WorkFlowTaskExecutionEntity> findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(UUID workFlowExecutionId, UUID workFlowTaskDefinitionId);
 }

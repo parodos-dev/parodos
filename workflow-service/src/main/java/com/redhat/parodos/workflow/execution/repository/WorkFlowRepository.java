@@ -27,5 +27,5 @@ import java.util.UUID;
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
-public interface WorkFlowExecutionRepository extends JpaRepository<WorkFlowExecutionEntity, UUID> {
+public interface WorkFlowRepository extends JpaRepository<WorkFlowExecutionEntity, UUID> {
 }

@@ -45,7 +45,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class WorkFlowDefinitionEntity extends AbstractEntity {
+public class WorkFlowDefinition extends AbstractEntity {
     private String name;
 
     private String type;
@@ -57,14 +57,14 @@ public class WorkFlowDefinitionEntity extends AbstractEntity {
 
     private Date modifyDate;
 
-    @OneToMany(mappedBy = "workFlowDefinitionEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<WorkFlowTaskDefinitionEntity> workFlowTaskDefinitionEntities = new ArrayList<>();
+    @OneToMany(mappedBy = "workFlowDefinition", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<WorkFlowTaskDefinition> workFlowTaskDefinitions = new ArrayList<>();
 
     @OneToMany(mappedBy = "checkWorkFlow", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private Set<WorkFlowCheckerDefinitionEntity> workFlowCheckerDefinitionEntities = new HashSet<>();
+    private Set<WorkFlowCheckerDefinition> workFlowCheckerDefinitions = new HashSet<>();
 
     @OneToMany(mappedBy = "nextWorkFlow", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private Set<WorkFlowCheckerDefinitionEntity> workFlowCheckerDefinitionEntity = new HashSet<>();
+    private Set<WorkFlowCheckerDefinition> workFlowCheckerDefinitions = new HashSet<>();
 
     private String commitId;
 }

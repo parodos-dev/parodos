@@ -38,13 +38,12 @@ import javax.persistence.OneToOne;
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
+
 @Entity(name = "workflow_checker_definition")
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
-//@EqualsAndHashCode(callSuper = false)
-@Data
-public class WorkFlowCheckerDefinitionEntity {
+public class WorkFlowCheckerDefinition {
     @EmbeddedId
     @AttributeOverride( name = "workFlowCheckerId", column = @Column(name = "workflow_checker_id"))
     @AttributeOverride( name = "taskId", column = @Column(name = "task_id"))
@@ -53,17 +52,17 @@ public class WorkFlowCheckerDefinitionEntity {
     @MapsId("workFlowCheckerId")
     @ManyToOne
     @JoinColumn(name = "workflow_checker_id")
-    private WorkFlowDefinitionEntity checkWorkFlow;
+    private WorkFlowDefinition checkWorkFlow;
 
     @MapsId("taskId")
     @OneToOne
     @JoinColumn(name = "task_id")
-    private WorkFlowTaskDefinitionEntity task;
+    private WorkFlowTaskDefinition task;
 
     @Column(name = "cron_expression")
     private String cronExpression;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     @JoinColumn(name = "next_workflow_id")
-    private WorkFlowDefinitionEntity nextWorkFlow;
+    private WorkFlowDefinition nextWorkFlow;
 }

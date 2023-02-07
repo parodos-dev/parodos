@@ -36,13 +36,13 @@ import lombok.NoArgsConstructor;
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
+
 @Data
-//@EqualsAndHashCode(callSuper = false)
 @Entity(name = "workflow_task_definition")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class WorkFlowTaskDefinitionEntity extends AbstractEntity {
+public class WorkFlowTaskDefinition extends AbstractEntity {
     private String name;
 
     private String parameters;
@@ -56,10 +56,10 @@ public class WorkFlowTaskDefinitionEntity extends AbstractEntity {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "workflow_definition_id")
-    private WorkFlowDefinitionEntity workFlowDefinitionEntity;
+    private WorkFlowDefinition workFlowDefinition;
 
     @OneToOne(mappedBy = "task", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
-    private WorkFlowCheckerDefinitionEntity workFlowCheckerDefinitionEntity;
+    private WorkFlowCheckerDefinition workFlowCheckerDefinition;
 
     private String commitId;
 }

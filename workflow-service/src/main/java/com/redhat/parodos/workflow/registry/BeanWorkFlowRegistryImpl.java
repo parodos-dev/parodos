@@ -16,16 +16,12 @@
 package com.redhat.parodos.workflow.registry;
 
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinitionEntity;
-import com.redhat.parodos.workflow.task.WorkFlowTask;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 
 /**
  * An implementation of the WorkflowRegistry that loads all Bean definitions of type WorkFlow into a list
@@ -44,7 +40,7 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
     private final Map<String, WorkFlowTask> workFlowTaskMap;
 
     // WorkFlow Task Maps with db id and entities
-    private final Map<String, WorkFlowTaskDefinitionEntity> workFlowDefinitionTaskNameMap = new HashMap<>();
+    private final Map<String, WorkFlowTaskDefinition> workFlowDefinitionTaskNameMap = new HashMap<>();
     private final Map<String, UUID> workFlowDefinitionTaskIdMap = new HashMap<>();
 
     private final BeanWorkFlowPostProcessorImpl beanWorkFlowPostProcessor;
@@ -59,8 +55,6 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 
     public BeanWorkFlowRegistryImpl(Map<String, WorkFlow> workFlows, Map<String, WorkFlowTask> workFlowTaskMap, Map<String, WorkFlowTask> workFlowTaskMap1, BeanWorkFlowPostProcessorImpl beanWorkFlowPostProcessor) {
         this.workFlows = workFlows;
-        this.workFlowTaskMap = workFlowTaskMap1;
-        this.beanWorkFlowPostProcessor = beanWorkFlowPostProcessor;
 
         if (workFlows == null) {
             log.error("No workflows were registered. Initializing an empty collection of workflows so the application can start");

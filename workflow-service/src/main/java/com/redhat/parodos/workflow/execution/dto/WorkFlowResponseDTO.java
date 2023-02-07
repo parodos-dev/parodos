@@ -28,8 +28,8 @@ import lombok.Data;
  */
 @Builder
 @Data
-public class WorkFlowExecutionResponseDTO<T> {
-    private String workFlowExecutionId;
+public class WorkFlowResponseDTO<T> {
+    private String workFlowId;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T output;

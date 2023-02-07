@@ -19,7 +19,7 @@ import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecutionEntity;
-import com.redhat.parodos.workflow.execution.service.WorkFlowExecutionServiceImpl;
+import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
 import com.redhat.parodos.workflow.task.WorkFlowTaskStatus;
 import com.redhat.parodos.workflows.work.WorkContext;
@@ -47,10 +47,10 @@ import java.util.UUID;
 @Slf4j
 public class WorkFlowTaskExecutionAspect {
     private final WorkFlowDefinitionServiceImpl workFlowDefinitionService;
-    private final WorkFlowExecutionServiceImpl workFlowExecutionService;
+    private final WorkFlowServiceImpl workFlowExecutionService;
     private final WorkFlowDelegate workFlowDelegate;
 
-    public WorkFlowTaskExecutionAspect(WorkFlowDefinitionServiceImpl workFlowDefinitionService, WorkFlowExecutionServiceImpl workFlowExecutionService, WorkFlowDelegate workFlowDelegate) {
+    public WorkFlowTaskExecutionAspect(WorkFlowDefinitionServiceImpl workFlowDefinitionService, WorkFlowServiceImpl workFlowExecutionService, WorkFlowDelegate workFlowDelegate) {
         this.workFlowDefinitionService = workFlowDefinitionService;
         this.workFlowExecutionService = workFlowExecutionService;
         this.workFlowDelegate = workFlowDelegate;
