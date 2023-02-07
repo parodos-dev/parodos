@@ -61,7 +61,7 @@ public class WorkFlowDefinitionController {
     }
 
 
-    @GetMapping("/{workFlowDefinitionId}/tasks")
+    @GetMapping("/{id}/tasks")
     public ResponseEntity<Collection<WorkFlowTaskDefinitionResponseDTO>> getWorkFlowTaskDefinitions(@PathVariable String workFlowDefinitionId) {
         List<WorkFlowTaskDefinitionResponseDTO> workFlowTaskDefinitionResponseDTOs = workFlowDefinitionService.getWorkFlowTaskDefinitionById(UUID.fromString(workFlowDefinitionId));
         return null;
