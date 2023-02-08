@@ -30,4 +30,5 @@ import java.util.UUID;
  */
 public interface WorkFlowDefinitionRepository extends JpaRepository<WorkFlowDefinition, UUID> {
     List<WorkFlowDefinition> findByName(String name);
+    List<WorkFlowDefinition> findByDescription(String description);
 }

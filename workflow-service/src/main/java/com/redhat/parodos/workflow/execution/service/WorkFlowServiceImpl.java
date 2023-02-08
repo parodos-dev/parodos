@@ -62,10 +62,11 @@ public class WorkFlowServiceImpl implements WorkFlowService {
     }
 
     @Override
-    public WorkReport execute(WorkFlow workFlow, Map<String, Map<String, String>> workFlowTaskArguments) {
+    public WorkReport execute(String workFlowName, Map<String, Map<String, String>> workFlowTaskArguments) {
+        WorkFlow workFlow = workFlowDelegate.getWorkFlowExecutionByName(workFlowName);
         log.info("execute workFlow: {}", workFlow);
         if (null != workFlow) {
-            WorkContext workContext = workFlowDelegate.getWorkFlowContext(workFlowDefinitionRepository.findByName(workFlow.getName()).stream().findFirst().get(), workFlowTaskArguments);
+            WorkContext workContext = workFlowDelegate.getWorkFlowContext(workFlowDefinitionRepository.findByName(workFlowName).stream().findFirst().get(), workFlowTaskArguments);
             return WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(workFlow, workContext);
         } else {
             return new DefaultWorkReport(WorkStatus.FAILED, new WorkContext());

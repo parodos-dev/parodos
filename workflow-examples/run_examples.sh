@@ -8,30 +8,30 @@
 
 get_workflow_name() {
   curl -X 'GET' -s \
-    "http://localhost:8080/api/v1/workflows-definitions/" \
+    "http://localhost:8080/api/v1/workflowdefinitions" \
     -H 'accept: */*' \
     -H 'Content-Type: application/json' | jq '.[] | select(.id=="'$1'")' | jq -r '.name'
 }
 
 get_workflow_id() {
   curl -X 'GET' -s \
-    "http://localhost:8080/api/v1/workflows-definitions/" \
+    "http://localhost:8080/api/v1/workflowdefinitions" \
     -H 'accept: */*' \
     -H 'Content-Type: application/json' | jq '.[] | select(.name=="'$1'")' | jq -r '.id'
 }
 
 get_checker_workflow() {
   curl -X 'GET' -s \
-    "http://localhost:8080/api/v1/workflows-definitions/$1/tasks" \
+    "http://localhost:8080/api/v1/workflowdefinitions/$1/" \
     -H 'accept: */*' \
-    -H 'Content-Type: application/json' | jq '.[] | select(has("workFlowChecker"))' | jq -r '.workFlowChecker' | head -n 1
+    -H 'Content-Type: application/json' | jq '.tasks[] | select(has("workFlowChecker"))' | jq -r '.workFlowChecker' | head -n 1
 }
 
 get_next_workflow() {
   curl -X 'GET' -s \
-    "http://localhost:8080/api/v1/workflows-definitions/$1/tasks" \
+    "http://localhost:8080/api/v1/workflowdefinitions/$1/" \
     -H 'accept: */*' \
-    -H 'Content-Type: application/json' | jq '.[] | select(has("nextWorkFlow"))' | jq -r '.nextWorkFlow' | head -n 1
+    -H 'Content-Type: application/json' | jq '.tasks[] | select(has("nextWorkFlow"))' | jq -r '.nextWorkFlow' | head -n 1
 }
 
 run_simple_flow() {
@@ -40,29 +40,13 @@ run_simple_flow() {
   echo "                                                  "
   workflow_id=$(get_workflow_id "simpleSequentialWorkFlowDefinition")
   curl -X 'POST' -v \
-    "http://localhost:8080/api/v1/workflows/$workflow_id" \
+    "http://localhost:8080/api/v1/workflows" \
     -H 'accept: */*' \
     -H 'Content-Type: application/json' \
-    -d '[
-          {
-            "taskName": "restAPIWorkFlowTaskDefinition",
-            "arguments": [
-              {
-                "key": "username",
-                "value": "Peter"
-              }
-            ]
-          },
-          {
-            "taskName": "loggingWorkFlowTaskDefinition",
-            "arguments": [
-              {
-                "key": "api-server",
-                "value": "http://api.com"
-              }
-            ]
-          }
-        ]'
+    -d '{
+        "name": "simpleSequentialWorkFlow_INFRASTRUCTURE_WORKFLOW",
+        "tasks": []
+      }'
   echo "                                                "
   echo "******** Simple Sequence Flow Completed ********"
   echo "                                                "
@@ -75,13 +59,13 @@ run_complex_flow() {
   echo "                                               "
   echo "Running the Assessment to see what WorkFlows are eligable for this situation:"
   INFRASTRUCTURE_OPTION=$(curl -X 'POST' -s \
-    'http://localhost:8080/api/v1/workflows/' \
+    'http://localhost:8080/api/v1/workflows' \
     -H 'accept: */*' \
     -H 'Content-Type: application/json' \
     -d '{
           "name": "onboardingAssessment_ASSESSMENT_WORKFLOW",
           "tasks": []
-        }' | jq -r '.output.newOptions[0].workFlowId')
+        }' | jq -r '.workFlowOptions.newOptions[0].workFlowId')
   echo "The Following Option Is Available: $INFRASTRUCTURE_OPTION"
   echo "                                               "
   echo "                                               "
@@ -143,7 +127,7 @@ run_complex_flow() {
     "http://localhost:8080/api/v1/workflows/" \
     -H 'accept: */*' \
     -H 'Content-Type: application/json' \
-     -d '{
+    -d '{
         "name": "'$NAMESPACE_WORKFLOW_NAME'",
         "tasks": []
       }' | jq -r '.workFlowId')"
@@ -161,7 +145,7 @@ run_complex_flow() {
     "http://localhost:8080/api/v1/workflows/" \
     -H 'accept: */*' \
     -H 'Content-Type: application/json' \
-     -d '{
+    -d '{
         "name": "'$NAMESPACE_WORKFLOW_CHECKER_NAME'",
         "tasks": []
       }' | jq -r '.workFlowId')"

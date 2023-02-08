@@ -95,8 +95,7 @@ public class WorkFlowContinuationService {
                             throw new RuntimeException(e);
                         }
                     });
-                    workFlowService.execute(workFlowDelegate.getWorkFlowExecutionByName(workFlowDefinitionEntity.getName()),
-                            workFlowTaskArguments);
+                    workFlowService.execute(workFlowDefinitionEntity.getName(), workFlowTaskArguments);
                 });
     }
 }
