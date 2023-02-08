@@ -83,7 +83,6 @@ public class WorkFlowContinuationService {
                 .filter(workFlowEntity -> WorkFlowStatus.IN_PROGRESS == workFlowEntity.getStatus())
                 .forEach(workFlowEntity -> {
                     WorkFlowDefinition workFlowDefinitionEntity = workFlowDefinitionRepository.findById(workFlowEntity.getWorkFlowDefinitionId()).get();
-//                    WorkFlowDefinition workFlowDefinition = workFlowDelegate.getWorkFlowDefinitionById(workFlowDefinitionEntity.getId());
                     List<WorkFlowTaskExecutionEntity> workFlowTaskEntityList = workFlowTaskRepository.findByWorkFlowExecutionId(workFlowEntity.getId());
                     Map<String, Map<String, String>> workFlowTaskArguments = new HashMap<>();
                     workFlowTaskEntityList.forEach(workFlowTaskEntity -> {
