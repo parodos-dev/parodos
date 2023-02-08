@@ -15,25 +15,16 @@
  */
 package com.redhat.parodos.workflow.definition.controller;
 
-import java.util.Collection;
+import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
+import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
 import java.util.List;
 import java.util.UUID;
-
-import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.redhat.parodos.workflow.WorkFlowDelegate;
-import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
-import com.redhat.parodos.workflow.definition.dto.WorkFlowTaskDefinitionResponseDTO;
-import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
-import com.redhat.parodos.workflow.definition.service.WorkFlowTaskDefinitionServiceImpl;
-import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 
 /**
  * controller
@@ -44,26 +35,21 @@ import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
  */
 @CrossOrigin(origins = "*", maxAge = 1800)
 @RestController
-@RequestMapping("/api/v1/workflows-definitions")
+@RequestMapping("/api/v1/workflowdefinitions")
 public class WorkFlowDefinitionController {
     private final WorkFlowDefinitionServiceImpl workFlowDefinitionService;
-    private final WorkFlowTaskDefinitionServiceImpl workFlowTaskDefinitionService;
 
-    public WorkFlowDefinitionController(WorkFlowDefinitionServiceImpl workFlowDefinitionService, WorkFlowTaskDefinitionServiceImpl workFlowTaskDefinitionService, WorkFlowServiceImpl workFlowExecutionService, WorkFlowDelegate workFlowDelegate, ModelMapper modelMapper, ObjectMapper objectMapper) {
+    public WorkFlowDefinitionController(WorkFlowDefinitionServiceImpl workFlowDefinitionService) {
         this.workFlowDefinitionService = workFlowDefinitionService;
-        this.workFlowTaskDefinitionService = workFlowTaskDefinitionService;
-
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<WorkFlowDefinitionResponseDTO>> getWorkFlowDefinitions() {
         return ResponseEntity.ok(workFlowDefinitionService.getWorkFlowDefinitions());
     }
 
-
-    @GetMapping("/{id}/tasks")
-    public ResponseEntity<Collection<WorkFlowTaskDefinitionResponseDTO>> getWorkFlowTaskDefinitions(@PathVariable String workFlowDefinitionId) {
-        List<WorkFlowTaskDefinitionResponseDTO> workFlowTaskDefinitionResponseDTOs = workFlowDefinitionService.getWorkFlowTaskDefinitionById(UUID.fromString(workFlowDefinitionId));
-        return null;
+    @GetMapping("/{id}")
+    public ResponseEntity<WorkFlowDefinitionResponseDTO> getWorkFlowTaskDefinitions(@PathVariable String id) {
+        return ResponseEntity.ok(workFlowDefinitionService.getWorkFlowDefinitionById(UUID.fromString(id)));
     }
 }

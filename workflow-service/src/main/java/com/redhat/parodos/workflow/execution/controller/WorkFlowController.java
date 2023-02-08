@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/workflows")
 public class WorkFlowController {
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<List<WorkFlowResponseDTO>> execute(@RequestBody @Valid WorkFlowRequestDTO workFlowRequestDTO) {
         return ResponseEntity.ok(new ArrayList<>());
     }

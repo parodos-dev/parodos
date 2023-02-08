@@ -1,11 +1,8 @@
 package com.redhat.parodos.workflow.execution.dto;
 
-import lombok.AllArgsConstructor;
+import java.util.List;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Builder
 @Data
@@ -16,8 +13,8 @@ public class WorkFlowRequestDTO {
     @Data
     @Builder
     public static class WorkFlowTaskRequestDTO {
-        String taskName;
-        List<ArgumentRequestDTO> arguments;
+        String name;
+        List<ArgumentRequestDTO> args;
 
         @Data
         @Builder
@@ -26,5 +23,4 @@ public class WorkFlowRequestDTO {
             String value;
         }
     }
-
 }

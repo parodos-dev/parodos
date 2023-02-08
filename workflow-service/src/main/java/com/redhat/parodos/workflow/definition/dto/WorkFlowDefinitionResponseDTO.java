@@ -19,8 +19,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * response dto
@@ -47,12 +48,5 @@ public class WorkFlowDefinitionResponseDTO {
     private Date modifyDate;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<TaskResponseDTO> tasks;
-
-    @Builder
-    @Data
-    public static class TaskResponseDTO {
-        private UUID id;
-        private String name;
-    }
+    private List<WorkFlowTaskDefinitionResponseDTO> tasks;
 }

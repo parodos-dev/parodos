@@ -33,10 +33,6 @@ import java.util.UUID;
  */
 public interface WorkFlowDefinitionService {
     List<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitions();
-
-    List<WorkFlowTaskDefinitionResponseDTO> getWorkFlowTaskDefinitionById(UUID workFlowDefinitionId);
-
-    WorkFlowDefinitionResponseDTO getWorkFlowDefinitionByName(String workFlowDefinitionName);
-
+    WorkFlowDefinitionResponseDTO getWorkFlowDefinitionById(UUID id);
     WorkFlowDefinitionResponseDTO save(String workFlowName, WorkFlowType workFlowType, Map<String, WorkFlowTask> hmWorkFlowTasks);
 }

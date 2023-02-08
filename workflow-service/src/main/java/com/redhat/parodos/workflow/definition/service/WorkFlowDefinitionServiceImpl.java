@@ -50,16 +50,13 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
     private final WorkFlowDefinitionRepository workFlowDefinitionRepository;
     private final WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository;
     private final ModelMapper modelMapper;
-    private final ObjectMapper objectMapper;
 
     public WorkFlowDefinitionServiceImpl(WorkFlowDefinitionRepository workFlowDefinitionRepository,
                                          WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository,
-                                         ModelMapper modelMapper,
-                                         ObjectMapper objectMapper) {
+                                         ModelMapper modelMapper) {
         this.workFlowDefinitionRepository = workFlowDefinitionRepository;
         this.workFlowTaskDefinitionRepository = workFlowTaskDefinitionRepository;
         this.modelMapper = modelMapper;
-        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -68,13 +65,10 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
     }
 
     @Override
-    public List<WorkFlowTaskDefinitionResponseDTO> getWorkFlowTaskDefinitionById(UUID workFlowDefinitionId) {
-        return modelMapper.map(workFlowTaskDefinitionRepository.findByWorkFlowDefinition(workFlowDefinitionRepository.findById(workFlowDefinitionId).get()), new TypeToken<List<WorkFlowTaskDefinitionResponseDTO>>() {}.getType());
-    }
-
-    @Override
-    public WorkFlowDefinitionResponseDTO getWorkFlowDefinitionByName(String workFlowDefinitionName) {
-        return modelMapper.map(workFlowDefinitionRepository.findByName(workFlowDefinitionName).get(0), WorkFlowDefinitionResponseDTO.class);
+    public WorkFlowDefinitionResponseDTO getWorkFlowDefinitionById(UUID id) {
+        WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException(String.format("Workflow definition id %s not found", id)));
+        return modelMapper.map(workFlowDefinition, WorkFlowDefinitionResponseDTO.class);
     }
 
     @Override
@@ -110,7 +104,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
     private String writeValueAsString(Object objectValue) {
         StringBuilder sb = new StringBuilder();
         try {
-            sb.append(objectMapper.writeValueAsString(objectValue));
+            sb.append((new ObjectMapper()).writeValueAsString(objectValue));
         } catch (JsonProcessingException e) {
             log.error("Error occurred in string conversion: {}", e.getMessage());
         }

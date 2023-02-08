@@ -47,13 +47,18 @@ public class RestAPIWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
     public List<WorkFlowTaskParameter> getParameters() {
         return List.of(WorkFlowTaskParameter.builder()
-                .key("username")
-                .description("The username")
-                .type(WorkFlowTaskParameterType.TEXT)
-                .optional(false).build());
+                        .key("username")
+                        .description("The username")
+                        .type(WorkFlowTaskParameterType.TEXT)
+                        .optional(false).build(),
+                WorkFlowTaskParameter.builder()
+                        .key("password")
+                        .description("The password")
+                        .type(WorkFlowTaskParameterType.PASSWORD)
+                        .optional(false).build());
     }
 
     public List<WorkFlowTaskOutput> getOutputs() {
-        return List.of(WorkFlowTaskOutput.OTHER);
+        return List.of(WorkFlowTaskOutput.HTTP2XX, WorkFlowTaskOutput.EXCEPTION);
     }
 }
