@@ -17,6 +17,7 @@ package com.redhat.parodos.workflow.task;
 
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import com.redhat.parodos.workflows.work.Work;
+import lombok.NonNull;
 
 import java.util.List;
 
@@ -26,7 +27,10 @@ import java.util.List;
  * @author Luke Shannon (Github: lshannon)
  *
  */
-public interface WorkFlowTask extends Work {
-    List<WorkFlowTaskParameter> getParameters();
-    List<WorkFlowTaskOutput> getOutputs();
+public interface WorkFlowTask extends Work  {
+    @NonNull
+    List<WorkFlowTaskParameter> getWorkFlowTaskParameters();
+
+    @NonNull
+    List<WorkFlowTaskOutput> getWorkFlowTaskOutputs();
 }

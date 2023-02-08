@@ -22,8 +22,11 @@ package com.redhat.parodos.workflow.consts;
  *
  */
 public class WorkFlowConstants {
-	// Can be used in the name/id of a Workflow to indicate its an Infrastructure Task WorkFlow
+	// Can be used in the name/id of a Workflow to indicate its an Infrastructure WorkFlow
 	public static final String INFRASTRUCTURE_WORKFLOW = "_INFRASTRUCTURE_WORKFLOW";
+
+	// Can be used in the name/id of a Workflow to indicate its a Checker WorkFlow
+	public static final String CHECKER_WORKFLOW = "_CHECKER_WORKFLOW";
 
 	// Name of the project that the WorkFlow was associated with
 	public static final String PROJECT_NAME = "PROJECT_NAME";

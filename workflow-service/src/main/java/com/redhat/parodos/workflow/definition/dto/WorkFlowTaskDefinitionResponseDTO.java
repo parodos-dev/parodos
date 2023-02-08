@@ -15,13 +15,17 @@
  */
 package com.redhat.parodos.workflow.definition.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.redhat.parodos.workflow.task.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import java.util.List;
 import java.util.UUID;
+
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * response dto
@@ -32,6 +36,9 @@ import lombok.Data;
  */
 @Data
 @Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
+@AllArgsConstructor
+@NoArgsConstructor
 public class WorkFlowTaskDefinitionResponseDTO {
     private String id;
 

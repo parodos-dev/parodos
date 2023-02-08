@@ -13,52 +13,57 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.examples.simple;
+package com.redhat.parodos.examples.continued.complex;
 
-import com.redhat.parodos.workflow.consts.WorkFlowConstants;
+import com.redhat.parodos.workflow.context.WorkContextDelegate;
+import com.redhat.parodos.workflow.option.WorkFlowOption;
+import com.redhat.parodos.workflow.option.WorkFlowOptions;
 import com.redhat.parodos.workflow.task.WorkFlowTaskOutput;
-import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
+import com.redhat.parodos.workflow.task.assessment.BaseAssessmentTask;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
+import java.util.Collections;
+
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
 
 /**
- * logging task execution
+ * Simple Assessment to determine if Onboarding is appropriate
  *
  * @author Luke Shannon (Github: lshannon)
- * @author Richard Wang (Github: richardw98)
- * @author Annel Ketcha (Github: anludke)
  */
-
-@Slf4j
-public class LoggingWorkFlowTask extends BaseInfrastructureWorkFlowTask {
-
-    @Override
-    public WorkReport execute(WorkContext workContext) {
-        log.info("Writing a message to the logs from: {}", getName());
-        if (getGetWorkFlowChecker() != null) {
-            workContext.put(WorkFlowConstants.WORKFLOW_CHECKER_ID, getGetWorkFlowChecker().getName());
-        }
-        return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
+public class OnboardingAssessmentTask extends BaseAssessmentTask {
+    private static final String INPUT = "INPUT";
+    public OnboardingAssessmentTask(WorkFlowOption infrastructureOption) {
+        super(List.of(infrastructureOption));
     }
 
     @Override
+    public WorkReport execute(WorkContext workContext) {
+        WorkContextDelegate.write(workContext,
+                WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+                WorkContextDelegate.Resource.INFRASTRUCTURE_OPTIONS,
+                new WorkFlowOptions.Builder()
+                        .addNewOption(getWorkFlowOptions().get(0))
+                        .build());
+        return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
+    }
+
     public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
-        return List.of(WorkFlowTaskParameter.builder()
-                .key("api-server")
-                .description("The api server")
-                .type(WorkFlowTaskParameterType.URL)
-                .optional(false)
-                .build());
+        return List.of(
+                WorkFlowTaskParameter.builder()
+                        .key(INPUT)
+                        .description("Enter some information to use for the Assessment to determine if they can onboard")
+                        .optional(false)
+                        .type(WorkFlowTaskParameterType.TEXT)
+                        .build());
     }
 
     @Override
     public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
-        return List.of(WorkFlowTaskOutput.OTHER);
+        return Collections.emptyList();
     }
 }

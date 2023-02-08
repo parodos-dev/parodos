@@ -38,6 +38,11 @@
             <version>${lombok.version}</version>
         </dependency>
         <!-- END Developer Productivity Dependencies -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>5.3.10</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
