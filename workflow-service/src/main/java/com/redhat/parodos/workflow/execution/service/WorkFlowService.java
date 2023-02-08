@@ -34,7 +34,7 @@ import java.util.UUID;
  * @author Annel Ketcha (Github: anludke)
  */
 public interface WorkFlowService {
-    WorkReport execute(WorkFlow workFlow, Map<String, Map<String, String>> workFlowTaskArguments);
+    WorkReport execute(String workFlowName, Map<String, Map<String, String>> workFlowTaskArguments);
 
     WorkFlowExecutionEntity getWorkFlowById(UUID workFlowExecutionId);
 

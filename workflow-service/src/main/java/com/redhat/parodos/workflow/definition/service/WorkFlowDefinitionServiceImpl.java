@@ -61,9 +61,10 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
     }
 
     @Override
-    public WorkFlowDefinitionResponseDTO save(String workFlowName, WorkFlowType workFlowType, Map<String, WorkFlowTask> hmWorkFlowTasks) {
+    public WorkFlowDefinitionResponseDTO save(String workFlowName, String workFlowDescription, WorkFlowType workFlowType, Map<String, WorkFlowTask> hmWorkFlowTasks) {
         WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder()
                 .name(workFlowName)
+                .description(workFlowDescription)
                 .type(workFlowType.name())
                 .createDate(new Date())
                 .modifyDate(new Date())

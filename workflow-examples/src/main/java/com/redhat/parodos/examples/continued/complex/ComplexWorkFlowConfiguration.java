@@ -45,6 +45,8 @@ public class ComplexWorkFlowConfiguration {
     WorkFlowOption onboardingOption() {
         return new WorkFlowOption.Builder("onboardingOption", "onboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
                 .addToDetails("An example of a complex WorkFlow with Status checks")
+                .displayName("Onboarding")
+                .setDescription("An example of a complex WorkFlow")
                 .build();
     }
 
@@ -60,7 +62,7 @@ public class ComplexWorkFlowConfiguration {
         return SequentialFlow
                 .Builder
                 .aNewSequentialFlow()
-                .named("onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
+                .named("onboarding Assessment WorkFlow")
                 .execute(onboardingAssessmentTask)
                 .build();
     }
@@ -97,7 +99,7 @@ public class ComplexWorkFlowConfiguration {
                                 @Qualifier("dynatraceWorkFlowTask") LoggingWorkFlowTask dynatraceWorkFlowTask) {
         return ParallelFlow.Builder
                 .aNewParallelFlow()
-                .named("onboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+                .named("onboarding Infrastructure WorkFlow")
                 .execute(certWorkFlowTask, adGroupWorkFlowTask, dynatraceWorkFlowTask)
                 .with(Executors.newFixedThreadPool(3))
                 .build();
@@ -118,7 +120,7 @@ public class ComplexWorkFlowConfiguration {
     WorkFlow nameSpaceWorkFlow(@Qualifier("nameSpaceWorkFlowTask") LoggingWorkFlowTask nameSpaceWorkFlowTask) {
         return SequentialFlow.Builder
                 .aNewSequentialFlow()
-                .named("nameSpaceWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+                .named("nameSpace Infrastructure WorkFlow")
                 .execute(nameSpaceWorkFlowTask)
                 .build();
     }
@@ -142,7 +144,7 @@ public class ComplexWorkFlowConfiguration {
                                 @Qualifier("failOverWorkFlowTask") LoggingWorkFlowTask failOverWorkFlowTask) {
         return SequentialFlow.Builder
                 .aNewSequentialFlow()
-                .named("networkingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+                .named("networking Infrastructure WorkFlow")
                 .execute(networkingFlowTask)
                 .then(failOverWorkFlowTask)
                 .build();
@@ -162,7 +164,7 @@ public class ComplexWorkFlowConfiguration {
     WorkFlow onboardingWorkFlowCheckerWorkFlow(@Qualifier("gateTwo") MockApprovalWorkFlowCheckerTask gateTwo) {
         return SequentialFlow.Builder
                 .aNewSequentialFlow()
-                .named("onboardingWorkFlow" + WorkFlowConstants.CHECKER_WORKFLOW)
+                .named("onboarding Checker WorkFlow")
                 .execute(gateTwo)
                 .build();
     }
@@ -181,7 +183,7 @@ public class ComplexWorkFlowConfiguration {
     WorkFlow namespaceWorkFlowCheckerWorkFlow(@Qualifier("gateThree") MockApprovalWorkFlowCheckerTask gateThree) {
         return SequentialFlow.Builder
                 .aNewSequentialFlow()
-                .named("namespaceWorkFlow" + WorkFlowConstants.CHECKER_WORKFLOW)
+                .named("namespace Checker WorkFlow")
                 .execute(gateThree)
                 .build();
     }

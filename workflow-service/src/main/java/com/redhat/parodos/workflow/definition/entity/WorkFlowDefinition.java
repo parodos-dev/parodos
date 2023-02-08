@@ -48,6 +48,8 @@ import java.util.Set;
 public class WorkFlowDefinition extends AbstractEntity {
     private String name;
 
+    private String description;
+
     private String type;
 
     private String author;
@@ -63,8 +65,8 @@ public class WorkFlowDefinition extends AbstractEntity {
     @OneToMany(mappedBy = "checkWorkFlow", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<WorkFlowCheckerDefinition> checkerWorkFlowDefinitions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "nextWorkFlow", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private Set<WorkFlowCheckerDefinition> nextWorkFlowDefinitions = new HashSet<>();
+    @OneToMany(mappedBy = "nextWorkFlow", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<WorkFlowCheckerDefinition> nextWorkFlowDefinitions = new ArrayList<>();
 
     private String commitId;
 }
