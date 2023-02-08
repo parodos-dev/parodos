@@ -15,19 +15,16 @@
  */
 package com.redhat.parodos.workflow.registry;
 
-
-//import com.redhat.parodos.workflow.WorkFlowDefinition;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
-
-import java.util.UUID;
 
 /**
  * Contract for Registering and Obtaining Workflows. Implementations could use the classpath, Spring Bean registry, a Database or some other custom means.
  *
- * For the WorkFlowRegistery in-memory collection the Key: BeanId, Value: WorkFlow
+ * For the WorkFlowRegistry in-memory collection the Key: BeanId, Value: WorkFlow
  *
  * @author Luke Shannon (Github: lshannon)
  * @author Annel Ketcha (Github: anludke)
+ * @author Richard Wang (Github: richardw98)
  */
 public interface WorkFlowRegistry<T> {
     WorkFlow getWorkFlowByName(T workFlowName);
