@@ -17,6 +17,7 @@ package com.redhat.parodos.workflow.execution.service;
 
 import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.WorkFlowStatus;
+import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionService;
 import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionEntity;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecutionEntity;
@@ -51,20 +52,23 @@ public class WorkFlowServiceImpl implements WorkFlowService {
     private final WorkFlowRepository workFlowRepository;
     private final WorkFlowTaskRepository workFlowTaskRepository;
 
+    private final WorkFlowDefinitionService workFlowDefinitionService;
+
     public WorkFlowServiceImpl(WorkFlowDelegate workFlowDelegate,
-                               WorkFlowDefinitionServiceImpl workFlowDefinitionService,
+                               WorkFlowDefinitionService workFlowDefinitionService,
                                WorkFlowRepository workFlowRepository,
                                WorkFlowTaskRepository workFlowTaskRepository) {
         this.workFlowDelegate = workFlowDelegate;
         this.workFlowRepository = workFlowRepository;
         this.workFlowTaskRepository = workFlowTaskRepository;
+        this.workFlowDefinitionService = workFlowDefinitionService;
     }
 
     @Override
     public WorkReport execute(WorkFlow workFlow, Map<String, Map<String, String>> workFlowTaskArguments) {
         log.info("execute workFlow: {}", workFlow);
         if (null != workFlow) {
-            WorkContext workContext = workFlowDelegate.getWorkFlowContext(workFlowTaskArguments);
+            WorkContext workContext = workFlowDelegate.getWorkFlowContext(workFlowDefinitionService.getWorkFlowDefinitionByName(workFlow.getName()), workFlowTaskArguments);
             return WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(workFlow, workContext);
         } else {
             return new DefaultWorkReport(WorkStatus.FAILED, new WorkContext());

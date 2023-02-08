@@ -31,4 +31,6 @@ import java.util.UUID;
  */
 public interface WorkFlowTaskDefinitionRepository extends JpaRepository<WorkFlowTaskDefinition, UUID> {
     List<WorkFlowTaskDefinition> findByWorkFlowDefinition(WorkFlowDefinition workFlowDefinition);
+
+    WorkFlowTaskDefinition findFirstByName(String name);
 }

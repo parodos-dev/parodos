@@ -30,9 +30,9 @@ import java.util.UUID;
  * @author Annel Ketcha (Github: anludke)
  */
 public interface WorkFlowRegistry<T> {
-    WorkFlow getWorkFlowExecutionByName(T workFlowName);
+    WorkFlow getWorkFlowByName(T workFlowName);
 
 //    WorkFlowDefinition getWorkFlowDefinitionById(UUID workFlowId);
 
-    UUID getWorkFlowTaskDefinitionId(T workFlowName, T workFlowTaskName);
+//    UUID getWorkFlowTaskDefinitionId(T workFlowName, T workFlowTaskName);
 }

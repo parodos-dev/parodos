@@ -16,21 +16,21 @@
 package com.redhat.parodos.workflow.definition.entity;
 
 import com.redhat.parodos.workflow.execution.entity.AbstractEntity;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * entity
@@ -60,11 +60,11 @@ public class WorkFlowDefinition extends AbstractEntity {
     @OneToMany(mappedBy = "workFlowDefinition", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<WorkFlowTaskDefinition> workFlowTaskDefinitions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "checkWorkFlow", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private Set<WorkFlowCheckerDefinition> workFlowCheckerDefinitions = new HashSet<>();
+    @OneToMany(mappedBy = "checkWorkFlow", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<WorkFlowCheckerDefinition> checkerWorkFlowDefinitions = new ArrayList<>();
 
     @OneToMany(mappedBy = "nextWorkFlow", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private Set<WorkFlowCheckerDefinition> workFlowCheckerDefinitions = new HashSet<>();
+    private Set<WorkFlowCheckerDefinition> nextWorkFlowDefinitions = new HashSet<>();
 
     private String commitId;
 }

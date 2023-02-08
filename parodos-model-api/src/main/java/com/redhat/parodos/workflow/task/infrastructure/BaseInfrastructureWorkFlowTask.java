@@ -15,7 +15,9 @@
  */
 package com.redhat.parodos.workflow.task.infrastructure;
 
+import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
+import com.redhat.parodos.workflow.task.WorkFlowTaskType;
 import com.redhat.parodos.workflow.task.checker.BaseWorkFlowCheckerTask;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import lombok.Getter;
@@ -28,16 +30,17 @@ import lombok.Getter;
  *
  * @author Luke Shannon (Github: lshannon)
  */
-public abstract class BaseInfrastructureWorkFlowTask implements WorkFlowTask {
+public abstract class BaseInfrastructureWorkFlowTask extends BaseWorkFlowTask {
+    private WorkFlowTaskType type = WorkFlowTaskType.INFRASTRUCTURE;
 
-    private WorkFlow workFlowChecker;
+    // WorkFlowChecker check a process that has been initiated by a WorkFlow to see if its been completed
+    private WorkFlow checkerWorkflow;
 
     public WorkFlow getGetWorkFlowChecker() {
-        return workFlowChecker;
+        return checkerWorkflow;
     }
 
-    public void setWorkFlowChecker(WorkFlow baseWorkFlowChecker) {
-        this.workFlowChecker = baseWorkFlowChecker;
+    public void setWorkFlowChecker(WorkFlow checkerWorkflow) {
+        this.checkerWorkflow = checkerWorkflow;
     }
-
 }

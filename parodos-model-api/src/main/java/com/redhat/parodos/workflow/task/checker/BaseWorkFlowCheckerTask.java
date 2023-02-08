@@ -15,7 +15,9 @@
  */
 package com.redhat.parodos.workflow.task.checker;
 
+import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
+import com.redhat.parodos.workflow.task.WorkFlowTaskType;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import lombok.Getter;
@@ -25,8 +27,9 @@ import lombok.Getter;
  *
  * @author Luke Shannon (Github: lshannon)
  */
-public abstract class BaseWorkFlowCheckerTask implements WorkFlowTask {
+public abstract class BaseWorkFlowCheckerTask extends BaseWorkFlowTask {
 
+    private WorkFlowTaskType type = WorkFlowTaskType.CHECKER;
     /**
      * Method to check if a WorkFlow that is in a holding status, i.e: waiting for an external process to occur, has achieved its status and can trigger the next WorkFlow
      *

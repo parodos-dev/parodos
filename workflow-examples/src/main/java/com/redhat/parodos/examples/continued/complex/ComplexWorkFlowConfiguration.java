@@ -43,7 +43,7 @@ public class ComplexWorkFlowConfiguration {
     //Infrastructure Option for Onboarding
     @Bean
     WorkFlowOption onboardingOption() {
-        return new WorkFlowOption.Builder("onboardingOption", "onboardingWorkflow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+        return new WorkFlowOption.Builder("onboardingOption", "onboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
                 .addToDetails("An example of a complex WorkFlow with Status checks")
                 .build();
     }

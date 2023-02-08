@@ -16,7 +16,9 @@
 package com.redhat.parodos.workflow.task.assessment;
 
 import com.redhat.parodos.workflow.option.WorkFlowOption;
+import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
+import com.redhat.parodos.workflow.task.WorkFlowTaskType;
 import lombok.Getter;
 
 import java.util.List;
@@ -26,7 +28,8 @@ import java.util.List;
  *
  * @author Luke Shannon (Github: lshannon)
  */
-public abstract class BaseAssessmentTask implements WorkFlowTask {
+public abstract class BaseAssessmentTask extends BaseWorkFlowTask {
+    private WorkFlowTaskType type = WorkFlowTaskType.ASSESSMENT;
 
     /**
      * These are the options this AssessmentTasks can return

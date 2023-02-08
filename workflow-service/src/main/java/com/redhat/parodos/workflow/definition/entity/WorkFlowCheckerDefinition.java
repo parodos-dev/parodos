@@ -43,6 +43,7 @@ import javax.persistence.OneToOne;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class WorkFlowCheckerDefinition {
     @EmbeddedId
     @AttributeOverride( name = "workFlowCheckerId", column = @Column(name = "workflow_checker_id"))
@@ -50,7 +51,7 @@ public class WorkFlowCheckerDefinition {
     private WorkFlowCheckerDefinitionPK id;
 
     @MapsId("workFlowCheckerId")
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "workflow_checker_id")
     private WorkFlowDefinition checkWorkFlow;
 

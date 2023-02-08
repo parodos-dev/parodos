@@ -66,6 +66,8 @@
             </column>
             <column name="project_id" type="varchar(255)"/>
             <column name="status" type="varchar(255)"/>
+            <column name="executed_by" type="varchar(255)"/>
+            <column name="executed_for" type="varchar(255)"/>
             <column name="start_date" type="timestamp" defaultValue="${now}"/>
             <column name="end_date" type="timestamp" defaultValue="${now}"/>
             <column name="object_version" type="bigint"/>

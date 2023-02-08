@@ -27,7 +27,7 @@ import java.util.List;
  * @author Luke Shannon (Github: lshannon)
  *
  */
-public interface WorkFlowTask extends Work {
+public interface WorkFlowTask extends Work  {
     @NonNull
     List<WorkFlowTaskParameter> getWorkFlowTaskParameters();
 

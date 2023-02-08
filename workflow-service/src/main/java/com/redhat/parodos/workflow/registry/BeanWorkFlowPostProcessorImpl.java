@@ -20,7 +20,6 @@ import com.redhat.parodos.workflow.WorkFlowType;
 import com.redhat.parodos.workflow.annotation.Assessment;
 import com.redhat.parodos.workflow.annotation.Checker;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
-import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
 import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
@@ -28,12 +27,12 @@ import com.redhat.parodos.workflows.workflow.WorkFlow;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -47,20 +46,29 @@ import java.util.Map;
  */
 @Slf4j
 @Component
-public class BeanWorkFlowPostProcessorImpl implements BeanPostProcessor {
+public class BeanWorkFlowPostProcessorImpl {
     private final ConfigurableListableBeanFactory beanFactory;
     private final WorkFlowDefinitionServiceImpl workFlowDefinitionService;
-//    private final Map<String, WorkFlowTask> workFlowTaskMap;
-
+    private final Map<String, WorkFlow> workFlows;
+    private final Map<String, WorkFlowTask> workFlowTaskMap;
 
     public BeanWorkFlowPostProcessorImpl(ConfigurableListableBeanFactory beanFactory,
-                                         WorkFlowDefinitionServiceImpl workFlowDefinitionService, Map<String, WorkFlowTask> workFlowTaskMap) {
+                                         WorkFlowDefinitionServiceImpl workFlowDefinitionService,
+                                         Map<String, WorkFlowTask> workFlowTaskMap,
+                                         Map<String, WorkFlow> workFlows) {
         this.beanFactory = beanFactory;
         this.workFlowDefinitionService = workFlowDefinitionService;
-//        this.workFlowTaskMap = workFlowTaskMap;
+        this.workFlows = workFlows;
+        this.workFlowTaskMap = workFlowTaskMap;
     }
 
-    public Object saveWorkFlow(Object bean, String name) {
+    @PostConstruct
+    void postInit() {
+        workFlows.forEach((key, value) -> saveWorkFlow(value, key));
+        saveChecker(workFlowTaskMap);
+    }
+
+    private void saveWorkFlow(Object bean, String name) {
         if (bean instanceof WorkFlow) {
             Map<String, WorkFlowTask> hmWorkFlowTasks = new HashMap<>();
             Arrays.stream(beanFactory.getDependenciesForBean(name))
@@ -75,10 +83,9 @@ public class BeanWorkFlowPostProcessorImpl implements BeanPostProcessor {
                     .forEach(dependency -> hmWorkFlowTasks.put(dependency, beanFactory.getBean(dependency, WorkFlowTask.class)));
             workFlowDefinitionService.save(((WorkFlow) bean).getName(), getWorkFlowTypeDetails(((WorkFlow) bean).getName(), List.of(Assessment.class, Checker.class, Infrastructure.class)).getFirst(), hmWorkFlowTasks);
         }
-        return bean;
     }
 
-    public void saveChecker(Map<String, WorkFlowTask> workFlowTaskMap) {
+    private void saveChecker(Map<String, WorkFlowTask> workFlowTaskMap) {
         workFlowTaskMap.forEach((name, value) ->
                 Arrays.stream(beanFactory.getDependenciesForBean(name))
                         .filter(dependency -> {

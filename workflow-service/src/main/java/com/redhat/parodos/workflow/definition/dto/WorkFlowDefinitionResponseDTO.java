@@ -15,6 +15,7 @@
  */
 package com.redhat.parodos.workflow.definition.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.Date;
 import java.util.List;
@@ -51,8 +52,13 @@ public class WorkFlowDefinitionResponseDTO {
 
     @Builder
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class TaskResponseDTO {
         private UUID id;
         private String name;
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        private UUID workFlowChecker;
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        private UUID nextWorkFlow;
     }
 }
