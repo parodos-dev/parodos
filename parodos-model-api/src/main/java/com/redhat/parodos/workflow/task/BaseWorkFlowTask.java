@@ -1,25 +1,36 @@
+/*
+ * Copyright (c) 2022 Red Hat Developer
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.redhat.parodos.workflow.task;
 
-import com.redhat.parodos.workflows.workflow.WorkFlow;
+import lombok.Getter;
+import org.springframework.beans.factory.BeanNameAware;
 
 /**
- * Base Class for a WorkFlowTask. 
- *
+ * Base Class for a WorkFlowTask.
+ * <p>
  * This includes the option for a @see WorkFlowChecker to be specified in the event that this WorkFlowTask triggers a long running process that will block further Workflows from being able to execute
  *
  * @author Luke Shannon (Github: lshannon)
- *
  */
-public abstract class BaseWorkFlowTask implements WorkFlowTask {
-    
-	// WorkFlowChecker check a process that has been initiated by a WorkFlow to see if its been completed
-    private WorkFlow checkerWorkflow;
+public abstract class BaseWorkFlowTask implements WorkFlowTask, BeanNameAware {
+    @Getter
+    private String name;
 
-    public WorkFlow getGetWorkFlowChecker() {
-        return checkerWorkflow;
-    }
-
-    public void setWorkFlowChecker(WorkFlow checkerWorkflow) {
-        this.checkerWorkflow = checkerWorkflow;
+    @Override
+    public void setBeanName(String name) {
+        this.name = name;
     }
 }

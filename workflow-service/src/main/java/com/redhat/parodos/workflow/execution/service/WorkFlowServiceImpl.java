@@ -17,7 +17,7 @@ package com.redhat.parodos.workflow.execution.service;
 
 import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.WorkFlowStatus;
-import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
+import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionEntity;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecutionEntity;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
@@ -29,13 +29,12 @@ import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 /**
  * workflow execution service implementation
@@ -48,14 +47,16 @@ import java.util.UUID;
 @Service
 public class WorkFlowServiceImpl implements WorkFlowService {
     private final WorkFlowDelegate workFlowDelegate;
+    private final WorkFlowDefinitionRepository workFlowDefinitionRepository;
     private final WorkFlowRepository workFlowRepository;
     private final WorkFlowTaskRepository workFlowTaskRepository;
 
     public WorkFlowServiceImpl(WorkFlowDelegate workFlowDelegate,
-                               WorkFlowDefinitionServiceImpl workFlowDefinitionService,
+                               WorkFlowDefinitionRepository workFlowDefinitionRepository,
                                WorkFlowRepository workFlowRepository,
                                WorkFlowTaskRepository workFlowTaskRepository) {
         this.workFlowDelegate = workFlowDelegate;
+        this.workFlowDefinitionRepository = workFlowDefinitionRepository;
         this.workFlowRepository = workFlowRepository;
         this.workFlowTaskRepository = workFlowTaskRepository;
     }
@@ -64,7 +65,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
     public WorkReport execute(WorkFlow workFlow, Map<String, Map<String, String>> workFlowTaskArguments) {
         log.info("execute workFlow: {}", workFlow);
         if (null != workFlow) {
-            WorkContext workContext = workFlowDelegate.getWorkFlowContext(workFlowTaskArguments);
+            WorkContext workContext = workFlowDelegate.getWorkFlowContext(workFlowDefinitionRepository.findByName(workFlow.getName()).stream().findFirst().get(), workFlowTaskArguments);
             return WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(workFlow, workContext);
         } else {
             return new DefaultWorkReport(WorkStatus.FAILED, new WorkContext());
@@ -95,7 +96,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
     @Override
     public WorkFlowTaskExecutionEntity getWorkFlowTask(UUID workFlowExecutionId, UUID workFlowTaskDefinitionId) {
         List<WorkFlowTaskExecutionEntity> workFlowTaskExecutionEntityList = workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(workFlowExecutionId, workFlowTaskDefinitionId);
-        return (workFlowTaskExecutionEntityList == null || workFlowTaskExecutionEntityList.isEmpty()) ? null : workFlowTaskExecutionEntityList.get(0);
+        return (workFlowTaskExecutionEntityList == null || workFlowTaskExecutionEntityList.isEmpty()) ? null : workFlowTaskExecutionEntityList.stream().findFirst().get();
     }
 
     @Override
@@ -113,15 +114,4 @@ public class WorkFlowServiceImpl implements WorkFlowService {
     public WorkFlowTaskExecutionEntity updateWorkFlowTask(WorkFlowTaskExecutionEntity workFlowTaskExecutionEntity) {
         return workFlowTaskRepository.save(workFlowTaskExecutionEntity);
     }
-    
-//    public Map<String, Map<String, String>> getWorkflowTaskArguments(
-//			List<WorkFlowTaskExecutionRequestDTO> workFlowTaskExecutionRequestDTOList) {
-//		Map<String, Map<String, String>> workFlowTaskArguments = new HashMap<>();
-//        workFlowTaskExecutionRequestDTOList.forEach(arg -> {
-//            Map<String, String> tasksValuesMap = new HashMap<>();
-//            arg.getArguments().forEach(i -> tasksValuesMap.put(i.getKey(), i.getValue()));
-//            workFlowTaskArguments.put(arg.getTaskName(), tasksValuesMap);
-//        });
-//		return workFlowTaskArguments;
-//	}
 }

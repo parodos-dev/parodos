@@ -20,6 +20,7 @@
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-beans.version>5.3.10</spring-beans.version>
     </properties>
 
     <dependencies>
@@ -38,6 +39,11 @@
             <version>${lombok.version}</version>
         </dependency>
         <!-- END Developer Productivity Dependencies -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>${spring-beans.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

@@ -49,7 +49,7 @@ public class WorkFlowDefinitionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<WorkFlowDefinitionResponseDTO> getWorkFlowTaskDefinitions(@PathVariable String id) {
+    public ResponseEntity<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitionById(@PathVariable String id) {
         return ResponseEntity.ok(workFlowDefinitionService.getWorkFlowDefinitionById(UUID.fromString(id)));
     }
 }

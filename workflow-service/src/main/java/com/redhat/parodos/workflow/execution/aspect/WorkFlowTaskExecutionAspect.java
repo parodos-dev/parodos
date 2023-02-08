@@ -29,8 +29,10 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.UUID;
 
@@ -73,7 +75,7 @@ public class WorkFlowTaskExecutionAspect {
     @Around(
             "pointcutScopeTask() && args(workContext)"
     )
-    public WorkReport executeAroundAdviceTask(ProceedingJoinPoint proceedingJoinPoint, WorkContext workContext) {
+    public WorkReport executeAroundAdviceTask(ProceedingJoinPoint proceedingJoinPoint, WorkContext workContext) throws NoSuchMethodException {
         WorkReport report = null;
         String workFlowTaskName = ((WorkFlowTask) proceedingJoinPoint.getTarget()).getName();
         log.info("Before invoking execute() on workflow task name: {}, work context is: {}", workFlowTaskName, workContext);

@@ -13,22 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow.task.checker;
+package com.redhat.parodos.workflow.definition.dto;
 
-import com.redhat.parodos.workflow.task.WorkFlowTaskType;
-import lombok.Getter;
-import lombok.experimental.SuperBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
- * Definition for a WorkFlowCheckerTask
- * 
- * @author Luke Shannon (Github: lshannon)
+ * workflow checker dto
  *
+ * @author Luke Shannon (Github: lshannon)
+ * @author Richard Wang (Github: richardw98)
+ * @author Annel Ketcha (Github: anludke)
  */
-@Getter
-@SuperBuilder
-public class WorkFlowCheckerTaskDefinition {
-	 public WorkFlowTaskType getWorkFlowType() {
-	    	return WorkFlowTaskType.CHECKER;
-	    }
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class WorkFlowCheckerDTO {
+    private String nextWorkFlowName;
+    private String cronExpression;
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
@@ -24,6 +25,8 @@ public class WorkFlowTaskDefinitionDTOConverter implements Converter<List<WorkFl
                                 }))
                                 .parameters(objectMapper.readValue(workFlowTaskDefinition.getParameters(), new TypeReference<>() {
                                 }))
+                                .workFlowChecker(Optional.ofNullable(workFlowTaskDefinition.getWorkFlowCheckerDefinition()).map(checker -> checker.getCheckWorkFlow().getId()).orElse(null))
+                                .nextWorkFlow(Optional.ofNullable(workFlowTaskDefinition.getWorkFlowCheckerDefinition()).map(checker -> checker.getNextWorkFlow().getId()).orElse(null))
                                 .build();
                     } catch (JsonProcessingException e) {
                         throw new RuntimeException(e);

@@ -30,4 +30,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface WorkFlowTaskDefinitionRepository extends JpaRepository<WorkFlowTaskDefinition, UUID> {
     List<WorkFlowTaskDefinition> findByWorkFlowDefinition(WorkFlowDefinition workFlowDefinition);
+
+    WorkFlowTaskDefinition findFirstByName(String name);
 }

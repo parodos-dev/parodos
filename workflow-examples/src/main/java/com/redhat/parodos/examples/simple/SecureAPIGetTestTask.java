@@ -15,42 +15,52 @@
  */
 package com.redhat.parodos.examples.simple;
 
+import java.util.Base64;
+import java.util.Collections;
+import java.util.List;
+
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.task.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 /**
- * rest api task execution
+ * An example of a task that calls a Rest Endpoint with a BasicAuth Header
  *
  * @author Luke Shannon (Github: lshannon)
- * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
+
 @Slf4j
-public class RestAPIWorkFlowTask extends BaseInfrastructureWorkFlowTask {
-    public static final String PAYLOAD_PASSED_IN_FROM_SERVICE = "PAYLOAD_PASSED_IN_FROM_SERVICE";
-    public static final String URL_PASSED_IN_FROM_SERVICE = "URL_PASSED_IN_FROM_SERVICE";
+public class SecureAPIGetTestTask extends BaseInfrastructureWorkFlowTask {
+    public static final String SECURED_URL = "SECURED_URL";
+    public static final String USERNAME = "USERNAME";
+    public static final String PASSWORD = "PASSWORD";
 
     /**
      * Executed by the InfrastructureTask engine as part of the Workflow
      */
     public WorkReport execute(WorkContext workContext) {
         try {
-            String urlString = WorkContextDelegate.getRequiredValueFromRequestParams(workContext, URL_PASSED_IN_FROM_SERVICE);
-            String payload = WorkContextDelegate.getRequiredValueFromRequestParams(workContext, PAYLOAD_PASSED_IN_FROM_SERVICE);
-            log.info("Running Task REST API Call: urlString: {} payload: {} ", urlString, payload);
+            String urlString = WorkContextDelegate.getRequiredValueFromRequestParams(workContext, SECURED_URL);
+            String username = WorkContextDelegate.getRequiredValueFromRequestParams(workContext, USERNAME);
+            String password = WorkContextDelegate.getRequiredValueFromRequestParams(workContext, PASSWORD);
+            log.info("Calling: urlString: {} username: {}", urlString, username);
             RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<String> result = restTemplate.postForEntity(urlString, payload, String.class);
+            ResponseEntity<String> result = restTemplate.exchange(urlString, HttpMethod.GET, getRequestWithHeaders(username, password), String.class);
             if (result.getStatusCode().is2xxSuccessful()) {
                 log.info("Rest call completed: {}", result.getBody());
                 return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
@@ -63,23 +73,40 @@ public class RestAPIWorkFlowTask extends BaseInfrastructureWorkFlowTask {
         return new DefaultWorkReport(WorkStatus.FAILED, workContext);
     }
 
+    HttpEntity<String> getRequestWithHeaders(String username, String password) {
+        String plainCreds = username+":"+ password;
+        byte[] plainCredsBytes = plainCreds.getBytes();
+        byte[] base64CredsBytes = Base64.getEncoder().encode(plainCredsBytes);
+        String base64Creds = new String(base64CredsBytes);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Basic " + base64Creds);
+        return new HttpEntity<String>(headers);
+    }
+
     @Override
     public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
         return List.of(
                 WorkFlowTaskParameter.builder()
-                        .key(URL_PASSED_IN_FROM_SERVICE)
-                        .description("The Url of the service (ie: https://httpbin.org/post")
+                        .key(SECURED_URL)
+                        .description("The URL of the Secured API you wish to call")
                         .optional(false)
                         .type(WorkFlowTaskParameterType.URL)
                         .build(),
                 WorkFlowTaskParameter.builder()
-                        .key(PAYLOAD_PASSED_IN_FROM_SERVICE)
-                        .description("Json of what to provide for data. (ie: 'Hello!')")
+                        .key(USERNAME)
+                        .description("Please enter your username authentication")
+                        .optional(false)
+                        .type(WorkFlowTaskParameterType.TEXT)
+                        .build(),
+                WorkFlowTaskParameter.builder()
+                        .key(PASSWORD)
+                        .description("Please enter your password for authentication (it will not be stored)")
                         .optional(false)
                         .type(WorkFlowTaskParameterType.PASSWORD)
                         .build());
     }
 
+    @Override
     public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
         return List.of(WorkFlowTaskOutput.HTTP2XX, WorkFlowTaskOutput.OTHER);
     }

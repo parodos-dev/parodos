@@ -15,30 +15,32 @@
  */
 package com.redhat.parodos.workflow.task.assessment;
 
+import com.redhat.parodos.workflow.option.WorkFlowOption;
+import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
+import com.redhat.parodos.workflow.task.WorkFlowTask;
+import com.redhat.parodos.workflow.task.WorkFlowTaskType;
+import lombok.Getter;
+
 import java.util.List;
 
-import com.redhat.parodos.workflow.option.WorkFlowOption;
-import com.redhat.parodos.workflow.task.WorkFlowTask;
-
 /**
- *
  * Base Class for Assessment WorkFlowTasks. An implementation of this class would do an Assessment and return options
  *
  * @author Luke Shannon (Github: lshannon)
- *
  */
-public abstract class BaseAssessmentTask implements WorkFlowTask {
+public abstract class BaseAssessmentTask extends BaseWorkFlowTask {
+    private WorkFlowTaskType type = WorkFlowTaskType.ASSESSMENT;
 
-	/**
-	 * These are the options this AssessmentTasks can return
-	 */
-	List<WorkFlowOption> workflowOptions;
+    /**
+     * These are the options this AssessmentTasks can return
+     */
+    List<WorkFlowOption> workflowOptions;
 
-	public BaseAssessmentTask(List<WorkFlowOption> workflowOptions) {
-		this.workflowOptions = workflowOptions;
-	}
+    protected BaseAssessmentTask(List<WorkFlowOption> workflowOptions) {
+        this.workflowOptions = workflowOptions;
+    }
 
-	public List<WorkFlowOption> getWorkFlowOptions() {
-		return workflowOptions;
-	}
+    public List<WorkFlowOption> getWorkFlowOptions() {
+        return workflowOptions;
+    }
 }

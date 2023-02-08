@@ -15,6 +15,7 @@
  */
 package com.redhat.parodos.workflow.definition.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.redhat.parodos.workflow.task.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
@@ -35,6 +36,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkFlowTaskDefinitionResponseDTO {
