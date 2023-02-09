@@ -25,6 +25,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -48,10 +49,13 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectResponseDTO save(ProjectRequestDTO projectRequestDTO) {
         // get user from security utils and set on project
-        return modelMapper.map(projectRepository.save(Project.builder()
-                        .name(projectRequestDTO.getName())
-                        .description(projectRequestDTO.getDescription()).build()),
-                ProjectResponseDTO.class);
+        Project project = projectRepository.save(Project.builder()
+                .name(projectRequestDTO.getName())
+                .description(projectRequestDTO.getDescription())
+                .createDate(new Date())
+                .modifyDate(new Date())
+                .build());
+        return modelMapper.map(project, ProjectResponseDTO.class);
     }
 
     @Override

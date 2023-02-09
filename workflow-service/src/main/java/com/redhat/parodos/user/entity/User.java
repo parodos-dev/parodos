@@ -25,9 +25,8 @@ import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 
 /**
  * User entity
@@ -37,6 +36,8 @@ import lombok.NoArgsConstructor;
 
 @Entity(name = "user")
 @Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends AbstractEntity {

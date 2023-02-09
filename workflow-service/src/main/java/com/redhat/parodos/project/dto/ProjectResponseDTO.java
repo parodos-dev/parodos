@@ -15,6 +15,7 @@
  */
 package com.redhat.parodos.project.dto;
 
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,7 +31,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProjectResponseDTO {
     private String id;
+
     private String name;
+
     private String description;
-//    private String username;
+
+    private Date createDate;
+
+    private Date modifyDate;
+
+    private String username;
 }

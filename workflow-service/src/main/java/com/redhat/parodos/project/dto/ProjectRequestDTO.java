@@ -30,5 +30,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProjectRequestDTO {
     private String name;
+
     private String description;
 }

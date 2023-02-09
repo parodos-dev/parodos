@@ -22,9 +22,8 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.util.Date;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 
 /**
  * Project entity
@@ -33,6 +32,8 @@ import lombok.NoArgsConstructor;
  */
 
 @Entity(name = "project")
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

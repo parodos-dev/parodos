@@ -15,6 +15,8 @@
  */
 package com.redhat.parodos.config;
 
+import com.redhat.parodos.project.dto.ProjectResponseDTO;
+import com.redhat.parodos.project.entity.Project;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowTaskDefinitionDTOConverter;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
@@ -39,6 +41,7 @@ public class ModelMapperConfig {
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setAmbiguityIgnored(true);
+        addProjectUserMapping(modelMapper);
         addWorkFlowDefinitionResponseDTOMapping(modelMapper);
         return modelMapper;
     }
@@ -50,5 +53,15 @@ public class ModelMapperConfig {
             }
         };
         modelMapper.addMappings(workFlowDefinitionResponseDTOMap);
+    }
+
+
+    private void addProjectUserMapping(ModelMapper modelMapper) {
+        PropertyMap<Project, ProjectResponseDTO> projectUserResponseDTOTypeMap = new PropertyMap<Project, ProjectResponseDTO>() {
+            protected void configure() {
+                map().setUsername(source.getUser().getUsername());
+            }
+        };
+        modelMapper.addMappings(projectUserResponseDTOTypeMap);
     }
 }
