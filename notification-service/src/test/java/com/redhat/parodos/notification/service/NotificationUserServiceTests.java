@@ -40,6 +40,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 @ActiveProfiles("test")
 public class NotificationUserServiceTests extends AbstractNotificationsIntegrationTest {
+
 	@Autowired
 	private NotificationUserRepository notificationUserRepository;
 
@@ -51,7 +52,8 @@ public class NotificationUserServiceTests extends AbstractNotificationsIntegrati
 
 	@Test
 	void findUsers() {
-		NotificationsDataCreator.createAndSaveTwoGroupsAndTwoUsersPerGroup(notificationGroupRepository, notificationUserRepository);
+		NotificationsDataCreator.createAndSaveTwoGroupsAndTwoUsersPerGroup(notificationGroupRepository,
+				notificationUserRepository);
 		List<String> usernames = new ArrayList<>();
 		usernames.add(NotificationsDataCreator.USER_A_1);
 		usernames.add(NotificationsDataCreator.USER_A_2);
@@ -59,4 +61,5 @@ public class NotificationUserServiceTests extends AbstractNotificationsIntegrati
 		assertThat(usersToNotify).isNotEmpty();
 		assertThat(usersToNotify).hasSize(2);
 	}
+
 }

@@ -30,17 +30,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserResponseDTO {
-    private String id;
 
-    private String username;
+	private String id;
 
-    private String firstName;
+	private String username;
 
-    private String lastName;
+	private String firstName;
 
-    private String email;
+	private String lastName;
 
-    private Date createDate;
+	private String email;
 
-    private Date modifyDate;
+	private Date createDate;
+
+	private Date modifyDate;
+
 }

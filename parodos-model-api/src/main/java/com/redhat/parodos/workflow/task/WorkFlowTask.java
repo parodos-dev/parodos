@@ -23,14 +23,16 @@ import java.util.List;
 
 /**
  * Basic Contract for Work in the Infrastructure Service
- * 
+ *
  * @author Luke Shannon (Github: lshannon)
  *
  */
-public interface WorkFlowTask extends Work  {
-    @NonNull
-    List<WorkFlowTaskParameter> getWorkFlowTaskParameters();
+public interface WorkFlowTask extends Work {
 
-    @NonNull
-    List<WorkFlowTaskOutput> getWorkFlowTaskOutputs();
+	@NonNull
+	List<WorkFlowTaskParameter> getWorkFlowTaskParameters();
+
+	@NonNull
+	List<WorkFlowTaskOutput> getWorkFlowTaskOutputs();
+
 }

@@ -16,10 +16,10 @@
 package com.redhat.parodos.patterndetection.exceptions;
 
 /**
- * 
- * Thrown for any issue related to the parameters passed into the WorkContext to start
- * the scan
- * 
+ *
+ * Thrown for any issue related to the parameters passed into the WorkContext to start the
+ * scan
+ *
  * @author Luke Shannon (Github: lshannon)
  *
  */

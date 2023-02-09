@@ -34,20 +34,23 @@ import java.util.UUID;
 @Transactional
 public interface NotificationRecordRepository extends JpaRepository<NotificationRecord, UUID> {
 
-    Page<NotificationRecord> findByNotificationUserListContaining(NotificationUser user, Pageable pageable);
+	Page<NotificationRecord> findByNotificationUserListContaining(NotificationUser user, Pageable pageable);
 
-    Page<NotificationRecord> findByReadTrueAndNotificationUserListContaining(NotificationUser user, Pageable pageable);
+	Page<NotificationRecord> findByReadTrueAndNotificationUserListContaining(NotificationUser user, Pageable pageable);
 
-    Page<NotificationRecord> findByReadFalseAndNotificationUserListContaining(NotificationUser user, Pageable pageable);
+	Page<NotificationRecord> findByReadFalseAndNotificationUserListContaining(NotificationUser user, Pageable pageable);
 
-    int countDistinctByReadFalseAndNotificationUserListContaining(NotificationUser user);
+	int countDistinctByReadFalseAndNotificationUserListContaining(NotificationUser user);
 
-    Page<NotificationRecord> findByFolderAndNotificationUserListContaining(String folder, NotificationUser user, Pageable pageable);
+	Page<NotificationRecord> findByFolderAndNotificationUserListContaining(String folder, NotificationUser user,
+			Pageable pageable);
 
-    @Query("Select notificationRecord from NotificationRecord notificationRecord where " +
-            " (LOWER(notificationRecord.notificationMessage.body) LIKE %:searchTerm% OR " +
-            " LOWER(notificationRecord.notificationMessage.messageType) LIKE %:searchTerm% OR " +
-            " LOWER(notificationRecord.notificationMessage.subject) LIKE %:searchTerm%) AND " +
-            " :user member notificationRecord.notificationUserList ")
-    Page<NotificationRecord> search(@Param("user") NotificationUser user, @Param("searchTerm") String searchTerm, Pageable pageable);
+	@Query("Select notificationRecord from NotificationRecord notificationRecord where "
+			+ " (LOWER(notificationRecord.notificationMessage.body) LIKE %:searchTerm% OR "
+			+ " LOWER(notificationRecord.notificationMessage.messageType) LIKE %:searchTerm% OR "
+			+ " LOWER(notificationRecord.notificationMessage.subject) LIKE %:searchTerm%) AND "
+			+ " :user member notificationRecord.notificationUserList ")
+	Page<NotificationRecord> search(@Param("user") NotificationUser user, @Param("searchTerm") String searchTerm,
+			Pageable pageable);
+
 }

@@ -36,35 +36,36 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class ProjectServiceImpl implements ProjectService {
-    private final ProjectRepository projectRepository;
-    private final ModelMapper modelMapper;
 
-    public ProjectServiceImpl(ProjectRepository projectRepository, ModelMapper modelMapper) {
-        this.projectRepository = projectRepository;
-        this.modelMapper = modelMapper;
-    }
+	private final ProjectRepository projectRepository;
 
-    @Override
-    public ProjectResponseDTO save(ProjectRequestDTO projectRequestDTO) {
-        // get user from security utils and set on project
-        Project project = projectRepository.save(Project.builder()
-                .name(projectRequestDTO.getName())
-                .description(projectRequestDTO.getDescription())
-                .createDate(new Date())
-                .modifyDate(new Date())
-                .build());
-        return modelMapper.map(project, ProjectResponseDTO.class);
-    }
+	private final ModelMapper modelMapper;
 
-    @Override
-    public ProjectResponseDTO getProjectById(UUID id) {
-        return modelMapper.map(projectRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(String.format("Project with id: %s not found", id))), ProjectResponseDTO.class);
-    }
+	public ProjectServiceImpl(ProjectRepository projectRepository, ModelMapper modelMapper) {
+		this.projectRepository = projectRepository;
+		this.modelMapper = modelMapper;
+	}
 
-    @Override
-    public List<ProjectResponseDTO> getProjects() {
-        return modelMapper.map(projectRepository.findAll(), new TypeToken<List<ProjectResponseDTO>>() {
-        }.getType());
-    }
+	@Override
+	public ProjectResponseDTO save(ProjectRequestDTO projectRequestDTO) {
+		// get user from security utils and set on project
+		Project project = projectRepository.save(Project.builder().name(projectRequestDTO.getName())
+				.description(projectRequestDTO.getDescription()).createDate(new Date()).modifyDate(new Date()).build());
+		return modelMapper.map(project, ProjectResponseDTO.class);
+	}
+
+	@Override
+	public ProjectResponseDTO getProjectById(UUID id) {
+		return modelMapper.map(
+				projectRepository.findById(id)
+						.orElseThrow(() -> new RuntimeException(String.format("Project with id: %s not found", id))),
+				ProjectResponseDTO.class);
+	}
+
+	@Override
+	public List<ProjectResponseDTO> getProjects() {
+		return modelMapper.map(projectRepository.findAll(), new TypeToken<List<ProjectResponseDTO>>() {
+		}.getType());
+	}
+
 }

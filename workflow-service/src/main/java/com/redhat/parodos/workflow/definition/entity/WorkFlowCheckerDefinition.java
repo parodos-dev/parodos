@@ -45,25 +45,27 @@ import javax.persistence.OneToOne;
 @NoArgsConstructor
 @Data
 public class WorkFlowCheckerDefinition {
-    @EmbeddedId
-    @AttributeOverride( name = "workFlowCheckerId", column = @Column(name = "workflow_checker_id"))
-    @AttributeOverride( name = "taskId", column = @Column(name = "task_id"))
-    private WorkFlowCheckerDefinitionPK id;
 
-    @MapsId("workFlowCheckerId")
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "workflow_checker_id")
-    private WorkFlowDefinition checkWorkFlow;
+	@EmbeddedId
+	@AttributeOverride(name = "workFlowCheckerId", column = @Column(name = "workflow_checker_id"))
+	@AttributeOverride(name = "taskId", column = @Column(name = "task_id"))
+	private WorkFlowCheckerDefinitionPK id;
 
-    @MapsId("taskId")
-    @OneToOne
-    @JoinColumn(name = "task_id")
-    private WorkFlowTaskDefinition task;
+	@MapsId("workFlowCheckerId")
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "workflow_checker_id")
+	private WorkFlowDefinition checkWorkFlow;
 
-    @Column(name = "cron_expression")
-    private String cronExpression;
+	@MapsId("taskId")
+	@OneToOne
+	@JoinColumn(name = "task_id")
+	private WorkFlowTaskDefinition task;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "next_workflow_id")
-    private WorkFlowDefinition nextWorkFlow;
+	@Column(name = "cron_expression")
+	private String cronExpression;
+
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "next_workflow_id")
+	private WorkFlowDefinition nextWorkFlow;
+
 }

@@ -22,15 +22,18 @@ import com.redhat.parodos.workflows.workflow.WorkFlow;
 
 /**
  * Pattern is what the Scan is looking to Detect.
- * 
- * If is composed on AllAreRequiredClues @see Clue (all Clue in this list must be detected) and OnlyOneIsRequiredClues (only one @see Clue from this collection needs to be detected).
+ *
+ * If is composed on AllAreRequiredClues @see Clue (all Clue in this list must be
+ * detected) and OnlyOneIsRequiredClues (only one @see Clue from this collection needs to
+ * be detected).
  *
  * @author Luke Shannon (Github: lshannon)
  *
  */
 public interface Pattern extends WorkFlow {
-	
+
 	List<? extends Clue> getAllAreRequiredClues();
+
 	List<? extends Clue> getOnlyOneIsRequiredClues();
 
 }

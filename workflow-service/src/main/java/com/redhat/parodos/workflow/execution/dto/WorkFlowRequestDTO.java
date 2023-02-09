@@ -34,25 +34,35 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkFlowRequestDTO {
-    private String projectId;
-    private String workFlowName;
-    private List<WorkFlowTaskRequestDTO> workFlowTasks;
 
-    @Data
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class WorkFlowTaskRequestDTO {
-        String name;
-        List<ArgumentRequestDTO> arguments;
+	private String projectId;
 
-        @Data
-        @Builder
-        @AllArgsConstructor
-        @NoArgsConstructor
-        public static class ArgumentRequestDTO {
-            String key;
-            String value;
-        }
-    }
+	private String workFlowName;
+
+	private List<WorkFlowTaskRequestDTO> workFlowTasks;
+
+	@Data
+	@Builder
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class WorkFlowTaskRequestDTO {
+
+		String name;
+
+		List<ArgumentRequestDTO> arguments;
+
+		@Data
+		@Builder
+		@AllArgsConstructor
+		@NoArgsConstructor
+		public static class ArgumentRequestDTO {
+
+			String key;
+
+			String value;
+
+		}
+
+	}
+
 }

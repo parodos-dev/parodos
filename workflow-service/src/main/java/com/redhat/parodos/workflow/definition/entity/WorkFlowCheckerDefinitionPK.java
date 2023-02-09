@@ -23,7 +23,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 /**
  * workflow checker definition entity primary key
  *
@@ -37,6 +36,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class WorkFlowCheckerDefinitionPK implements Serializable {
-    private UUID workFlowCheckerId;
-    private UUID taskId;
+
+	private UUID workFlowCheckerId;
+
+	private UUID taskId;
+
 }

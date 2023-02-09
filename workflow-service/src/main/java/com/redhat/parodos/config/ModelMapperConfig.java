@@ -37,31 +37,31 @@ import org.springframework.context.annotation.Bean;
 @Configuration
 public class ModelMapperConfig {
 
-    @Bean
-    public ModelMapper modelMapper() {
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setAmbiguityIgnored(true);
-        addProjectUserMapping(modelMapper);
-        addWorkFlowDefinitionResponseDTOMapping(modelMapper);
-        return modelMapper;
-    }
+	@Bean
+	public ModelMapper modelMapper() {
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setAmbiguityIgnored(true);
+		addProjectUserMapping(modelMapper);
+		addWorkFlowDefinitionResponseDTOMapping(modelMapper);
+		return modelMapper;
+	}
 
-    private void addWorkFlowDefinitionResponseDTOMapping(ModelMapper modelMapper) {
-        PropertyMap<WorkFlowDefinition, WorkFlowDefinitionResponseDTO> workFlowDefinitionResponseDTOMap = new PropertyMap<>() {
-            protected void configure() {
-                using(new WorkFlowTaskDefinitionDTOConverter()).map(source.getWorkFlowTaskDefinitions()).setTasks(null);
-            }
-        };
-        modelMapper.addMappings(workFlowDefinitionResponseDTOMap);
-    }
+	private void addWorkFlowDefinitionResponseDTOMapping(ModelMapper modelMapper) {
+		PropertyMap<WorkFlowDefinition, WorkFlowDefinitionResponseDTO> workFlowDefinitionResponseDTOMap = new PropertyMap<>() {
+			protected void configure() {
+				using(new WorkFlowTaskDefinitionDTOConverter()).map(source.getWorkFlowTaskDefinitions()).setTasks(null);
+			}
+		};
+		modelMapper.addMappings(workFlowDefinitionResponseDTOMap);
+	}
 
+	private void addProjectUserMapping(ModelMapper modelMapper) {
+		PropertyMap<Project, ProjectResponseDTO> projectUserResponseDTOTypeMap = new PropertyMap<Project, ProjectResponseDTO>() {
+			protected void configure() {
+				map().setUsername(source.getUser().getUsername());
+			}
+		};
+		modelMapper.addMappings(projectUserResponseDTOTypeMap);
+	}
 
-    private void addProjectUserMapping(ModelMapper modelMapper) {
-        PropertyMap<Project, ProjectResponseDTO> projectUserResponseDTOTypeMap = new PropertyMap<Project, ProjectResponseDTO>() {
-            protected void configure() {
-                map().setUsername(source.getUser().getUsername());
-            }
-        };
-        modelMapper.addMappings(projectUserResponseDTOTypeMap);
-    }
 }

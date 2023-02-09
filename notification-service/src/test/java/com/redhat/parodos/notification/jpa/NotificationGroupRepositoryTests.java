@@ -28,12 +28,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * @author Richard Wang (Github: RichardW98)
  */
 @Transactional
 @ActiveProfiles("test")
 public class NotificationGroupRepositoryTests extends AbstractNotificationsIntegrationTest {
+
 	@Autowired
 	private NotificationGroupRepository notificationGroupRepository;
 
@@ -48,11 +50,13 @@ public class NotificationGroupRepositoryTests extends AbstractNotificationsInteg
 		Optional<NotificationGroup> g = this.notificationGroupRepository.findById(group.getId());
 		assertThat(g.isPresent());
 		assertThat(g.get().getGroupname()).isEqualTo(NotificationsDataCreator.ADMIN_GROUP);
-		Optional<NotificationGroup> g2 = this.notificationGroupRepository.findByGroupname(NotificationsDataCreator.ADMIN_GROUP);
+		Optional<NotificationGroup> g2 = this.notificationGroupRepository
+				.findByGroupname(NotificationsDataCreator.ADMIN_GROUP);
 		assertThat(g2.isPresent());
 		assertThat(g2.get().getGroupname()).isEqualTo(NotificationsDataCreator.ADMIN_GROUP);
 		this.notificationGroupRepository.deleteById(g2.get().getId());
 		Optional<NotificationGroup> g3 = this.notificationGroupRepository.findById(group.getId());
 		assertThat(g3.isEmpty());
 	}
+
 }

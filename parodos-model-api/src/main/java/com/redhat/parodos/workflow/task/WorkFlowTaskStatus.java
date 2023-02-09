@@ -23,6 +23,7 @@ package com.redhat.parodos.workflow.task;
  * @author Annel Ketcha (Github: anludke)
  */
 public enum WorkFlowTaskStatus {
-    FAILED,
-    COMPLETED
+
+	FAILED, COMPLETED
+
 }

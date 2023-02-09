@@ -30,24 +30,23 @@ package com.redhat.parodos.workflows.engine;
  */
 public class WorkFlowEngineBuilder {
 
-    /**
-     * Create a new {@link WorkFlowEngineBuilder}.
-     * 
-     * @return a new {@link WorkFlowEngineBuilder}.
-     */
-    public static WorkFlowEngineBuilder aNewWorkFlowEngine() {
-        return new WorkFlowEngineBuilder();
-    }
+	/**
+	 * Create a new {@link WorkFlowEngineBuilder}.
+	 * @return a new {@link WorkFlowEngineBuilder}.
+	 */
+	public static WorkFlowEngineBuilder aNewWorkFlowEngine() {
+		return new WorkFlowEngineBuilder();
+	}
 
-    private WorkFlowEngineBuilder() {
-    }
+	private WorkFlowEngineBuilder() {
+	}
 
-    /**
-     * Create a new {@link WorkFlowEngine}.
-     * 
-     * @return a new {@link WorkFlowEngine}.
-     */
-    public WorkFlowEngine build() {
-        return new WorkFlowEngineImpl();
-    }
+	/**
+	 * Create a new {@link WorkFlowEngine}.
+	 * @return a new {@link WorkFlowEngine}.
+	 */
+	public WorkFlowEngine build() {
+		return new WorkFlowEngineImpl();
+	}
+
 }

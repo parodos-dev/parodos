@@ -22,79 +22,96 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * An WorkFlowOption is an identifier for a collection of @see WorkFlowTasks that can be presented to a user as an option to choose from.
+ * An WorkFlowOption is an identifier for a collection of @see WorkFlowTasks that can be
+ * presented to a user as an option to choose from.
  * <p>
- * WorkFlowOption contains both the information to be displayed to the User to determine if they want to select the WorkFlow, and also the information to execute the WorkFlow
+ * WorkFlowOption contains both the information to be displayed to the User to determine
+ * if they want to select the WorkFlow, and also the information to execute the WorkFlow
  * <p>
  * <p>
  * <p>
- * workFlowId: unique identifier for this Workflow option. An example could be platformname + workflowName (ie: AwsOcpAnsibleSelfHealingV1). This should corespond to the value the workflow-service end points expect to execute a Workflow
+ * workFlowId: unique identifier for this Workflow option. An example could be
+ * platformname + workflowName (ie: AwsOcpAnsibleSelfHealingV1). This should corespond to
+ * the value the workflow-service end points expect to execute a Workflow
  * <p>
  * name: a readable/user-friendly label for the WorkflowOption
  * <p>
  * description: a high level description related to the WorkflowOption
  * <p>
- * details: a collection of strings that can provide optional details (i.e: internal charge back for the tooling to be stood up)
+ * details: a collection of strings that can provide optional details (i.e: internal
+ * charge back for the tooling to be stood up)
  * <p>
- * As much of this information is already required for the @see WorkFlowDefinition, this object is leveraged to reduce having to specify the same information in two different places
+ * As much of this information is already required for the @see WorkFlowDefinition, this
+ * object is leveraged to reduce having to specify the same information in two different
+ * places
  *
  * @author Luke Shannon (Github: lshannon)
  */
 @Getter
 @Setter
 public class WorkFlowOption {
-    private String identifier;
-    private String displayName;
-    private String description;
-    private List<String> details;
-    private String workFlowName;
 
-    private WorkFlowOption(Builder builder) {
-        this.description = builder.description;
-        this.details = builder.details;
-        this.identifier = builder.identifier;
-        this.workFlowName = builder.workFlowName;
-        this.displayName = builder.displayName;
-    }
+	private String identifier;
 
+	private String displayName;
 
-    public static class Builder {
-        // required
-        private String identifier;
-        private String displayName;
-        private String description;
-        private List<String> details = new ArrayList<>();
+	private String description;
 
-        // required
-        private String workFlowName;
+	private List<String> details;
 
-        public Builder(String identifier, String workFlowName) {
-            this.identifier = identifier;
-            this.workFlowName = workFlowName;
-        }
+	private String workFlowName;
 
-        public Builder setDescription(String description) {
-            this.description = description;
-            return this;
-        }
+	private WorkFlowOption(Builder builder) {
+		this.description = builder.description;
+		this.details = builder.details;
+		this.identifier = builder.identifier;
+		this.workFlowName = builder.workFlowName;
+		this.displayName = builder.displayName;
+	}
 
-        public Builder setDetails(List<String> details) {
-            this.details = details;
-            return this;
-        }
+	public static class Builder {
 
-        public Builder addToDetails(String detail) {
-            this.details.add(detail);
-            return this;
-        }
+		// required
+		private String identifier;
 
-        public Builder displayName(String displayName) {
-            this.displayName = displayName;
-            return this;
-        }
+		private String displayName;
 
-        public WorkFlowOption build() {
-            return new WorkFlowOption(this);
-        }
-    }
+		private String description;
+
+		private List<String> details = new ArrayList<>();
+
+		// required
+		private String workFlowName;
+
+		public Builder(String identifier, String workFlowName) {
+			this.identifier = identifier;
+			this.workFlowName = workFlowName;
+		}
+
+		public Builder setDescription(String description) {
+			this.description = description;
+			return this;
+		}
+
+		public Builder setDetails(List<String> details) {
+			this.details = details;
+			return this;
+		}
+
+		public Builder addToDetails(String detail) {
+			this.details.add(detail);
+			return this;
+		}
+
+		public Builder displayName(String displayName) {
+			this.displayName = displayName;
+			return this;
+		}
+
+		public WorkFlowOption build() {
+			return new WorkFlowOption(this);
+		}
+
+	}
+
 }

@@ -36,18 +36,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkFlowDefinitionResponseDTO {
-    private UUID id;
 
-    private String name;
+	private UUID id;
 
-    private String type;
+	private String name;
 
-    private String author;
+	private String type;
 
-    private Date createDate;
+	private String author;
 
-    private Date modifyDate;
+	private Date createDate;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<WorkFlowTaskDefinitionResponseDTO> tasks;
+	private Date modifyDate;
+
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private List<WorkFlowTaskDefinitionResponseDTO> tasks;
+
 }

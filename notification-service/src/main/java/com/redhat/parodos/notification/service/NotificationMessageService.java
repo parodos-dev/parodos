@@ -22,5 +22,7 @@ import com.redhat.parodos.notification.dto.NotificationMessageCreateRequestDTO;
  * @author Annel Ketcha (Github: anludke)
  */
 public interface NotificationMessageService {
-    void createNotificationMessage(NotificationMessageCreateRequestDTO notificationMessageCreateRequestDTO);
+
+	void createNotificationMessage(NotificationMessageCreateRequestDTO notificationMessageCreateRequestDTO);
+
 }

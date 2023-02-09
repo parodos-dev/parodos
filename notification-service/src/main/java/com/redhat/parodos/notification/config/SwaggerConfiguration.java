@@ -27,12 +27,13 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class SwaggerConfiguration {
-    @Bean
-    OpenAPI springShopOpenAPI() {
-        return new OpenAPI()
-                .info(new Info().title("Parodos Notification Service")
-                        .description("This is the API documentation for the Parodos Notification Service. " +
-                                "The APIs are secured with oAuth2/OpenID and cannot be accessed without a valid token.")
-                        .version("v1.0.0"));
-    }
+
+	@Bean
+	OpenAPI springShopOpenAPI() {
+		return new OpenAPI().info(new Info().title("Parodos Notification Service")
+				.description("This is the API documentation for the Parodos Notification Service. "
+						+ "The APIs are secured with oAuth2/OpenID and cannot be accessed without a valid token.")
+				.version("v1.0.0"));
+	}
+
 }

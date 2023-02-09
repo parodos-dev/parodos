@@ -21,16 +21,20 @@ import org.springframework.beans.factory.BeanNameAware;
 /**
  * Base Class for a WorkFlowTask.
  * <p>
- * This includes the option for a @see WorkFlowChecker to be specified in the event that this WorkFlowTask triggers a long running process that will block further Workflows from being able to execute
+ * This includes the option for a @see WorkFlowChecker to be specified in the event that
+ * this WorkFlowTask triggers a long running process that will block further Workflows
+ * from being able to execute
  *
  * @author Luke Shannon (Github: lshannon)
  */
 public abstract class BaseWorkFlowTask implements WorkFlowTask, BeanNameAware {
-    @Getter
-    private String name;
 
-    @Override
-    public void setBeanName(String name) {
-        this.name = name;
-    }
+	@Getter
+	private String name;
+
+	@Override
+	public void setBeanName(String name) {
+		this.name = name;
+	}
+
 }

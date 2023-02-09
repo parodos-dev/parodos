@@ -26,6 +26,9 @@ import com.redhat.parodos.workflows.workflow.WorkFlow;
  * @author Annel Ketcha (Github: anludke)
  */
 public interface WorkFlowSchedulerService {
-    void schedule(WorkFlow workFlow, WorkContext workContext, String cronExpression);
-    boolean stop(WorkFlow workFlow);
+
+	void schedule(WorkFlow workFlow, WorkContext workContext, String cronExpression);
+
+	boolean stop(WorkFlow workFlow);
+
 }

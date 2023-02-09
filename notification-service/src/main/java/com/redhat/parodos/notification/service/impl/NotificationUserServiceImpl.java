@@ -29,22 +29,21 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Service
 public class NotificationUserServiceImpl implements NotificationUserService {
-    private final NotificationUserRepository notificationUserRepository;
 
-    public NotificationUserServiceImpl(NotificationUserRepository notificationUserRepository) {
-        this.notificationUserRepository = notificationUserRepository;
-    }
+	private final NotificationUserRepository notificationUserRepository;
 
-    @Override
-    public List<NotificationUser> findUsers(List<String> usernames) {
-        List<NotificationUser> notificationUsers = new ArrayList<>();
-        for (String username : usernames) {
-            notificationUsers.add(
-                    this.notificationUserRepository.findByUsername(username).orElse(NotificationUser.builder()
-                            .username(username)
-                                    .notificationRecordList(new ArrayList<>())
-                            .build()));
-        }
-        return notificationUsers;
-    }
+	public NotificationUserServiceImpl(NotificationUserRepository notificationUserRepository) {
+		this.notificationUserRepository = notificationUserRepository;
+	}
+
+	@Override
+	public List<NotificationUser> findUsers(List<String> usernames) {
+		List<NotificationUser> notificationUsers = new ArrayList<>();
+		for (String username : usernames) {
+			notificationUsers.add(this.notificationUserRepository.findByUsername(username).orElse(
+					NotificationUser.builder().username(username).notificationRecordList(new ArrayList<>()).build()));
+		}
+		return notificationUsers;
+	}
+
 }

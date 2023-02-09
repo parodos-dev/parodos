@@ -25,27 +25,23 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 /**
- * Security configuration for the application to ensure the main endpoints are locked down and an OAuth2 server is enable.
- * The OAuth2 server details can be found in the application.yml file
- * 
+ * Security configuration for the application to ensure the main endpoints are locked down
+ * and an OAuth2 server is enable. The OAuth2 server details can be found in the
+ * application.yml file
+ *
  * @author Luke Shannon (Github: lshannon)
  *
  */
 @Configuration
 @Profile("!local")
 public class SecurityConfiguration {
-   @Bean
-   SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-        .csrf()
-        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-        .and()
-        .authorizeRequests()
-        .mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-        .mvcMatchers("/api/**").authenticated()
-        .and()
-        .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
-      return http.build();
-   }
-   
+
+	@Bean
+	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and().authorizeRequests()
+				.mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll().mvcMatchers("/api/**").authenticated().and()
+				.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
+		return http.build();
+	}
+
 }

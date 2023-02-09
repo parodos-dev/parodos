@@ -23,7 +23,7 @@ package com.redhat.parodos.workflow;
  * @author Annel Ketcha (Github: anludke)
  */
 public enum WorkFlowStatus {
-    FAILED,
-    IN_PROGRESS,
-    COMPLETED
+
+	FAILED, IN_PROGRESS, COMPLETED
+
 }

@@ -34,6 +34,7 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 public class ParallelFlowReportTest {
 
 	private Exception exception;
+
 	private ParallelFlowReport parallelFlowReport;
 
 	@Before
@@ -59,4 +60,5 @@ public class ParallelFlowReportTest {
 	public void testGetReports() {
 		Assertions.assertThat(parallelFlowReport.getReports()).hasSize(2);
 	}
+
 }

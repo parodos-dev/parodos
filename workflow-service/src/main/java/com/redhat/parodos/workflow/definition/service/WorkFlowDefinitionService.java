@@ -31,10 +31,17 @@ import java.util.UUID;
  * @author Annel Ketcha (Github: anludke)
  */
 public interface WorkFlowDefinitionService {
-    WorkFlowDefinitionResponseDTO save(String workFlowName, String workFlowDescription, WorkFlowType workFlowType, Map<String, WorkFlowTask> hmWorkFlowTasks);
-    List<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitions();
-    WorkFlowDefinitionResponseDTO getWorkFlowDefinitionById(UUID id);
 
-    List<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitionsByName(String name);
-    void saveWorkFlowChecker(String workFlowTaskName, String workFlowCheckerName, WorkFlowCheckerDTO workFlowCheckerDTO);
+	WorkFlowDefinitionResponseDTO save(String workFlowName, String workFlowDescription, WorkFlowType workFlowType,
+			Map<String, WorkFlowTask> hmWorkFlowTasks);
+
+	List<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitions();
+
+	WorkFlowDefinitionResponseDTO getWorkFlowDefinitionById(UUID id);
+
+	List<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitionsByName(String name);
+
+	void saveWorkFlowChecker(String workFlowTaskName, String workFlowCheckerName,
+			WorkFlowCheckerDTO workFlowCheckerDTO);
+
 }

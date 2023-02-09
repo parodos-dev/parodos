@@ -41,16 +41,18 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Project extends AbstractEntity {
-    private String name;
 
-    private String description;
+	private String name;
 
-    @Column(updatable = false)
-    private Date createDate;
+	private String description;
 
-    private Date modifyDate;
+	@Column(updatable = false)
+	private Date createDate;
 
-    @ManyToOne(optional = true)
-    @JoinColumn(name = "user_id")
-    private User user;
+	private Date modifyDate;
+
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "user_id")
+	private User user;
+
 }

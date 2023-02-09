@@ -47,74 +47,79 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class WorkFlowServiceImpl implements WorkFlowService {
-    private final WorkFlowDelegate workFlowDelegate;
-    private final WorkFlowDefinitionRepository workFlowDefinitionRepository;
-    private final WorkFlowRepository workFlowRepository;
-    private final WorkFlowTaskRepository workFlowTaskRepository;
 
-    public WorkFlowServiceImpl(WorkFlowDelegate workFlowDelegate,
-                               WorkFlowDefinitionRepository workFlowDefinitionRepository,
-                               WorkFlowRepository workFlowRepository,
-                               WorkFlowTaskRepository workFlowTaskRepository) {
-        this.workFlowDelegate = workFlowDelegate;
-        this.workFlowDefinitionRepository = workFlowDefinitionRepository;
-        this.workFlowRepository = workFlowRepository;
-        this.workFlowTaskRepository = workFlowTaskRepository;
-    }
+	private final WorkFlowDelegate workFlowDelegate;
 
-    @Override
-    public WorkReport execute(String projectId, String workFlowName, Map<String, Map<String, String>> workFlowTaskArguments) {
-        WorkFlow workFlow = workFlowDelegate.getWorkFlowExecutionByName(workFlowName);
-        log.info("execute workFlow: {}", workFlow);
-        if (null != workFlow) {
-            WorkContext workContext = workFlowDelegate.getWorkFlowContext(workFlowDefinitionRepository.findByName(workFlowName).stream().findFirst().get(), workFlowTaskArguments);
-            WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.PROJECT, WorkContextDelegate.Resource.ID, projectId);
-            WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION, WorkContextDelegate.Resource.NAME, workFlowName);
-            return WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(workFlow, workContext);
-        } else {
-            return new DefaultWorkReport(WorkStatus.FAILED, new WorkContext());
-        }
-    }
+	private final WorkFlowDefinitionRepository workFlowDefinitionRepository;
 
-    @Override
-    public WorkFlowExecution getWorkFlowById(UUID workFlowExecutionId) {
-        return this.workFlowRepository.findById(workFlowExecutionId).get();
-    }
+	private final WorkFlowRepository workFlowRepository;
 
-    @Override
-    public WorkFlowExecution saveWorkFlow(UUID projectId, UUID workFlowDefinitionId, WorkFlowStatus workFlowStatus) {
-        return workFlowRepository.save(WorkFlowExecution.builder()
-                .workFlowDefinitionId(workFlowDefinitionId)
-                .projectId(projectId)
-                .status(workFlowStatus)
-                .startDate(new Date())
-                .build());
-    }
+	private final WorkFlowTaskRepository workFlowTaskRepository;
 
-    @Override
-    public WorkFlowExecution updateWorkFlow(WorkFlowExecution workFlowExecution) {
-        return workFlowRepository.save(workFlowExecution);
-    }
+	public WorkFlowServiceImpl(WorkFlowDelegate workFlowDelegate,
+			WorkFlowDefinitionRepository workFlowDefinitionRepository, WorkFlowRepository workFlowRepository,
+			WorkFlowTaskRepository workFlowTaskRepository) {
+		this.workFlowDelegate = workFlowDelegate;
+		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
+		this.workFlowRepository = workFlowRepository;
+		this.workFlowTaskRepository = workFlowTaskRepository;
+	}
 
-    @Override
-    public WorkFlowTaskExecution getWorkFlowTask(UUID workFlowExecutionId, UUID workFlowTaskDefinitionId) {
-        List<WorkFlowTaskExecution> workFlowTaskExecutionList = workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(workFlowExecutionId, workFlowTaskDefinitionId);
-        return (workFlowTaskExecutionList == null || workFlowTaskExecutionList.isEmpty()) ? null : workFlowTaskExecutionList.stream().findFirst().get();
-    }
+	@Override
+	public WorkReport execute(String projectId, String workFlowName,
+			Map<String, Map<String, String>> workFlowTaskArguments) {
+		WorkFlow workFlow = workFlowDelegate.getWorkFlowExecutionByName(workFlowName);
+		log.info("execute workFlow: {}", workFlow);
+		if (null != workFlow) {
+			WorkContext workContext = workFlowDelegate.getWorkFlowContext(
+					workFlowDefinitionRepository.findByName(workFlowName).stream().findFirst().get(),
+					workFlowTaskArguments);
+			WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.PROJECT,
+					WorkContextDelegate.Resource.ID, projectId);
+			WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION,
+					WorkContextDelegate.Resource.NAME, workFlowName);
+			return WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(workFlow, workContext);
+		}
+		else {
+			return new DefaultWorkReport(WorkStatus.FAILED, new WorkContext());
+		}
+	}
 
-    @Override
-    public WorkFlowTaskExecution saveWorkFlowTask(String arguments, UUID workFlowTaskDefinitionId, UUID workFlowExecutionId, WorkFlowTaskStatus workFlowTaskStatus) {
-        return workFlowTaskRepository.save(WorkFlowTaskExecution.builder()
-                .workFlowExecutionId(workFlowExecutionId)
-                .workFlowTaskDefinitionId(workFlowTaskDefinitionId)
-                .arguments(arguments)
-                .status(workFlowTaskStatus)
-                .startDate(new Date())
-                .build());
-    }
+	@Override
+	public WorkFlowExecution getWorkFlowById(UUID workFlowExecutionId) {
+		return this.workFlowRepository.findById(workFlowExecutionId).get();
+	}
 
-    @Override
-    public WorkFlowTaskExecution updateWorkFlowTask(WorkFlowTaskExecution workFlowTaskExecution) {
-        return workFlowTaskRepository.save(workFlowTaskExecution);
-    }
+	@Override
+	public WorkFlowExecution saveWorkFlow(UUID projectId, UUID workFlowDefinitionId, WorkFlowStatus workFlowStatus) {
+		return workFlowRepository.save(WorkFlowExecution.builder().workFlowDefinitionId(workFlowDefinitionId)
+				.projectId(projectId).status(workFlowStatus).startDate(new Date()).build());
+	}
+
+	@Override
+	public WorkFlowExecution updateWorkFlow(WorkFlowExecution workFlowExecution) {
+		return workFlowRepository.save(workFlowExecution);
+	}
+
+	@Override
+	public WorkFlowTaskExecution getWorkFlowTask(UUID workFlowExecutionId, UUID workFlowTaskDefinitionId) {
+		List<WorkFlowTaskExecution> workFlowTaskExecutionList = workFlowTaskRepository
+				.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(workFlowExecutionId, workFlowTaskDefinitionId);
+		return (workFlowTaskExecutionList == null || workFlowTaskExecutionList.isEmpty()) ? null
+				: workFlowTaskExecutionList.stream().findFirst().get();
+	}
+
+	@Override
+	public WorkFlowTaskExecution saveWorkFlowTask(String arguments, UUID workFlowTaskDefinitionId,
+			UUID workFlowExecutionId, WorkFlowTaskStatus workFlowTaskStatus) {
+		return workFlowTaskRepository.save(WorkFlowTaskExecution.builder().workFlowExecutionId(workFlowExecutionId)
+				.workFlowTaskDefinitionId(workFlowTaskDefinitionId).arguments(arguments).status(workFlowTaskStatus)
+				.startDate(new Date()).build());
+	}
+
+	@Override
+	public WorkFlowTaskExecution updateWorkFlowTask(WorkFlowTaskExecution workFlowTaskExecution) {
+		return workFlowTaskRepository.save(workFlowTaskExecution);
+	}
+
 }

@@ -16,6 +16,7 @@
 package com.redhat.parodos.workflow.version;
 
 import java.io.IOException;
+
 /**
  * Provides functionality interface to get hash of a workflow related class
  *
@@ -24,5 +25,7 @@ import java.io.IOException;
  */
 
 public interface WorkFlowVersionService {
-    String getHash(Object workFlowRef) throws IOException;
+
+	String getHash(Object workFlowRef) throws IOException;
+
 }

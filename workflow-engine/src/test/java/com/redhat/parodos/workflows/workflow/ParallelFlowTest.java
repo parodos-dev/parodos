@@ -35,22 +35,22 @@ import com.redhat.parodos.workflows.work.WorkContext;
 
 public class ParallelFlowTest {
 
-    @Test
-    public void testExecute() {
-        // given
-        Work work1 = Mockito.mock(Work.class);
-        Work work2 = Mockito.mock(Work.class);
-        WorkContext workContext = Mockito.mock(WorkContext.class);
-        ParallelFlowExecutor parallelFlowExecutor = Mockito.mock(ParallelFlowExecutor.class);
-        List<Work> works = Arrays.asList(work1, work2);
-        ParallelFlow parallelFlow = new ParallelFlow("pf", works, parallelFlowExecutor);
+	@Test
+	public void testExecute() {
+		// given
+		Work work1 = Mockito.mock(Work.class);
+		Work work2 = Mockito.mock(Work.class);
+		WorkContext workContext = Mockito.mock(WorkContext.class);
+		ParallelFlowExecutor parallelFlowExecutor = Mockito.mock(ParallelFlowExecutor.class);
+		List<Work> works = Arrays.asList(work1, work2);
+		ParallelFlow parallelFlow = new ParallelFlow("pf", works, parallelFlowExecutor);
 
-        // when
-        ParallelFlowReport parallelFlowReport = parallelFlow.execute(workContext);
+		// when
+		ParallelFlowReport parallelFlowReport = parallelFlow.execute(workContext);
 
-        // then
-        Assertions.assertThat(parallelFlowReport).isNotNull();
-        Mockito.verify(parallelFlowExecutor).executeInParallel(works, workContext);
-    }
+		// then
+		Assertions.assertThat(parallelFlowReport).isNotNull();
+		Mockito.verify(parallelFlowExecutor).executeInParallel(works, workContext);
+	}
 
 }

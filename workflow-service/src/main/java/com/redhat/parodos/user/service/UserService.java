@@ -26,7 +26,11 @@ import java.util.UUID;
  */
 
 public interface UserService {
-    UserResponseDTO save(User user);
-    UserResponseDTO getUserById(UUID id);
-    UserResponseDTO getUserByUsername(String username);
+
+	UserResponseDTO save(User user);
+
+	UserResponseDTO getUserById(UUID id);
+
+	UserResponseDTO getUserByUsername(String username);
+
 }

@@ -43,15 +43,17 @@ import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.workflow.ParallelFlow;
 
 /**
- * 
+ *
  * An implementation of @see Pattern that will serve most Pattern Detection needs
- * 
- * allAreRequiredClues - every @see Clue added to this list needs to be detected for the @see Pattern to be considered detected
- * onlyOneIsRequiredClues - only one @see Clue from this list needs to be detected for the @see Pattern to be considered detected
- * 
- * If both onlyOneIsRequiredClues and allAreRequiredClues are configured, then all of the @Clue in allAreRequiredClues must be detected AND one of the @see Clue in
- * the onlyOneIsRequiredClues must be detected 
- * 
+ *
+ * allAreRequiredClues - every @see Clue added to this list needs to be detected for
+ * the @see Pattern to be considered detected onlyOneIsRequiredClues - only one @see Clue
+ * from this list needs to be detected for the @see Pattern to be considered detected
+ *
+ * If both onlyOneIsRequiredClues and allAreRequiredClues are configured, then all of
+ * the @Clue in allAreRequiredClues must be detected AND one of the @see Clue in the
+ * onlyOneIsRequiredClues must be detected
+ *
  * @author Luke Shannon (Github: lshannon)
  *
  */
@@ -68,17 +70,13 @@ public class BasicPatternImpl implements Pattern {
 
 	/**
 	 * Executes all the Clues in the DESIRED_PATTERNS set in the WorkContext
-	 * 
+	 *
 	 */
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		return ParallelFlow.Builder.aNewParallelFlow()
-				.execute(combineAllClues())
-				.with(ScanningThreadPool.getThreadPoolExecutor())
-				.build()
-				.execute(workContext);
+		return ParallelFlow.Builder.aNewParallelFlow().execute(combineAllClues())
+				.with(ScanningThreadPool.getThreadPoolExecutor()).build().execute(workContext);
 	}
-
 
 	/*
 	 * Combine the allAreRequiredClues and onlyOneIsRequired into a single list
@@ -87,7 +85,7 @@ public class BasicPatternImpl implements Pattern {
 		List<Clue> allClues = new ArrayList<>();
 		allClues.addAll(allAreRequiredClues);
 		allClues.addAll(onlyOneIsRequiredClues);
-		return allClues.stream().toArray(Work[] ::new);
+		return allClues.stream().toArray(Work[]::new);
 	}
 
 	@Override
@@ -149,6 +147,7 @@ public class BasicPatternImpl implements Pattern {
 			public BasicPatternImpl build() {
 				return new BasicPatternImpl(allAreRequiredClues, onlyOneIsRequiredClues);
 			}
+
 		}
 
 	}

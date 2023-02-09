@@ -31,7 +31,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @EnableWebSecurity
 @EnableAspectJAutoProxy
 public class WorkflowServiceApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(WorkflowServiceApplication.class, args);
-    }
+
+	public static void main(String[] args) {
+		SpringApplication.run(WorkflowServiceApplication.class, args);
+	}
+
 }

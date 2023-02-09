@@ -36,35 +36,33 @@ import java.util.List;
 @Table(name = "NotificationGroup")
 public class NotificationGroup extends AbstractEntity {
 
-    @Column(name = "groupname", unique = true)
-    @NotNull
-    private String groupname;
+	@Column(name = "groupname", unique = true)
+	@NotNull
+	private String groupname;
 
-    @ManyToMany(mappedBy = "notificationGroupList", fetch = FetchType.LAZY)
-    private List<NotificationUser> notificationUserList = new ArrayList<>();
+	@ManyToMany(mappedBy = "notificationGroupList", fetch = FetchType.LAZY)
+	private List<NotificationUser> notificationUserList = new ArrayList<>();
 
-    public String getGroupname() {
-        return groupname;
-    }
+	public String getGroupname() {
+		return groupname;
+	}
 
-    public void setGroupname(String groupname) {
-        this.groupname = groupname;
-    }
+	public void setGroupname(String groupname) {
+		this.groupname = groupname;
+	}
 
-    public List<NotificationUser> getNotificationsUserList() {
-        return notificationUserList;
-    }
+	public List<NotificationUser> getNotificationsUserList() {
+		return notificationUserList;
+	}
 
-    public void setNotificationsUserList(List<NotificationUser> notificationUserList) {
-        this.notificationUserList = notificationUserList;
-    }
+	public void setNotificationsUserList(List<NotificationUser> notificationUserList) {
+		this.notificationUserList = notificationUserList;
+	}
 
-    @Override
-    public String toString() {
-        return "NotificationGroup{" +
-                "id=" + getId() +
-                ", groupname='" + groupname + '\'' +
-                ", notificationUserList=" + notificationUserList +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "NotificationGroup{" + "id=" + getId() + ", groupname='" + groupname + '\'' + ", notificationUserList="
+				+ notificationUserList + '}';
+	}
+
 }

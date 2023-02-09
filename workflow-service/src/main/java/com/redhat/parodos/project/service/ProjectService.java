@@ -26,8 +26,11 @@ import java.util.UUID;
  * @author Annel Ketcha (Github: anludke)
  */
 public interface ProjectService {
-    ProjectResponseDTO save(ProjectRequestDTO projectRequestDTO);
-    ProjectResponseDTO getProjectById(UUID id);
 
-    List<ProjectResponseDTO> getProjects();
+	ProjectResponseDTO save(ProjectRequestDTO projectRequestDTO);
+
+	ProjectResponseDTO getProjectById(UUID id);
+
+	List<ProjectResponseDTO> getProjects();
+
 }

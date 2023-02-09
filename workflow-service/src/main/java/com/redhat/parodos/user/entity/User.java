@@ -44,19 +44,21 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends AbstractEntity {
-    private String username;
 
-    private String firstName;
+	private String username;
 
-    private String lastName;
+	private String firstName;
 
-    private String email;
+	private String lastName;
 
-    @Column(updatable = false)
-    private Date createDate;
+	private String email;
 
-    private Date modifyDate;
+	@Column(updatable = false)
+	private Date createDate;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Project> projects = new ArrayList<>();
+	private Date modifyDate;
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Project> projects = new ArrayList<>();
+
 }

@@ -43,23 +43,25 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WorkFlowTaskDefinition extends AbstractEntity {
-    private String name;
 
-    private String parameters;
+	private String name;
 
-    private String outputs;
+	private String parameters;
 
-    @Column(updatable = false)
-    private Date createDate;
+	private String outputs;
 
-    private Date modifyDate;
+	@Column(updatable = false)
+	private Date createDate;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "workflow_definition_id")
-    private WorkFlowDefinition workFlowDefinition;
+	private Date modifyDate;
 
-    @OneToOne(mappedBy = "task", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
-    private WorkFlowCheckerDefinition workFlowCheckerDefinition;
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "workflow_definition_id")
+	private WorkFlowDefinition workFlowDefinition;
 
-    private String commitId;
+	@OneToOne(mappedBy = "task", fetch = FetchType.LAZY, cascade = { CascadeType.MERGE })
+	private WorkFlowCheckerDefinition workFlowCheckerDefinition;
+
+	private String commitId;
+
 }

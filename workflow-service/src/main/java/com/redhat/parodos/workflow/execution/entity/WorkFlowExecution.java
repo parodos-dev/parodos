@@ -41,16 +41,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WorkFlowExecution extends AbstractEntity {
-    private WorkFlowStatus status;
 
-    @Column(updatable = false)
-    private Date startDate;
+	private WorkFlowStatus status;
 
-    private Date endDate;
+	@Column(updatable = false)
+	private Date startDate;
 
-    @Column(name="workflow_definition_id")
-    private UUID workFlowDefinitionId;
+	private Date endDate;
 
-    @Column(name="project_id")
-    private UUID projectId;
+	@Column(name = "workflow_definition_id")
+	private UUID workFlowDefinitionId;
+
+	@Column(name = "project_id")
+	private UUID projectId;
+
 }
