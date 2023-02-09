@@ -25,34 +25,36 @@ import java.util.UUID;
 
 /**
  * Base class for persisting and Entity
- * 
+ *
  * @author Luke Shannon (Github: lshannon)
  *
  */
 @MappedSuperclass
 public class AbstractEntity {
-    @Id
-    @GeneratedValue
-    @Column(columnDefinition = "uuid")
-    private UUID id;
 
-    @Version
-    @JsonIgnore
-    private Long objectVersion;
+	@Id
+	@GeneratedValue
+	@Column(columnDefinition = "uuid")
+	private UUID id;
 
-    protected AbstractEntity() {
-        this.id = null;
-    }
+	@Version
+	@JsonIgnore
+	private Long objectVersion;
 
-    public UUID getId() {
-        return this.id;
-    }
+	protected AbstractEntity() {
+		this.id = null;
+	}
 
-    void setId(UUID id) {
-        this.id = id;
-    }
+	public UUID getId() {
+		return this.id;
+	}
 
-    public Long getObjectVersion() {
-        return objectVersion;
-    }
+	void setId(UUID id) {
+		this.id = id;
+	}
+
+	public Long getObjectVersion() {
+		return objectVersion;
+	}
+
 }

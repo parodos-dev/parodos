@@ -29,14 +29,14 @@ import javax.persistence.Converter;
 @Converter(autoApply = true)
 public class WorkFlowTaskStatusConverter implements AttributeConverter<WorkFlowTaskStatus, String> {
 
-    @Override
-    public String convertToDatabaseColumn(WorkFlowTaskStatus status) {
-        return status.name();
-    }
+	@Override
+	public String convertToDatabaseColumn(WorkFlowTaskStatus status) {
+		return status.name();
+	}
 
-    @Override
-    public WorkFlowTaskStatus convertToEntityAttribute(String dbData) {
-        return WorkFlowTaskStatus.valueOf(dbData);
-    }
+	@Override
+	public WorkFlowTaskStatus convertToEntityAttribute(String dbData) {
+		return WorkFlowTaskStatus.valueOf(dbData);
+	}
 
 }

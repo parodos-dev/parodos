@@ -42,22 +42,24 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WorkFlowTaskExecution extends AbstractEntity {
-    @Column(name="workflow_execution_id")
-    private UUID workFlowExecutionId;
 
-    @Column(name="workflow_task_definition_id")
-    private UUID workFlowTaskDefinitionId;
+	@Column(name = "workflow_execution_id")
+	private UUID workFlowExecutionId;
 
-    private String arguments;
+	@Column(name = "workflow_task_definition_id")
+	private UUID workFlowTaskDefinitionId;
 
-    private String results;
+	private String arguments;
 
-    private WorkFlowTaskStatus status;
+	private String results;
 
-    @Column(updatable = false)
-    private Date startDate;
+	private WorkFlowTaskStatus status;
 
-    private Date endDate;
+	@Column(updatable = false)
+	private Date startDate;
 
-    private Date lastUpdateDate;
+	private Date endDate;
+
+	private Date lastUpdateDate;
+
 }

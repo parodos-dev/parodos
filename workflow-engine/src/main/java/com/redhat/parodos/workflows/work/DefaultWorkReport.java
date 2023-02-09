@@ -30,50 +30,48 @@ package com.redhat.parodos.workflows.work;
  */
 public class DefaultWorkReport implements WorkReport {
 
-    private final WorkStatus status;
-    private final WorkContext workContext;
-    private Throwable error;
+	private final WorkStatus status;
 
-    /**
-     * Create a new {@link DefaultWorkReport}.
-     *
-     * @param status of work
-     */
-    public DefaultWorkReport(WorkStatus status, WorkContext workContext) {
-        this.status = status;
-        this.workContext = workContext;
-    }
+	private final WorkContext workContext;
 
-    /**
-     * Create a new {@link DefaultWorkReport}.
-     *
-     * @param status of work
-     * @param error if any
-     */
-    public DefaultWorkReport(WorkStatus status, WorkContext workContext, Throwable error) {
-        this(status, workContext);
-        this.error = error;
-    }
+	private Throwable error;
 
-    public WorkStatus getStatus() {
-        return status;
-    }
+	/**
+	 * Create a new {@link DefaultWorkReport}.
+	 * @param status of work
+	 */
+	public DefaultWorkReport(WorkStatus status, WorkContext workContext) {
+		this.status = status;
+		this.workContext = workContext;
+	}
 
-    public Throwable getError() {
-        return error;
-    }
+	/**
+	 * Create a new {@link DefaultWorkReport}.
+	 * @param status of work
+	 * @param error if any
+	 */
+	public DefaultWorkReport(WorkStatus status, WorkContext workContext, Throwable error) {
+		this(status, workContext);
+		this.error = error;
+	}
 
-    @Override
-    public WorkContext getWorkContext() {
-        return workContext;
-    }
+	public WorkStatus getStatus() {
+		return status;
+	}
 
-    @Override
-    public String toString() {
-        return "DefaultWorkReport {" +
-                "status=" + status +
-                ", context=" + workContext +
-                ", error=" + (error == null ? "''" : error) +
-                '}';
-    }
+	public Throwable getError() {
+		return error;
+	}
+
+	@Override
+	public WorkContext getWorkContext() {
+		return workContext;
+	}
+
+	@Override
+	public String toString() {
+		return "DefaultWorkReport {" + "status=" + status + ", context=" + workContext + ", error="
+				+ (error == null ? "''" : error) + '}';
+	}
+
 }

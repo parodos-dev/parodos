@@ -34,19 +34,21 @@ import java.util.Collections;
 
 @Slf4j
 public class MockApprovalWorkFlowCheckerTask extends BaseWorkFlowCheckerTask {
-    @Override
-    public WorkReport checkWorkFlowStatus(WorkContext context) {
-        log.info("Mocking a successful workflow checker task");
-        return new DefaultWorkReport(WorkStatus.COMPLETED, context);
-    }
 
-    @Override
-    public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
-        return Collections.emptyList();
-    }
+	@Override
+	public WorkReport checkWorkFlowStatus(WorkContext context) {
+		log.info("Mocking a successful workflow checker task");
+		return new DefaultWorkReport(WorkStatus.COMPLETED, context);
+	}
 
-    @Override
-    public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
-        return Collections.emptyList();
-    }
+	@Override
+	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
+		return Collections.emptyList();
+	}
+
+	@Override
+	public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
+		return Collections.emptyList();
+	}
+
 }

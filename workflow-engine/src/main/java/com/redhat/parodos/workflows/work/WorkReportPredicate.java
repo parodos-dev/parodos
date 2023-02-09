@@ -33,43 +33,45 @@ import java.util.concurrent.atomic.AtomicInteger;
 @FunctionalInterface
 public interface WorkReportPredicate {
 
-    /**
-     * Apply the predicate on the given work report.
-     * 
-     * @param workReport on which the predicate should be applied
-     * @return true if the predicate applies on the given report, false otherwise
-     */
-    boolean apply(WorkReport workReport);
+	/**
+	 * Apply the predicate on the given work report.
+	 * @param workReport on which the predicate should be applied
+	 * @return true if the predicate applies on the given report, false otherwise
+	 */
+	boolean apply(WorkReport workReport);
 
-    WorkReportPredicate ALWAYS_TRUE = workReport -> true;
-    WorkReportPredicate ALWAYS_FALSE = workReport -> false;
-    WorkReportPredicate COMPLETED = workReport -> workReport.getStatus().equals(WorkStatus.COMPLETED);
-    WorkReportPredicate FAILED = workReport -> workReport.getStatus().equals(WorkStatus.FAILED);
+	WorkReportPredicate ALWAYS_TRUE = workReport -> true;
 
-    /**
-     * A predicate that returns true after a given number of times.
-     *
-     * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
-     */
-    class TimesPredicate implements WorkReportPredicate {
+	WorkReportPredicate ALWAYS_FALSE = workReport -> false;
 
-        private final int times;
+	WorkReportPredicate COMPLETED = workReport -> workReport.getStatus().equals(WorkStatus.COMPLETED);
 
-        private final AtomicInteger counter = new AtomicInteger();
+	WorkReportPredicate FAILED = workReport -> workReport.getStatus().equals(WorkStatus.FAILED);
 
-        public TimesPredicate(int times) {
-            this.times = times;
-        }
+	/**
+	 * A predicate that returns true after a given number of times.
+	 *
+	 * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
+	 */
+	class TimesPredicate implements WorkReportPredicate {
 
-        @Override
-        public boolean apply(WorkReport workReport) {
-            return counter.incrementAndGet() != times;
-        }
+		private final int times;
 
-        public static TimesPredicate times(int times) {
-            return new TimesPredicate(times);
-        }
-    }
+		private final AtomicInteger counter = new AtomicInteger();
 
+		public TimesPredicate(int times) {
+			this.times = times;
+		}
+
+		@Override
+		public boolean apply(WorkReport workReport) {
+			return counter.incrementAndGet() != times;
+		}
+
+		public static TimesPredicate times(int times) {
+			return new TimesPredicate(times);
+		}
+
+	}
 
 }

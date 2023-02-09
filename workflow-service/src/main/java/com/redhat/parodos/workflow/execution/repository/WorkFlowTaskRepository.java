@@ -28,6 +28,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author Annel Ketcha (Github: anludke)
  */
 public interface WorkFlowTaskRepository extends JpaRepository<WorkFlowTaskExecution, UUID> {
-    List<WorkFlowTaskExecution> findByWorkFlowExecutionId(UUID workFlowExecutionId);
-    List<WorkFlowTaskExecution> findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(UUID workFlowExecutionId, UUID workFlowTaskDefinitionId);
+
+	List<WorkFlowTaskExecution> findByWorkFlowExecutionId(UUID workFlowExecutionId);
+
+	List<WorkFlowTaskExecution> findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(UUID workFlowExecutionId,
+			UUID workFlowTaskDefinitionId);
+
 }

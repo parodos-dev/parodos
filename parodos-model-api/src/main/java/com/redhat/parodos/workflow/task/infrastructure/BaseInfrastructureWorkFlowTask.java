@@ -25,22 +25,26 @@ import lombok.Getter;
 /**
  * Base Class for an InfrastrcutureWorkFlowTask.
  * <p>
- * If the infrastructure @see WorkFlowTask ends with a long running task outside of Parodos (i.e: waiting for ticket approval), a @see WorkFlowChecker can be specified with the
- * logic required to check the status of this external tasks
+ * If the infrastructure @see WorkFlowTask ends with a long running task outside of
+ * Parodos (i.e: waiting for ticket approval), a @see WorkFlowChecker can be specified
+ * with the logic required to check the status of this external tasks
  *
  * @author Luke Shannon (Github: lshannon)
  */
 public abstract class BaseInfrastructureWorkFlowTask extends BaseWorkFlowTask {
-    private WorkFlowTaskType type = WorkFlowTaskType.INFRASTRUCTURE;
 
-    // WorkFlowChecker check a process that has been initiated by a WorkFlow to see if its been completed
-    private WorkFlow checkerWorkflow;
+	private WorkFlowTaskType type = WorkFlowTaskType.INFRASTRUCTURE;
 
-    public WorkFlow getGetWorkFlowChecker() {
-        return checkerWorkflow;
-    }
+	// WorkFlowChecker check a process that has been initiated by a WorkFlow to see if its
+	// been completed
+	private WorkFlow checkerWorkflow;
 
-    public void setWorkFlowChecker(WorkFlow checkerWorkflow) {
-        this.checkerWorkflow = checkerWorkflow;
-    }
+	public WorkFlow getGetWorkFlowChecker() {
+		return checkerWorkflow;
+	}
+
+	public void setWorkFlowChecker(WorkFlow checkerWorkflow) {
+		this.checkerWorkflow = checkerWorkflow;
+	}
+
 }

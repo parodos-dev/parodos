@@ -35,8 +35,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkFlowResponseDTO {
-    private String workFlowExecutionId;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private WorkFlowOptions workFlowOptions;
+	private String workFlowExecutionId;
+
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private WorkFlowOptions workFlowOptions;
+
 }

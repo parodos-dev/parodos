@@ -34,17 +34,29 @@ import org.modelmapper.ModelMapper;
  * @author Richard Wang (Github: RichardW98)
  */
 public final class NotificationsDataCreator {
+
 	public static final String ARCHIVE_FOLDER = "archive";
+
 	public static final String ADMIN_GROUP = "admin";
+
 	public static final String GROUP_A = "group_a";
+
 	public static final String GROUP_B = "group_b";
+
 	public static final String USER_A_1 = "user_a_1";
+
 	public static final String USER_A_2 = "user_a_2";
+
 	public static final String USER_B_1 = "user_b_1";
+
 	public static final String USER_B_2 = "user_b_2";
+
 	public static final String MESSAGE_BODY = "this isn't so bad!";
+
 	public static final String MESSAGE_SUBJECT = "please read this warning message";
+
 	public static final String MESSAGE_TYPE = "warning";
+
 	public static final String USERNAME = "johndoe";
 
 	public static List<String> getTags() {
@@ -60,7 +72,6 @@ public final class NotificationsDataCreator {
 		notificationUserRepository.save(user);
 	}
 
-
 	public static void createNotificationsGroup(NotificationGroupRepository notificationGroupRepository) {
 		NotificationGroup group = new NotificationGroup();
 		group.setGroupname(ADMIN_GROUP);
@@ -69,8 +80,9 @@ public final class NotificationsDataCreator {
 
 	// Creates GROUP_A and GROUP_B with
 	// users USER_A_1, USER_A2 in GROUP_A and USER_B_1,USER_B_2 in GROUP_B
-	public static void createAndSaveTwoGroupsAndTwoUsersPerGroup(NotificationGroupRepository notificationGroupRepository,
-																 NotificationUserRepository notificationUserRepository) {
+	public static void createAndSaveTwoGroupsAndTwoUsersPerGroup(
+			NotificationGroupRepository notificationGroupRepository,
+			NotificationUserRepository notificationUserRepository) {
 		NotificationGroup group_a = new NotificationGroup();
 		group_a.setGroupname(GROUP_A);
 		notificationGroupRepository.save(group_a);
@@ -100,7 +112,6 @@ public final class NotificationsDataCreator {
 		notificationUserRepository.save(user_b_2);
 	}
 
-
 	public static void createNotificationsRecord(NotificationRecordRepository notificationRecordRepository) {
 		NotificationRecord record = new NotificationRecord();
 		record.setRead(false);
@@ -127,8 +138,10 @@ public final class NotificationsDataCreator {
 
 	public static NotificationMessageCreateRequestDTO createNotificationsMessageRequest(List<String> usernames) {
 		ModelMapper modelMapper = new ModelMapper();
-		NotificationMessageCreateRequestDTO createRequest = modelMapper.map(createNotificationsMessage(), NotificationMessageCreateRequestDTO.class);
+		NotificationMessageCreateRequestDTO createRequest = modelMapper.map(createNotificationsMessage(),
+				NotificationMessageCreateRequestDTO.class);
 		createRequest.setUsernames(usernames);
 		return createRequest;
 	}
+
 }

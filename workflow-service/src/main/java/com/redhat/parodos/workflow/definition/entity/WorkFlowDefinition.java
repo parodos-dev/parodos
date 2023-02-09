@@ -44,29 +44,29 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WorkFlowDefinition extends AbstractEntity {
-    private String name;
 
-    private String description;
+	private String name;
 
-    private String type;
+	private String description;
 
-    private String author;
+	private String type;
 
-    @Column(updatable = false)
-    private Date createDate;
+	private String author;
 
-    private Date modifyDate;
+	@Column(updatable = false)
+	private Date createDate;
 
-    @OneToMany(mappedBy = "workFlowDefinition", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<WorkFlowTaskDefinition> workFlowTaskDefinitions = new ArrayList<>();
+	private Date modifyDate;
 
-    @OneToMany(mappedBy = "checkWorkFlow", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<WorkFlowCheckerDefinition> checkerWorkFlowDefinitions = new ArrayList<>();
+	@OneToMany(mappedBy = "workFlowDefinition", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<WorkFlowTaskDefinition> workFlowTaskDefinitions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "nextWorkFlow", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<WorkFlowCheckerDefinition> nextWorkFlowDefinitions = new ArrayList<>();
+	@OneToMany(mappedBy = "checkWorkFlow", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<WorkFlowCheckerDefinition> checkerWorkFlowDefinitions = new ArrayList<>();
 
-    private String commitId;
+	@OneToMany(mappedBy = "nextWorkFlow", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<WorkFlowCheckerDefinition> nextWorkFlowDefinitions = new ArrayList<>();
+
+	private String commitId;
+
 }
-
-

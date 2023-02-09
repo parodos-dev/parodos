@@ -16,15 +16,17 @@
 package com.redhat.parodos.workflow.exception;
 
 /**
- * Thrown when the  @see WorkContext is missing a @see WorkFlowTaskParameter
- * 
+ * Thrown when the @see WorkContext is missing a @see WorkFlowTaskParameter
+ *
  * @author Luke Shannon (Github: lshannon)
  *
  */
 public class MissingParameterException extends Exception {
+
 	private static final long serialVersionUID = 1L;
 
 	public MissingParameterException(String errorMessage) {
 		super(errorMessage);
 	}
+
 }

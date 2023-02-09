@@ -36,6 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 @ActiveProfiles("test")
 public class NotificationUserRepositoryTests extends AbstractNotificationsIntegrationTest {
+
 	@Autowired
 	private NotificationUserRepository notificationUserRepository;
 
@@ -55,7 +56,8 @@ public class NotificationUserRepositoryTests extends AbstractNotificationsIntegr
 		assertThat(u.isPresent());
 		assertThat(u.get().getUsername()).isEqualTo(NotificationsDataCreator.USERNAME);
 
-		Optional<NotificationUser> u2 = this.notificationUserRepository.findByUsername(NotificationsDataCreator.USERNAME);
+		Optional<NotificationUser> u2 = this.notificationUserRepository
+				.findByUsername(NotificationsDataCreator.USERNAME);
 		assertThat(u2.isPresent());
 		assertThat(u2.get().getUsername()).isEqualTo(NotificationsDataCreator.USERNAME);
 
@@ -64,4 +66,5 @@ public class NotificationUserRepositoryTests extends AbstractNotificationsIntegr
 		Optional<NotificationUser> u3 = this.notificationUserRepository.findById(user.getId());
 		assertThat(u3.isEmpty());
 	}
+
 }

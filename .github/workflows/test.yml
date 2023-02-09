@@ -1,0 +1,39 @@
+---
+name: Tests
+on:
+  push:
+    branches:
+      - main
+      - 'releases/**'
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Maven Build
+        run: mvn clean package
+
+      - name: Maven Validate
+        run: mvn validate
+
+      - name: Maven Test
+        run: mvn test --file ./workflow-engine/pom.xml
+
+      - name: Generate JaCoCo Badge
+        uses: cicirello/jacoco-badge-generator@v2
+        with:
+          generate-branches-badge: true
+          jacoco-csv-file: ./workflow-engine/target/site/jacoco/jacoco.csv
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 40
+          min-coverage-changed-files: 60

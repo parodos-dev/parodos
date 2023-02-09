@@ -41,49 +41,49 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 @Component
 public class RestAPIWorkFlowTask extends BaseInfrastructureWorkFlowTask {
-    public static final String PAYLOAD_PASSED_IN_FROM_SERVICE = "PAYLOAD_PASSED_IN_FROM_SERVICE";
-    public static final String URL_PASSED_IN_FROM_SERVICE = "URL_PASSED_IN_FROM_SERVICE";
 
-    /**
-     * Executed by the InfrastructureTask engine as part of the Workflow
-     */
-    public WorkReport execute(WorkContext workContext) {
-        try {
-            String urlString = WorkContextDelegate.getRequiredValueFromRequestParams(workContext, URL_PASSED_IN_FROM_SERVICE);
-            String payload = WorkContextDelegate.getRequiredValueFromRequestParams(workContext, PAYLOAD_PASSED_IN_FROM_SERVICE);
-            log.info("Running Task REST API Call: urlString: {} payload: {} ", urlString, payload);
-            RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<String> result = restTemplate.postForEntity(urlString, payload, String.class);
-            if (result.getStatusCode().is2xxSuccessful()) {
-                log.info("Rest call completed: {}", result.getBody());
-                return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
-            }
-            log.error("Call to the API was not successful. Response: {}", result.getStatusCode());
-        } catch (Exception e) {
-            log.error("There was an issue with the REST call: {}", e.getMessage());
+	public static final String PAYLOAD_PASSED_IN_FROM_SERVICE = "PAYLOAD_PASSED_IN_FROM_SERVICE";
 
-        }
-        return new DefaultWorkReport(WorkStatus.FAILED, workContext);
-    }
+	public static final String URL_PASSED_IN_FROM_SERVICE = "URL_PASSED_IN_FROM_SERVICE";
 
-    @Override
-    public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
-        return List.of(
-                WorkFlowTaskParameter.builder()
-                        .key(URL_PASSED_IN_FROM_SERVICE)
-                        .description("The Url of the service (ie: https://httpbin.org/post")
-                        .optional(false)
-                        .type(WorkFlowTaskParameterType.URL)
-                        .build(),
-                WorkFlowTaskParameter.builder()
-                        .key(PAYLOAD_PASSED_IN_FROM_SERVICE)
-                        .description("Json of what to provide for data. (ie: 'Hello!')")
-                        .optional(false)
-                        .type(WorkFlowTaskParameterType.PASSWORD)
-                        .build());
-    }
+	/**
+	 * Executed by the InfrastructureTask engine as part of the Workflow
+	 */
+	public WorkReport execute(WorkContext workContext) {
+		try {
+			String urlString = WorkContextDelegate.getRequiredValueFromRequestParams(workContext,
+					URL_PASSED_IN_FROM_SERVICE);
+			String payload = WorkContextDelegate.getRequiredValueFromRequestParams(workContext,
+					PAYLOAD_PASSED_IN_FROM_SERVICE);
+			log.info("Running Task REST API Call: urlString: {} payload: {} ", urlString, payload);
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<String> result = restTemplate.postForEntity(urlString, payload, String.class);
+			if (result.getStatusCode().is2xxSuccessful()) {
+				log.info("Rest call completed: {}", result.getBody());
+				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
+			}
+			log.error("Call to the API was not successful. Response: {}", result.getStatusCode());
+		}
+		catch (Exception e) {
+			log.error("There was an issue with the REST call: {}", e.getMessage());
 
-    public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
-        return List.of(WorkFlowTaskOutput.HTTP2XX, WorkFlowTaskOutput.OTHER);
-    }
+		}
+		return new DefaultWorkReport(WorkStatus.FAILED, workContext);
+	}
+
+	@Override
+	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
+		return List.of(
+				WorkFlowTaskParameter.builder().key(URL_PASSED_IN_FROM_SERVICE)
+						.description("The Url of the service (ie: https://httpbin.org/post").optional(false)
+						.type(WorkFlowTaskParameterType.URL).build(),
+				WorkFlowTaskParameter.builder().key(PAYLOAD_PASSED_IN_FROM_SERVICE)
+						.description("Json of what to provide for data. (ie: 'Hello!')").optional(false)
+						.type(WorkFlowTaskParameterType.PASSWORD).build());
+	}
+
+	public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
+		return List.of(WorkFlowTaskOutput.HTTP2XX, WorkFlowTaskOutput.OTHER);
+	}
+
 }

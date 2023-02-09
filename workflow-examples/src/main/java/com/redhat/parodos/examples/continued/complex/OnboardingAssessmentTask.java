@@ -35,34 +35,30 @@ import java.util.List;
  * @author Luke Shannon (Github: lshannon)
  */
 public class OnboardingAssessmentTask extends BaseAssessmentTask {
-    private static final String INPUT = "INPUT";
-    public OnboardingAssessmentTask(WorkFlowOption infrastructureOption) {
-        super(List.of(infrastructureOption));
-    }
 
-    @Override
-    public WorkReport execute(WorkContext workContext) {
-        WorkContextDelegate.write(workContext,
-                WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-                WorkContextDelegate.Resource.INFRASTRUCTURE_OPTIONS,
-                new WorkFlowOptions.Builder()
-                        .addNewOption(getWorkFlowOptions().get(0))
-                        .build());
-        return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
-    }
+	private static final String INPUT = "INPUT";
 
-    public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
-        return List.of(
-                WorkFlowTaskParameter.builder()
-                        .key(INPUT)
-                        .description("Enter some information to use for the Assessment to determine if they can onboard")
-                        .optional(false)
-                        .type(WorkFlowTaskParameterType.TEXT)
-                        .build());
-    }
+	public OnboardingAssessmentTask(WorkFlowOption infrastructureOption) {
+		super(List.of(infrastructureOption));
+	}
 
-    @Override
-    public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
-        return Collections.emptyList();
-    }
+	@Override
+	public WorkReport execute(WorkContext workContext) {
+		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.INFRASTRUCTURE_OPTIONS,
+				new WorkFlowOptions.Builder().addNewOption(getWorkFlowOptions().get(0)).build());
+		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
+	}
+
+	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
+		return List.of(WorkFlowTaskParameter.builder().key(INPUT)
+				.description("Enter some information to use for the Assessment to determine if they can onboard")
+				.optional(false).type(WorkFlowTaskParameterType.TEXT).build());
+	}
+
+	@Override
+	public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
+		return Collections.emptyList();
+	}
+
 }

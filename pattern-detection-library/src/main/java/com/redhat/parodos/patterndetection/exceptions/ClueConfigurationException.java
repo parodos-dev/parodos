@@ -16,14 +16,16 @@
 package com.redhat.parodos.patterndetection.exceptions;
 
 /**
- * 
- * Throw if a @see Clue is being built that can never be detected (ie: missing any of the basic criteria to scan for). This is to prevent @see Clue references that run without any potiential of being detected. Too many of these could affect performance
- * 
+ *
+ * Throw if a @see Clue is being built that can never be detected (ie: missing any of the
+ * basic criteria to scan for). This is to prevent @see Clue references that run without
+ * any potiential of being detected. Too many of these could affect performance
+ *
  * @author Luke Shannon (Github: lshannon)
  *
  */
 public class ClueConfigurationException extends RuntimeException {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	public ClueConfigurationException(String message) {

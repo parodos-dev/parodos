@@ -32,17 +32,20 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class WorkFlowVersionServiceImpl implements WorkFlowVersionService {
-    @Override
-    public String getHash(Object workFlowRef) throws IOException {
-        String md5 = "";
-        try (InputStream is = getClassInputStream(workFlowRef)) {
-            md5 = DigestUtils.md5Hex(is);
-        }
-        log.info("md5 checksum version of {} is : {}", workFlowRef.getClass(), md5);
-        return md5;
-    }
 
-    private InputStream getClassInputStream(Object workFlowRef) throws IOException {
-        return new ClassPathResource(workFlowRef.getClass().getName().replace(".", "/") + ".class", workFlowRef.getClass().getClassLoader()).getInputStream();
-    }
+	@Override
+	public String getHash(Object workFlowRef) throws IOException {
+		String md5 = "";
+		try (InputStream is = getClassInputStream(workFlowRef)) {
+			md5 = DigestUtils.md5Hex(is);
+		}
+		log.info("md5 checksum version of {} is : {}", workFlowRef.getClass(), md5);
+		return md5;
+	}
+
+	private InputStream getClassInputStream(Object workFlowRef) throws IOException {
+		return new ClassPathResource(workFlowRef.getClass().getName().replace(".", "/") + ".class",
+				workFlowRef.getClass().getClassLoader()).getInputStream();
+	}
+
 }

@@ -22,5 +22,7 @@ import java.util.List;
  * @author Richard Wang (Github: RichardW98)
  */
 public interface NotificationUserService {
-    List<NotificationUser> findUsers(List<String> usernames);
+
+	List<NotificationUser> findUsers(List<String> usernames);
+
 }

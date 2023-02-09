@@ -31,17 +31,20 @@ import java.util.UUID;
  * @author Annel Ketcha (Github: anludke)
  */
 public interface WorkFlowService {
-    WorkReport execute(String projectId, String workFlowName, Map<String, Map<String, String>> workFlowTaskArguments);
 
-    WorkFlowExecution getWorkFlowById(UUID workFlowExecutionId);
+	WorkReport execute(String projectId, String workFlowName, Map<String, Map<String, String>> workFlowTaskArguments);
 
-    WorkFlowExecution saveWorkFlow(UUID projectId, UUID workFlowDefinitionId, WorkFlowStatus workFlowStatus);
+	WorkFlowExecution getWorkFlowById(UUID workFlowExecutionId);
 
-    WorkFlowExecution updateWorkFlow(WorkFlowExecution workFlowExecution);
+	WorkFlowExecution saveWorkFlow(UUID projectId, UUID workFlowDefinitionId, WorkFlowStatus workFlowStatus);
 
-    WorkFlowTaskExecution getWorkFlowTask(UUID workFlowExecutionId, UUID workFlowTaskDefinitionId);
+	WorkFlowExecution updateWorkFlow(WorkFlowExecution workFlowExecution);
 
-    WorkFlowTaskExecution saveWorkFlowTask(String arguments, UUID workFlowTaskDefinitionId, UUID workFlowExecutionId, WorkFlowTaskStatus workFlowTaskStatus);
+	WorkFlowTaskExecution getWorkFlowTask(UUID workFlowExecutionId, UUID workFlowTaskDefinitionId);
 
-    WorkFlowTaskExecution updateWorkFlowTask(WorkFlowTaskExecution workFlowTaskExecution);
+	WorkFlowTaskExecution saveWorkFlowTask(String arguments, UUID workFlowTaskDefinitionId, UUID workFlowExecutionId,
+			WorkFlowTaskStatus workFlowTaskStatus);
+
+	WorkFlowTaskExecution updateWorkFlowTask(WorkFlowTaskExecution workFlowTaskExecution);
+
 }

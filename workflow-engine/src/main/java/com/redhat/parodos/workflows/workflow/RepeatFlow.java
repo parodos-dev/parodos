@@ -38,94 +38,109 @@ import com.redhat.parodos.workflows.work.WorkReportPredicate;
  */
 public class RepeatFlow extends AbstractWorkFlow {
 
-    private final Work work;
-    private final WorkReportPredicate predicate;
+	private final Work work;
 
-    RepeatFlow(String name, Work work, WorkReportPredicate predicate) {
-        super(name);
-        this.work = work;
-        this.predicate = predicate;
-    }
+	private final WorkReportPredicate predicate;
 
-    /**
-     * {@inheritDoc}
-     */
-    public WorkReport execute(WorkContext workContext) {
-        WorkReport workReport;
-        do {
-            workReport = work.execute(workContext);
-        } while (predicate.apply(workReport));
-        return workReport;
-    }
+	RepeatFlow(String name, Work work, WorkReportPredicate predicate) {
+		super(name);
+		this.work = work;
+		this.predicate = predicate;
+	}
 
-    public static class Builder {
+	/**
+	 * {@inheritDoc}
+	 */
+	public WorkReport execute(WorkContext workContext) {
+		WorkReport workReport;
+		do {
+			workReport = work.execute(workContext);
+		}
+		while (predicate.apply(workReport));
+		return workReport;
+	}
 
-        private Builder() {
-            // force usage of static method aNewRepeatFlow
-        }
+	public static class Builder {
 
-        public static NameStep aNewRepeatFlow() {
-            return new BuildSteps();
-        }
+		private Builder() {
+			// force usage of static method aNewRepeatFlow
+		}
 
-        public interface NameStep extends RepeatStep {
-            RepeatStep named(String name);
-        }
+		public static NameStep aNewRepeatFlow() {
+			return new BuildSteps();
+		}
 
-        public interface RepeatStep {
-            UntilStep repeat(Work work);
-        }
+		public interface NameStep extends RepeatStep {
 
-        public interface UntilStep {
-            BuildStep until(WorkReportPredicate predicate);
-            BuildStep times(int times);
-        }
+			RepeatStep named(String name);
 
-        public interface BuildStep {
-            RepeatFlow build();
-        }
+		}
 
-        private static class BuildSteps implements NameStep, RepeatStep, UntilStep, BuildStep {
+		public interface RepeatStep {
 
-            private String name;
-            private Work work;
-            private WorkReportPredicate predicate;
+			UntilStep repeat(Work work);
 
-            BuildSteps() {
-                this.name = UUID.randomUUID().toString();
-                this.work = new NoOpWork();
-                this.predicate = WorkReportPredicate.ALWAYS_FALSE;
-            }
-            
-            @Override
-            public RepeatStep named(String name) {
-                this.name = name;
-                return this;
-            }
+		}
 
-            @Override
-            public UntilStep repeat(Work work) {
-                this.work = work;
-                return this;
-            }
+		public interface UntilStep {
 
-            @Override
-            public BuildStep until(WorkReportPredicate predicate) {
-                this.predicate = predicate;
-                return this;
-            }
+			BuildStep until(WorkReportPredicate predicate);
 
-            @Override
-            public BuildStep times(int times) {
-                until(WorkReportPredicate.TimesPredicate.times(times));
-                return this;
-            }
+			BuildStep times(int times);
 
-            @Override
-            public RepeatFlow build() {
-                return new RepeatFlow(name, work, predicate);
-            }
-        }
+		}
 
-    }
+		public interface BuildStep {
+
+			RepeatFlow build();
+
+		}
+
+		private static class BuildSteps implements NameStep, RepeatStep, UntilStep, BuildStep {
+
+			private String name;
+
+			private Work work;
+
+			private WorkReportPredicate predicate;
+
+			BuildSteps() {
+				this.name = UUID.randomUUID().toString();
+				this.work = new NoOpWork();
+				this.predicate = WorkReportPredicate.ALWAYS_FALSE;
+			}
+
+			@Override
+			public RepeatStep named(String name) {
+				this.name = name;
+				return this;
+			}
+
+			@Override
+			public UntilStep repeat(Work work) {
+				this.work = work;
+				return this;
+			}
+
+			@Override
+			public BuildStep until(WorkReportPredicate predicate) {
+				this.predicate = predicate;
+				return this;
+			}
+
+			@Override
+			public BuildStep times(int times) {
+				until(WorkReportPredicate.TimesPredicate.times(times));
+				return this;
+			}
+
+			@Override
+			public RepeatFlow build() {
+				return new RepeatFlow(name, work, predicate);
+			}
+
+		}
+
+	}
+
 }

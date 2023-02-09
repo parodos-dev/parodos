@@ -23,7 +23,7 @@ package com.redhat.parodos.workflow.task;
  * @author Annel Ketcha (Github: anludke)
  */
 public enum WorkFlowTaskType {
-    ASSESSMENT,
-    CHECKER,
-    INFRASTRUCTURE
+
+	ASSESSMENT, CHECKER, INFRASTRUCTURE
+
 }

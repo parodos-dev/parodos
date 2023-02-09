@@ -40,19 +40,21 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkFlowTaskDefinitionResponseDTO {
-    private String id;
 
-    private String name;
+	private String id;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<WorkFlowTaskParameter> parameters;
+	private String name;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<WorkFlowTaskOutput> outputs;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private List<WorkFlowTaskParameter> parameters;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private UUID workFlowChecker;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private List<WorkFlowTaskOutput> outputs;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private UUID nextWorkFlow;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private UUID workFlowChecker;
+
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private UUID nextWorkFlow;
+
 }

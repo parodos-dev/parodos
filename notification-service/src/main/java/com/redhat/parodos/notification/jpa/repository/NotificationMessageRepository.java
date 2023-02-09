@@ -21,6 +21,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
+
 /**
  * @author Richard Wang (Github: RichardW98)
  * @author Annel Ketcha (Github: anludke)
@@ -28,4 +29,5 @@ import java.util.UUID;
 @Repository
 @Transactional
 public interface NotificationMessageRepository extends JpaRepository<NotificationMessage, UUID> {
+
 }

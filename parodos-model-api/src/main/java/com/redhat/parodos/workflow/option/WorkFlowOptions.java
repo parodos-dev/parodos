@@ -20,34 +20,45 @@ import java.util.List;
 
 /**
  *
- * This consumed by a @see BaseAssessmentTask, updated by that task and then consumed by the UI layer for the user to choose which Workflow they wish to execute
+ * This consumed by a @see BaseAssessmentTask, updated by that task and then consumed by
+ * the UI layer for the user to choose which Workflow they wish to execute
  *
- * - currentVersion: The tool chain the application is currently using (it might be none - meaning tooling must be created)
+ * - currentVersion: The tool chain the application is currently using (it might be none -
+ * meaning tooling must be created)
  *
  * - upgradeOptions: Any available upgrade options for the existing tool chain
  *
- * - migrationOptions: Existing tooling/environments that the user can to move their workload over too (ie: moving from VMs to k8)
+ * - migrationOptions: Existing tooling/environments that the user can to move their
+ * workload over too (ie: moving from VMs to k8)
  *
  * - newOptions: New tool chains/environments that can be created for the application
  *
- * - continuationOptions: if a workflow has started and not been completed due to missing information from the user. Selecting one of these options allows them to continue
- * 
- * - otherOptions: Workflows that are specific to the team (ie: adding/removing a developer from a project)
+ * - continuationOptions: if a workflow has started and not been completed due to missing
+ * information from the user. Selecting one of these options allows them to continue
+ *
+ * - otherOptions: Workflows that are specific to the team (ie: adding/removing a
+ * developer from a project)
  *
  * @author Luke Shannon (Github: lshannon)
  *
  */
 public class WorkFlowOptions {
-	
+
 	private WorkFlowOption currentVersion;
+
 	private List<WorkFlowOption> upgradeOptions;
+
 	private List<WorkFlowOption> migrationOptions;
+
 	private List<WorkFlowOption> newOptions;
+
 	private List<WorkFlowOption> continuationOptions;
+
 	private List<WorkFlowOption> otherOptions;
 
 	public boolean isOptionsAvailable() {
-		return !upgradeOptions.isEmpty() && !migrationOptions.isEmpty() && !newOptions.isEmpty() && !continuationOptions.isEmpty() && otherOptions.isEmpty();
+		return !upgradeOptions.isEmpty() && !migrationOptions.isEmpty() && !newOptions.isEmpty()
+				&& !continuationOptions.isEmpty() && otherOptions.isEmpty();
 	}
 
 	public boolean hasInfrastructure() {
@@ -82,10 +93,9 @@ public class WorkFlowOptions {
 	public void setContinuationOptions(List<WorkFlowOption> continuationOptions) {
 		this.continuationOptions = continuationOptions;
 	}
-	
+
 	/**
 	 * Add an Other option to the existing other Options
-	 *
 	 * @param otherOption new Workflow Option to add to the other options list
 	 * @return the updated reference
 	 */
@@ -105,7 +115,6 @@ public class WorkFlowOptions {
 
 	/**
 	 * Add an Upgrade option to the existing upgrade Options
-	 *
 	 * @param upgradeOption new InfrastructureOption to add to the upgrade option list
 	 * @return the updated reference
 	 */
@@ -125,7 +134,6 @@ public class WorkFlowOptions {
 
 	/**
 	 * Add a Migration option to the migration option list
-	 *
 	 * @param migrationOption new migration option to add the migration option list
 	 * @return the updated reference
 	 */
@@ -142,10 +150,8 @@ public class WorkFlowOptions {
 		this.migrationOptions = migrationOptions;
 	}
 
-
 	/**
 	 * Add an Infrastructure option to the new Infrastructure options list
-	 *
 	 * @param newOption the new option to add
 	 * @return the updated reference
 	 */
@@ -157,12 +163,12 @@ public class WorkFlowOptions {
 	public void setNewOptions(List<WorkFlowOption> newOptions) {
 		this.newOptions = newOptions;
 	}
-	
+
 	public List<WorkFlowOption> getNewOptions() {
 		return newOptions;
 	}
 
-	//Should only be called by the Builder
+	// Should only be called by the Builder
 	private WorkFlowOptions(Builder builder) {
 		this.currentVersion = builder.currentVersion;
 		this.migrationOptions = builder.migrationOptions;
@@ -179,11 +185,17 @@ public class WorkFlowOptions {
 	 *
 	 */
 	public static class Builder {
+
 		private WorkFlowOption currentVersion;
+
 		private List<WorkFlowOption> upgradeOptions = new ArrayList<WorkFlowOption>();
+
 		private List<WorkFlowOption> migrationOptions = new ArrayList<WorkFlowOption>();
+
 		private List<WorkFlowOption> newOptions = new ArrayList<WorkFlowOption>();
+
 		private List<WorkFlowOption> continuationOptions = new ArrayList<WorkFlowOption>();
+
 		private List<WorkFlowOption> otherOptions = new ArrayList<WorkFlowOption>();
 
 		public Builder() {
@@ -213,7 +225,7 @@ public class WorkFlowOptions {
 			this.migrationOptions.add(migrationOption);
 			return this;
 		}
-		
+
 		public Builder addOtherOption(WorkFlowOption otherOption) {
 			this.otherOptions.add(otherOption);
 			return this;
@@ -222,5 +234,7 @@ public class WorkFlowOptions {
 		public WorkFlowOptions build() {
 			return new WorkFlowOptions(this);
 		}
+
 	}
+
 }

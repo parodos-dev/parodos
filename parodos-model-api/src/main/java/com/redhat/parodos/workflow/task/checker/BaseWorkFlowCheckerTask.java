@@ -23,26 +23,31 @@ import com.redhat.parodos.workflows.work.WorkReport;
 import lombok.Getter;
 
 /**
- * Basic Contract for checking if a manual process initiated by a @see WorkFlowTask has been completed
+ * Basic Contract for checking if a manual process initiated by a @see WorkFlowTask has
+ * been completed
  *
  * @author Luke Shannon (Github: lshannon)
  */
 public abstract class BaseWorkFlowCheckerTask extends BaseWorkFlowTask {
 
-    private WorkFlowTaskType type = WorkFlowTaskType.CHECKER;
-    /**
-     * Method to check if a WorkFlow that is in a holding status, i.e: waiting for an external process to occur, has achieved its status and can trigger the next WorkFlow
-     *
-     * @param context
-     * @return
-     */
-    protected abstract WorkReport checkWorkFlowStatus(WorkContext context);
+	private WorkFlowTaskType type = WorkFlowTaskType.CHECKER;
 
-    /**
-     * By default, if no execute method is defined, the checkWorkFlowStatus method will be executed by the WorkFlow engine
-     */
-    @Override
-    public WorkReport execute(WorkContext workContext) {
-        return checkWorkFlowStatus(workContext);
-    }
+	/**
+	 * Method to check if a WorkFlow that is in a holding status, i.e: waiting for an
+	 * external process to occur, has achieved its status and can trigger the next
+	 * WorkFlow
+	 * @param context
+	 * @return
+	 */
+	protected abstract WorkReport checkWorkFlowStatus(WorkContext context);
+
+	/**
+	 * By default, if no execute method is defined, the checkWorkFlowStatus method will be
+	 * executed by the WorkFlow engine
+	 */
+	@Override
+	public WorkReport execute(WorkContext workContext) {
+		return checkWorkFlowStatus(workContext);
+	}
+
 }

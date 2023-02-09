@@ -45,74 +45,77 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class WorkFlowTaskExecutionAspect {
-    private final WorkFlowDefinitionServiceImpl workFlowDefinitionService;
-    private final WorkFlowServiceImpl workFlowExecutionService;
-    private final WorkFlowDelegate workFlowDelegate;
 
-    public WorkFlowTaskExecutionAspect(WorkFlowDefinitionServiceImpl workFlowDefinitionService, WorkFlowServiceImpl workFlowExecutionService, WorkFlowDelegate workFlowDelegate) {
-        this.workFlowDefinitionService = workFlowDefinitionService;
-        this.workFlowExecutionService = workFlowExecutionService;
-        this.workFlowDelegate = workFlowDelegate;
-    }
+	private final WorkFlowDefinitionServiceImpl workFlowDefinitionService;
 
-    /**
-     * the "execute()" method of all subclasses of WorkFlowTask are targeted
-     */
-    @Pointcut("execution(* com.redhat.parodos.workflow.task.WorkFlowTask+.execute(..))")
-    public void pointcutScopeTask() {
-    }
+	private final WorkFlowServiceImpl workFlowExecutionService;
 
-    /**
-     * Main entry point. Determines if a WorkFlowTask should be continued to execute, also persists/updates execution state in the DB
-     *
-     * @param proceedingJoinPoint - JoinPoint supplied by framework
-     * @param workContext         - @see WorkFlowContext reference being used for the execution
-     * @return WorkReport with the results of the Workflow execution
-     */
-    @Around(
-            "pointcutScopeTask() && args(workContext)"
-    )
-    public WorkReport executeAroundAdviceTask(ProceedingJoinPoint proceedingJoinPoint, WorkContext workContext) throws NoSuchMethodException {
-        WorkReport report = null;
-        String workFlowTaskName = ((WorkFlowTask) proceedingJoinPoint.getTarget()).getName();
-        log.info("Before invoking execute() on workflow task name: {}, work context is: {}", workFlowTaskName, workContext);
-        try {
-            report = (WorkReport) proceedingJoinPoint.proceed();
-        } catch (Throwable e) {
-            log.error("Workflow task execution {} has failed!", workFlowTaskName);
-        }
-        WorkContextDelegate.write(workContext,
-                WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
-                workFlowTaskName,
-                WorkContextDelegate.Resource.STATUS,
-                report.getStatus().name());
+	private final WorkFlowDelegate workFlowDelegate;
 
-        WorkFlowTaskExecution workFlowTaskExecution = workFlowExecutionService.getWorkFlowTask(UUID.fromString(WorkContextDelegate.read(workContext,
-                        WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-                        WorkContextDelegate.Resource.ID).toString()),
-                UUID.fromString(WorkContextDelegate.read(workContext,
-                        WorkContextDelegate.ProcessType.WORKFLOW_TASK_DEFINITION,
-                        workFlowTaskName,
-                        WorkContextDelegate.Resource.ID).toString()));
+	public WorkFlowTaskExecutionAspect(WorkFlowDefinitionServiceImpl workFlowDefinitionService,
+			WorkFlowServiceImpl workFlowExecutionService, WorkFlowDelegate workFlowDelegate) {
+		this.workFlowDefinitionService = workFlowDefinitionService;
+		this.workFlowExecutionService = workFlowExecutionService;
+		this.workFlowDelegate = workFlowDelegate;
+	}
 
-        if (workFlowTaskExecution == null) {
-            workFlowExecutionService.saveWorkFlowTask(WorkContextDelegate.read(workContext,
-                            WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
-                            workFlowTaskName,
-                            WorkContextDelegate.Resource.ARGUMENTS).toString(),
-                    UUID.fromString(WorkContextDelegate.read(workContext,
-                            WorkContextDelegate.ProcessType.WORKFLOW_TASK_DEFINITION,
-                            workFlowTaskName,
-                            WorkContextDelegate.Resource.ID).toString()),
-                    UUID.fromString(WorkContextDelegate.read(workContext,
-                            WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-                            WorkContextDelegate.Resource.ID).toString()),
-                    WorkFlowTaskStatus.valueOf(report.getStatus().name()));
-        } else {
-            workFlowTaskExecution.setStatus(WorkFlowTaskStatus.valueOf(report.getStatus().name()));
-            workFlowTaskExecution.setLastUpdateDate(new Date());
-            workFlowExecutionService.updateWorkFlowTask(workFlowTaskExecution);
-        }
-        return report;
-    }
+	/**
+	 * the "execute()" method of all subclasses of WorkFlowTask are targeted
+	 */
+	@Pointcut("execution(* com.redhat.parodos.workflow.task.WorkFlowTask+.execute(..))")
+	public void pointcutScopeTask() {
+	}
+
+	/**
+	 * Main entry point. Determines if a WorkFlowTask should be continued to execute, also
+	 * persists/updates execution state in the DB
+	 * @param proceedingJoinPoint - JoinPoint supplied by framework
+	 * @param workContext - @see WorkFlowContext reference being used for the execution
+	 * @return WorkReport with the results of the Workflow execution
+	 */
+	@Around("pointcutScopeTask() && args(workContext)")
+	public WorkReport executeAroundAdviceTask(ProceedingJoinPoint proceedingJoinPoint, WorkContext workContext)
+			throws NoSuchMethodException {
+		WorkReport report = null;
+		String workFlowTaskName = ((WorkFlowTask) proceedingJoinPoint.getTarget()).getName();
+		log.info("Before invoking execute() on workflow task name: {}, work context is: {}", workFlowTaskName,
+				workContext);
+		try {
+			report = (WorkReport) proceedingJoinPoint.proceed();
+		}
+		catch (Throwable e) {
+			log.error("Workflow task execution {} has failed!", workFlowTaskName);
+		}
+		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
+				workFlowTaskName, WorkContextDelegate.Resource.STATUS, report.getStatus().name());
+
+		WorkFlowTaskExecution workFlowTaskExecution = workFlowExecutionService.getWorkFlowTask(
+				UUID.fromString(
+						WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+								WorkContextDelegate.Resource.ID).toString()),
+				UUID.fromString(
+						WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_DEFINITION,
+								workFlowTaskName, WorkContextDelegate.Resource.ID).toString()));
+
+		if (workFlowTaskExecution == null) {
+			workFlowExecutionService.saveWorkFlowTask(
+					WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
+							workFlowTaskName, WorkContextDelegate.Resource.ARGUMENTS).toString(),
+					UUID.fromString(WorkContextDelegate
+							.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_DEFINITION,
+									workFlowTaskName, WorkContextDelegate.Resource.ID)
+							.toString()),
+					UUID.fromString(
+							WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+									WorkContextDelegate.Resource.ID).toString()),
+					WorkFlowTaskStatus.valueOf(report.getStatus().name()));
+		}
+		else {
+			workFlowTaskExecution.setStatus(WorkFlowTaskStatus.valueOf(report.getStatus().name()));
+			workFlowTaskExecution.setLastUpdateDate(new Date());
+			workFlowExecutionService.updateWorkFlowTask(workFlowTaskExecution);
+		}
+		return report;
+	}
+
 }

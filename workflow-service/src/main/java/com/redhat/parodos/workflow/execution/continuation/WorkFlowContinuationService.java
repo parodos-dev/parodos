@@ -37,7 +37,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 /**
- * When the application starts up it will run any workflows in Progress @see Status.IN_PROGRESS
+ * When the application starts up it will run any workflows in Progress @see
+ * Status.IN_PROGRESS
  *
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
@@ -46,54 +47,65 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class WorkFlowContinuationService {
-    private final WorkFlowDefinitionRepository workFlowDefinitionRepository;
-    private final WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository;
-    private final WorkFlowRepository workFlowRepository;
-    private final WorkFlowTaskRepository workFlowTaskRepository;
-    private final WorkFlowServiceImpl workFlowService;
-    private final WorkFlowDelegate workFlowDelegate;
-    private final ObjectMapper objectMapper;
 
-    public WorkFlowContinuationService(WorkFlowDefinitionRepository workFlowDefinitionRepository,
-                                       WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository,
-                                       WorkFlowRepository workFlowRepository,
-                                       WorkFlowTaskRepository workFlowTaskRepository,
-                                       WorkFlowServiceImpl workFlowService,
-                                       WorkFlowDelegate workFlowDelegate,
-                                       ObjectMapper objectMapper) {
-        this.workFlowDefinitionRepository = workFlowDefinitionRepository;
-        this.workFlowTaskDefinitionRepository = workFlowTaskDefinitionRepository;
-        this.workFlowRepository = workFlowRepository;
-        this.workFlowTaskRepository = workFlowTaskRepository;
-        this.workFlowService = workFlowService;
-        this.workFlowDelegate = workFlowDelegate;
-        this.objectMapper = objectMapper;
-    }
+	private final WorkFlowDefinitionRepository workFlowDefinitionRepository;
 
-    /**
-     * When the application starts up, get all workflows with Status.IN_PROGRESS and execute them
-     */
-    @EventListener(ApplicationReadyEvent.class)
-    public void workFlowRunAfterStartup() {
-        log.info("Looking up all IN PROGRESS workflows for ");
-        List<WorkFlowExecution> workFlowExecutions = workFlowRepository.findAll();
-        log.info("Number of IN PROGRESS workflows for : {}", workFlowExecutions.size());
-        workFlowExecutions.stream()
-                .filter(workFlowExecution -> WorkFlowStatus.IN_PROGRESS == workFlowExecution.getStatus())
-                .forEach(workFlowExecution -> {
-                    WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository.findById(workFlowExecution.getWorkFlowDefinitionId()).get();
-                    List<WorkFlowTaskExecution> workFlowTaskExecutions = workFlowTaskRepository.findByWorkFlowExecutionId(workFlowExecution.getId());
-                    Map<String, Map<String, String>> workFlowTaskArguments = new HashMap<>();
-                    workFlowTaskExecutions.forEach(workFlowTaskExecution -> {
-                        try {
-                            workFlowTaskArguments.put(workFlowTaskDefinitionRepository.findById(workFlowTaskExecution.getWorkFlowTaskDefinitionId()).get().getName(),
-                                    objectMapper.readValue(workFlowTaskExecution.getArguments(), new TypeReference<>() {
-                                    }));
-                        } catch (JsonProcessingException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
-                    workFlowService.execute(workFlowExecution.getProjectId().toString(), workFlowDefinition.getName(), workFlowTaskArguments);
-                });
-    }
+	private final WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository;
+
+	private final WorkFlowRepository workFlowRepository;
+
+	private final WorkFlowTaskRepository workFlowTaskRepository;
+
+	private final WorkFlowServiceImpl workFlowService;
+
+	private final WorkFlowDelegate workFlowDelegate;
+
+	private final ObjectMapper objectMapper;
+
+	public WorkFlowContinuationService(WorkFlowDefinitionRepository workFlowDefinitionRepository,
+			WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository, WorkFlowRepository workFlowRepository,
+			WorkFlowTaskRepository workFlowTaskRepository, WorkFlowServiceImpl workFlowService,
+			WorkFlowDelegate workFlowDelegate, ObjectMapper objectMapper) {
+		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
+		this.workFlowTaskDefinitionRepository = workFlowTaskDefinitionRepository;
+		this.workFlowRepository = workFlowRepository;
+		this.workFlowTaskRepository = workFlowTaskRepository;
+		this.workFlowService = workFlowService;
+		this.workFlowDelegate = workFlowDelegate;
+		this.objectMapper = objectMapper;
+	}
+
+	/**
+	 * When the application starts up, get all workflows with Status.IN_PROGRESS and
+	 * execute them
+	 */
+	@EventListener(ApplicationReadyEvent.class)
+	public void workFlowRunAfterStartup() {
+		log.info("Looking up all IN PROGRESS workflows for ");
+		List<WorkFlowExecution> workFlowExecutions = workFlowRepository.findAll();
+		log.info("Number of IN PROGRESS workflows for : {}", workFlowExecutions.size());
+		workFlowExecutions.stream()
+				.filter(workFlowExecution -> WorkFlowStatus.IN_PROGRESS == workFlowExecution.getStatus())
+				.forEach(workFlowExecution -> {
+					WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository
+							.findById(workFlowExecution.getWorkFlowDefinitionId()).get();
+					List<WorkFlowTaskExecution> workFlowTaskExecutions = workFlowTaskRepository
+							.findByWorkFlowExecutionId(workFlowExecution.getId());
+					Map<String, Map<String, String>> workFlowTaskArguments = new HashMap<>();
+					workFlowTaskExecutions.forEach(workFlowTaskExecution -> {
+						try {
+							workFlowTaskArguments.put(workFlowTaskDefinitionRepository
+									.findById(workFlowTaskExecution.getWorkFlowTaskDefinitionId()).get().getName(),
+									objectMapper.readValue(workFlowTaskExecution.getArguments(), new TypeReference<>() {
+									}));
+						}
+						catch (JsonProcessingException e) {
+							throw new RuntimeException(e);
+						}
+					});
+					workFlowService.execute(workFlowExecution.getProjectId().toString(), workFlowDefinition.getName(),
+							workFlowTaskArguments);
+				});
+	}
+
 }

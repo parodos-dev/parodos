@@ -28,24 +28,22 @@ import java.util.List;
 
 @Data
 public class NotificationMessageCreateRequestDTO {
-    private List<String> usernames;
 
-    private List<String> groupnames;
+	private List<String> usernames;
 
-    private String subject;
+	private List<String> groupnames;
 
-    private String messageType;
+	private String subject;
 
-    private String body;
+	private String messageType;
 
-    @Override
-    public String toString() {
-        return "NotificationMessageCreateRequestDTO{" +
-                "usernames=" + usernames +
-                ", groupnames=" + groupnames +
-                ", subject='" + subject + '\'' +
-                ", messageType='" + messageType + '\'' +
-                ", body='" + body + '\'' +
-                '}';
-    }
+	private String body;
+
+	@Override
+	public String toString() {
+		return "NotificationMessageCreateRequestDTO{" + "usernames=" + usernames + ", groupnames=" + groupnames
+				+ ", subject='" + subject + '\'' + ", messageType='" + messageType + '\'' + ", body='" + body + '\''
+				+ '}';
+	}
+
 }

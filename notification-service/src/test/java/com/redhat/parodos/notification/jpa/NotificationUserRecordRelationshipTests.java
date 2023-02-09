@@ -38,6 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 @ActiveProfiles("test")
 public class NotificationUserRecordRelationshipTests extends AbstractNotificationsIntegrationTest {
+
 	@Autowired
 	private NotificationUserRepository notificationUserRepository;
 
@@ -50,7 +51,8 @@ public class NotificationUserRecordRelationshipTests extends AbstractNotificatio
 		NotificationsDataCreator.createNotificationsRecord(notificationRecordRepository);
 
 		// Sanity check
-		Optional<NotificationUser> userOptional = this.notificationUserRepository.findByUsername(NotificationsDataCreator.USERNAME);
+		Optional<NotificationUser> userOptional = this.notificationUserRepository
+				.findByUsername(NotificationsDataCreator.USERNAME);
 		assertThat(userOptional.isPresent());
 
 		List<NotificationRecord> notificationRecords = this.notificationRecordRepository.findAll();
@@ -64,11 +66,13 @@ public class NotificationUserRecordRelationshipTests extends AbstractNotificatio
 
 		this.notificationUserRepository.save(user);
 
-		Optional<NotificationUser> u2 = this.notificationUserRepository.findByUsername(NotificationsDataCreator.USERNAME);
+		Optional<NotificationUser> u2 = this.notificationUserRepository
+				.findByUsername(NotificationsDataCreator.USERNAME);
 		assertThat(u2.isPresent());
 		List<NotificationRecord> notificationRecordList = u2.get().getNotificationRecordList();
 		assertThat(notificationRecordList).hasSize(1);
 		assertThat(notificationRecordList.get(0).getFolder()).isEqualTo(NotificationsDataCreator.ARCHIVE_FOLDER);
 		assertThat(notificationRecordList.get(0).getTags()).hasSameElementsAs(NotificationsDataCreator.getTags());
 	}
+
 }

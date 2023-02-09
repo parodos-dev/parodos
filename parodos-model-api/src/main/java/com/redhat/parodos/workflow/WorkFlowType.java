@@ -16,14 +16,15 @@
 package com.redhat.parodos.workflow;
 
 /**
- * Workflows themselves are defined by the WorkFlowTasks that compose them, but it is useful to provide a type for a Workflow
+ * Workflows themselves are defined by the WorkFlowTasks that compose them, but it is
+ * useful to provide a type for a Workflow
  *
  * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
 public enum WorkFlowType {
-    ASSESSMENT,
-    CHECKER,
-    INFRASTRUCTURE
+
+	ASSESSMENT, CHECKER, INFRASTRUCTURE
+
 }

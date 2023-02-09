@@ -23,33 +23,36 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 import java.util.UUID;
+
 /**
  * @author Richard Wang (Github: RichardW98)
  */
 @MappedSuperclass
 public class AbstractEntity {
-    @Id
-    @GeneratedValue
-    @Column(columnDefinition = "uuid")
-    private UUID id;
 
-    @Version
-    @JsonIgnore
-    private Long objectVersion;
+	@Id
+	@GeneratedValue
+	@Column(columnDefinition = "uuid")
+	private UUID id;
 
-    protected AbstractEntity() {
-        this.id = null;
-    }
+	@Version
+	@JsonIgnore
+	private Long objectVersion;
 
-    void setId(UUID id) {
-        this.id = id;
-    }
+	protected AbstractEntity() {
+		this.id = null;
+	}
 
-    public UUID getId() {
-        return this.id;
-    }
+	void setId(UUID id) {
+		this.id = id;
+	}
 
-    public Long getObjectVersion() {
-        return objectVersion;
-    }
+	public UUID getId() {
+		return this.id;
+	}
+
+	public Long getObjectVersion() {
+		return objectVersion;
+	}
+
 }

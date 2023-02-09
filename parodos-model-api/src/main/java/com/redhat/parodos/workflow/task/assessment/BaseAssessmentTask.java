@@ -24,23 +24,26 @@ import lombok.Getter;
 import java.util.List;
 
 /**
- * Base Class for Assessment WorkFlowTasks. An implementation of this class would do an Assessment and return options
+ * Base Class for Assessment WorkFlowTasks. An implementation of this class would do an
+ * Assessment and return options
  *
  * @author Luke Shannon (Github: lshannon)
  */
 public abstract class BaseAssessmentTask extends BaseWorkFlowTask {
-    private WorkFlowTaskType type = WorkFlowTaskType.ASSESSMENT;
 
-    /**
-     * These are the options this AssessmentTasks can return
-     */
-    List<WorkFlowOption> workflowOptions;
+	private WorkFlowTaskType type = WorkFlowTaskType.ASSESSMENT;
 
-    protected BaseAssessmentTask(List<WorkFlowOption> workflowOptions) {
-        this.workflowOptions = workflowOptions;
-    }
+	/**
+	 * These are the options this AssessmentTasks can return
+	 */
+	List<WorkFlowOption> workflowOptions;
 
-    public List<WorkFlowOption> getWorkFlowOptions() {
-        return workflowOptions;
-    }
+	protected BaseAssessmentTask(List<WorkFlowOption> workflowOptions) {
+		this.workflowOptions = workflowOptions;
+	}
+
+	public List<WorkFlowOption> getWorkFlowOptions() {
+		return workflowOptions;
+	}
+
 }

@@ -40,27 +40,24 @@ import org.springframework.stereotype.Component;
 @Component
 public class LoggingWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
-    @Override
-    public WorkReport execute(WorkContext workContext) {
-        log.info("Writing a message to the logs from: {}", getName());
-        if (getGetWorkFlowChecker() != null) {
-            workContext.put(WorkFlowConstants.WORKFLOW_CHECKER_ID, getGetWorkFlowChecker().getName());
-        }
-        return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
-    }
+	@Override
+	public WorkReport execute(WorkContext workContext) {
+		log.info("Writing a message to the logs from: {}", getName());
+		if (getGetWorkFlowChecker() != null) {
+			workContext.put(WorkFlowConstants.WORKFLOW_CHECKER_ID, getGetWorkFlowChecker().getName());
+		}
+		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
+	}
 
-    @Override
-    public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
-        return List.of(WorkFlowTaskParameter.builder()
-                .key("api-server")
-                .description("The api server")
-                .type(WorkFlowTaskParameterType.URL)
-                .optional(false)
-                .build());
-    }
+	@Override
+	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
+		return List.of(WorkFlowTaskParameter.builder().key("api-server").description("The api server")
+				.type(WorkFlowTaskParameterType.URL).optional(false).build());
+	}
 
-    @Override
-    public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
-        return List.of(WorkFlowTaskOutput.OTHER);
-    }
+	@Override
+	public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
+		return List.of(WorkFlowTaskOutput.OTHER);
+	}
+
 }

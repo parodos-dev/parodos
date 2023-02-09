@@ -6,6 +6,7 @@ package com.redhat.parodos.notification.enums;
  * @author Annel Ketcha (Github: anludke)
  */
 public enum Operation {
-    ARCHIVE,
-    READ
+
+	ARCHIVE, READ
+
 }

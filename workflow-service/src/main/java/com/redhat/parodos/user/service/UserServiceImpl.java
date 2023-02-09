@@ -32,27 +32,32 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
 
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
-        this.userRepository = userRepository;
-        this.modelMapper = modelMapper;
-    }
+	private final UserRepository userRepository;
 
-    @Override
-    public UserResponseDTO save(User user) {
-        return modelMapper.map(userRepository.save(user), UserResponseDTO.class);
-    }
+	private final ModelMapper modelMapper;
 
-    @Override
-    public UserResponseDTO getUserById(UUID id) {
-        return modelMapper.map(userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(String.format("User with id: %s not found", id))), UserResponseDTO.class);
-    }
+	public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
+		this.userRepository = userRepository;
+		this.modelMapper = modelMapper;
+	}
 
-    @Override
-    public UserResponseDTO getUserByUsername(String username) {
-        return modelMapper.map(userRepository.findByUsername(username).stream().findFirst(), UserResponseDTO.class);
-    }
+	@Override
+	public UserResponseDTO save(User user) {
+		return modelMapper.map(userRepository.save(user), UserResponseDTO.class);
+	}
+
+	@Override
+	public UserResponseDTO getUserById(UUID id) {
+		return modelMapper.map(
+				userRepository.findById(id)
+						.orElseThrow(() -> new RuntimeException(String.format("User with id: %s not found", id))),
+				UserResponseDTO.class);
+	}
+
+	@Override
+	public UserResponseDTO getUserByUsername(String username) {
+		return modelMapper.map(userRepository.findByUsername(username).stream().findFirst(), UserResponseDTO.class);
+	}
+
 }

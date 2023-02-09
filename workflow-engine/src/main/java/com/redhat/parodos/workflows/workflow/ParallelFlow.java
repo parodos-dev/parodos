@@ -37,112 +37,124 @@ import com.redhat.parodos.workflows.work.WorkContext;
  * A parallel flow executes a set of work units in parallel. A {@link ParallelFlow}
  * requires a {@link ExecutorService} to execute work units in parallel using multiple
  * threads.
- * 
- * <strong>It is the responsibility of the caller to manage the lifecycle of the
- * executor service.</strong>
+ *
+ * <strong>It is the responsibility of the caller to manage the lifecycle of the executor
+ * service.</strong>
  *
  * The status of a parallel flow execution is defined as:
  *
  * <ul>
- *     <li>{@link org.jeasy.flows.work.WorkStatus#COMPLETED}: If all work units have successfully completed</li>
- *     <li>{@link org.jeasy.flows.work.WorkStatus#FAILED}: If one of the work units has failed</li>
+ * <li>{@link org.jeasy.flows.work.WorkStatus#COMPLETED}: If all work units have
+ * successfully completed</li>
+ * <li>{@link org.jeasy.flows.work.WorkStatus#FAILED}: If one of the work units has
+ * failed</li>
  * </ul>
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
 public class ParallelFlow extends AbstractWorkFlow {
 
-    private final List<Work> workUnits = new ArrayList<>();
-    private final ParallelFlowExecutor workExecutor;
+	private final List<Work> workUnits = new ArrayList<>();
 
-    ParallelFlow(String name, List<Work> workUnits, ParallelFlowExecutor parallelFlowExecutor) {
-        super(name);
-        this.workUnits.addAll(workUnits);
-        this.workExecutor = parallelFlowExecutor;
-    }
+	private final ParallelFlowExecutor workExecutor;
 
-    /**
-     * {@inheritDoc}
-     */
-    public ParallelFlowReport execute(WorkContext workContext) {
-        ParallelFlowReport workFlowReport = new ParallelFlowReport();
-        List<WorkReport> workReports = workExecutor.executeInParallel(workUnits, workContext);
-        workFlowReport.addAll(workReports);
-        return workFlowReport;
-    }
+	ParallelFlow(String name, List<Work> workUnits, ParallelFlowExecutor parallelFlowExecutor) {
+		super(name);
+		this.workUnits.addAll(workUnits);
+		this.workExecutor = parallelFlowExecutor;
+	}
 
-    public static class Builder {
+	/**
+	 * {@inheritDoc}
+	 */
+	public ParallelFlowReport execute(WorkContext workContext) {
+		ParallelFlowReport workFlowReport = new ParallelFlowReport();
+		List<WorkReport> workReports = workExecutor.executeInParallel(workUnits, workContext);
+		workFlowReport.addAll(workReports);
+		return workFlowReport;
+	}
 
-        private Builder() {
-            // force usage of method aNewParallelFlow
-        }
-        
-        public static NameStep aNewParallelFlow() {
-            return new BuildSteps();
-        }
+	public static class Builder {
 
-        public interface NameStep extends ExecuteStep {
-            ExecuteStep named(String name);
-        }
+		private Builder() {
+			// force usage of method aNewParallelFlow
+		}
 
-        public interface ExecuteStep {
-            WithStep execute(Work... workUnits);
-        }
+		public static NameStep aNewParallelFlow() {
+			return new BuildSteps();
+		}
 
-        public interface WithStep {
-            /**
-             *  A {@link ParallelFlow} requires an {@link ExecutorService} to
-             *  execute work units in parallel using multiple threads.
-             *  
-             *  <strong>It is the responsibility of the caller to manage the lifecycle
-             *  of the executor service.</strong>
-             *  
-             * @param executorService to use to execute work units in parallel
-             * @return the builder instance
-             */
-            BuildStep with(ExecutorService executorService);
-        }
+		public interface NameStep extends ExecuteStep {
 
-        public interface BuildStep {
-            ParallelFlow build();
-        }
+			ExecuteStep named(String name);
 
-        private static class BuildSteps implements NameStep, ExecuteStep, WithStep, BuildStep {
+		}
 
-            private String name;
-            private final List<Work> works;
-            private ExecutorService executorService;
+		public interface ExecuteStep {
 
-            public BuildSteps() {
-                this.name = UUID.randomUUID().toString();
-                this.works = new ArrayList<>();
-            }
+			WithStep execute(Work... workUnits);
 
-            @Override
-            public ExecuteStep named(String name) {
-                this.name = name;
-                return this;
-            }
+		}
 
-            @Override
-            public WithStep execute(Work... workUnits) {
-                this.works.addAll(Arrays.asList(workUnits));
-                return this;
-            }
-            
-            @Override
-            public BuildStep with(ExecutorService executorService) {
-                this.executorService = executorService;
-                return this;
-            }
+		public interface WithStep {
 
-            @Override
-            public ParallelFlow build() {
-                return new ParallelFlow(
-                        this.name, this.works,
-                        new ParallelFlowExecutor(this.executorService));
-            }
-        }
+			/**
+			 * A {@link ParallelFlow} requires an {@link ExecutorService} to execute work
+			 * units in parallel using multiple threads.
+			 *
+			 * <strong>It is the responsibility of the caller to manage the lifecycle of
+			 * the executor service.</strong>
+			 * @param executorService to use to execute work units in parallel
+			 * @return the builder instance
+			 */
+			BuildStep with(ExecutorService executorService);
 
-    }
+		}
+
+		public interface BuildStep {
+
+			ParallelFlow build();
+
+		}
+
+		private static class BuildSteps implements NameStep, ExecuteStep, WithStep, BuildStep {
+
+			private String name;
+
+			private final List<Work> works;
+
+			private ExecutorService executorService;
+
+			public BuildSteps() {
+				this.name = UUID.randomUUID().toString();
+				this.works = new ArrayList<>();
+			}
+
+			@Override
+			public ExecuteStep named(String name) {
+				this.name = name;
+				return this;
+			}
+
+			@Override
+			public WithStep execute(Work... workUnits) {
+				this.works.addAll(Arrays.asList(workUnits));
+				return this;
+			}
+
+			@Override
+			public BuildStep with(ExecutorService executorService) {
+				this.executorService = executorService;
+				return this;
+			}
+
+			@Override
+			public ParallelFlow build() {
+				return new ParallelFlow(this.name, this.works, new ParallelFlowExecutor(this.executorService));
+			}
+
+		}
+
+	}
+
 }

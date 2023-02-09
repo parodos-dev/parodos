@@ -34,13 +34,14 @@ import org.springframework.data.domain.Pageable;
 
 public interface NotificationRecordService {
 
-    void createNotificationRecords(List<NotificationUser> notificationUsers, NotificationMessage notificationMessage);
+	void createNotificationRecords(List<NotificationUser> notificationUsers, NotificationMessage notificationMessage);
 
-    Page<NotificationRecord> getNotificationRecords(Pageable pageable, String username, State state, String searchTerm);
+	Page<NotificationRecord> getNotificationRecords(Pageable pageable, String username, State state, String searchTerm);
 
-    int countNotificationRecords(String username, State state);
+	int countNotificationRecords(String username, State state);
 
-    NotificationRecord updateNotificationStatus(UUID id, Operation operation);
+	NotificationRecord updateNotificationStatus(UUID id, Operation operation);
 
-    void deleteNotificationRecord(UUID id);
+	void deleteNotificationRecord(UUID id);
+
 }

@@ -34,52 +34,47 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SimpleWorkFlowConfiguration {
 
-    @Bean
-    RestAPIWorkFlowTask simpleTask1() {
-        return new RestAPIWorkFlowTask();
-    }
+	@Bean
+	RestAPIWorkFlowTask simpleTask1() {
+		return new RestAPIWorkFlowTask();
+	}
 
-    @Bean
-    LoggingWorkFlowTask simpleTask2() {
-        return new LoggingWorkFlowTask();
-    }
+	@Bean
+	LoggingWorkFlowTask simpleTask2() {
+		return new LoggingWorkFlowTask();
+	}
 
-    @Bean(name = "simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
-    @Infrastructure
-    WorkFlow simpleSequentialWorkFlowTask(@Qualifier("simpleTask1") RestAPIWorkFlowTask simpleTask1,
-                                          @Qualifier("simpleTask2") LoggingWorkFlowTask simpleTask2) {
-        return SequentialFlow.Builder.aNewSequentialFlow()
-                .named("simple Sequential Infrastructure WorkFlow")
-                .execute(simpleTask1)
-                .then(simpleTask2)
-                .build();
-    }
+	@Bean(name = "simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+	@Infrastructure
+	WorkFlow simpleSequentialWorkFlowTask(@Qualifier("simpleTask1") RestAPIWorkFlowTask simpleTask1,
+			@Qualifier("simpleTask2") LoggingWorkFlowTask simpleTask2) {
+		return SequentialFlow.Builder.aNewSequentialFlow().named("simple Sequential Infrastructure WorkFlow")
+				.execute(simpleTask1).then(simpleTask2).build();
+	}
 
-    @Bean
-    LoggingWorkFlowTask simpleParallelTask1() {
-        return new LoggingWorkFlowTask();
-    }
+	@Bean
+	LoggingWorkFlowTask simpleParallelTask1() {
+		return new LoggingWorkFlowTask();
+	}
 
-    @Bean
-    LoggingWorkFlowTask simpleParallelTask2() {
-        return new LoggingWorkFlowTask();
-    }
+	@Bean
+	LoggingWorkFlowTask simpleParallelTask2() {
+		return new LoggingWorkFlowTask();
+	}
 
-    @Bean
-    LoggingWorkFlowTask simpleParallelTask3() {
-        return new LoggingWorkFlowTask();
-    }
+	@Bean
+	LoggingWorkFlowTask simpleParallelTask3() {
+		return new LoggingWorkFlowTask();
+	}
 
-    @Bean(name = "simpleParallelWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
-    @Infrastructure
-    WorkFlow simpleParallelWorkFlowTask(@Qualifier("simpleParallelTask1") LoggingWorkFlowTask simpleParallelTask1,
-                                        @Qualifier("simpleParallelTask2") LoggingWorkFlowTask simpleParallelTask2,
-                                        @Qualifier("simpleParallelTask3") LoggingWorkFlowTask simpleParallelTask3) {
-        return ParallelFlow.Builder
-                .aNewParallelFlow()
-                .named("simple Parallel Infrastructure WorkFlow")
-                .execute(simpleParallelTask1, simpleParallelTask2, simpleParallelTask3)
-                .with(Executors.newFixedThreadPool(3))
-                .build();
-    }
+	@Bean(name = "simpleParallelWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+	@Infrastructure
+	WorkFlow simpleParallelWorkFlowTask(@Qualifier("simpleParallelTask1") LoggingWorkFlowTask simpleParallelTask1,
+			@Qualifier("simpleParallelTask2") LoggingWorkFlowTask simpleParallelTask2,
+			@Qualifier("simpleParallelTask3") LoggingWorkFlowTask simpleParallelTask3) {
+		return ParallelFlow.Builder.aNewParallelFlow().named("simple Parallel Infrastructure WorkFlow")
+				.execute(simpleParallelTask1, simpleParallelTask2, simpleParallelTask3)
+				.with(Executors.newFixedThreadPool(3)).build();
+	}
+
 }

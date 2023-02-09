@@ -43,25 +43,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/workflows")
 public class WorkFlowController {
-    private final WorkFlowDelegate workFlowDelegate;
-    private final WorkFlowService workFlowService;
 
-    public WorkFlowController(WorkFlowDelegate workFlowDelegate, WorkFlowService workFlowService) {
-        this.workFlowDelegate = workFlowDelegate;
-        this.workFlowService = workFlowService;
-    }
+	private final WorkFlowDelegate workFlowDelegate;
 
-    @PostMapping
-    public ResponseEntity<WorkFlowResponseDTO> execute(@RequestBody @Valid WorkFlowRequestDTO workFlowRequestDTO) {
-        WorkReport workReport = workFlowService.execute(workFlowRequestDTO.getProjectId(), workFlowRequestDTO.getWorkFlowName(), WorkFlowDTOUtil.convertWorkFlowTaskRequestDTOListToMap(workFlowRequestDTO.getWorkFlowTasks()));
-        return ResponseEntity.ok(WorkFlowResponseDTO.builder()
-                .workFlowExecutionId(WorkContextDelegate.read(
-                        workReport.getWorkContext(),
-                        WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-                        WorkContextDelegate.Resource.ID).toString())
-                .workFlowOptions((WorkFlowOptions) WorkContextDelegate.read(workReport.getWorkContext(),
-                        WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-                        WorkContextDelegate.Resource.INFRASTRUCTURE_OPTIONS))
-                .build());
-    }
+	private final WorkFlowService workFlowService;
+
+	public WorkFlowController(WorkFlowDelegate workFlowDelegate, WorkFlowService workFlowService) {
+		this.workFlowDelegate = workFlowDelegate;
+		this.workFlowService = workFlowService;
+	}
+
+	@PostMapping
+	public ResponseEntity<WorkFlowResponseDTO> execute(@RequestBody @Valid WorkFlowRequestDTO workFlowRequestDTO) {
+		WorkReport workReport = workFlowService.execute(workFlowRequestDTO.getProjectId(),
+				workFlowRequestDTO.getWorkFlowName(),
+				WorkFlowDTOUtil.convertWorkFlowTaskRequestDTOListToMap(workFlowRequestDTO.getWorkFlowTasks()));
+		return ResponseEntity.ok(WorkFlowResponseDTO.builder()
+				.workFlowExecutionId(WorkContextDelegate.read(workReport.getWorkContext(),
+						WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ID).toString())
+				.workFlowOptions((WorkFlowOptions) WorkContextDelegate.read(workReport.getWorkContext(),
+						WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+						WorkContextDelegate.Resource.INFRASTRUCTURE_OPTIONS))
+				.build());
+	}
+
 }
