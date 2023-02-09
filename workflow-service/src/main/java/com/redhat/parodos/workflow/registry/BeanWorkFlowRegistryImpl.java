@@ -66,7 +66,7 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 		this.workFlows = workFlows;
 		this.workFlowTaskMap = workFlowTaskMap;
 
-		if (workFlows == null || workFlowTaskMap == null) {
+		if (workFlows == null && workFlowTaskMap == null) {
 			log.error(
 					"No workflows or workflowTasks were registered. Initializing an empty collection of workflows so the application can start");
 			workFlows = new HashMap<>();
