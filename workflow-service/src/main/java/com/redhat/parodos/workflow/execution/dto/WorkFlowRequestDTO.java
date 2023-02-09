@@ -16,7 +16,6 @@
 package com.redhat.parodos.workflow.execution.dto;
 
 import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,6 +28,7 @@ import lombok.NoArgsConstructor;
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
+
 @Builder
 @Data
 @AllArgsConstructor

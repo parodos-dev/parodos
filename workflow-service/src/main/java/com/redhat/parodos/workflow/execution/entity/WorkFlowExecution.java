@@ -16,22 +16,19 @@
 package com.redhat.parodos.workflow.execution.entity;
 
 import com.redhat.parodos.common.AbstractEntity;
+import com.redhat.parodos.workflow.WorkFlowStatus;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import java.util.Date;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-
-import com.redhat.parodos.workflow.WorkFlowStatus;
-
-import java.util.Date;
-import java.util.UUID;
-
 /**
- * workflow execution entity
+ * Workflow execution entity
  *
  * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)

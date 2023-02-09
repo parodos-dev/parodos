@@ -15,15 +15,12 @@
  */
 package com.redhat.parodos.workflow.execution.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-
 import com.redhat.parodos.common.AbstractEntity;
 import com.redhat.parodos.workflow.task.WorkFlowTaskStatus;
-
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import java.util.Date;
 import java.util.UUID;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,12 +28,13 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * entity
+ * WorkFlow task execution entity
  *
  * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
+
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity(name = "workflow_task_execution")

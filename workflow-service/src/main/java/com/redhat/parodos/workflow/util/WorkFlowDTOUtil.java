@@ -28,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  * @author Annel Ketcha (Github: anludke)
  */
+
 @Slf4j
 public class WorkFlowDTOUtil {
     public static Map<String, Map<String, String>> convertWorkFlowTaskRequestDTOListToMap(List<WorkFlowRequestDTO.WorkFlowTaskRequestDTO> workFlowTaskRequestDTOs) {

@@ -15,13 +15,12 @@
  */
 package com.redhat.parodos.workflow.execution.scheduler;
 
+import com.redhat.parodos.workflows.work.WorkContext;
+import com.redhat.parodos.workflows.workflow.WorkFlow;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.ScheduledFuture;
-
-import com.redhat.parodos.workflows.work.WorkContext;
-import com.redhat.parodos.workflows.workflow.WorkFlow;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;

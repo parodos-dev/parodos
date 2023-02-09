@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow.execution.entity;
-
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
+package com.redhat.parodos.workflow.execution.entity.converter;
 
 import com.redhat.parodos.workflow.task.WorkFlowTaskStatus;
+import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 
 /**
  * Converts WorkFlow task status into values that can be persisted into a DB column

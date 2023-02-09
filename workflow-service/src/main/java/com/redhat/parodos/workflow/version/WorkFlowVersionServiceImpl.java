@@ -16,12 +16,11 @@
 package com.redhat.parodos.workflow.version;
 
 import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.io.InputStream;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Provides functionality implementation to get hash of a workflow related class

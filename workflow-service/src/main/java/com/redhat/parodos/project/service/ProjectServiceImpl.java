@@ -19,15 +19,13 @@ import com.redhat.parodos.project.dto.ProjectRequestDTO;
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
 import com.redhat.parodos.project.entity.Project;
 import com.redhat.parodos.project.repository.ProjectRepository;
-import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * Project service implementation

@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
+
 @CrossOrigin(origins = "*", maxAge = 1800)
 @RestController
 @RequestMapping("/api/v1/workflowdefinitions")

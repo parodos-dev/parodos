@@ -1,8 +1,9 @@
-package com.redhat.parodos.workflow.definition.dto;
+package com.redhat.parodos.workflow.definition.dto.converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.redhat.parodos.workflow.definition.dto.WorkFlowTaskDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import java.util.List;
 import java.util.Optional;
