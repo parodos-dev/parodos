@@ -54,7 +54,18 @@ run_simple_flow() {
 
 run_complex_flow() {
   echo "                                                "
+  echo "******** Create Project ********"
+  echo "                                                "
   echo "******** Running The Complex WorkFlow ********"
+  PROJECT_ID=$(curl -X 'POST' -s \
+    'http://localhost:8080/api/v1/projects' \
+    -H 'accept: */*' \
+    -H 'Content-Type: application/json' \
+    -d '{
+                 "name": "project-1",
+                 "description": "an example project"
+               }' | jq -r '.id')
+  echo "Project id is $PROJECT_ID"
   echo "                                               "
   echo "                                               "
   echo "Running the Assessment to see what WorkFlows are eligable for this situation:"
@@ -63,8 +74,9 @@ run_complex_flow() {
     -H 'accept: */*' \
     -H 'Content-Type: application/json' \
     -d '{
-          "name": "onboardingAssessment_ASSESSMENT_WORKFLOW",
-          "tasks": []
+          "projectId": "'$PROJECT_ID'",
+          "workFlowName": "onboardingAssessment_ASSESSMENT_WORKFLOW",
+          "workFlowTasks": []
         }' | jq -r '.workFlowOptions.newOptions[0].workFlowId')
   echo "The Following Option Is Available: $INFRASTRUCTURE_OPTION"
   echo "                                               "
@@ -79,8 +91,9 @@ run_complex_flow() {
     -H 'accept: */*' \
     -H 'Content-Type: application/json' \
     -d '{
-      "name": "'$ONBOARDING_WORKFLOW_NAME'",
-      "tasks": [
+          "projectId": "'$PROJECT_ID'",
+      "workFlowName": "'$ONBOARDING_WORKFLOW_NAME'",
+      "workFlowTasks": [
     {
                     "taskName": "certWorkFlowTask",
                     "arguments": [
@@ -114,8 +127,9 @@ run_complex_flow() {
     -H 'accept: */*' \
     -H 'Content-Type: application/json' \
     -d '{
-      "name": "'"$ONBOARDING_WORKFLOW_CHECKER_NAME"'",
-      "tasks": []
+          "projectId": "'$PROJECT_ID'",
+      "workFlowName": "'"$ONBOARDING_WORKFLOW_CHECKER_NAME"'",
+      "workFlowTasks": []
     }' | jq -r '.workFlowId')"
   echo "Onboarding workflow Checker execution id: $EXECUTION_ID"
   echo "                                               "
@@ -128,8 +142,9 @@ run_complex_flow() {
     -H 'accept: */*' \
     -H 'Content-Type: application/json' \
     -d '{
-        "name": "'$NAMESPACE_WORKFLOW_NAME'",
-        "tasks": []
+          "projectId": "'$PROJECT_ID'",
+        "workFlowName": "'$NAMESPACE_WORKFLOW_NAME'",
+        "workFlowTasks": []
       }' | jq -r '.workFlowId')"
   echo "Namespace workflow execution id: $EXECUTION_ID"
   echo "Executing the WorkFlowChecker (namespaceWorkFlowCheck)."
@@ -146,8 +161,9 @@ run_complex_flow() {
     -H 'accept: */*' \
     -H 'Content-Type: application/json' \
     -d '{
-        "name": "'$NAMESPACE_WORKFLOW_CHECKER_NAME'",
-        "tasks": []
+          "projectId": "'$PROJECT_ID'",
+        "workFlowName": "'$NAMESPACE_WORKFLOW_CHECKER_NAME'",
+        "workFlowTasks": []
       }' | jq -r '.workFlowId')"
   echo "Namespace workflow Checker execution id: $EXECUTION_ID"
   echo "                                               "
@@ -160,8 +176,9 @@ run_complex_flow() {
     -H 'accept: */*' \
     -H 'Content-Type: application/json' \
     -d '{
-        "name": "'$NETWORK_WORKFLOW_NAME'",
-        "tasks": []
+          "projectId": "'$PROJECT_ID'",
+        "workFlowName": "'$NETWORK_WORKFLOW_NAME'",
+        "workFlowTasks": []
       }' | jq -r '.workFlowId')"
   echo "network workflow execution id: $EXECUTION_ID"
 }

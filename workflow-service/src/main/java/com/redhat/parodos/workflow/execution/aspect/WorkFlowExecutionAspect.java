@@ -88,11 +88,10 @@ public class WorkFlowExecutionAspect {
     )
     public WorkReport executeAroundAdvice(ProceedingJoinPoint proceedingJoinPoint, WorkContext workContext) {
         WorkReport report = null;
-        String workFlowDescription = ((WorkFlow) proceedingJoinPoint.getTarget()).getName();
-        log.info("Before invoking execute() on workflow: {} with workContext: {}", workFlowDescription, workContext);
+        String workFlowName = WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION, WorkContextDelegate.Resource.NAME).toString();
+        log.info("Before invoking execute() on workflow: {} with workContext: {}", workFlowName, workContext);
         // get workflow definition entity
-        WorkFlowDefinition workFlowDefinition = this.workFlowDefinitionRepository.findByDescription(workFlowDescription).stream().findFirst().get();
-        String workFlowName = workFlowDefinition.getName();
+        WorkFlowDefinition workFlowDefinition = this.workFlowDefinitionRepository.findByName(workFlowName).stream().findFirst().get();
         // save work execution entity
         WorkFlowExecution workFlowExecution = this.workFlowService.saveWorkFlow(UUID.fromString(WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.PROJECT, WorkContextDelegate.Resource.ID).toString()),
                 workFlowDefinition.getId(),
