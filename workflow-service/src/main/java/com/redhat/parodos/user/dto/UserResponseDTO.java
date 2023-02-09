@@ -13,29 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow.execution.dto;
+package com.redhat.parodos.user.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.redhat.parodos.workflow.option.WorkFlowOptions;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * response dto
+ * User response DTO
  *
- * @author Luke Shannon (Github: lshannon)
- * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
-@Builder
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class WorkFlowResponseDTO {
-    private String workFlowId;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private WorkFlowOptions workFlowOptions;
+public class UserResponseDTO {
+    private String id;
+    private String username;
+    private String firstName;
+    private String lastName;
+    private String email;
 }

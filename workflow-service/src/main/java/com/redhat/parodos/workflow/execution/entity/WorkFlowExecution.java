@@ -13,29 +13,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow.execution.dto;
+package com.redhat.parodos.workflow.execution.entity;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.redhat.parodos.workflow.option.WorkFlowOptions;
+import com.redhat.parodos.common.AbstractEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
+import com.redhat.parodos.workflow.WorkFlowStatus;
+
+import java.util.Date;
+import java.util.UUID;
+
 /**
- * response dto
+ * workflow execution entity
  *
  * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
-@Builder
 @Data
-@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@Entity(name = "workflow_execution")
+@Builder
 @NoArgsConstructor
-public class WorkFlowResponseDTO {
-    private String workFlowId;
+@AllArgsConstructor
+public class WorkFlowExecution extends AbstractEntity {
+    private WorkFlowStatus status;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private WorkFlowOptions workFlowOptions;
+    @Column(updatable = false)
+    private Date startDate;
+
+    private Date endDate;
+
+    @Column(name="workflow_definition_id")
+    private UUID workFlowDefinitionId;
+
+    @Column(name="project_id")
+    private UUID projectId;
 }

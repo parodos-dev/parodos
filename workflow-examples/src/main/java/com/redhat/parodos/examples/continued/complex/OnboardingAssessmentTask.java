@@ -27,7 +27,6 @@ import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import java.util.Collections;
-
 import java.util.List;
 
 /**

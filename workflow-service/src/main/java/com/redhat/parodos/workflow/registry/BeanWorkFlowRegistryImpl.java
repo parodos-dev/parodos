@@ -24,6 +24,12 @@ import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
 import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
+import javax.annotation.PostConstruct;
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -32,71 +38,64 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import java.lang.annotation.Annotation;
-import java.util.*;
-
 /**
  * An implementation of the WorkflowRegistry that loads all Bean definitions of type WorkFlow into a list
  *
  * @author Luke Shannon (Github: lshannon)
  * @author Annel Ketcha (Github: anludke)
- * @author Richard Wang (Github: richardw98)
+ * @author Annel Ketcha (Github: anludke)
  */
 
 @Slf4j
 @Component
 public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
+    // Spring will populate this through classpath scanning when the Context starts up
     private final ConfigurableListableBeanFactory beanFactory;
     private final WorkFlowDefinitionServiceImpl workFlowDefinitionService;
-    private final Map<String, WorkFlow> workFlows; // Spring will populate this through classpath scanning when the Context starts up
+    private final Map<String, WorkFlow> workFlows;
     private final Map<String, WorkFlowTask> workFlowTaskMap;
 
     public BeanWorkFlowRegistryImpl(ConfigurableListableBeanFactory beanFactory,
                                     WorkFlowDefinitionServiceImpl workFlowDefinitionService,
-                                    Map<String, WorkFlow> workFlows,
-                                    Map<String, WorkFlowTask> workFlowTaskMap) {
-        this.beanFactory = beanFactory;
-        this.workFlowDefinitionService = workFlowDefinitionService;
+                                    Map<String, WorkFlowTask> workFlowTaskMap,
+                                    Map<String, WorkFlow> workFlows) {
+
         this.workFlows = workFlows;
         this.workFlowTaskMap = workFlowTaskMap;
 
-        if (workFlows == null) {
-            log.error("No workflows were registered. Initializing an empty collection of workflows so the application can start");
+        if (workFlows == null && workFlowTaskMap == null) {
+            log.error("No workflows or workflowTasks were registered. Initializing an empty collection of workflows so the application can start");
             workFlows = new HashMap<>();
+            workFlowTaskMap = new HashMap<>();
         }
-        log.info(">> Detected {} WorkFlow from the Bean Registry", workFlows.size());
+        log.info(">> Detected {} WorkFlow and {} workFlowTasks from the Bean Registry", workFlows.size(), workFlowTaskMap.size());
+
+        this.beanFactory = beanFactory;
+        this.workFlowDefinitionService = workFlowDefinitionService;
     }
 
     @PostConstruct
     void postInit() {
         workFlows.forEach((key, value) -> saveWorkFlow(value, key));
-        saveWorFlowChecker(workFlowTaskMap);
-    }
-
-    @Override
-    public WorkFlow getWorkFlowByName(String workFlowName) {
-        return workFlows.get(workFlowName);
+        saveChecker(workFlowTaskMap);
     }
 
     private void saveWorkFlow(Object bean, String name) {
-        if (bean instanceof WorkFlow) {
-            Map<String, WorkFlowTask> hmWorkFlowTasks = new HashMap<>();
-            Arrays.stream(beanFactory.getDependenciesForBean(name))
-                    .filter(dependency -> {
-                        try {
-                            beanFactory.getBean(dependency, WorkFlowTask.class);
-                            return true;
-                        } catch (BeansException e) {
-                            return false;
-                        }
-                    })
-                    .forEach(dependency -> hmWorkFlowTasks.put(dependency, beanFactory.getBean(dependency, WorkFlowTask.class)));
-            workFlowDefinitionService.save(((WorkFlow) bean).getName(), getWorkFlowTypeDetails(((WorkFlow) bean).getName(), List.of(Assessment.class, Checker.class, Infrastructure.class)).getFirst(), hmWorkFlowTasks);
-        }
+        Map<String, WorkFlowTask> hmWorkFlowTasks = new HashMap<>();
+        Arrays.stream(beanFactory.getDependenciesForBean(name))
+                .filter(dependency -> {
+                    try {
+                        beanFactory.getBean(dependency, WorkFlowTask.class);
+                        return true;
+                    } catch (BeansException e) {
+                        return false;
+                    }
+                })
+                .forEach(dependency -> hmWorkFlowTasks.put(dependency, beanFactory.getBean(dependency, WorkFlowTask.class)));
+        workFlowDefinitionService.save(name, ((WorkFlow) bean).getName(), getWorkFlowTypeDetails(name, List.of(Assessment.class, Checker.class, Infrastructure.class)).getFirst(), hmWorkFlowTasks);
     }
 
-    private void saveWorFlowChecker(Map<String, WorkFlowTask> workFlowTaskMap) {
+    private void saveChecker(Map<String, WorkFlowTask> workFlowTaskMap) {
         workFlowTaskMap.forEach((name, value) ->
                 Arrays.stream(beanFactory.getDependenciesForBean(name))
                         .filter(dependency -> {
@@ -129,5 +128,10 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
                     .orElseThrow(() -> new RuntimeException("workflow missing type!"));
         }
         throw new RuntimeException("workflow with no annotated type metadata!");
+    }
+
+    @Override
+    public WorkFlow getWorkFlowByName(String workFlowName) {
+        return workFlows.get(workFlowName);
     }
 }

@@ -15,22 +15,23 @@
  */
 package com.redhat.parodos.workflow.execution.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
+import com.redhat.parodos.common.AbstractEntity;
+import com.redhat.parodos.workflow.task.WorkFlowTaskStatus;
+
+import java.util.Date;
+import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-
-import com.redhat.parodos.workflow.WorkFlowStatus;
-
-import java.util.Date;
-import java.util.UUID;
-
 /**
- * workflow execution entity
+ * entity
  *
  * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
@@ -38,22 +39,27 @@ import java.util.UUID;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@Entity(name = "workflow_execution")
+@Entity(name = "workflow_task_execution")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class WorkFlowExecutionEntity extends AbstractEntity {
-    private String executedBy;
+public class WorkFlowTaskExecution extends AbstractEntity {
+    @Column(name="workflow_execution_id")
+    private UUID workFlowExecutionId;
 
-    private String executedFor;
+    @Column(name="workflow_task_definition_id")
+    private UUID workFlowTaskDefinitionId;
 
-    private WorkFlowStatus status;
+    private String arguments;
+
+    private String results;
+
+    private WorkFlowTaskStatus status;
 
     @Column(updatable = false)
     private Date startDate;
 
     private Date endDate;
 
-    @Column(name="workflow_definition_id")
-    private UUID workFlowDefinitionId;
+    private Date lastUpdateDate;
 }

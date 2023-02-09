@@ -15,7 +15,7 @@
  */
 package com.redhat.parodos.workflow.execution.repository;
 
-import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionEntity;
+import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
@@ -27,5 +27,5 @@ import java.util.UUID;
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
-public interface WorkFlowRepository extends JpaRepository<WorkFlowExecutionEntity, UUID> {
+public interface WorkFlowRepository extends JpaRepository<WorkFlowExecution, UUID> {
 }

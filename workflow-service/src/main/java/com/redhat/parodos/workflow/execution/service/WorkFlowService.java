@@ -15,14 +15,11 @@
  */
 package com.redhat.parodos.workflow.execution.service;
 
-//import com.redhat.parodos.workflow.WorkFlowDefinition;
 import com.redhat.parodos.workflow.WorkFlowStatus;
-//import com.redhat.parodos.workflow.annotation.WorkFlowDefinition;
-import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionEntity;
-import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecutionEntity;
+import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
+import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.task.WorkFlowTaskStatus;
 import com.redhat.parodos.workflows.work.WorkReport;
-import com.redhat.parodos.workflows.workflow.WorkFlow;
 import java.util.Map;
 import java.util.UUID;
 
@@ -34,17 +31,17 @@ import java.util.UUID;
  * @author Annel Ketcha (Github: anludke)
  */
 public interface WorkFlowService {
-    WorkReport execute(WorkFlow workFlow, Map<String, Map<String, String>> workFlowTaskArguments);
+    WorkReport execute(String projectId, String workFlowName, Map<String, Map<String, String>> workFlowTaskArguments);
 
-    WorkFlowExecutionEntity getWorkFlowById(UUID workFlowExecutionId);
+    WorkFlowExecution getWorkFlowById(UUID workFlowExecutionId);
 
-    WorkFlowExecutionEntity saveWorkFlow(String username, String reason, UUID workFlowDefinitionId, WorkFlowStatus workFlowStatus);
+    WorkFlowExecution saveWorkFlow(UUID projectId, UUID workFlowDefinitionId, WorkFlowStatus workFlowStatus);
 
-    WorkFlowExecutionEntity updateWorkFlow(WorkFlowExecutionEntity workFlowExecutionEntity);
+    WorkFlowExecution updateWorkFlow(WorkFlowExecution workFlowExecution);
 
-    WorkFlowTaskExecutionEntity getWorkFlowTask(UUID workFlowExecutionId, UUID workFlowTaskDefinitionId);
+    WorkFlowTaskExecution getWorkFlowTask(UUID workFlowExecutionId, UUID workFlowTaskDefinitionId);
 
-    WorkFlowTaskExecutionEntity saveWorkFlowTask(String arguments, UUID workFlowTaskDefinitionId, UUID workFlowExecutionId, WorkFlowTaskStatus workFlowTaskStatus);
+    WorkFlowTaskExecution saveWorkFlowTask(String arguments, UUID workFlowTaskDefinitionId, UUID workFlowExecutionId, WorkFlowTaskStatus workFlowTaskStatus);
 
-    WorkFlowTaskExecutionEntity updateWorkFlowTask(WorkFlowTaskExecutionEntity workFlowTaskExecutionEntity);
+    WorkFlowTaskExecution updateWorkFlowTask(WorkFlowTaskExecution workFlowTaskExecution);
 }

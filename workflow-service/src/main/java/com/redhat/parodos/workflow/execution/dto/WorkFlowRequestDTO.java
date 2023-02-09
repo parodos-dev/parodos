@@ -34,8 +34,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkFlowRequestDTO {
-    private String name;
-    private List<WorkFlowTaskRequestDTO> tasks;
+    private String projectId;
+    private String workFlowName;
+    private List<WorkFlowTaskRequestDTO> workFlowTasks;
 
     @Data
     @Builder

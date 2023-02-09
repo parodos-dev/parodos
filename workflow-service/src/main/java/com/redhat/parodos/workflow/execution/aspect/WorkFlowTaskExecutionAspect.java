@@ -18,7 +18,7 @@ package com.redhat.parodos.workflow.execution.aspect;
 import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
-import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecutionEntity;
+import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
 import com.redhat.parodos.workflow.task.WorkFlowTaskStatus;
@@ -29,10 +29,8 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.UUID;
 
@@ -90,7 +88,7 @@ public class WorkFlowTaskExecutionAspect {
                 WorkContextDelegate.Resource.STATUS,
                 report.getStatus().name());
 
-        WorkFlowTaskExecutionEntity workFlowTaskExecutionEntity = workFlowExecutionService.getWorkFlowTask(UUID.fromString(WorkContextDelegate.read(workContext,
+        WorkFlowTaskExecution workFlowTaskExecution = workFlowExecutionService.getWorkFlowTask(UUID.fromString(WorkContextDelegate.read(workContext,
                         WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
                         WorkContextDelegate.Resource.ID).toString()),
                 UUID.fromString(WorkContextDelegate.read(workContext,
@@ -98,7 +96,7 @@ public class WorkFlowTaskExecutionAspect {
                         workFlowTaskName,
                         WorkContextDelegate.Resource.ID).toString()));
 
-        if (workFlowTaskExecutionEntity == null) {
+        if (workFlowTaskExecution == null) {
             workFlowExecutionService.saveWorkFlowTask(WorkContextDelegate.read(workContext,
                             WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
                             workFlowTaskName,
@@ -112,9 +110,9 @@ public class WorkFlowTaskExecutionAspect {
                             WorkContextDelegate.Resource.ID).toString()),
                     WorkFlowTaskStatus.valueOf(report.getStatus().name()));
         } else {
-            workFlowTaskExecutionEntity.setStatus(WorkFlowTaskStatus.valueOf(report.getStatus().name()));
-            workFlowTaskExecutionEntity.setLastUpdateDate(new Date());
-            workFlowExecutionService.updateWorkFlowTask(workFlowTaskExecutionEntity);
+            workFlowTaskExecution.setStatus(WorkFlowTaskStatus.valueOf(report.getStatus().name()));
+            workFlowTaskExecution.setLastUpdateDate(new Date());
+            workFlowExecutionService.updateWorkFlowTask(workFlowTaskExecution);
         }
         return report;
     }

@@ -17,9 +17,10 @@ package com.redhat.parodos.workflow.execution.service;
 
 import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.WorkFlowStatus;
+import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
-import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionEntity;
-import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecutionEntity;
+import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
+import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
 import com.redhat.parodos.workflow.task.WorkFlowTaskStatus;
@@ -62,10 +63,12 @@ public class WorkFlowServiceImpl implements WorkFlowService {
     }
 
     @Override
-    public WorkReport execute(WorkFlow workFlow, Map<String, Map<String, String>> workFlowTaskArguments) {
+    public WorkReport execute(String projectId, String workFlowName, Map<String, Map<String, String>> workFlowTaskArguments) {
+        WorkFlow workFlow = workFlowDelegate.getWorkFlowExecutionByName(workFlowName);
         log.info("execute workFlow: {}", workFlow);
         if (null != workFlow) {
-            WorkContext workContext = workFlowDelegate.getWorkFlowContext(workFlowDefinitionRepository.findByName(workFlow.getName()).stream().findFirst().get(), workFlowTaskArguments);
+            WorkContext workContext = workFlowDelegate.getWorkFlowContext(workFlowDefinitionRepository.findByName(workFlowName).stream().findFirst().get(), workFlowTaskArguments);
+            WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.PROJECT, WorkContextDelegate.Resource.ID, projectId);
             return WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(workFlow, workContext);
         } else {
             return new DefaultWorkReport(WorkStatus.FAILED, new WorkContext());
@@ -73,35 +76,34 @@ public class WorkFlowServiceImpl implements WorkFlowService {
     }
 
     @Override
-    public WorkFlowExecutionEntity getWorkFlowById(UUID workFlowExecutionId) {
+    public WorkFlowExecution getWorkFlowById(UUID workFlowExecutionId) {
         return this.workFlowRepository.findById(workFlowExecutionId).get();
     }
 
     @Override
-    public WorkFlowExecutionEntity saveWorkFlow(String username, String reason, UUID workFlowDefinitionId, WorkFlowStatus workFlowStatus) {
-        return workFlowRepository.save(WorkFlowExecutionEntity.builder()
+    public WorkFlowExecution saveWorkFlow(UUID projectId, UUID workFlowDefinitionId, WorkFlowStatus workFlowStatus) {
+        return workFlowRepository.save(WorkFlowExecution.builder()
                 .workFlowDefinitionId(workFlowDefinitionId)
-                .executedBy(username)
-                .executedFor(reason)
+                .projectId(projectId)
                 .status(workFlowStatus)
                 .startDate(new Date())
                 .build());
     }
 
     @Override
-    public WorkFlowExecutionEntity updateWorkFlow(WorkFlowExecutionEntity workFlowExecutionEntity) {
-        return workFlowRepository.save(workFlowExecutionEntity);
+    public WorkFlowExecution updateWorkFlow(WorkFlowExecution workFlowExecution) {
+        return workFlowRepository.save(workFlowExecution);
     }
 
     @Override
-    public WorkFlowTaskExecutionEntity getWorkFlowTask(UUID workFlowExecutionId, UUID workFlowTaskDefinitionId) {
-        List<WorkFlowTaskExecutionEntity> workFlowTaskExecutionEntityList = workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(workFlowExecutionId, workFlowTaskDefinitionId);
-        return (workFlowTaskExecutionEntityList == null || workFlowTaskExecutionEntityList.isEmpty()) ? null : workFlowTaskExecutionEntityList.stream().findFirst().get();
+    public WorkFlowTaskExecution getWorkFlowTask(UUID workFlowExecutionId, UUID workFlowTaskDefinitionId) {
+        List<WorkFlowTaskExecution> workFlowTaskExecutionList = workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(workFlowExecutionId, workFlowTaskDefinitionId);
+        return (workFlowTaskExecutionList == null || workFlowTaskExecutionList.isEmpty()) ? null : workFlowTaskExecutionList.stream().findFirst().get();
     }
 
     @Override
-    public WorkFlowTaskExecutionEntity saveWorkFlowTask(String arguments, UUID workFlowTaskDefinitionId, UUID workFlowExecutionId, WorkFlowTaskStatus workFlowTaskStatus) {
-        return workFlowTaskRepository.save(WorkFlowTaskExecutionEntity.builder()
+    public WorkFlowTaskExecution saveWorkFlowTask(String arguments, UUID workFlowTaskDefinitionId, UUID workFlowExecutionId, WorkFlowTaskStatus workFlowTaskStatus) {
+        return workFlowTaskRepository.save(WorkFlowTaskExecution.builder()
                 .workFlowExecutionId(workFlowExecutionId)
                 .workFlowTaskDefinitionId(workFlowTaskDefinitionId)
                 .arguments(arguments)
@@ -111,7 +113,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
     }
 
     @Override
-    public WorkFlowTaskExecutionEntity updateWorkFlowTask(WorkFlowTaskExecutionEntity workFlowTaskExecutionEntity) {
-        return workFlowTaskRepository.save(workFlowTaskExecutionEntity);
+    public WorkFlowTaskExecution updateWorkFlowTask(WorkFlowTaskExecution workFlowTaskExecution) {
+        return workFlowTaskRepository.save(workFlowTaskExecution);
     }
 }

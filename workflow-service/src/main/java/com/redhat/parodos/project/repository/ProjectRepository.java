@@ -13,29 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow.execution.dto;
+package com.redhat.parodos.project.repository;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.redhat.parodos.workflow.option.WorkFlowOptions;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.redhat.parodos.project.entity.Project;
+import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * response dto
+ * Project repository
  *
- * @author Luke Shannon (Github: lshannon)
- * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
-@Builder
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class WorkFlowResponseDTO {
-    private String workFlowId;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private WorkFlowOptions workFlowOptions;
+public interface ProjectRepository extends JpaRepository<Project, UUID> {
 }

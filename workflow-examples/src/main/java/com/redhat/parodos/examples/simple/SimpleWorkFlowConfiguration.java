@@ -20,40 +20,66 @@ import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import com.redhat.parodos.workflows.workflow.ParallelFlow;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
+import java.util.concurrent.Executors;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.concurrent.Executors;
-
 
 /**
  * Very simple workflow configurations
  *
  * @author Luke Shannon (Github: lshannon)
  */
+
 @Configuration
 public class SimpleWorkFlowConfiguration {
 
+    @Bean
+    RestAPIWorkFlowTask simpleTask1() {
+        return new RestAPIWorkFlowTask();
+    }
+
+    @Bean
+    LoggingWorkFlowTask simpleTask2() {
+        return new LoggingWorkFlowTask();
+    }
+
     @Bean(name = "simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
     @Infrastructure
-    WorkFlow simpleSequentialWorkFlowTask() {
+    WorkFlow simpleSequentialWorkFlowTask(@Qualifier("simpleTask1") RestAPIWorkFlowTask simpleTask1,
+                                          @Qualifier("simpleTask2") LoggingWorkFlowTask simpleTask2) {
         return SequentialFlow.Builder.aNewSequentialFlow()
-                .named("simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
-                .execute(new RestAPIWorkFlowTask())
-                .then(new LoggingWorkFlowTask())
+                .named("simple Sequential Infrastructure WorkFlow")
+                .execute(simpleTask1)
+                .then(simpleTask2)
                 .build();
     }
 
+    @Bean
+    LoggingWorkFlowTask simpleParallelTask1() {
+        return new LoggingWorkFlowTask();
+    }
+
+    @Bean
+    LoggingWorkFlowTask simpleParallelTask2() {
+        return new LoggingWorkFlowTask();
+    }
+
+    @Bean
+    LoggingWorkFlowTask simpleParallelTask3() {
+        return new LoggingWorkFlowTask();
+    }
 
     @Bean(name = "simpleParallelWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
     @Infrastructure
-    WorkFlow simpleParallelWorkFlowTask() {
+    WorkFlow simpleParallelWorkFlowTask(@Qualifier("simpleParallelTask1") LoggingWorkFlowTask simpleParallelTask1,
+                                        @Qualifier("simpleParallelTask2") LoggingWorkFlowTask simpleParallelTask2,
+                                        @Qualifier("simpleParallelTask3") LoggingWorkFlowTask simpleParallelTask3) {
         return ParallelFlow.Builder
                 .aNewParallelFlow()
-                .named("simpleParallelWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
-                .execute(new LoggingWorkFlowTask(), new LoggingWorkFlowTask(), new LoggingWorkFlowTask())
+                .named("simple Parallel Infrastructure WorkFlow")
+                .execute(simpleParallelTask1, simpleParallelTask2, simpleParallelTask3)
                 .with(Executors.newFixedThreadPool(3))
                 .build();
     }
-
 }

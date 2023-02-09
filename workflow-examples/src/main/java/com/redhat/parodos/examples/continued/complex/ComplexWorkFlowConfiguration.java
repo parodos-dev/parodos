@@ -39,12 +39,13 @@ import java.util.concurrent.Executors;
 public class ComplexWorkFlowConfiguration {
 
     //Start Assessment Logic
-
     //Infrastructure Option for Onboarding
     @Bean
     WorkFlowOption onboardingOption() {
         return new WorkFlowOption.Builder("onboardingOption", "onboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
                 .addToDetails("An example of a complex WorkFlow with Status checks")
+                .displayName("Onboarding")
+                .setDescription("An example of a complex WorkFlow")
                 .build();
     }
 
@@ -60,11 +61,10 @@ public class ComplexWorkFlowConfiguration {
         return SequentialFlow
                 .Builder
                 .aNewSequentialFlow()
-                .named("onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
+                .named("onboarding Assessment WorkFlow")
                 .execute(onboardingAssessmentTask)
                 .build();
     }
-
     //End Assessment Logic
 
     //Start Onboarding Logic
@@ -89,7 +89,6 @@ public class ComplexWorkFlowConfiguration {
         return loggingWorkFlow;
     }
 
-
     @Bean(name = "onboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
     @Infrastructure
     WorkFlow onboardingWorkflow(@Qualifier("certWorkFlowTask") LoggingWorkFlowTask certWorkFlowTask,
@@ -97,12 +96,11 @@ public class ComplexWorkFlowConfiguration {
                                 @Qualifier("dynatraceWorkFlowTask") LoggingWorkFlowTask dynatraceWorkFlowTask) {
         return ParallelFlow.Builder
                 .aNewParallelFlow()
-                .named("onboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+                .named("onboarding Infrastructure WorkFlow")
                 .execute(certWorkFlowTask, adGroupWorkFlowTask, dynatraceWorkFlowTask)
                 .with(Executors.newFixedThreadPool(3))
                 .build();
     }
-
     // End Onboarding Logic
 
     //Start Name Space Logic
@@ -118,14 +116,13 @@ public class ComplexWorkFlowConfiguration {
     WorkFlow nameSpaceWorkFlow(@Qualifier("nameSpaceWorkFlowTask") LoggingWorkFlowTask nameSpaceWorkFlowTask) {
         return SequentialFlow.Builder
                 .aNewSequentialFlow()
-                .named("nameSpaceWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+                .named("nameSpace Infrastructure WorkFlow")
                 .execute(nameSpaceWorkFlowTask)
                 .build();
     }
     //End Name Space Logic
 
     //Start networking workflow Logic
-
     @Bean
     LoggingWorkFlowTask loadBalancerFlowTask() {
         return new LoggingWorkFlowTask();
@@ -142,13 +139,12 @@ public class ComplexWorkFlowConfiguration {
                                 @Qualifier("failOverWorkFlowTask") LoggingWorkFlowTask failOverWorkFlowTask) {
         return SequentialFlow.Builder
                 .aNewSequentialFlow()
-                .named("networkingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+                .named("networking Infrastructure WorkFlow")
                 .execute(networkingFlowTask)
                 .then(failOverWorkFlowTask)
                 .build();
     }
     //End networking workflow Logic
-
 
     //Start onboardingWorkFlowCheck Logic
     @Bean
@@ -162,11 +158,10 @@ public class ComplexWorkFlowConfiguration {
     WorkFlow onboardingWorkFlowCheckerWorkFlow(@Qualifier("gateTwo") MockApprovalWorkFlowCheckerTask gateTwo) {
         return SequentialFlow.Builder
                 .aNewSequentialFlow()
-                .named("onboardingWorkFlow" + WorkFlowConstants.CHECKER_WORKFLOW)
+                .named("onboarding Checker WorkFlow")
                 .execute(gateTwo)
                 .build();
     }
-
     //End onboardingWorkFlowCheck Logic
 
     //Start namespaceWorkFlowCheck Logic
@@ -181,10 +176,9 @@ public class ComplexWorkFlowConfiguration {
     WorkFlow namespaceWorkFlowCheckerWorkFlow(@Qualifier("gateThree") MockApprovalWorkFlowCheckerTask gateThree) {
         return SequentialFlow.Builder
                 .aNewSequentialFlow()
-                .named("namespaceWorkFlow" + WorkFlowConstants.CHECKER_WORKFLOW)
+                .named("namespace Checker WorkFlow")
                 .execute(gateThree)
                 .build();
     }
-
     //End namespaceWorkFlowCheck Logic
 }

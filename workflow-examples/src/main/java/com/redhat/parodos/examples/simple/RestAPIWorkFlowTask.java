@@ -27,6 +27,7 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -36,7 +37,9 @@ import org.springframework.web.client.RestTemplate;
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
+
 @Slf4j
+@Component
 public class RestAPIWorkFlowTask extends BaseInfrastructureWorkFlowTask {
     public static final String PAYLOAD_PASSED_IN_FROM_SERVICE = "PAYLOAD_PASSED_IN_FROM_SERVICE";
     public static final String URL_PASSED_IN_FROM_SERVICE = "URL_PASSED_IN_FROM_SERVICE";

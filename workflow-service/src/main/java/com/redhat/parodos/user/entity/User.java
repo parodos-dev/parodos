@@ -13,52 +13,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow.execution.entity;
+package com.redhat.parodos.user.entity;
 
+import com.redhat.parodos.project.entity.Project;
+import com.redhat.parodos.common.AbstractEntity;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-
-import com.redhat.parodos.workflow.task.WorkFlowTaskStatus;
-
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.UUID;
-
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * entity
+ * User entity
  *
- * @author Luke Shannon (Github: lshannon)
- * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
-@Data
-@EqualsAndHashCode(callSuper = false)
-@Entity(name = "workflow_task_execution")
+
+@Entity(name = "user")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class WorkFlowTaskExecutionEntity extends AbstractEntity {
-    @Column(name="workflow_execution_id")
-    private UUID workFlowExecutionId;
+public class User extends AbstractEntity {
+    private String username;
 
-    @Column(name="workflow_task_definition_id")
-    private UUID workFlowTaskDefinitionId;
+    private String firstName;
 
-    private String arguments;
+    private String lastName;
 
-    private String results;
-
-    private WorkFlowTaskStatus status;
+    private String email;
 
     @Column(updatable = false)
-    private Date startDate;
+    private Date createDate;
 
-    private Date endDate;
+    private Date modifyDate;
 
-    private Date lastUpdateDate;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Project> projects = new ArrayList<>();
 }

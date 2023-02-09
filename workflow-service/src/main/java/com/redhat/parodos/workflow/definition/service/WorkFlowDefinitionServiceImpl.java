@@ -24,7 +24,7 @@ import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
-import com.redhat.parodos.workflow.execution.util.WorkFlowDTOUtil;
+import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
 import java.util.Date;
 import java.util.HashMap;
@@ -61,9 +61,10 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
     }
 
     @Override
-    public WorkFlowDefinitionResponseDTO save(String workFlowName, WorkFlowType workFlowType, Map<String, WorkFlowTask> hmWorkFlowTasks) {
+    public WorkFlowDefinitionResponseDTO save(String workFlowName, String workFlowDescription, WorkFlowType workFlowType, Map<String, WorkFlowTask> hmWorkFlowTasks) {
         WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder()
                 .name(workFlowName)
+                .description(workFlowDescription)
                 .type(workFlowType.name())
                 .createDate(new Date())
                 .modifyDate(new Date())

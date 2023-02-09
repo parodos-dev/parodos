@@ -20,16 +20,17 @@ import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowResponseDTO;
 import com.redhat.parodos.workflow.execution.service.WorkFlowService;
-import com.redhat.parodos.workflow.execution.util.WorkFlowDTOUtil;
+import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
+import com.redhat.parodos.workflow.option.WorkFlowOptions;
 import com.redhat.parodos.workflows.work.WorkReport;
-import com.redhat.parodos.workflows.workflow.WorkFlow;
-import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 /**
  * controller to execute workflow and get status
@@ -53,14 +54,13 @@ public class WorkFlowController {
 
     @PostMapping
     public ResponseEntity<WorkFlowResponseDTO> execute(@RequestBody @Valid WorkFlowRequestDTO workFlowRequestDTO) {
-        WorkFlow workFlow = workFlowDelegate.getWorkFlowExecutionByName(workFlowRequestDTO.getName());
-        WorkReport workReport = workFlowService.execute(workFlow, WorkFlowDTOUtil.convertWorkFlowTaskRequestDTOListToMap(workFlowRequestDTO.getTasks()));
+        WorkReport workReport = workFlowService.execute(workFlowRequestDTO.getProjectId(), workFlowRequestDTO.getWorkFlowName(), WorkFlowDTOUtil.convertWorkFlowTaskRequestDTOListToMap(workFlowRequestDTO.getWorkFlowTasks()));
         return ResponseEntity.ok(WorkFlowResponseDTO.builder()
                 .workFlowId(WorkContextDelegate.read(
                         workReport.getWorkContext(),
                         WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
                         WorkContextDelegate.Resource.ID).toString())
-                .output(WorkContextDelegate.read(workReport.getWorkContext(),
+                .workFlowOptions((WorkFlowOptions) WorkContextDelegate.read(workReport.getWorkContext(),
                         WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
                         WorkContextDelegate.Resource.INFRASTRUCTURE_OPTIONS))
                 .build());

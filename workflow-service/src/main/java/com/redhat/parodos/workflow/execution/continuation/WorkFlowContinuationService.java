@@ -23,19 +23,18 @@ import com.redhat.parodos.workflow.WorkFlowStatus;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
-import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionEntity;
-import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecutionEntity;
+import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
+import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * When the application starts up it will run any workflows in Progress @see Status.IN_PROGRESS
@@ -77,26 +76,24 @@ public class WorkFlowContinuationService {
     @EventListener(ApplicationReadyEvent.class)
     public void workFlowRunAfterStartup() {
         log.info("Looking up all IN PROGRESS workflows for ");
-        List<WorkFlowExecutionEntity> workFlowEntityList = workFlowRepository.findAll();
-        log.info("Number of IN PROGRESS workflows for : {}", workFlowEntityList.size());
-        workFlowEntityList.stream()
-                .filter(workFlowEntity -> WorkFlowStatus.IN_PROGRESS == workFlowEntity.getStatus())
-                .forEach(workFlowEntity -> {
-                    WorkFlowDefinition workFlowDefinitionEntity = workFlowDefinitionRepository.findById(workFlowEntity.getWorkFlowDefinitionId()).get();
-//                    WorkFlowDefinition workFlowDefinition = workFlowDelegate.getWorkFlowDefinitionById(workFlowDefinitionEntity.getId());
-                    List<WorkFlowTaskExecutionEntity> workFlowTaskEntityList = workFlowTaskRepository.findByWorkFlowExecutionId(workFlowEntity.getId());
+        List<WorkFlowExecution> workFlowExecutions = workFlowRepository.findAll();
+        log.info("Number of IN PROGRESS workflows for : {}", workFlowExecutions.size());
+        workFlowExecutions.stream()
+                .filter(workFlowExecution -> WorkFlowStatus.IN_PROGRESS == workFlowExecution.getStatus())
+                .forEach(workFlowExecution -> {
+                    WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository.findById(workFlowExecution.getWorkFlowDefinitionId()).get();
+                    List<WorkFlowTaskExecution> workFlowTaskExecutions = workFlowTaskRepository.findByWorkFlowExecutionId(workFlowExecution.getId());
                     Map<String, Map<String, String>> workFlowTaskArguments = new HashMap<>();
-                    workFlowTaskEntityList.forEach(workFlowTaskEntity -> {
+                    workFlowTaskExecutions.forEach(workFlowTaskExecution -> {
                         try {
-                            workFlowTaskArguments.put(workFlowTaskDefinitionRepository.findById(workFlowTaskEntity.getWorkFlowTaskDefinitionId()).get().getName(),
-                                    objectMapper.readValue(workFlowTaskEntity.getArguments(), new TypeReference<>() {
+                            workFlowTaskArguments.put(workFlowTaskDefinitionRepository.findById(workFlowTaskExecution.getWorkFlowTaskDefinitionId()).get().getName(),
+                                    objectMapper.readValue(workFlowTaskExecution.getArguments(), new TypeReference<>() {
                                     }));
                         } catch (JsonProcessingException e) {
                             throw new RuntimeException(e);
                         }
                     });
-                    workFlowService.execute(workFlowDelegate.getWorkFlowExecutionByName(workFlowDefinitionEntity.getName()),
-                            workFlowTaskArguments);
+                    workFlowService.execute(workFlowExecution.getProjectId().toString(), workFlowDefinition.getName(), workFlowTaskArguments);
                 });
     }
 }

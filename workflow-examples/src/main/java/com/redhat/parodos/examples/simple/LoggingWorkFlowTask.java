@@ -26,6 +26,7 @@ import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 /**
  * logging task execution
@@ -36,6 +37,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @Slf4j
+@Component
 public class LoggingWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
     @Override

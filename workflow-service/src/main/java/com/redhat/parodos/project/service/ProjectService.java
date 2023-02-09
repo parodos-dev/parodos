@@ -13,29 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow.execution.dto;
+package com.redhat.parodos.project.service;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.redhat.parodos.workflow.option.WorkFlowOptions;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.redhat.parodos.project.dto.ProjectRequestDTO;
+import com.redhat.parodos.project.dto.ProjectResponseDTO;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
- * response dto
+ * Project service
  *
- * @author Luke Shannon (Github: lshannon)
- * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
-@Builder
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class WorkFlowResponseDTO {
-    private String workFlowId;
+public interface ProjectService {
+    ProjectResponseDTO save(ProjectRequestDTO projectRequestDTO);
+    ProjectResponseDTO getProjectById(UUID id);
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private WorkFlowOptions workFlowOptions;
+    List<ProjectResponseDTO> getProjects();
 }

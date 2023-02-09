@@ -15,7 +15,7 @@
  */
 package com.redhat.parodos.workflow.definition.entity;
 
-import com.redhat.parodos.workflow.execution.entity.AbstractEntity;
+import com.redhat.parodos.common.AbstractEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,12 +28,10 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
- * entity
+ * Workflow definition entity
  *
  * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
@@ -47,6 +45,8 @@ import java.util.Set;
 @AllArgsConstructor
 public class WorkFlowDefinition extends AbstractEntity {
     private String name;
+
+    private String description;
 
     private String type;
 
@@ -63,8 +63,8 @@ public class WorkFlowDefinition extends AbstractEntity {
     @OneToMany(mappedBy = "checkWorkFlow", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<WorkFlowCheckerDefinition> checkerWorkFlowDefinitions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "nextWorkFlow", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private Set<WorkFlowCheckerDefinition> nextWorkFlowDefinitions = new HashSet<>();
+    @OneToMany(mappedBy = "nextWorkFlow", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<WorkFlowCheckerDefinition> nextWorkFlowDefinitions = new ArrayList<>();
 
     private String commitId;
 }

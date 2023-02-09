@@ -13,29 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow.execution.dto;
+package com.redhat.parodos.project.entity;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.redhat.parodos.workflow.option.WorkFlowOptions;
+import com.redhat.parodos.user.entity.User;
+import com.redhat.parodos.common.AbstractEntity;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * response dto
+ * Project entity
  *
- * @author Luke Shannon (Github: lshannon)
- * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
-@Builder
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class WorkFlowResponseDTO {
-    private String workFlowId;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private WorkFlowOptions workFlowOptions;
+@Entity(name = "project")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Project extends AbstractEntity {
+    private String name;
+
+    private String description;
+
+    @Column(updatable = false)
+    private Date createDate;
+
+    private Date modifyDate;
+
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

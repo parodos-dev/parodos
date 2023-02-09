@@ -15,7 +15,7 @@
  */
 package com.redhat.parodos.workflow.execution.repository;
 
-import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecutionEntity;
+import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,7 +27,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
-public interface WorkFlowTaskRepository extends JpaRepository<WorkFlowTaskExecutionEntity, UUID> {
-    List<WorkFlowTaskExecutionEntity> findByWorkFlowExecutionId(UUID workFlowExecutionId);
-    List<WorkFlowTaskExecutionEntity> findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(UUID workFlowExecutionId, UUID workFlowTaskDefinitionId);
+public interface WorkFlowTaskRepository extends JpaRepository<WorkFlowTaskExecution, UUID> {
+    List<WorkFlowTaskExecution> findByWorkFlowExecutionId(UUID workFlowExecutionId);
+    List<WorkFlowTaskExecution> findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(UUID workFlowExecutionId, UUID workFlowTaskDefinitionId);
 }

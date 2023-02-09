@@ -15,7 +15,7 @@
  */
 package com.redhat.parodos.workflow.definition.entity;
 
-import com.redhat.parodos.workflow.execution.entity.AbstractEntity;
+import com.redhat.parodos.common.AbstractEntity;
 import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;

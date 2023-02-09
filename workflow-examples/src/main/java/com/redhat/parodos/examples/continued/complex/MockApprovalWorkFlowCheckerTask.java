@@ -22,16 +22,16 @@ import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import lombok.extern.slf4j.Slf4j;
-
-import java.util.Collections;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import java.util.Collections;
 
 /**
  * A simple example of a WorkFlowChecker that always returns true
  *
  * @author Luke Shannon (Github: lshannon)
  */
+
 @Slf4j
 public class MockApprovalWorkFlowCheckerTask extends BaseWorkFlowCheckerTask {
     @Override
