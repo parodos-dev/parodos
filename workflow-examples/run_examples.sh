@@ -55,8 +55,6 @@ run_simple_flow() {
 run_complex_flow() {
   echo "                                                "
   echo "******** Create Project ********"
-  echo "                                                "
-  echo "******** Running The Complex WorkFlow ********"
   PROJECT_ID=$(curl -X 'POST' -s \
     'http://localhost:8080/api/v1/projects' \
     -H 'accept: */*' \
@@ -66,6 +64,8 @@ run_complex_flow() {
                  "description": "an example project"
                }' | jq -r '.id')
   echo "Project id is $PROJECT_ID"
+  echo "                                                "
+  echo "******** Running The Complex WorkFlow ********"
   echo "                                               "
   echo "                                               "
   echo "Running the Assessment to see what WorkFlows are eligable for this situation:"
