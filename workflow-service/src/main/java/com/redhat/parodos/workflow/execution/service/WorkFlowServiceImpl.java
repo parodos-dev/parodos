@@ -69,6 +69,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
         if (null != workFlow) {
             WorkContext workContext = workFlowDelegate.getWorkFlowContext(workFlowDefinitionRepository.findByName(workFlowName).stream().findFirst().get(), workFlowTaskArguments);
             WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.PROJECT, WorkContextDelegate.Resource.ID, projectId);
+            WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION, WorkContextDelegate.Resource.NAME, workFlowName);
             return WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(workFlow, workContext);
         } else {
             return new DefaultWorkReport(WorkStatus.FAILED, new WorkContext());
