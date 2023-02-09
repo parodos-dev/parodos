@@ -24,14 +24,12 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * workflow execution service
+ * Workflow execution service
  *
- * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
 public interface WorkFlowService {
-
 	WorkReport execute(String projectId, String workFlowName, Map<String, Map<String, String>> workFlowTaskArguments);
 
 	WorkFlowExecution getWorkFlowById(UUID workFlowExecutionId);
@@ -42,9 +40,7 @@ public interface WorkFlowService {
 
 	WorkFlowTaskExecution getWorkFlowTask(UUID workFlowExecutionId, UUID workFlowTaskDefinitionId);
 
-	WorkFlowTaskExecution saveWorkFlowTask(String arguments, UUID workFlowTaskDefinitionId, UUID workFlowExecutionId,
-			WorkFlowTaskStatus workFlowTaskStatus);
+	WorkFlowTaskExecution saveWorkFlowTask(String arguments, UUID workFlowTaskDefinitionId, UUID workFlowExecutionId, WorkFlowTaskStatus workFlowTaskStatus);
 
 	WorkFlowTaskExecution updateWorkFlowTask(WorkFlowTaskExecution workFlowTaskExecution);
-
 }

@@ -31,7 +31,6 @@ import java.util.UUID;
  */
 @MappedSuperclass
 public class AbstractEntity {
-
 	@Id
 	@GeneratedValue
 	@Column(columnDefinition = "uuid")
@@ -56,5 +55,4 @@ public class AbstractEntity {
 	public Long getObjectVersion() {
 		return objectVersion;
 	}
-
 }

@@ -15,26 +15,23 @@
  */
 package com.redhat.parodos.workflow.definition.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import javax.persistence.AttributeOverride;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
- * entity
+ * Workflow checker definition entity
  *
- * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
@@ -43,9 +40,9 @@ import javax.persistence.OneToOne;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class WorkFlowCheckerDefinition {
-
 	@EmbeddedId
 	@AttributeOverride(name = "workFlowCheckerId", column = @Column(name = "workflow_checker_id"))
 	@AttributeOverride(name = "taskId", column = @Column(name = "task_id"))
@@ -67,5 +64,4 @@ public class WorkFlowCheckerDefinition {
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "next_workflow_id")
 	private WorkFlowDefinition nextWorkFlow;
-
 }

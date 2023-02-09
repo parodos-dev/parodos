@@ -23,18 +23,16 @@ import lombok.NoArgsConstructor;
 /**
  * Workflow checker dto
  *
- * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkFlowCheckerDTO {
-
 	private String nextWorkFlowName;
 
 	private String cronExpression;
-
 }

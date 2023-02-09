@@ -28,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Jennifer Ubah, Luke Shannon (Github: lshannon)
  *
  */
+
 @Component
 @Slf4j
 public class SecurityUtils {

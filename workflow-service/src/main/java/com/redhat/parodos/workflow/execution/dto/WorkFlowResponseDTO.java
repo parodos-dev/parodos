@@ -23,9 +23,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * response dto
+ * Workflow response dto
  *
- * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
@@ -35,10 +34,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkFlowResponseDTO {
-
 	private String workFlowExecutionId;
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private WorkFlowOptions workFlowOptions;
-
 }

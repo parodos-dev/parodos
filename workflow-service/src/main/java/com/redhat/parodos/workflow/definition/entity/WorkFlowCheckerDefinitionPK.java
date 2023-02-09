@@ -20,13 +20,11 @@ import java.io.Serializable;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
  * workflow checker definition entity primary key
  *
- * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
@@ -36,9 +34,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class WorkFlowCheckerDefinitionPK implements Serializable {
-
 	private UUID workFlowCheckerId;
 
 	private UUID taskId;
-
 }

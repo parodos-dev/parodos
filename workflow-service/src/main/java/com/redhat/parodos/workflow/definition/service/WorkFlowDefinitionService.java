@@ -26,14 +26,11 @@ import java.util.UUID;
 /**
  * workflow definition service
  *
- * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
 public interface WorkFlowDefinitionService {
-
-	WorkFlowDefinitionResponseDTO save(String workFlowName, String workFlowDescription, WorkFlowType workFlowType,
-			Map<String, WorkFlowTask> hmWorkFlowTasks);
+	WorkFlowDefinitionResponseDTO save(String workFlowName, String workFlowDescription, WorkFlowType workFlowType, Map<String, WorkFlowTask> hmWorkFlowTasks);
 
 	List<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitions();
 
@@ -41,7 +38,5 @@ public interface WorkFlowDefinitionService {
 
 	List<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitionsByName(String name);
 
-	void saveWorkFlowChecker(String workFlowTaskName, String workFlowCheckerName,
-			WorkFlowCheckerDTO workFlowCheckerDTO);
-
+	void saveWorkFlowChecker(String workFlowTaskName, String workFlowCheckerName, WorkFlowCheckerDTO workFlowCheckerDTO);
 }

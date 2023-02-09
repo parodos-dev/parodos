@@ -16,11 +16,6 @@
 package com.redhat.parodos.workflow.definition.entity;
 
 import com.redhat.parodos.common.AbstractEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,6 +24,11 @@ import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * Workflow definition entity
@@ -38,11 +38,12 @@ import java.util.List;
  * @author Annel Ketcha (Github: anludke)
  */
 
-@Data
 @Entity(name = "workflow_definition")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class WorkFlowDefinition extends AbstractEntity {
 
 	private String name;
@@ -68,5 +69,4 @@ public class WorkFlowDefinition extends AbstractEntity {
 	private List<WorkFlowCheckerDefinition> nextWorkFlowDefinitions = new ArrayList<>();
 
 	private String commitId;
-
 }

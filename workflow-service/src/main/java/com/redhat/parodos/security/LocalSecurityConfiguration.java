@@ -27,6 +27,7 @@ import org.springframework.security.web.SecurityFilterChain;
  * @author Luke Shannon (Github: lshannon)
  *
  */
+
 @Profile("local")
 @Configuration
 public class LocalSecurityConfiguration {

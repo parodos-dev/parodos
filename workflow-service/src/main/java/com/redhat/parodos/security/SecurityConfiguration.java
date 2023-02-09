@@ -32,6 +32,7 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
  * @author Luke Shannon (Github: lshannon)
  *
  */
+
 @Configuration
 @Profile("!local")
 public class SecurityConfiguration {

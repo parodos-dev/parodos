@@ -15,7 +15,6 @@
  */
 package com.redhat.parodos.workflow.definition.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.Date;
 import java.util.List;
@@ -27,7 +26,6 @@ import lombok.NoArgsConstructor;
 /**
  * Workflow definition response dto
  *
- * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
@@ -36,7 +34,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkFlowDefinitionResponseDTO {
-
 	private UUID id;
 
 	private String name;
@@ -51,5 +48,4 @@ public class WorkFlowDefinitionResponseDTO {
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private List<WorkFlowTaskDefinitionResponseDTO> tasks;
-
 }

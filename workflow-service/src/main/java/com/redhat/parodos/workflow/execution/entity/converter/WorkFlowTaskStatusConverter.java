@@ -28,7 +28,6 @@ import javax.persistence.Converter;
 
 @Converter(autoApply = true)
 public class WorkFlowTaskStatusConverter implements AttributeConverter<WorkFlowTaskStatus, String> {
-
 	@Override
 	public String convertToDatabaseColumn(WorkFlowTaskStatus status) {
 		return status.name();
@@ -38,5 +37,4 @@ public class WorkFlowTaskStatusConverter implements AttributeConverter<WorkFlowT
 	public WorkFlowTaskStatus convertToEntityAttribute(String dbData) {
 		return WorkFlowTaskStatus.valueOf(dbData);
 	}
-
 }

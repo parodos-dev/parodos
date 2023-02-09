@@ -26,24 +26,24 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
- * task entity
+ * Workflow task definition entity
  *
- * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
 
-@Data
 @Entity(name = "workflow_task_definition")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class WorkFlowTaskDefinition extends AbstractEntity {
-
 	private String name;
 
 	private String parameters;
@@ -63,5 +63,4 @@ public class WorkFlowTaskDefinition extends AbstractEntity {
 	private WorkFlowCheckerDefinition workFlowCheckerDefinition;
 
 	private String commitId;
-
 }

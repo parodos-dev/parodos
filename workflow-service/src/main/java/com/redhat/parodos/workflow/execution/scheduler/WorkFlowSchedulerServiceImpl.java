@@ -29,16 +29,14 @@ import org.springframework.stereotype.Service;
 /**
  * workflow scheduler service implementation
  *
- * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
+
 @Service
 @Slf4j
 public class WorkFlowSchedulerServiceImpl implements WorkFlowSchedulerService {
-
 	private final TaskScheduler taskScheduler;
-
 	private final Map<String, ScheduledFuture<?>> hm = new HashMap<>();
 
 	public WorkFlowSchedulerServiceImpl(TaskScheduler taskScheduler) {
@@ -68,5 +66,4 @@ public class WorkFlowSchedulerServiceImpl implements WorkFlowSchedulerService {
 		log.info("Workflow: {} has not been scheduled!", hm.get(workFlow.getName()));
 		return false;
 	}
-
 }

@@ -22,10 +22,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /**
  * workflow execution repository
  *
- * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
-public interface WorkFlowRepository extends JpaRepository<WorkFlowExecution, UUID> {
 
+public interface WorkFlowRepository extends JpaRepository<WorkFlowExecution, UUID> {
 }

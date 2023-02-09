@@ -23,25 +23,24 @@ import java.util.Date;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * Workflow execution entity
  *
- * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
-@Data
-@EqualsAndHashCode(callSuper = false)
+
 @Entity(name = "workflow_execution")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class WorkFlowExecution extends AbstractEntity {
-
 	private WorkFlowStatus status;
 
 	@Column(updatable = false)
@@ -54,5 +53,4 @@ public class WorkFlowExecution extends AbstractEntity {
 
 	@Column(name = "project_id")
 	private UUID projectId;
-
 }

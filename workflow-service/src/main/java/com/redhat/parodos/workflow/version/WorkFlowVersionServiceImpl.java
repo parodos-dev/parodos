@@ -47,5 +47,4 @@ public class WorkFlowVersionServiceImpl implements WorkFlowVersionService {
 		return new ClassPathResource(workFlowRef.getClass().getName().replace(".", "/") + ".class",
 				workFlowRef.getClass().getClassLoader()).getInputStream();
 	}
-
 }

@@ -23,26 +23,24 @@ import java.util.Date;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * WorkFlow task execution entity
  *
- * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
 
-@Data
-@EqualsAndHashCode(callSuper = false)
 @Entity(name = "workflow_task_execution")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class WorkFlowTaskExecution extends AbstractEntity {
-
 	@Column(name = "workflow_execution_id")
 	private UUID workFlowExecutionId;
 
@@ -61,5 +59,4 @@ public class WorkFlowTaskExecution extends AbstractEntity {
 	private Date endDate;
 
 	private Date lastUpdateDate;
-
 }

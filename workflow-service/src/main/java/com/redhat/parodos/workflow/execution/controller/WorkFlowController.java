@@ -15,7 +15,6 @@
  */
 package com.redhat.parodos.workflow.execution.controller;
 
-import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowResponseDTO;
@@ -32,9 +31,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * controller to execute workflow and get status
+ * Workflow controller to execute workflow and get status
  *
- * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
@@ -43,13 +41,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/workflows")
 public class WorkFlowController {
-
-	private final WorkFlowDelegate workFlowDelegate;
-
 	private final WorkFlowService workFlowService;
 
-	public WorkFlowController(WorkFlowDelegate workFlowDelegate, WorkFlowService workFlowService) {
-		this.workFlowDelegate = workFlowDelegate;
+	public WorkFlowController(WorkFlowService workFlowService) {
 		this.workFlowService = workFlowService;
 	}
 
@@ -66,5 +60,4 @@ public class WorkFlowController {
 						WorkContextDelegate.Resource.INFRASTRUCTURE_OPTIONS))
 				.build());
 	}
-
 }

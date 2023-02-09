@@ -76,5 +76,4 @@ public class WorkFlowDelegate {
 				.get().getTasks().stream().filter(task -> task.getName().equalsIgnoreCase(workFlowTaskName)).findFirst()
 				.get().getId());
 	}
-
 }

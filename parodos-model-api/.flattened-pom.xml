@@ -13,12 +13,12 @@
   <name>parodos-model-api</name>
   <description>Parodos Model Api</description>
   <properties>
-    <java.version>11</java.version>
-    <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
-    <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     <lombok.version>1.18.24</lombok.version>
     <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
     <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+    <java.version>11</java.version>
+    <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+    <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <spring-beans.version>5.3.10</spring-beans.version>
   </properties>

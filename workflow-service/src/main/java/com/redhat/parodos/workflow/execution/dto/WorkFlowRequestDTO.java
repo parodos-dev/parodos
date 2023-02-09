@@ -22,9 +22,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * workflow request dto
+ * Workflow request dto
  *
- * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
@@ -34,7 +33,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkFlowRequestDTO {
-
 	private String projectId;
 
 	private String workFlowName;
@@ -46,7 +44,6 @@ public class WorkFlowRequestDTO {
 	@AllArgsConstructor
 	@NoArgsConstructor
 	public static class WorkFlowTaskRequestDTO {
-
 		String name;
 
 		List<ArgumentRequestDTO> arguments;
@@ -56,13 +53,9 @@ public class WorkFlowRequestDTO {
 		@AllArgsConstructor
 		@NoArgsConstructor
 		public static class ArgumentRequestDTO {
-
 			String key;
 
 			String value;
-
 		}
-
 	}
-
 }

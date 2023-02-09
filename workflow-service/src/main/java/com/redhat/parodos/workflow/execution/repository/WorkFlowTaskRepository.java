@@ -23,10 +23,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /**
  * Workflow task execution repository
  *
- * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
+
 public interface WorkFlowTaskRepository extends JpaRepository<WorkFlowTaskExecution, UUID> {
 
 	List<WorkFlowTaskExecution> findByWorkFlowExecutionId(UUID workFlowExecutionId);

@@ -34,7 +34,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 /**
- * Aspect pointcut to perform state management for WorkFlowTask executions
+ * Aspect pointcut to perform state management for a workflow task executions
  *
  * @author Richard Wang (Github: RichardW98)
  * @author Luke Shannon (Github: lshannon)
@@ -45,18 +45,10 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class WorkFlowTaskExecutionAspect {
-
-	private final WorkFlowDefinitionServiceImpl workFlowDefinitionService;
-
 	private final WorkFlowServiceImpl workFlowExecutionService;
 
-	private final WorkFlowDelegate workFlowDelegate;
-
-	public WorkFlowTaskExecutionAspect(WorkFlowDefinitionServiceImpl workFlowDefinitionService,
-			WorkFlowServiceImpl workFlowExecutionService, WorkFlowDelegate workFlowDelegate) {
-		this.workFlowDefinitionService = workFlowDefinitionService;
+	public WorkFlowTaskExecutionAspect(WorkFlowServiceImpl workFlowExecutionService) {
 		this.workFlowExecutionService = workFlowExecutionService;
-		this.workFlowDelegate = workFlowDelegate;
 	}
 
 	/**
@@ -117,5 +109,4 @@ public class WorkFlowTaskExecutionAspect {
 		}
 		return report;
 	}
-
 }

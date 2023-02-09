@@ -21,14 +21,12 @@ import com.redhat.parodos.workflows.workflow.WorkFlow;
 /**
  * workflow scheduler service
  *
- * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
-public interface WorkFlowSchedulerService {
 
+public interface WorkFlowSchedulerService {
 	void schedule(WorkFlow workFlow, WorkContext workContext, String cronExpression);
 
 	boolean stop(WorkFlow workFlow);
-
 }

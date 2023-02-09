@@ -27,11 +27,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
 
 /**
- * configuration class for modelMapper
+ * Model mapper configuration
  *
- * @author Luke Shannon (Github: lshannon)
- * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
+ * @author Richard Wang (Github: richardw98)
  */
 @Slf4j
 @Configuration

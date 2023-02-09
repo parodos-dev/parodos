@@ -38,12 +38,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /**
- * workflow execution service implementation
+ * Workflow execution service implementation
  *
- * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
+
 @Slf4j
 @Service
 public class WorkFlowServiceImpl implements WorkFlowService {

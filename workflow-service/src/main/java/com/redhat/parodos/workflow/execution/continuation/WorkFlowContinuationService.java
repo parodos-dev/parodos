@@ -18,7 +18,6 @@ package com.redhat.parodos.workflow.execution.continuation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.WorkFlowStatus;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
@@ -47,31 +46,24 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class WorkFlowContinuationService {
-
 	private final WorkFlowDefinitionRepository workFlowDefinitionRepository;
-
 	private final WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository;
-
 	private final WorkFlowRepository workFlowRepository;
-
 	private final WorkFlowTaskRepository workFlowTaskRepository;
-
 	private final WorkFlowServiceImpl workFlowService;
-
-	private final WorkFlowDelegate workFlowDelegate;
-
 	private final ObjectMapper objectMapper;
 
 	public WorkFlowContinuationService(WorkFlowDefinitionRepository workFlowDefinitionRepository,
-			WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository, WorkFlowRepository workFlowRepository,
-			WorkFlowTaskRepository workFlowTaskRepository, WorkFlowServiceImpl workFlowService,
-			WorkFlowDelegate workFlowDelegate, ObjectMapper objectMapper) {
+									   WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository,
+									   WorkFlowRepository workFlowRepository,
+									   WorkFlowTaskRepository workFlowTaskRepository,
+									   WorkFlowServiceImpl workFlowService,
+									   ObjectMapper objectMapper) {
 		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
 		this.workFlowTaskDefinitionRepository = workFlowTaskDefinitionRepository;
 		this.workFlowRepository = workFlowRepository;
 		this.workFlowTaskRepository = workFlowTaskRepository;
 		this.workFlowService = workFlowService;
-		this.workFlowDelegate = workFlowDelegate;
 		this.objectMapper = objectMapper;
 	}
 
@@ -107,5 +99,4 @@ public class WorkFlowContinuationService {
 							workFlowTaskArguments);
 				});
 	}
-
 }

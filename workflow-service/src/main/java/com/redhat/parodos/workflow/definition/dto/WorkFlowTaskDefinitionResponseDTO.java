@@ -29,7 +29,6 @@ import lombok.NoArgsConstructor;
 /**
  * Workflow task definition response dto
  *
- * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
@@ -40,7 +39,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkFlowTaskDefinitionResponseDTO {
-
 	private String id;
 
 	private String name;
@@ -56,5 +54,4 @@ public class WorkFlowTaskDefinitionResponseDTO {
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private UUID nextWorkFlow;
-
 }

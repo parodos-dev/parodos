@@ -15,15 +15,12 @@
  */
 package com.redhat.parodos.workflow.execution.aspect;
 
-import com.redhat.parodos.security.SecurityUtils;
-import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.WorkFlowStatus;
 import com.redhat.parodos.workflow.WorkFlowType;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
-import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.scheduler.WorkFlowSchedulerServiceImpl;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
@@ -41,7 +38,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 /**
- * Aspect pointcut to perform state management for WorkFlow executions
+ * Aspect pointcut to perform state management for a workflow execution
  *
  * @author Richard Wang (Github: RichardW98)
  * @author Luke Shannon (Github: lshannon)
@@ -52,29 +49,16 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class WorkFlowExecutionAspect {
-
-	private final WorkFlowDefinitionServiceImpl workFlowDefinitionService;
-
 	private final WorkFlowServiceImpl workFlowService;
-
 	private final WorkFlowSchedulerServiceImpl workFlowSchedulerService;
-
-	private final WorkFlowDelegate workFlowDelegate;
-
 	private final WorkFlowDefinitionRepository workFlowDefinitionRepository;
 
-	private final SecurityUtils securityUtils;
-
-	public WorkFlowExecutionAspect(WorkFlowDefinitionServiceImpl workFlowDefinitionService,
-			WorkFlowServiceImpl workFlowService, WorkFlowSchedulerServiceImpl workFlowSchedulerService,
-			WorkFlowDelegate workFlowDelegate, WorkFlowDefinitionRepository workFlowDefinitionRepository,
-			SecurityUtils securityUtils) {
-		this.workFlowDefinitionService = workFlowDefinitionService;
+	public WorkFlowExecutionAspect(WorkFlowServiceImpl workFlowService,
+								   WorkFlowSchedulerServiceImpl workFlowSchedulerService,
+								   WorkFlowDefinitionRepository workFlowDefinitionRepository) {
 		this.workFlowService = workFlowService;
 		this.workFlowSchedulerService = workFlowSchedulerService;
-		this.workFlowDelegate = workFlowDelegate;
 		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
-		this.securityUtils = securityUtils;
 	}
 
 	/**
@@ -147,5 +131,4 @@ public class WorkFlowExecutionAspect {
 			workFlowSchedulerService.stop(workFlow);
 		}
 	}
-
 }

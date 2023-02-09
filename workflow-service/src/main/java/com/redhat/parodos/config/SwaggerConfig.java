@@ -24,8 +24,9 @@ import org.springframework.context.annotation.Configuration;
  * Configuration for the Swagger Documentation
  *
  * @author Luke Shannon (Github: lshannon)
- *
+ * @author Annel Ketcha (Github: anludke)
  */
+
 @Configuration
 public class SwaggerConfig {
 
@@ -35,5 +36,4 @@ public class SwaggerConfig {
 				"Executes assessments to determine InfrastructureOptions (tooling + environments). Also executes Infrastructure Task Workflows to call downstream systems to stand-up an InfrastructureOption")
 				.version("v.0.0.1"));
 	}
-
 }
