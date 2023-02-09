@@ -36,6 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 @ActiveProfiles("test")
 public class NotificationRecordRepositoryTests extends AbstractNotificationsIntegrationTest {
+
 	@Autowired
 	private NotificationRecordRepository notificationRecordRepository;
 
@@ -61,4 +62,5 @@ public class NotificationRecordRepositoryTests extends AbstractNotificationsInte
 		Optional<NotificationRecord> r2 = this.notificationRecordRepository.findById(r.get().getId());
 		assertThat(r2.isEmpty());
 	}
+
 }

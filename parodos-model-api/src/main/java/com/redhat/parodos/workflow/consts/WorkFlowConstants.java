@@ -16,14 +16,19 @@
 package com.redhat.parodos.workflow.consts;
 
 /**
- * Represent Keys that can be put into the WorkContext to get out specific values that might be used by WorkFlowService or WorkFlowEngine implementations
+ * Represent Keys that can be put into the WorkContext to get out specific values that
+ * might be used by WorkFlowService or WorkFlowEngine implementations
  *
  * @author Luke Shannon (Github: lshannon)
  *
  */
 public class WorkFlowConstants {
-	// Can be used in the name/id of a Workflow to indicate its an Infrastructure Task WorkFlow
+
+	// Can be used in the name/id of a Workflow to indicate its an Infrastructure WorkFlow
 	public static final String INFRASTRUCTURE_WORKFLOW = "_INFRASTRUCTURE_WORKFLOW";
+
+	// Can be used in the name/id of a Workflow to indicate its a Checker WorkFlow
+	public static final String CHECKER_WORKFLOW = "_CHECKER_WORKFLOW";
 
 	// Name of the project that the WorkFlow was associated with
 	public static final String PROJECT_NAME = "PROJECT_NAME";
@@ -43,21 +48,26 @@ public class WorkFlowConstants {
 	// The type of the WorkFlow
 	public static final String WORKFLOW_TYPE = "WORKFLOW_TYPE";
 
-	// This is used when you need to specify an assessment to determine if follow on workflow can be executed
+	// This is used when you need to specify an assessment to determine if follow on
+	// workflow can be executed
 	public static final String WORKFLOW_CHECKER_ID = "WORKFLOW_CHECKER_ID";
 
-	// The arguments for the WorkFlow Checker to run. As these might be runtime values they will be persisted in the WorkFlowTransactionDTO
+	// The arguments for the WorkFlow Checker to run. As these might be runtime values
+	// they will be persisted in the WorkFlowTransactionDTO
 	public static final String WORKFLOW_CHECKER_ARGUMENTS = "WORKFLOW_CHECKER_ARGUMENTS";
 
 	public static final String CURRENT_WORKFLOW_ID = "CURRENT_WORKFLOW_ID";
 
-	// This is for an WorkFlowChecker to store the value of the next WorkFlow to run in a WorkFlowTransactionDTO
+	// This is for an WorkFlowChecker to store the value of the next WorkFlow to run in a
+	// WorkFlowTransactionDTO
 	public static final String NEXT_WORKFLOW_ID = "NEXT_WORKFLOW_ID";
 
-	// These arguments are for passing values from the WorkFlowChecker to the next WorkFlow to run
+	// These arguments are for passing values from the WorkFlowChecker to the next
+	// WorkFlow to run
 	public static final String NEXT_WORKFLOW_ARGUMENTS = "NEXT_WORKFLOW_ARGUMENTS";
 
 	// Ensures this class is only used to obtain the constants
 	private WorkFlowConstants() {
 	}
+
 }

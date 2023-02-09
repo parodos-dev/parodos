@@ -26,24 +26,28 @@ import lombok.Data;
 
 /**
  * Wrapper for the results of the Scan:
- * 
- * - Detected @see Pattern references (meaning all required @see Clue were discovered)
- * - A list of all the detected @see Clue and the files that triggered the detection. This list is populated regardless of if @see Patterns were detected or not
- * - Time the scan started
- * - Time the scan ended
- * - allStatesWhereDetected returns true is all desired @see Pattern that were specified in the @see WorkContext were detected
- * 
+ *
+ * - Detected @see Pattern references (meaning all required @see Clue were discovered) - A
+ * list of all the detected @see Clue and the files that triggered the detection. This
+ * list is populated regardless of if @see Patterns were detected or not - Time the scan
+ * started - Time the scan ended - allStatesWhereDetected returns true is all desired @see
+ * Pattern that were specified in the @see WorkContext were detected
+ *
  * @author Luke Shannon (Github: lshannon)
  *
  */
 @Data
 @Builder
 public class DetectionResults {
-	
+
 	private Map<Clue, List<File>> detectedClues;
+
 	private List<Pattern> detectedPatterns;
+
 	private Date startTime;
+
 	private Date endTime;
+
 	private boolean allPatternsWhereDetected;
 
 }

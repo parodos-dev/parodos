@@ -21,8 +21,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * An input to a @see WorkFlowTask. The @see WorkFlowTaskParameterType is used by the UI to render inputs to collect the values from users running the workflow
- * 
+ * An input to a @see WorkFlowTask. The @see WorkFlowTaskParameterType is used by the UI
+ * to render inputs to collect the values from users running the workflow
+ *
  * @author Luke Shannon (Github: lshannon)
  *
  */
@@ -31,8 +32,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkFlowTaskParameter {
+
 	private String key;
+
 	private String description;
+
 	private boolean optional;
+
 	private WorkFlowTaskParameterType type;
+
 }

@@ -28,7 +28,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * Implementation of a Clue that scans the names of Files/Folder for text patterns. Supports Regular Expression
+ * Implementation of a Clue that scans the names of Files/Folder for text patterns.
+ * Supports Regular Expression
  *
  * @author Luke Shannon (Github: lshannon)
  *
@@ -38,6 +39,7 @@ import lombok.EqualsAndHashCode;
 public class NameClueImpl extends AbstractClue {
 
 	private FileContentsDelegate fileContentsDelegate = new FileContentsDelegate();
+
 	Pattern targetFileNameRegexPattern;
 
 	@Override
@@ -51,9 +53,9 @@ public class NameClueImpl extends AbstractClue {
 				filesToScan = workContextDelegate.getFilesToScan(workContext);
 			}
 			for (File thisFile : filesToScan) {
-				boolean matched = targetFileNameRegexPattern != null ?
-						targetFileNameRegexPattern.matcher(thisFile.getName()).matches() :
-						nameMatchingDelegate.doesNameMatch(thisFile.getName());
+				boolean matched = targetFileNameRegexPattern != null
+						? targetFileNameRegexPattern.matcher(thisFile.getName()).matches()
+						: nameMatchingDelegate.doesNameMatch(thisFile.getName());
 				if (matched) {
 					workContextDelegate.markClueAsDetected(this, thisFile, workContext);
 				}
@@ -79,8 +81,10 @@ public class NameClueImpl extends AbstractClue {
 			NameClueImpl instance = super.build(new NameClueImpl());
 			if (fileNamePatternString != null) {
 				instance.setTargetFileNameRegexPattern(Pattern.compile(fileNamePatternString));
-			} else if (super.getNameMatchingDelegate().getTargetFileNameRegexPattern() == null) {
-				throw new ClueConfigurationException("Name Clue " + instance.getName() +  " must contain a fileNamePatternString or a NameMatchingDelegate.targetFileNamePatternString");
+			}
+			else if (super.getNameMatchingDelegate().getTargetFileNameRegexPattern() == null) {
+				throw new ClueConfigurationException("Name Clue " + instance.getName()
+						+ " must contain a fileNamePatternString or a NameMatchingDelegate.targetFileNamePatternString");
 			}
 			return instance;
 		}
@@ -88,6 +92,7 @@ public class NameClueImpl extends AbstractClue {
 		public static Builder builder() {
 			return new Builder();
 		}
+
 	}
 
 }

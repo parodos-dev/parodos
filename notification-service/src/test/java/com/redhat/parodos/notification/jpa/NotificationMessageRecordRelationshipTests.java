@@ -37,6 +37,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 @ActiveProfiles("test")
 public class NotificationMessageRecordRelationshipTests extends AbstractNotificationsIntegrationTest {
+
 	@Autowired
 	private NotificationRecordRepository notificationRecordRepository;
 
@@ -63,8 +64,8 @@ public class NotificationMessageRecordRelationshipTests extends AbstractNotifica
 		NotificationRecord notificationRecord = notificationRecords.get(0);
 
 		notificationRecord.setNotificationMessage(notificationMessage);
-		//set the other side.
-		//notificationsMessage.setNotificationsRecord(notificationsRecord);
+		// set the other side.
+		// notificationsMessage.setNotificationsRecord(notificationsRecord);
 
 		this.notificationRecordRepository.save(notificationRecord);
 
@@ -74,7 +75,8 @@ public class NotificationMessageRecordRelationshipTests extends AbstractNotifica
 		NotificationRecord notificationRecord2 = notificationRecords2.get(0);
 		assertThat(notificationRecord2.getNotificationMessage()).isNotNull();
 		// TODO
-		//  - notificationsRecord=null inside NotificationsMessage, why not bidirectional
-		//  - probably use @MapIds to be more efficient...
+		// - notificationsRecord=null inside NotificationsMessage, why not bidirectional
+		// - probably use @MapIds to be more efficient...
 	}
+
 }

@@ -15,47 +15,45 @@
  */
 package com.redhat.parodos.workflow.definition.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.redhat.parodos.workflow.task.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
-
-import lombok.Builder;
-import lombok.Data;
-
 import java.util.List;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
- * response dto
+ * Workflow task definition response dto
  *
- * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
+
 @Data
 @Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
+@AllArgsConstructor
+@NoArgsConstructor
 public class WorkFlowTaskDefinitionResponseDTO {
-    private String id;
 
-    private String name;
+	private String id;
 
-    private String description;
+	private String name;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<WorkFlowTaskParameter> parameters;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private List<WorkFlowTaskParameter> parameters;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<WorkFlowTaskOutput> outputs;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private List<WorkFlowTaskOutput> outputs;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private EmbeddedTaskResponseDTO previousTask;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private UUID workFlowChecker;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private EmbeddedTaskResponseDTO nextTask;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private UUID nextWorkFlow;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private UUID workFlowChecker;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private UUID nextWorkFlow;
 }

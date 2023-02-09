@@ -33,6 +33,7 @@ import org.springframework.web.context.WebApplicationContext;
  */
 
 public abstract class AbstractControllerTests extends AbstractNotificationsIntegrationTest {
+
 	@Autowired
 	protected WebApplicationContext webApplicationContext;
 
@@ -49,4 +50,5 @@ public abstract class AbstractControllerTests extends AbstractNotificationsInteg
 		usernames.add(NotificationsDataCreator.USER_A_1);
 		return NotificationsDataCreator.createNotificationsMessageRequest(usernames);
 	}
+
 }

@@ -30,13 +30,14 @@ package com.redhat.parodos.workflows.work;
  */
 public enum WorkStatus {
 
-    /**
-     * The unit of work has failed.
-     */
-    FAILED,
+	/**
+	 * The unit of work has failed.
+	 */
+	FAILED,
 
-    /**
-     * The unit of work has completed successfully
-     */
-    COMPLETED
+	/**
+	 * The unit of work has completed successfully
+	 */
+	COMPLETED
+
 }

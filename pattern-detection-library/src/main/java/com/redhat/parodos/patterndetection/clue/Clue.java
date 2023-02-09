@@ -20,14 +20,19 @@ import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 
 /**
- * 
- * A Clue is a aspect of a file/folder that can be detected. Clue(s) are grouped together to establish a @see Pattern.
- * 
- * Clue is based on the @see Work, which comes from on j-easy (https://github.com/j-easy/easy-flows) Work class. This provides a contract for a @see WorkFlow to execute
- * 
- * If 'isContinueToRunIfDetected' is true, the scanner will keep matching for this Clue (this is enforced in @see WorkContextDelegate). If its false, the scanner will make the
- * Clue detected, save the file it was detected in and no longer scan for that particular Clue.
- * 
+ *
+ * A Clue is a aspect of a file/folder that can be detected. Clue(s) are grouped together
+ * to establish a @see Pattern.
+ *
+ * Clue is based on the @see Work, which comes from on j-easy
+ * (https://github.com/j-easy/easy-flows) Work class. This provides a contract for a @see
+ * WorkFlow to execute
+ *
+ * If 'isContinueToRunIfDetected' is true, the scanner will keep matching for this Clue
+ * (this is enforced in @see WorkContextDelegate). If its false, the scanner will make the
+ * Clue detected, save the file it was detected in and no longer scan for that particular
+ * Clue.
+ *
  * @author Luke Shannon (Github: lshannon)
  *
  */

@@ -26,51 +26,52 @@ import com.redhat.parodos.workflows.workflow.ParallelFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 
 /**
- * 
+ *
  * Main entry point to the library
- * 
+ *
  * @author Luke Shannon (Github: lshannon)
  *
  */
 public class PatternDetector {
-	
+
 	private static final WorkContextDelegate contextDelegate = new WorkContextDelegate();
-	
+
 	private PatternDetector() {
 	}
-	
+
 	/**
-	 * 
-	 * Takes a @see WorkContext and a List of @Pattern reference, performs a Scan on code/configuration to determine if the @see Clue references are present to detect one of the desired @Pattern
-	 * 
-	 * @param context contains inputs for the scan, and is passed around components of the scan to capture all outputs generated during the scan
-	 * 
-	 * @return DetectionResults contains the detected @see Clue(s) and detected @see Pattern(s)
-	 * 
+	 *
+	 * Takes a @see WorkContext and a List of @Pattern reference, performs a Scan on
+	 * code/configuration to determine if the @see Clue references are present to detect
+	 * one of the desired @Pattern
+	 * @param context contains inputs for the scan, and is passed around components of the
+	 * scan to capture all outputs generated during the scan
+	 * @return DetectionResults contains the detected @see Clue(s) and detected @see
+	 * Pattern(s)
+	 *
 	 * @author Luke Shannon (Github: lshannon)
-	 * 
+	 *
 	 */
 	public static DetectionResults detect(WorkContext context, Pattern[] desiredPatterns) {
 		if (contextDelegate.validateAndIntializeContext(context)) {
 			Date startTime = new Date();
-			//put all the Patterns into a ParallelFlow - they will all execute at the same time
-			WorkFlow workflow = ParallelFlow.Builder.aNewParallelFlow()
-					.execute(desiredPatterns)
-					.with(ScanningThreadPool.getThreadPoolExecutor())
-					.build();
-			//get the end report
+			// put all the Patterns into a ParallelFlow - they will all execute at the
+			// same time
+			WorkFlow workflow = ParallelFlow.Builder.aNewParallelFlow().execute(desiredPatterns)
+					.with(ScanningThreadPool.getThreadPoolExecutor()).build();
+			// get the end report
 			WorkReport report = workflow.execute(context);
-			//process the results to make more user friendly results
+			// process the results to make more user friendly results
 			contextDelegate.processResultsAfterScan(report.getWorkContext());
-			//return the user friendly results
-			return DetectionResults.builder()
-					.detectedClues(contextDelegate.getDetectedClue(report))
-					.detectedPatterns(contextDelegate.getDetectedPatterns(report))
-					.startTime(startTime)
-					.endTime(new Date())
-					.build();
-		} else {
-			throw new PatternDetectionConfigurationException("The Scan for Patterns could not be started due to a misconfiguration. Please review the log files");
+			// return the user friendly results
+			return DetectionResults.builder().detectedClues(contextDelegate.getDetectedClue(report))
+					.detectedPatterns(contextDelegate.getDetectedPatterns(report)).startTime(startTime)
+					.endTime(new Date()).build();
+		}
+		else {
+			throw new PatternDetectionConfigurationException(
+					"The Scan for Patterns could not be started due to a misconfiguration. Please review the log files");
 		}
 	}
+
 }

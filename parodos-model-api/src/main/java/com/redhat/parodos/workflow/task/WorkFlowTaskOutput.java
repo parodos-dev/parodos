@@ -23,8 +23,7 @@ package com.redhat.parodos.workflow.task;
  * @author Annel Ketcha (Github: anludke)
  */
 public enum WorkFlowTaskOutput {
-    EXCEPTION,
-    HTTP2XX,
-    NO_EXCEPTION,
-    OTHER
+
+	EXCEPTION, HTTP2XX, NO_EXCEPTION, OTHER
+
 }

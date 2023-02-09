@@ -40,51 +40,54 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 
 public class ParallelFlowExecutorTest {
 
-    @Test
-    public void testExecute() {
+	@Test
+	public void testExecute() {
 
-        // given
-        ExecutorService executorService = Executors.newFixedThreadPool(2);
-        HelloWorldWork work1 = new HelloWorldWork("work1", WorkStatus.COMPLETED);
-        HelloWorldWork work2 = new HelloWorldWork("work2", WorkStatus.FAILED);
-        WorkContext workContext = Mockito.mock(WorkContext.class);
-        ParallelFlowExecutor parallelFlowExecutor = new ParallelFlowExecutor(executorService);
+		// given
+		ExecutorService executorService = Executors.newFixedThreadPool(2);
+		HelloWorldWork work1 = new HelloWorldWork("work1", WorkStatus.COMPLETED);
+		HelloWorldWork work2 = new HelloWorldWork("work2", WorkStatus.FAILED);
+		WorkContext workContext = Mockito.mock(WorkContext.class);
+		ParallelFlowExecutor parallelFlowExecutor = new ParallelFlowExecutor(executorService);
 
-        // when
-        List<WorkReport> workReports = parallelFlowExecutor.executeInParallel(Arrays.asList(work1, work2), workContext);
-        executorService.shutdown();
+		// when
+		List<WorkReport> workReports = parallelFlowExecutor.executeInParallel(Arrays.asList(work1, work2), workContext);
+		executorService.shutdown();
 
-        // then
-        Assertions.assertThat(workReports).hasSize(2);
-        Assertions.assertThat(work1.isExecuted()).isTrue();
-        Assertions.assertThat(work2.isExecuted()).isTrue();
-    }
+		// then
+		Assertions.assertThat(workReports).hasSize(2);
+		Assertions.assertThat(work1.isExecuted()).isTrue();
+		Assertions.assertThat(work2.isExecuted()).isTrue();
+	}
 
-    static class HelloWorldWork implements Work {
+	static class HelloWorldWork implements Work {
 
-        private final String name;
-        private final WorkStatus status;
-        private boolean executed;
+		private final String name;
 
-        HelloWorldWork(String name, WorkStatus status) {
-            this.name = name;
-            this.status = status;
-        }
+		private final WorkStatus status;
 
-        @Override
-        public String getName() {
-            return name;
-        }
+		private boolean executed;
 
-        @Override
-        public WorkReport execute(WorkContext workContext) {
-            executed = true;
-            return new DefaultWorkReport(status, workContext);
-        }
+		HelloWorldWork(String name, WorkStatus status) {
+			this.name = name;
+			this.status = status;
+		}
 
-        public boolean isExecuted() {
-            return executed;
-        }
-    }
+		@Override
+		public String getName() {
+			return name;
+		}
+
+		@Override
+		public WorkReport execute(WorkContext workContext) {
+			executed = true;
+			return new DefaultWorkReport(status, workContext);
+		}
+
+		public boolean isExecuted() {
+			return executed;
+		}
+
+	}
 
 }

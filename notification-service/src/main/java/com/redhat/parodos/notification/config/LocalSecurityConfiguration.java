@@ -29,11 +29,11 @@ import org.springframework.security.web.SecurityFilterChain;
 @Profile("local")
 @Configuration
 public class LocalSecurityConfiguration {
-    @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf()
-                .disable()
-                .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
-        return http.build();
-    }
+
+	@Bean
+	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		http.csrf().disable().authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
+		return http.build();
+	}
+
 }

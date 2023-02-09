@@ -30,5 +30,7 @@ import java.util.UUID;
 @Repository
 @Transactional
 public interface NotificationUserRepository extends JpaRepository<NotificationUser, UUID> {
-    Optional<NotificationUser> findByUsername(String username);
+
+	Optional<NotificationUser> findByUsername(String username);
+
 }

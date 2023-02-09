@@ -16,26 +16,19 @@
 package com.redhat.parodos.patterndetection.context;
 
 /**
- * These are used to put things in the @see WorkContext
- * - DESIRED_PATTERNS - Patterns we are looking for
- * - DETECTED_PATTERNS - As Patterns are found during scanning, they are stored in the WorkContext using this key
- * - START_DIRECTORY - Where to start scanning
- * - FILES_TO_SCAN - The files are folders contained in the START_DIRECTORY
- * - FOLDERS_TO_SCAN - All the folders contained in the START_DIRECTORY location
- * 
+ * These are used to put things in the @see WorkContext - DESIRED_PATTERNS - Patterns we
+ * are looking for - DETECTED_PATTERNS - As Patterns are found during scanning, they are
+ * stored in the WorkContext using this key - START_DIRECTORY - Where to start scanning -
+ * FILES_TO_SCAN - The files are folders contained in the START_DIRECTORY -
+ * FOLDERS_TO_SCAN - All the folders contained in the START_DIRECTORY location
+ *
  * These are used to both PUT and GET from Context
- * 
+ *
  * @author Luke Shannon (Github: lshannon)
  *
  */
 public enum WorkFlowConstants {
-	
-	DESIRED_PATTERNS,
-	DETECTED_PATTERNS,
-	DETECTED_CLUES,
-	START_DIRECTORY,
-	START_FILE,
-	FILES_TO_SCAN,
-	FOLDERS_TO_SCAN
-	
+
+	DESIRED_PATTERNS, DETECTED_PATTERNS, DETECTED_CLUES, START_DIRECTORY, START_FILE, FILES_TO_SCAN, FOLDERS_TO_SCAN
+
 }

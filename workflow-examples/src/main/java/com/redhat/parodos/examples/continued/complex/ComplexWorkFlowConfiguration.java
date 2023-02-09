@@ -15,16 +15,12 @@
  */
 package com.redhat.parodos.examples.continued.complex;
 
-import com.redhat.parodos.examples.simple.LoggingWorkFlowTaskExecution;
-import com.redhat.parodos.workflow.WorkFlowCheckerDefinition;
-import com.redhat.parodos.workflow.WorkFlowDefinition;
-import com.redhat.parodos.workflow.WorkFlowType;
+import com.redhat.parodos.examples.simple.LoggingWorkFlowTask;
+import com.redhat.parodos.workflow.annotation.Assessment;
+import com.redhat.parodos.workflow.annotation.Checker;
+import com.redhat.parodos.workflow.annotation.Infrastructure;
+import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
-import com.redhat.parodos.workflow.task.assessment.AssessmentTaskDefinition;
-import com.redhat.parodos.workflow.task.checker.WorkFlowCheckerTaskDefinition;
-import com.redhat.parodos.workflow.task.infrastructure.InfrastructureTaskDefinition;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
 import com.redhat.parodos.workflows.workflow.ParallelFlow;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
@@ -32,8 +28,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Date;
-import java.util.List;
 import java.util.concurrent.Executors;
 
 /**
@@ -43,336 +37,134 @@ import java.util.concurrent.Executors;
  */
 @Configuration
 public class ComplexWorkFlowConfiguration {
-    //Start Assessment Logic
-    //Infrastructure Option for Onboarding
-    @Bean(name = "onboardingOption")
-    WorkFlowOption onboardingOptions(@Qualifier("onboardingWorkFlowDefinition") WorkFlowDefinition onboardingWorkFlowDefinition) {
-        return new WorkFlowOption.Builder(onboardingWorkFlowDefinition).build();
-    }
 
-    //start assessment task
-    @Bean(name = "onboardingAssessmentTaskDefinition")
-    AssessmentTaskDefinition onboardingAssessmentTaskDefinition() {
-        return AssessmentTaskDefinition.builder()
-                .name("onboardingAssessmentTaskDefinition")
-                .description("onboarding Assessment Task")
-                .parameters(List.of(
-                        WorkFlowTaskParameter.builder()
-                                .key("INPUT")
-                                .description("Enter some information to use for the Assessment to determine if they can onboard")
-                                .optional(false)
-                                .type(WorkFlowTaskParameterType.TEXT)
-                                .build()))
-                .outputs(null)
-                .previousTask(null)
-                .build();
-    }
+	// Start Assessment Logic
+	// Infrastructure Option for Onboarding
+	@Bean
+	WorkFlowOption onboardingOption() {
+		return new WorkFlowOption.Builder("onboardingOption",
+				"onboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+						.addToDetails("An example of a complex WorkFlow with Status checks").displayName("Onboarding")
+						.setDescription("An example of a complex WorkFlow").build();
+	}
 
-    @Bean(name = "onboardingAssessmentTaskExecution")
-    OnboardingAssessmentTaskExecution onboardingAssessmentTaskExecution(@Qualifier("onboardingAssessmentTaskDefinition") AssessmentTaskDefinition onboardingAssessmentTaskDefinition, @Qualifier("onboardingOption") WorkFlowOption onboardingOption) {
-        return new OnboardingAssessmentTaskExecution(onboardingOption, onboardingAssessmentTaskDefinition);
-    }
-    //end assessment task
+	// Determines what WorkFlowOption if available based on Input
+	@Bean
+	OnboardingAssessmentTask onboardingAssessmentTask(
+			@Qualifier("onboardingOption") WorkFlowOption awesomeToolsOption) {
+		return new OnboardingAssessmentTask(awesomeToolsOption);
+	}
 
-    //start assessment workflow
-    @Bean(name = "onboardingAssessmentDefinition")
-    WorkFlowDefinition onboardingAssessmentDefinition(@Qualifier("onboardingAssessmentTaskDefinition") AssessmentTaskDefinition onboardingAssessmentTaskDefinition) {
-        return WorkFlowDefinition.builder()
-                .name("onboardingAssessmentDefinition")
-                .description("Onbaoarding assessment workflow")
-                .type(WorkFlowType.ASSESSMENT)
-                .author("Peter")
-                .tasks(List.of(onboardingAssessmentTaskDefinition))
-                .createdDate(new Date())
-                .modifiedDate(new Date())
-                .build();
-    }
+	@Bean(name = "onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
+	@Assessment
+	WorkFlow assessmentWorkFlow(
+			@Qualifier("onboardingAssessmentTask") OnboardingAssessmentTask onboardingAssessmentTask) {
+		return SequentialFlow.Builder.aNewSequentialFlow().named("onboarding Assessment WorkFlow")
+				.execute(onboardingAssessmentTask).build();
+	}
+	// End Assessment Logic
 
-    @Bean(name = "onboardingAssessmentExecution")
-    WorkFlow onboardingAssessmentExecution(@Qualifier("onboardingAssessmentDefinition") WorkFlowDefinition onboardingAssessmentDefinition,
-                                           @Qualifier("onboardingAssessmentTaskExecution") OnboardingAssessmentTaskExecution onboardingAssessmentTaskExecution) {
-        return SequentialFlow.Builder.aNewSequentialFlow()
-                .named(onboardingAssessmentDefinition.getName())
-                .execute(onboardingAssessmentTaskExecution)
-                .build();
-    }
-    //end assessment workflow
-    //End Assessment Logic
+	// Start Onboarding Logic
+	@Bean
+	LoggingWorkFlowTask certWorkFlowTask(@Qualifier("namespaceWorkFlow"
+			+ WorkFlowConstants.CHECKER_WORKFLOW) WorkFlow namespaceWorkFlowCheckerWorkFlow) {
+		LoggingWorkFlowTask loggingWorkFlow = new LoggingWorkFlowTask();
+		loggingWorkFlow.setWorkFlowChecker(namespaceWorkFlowCheckerWorkFlow);
+		return loggingWorkFlow;
+	}
 
-    //Start Onboarding Logic
-    //start cert  task
-    @Bean(name = "certWorkFlowTaskDefinition")
-    InfrastructureTaskDefinition certWorkFlowTaskDefinition() {
-        return InfrastructureTaskDefinition.builder()
-                .name("certWorkFlowTaskDefinition")
-                .description("A cert workflow task")
-                .parameters(List.of(WorkFlowTaskParameter.builder()
-                        .key("username")
-                        .type(WorkFlowTaskParameterType.TEXT)
-                        .optional(false)
-                        .description("username for cert taask")
-                        .build()))
-                .build();
-    }
+	@Bean
+	LoggingWorkFlowTask adGroupWorkFlowTask(@Qualifier("onboardingWorkFlow"
+			+ WorkFlowConstants.CHECKER_WORKFLOW) WorkFlow onboardingWorkFlowCheckerWorkFlow) {
+		LoggingWorkFlowTask loggingWorkFlow = new LoggingWorkFlowTask();
+		loggingWorkFlow.setWorkFlowChecker(onboardingWorkFlowCheckerWorkFlow);
+		return loggingWorkFlow;
+	}
 
-    @Bean(name = "certWorkFlowTaskExecution")
-    LoggingWorkFlowTaskExecution certWorkFlowTaskExecution(@Qualifier("certWorkFlowTaskDefinition") InfrastructureTaskDefinition certWorkFlowTaskDefinition) {
-        return new LoggingWorkFlowTaskExecution(certWorkFlowTaskDefinition);
-    }
-    //end cert task
+	@Bean
+	LoggingWorkFlowTask dynatraceWorkFlowTask(@Qualifier("onboardingWorkFlow"
+			+ WorkFlowConstants.CHECKER_WORKFLOW) WorkFlow onboardingWorkFlowCheckerWorkFlow) {
+		LoggingWorkFlowTask loggingWorkFlow = new LoggingWorkFlowTask();
+		loggingWorkFlow.setWorkFlowChecker(onboardingWorkFlowCheckerWorkFlow);
+		return loggingWorkFlow;
+	}
 
-    //start adGroup  task
-    @Bean(name = "adGroupWorkFlowTaskDefinition")
-    InfrastructureTaskDefinition adGroupWorkFlowTaskDefinition(@Qualifier("onboardingWorkFlowCheckDefinition") WorkFlowCheckerDefinition onboardingWorkFlowCheckDefinition) {
-        return InfrastructureTaskDefinition.builder()
-                .name("adGroupWorkFlowTaskDefinition")
-                .description("adGroup workflow task")
-                .parameters(List.of(WorkFlowTaskParameter.builder()
-                        .key("api-server")
-                        .type(WorkFlowTaskParameterType.URL)
-                        .optional(false)
-                        .description("The adgroup api server to push logs")
-                        .build()))
-                .workFlowCheckerDefinition(onboardingWorkFlowCheckDefinition)
-                .build();
-    }
+	@Bean(name = "onboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+	@Infrastructure
+	WorkFlow onboardingWorkflow(@Qualifier("certWorkFlowTask") LoggingWorkFlowTask certWorkFlowTask,
+			@Qualifier("adGroupWorkFlowTask") LoggingWorkFlowTask adGroupWorkFlowTask,
+			@Qualifier("dynatraceWorkFlowTask") LoggingWorkFlowTask dynatraceWorkFlowTask) {
+		return ParallelFlow.Builder.aNewParallelFlow().named("onboarding Infrastructure WorkFlow")
+				.execute(certWorkFlowTask, adGroupWorkFlowTask, dynatraceWorkFlowTask)
+				.with(Executors.newFixedThreadPool(3)).build();
+	}
+	// End Onboarding Logic
 
-    @Bean(name = "adGroupWorkFlowTaskExecution")
-    LoggingWorkFlowTaskExecution adGroupWorkFlowTaskExecution(@Qualifier("adGroupWorkFlowTaskDefinition") InfrastructureTaskDefinition adGroupWorkFlowTaskDefinition) {
-        return new LoggingWorkFlowTaskExecution(adGroupWorkFlowTaskDefinition);
-    }
+	// Start Name Space Logic
+	@Bean
+	LoggingWorkFlowTask nameSpaceWorkFlowTask(@Qualifier("namespaceWorkFlow"
+			+ WorkFlowConstants.CHECKER_WORKFLOW) WorkFlow namespaceWorkFlowCheckerWorkFlow) {
+		LoggingWorkFlowTask loggingWorkFlow = new LoggingWorkFlowTask();
+		loggingWorkFlow.setWorkFlowChecker(namespaceWorkFlowCheckerWorkFlow);
+		return loggingWorkFlow;
+	}
 
-    //end adGroup task
-    //start dynatrace  task
-    @Bean(name = "dynatraceWorkFlowTaskDefinition")
-    InfrastructureTaskDefinition dynatraceWorkFlowTaskDefinition(@Qualifier("onboardingWorkFlowCheckDefinition") WorkFlowCheckerDefinition onboardingWorkFlowCheckDefinition) {
-        return InfrastructureTaskDefinition.builder()
-                .name("dynatraceWorkFlowTaskDefinition")
-                .description("dynatrace workflow task")
-                .workFlowCheckerDefinition(onboardingWorkFlowCheckDefinition)
-                .build();
-    }
+	@Bean(name = "nameSpaceWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+	@Infrastructure
+	WorkFlow nameSpaceWorkFlow(@Qualifier("nameSpaceWorkFlowTask") LoggingWorkFlowTask nameSpaceWorkFlowTask) {
+		return SequentialFlow.Builder.aNewSequentialFlow().named("nameSpace Infrastructure WorkFlow")
+				.execute(nameSpaceWorkFlowTask).build();
+	}
+	// End Name Space Logic
 
-    @Bean(name = "dynatraceWorkFlowTaskExecution")
-    LoggingWorkFlowTaskExecution dynatraceWorkFlowTaskExecution(@Qualifier("dynatraceWorkFlowTaskDefinition") InfrastructureTaskDefinition dynatraceWorkFlowTaskDefinition) {
-        return new LoggingWorkFlowTaskExecution(dynatraceWorkFlowTaskDefinition);
-    }
-    //end dynatrace task
+	// Start networking workflow Logic
+	@Bean
+	LoggingWorkFlowTask loadBalancerFlowTask() {
+		return new LoggingWorkFlowTask();
+	}
 
-    //start onboarding infrastructure workflow
-    @Bean(name = "onboardingWorkFlowDefinition")
-    WorkFlowDefinition onboardingWorkFlowDefinition(@Qualifier("certWorkFlowTaskDefinition") InfrastructureTaskDefinition certWorkFlowTaskDefinition, @Qualifier("adGroupWorkFlowTaskDefinition") InfrastructureTaskDefinition adGroupWorkFlowTaskDefinition, @Qualifier("dynatraceWorkFlowTaskDefinition") InfrastructureTaskDefinition dynatraceWorkFlowTaskDefinition) {
-        return WorkFlowDefinition.builder()
-                .name("onboardingWorkFlowDefinition")
-                .description("onboarding parallel workflow test")
-                .type(WorkFlowType.INFRASTRUCTURE)
-                .author("Peter")
-                .tasks(List.of(certWorkFlowTaskDefinition, adGroupWorkFlowTaskDefinition, dynatraceWorkFlowTaskDefinition))
-                .createdDate(new Date())
-                .modifiedDate(new Date())
-                .build();
-    }
+	@Bean
+	LoggingWorkFlowTask failOverWorkFlowTask() {
+		return new LoggingWorkFlowTask();
+	}
 
-    @Bean(name = "onboardingWorkFlowExecution")
-    WorkFlow onboardingWorkFlowExecution(@Qualifier("onboardingWorkFlowDefinition") WorkFlowDefinition onboardingWorkFlowDefinition,
-                                         @Qualifier("certWorkFlowTaskExecution") LoggingWorkFlowTaskExecution certWorkFlowTaskExecution,
-                                         @Qualifier("adGroupWorkFlowTaskExecution") LoggingWorkFlowTaskExecution adGroupWorkFlowTaskExecution,
-                                         @Qualifier("dynatraceWorkFlowTaskExecution") LoggingWorkFlowTaskExecution dynatraceWorkFlowTaskExecution) {
-        return ParallelFlow.Builder.aNewParallelFlow()
-                .named(onboardingWorkFlowDefinition.getName())
-                .execute(certWorkFlowTaskExecution, adGroupWorkFlowTaskExecution, dynatraceWorkFlowTaskExecution)
-                .with(Executors.newFixedThreadPool(3))
-                .build();
-    }
-    //end onboarding infrastructure workflow
-    // End Onboarding Logic
+	@Bean(name = "networkingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+	@Infrastructure
+	WorkFlow networkingWorkFlow(@Qualifier("loadBalancerFlowTask") LoggingWorkFlowTask networkingFlowTask,
+			@Qualifier("failOverWorkFlowTask") LoggingWorkFlowTask failOverWorkFlowTask) {
+		return SequentialFlow.Builder.aNewSequentialFlow().named("networking Infrastructure WorkFlow")
+				.execute(networkingFlowTask).then(failOverWorkFlowTask).build();
+	}
+	// End networking workflow Logic
 
-    //Start Name Space Logic
-    //start nameSpace  task
-    @Bean(name = "namespaceWorkFlowTaskDefinition")
-    InfrastructureTaskDefinition namespaceWorkFlowTaskDefinition(@Qualifier("namespaceWorkFlowCheckDefinition") WorkFlowCheckerDefinition namespaceWorkFlowCheckDefinition) {
-        return InfrastructureTaskDefinition.builder()
-                .name("namespaceWorkFlowTaskDefinition")
-                .description("namespace workflow task")
-                .workFlowCheckerDefinition(namespaceWorkFlowCheckDefinition)
-                .build();
-    }
+	// Start onboardingWorkFlowCheck Logic
+	@Bean
+	MockApprovalWorkFlowCheckerTask gateTwo() {
+		return new MockApprovalWorkFlowCheckerTask();
+	}
 
-    @Bean(name = "namespaceWorkFlowTaskExecution")
-    LoggingWorkFlowTaskExecution namespaceWorkFlowTaskExecution(@Qualifier("namespaceWorkFlowTaskDefinition") InfrastructureTaskDefinition namespaceWorkFlowTaskDefinition) {
-        return new LoggingWorkFlowTaskExecution(namespaceWorkFlowTaskDefinition);
-    }
-    //end nameSpace task
+	@Bean("onboardingWorkFlow" + WorkFlowConstants.CHECKER_WORKFLOW)
+	@Checker(nextWorkFlowName = "nameSpaceWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW,
+			cronExpression = "0 0/1 * * * ?")
+	WorkFlow onboardingWorkFlowCheckerWorkFlow(@Qualifier("gateTwo") MockApprovalWorkFlowCheckerTask gateTwo) {
+		return SequentialFlow.Builder.aNewSequentialFlow().named("onboarding Checker WorkFlow").execute(gateTwo)
+				.build();
+	}
+	// End onboardingWorkFlowCheck Logic
 
-    //Start nameSpace workflow
-    @Bean(name = "nameSpaceWorkFlowDefinition")
-    WorkFlowDefinition nameSpaceWorkFlowDefinition(@Qualifier("namespaceWorkFlowTaskDefinition") InfrastructureTaskDefinition namespaceWorkFlowTaskDefinition) {
-        return WorkFlowDefinition.builder()
-                .name("nameSpaceWorkFlowDefinition")
-                .description("namespace workflow test")
-                .type(WorkFlowType.INFRASTRUCTURE)
-                .author("Peter")
-                .tasks(List.of(namespaceWorkFlowTaskDefinition))
-                .createdDate(new Date())
-                .modifiedDate(new Date())
-                .build();
-    }
+	// Start namespaceWorkFlowCheck Logic
+	@Bean
+	MockApprovalWorkFlowCheckerTask gateThree() {
+		return new MockApprovalWorkFlowCheckerTask();
+	}
 
-    @Bean(name = "nameSpaceWorkFlowExecution")
-    WorkFlow nameSpaceWorkFlowExecution(@Qualifier("nameSpaceWorkFlowDefinition") WorkFlowDefinition nameSpaceWorkFlowDefinition, @Qualifier("namespaceWorkFlowTaskExecution") LoggingWorkFlowTaskExecution namespaceWorkFlowTaskExecution) {
-        return SequentialFlow.Builder.aNewSequentialFlow()
-                .named(nameSpaceWorkFlowDefinition.getName())
-                .execute(namespaceWorkFlowTaskExecution)
-                .build();
-    }
-    //End nameSpace workflow
-    //End Name Space Logic
+	@Bean("namespaceWorkFlow" + WorkFlowConstants.CHECKER_WORKFLOW)
+	@Checker(nextWorkFlowName = "networkingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW,
+			cronExpression = "0 0/1 * * * ?")
+	WorkFlow namespaceWorkFlowCheckerWorkFlow(@Qualifier("gateThree") MockApprovalWorkFlowCheckerTask gateThree) {
+		return SequentialFlow.Builder.aNewSequentialFlow().named("namespace Checker WorkFlow").execute(gateThree)
+				.build();
+	}
+	// End namespaceWorkFlowCheck Logic
 
-    //Start Load Balancer Logic
-    //start loadBalancer  task
-    @Bean(name = "loadBalancerWorkFlowTaskDefinition")
-    InfrastructureTaskDefinition loadBalancerWorkFlowTaskDefinition() {
-        return InfrastructureTaskDefinition.builder()
-                .name("loadBalancerWorkFlowTaskDefinition")
-                .description("A loadBalancer workflow task")
-                .build();
-    }
-
-    @Bean(name = "loadBalancerWorkFlowTaskExecution")
-    LoggingWorkFlowTaskExecution loadBalancerWorkFlowTaskExecution(@Qualifier("loadBalancerWorkFlowTaskDefinition") InfrastructureTaskDefinition loadBalancerWorkFlowTaskDefinition) {
-        return new LoggingWorkFlowTaskExecution(loadBalancerWorkFlowTaskDefinition);
-    }
-    //end cert task
-
-    //start cert  task
-    @Bean(name = "failOverWorkFlowTaskDefinition")
-    InfrastructureTaskDefinition failOverWorkFlowTaskDefinition(@Qualifier("loadBalancerWorkFlowTaskDefinition") InfrastructureTaskDefinition loadBalancerWorkFlowTaskDefinition) {
-        InfrastructureTaskDefinition failOverWorkFlowTaskDefinition = InfrastructureTaskDefinition.builder()
-                .name("failOverWorkFlowTaskDefinition")
-                .description("failOver workflow task")
-                .previousTask(loadBalancerWorkFlowTaskDefinition)
-                .build();
-        loadBalancerWorkFlowTaskDefinition.setNextTask(failOverWorkFlowTaskDefinition);
-        return failOverWorkFlowTaskDefinition;
-    }
-
-    @Bean(name = "failOverWorkFlowTaskExecution")
-    LoggingWorkFlowTaskExecution failOverWorkFlowTaskExecution(@Qualifier("failOverWorkFlowTaskDefinition") InfrastructureTaskDefinition failOverWorkFlowTaskDefinition) {
-        return new LoggingWorkFlowTaskExecution(failOverWorkFlowTaskDefinition);
-    }
-    //end cert task
-
-    //Start networking Logic
-    //Start networking workflow
-    @Bean(name = "networkingWorkFlowDefinition")
-    WorkFlowDefinition networkingWorkFlowDefinition(@Qualifier("loadBalancerWorkFlowTaskDefinition") InfrastructureTaskDefinition loadBalancerWorkFlowTaskDefinition, @Qualifier("failOverWorkFlowTaskDefinition") InfrastructureTaskDefinition failOverWorkFlowTaskDefinition) {
-        return WorkFlowDefinition.builder()
-                .name("networkingWorkFlowDefinition")
-                .description("networking workflow test")
-                .type(WorkFlowType.INFRASTRUCTURE)
-                .author("Peter")
-                .tasks(List.of(loadBalancerWorkFlowTaskDefinition, failOverWorkFlowTaskDefinition))
-                .createdDate(new Date())
-                .modifiedDate(new Date())
-                .build();
-    }
-
-    @Bean(name = "networkingWorkFlowExecution")
-    WorkFlow networkingWorkFlowExecution(@Qualifier("networkingWorkFlowDefinition") WorkFlowDefinition networkingWorkFlowDefinition, @Qualifier("loadBalancerWorkFlowTaskExecution") LoggingWorkFlowTaskExecution loadBalancerWorkFlowTaskExecution, @Qualifier("failOverWorkFlowTaskExecution") LoggingWorkFlowTaskExecution failOverWorkFlowTaskExecution) {
-        return SequentialFlow.Builder.aNewSequentialFlow()
-                .named(networkingWorkFlowDefinition.getName())
-                .execute(loadBalancerWorkFlowTaskExecution)
-                .then(failOverWorkFlowTaskExecution)
-                .build();
-    }
-    //End networking workflow
-    //End networking Logic
-
-
-    //Start onboardingWorkFlowCheck Logic
-    //Start onboardingWorkFlowCheck Task
-    @Bean(name = "onboardingWorkFlowCheckTaskDefinition")
-    WorkFlowCheckerTaskDefinition gateTwo() {
-        return WorkFlowCheckerTaskDefinition.builder()
-                .name("onboardingWorkFlowCheckTaskDefinition")
-                .description("onboarding workflow Checker task test")
-                .build();
-    }
-
-    @Bean(name = "onboardingWorkFlowCheckTaskExecution")
-    MockApprovalWorkFlowCheckerTaskExecution onboardingWorkFlowCheckTaskExecution(@Qualifier("onboardingWorkFlowCheckTaskDefinition") WorkFlowCheckerTaskDefinition gateTwo) {
-        return new MockApprovalWorkFlowCheckerTaskExecution(gateTwo);
-    }
-    //End onboardingWorkFlowCheck Task
-
-    //Start onboardingWorkFlowCheck Workflow
-    @Bean(name = "onboardingWorkFlowCheckDefinition")
-    WorkFlowCheckerDefinition onboardingWorkFlowCheckDefinition(@Qualifier("onboardingWorkFlowCheckTaskDefinition") WorkFlowCheckerTaskDefinition onboardingWorkFlowCheckTaskDefinition, @Qualifier("nameSpaceWorkFlowDefinition") WorkFlowDefinition namespaceWorkFlowDefinition) {
-        return WorkFlowCheckerDefinition.builder()
-                .name("onboardingWorkFlowCheckDefinition")
-                .description("onboarding workflow checker test")
-                .type(WorkFlowType.CHECKER)
-                .author("Peter")
-                .tasks(List.of(onboardingWorkFlowCheckTaskDefinition))
-                .createdDate(new Date())
-                .modifiedDate(new Date())
-                .cronExpression("0 0/1 * * * ?")
-                .nextWorkFlowDefinition(namespaceWorkFlowDefinition)
-                .build();
-    }
-
-    @Bean(name = "onboardingWorkFlowCheckExecution")
-    WorkFlow onboardingWorkFlowCheckExecution(@Qualifier("onboardingWorkFlowCheckDefinition") WorkFlowCheckerDefinition onboardingWorkFlowCheckDefinition, @Qualifier("onboardingWorkFlowCheckTaskExecution") MockApprovalWorkFlowCheckerTaskExecution onboardingWorkFlowCheckTaskExecution) {
-        return SequentialFlow.Builder
-                .aNewSequentialFlow()
-                .named(onboardingWorkFlowCheckDefinition.getName())
-                .execute(onboardingWorkFlowCheckTaskExecution)
-                .build();
-    }
-    //End onboardingWorkFlowCheck
-    //End onboardingWorkFlowCheck Logic
-
-
-    //Start namespaceWorkFlowCheck Logic
-    //Start namespaceWorkFlowCheck Task
-    @Bean(name = "namespaceWorkFlowCheckTaskDefinition")
-    WorkFlowCheckerTaskDefinition gateThree() {
-        return WorkFlowCheckerTaskDefinition.builder()
-                .name("namespaceWorkFlowCheckTaskDefinition")
-                .description("namespace workflow Checker task test")
-                .build();
-    }
-
-    @Bean(name = "namespaceWorkFlowCheckTaskExecution")
-    MockApprovalWorkFlowCheckerTaskExecution namespaceWorkFlowCheckTaskExecution(@Qualifier("namespaceWorkFlowCheckTaskDefinition") WorkFlowCheckerTaskDefinition gateThree) {
-        return new MockApprovalWorkFlowCheckerTaskExecution(gateThree);
-    }
-
-    //End namespaceWorkFlowCheck Task
-    //Start namespaceWorkFlowCheck Workflow
-    @Bean(name = "namespaceWorkFlowCheckDefinition")
-    WorkFlowCheckerDefinition namespaceWorkFlowCheckDefinition(@Qualifier("namespaceWorkFlowCheckTaskDefinition") WorkFlowCheckerTaskDefinition namespaceWorkFlowCheckTaskDefinition, @Qualifier("networkingWorkFlowDefinition") WorkFlowDefinition namespaceWorkFlowDefinition) {
-        return WorkFlowCheckerDefinition.builder()
-                .name("namespaceWorkFlowCheckDefinition")
-                .description("namespace workflow checker test")
-                .type(WorkFlowType.CHECKER)
-                .author("Peter")
-                .tasks(List.of(namespaceWorkFlowCheckTaskDefinition))
-                .createdDate(new Date())
-                .modifiedDate(new Date())
-                .cronExpression("0 0/1 * * * ?")
-                .nextWorkFlowDefinition(namespaceWorkFlowDefinition)
-                .build();
-    }
-
-    @Bean(name = "namespaceWorkFlowCheckExecution")
-    WorkFlow namespaceWorkFlowCheckExecution(@Qualifier("namespaceWorkFlowCheckDefinition") WorkFlowCheckerDefinition namespaceWorkFlowCheckDefinition, @Qualifier("namespaceWorkFlowCheckTaskExecution") MockApprovalWorkFlowCheckerTaskExecution namespaceWorkFlowCheckTaskExecution) {
-        return SequentialFlow.Builder
-                .aNewSequentialFlow()
-                .named(namespaceWorkFlowCheckDefinition.getName())
-                .execute(namespaceWorkFlowCheckTaskExecution)
-                .build();
-    }
-    //End namespaceWorkFlowCheck
-    //End namespaceWorkFlowCheck Logic
 }

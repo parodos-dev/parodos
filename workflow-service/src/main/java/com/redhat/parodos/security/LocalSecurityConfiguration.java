@@ -23,17 +23,19 @@ import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * Turn off security for Local testing only. Do not enable this profile in production
- * 
+ *
  * @author Luke Shannon (Github: lshannon)
  *
  */
+
 @Profile("local")
 @Configuration
 public class LocalSecurityConfiguration {
 
-   @Bean
-   SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-      http.mvcMatcher("/").anonymous();
-          return http.build();
-   }
+	@Bean
+	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		http.mvcMatcher("/").anonymous();
+		return http.build();
+	}
+
 }

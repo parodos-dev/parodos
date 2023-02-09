@@ -16,36 +16,38 @@
 package com.redhat.parodos.workflow.definition.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Builder;
-import lombok.Data;
-
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
- * response dto
+ * Workflow definition response dto
  *
- * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
+
 @Data
-@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class WorkFlowDefinitionResponseDTO {
-    private String id;
 
-    private String name;
+	private UUID id;
 
-    private String description;
+	private String name;
 
-    private String type;
+	private String type;
 
-    private String author;
+	private String author;
 
-    private Date createdDate;
+	private Date createDate;
 
-    private Date modifiedDate;
+	private Date modifyDate;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<EmbeddedTaskResponseDTO> tasks;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private List<WorkFlowTaskDefinitionResponseDTO> tasks;
+
 }

@@ -15,166 +15,132 @@
  */
 package com.redhat.parodos.workflow.registry;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.redhat.parodos.workflow.WorkFlowDefinition;
-import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerDefinitionEntity;
-import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerDefinitionPK;
-import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinitionEntity;
-import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinitionEntity;
-import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
-import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
-import com.redhat.parodos.workflow.task.WorkFlowTaskDefinition;
+import com.redhat.parodos.workflow.WorkFlowType;
+import com.redhat.parodos.workflow.annotation.Assessment;
+import com.redhat.parodos.workflow.annotation.Checker;
+import com.redhat.parodos.workflow.annotation.Infrastructure;
+import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
+import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
+import com.redhat.parodos.workflow.task.WorkFlowTask;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
+import javax.annotation.PostConstruct;
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.core.type.AnnotatedTypeMetadata;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
-
 /**
- * An implementation of the WorkflowRegistry that loads all Bean definitions of type WorkFlow into a list
+ * An implementation of the WorkflowRegistry that loads all Bean definitions of type
+ * WorkFlow into a list
  *
  * @author Luke Shannon (Github: lshannon)
+ * @author Annel Ketcha (Github: anludke)
  * @author Annel Ketcha (Github: anludke)
  */
 
 @Slf4j
 @Component
 public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
-    // Spring will populate this through classpath scanning when the Context starts up
-    private static String underscoreChar = "_";
-    private final List<WorkFlowDefinition> workFlowDefinitions;
-    private final List<WorkFlowTaskDefinition> workFlowTaskDefinitions;
-    private final List<WorkFlow> workFlowExecutions;
-    private final WorkFlowDefinitionRepository workFlowDefinitionRepository;
-    private final WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository;
-    private final ObjectMapper objectMapper;
 
-    // WorkFlow Maps with db id and entities
-    private final Map<UUID, WorkFlowDefinition> workFlowDefinitionIdMap = new HashMap<>();
-    private final Map<String, WorkFlow> workFlowExecutionNameMap = new HashMap<>();
-    // WorkFlow Task Maps with db id and entities
-    private final Map<String, WorkFlowTaskDefinitionEntity> workFlowDefinitionTaskNameMap = new HashMap<>();
-    private final Map<String, UUID> workFlowDefinitionTaskIdMap = new HashMap<>();
+	// Spring will populate this through classpath scanning when the Context starts up
+	private final ConfigurableListableBeanFactory beanFactory;
 
-    public BeanWorkFlowRegistryImpl(List<WorkFlowDefinition> workFlowDefinitions,
-                                    List<WorkFlowTaskDefinition> workFlowTaskDefinitions,
-                                    List<WorkFlow> workFlowExecutions,
-                                    WorkFlowDefinitionRepository workFlowDefinitionRepository,
-                                    WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository,
-                                    ObjectMapper objectMapper) {
-        this.workFlowDefinitions = workFlowDefinitions;
-        this.workFlowTaskDefinitions = workFlowTaskDefinitions;
-        this.workFlowExecutions = workFlowExecutions;
-        this.workFlowDefinitionRepository = workFlowDefinitionRepository;
-        this.workFlowTaskDefinitionRepository = workFlowTaskDefinitionRepository;
-        this.objectMapper = objectMapper;
+	private final WorkFlowDefinitionServiceImpl workFlowDefinitionService;
 
-        if (workFlowDefinitions == null) {
-            log.error("No workflows definitions were registered. Initializing an empty collection of workflows so the application can start");
-            workFlowDefinitions = new ArrayList<>();
-        }
+	private final Map<String, WorkFlow> workFlows;
 
-        if (workFlowExecutions == null) {
-            log.error("No workflows executions were registered. Initializing an empty collection of workflows so the application can start");
-            workFlowExecutions = new ArrayList<>();
-        }
+	private final Map<String, WorkFlowTask> workFlowTaskMap;
 
-        // persist workflow from beans
-        // TODO: refine into services
-        this.workFlowDefinitions.forEach(wd -> {
-            WorkFlowDefinitionEntity workFlowDefinitionEntity = workFlowDefinitionRepository.save(WorkFlowDefinitionEntity.builder()
-                    .name(wd.getName())
-                    .description(wd.getDescription())
-                    .type(wd.getType().name())
-                    .author(wd.getAuthor())
-                    .createDate(wd.getCreatedDate())
-                    .modifyDate(wd.getCreatedDate())
-                    .build());
-            wd.getTasks().forEach(wdt -> {
-                try {
-                    WorkFlowTaskDefinitionEntity taskEntity = WorkFlowTaskDefinitionEntity.builder()
-                            .name(wdt.getName())
-                            .description(wdt.getDescription())
-                            .createDate(wdt.getCreateDate())
-                            .modifyDate(wdt.getModifyDate())
-                            .parameters(objectMapper.writeValueAsString(wdt.getParameters()))
-                            .outputs(objectMapper.writeValueAsString(wdt.getOutputs()))
-                            .workFlowDefinitionEntity(workFlowDefinitionEntity)
-                            .build();
+	public BeanWorkFlowRegistryImpl(ConfigurableListableBeanFactory beanFactory,
+			WorkFlowDefinitionServiceImpl workFlowDefinitionService, Map<String, WorkFlowTask> workFlowTaskMap,
+			Map<String, WorkFlow> workFlows) {
+		this.workFlows = workFlows;
+		this.workFlowTaskMap = workFlowTaskMap;
 
-                    WorkFlowTaskDefinitionEntity workFlowTaskDefinitionEntity = workFlowTaskDefinitionRepository.save(taskEntity);
+		if (workFlows == null && workFlowTaskMap == null) {
+			log.error(
+					"No workflows or workflowTasks were registered. Initializing an empty collection of workflows so the application can start");
+			workFlows = new HashMap<>();
+			workFlowTaskMap = new HashMap<>();
+		}
+		log.info(">> Detected {} WorkFlow and {} workFlowTasks from the Bean Registry", workFlows.size(),
+				workFlowTaskMap.size());
 
-                    workFlowDefinitionTaskIdMap.put(wdt.getName(), workFlowTaskDefinitionEntity.getId());
+		this.beanFactory = beanFactory;
+		this.workFlowDefinitionService = workFlowDefinitionService;
+	}
 
-                    workFlowDefinitionTaskNameMap.put(String.format("%s%s%s", workFlowDefinitionEntity.getName(),
-                                    underscoreChar,
-                                    workFlowTaskDefinitionEntity.getName()),
-                            workFlowTaskDefinitionEntity);
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+	@PostConstruct
+	void postInit() {
+		workFlows.forEach((key, value) -> saveWorkFlow(value, key));
+		saveChecker(workFlowTaskMap);
+	}
 
-            List<WorkFlowTaskDefinitionEntity> workFlowTaskDefinitionEntityList = workFlowTaskDefinitionRepository.findByWorkFlowDefinitionEntity(workFlowDefinitionEntity);
+	private void saveWorkFlow(Object bean, String name) {
+		Map<String, WorkFlowTask> hmWorkFlowTasks = new HashMap<>();
+		Arrays.stream(beanFactory.getDependenciesForBean(name)).filter(dependency -> {
+			try {
+				beanFactory.getBean(dependency, WorkFlowTask.class);
+				return true;
+			}
+			catch (BeansException e) {
+				return false;
+			}
+		}).forEach(dependency -> hmWorkFlowTasks.put(dependency, beanFactory.getBean(dependency, WorkFlowTask.class)));
+		workFlowDefinitionService.save(name, ((WorkFlow) bean).getName(),
+				getWorkFlowTypeDetails(name, List.of(Assessment.class, Checker.class, Infrastructure.class)).getFirst(),
+				hmWorkFlowTasks);
+	}
 
-            workFlowTaskDefinitionEntityList.forEach(workFlowTaskDefinitionEntity -> {
-                WorkFlowTaskDefinition wtd = wd.getTasks().stream().filter(t -> t.getName().equalsIgnoreCase(workFlowTaskDefinitionEntity.getName())).findFirst().get();
-                if (wtd.getPreviousTask() != null) {
-                    workFlowTaskDefinitionEntity.setPreviousTask(workFlowDefinitionTaskIdMap.get(wtd.getPreviousTask().getName()));
-                }
-                if (wtd.getNextTask() != null) {
-                    workFlowTaskDefinitionEntity.setNextTask(workFlowDefinitionTaskIdMap.get(wtd.getNextTask().getName()));
-                }
-                workFlowTaskDefinitionRepository.save(workFlowTaskDefinitionEntity);
-            });
+	private void saveChecker(Map<String, WorkFlowTask> workFlowTaskMap) {
+		workFlowTaskMap
+				.forEach((name, value) -> Arrays.stream(beanFactory.getDependenciesForBean(name)).filter(dependency -> {
+					try {
+						beanFactory.getBean(dependency, WorkFlow.class);
+						return true;
+					}
+					catch (BeansException e) {
+						return false;
+					}
+				}).findFirst().ifPresent(dependency -> {
+					try {
+						WorkFlowCheckerDTO workFlowCheckerDTO = new ObjectMapper().convertValue(
+								getWorkFlowTypeDetails(dependency, List.of(Checker.class)).getSecond(),
+								WorkFlowCheckerDTO.class);
+						workFlowDefinitionService.saveWorkFlowChecker(name, dependency, workFlowCheckerDTO);
+					}
+					catch (IllegalArgumentException ignored) {
+						log.info("{} is not a checker for {}", dependency, name);
+					}
+				}));
+	}
 
-            workFlowDefinitionIdMap.put(workFlowDefinitionEntity.getId(), wd);
-        });
+	private Pair<WorkFlowType, Map<String, Object>> getWorkFlowTypeDetails(String beanName,
+			List<Class<? extends Annotation>> workFlowTypeList) {
+		BeanDefinition beanDefinition = beanFactory.getBeanDefinition(beanName);
+		if (beanDefinition.getSource() instanceof AnnotatedTypeMetadata) {
+			AnnotatedTypeMetadata metadata = (AnnotatedTypeMetadata) beanDefinition.getSource();
+			return workFlowTypeList.stream().filter(clazz -> metadata.getAnnotationAttributes(clazz.getName()) != null)
+					.findFirst()
+					.map(clazz -> Pair.of(WorkFlowType.valueOf(clazz.getSimpleName().toUpperCase()),
+							metadata.getAnnotationAttributes(clazz.getName())))
+					.orElseThrow(() -> new RuntimeException("workflow missing type!"));
+		}
+		throw new RuntimeException("workflow with no annotated type metadata!");
+	}
 
-        workFlowTaskDefinitions.stream()
-                .filter(workFlowTaskDefinition -> workFlowTaskDefinition.getWorkFlowCheckerDefinition() != null)
-                .forEach(wtd -> {
-                    WorkFlowTaskDefinitionEntity workFlowTaskDefinitionEntity = workFlowTaskDefinitionRepository.findFirstByName(wtd.getName());
-                    workFlowTaskDefinitionEntity.setWorkFlowCheckerDefinitionEntity(
-                            Optional.ofNullable(wtd.getWorkFlowCheckerDefinition())
-                                    .map(wdtChecker ->
-                                            WorkFlowCheckerDefinitionEntity.builder()
-                                                    .id(WorkFlowCheckerDefinitionPK.builder()
-                                                            .workFlowCheckerId(workFlowDefinitionRepository.findFirstByName(wdtChecker.getName()).getId())
-                                                            .taskId(workFlowTaskDefinitionEntity.getId())
-                                                            .build())
-                                                    .task(workFlowTaskDefinitionEntity)
-                                                    .checkWorkFlow(workFlowDefinitionRepository.findFirstByName(wdtChecker.getName()))
-                                                    .nextWorkFlow(workFlowDefinitionRepository.findFirstByName(wdtChecker.getNextWorkFlowDefinition().getName()))
-                                                    .cronExpression(wdtChecker.getCronExpression())
-                                                    .build())
-                                    .orElse(null)
-                    );
-                    workFlowTaskDefinitionRepository.save(workFlowTaskDefinitionEntity);
-                });
+	@Override
+	public WorkFlow getWorkFlowByName(String workFlowName) {
+		return workFlows.get(workFlowName);
+	}
 
-        this.workFlowExecutions.forEach(we -> workFlowExecutionNameMap.put(we.getName(), we));
-
-        log.info(">> Detected {} WorkFlow definitions from the Bean Registry", workFlowDefinitions.size());
-        log.info(">> Detected {} WorkFlow executions from the Bean Registry", workFlowExecutions.size());
-    }
-
-    @Override
-    public WorkFlow getWorkFlowExecutionByName(String workFlowName) {
-        return workFlowExecutionNameMap.get(workFlowName);
-    }
-
-    @Override
-    public WorkFlowDefinition getWorkFlowDefinitionById(UUID workFlowId) {
-        return workFlowDefinitionIdMap.get(workFlowId);
-    }
-
-    @Override
-    public UUID getWorkFlowTaskDefinitionId(String workFlowName, String workFlowTaskName) {
-        return UUID.fromString(workFlowDefinitionTaskNameMap.get(String.format("%s%s%s",
-                workFlowName,
-                underscoreChar,
-                workFlowTaskName)).getId().toString());
-    }
 }

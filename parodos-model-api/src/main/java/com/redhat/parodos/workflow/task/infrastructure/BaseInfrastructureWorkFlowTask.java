@@ -15,27 +15,36 @@
  */
 package com.redhat.parodos.workflow.task.infrastructure;
 
+import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
-import com.redhat.parodos.workflow.task.checker.WorkFlowCheckerTask;
+import com.redhat.parodos.workflow.task.WorkFlowTaskType;
+import com.redhat.parodos.workflow.task.checker.BaseWorkFlowCheckerTask;
+import com.redhat.parodos.workflows.workflow.WorkFlow;
+import lombok.Getter;
 
 /**
  * Base Class for an InfrastrcutureWorkFlowTask.
- *
- * If the infrastructure @see WorkFlowTask ends with a long running task outside of Parodos (i.e: waiting for ticket approval), a @see WorkFlowChecker can be specified with the
- * logic required to check the status of this external tasks
+ * <p>
+ * If the infrastructure @see WorkFlowTask ends with a long running task outside of
+ * Parodos (i.e: waiting for ticket approval), a @see WorkFlowChecker can be specified
+ * with the logic required to check the status of this external tasks
  *
  * @author Luke Shannon (Github: lshannon)
- *
  */
-public abstract class BaseInfrastructureWorkFlowTask implements WorkFlowTask {
+public abstract class BaseInfrastructureWorkFlowTask extends BaseWorkFlowTask {
 
-	private WorkFlowCheckerTask workFlowChecker;
+	private WorkFlowTaskType type = WorkFlowTaskType.INFRASTRUCTURE;
 
-	public WorkFlowCheckerTask getGetWorkFlowChecker() {
-		return workFlowChecker;
+	// WorkFlowChecker check a process that has been initiated by a WorkFlow to see if its
+	// been completed
+	private WorkFlow checkerWorkflow;
+
+	public WorkFlow getGetWorkFlowChecker() {
+		return checkerWorkflow;
 	}
 
-	public void setWorkFlowChecker(WorkFlowCheckerTask gateTwo) {
-		this.workFlowChecker = gateTwo;
+	public void setWorkFlowChecker(WorkFlow checkerWorkflow) {
+		this.checkerWorkflow = checkerWorkflow;
 	}
+
 }

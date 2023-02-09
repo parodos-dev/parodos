@@ -43,129 +43,144 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Service
 public class NotificationRecordServiceImpl implements NotificationRecordService {
-    public static final String ARCHIVE_FOLDER = "archive";
-    private final NotificationRecordRepository notificationRecordRepository;
-    private final NotificationUserRepository notificationUserRepository;
 
-    public NotificationRecordServiceImpl(NotificationRecordRepository notificationRecordRepository,
-                                         NotificationUserRepository notificationUserRepository) {
-        this.notificationRecordRepository = notificationRecordRepository;
-        this.notificationUserRepository = notificationUserRepository;
-    }
+	public static final String ARCHIVE_FOLDER = "archive";
 
-    @Override
-    public void createNotificationRecords(List<NotificationUser> notificationUsers, NotificationMessage notificationMessage) {
-        for (NotificationUser notificationUser : notificationUsers) {
-            NotificationRecord record = new NotificationRecord();
-            record.setRead(false);
-            record.setNotificationMessage(notificationMessage);
-            NotificationRecord savedNotificationRecord = this.notificationRecordRepository.save(record);
-            // associate a notification record with a user
-            notificationUser.addNotificationRecord(savedNotificationRecord);
-            log.info("Saving notification record for user {}", notificationUser);
-            this.notificationUserRepository.save(notificationUser);
-        }
-    }
+	private final NotificationRecordRepository notificationRecordRepository;
 
-    @Override
-    public Page<NotificationRecord> getNotificationRecords(Pageable pageable, String username, State state, String searchTerm) {
-        NotificationUser notificationUser = getNotificationUser(username);
-        SearchCriteria searchCriteria = SearchUtil.getSearchCriteria(state, searchTerm);
-        switch (searchCriteria) {
-            case BY_USERNAME:
-                return this.notificationRecordRepository.findByNotificationUserListContaining(notificationUser, pageable);
-            case BY_USERNAME_AND_SEARCH_TERM:
-                return this.getNotificationRecordsBySearchTerm(pageable, username, searchTerm);
-            case BY_USERNAME_AND_STATE_UNREAD:
-                return getUnreadNotificationRecords(pageable, username);
-            case BY_USERNAME_AND_STATE_ARCHIVED:
-                return getArchivedNotificationRecords(pageable, username);
-        }
-        return Page.empty();
-    }
+	private final NotificationUserRepository notificationUserRepository;
 
-    @Override
-    public int countNotificationRecords(String username, State state) {
-        if (State.UNREAD.equals(state)) {
-            return this.notificationUserRepository.findByUsername(username)
-                    .map(notificationRecordRepository::countDistinctByReadFalseAndNotificationUserListContaining)
-                    .orElse(0);
-        }
-        throw new RuntimeException(String.format("State %s is found/supported", state));
-    }
+	public NotificationRecordServiceImpl(NotificationRecordRepository notificationRecordRepository,
+			NotificationUserRepository notificationUserRepository) {
+		this.notificationRecordRepository = notificationRecordRepository;
+		this.notificationUserRepository = notificationUserRepository;
+	}
 
-    @Override
-    public NotificationRecord updateNotificationStatus(UUID id, Operation operation) {
-        if (Operation.READ.equals(operation)) {
-            return updateReadNotification(id);
-        }
-        if (Operation.ARCHIVE.equals(operation)) {
-            return updateArchiveFolder(id);
-        }
-        throw new RuntimeException(String.format("Operation %s is invalid", operation));
-    }
+	@Override
+	public void createNotificationRecords(List<NotificationUser> notificationUsers,
+			NotificationMessage notificationMessage) {
+		for (NotificationUser notificationUser : notificationUsers) {
+			NotificationRecord record = new NotificationRecord();
+			record.setRead(false);
+			record.setNotificationMessage(notificationMessage);
+			NotificationRecord savedNotificationRecord = this.notificationRecordRepository.save(record);
+			// associate a notification record with a user
+			notificationUser.addNotificationRecord(savedNotificationRecord);
+			log.info("Saving notification record for user {}", notificationUser);
+			this.notificationUserRepository.save(notificationUser);
+		}
+	}
 
-    @Override
-    public void deleteNotificationRecord(UUID id) {
-        try {
-            this.notificationRecordRepository.deleteById(id);
-        } catch (Exception e) {
-            log.error("Deleting notification is failed for id: {}", id);
-        }
-    }
+	@Override
+	public Page<NotificationRecord> getNotificationRecords(Pageable pageable, String username, State state,
+			String searchTerm) {
+		NotificationUser notificationUser = getNotificationUser(username);
+		SearchCriteria searchCriteria = SearchUtil.getSearchCriteria(state, searchTerm);
+		switch (searchCriteria) {
+			case BY_USERNAME:
+				return this.notificationRecordRepository.findByNotificationUserListContaining(notificationUser,
+						pageable);
+			case BY_USERNAME_AND_SEARCH_TERM:
+				return this.getNotificationRecordsBySearchTerm(pageable, username, searchTerm);
+			case BY_USERNAME_AND_STATE_UNREAD:
+				return getUnreadNotificationRecords(pageable, username);
+			case BY_USERNAME_AND_STATE_ARCHIVED:
+				return getArchivedNotificationRecords(pageable, username);
+		}
+		return Page.empty();
+	}
 
-    private NotificationUser getNotificationUser(String username) {
-        Optional<NotificationUser> notificationsUser = this.notificationUserRepository.findByUsername(username);
-        if (notificationsUser.isEmpty()) {
-            throw new RuntimeException(String.format("Username %s not found", username));
-        }
-        return notificationsUser.get();
-    }
+	@Override
+	public int countNotificationRecords(String username, State state) {
+		if (State.UNREAD.equals(state)) {
+			return this.notificationUserRepository.findByUsername(username)
+					.map(notificationRecordRepository::countDistinctByReadFalseAndNotificationUserListContaining)
+					.orElse(0);
+		}
+		throw new RuntimeException(String.format("State %s is found/supported", state));
+	}
 
-    private Page<NotificationRecord> getNotificationRecordsBySearchTerm(Pageable pageable, String username, String searchTerm) {
-        Optional<NotificationUser> notificationsUser = this.notificationUserRepository.findByUsername(username);
-        if (notificationsUser.isPresent()) {
-            return this.notificationRecordRepository.search(notificationsUser.get(), searchTerm.toLowerCase(), pageable);
-        } else {
-            throw new RuntimeException(String.format("Username %s not found", username));
-        }
-    }
+	@Override
+	public NotificationRecord updateNotificationStatus(UUID id, Operation operation) {
+		if (Operation.READ.equals(operation)) {
+			return updateReadNotification(id);
+		}
+		if (Operation.ARCHIVE.equals(operation)) {
+			return updateArchiveFolder(id);
+		}
+		throw new RuntimeException(String.format("Operation %s is invalid", operation));
+	}
 
-    private Page<NotificationRecord> getUnreadNotificationRecords(Pageable pageable, String username) {
-        Optional<NotificationUser> notificationsUser = this.notificationUserRepository.findByUsername(username);
-        if (notificationsUser.isPresent()) {
-            return this.notificationRecordRepository.findByReadFalseAndNotificationUserListContaining(notificationsUser.get(), pageable);
-        } else {
-            throw new RuntimeException(String.format("Username %s not found", username));
-        }
-    }
+	@Override
+	public void deleteNotificationRecord(UUID id) {
+		try {
+			this.notificationRecordRepository.deleteById(id);
+		}
+		catch (Exception e) {
+			log.error("Deleting notification is failed for id: {}", id);
+		}
+	}
 
-    private Page<NotificationRecord> getArchivedNotificationRecords(Pageable pageable, String username) {
-        Optional<NotificationUser> notificationsUser = this.notificationUserRepository.findByUsername(username);
-        if (notificationsUser.isPresent()) {
-            return this.notificationRecordRepository.findByFolderAndNotificationUserListContaining(ARCHIVE_FOLDER, notificationsUser.get(), pageable);
-        } else {
-            throw new RuntimeException(String.format("Username %s not found", username));
-        }
-    }
+	private NotificationUser getNotificationUser(String username) {
+		Optional<NotificationUser> notificationsUser = this.notificationUserRepository.findByUsername(username);
+		if (notificationsUser.isEmpty()) {
+			throw new RuntimeException(String.format("Username %s not found", username));
+		}
+		return notificationsUser.get();
+	}
 
-    private NotificationRecord updateReadNotification(UUID id) {
-        NotificationRecord notificationRecord = findRecordById(id).get();
-        notificationRecord.setRead(true);
-        return this.notificationRecordRepository.save(notificationRecord);
-    }
+	private Page<NotificationRecord> getNotificationRecordsBySearchTerm(Pageable pageable, String username,
+			String searchTerm) {
+		Optional<NotificationUser> notificationsUser = this.notificationUserRepository.findByUsername(username);
+		if (notificationsUser.isPresent()) {
+			return this.notificationRecordRepository.search(notificationsUser.get(), searchTerm.toLowerCase(),
+					pageable);
+		}
+		else {
+			throw new RuntimeException(String.format("Username %s not found", username));
+		}
+	}
 
-    private NotificationRecord updateArchiveFolder(UUID id) {
-        NotificationRecord notificationRecord = findRecordById(id).get();
-        notificationRecord.setFolder(ARCHIVE_FOLDER);
-        return this.notificationRecordRepository.save(notificationRecord);
-    }
+	private Page<NotificationRecord> getUnreadNotificationRecords(Pageable pageable, String username) {
+		Optional<NotificationUser> notificationsUser = this.notificationUserRepository.findByUsername(username);
+		if (notificationsUser.isPresent()) {
+			return this.notificationRecordRepository
+					.findByReadFalseAndNotificationUserListContaining(notificationsUser.get(), pageable);
+		}
+		else {
+			throw new RuntimeException(String.format("Username %s not found", username));
+		}
+	}
 
-    private Optional<NotificationRecord> findRecordById(UUID id) {
-        Optional<NotificationRecord> notificationsRecordOptional = this.notificationRecordRepository.findById(id);
-        if (notificationsRecordOptional.isEmpty()) {
-            throw new RuntimeException(String.format("Could not find NotificationRecord for id = %s", id));
-        }
-        return notificationsRecordOptional;
-    }
+	private Page<NotificationRecord> getArchivedNotificationRecords(Pageable pageable, String username) {
+		Optional<NotificationUser> notificationsUser = this.notificationUserRepository.findByUsername(username);
+		if (notificationsUser.isPresent()) {
+			return this.notificationRecordRepository.findByFolderAndNotificationUserListContaining(ARCHIVE_FOLDER,
+					notificationsUser.get(), pageable);
+		}
+		else {
+			throw new RuntimeException(String.format("Username %s not found", username));
+		}
+	}
+
+	private NotificationRecord updateReadNotification(UUID id) {
+		NotificationRecord notificationRecord = findRecordById(id).get();
+		notificationRecord.setRead(true);
+		return this.notificationRecordRepository.save(notificationRecord);
+	}
+
+	private NotificationRecord updateArchiveFolder(UUID id) {
+		NotificationRecord notificationRecord = findRecordById(id).get();
+		notificationRecord.setFolder(ARCHIVE_FOLDER);
+		return this.notificationRecordRepository.save(notificationRecord);
+	}
+
+	private Optional<NotificationRecord> findRecordById(UUID id) {
+		Optional<NotificationRecord> notificationsRecordOptional = this.notificationRecordRepository.findById(id);
+		if (notificationsRecordOptional.isEmpty()) {
+			throw new RuntimeException(String.format("Could not find NotificationRecord for id = %s", id));
+		}
+		return notificationsRecordOptional;
+	}
+
 }
