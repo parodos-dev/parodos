@@ -28,5 +28,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author Annel Ketcha (Github: anludke)
  */
 public interface WorkFlowTaskDefinitionRepository extends JpaRepository<WorkFlowTaskDefinition, UUID> {
+
 	WorkFlowTaskDefinition findFirstByName(String name);
+
 }

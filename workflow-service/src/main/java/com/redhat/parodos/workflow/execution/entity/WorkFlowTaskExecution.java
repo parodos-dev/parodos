@@ -41,6 +41,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class WorkFlowTaskExecution extends AbstractEntity {
+
 	@Column(name = "workflow_execution_id")
 	private UUID workFlowExecutionId;
 
@@ -59,4 +60,5 @@ public class WorkFlowTaskExecution extends AbstractEntity {
 	private Date endDate;
 
 	private Date lastUpdateDate;
+
 }

@@ -34,7 +34,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class WorkFlowCheckerDefinitionPK implements Serializable {
+
 	private UUID workFlowCheckerId;
 
 	private UUID taskId;
+
 }

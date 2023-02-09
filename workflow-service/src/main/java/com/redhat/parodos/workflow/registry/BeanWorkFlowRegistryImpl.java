@@ -50,26 +50,30 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
+
 	// Spring will populate this through classpath scanning when the Context starts up
 	private final ConfigurableListableBeanFactory beanFactory;
+
 	private final WorkFlowDefinitionServiceImpl workFlowDefinitionService;
+
 	private final Map<String, WorkFlow> workFlows;
+
 	private final Map<String, WorkFlowTask> workFlowTaskMap;
 
 	public BeanWorkFlowRegistryImpl(ConfigurableListableBeanFactory beanFactory,
-									WorkFlowDefinitionServiceImpl workFlowDefinitionService,
-									Map<String, WorkFlowTask> workFlowTaskMap,
-									Map<String, WorkFlow> workFlows) {
+			WorkFlowDefinitionServiceImpl workFlowDefinitionService, Map<String, WorkFlowTask> workFlowTaskMap,
+			Map<String, WorkFlow> workFlows) {
 		this.workFlows = workFlows;
 		this.workFlowTaskMap = workFlowTaskMap;
 
-		if (workFlows == null && workFlowTaskMap == null) {
+		if (workFlows == null || workFlowTaskMap == null) {
 			log.error(
 					"No workflows or workflowTasks were registered. Initializing an empty collection of workflows so the application can start");
 			workFlows = new HashMap<>();
 			workFlowTaskMap = new HashMap<>();
 		}
-		log.info(">> Detected {} WorkFlow and {} workFlowTasks from the Bean Registry", workFlows.size(), workFlowTaskMap.size());
+		log.info(">> Detected {} WorkFlow and {} workFlowTasks from the Bean Registry", workFlows.size(),
+				workFlowTaskMap.size());
 
 		this.beanFactory = beanFactory;
 		this.workFlowDefinitionService = workFlowDefinitionService;
@@ -138,4 +142,5 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 	public WorkFlow getWorkFlowByName(String workFlowName) {
 		return workFlows.get(workFlowName);
 	}
+
 }

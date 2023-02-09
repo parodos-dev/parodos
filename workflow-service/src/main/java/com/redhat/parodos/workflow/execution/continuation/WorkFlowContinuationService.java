@@ -46,19 +46,23 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class WorkFlowContinuationService {
+
 	private final WorkFlowDefinitionRepository workFlowDefinitionRepository;
+
 	private final WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository;
+
 	private final WorkFlowRepository workFlowRepository;
+
 	private final WorkFlowTaskRepository workFlowTaskRepository;
+
 	private final WorkFlowServiceImpl workFlowService;
+
 	private final ObjectMapper objectMapper;
 
 	public WorkFlowContinuationService(WorkFlowDefinitionRepository workFlowDefinitionRepository,
-									   WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository,
-									   WorkFlowRepository workFlowRepository,
-									   WorkFlowTaskRepository workFlowTaskRepository,
-									   WorkFlowServiceImpl workFlowService,
-									   ObjectMapper objectMapper) {
+			WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository, WorkFlowRepository workFlowRepository,
+			WorkFlowTaskRepository workFlowTaskRepository, WorkFlowServiceImpl workFlowService,
+			ObjectMapper objectMapper) {
 		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
 		this.workFlowTaskDefinitionRepository = workFlowTaskDefinitionRepository;
 		this.workFlowRepository = workFlowRepository;
@@ -99,4 +103,5 @@ public class WorkFlowContinuationService {
 							workFlowTaskArguments);
 				});
 	}
+
 }

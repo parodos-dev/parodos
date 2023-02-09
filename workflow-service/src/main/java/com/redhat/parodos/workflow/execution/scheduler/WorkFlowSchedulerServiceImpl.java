@@ -36,7 +36,9 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class WorkFlowSchedulerServiceImpl implements WorkFlowSchedulerService {
+
 	private final TaskScheduler taskScheduler;
+
 	private final Map<String, ScheduledFuture<?>> hm = new HashMap<>();
 
 	public WorkFlowSchedulerServiceImpl(TaskScheduler taskScheduler) {
@@ -66,4 +68,5 @@ public class WorkFlowSchedulerServiceImpl implements WorkFlowSchedulerService {
 		log.info("Workflow: {} has not been scheduled!", hm.get(workFlow.getName()));
 		return false;
 	}
+
 }

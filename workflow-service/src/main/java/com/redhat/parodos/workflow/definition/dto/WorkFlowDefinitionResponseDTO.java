@@ -34,6 +34,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkFlowDefinitionResponseDTO {
+
 	private UUID id;
 
 	private String name;
@@ -48,4 +49,5 @@ public class WorkFlowDefinitionResponseDTO {
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private List<WorkFlowTaskDefinitionResponseDTO> tasks;
+
 }

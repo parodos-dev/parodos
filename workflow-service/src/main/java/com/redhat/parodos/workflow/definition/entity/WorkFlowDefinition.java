@@ -69,4 +69,5 @@ public class WorkFlowDefinition extends AbstractEntity {
 	private List<WorkFlowCheckerDefinition> nextWorkFlowDefinitions = new ArrayList<>();
 
 	private String commitId;
+
 }

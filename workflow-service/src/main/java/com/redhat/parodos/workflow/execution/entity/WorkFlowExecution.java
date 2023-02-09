@@ -41,6 +41,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class WorkFlowExecution extends AbstractEntity {
+
 	private WorkFlowStatus status;
 
 	@Column(updatable = false)
@@ -53,4 +54,5 @@ public class WorkFlowExecution extends AbstractEntity {
 
 	@Column(name = "project_id")
 	private UUID projectId;
+
 }

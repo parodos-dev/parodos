@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/workflows")
 public class WorkFlowController {
+
 	private final WorkFlowService workFlowService;
 
 	public WorkFlowController(WorkFlowService workFlowService) {
@@ -60,4 +61,5 @@ public class WorkFlowController {
 						WorkContextDelegate.Resource.INFRASTRUCTURE_OPTIONS))
 				.build());
 	}
+
 }

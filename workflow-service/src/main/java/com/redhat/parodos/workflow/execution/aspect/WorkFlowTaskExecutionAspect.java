@@ -45,6 +45,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class WorkFlowTaskExecutionAspect {
+
 	private final WorkFlowServiceImpl workFlowExecutionService;
 
 	public WorkFlowTaskExecutionAspect(WorkFlowServiceImpl workFlowExecutionService) {
@@ -109,4 +110,5 @@ public class WorkFlowTaskExecutionAspect {
 		}
 		return report;
 	}
+
 }

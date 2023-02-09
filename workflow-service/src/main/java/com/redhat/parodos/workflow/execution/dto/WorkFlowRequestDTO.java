@@ -33,6 +33,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkFlowRequestDTO {
+
 	private String projectId;
 
 	private String workFlowName;
@@ -44,6 +45,7 @@ public class WorkFlowRequestDTO {
 	@AllArgsConstructor
 	@NoArgsConstructor
 	public static class WorkFlowTaskRequestDTO {
+
 		String name;
 
 		List<ArgumentRequestDTO> arguments;
@@ -53,9 +55,13 @@ public class WorkFlowRequestDTO {
 		@AllArgsConstructor
 		@NoArgsConstructor
 		public static class ArgumentRequestDTO {
+
 			String key;
 
 			String value;
+
 		}
+
 	}
+
 }

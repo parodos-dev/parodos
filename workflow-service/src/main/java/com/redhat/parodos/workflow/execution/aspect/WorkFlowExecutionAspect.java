@@ -49,13 +49,16 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class WorkFlowExecutionAspect {
+
 	private final WorkFlowServiceImpl workFlowService;
+
 	private final WorkFlowSchedulerServiceImpl workFlowSchedulerService;
+
 	private final WorkFlowDefinitionRepository workFlowDefinitionRepository;
 
 	public WorkFlowExecutionAspect(WorkFlowServiceImpl workFlowService,
-								   WorkFlowSchedulerServiceImpl workFlowSchedulerService,
-								   WorkFlowDefinitionRepository workFlowDefinitionRepository) {
+			WorkFlowSchedulerServiceImpl workFlowSchedulerService,
+			WorkFlowDefinitionRepository workFlowDefinitionRepository) {
 		this.workFlowService = workFlowService;
 		this.workFlowSchedulerService = workFlowSchedulerService;
 		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
@@ -131,4 +134,5 @@ public class WorkFlowExecutionAspect {
 			workFlowSchedulerService.stop(workFlow);
 		}
 	}
+
 }

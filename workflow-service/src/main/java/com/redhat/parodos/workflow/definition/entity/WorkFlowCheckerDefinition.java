@@ -43,6 +43,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class WorkFlowCheckerDefinition {
+
 	@EmbeddedId
 	@AttributeOverride(name = "workFlowCheckerId", column = @Column(name = "workflow_checker_id"))
 	@AttributeOverride(name = "taskId", column = @Column(name = "task_id"))
@@ -64,4 +65,5 @@ public class WorkFlowCheckerDefinition {
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "next_workflow_id")
 	private WorkFlowDefinition nextWorkFlow;
+
 }

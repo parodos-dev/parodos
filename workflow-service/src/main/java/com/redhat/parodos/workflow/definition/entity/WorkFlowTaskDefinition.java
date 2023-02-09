@@ -44,6 +44,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class WorkFlowTaskDefinition extends AbstractEntity {
+
 	private String name;
 
 	private String parameters;
@@ -63,4 +64,5 @@ public class WorkFlowTaskDefinition extends AbstractEntity {
 	private WorkFlowCheckerDefinition workFlowCheckerDefinition;
 
 	private String commitId;
+
 }

@@ -27,5 +27,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author Annel Ketcha (Github: anludke)
  */
 public interface WorkFlowDefinitionRepository extends JpaRepository<WorkFlowDefinition, UUID> {
+
 	List<WorkFlowDefinition> findByName(String name);
+
 }

@@ -47,13 +47,15 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService {
+
 	private final WorkFlowDefinitionRepository workFlowDefinitionRepository;
+
 	private final WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository;
+
 	private final ModelMapper modelMapper;
 
 	public WorkFlowDefinitionServiceImpl(WorkFlowDefinitionRepository workFlowDefinitionRepository,
-										 WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository,
-										 ModelMapper modelMapper) {
+			WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository, ModelMapper modelMapper) {
 		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
 		this.workFlowTaskDefinitionRepository = workFlowTaskDefinitionRepository;
 		this.modelMapper = modelMapper;
@@ -126,4 +128,5 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 			log.error(e.getMessage());
 		}
 	}
+
 }
