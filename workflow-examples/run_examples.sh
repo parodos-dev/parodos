@@ -77,7 +77,7 @@ run_complex_flow() {
           "projectId": "'$PROJECT_ID'",
           "workFlowName": "onboardingAssessment_ASSESSMENT_WORKFLOW",
           "workFlowTasks": []
-        }' | jq -r '.workFlowOptions.newOptions[0].workFlowId')
+        }' | jq -r '.workFlowOptions.newOptions[0].workFlowName')
   echo "The Following Option Is Available: $INFRASTRUCTURE_OPTION"
   echo "                                               "
   echo "                                               "
@@ -113,7 +113,7 @@ run_complex_flow() {
                     ]
                   }
       ]
-    }' | jq -r '.workFlowId')"
+    }' | jq -r '.workFlowExecutionId')"
   echo "                                               "
   echo "                                               "
   echo "Onboarding workflow execution id: $EXECUTION_ID"
@@ -130,7 +130,7 @@ run_complex_flow() {
           "projectId": "'$PROJECT_ID'",
       "workFlowName": "'"$ONBOARDING_WORKFLOW_CHECKER_NAME"'",
       "workFlowTasks": []
-    }' | jq -r '.workFlowId')"
+    }' | jq -r '.workFlowExecutionId')"
   echo "Onboarding workflow Checker execution id: $EXECUTION_ID"
   echo "                                               "
   echo "                                               "
@@ -145,7 +145,7 @@ run_complex_flow() {
           "projectId": "'$PROJECT_ID'",
         "workFlowName": "'$NAMESPACE_WORKFLOW_NAME'",
         "workFlowTasks": []
-      }' | jq -r '.workFlowId')"
+      }' | jq -r '.workFlowExecutionId')"
   echo "Namespace workflow execution id: $EXECUTION_ID"
   echo "Executing the WorkFlowChecker (namespaceWorkFlowCheck)."
   echo "                                               "
@@ -164,7 +164,7 @@ run_complex_flow() {
           "projectId": "'$PROJECT_ID'",
         "workFlowName": "'$NAMESPACE_WORKFLOW_CHECKER_NAME'",
         "workFlowTasks": []
-      }' | jq -r '.workFlowId')"
+      }' | jq -r '.workFlowExecutionId')"
   echo "Namespace workflow Checker execution id: $EXECUTION_ID"
   echo "                                               "
   echo "                                               "
@@ -179,7 +179,7 @@ run_complex_flow() {
           "projectId": "'$PROJECT_ID'",
         "workFlowName": "'$NETWORK_WORKFLOW_NAME'",
         "workFlowTasks": []
-      }' | jq -r '.workFlowId')"
+      }' | jq -r '.workFlowExecutionId')"
   echo "network workflow execution id: $EXECUTION_ID"
 }
 

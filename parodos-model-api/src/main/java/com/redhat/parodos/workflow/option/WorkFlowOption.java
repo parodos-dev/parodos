@@ -47,13 +47,13 @@ public class WorkFlowOption {
     private String displayName;
     private String description;
     private List<String> details;
-    private String workFlowId;
+    private String workFlowName;
 
     private WorkFlowOption(Builder builder) {
         this.description = builder.description;
         this.details = builder.details;
         this.identifier = builder.identifier;
-        this.workFlowId = builder.workFlowId;
+        this.workFlowName = builder.workFlowName;
         this.displayName = builder.displayName;
     }
 
@@ -66,11 +66,11 @@ public class WorkFlowOption {
         private List<String> details = new ArrayList<>();
 
         // required
-        private String workFlowId;
+        private String workFlowName;
 
         public Builder(String identifier, String workFlowName) {
             this.identifier = identifier;
-            this.workFlowId = workFlowName;
+            this.workFlowName = workFlowName;
         }
 
         public Builder setDescription(String description) {

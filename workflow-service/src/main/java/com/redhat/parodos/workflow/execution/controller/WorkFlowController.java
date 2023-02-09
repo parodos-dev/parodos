@@ -55,7 +55,7 @@ public class WorkFlowController {
     public ResponseEntity<WorkFlowResponseDTO> execute(@RequestBody @Valid WorkFlowRequestDTO workFlowRequestDTO) {
         WorkReport workReport = workFlowService.execute(workFlowRequestDTO.getProjectId(), workFlowRequestDTO.getWorkFlowName(), WorkFlowDTOUtil.convertWorkFlowTaskRequestDTOListToMap(workFlowRequestDTO.getWorkFlowTasks()));
         return ResponseEntity.ok(WorkFlowResponseDTO.builder()
-                .workFlowId(WorkContextDelegate.read(
+                .workFlowExecutionId(WorkContextDelegate.read(
                         workReport.getWorkContext(),
                         WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
                         WorkContextDelegate.Resource.ID).toString())
