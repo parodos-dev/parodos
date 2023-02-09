@@ -12,6 +12,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
       - uses: actions/checkout@v3
 
@@ -27,13 +29,15 @@ jobs:
         run: mvn validate
 
       - name: Maven Test
-        run: mvn test --file ./workflow-engine/pom.xml
+        run: |
+          mvn test --file ./pom.xml
+          mvn jacoco:report-aggregate
 
-      - name: Generate JaCoCo Badge
-        uses: cicirello/jacoco-badge-generator@v2
+      - name: Add coverage to PR
+        id: jacoco
+        uses: madrapps/jacoco-report@v1.3
         with:
-          generate-branches-badge: true
-          jacoco-csv-file: ./workflow-engine/target/site/jacoco/jacoco.csv
-          token: ${{ secrets.GITHUB_TOKEN }}
+          paths: ./coverage/target/site/jacoco-aggregate/jacoco.xml
           min-coverage-overall: 40
           min-coverage-changed-files: 60
+          token: ${{ secrets.GITHUB_TOKEN }}
