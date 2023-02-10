@@ -28,6 +28,7 @@
         <module>workflow-examples</module>
         <module>notification-service</module>
         <module>pattern-detection-library</module>
+        <module>coverage</module>
     </modules>
 
     <build>
