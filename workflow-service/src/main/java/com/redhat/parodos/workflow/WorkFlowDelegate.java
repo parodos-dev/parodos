@@ -54,9 +54,6 @@ public class WorkFlowDelegate {
 			log.info("****** workflow task name: {}, parameter values: {}", workFlowTaskDefinition.getName(),
 					workFlowTaskParameterValues.get(workFlowTaskDefinition.getName()));
 			WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_DEFINITION,
-					workFlowTaskDefinition.getName(), WorkContextDelegate.Resource.NAME,
-					workFlowTaskDefinition.getName());
-			WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_DEFINITION,
 					workFlowTaskDefinition.getName(), WorkContextDelegate.Resource.ID,
 					getWorkFlowTaskDefinitionId(workFlowDefinition.getName(), workFlowTaskDefinition.getName()));
 			WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,

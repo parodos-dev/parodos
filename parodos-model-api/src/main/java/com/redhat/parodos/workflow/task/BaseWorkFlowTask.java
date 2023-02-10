@@ -15,8 +15,17 @@
  */
 package com.redhat.parodos.workflow.task;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.redhat.parodos.workflow.context.WorkContextDelegate;
+import com.redhat.parodos.workflow.exception.MissingParameterException;
+import com.redhat.parodos.workflows.work.WorkContext;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanNameAware;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Base Class for a WorkFlowTask.
@@ -27,6 +36,7 @@ import org.springframework.beans.factory.BeanNameAware;
  *
  * @author Luke Shannon (Github: lshannon)
  */
+@Slf4j
 public abstract class BaseWorkFlowTask implements WorkFlowTask, BeanNameAware {
 
 	@Getter
@@ -35,6 +45,20 @@ public abstract class BaseWorkFlowTask implements WorkFlowTask, BeanNameAware {
 	@Override
 	public void setBeanName(String name) {
 		this.name = name;
+	}
+
+	protected String getParameterValue(WorkContext workContext, String parameterName) throws MissingParameterException {
+		return new ObjectMapper()
+				.convertValue(
+						WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
+								name, WorkContextDelegate.Resource.ARGUMENTS),
+						new TypeReference<HashMap<String, String>>() {
+						})
+				.entrySet().stream().filter(entry -> parameterName.equals(entry.getKey())).map(Map.Entry::getValue)
+				.findFirst().orElseThrow(() -> {
+					log.error(String.format("parameter %s is not provided for task %s!", parameterName, name));
+					return new MissingParameterException("missing parameter(s)");
+				});
 	}
 
 }
