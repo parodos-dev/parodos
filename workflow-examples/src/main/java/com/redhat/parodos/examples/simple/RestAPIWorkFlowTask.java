@@ -51,10 +51,8 @@ public class RestAPIWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	 */
 	public WorkReport execute(WorkContext workContext) {
 		try {
-			String urlString = WorkContextDelegate.getRequiredValueFromRequestParams(workContext,
-					URL_PASSED_IN_FROM_SERVICE);
-			String payload = WorkContextDelegate.getRequiredValueFromRequestParams(workContext,
-					PAYLOAD_PASSED_IN_FROM_SERVICE);
+			String urlString = getParameterValue(workContext, URL_PASSED_IN_FROM_SERVICE);
+			String payload = getParameterValue(workContext, PAYLOAD_PASSED_IN_FROM_SERVICE);
 			log.info("Running Task REST API Call: urlString: {} payload: {} ", urlString, payload);
 			RestTemplate restTemplate = new RestTemplate();
 			ResponseEntity<String> result = restTemplate.postForEntity(urlString, payload, String.class);

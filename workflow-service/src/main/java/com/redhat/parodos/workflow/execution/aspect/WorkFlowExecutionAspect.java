@@ -108,7 +108,7 @@ public class WorkFlowExecutionAspect {
 		catch (Throwable e) {
 			log.error("Workflow {} has failed!", workFlowName);
 		}
-		log.info("Workflow {} is successful!", workFlowName);
+		log.info("Workflow {} is {}!", workFlowName, report.getStatus().name());
 		// update workflow execution entity
 		workFlowExecution.setStatus(WorkFlowStatus.valueOf(report.getStatus().name()));
 		workFlowExecution.setEndDate(new Date());
