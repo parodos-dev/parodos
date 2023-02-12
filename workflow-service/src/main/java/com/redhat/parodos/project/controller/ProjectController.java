@@ -22,6 +22,14 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +49,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @CrossOrigin(origins = "*", maxAge = 1800)
 @RestController
 @RequestMapping("/api/v1/projects")
+@Tag(name = "Project", description = "Operations about project")
 public class ProjectController {
 
 	private final ProjectServiceImpl projectService;
@@ -49,6 +58,12 @@ public class ProjectController {
 		this.projectService = projectService;
 	}
 
+	@Operation(summary = "Creates a new project")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "201", description = "Created",
+					content = { @Content(mediaType = "application/json",
+							schema = @Schema(implementation = ProjectResponseDTO.class)) }),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content) })
 	@PostMapping
 	public ResponseEntity<ProjectResponseDTO> createProject(@Valid @RequestBody ProjectRequestDTO projectRequestDTO) {
 		ProjectResponseDTO projectResponseDTO = projectService.save(projectRequestDTO);
@@ -57,11 +72,27 @@ public class ProjectController {
 		return ResponseEntity.created(location).body(projectResponseDTO);
 	}
 
+	@Operation(summary = "Returns a list of project")
+	@ApiResponses(
+			value = {
+					@ApiResponse(responseCode = "200", description = "Succeeded",
+							content = { @Content(mediaType = "application/json",
+									array = @ArraySchema(
+											schema = @Schema(implementation = ProjectResponseDTO.class))) }),
+					@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+					@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content) })
 	@GetMapping
 	public ResponseEntity<List<ProjectResponseDTO>> getProjects() {
 		return ResponseEntity.ok(projectService.getProjects());
 	}
 
+	@Operation(summary = "Returns information about a specified project")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Succeeded",
+					content = { @Content(mediaType = "application/json",
+							schema = @Schema(implementation = ProjectResponseDTO.class)) }),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Not found", content = @Content) })
 	@GetMapping("/{id}")
 	public ResponseEntity<ProjectResponseDTO> getProjectById(@PathVariable String id) {
 		return ResponseEntity.ok(projectService.getProjectById(UUID.fromString(id)));
