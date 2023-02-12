@@ -2,13 +2,23 @@
 
 This repository contains some examples of different WorkFlows that can be created with the Parodos infrastructure-service
 
-Its recommended that you read the README for the 'parodos-model-api' and the 'infrastructure-service' prior to working with this sample.
+Its recommended that you read the README for the 'parodos-model-api' prior to working with this sample. The README of the 'workflow-service' will explain how to execute the workflow. 
 
-## Using This Sample
+## What Is In This Sample
 
-The following is a review of how Assessment and Infrastructure WorkFlows can be configured within their own Jar for consumption by the BeanWorkflowRegistryImpl contained in the Infrastructure Service. *Note*: Future versions of the Infrastructure Service will include means of registering Tasks and WorkFlows that are not dependent on the Spring Framework and/or rebuilding the application.
+In this version of Parodos, Workflow projects are Java project. All configuration is done using the Spring Framework. These samples are built with Maven, however Gradle could also be used.
 
-### Compiling The Code
+The examples in this project can be found in two different packages.
+
+### Simple
+
+This package shows different WorkflowTask(s) being created. The project shows how to create both Sequential and Parrellel workflows.
+
+### Complex
+
+This package shows how to work with WorkflowTasks that create a manual process that needs to be monitored before further WorkFlowTasks can be created. In this project WorkflowCheckers and other related concepts are created and configured.
+
+## Compiling The Code
 
 To get the Parodos dependencies you will need to run a maven install from the **root** of the project folder. This will build all the Java dependencies.
 
@@ -20,7 +30,7 @@ mvn install
 
 ### Adding The workflow-examples To The InfraStructure Service
 
-Once the Jar has been compiled, ensure its added to the pom.xml of the InfraStructure Service. This will allow the BeanWorkflowRegistryImpl to register the Tasks and WorkFlows. 
+Once the Jar has been compiled, ensure its added to the pom.xml of the workflow-service. This will allow the BeanWorkflowRegistryImpl to register the WorkflowTasks and Workflows. 
 
 
 ```xml
@@ -33,35 +43,26 @@ Once the Jar has been compiled, ensure its added to the pom.xml of the InfraStru
 
 
 ```
-Compiled the application by running the following in the 'infrastructure-service' folder.
 
-```shell
+Refer to the README of the workflow-service for how to build and start the application with this dependency in place.
 
-mvn install
+This project contains a script to run the examples in this project 'run_examples.sh' and to start the workflow-service in LOCAL mode for testing 'start_workflow_service.sh'.
 
-```
-Then start it by running the 'start_infrastructure_service.sh' script. This will start the application in 'local' mode. This profile is intended for local use. DO NOT ENABLE THIS PROFILE IN PRODUCTION. Starting in any other profile will enable security and integrate it with Keycloak for authentication.
+## Overview of Sample Code and Configuration
 
 
-### Testing The Application With The WorkFlow-Examples
-
-Execute the 'run_examples.sh' script to run the workflows from the commandline. The outputs of the script will help demonstrate the logic of the Workflows as they execute
 
 ## Notes
 
-### Package Structures and InfraStructure Service's BeanWorkFlowRegistryImpl
+### Package Structures and Workflow-Service's BeanWorkFlowRegistryImpl
 
-If you are using the out of the box BeanWorkFlowRegistryImpl in the infrastructure service, ensure your packages have the base of 'com.redhat.parodos'. If a different structure is used 'com.mycompany.parodos', any WorkFlows and Tasks defined will not be detected by the BeanWorkFlowRegistryImpl.
+Ensure your packages have the base of 'com.redhat.parodos'. If a different structure is used, 'com.mycompany.parodos' for example, any WorkFlows and Tasks defined will not be detected by the BeanWorkFlowRegistryImpl of the workflow-service.
 
 ### A Word On Dependencies
 
-Please review the dependencies included in the infrastructure service and ensure when creating Tasks and WorkFlows in an external Jar (such as outlined in this project) that dependencies are not included that override existing dependencies that the Infrastructure Service has.
+Please review the dependencies included in the workflow-service and ensure when creating Tasks and WorkFlows in an external Jar (such as outlined in this project) that dependencies are not included that override existing dependencies that the workflow-service has.
 
 ### Tips On Task and WorkFlow Complexity
 
 If you find yourself creating over complex Tasks and WorkFlow, you are not using Parodos for its intended use case. Parodos is intended to tie together existing logic and tools. Tasks and WorkFlows should be posting messages on queues, calling APIs and other light weight integrations.
-
-# Authors
-
-Luke Shannon (Github: lshannon)
 
