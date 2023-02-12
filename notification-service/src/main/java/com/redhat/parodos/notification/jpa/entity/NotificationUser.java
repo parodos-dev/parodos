@@ -57,9 +57,11 @@ public class NotificationUser extends AbstractEntity {
 	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "user_group", joinColumns = @JoinColumn(name = "notificationuser_id"),
 			inverseJoinColumns = @JoinColumn(name = "notificationgroup_id"))
+	@Builder.Default
 	private List<NotificationGroup> notificationGroupList = new ArrayList<>();
 
 	@ManyToMany(mappedBy = "notificationUserList", fetch = FetchType.LAZY)
+	@Builder.Default
 	private List<NotificationRecord> notificationRecordList = new ArrayList<>();
 
 	public String getUsername() {

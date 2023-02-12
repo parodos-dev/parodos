@@ -15,13 +15,10 @@
  */
 package com.redhat.parodos.workflow.task.assessment;
 
+import java.util.List;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
-import com.redhat.parodos.workflow.task.WorkFlowTask;
 import com.redhat.parodos.workflow.task.WorkFlowTaskType;
-import lombok.Getter;
-
-import java.util.List;
 
 /**
  * Base Class for Assessment WorkFlowTasks. An implementation of this class would do an
@@ -44,6 +41,10 @@ public abstract class BaseAssessmentTask extends BaseWorkFlowTask {
 
 	public List<WorkFlowOption> getWorkFlowOptions() {
 		return workflowOptions;
+	}
+
+	public WorkFlowTaskType getType() {
+		return type;
 	}
 
 }

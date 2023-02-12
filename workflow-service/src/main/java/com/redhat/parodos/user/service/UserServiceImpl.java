@@ -15,21 +15,18 @@
  */
 package com.redhat.parodos.user.service;
 
+import java.util.UUID;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 import com.redhat.parodos.user.dto.UserResponseDTO;
 import com.redhat.parodos.user.entity.User;
 import com.redhat.parodos.user.repository.UserRepository;
-import java.util.UUID;
-import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
 
 /**
  * User service implementation
  *
  * @author Annel Ketcha (Github: anludke)
  */
-
-@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 

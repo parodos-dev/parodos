@@ -15,10 +15,8 @@
  */
 package com.redhat.parodos.notification.jpa.entity;
 
-import com.redhat.parodos.notification.jpa.entity.base.AbstractEntity;
-import lombok.Data;
-import lombok.Setter;
-
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -29,8 +27,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
+import com.redhat.parodos.notification.jpa.entity.base.AbstractEntity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * The record that keeps track of notifications for a user, if it read and what
@@ -44,6 +43,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "NotificationRecord")
+@EqualsAndHashCode(callSuper = false)
 public class NotificationRecord extends AbstractEntity {
 
 	@OneToOne(cascade = CascadeType.ALL)

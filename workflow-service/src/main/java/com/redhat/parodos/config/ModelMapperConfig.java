@@ -15,16 +15,15 @@
  */
 package com.redhat.parodos.config;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
 import com.redhat.parodos.project.entity.Project;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.dto.converter.WorkFlowTaskDefinitionDTOConverter;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
-import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Bean;
 
 /**
  * Model mapper configuration
@@ -32,12 +31,11 @@ import org.springframework.context.annotation.Bean;
  * @author Annel Ketcha (Github: anludke)
  * @author Richard Wang (Github: richardw98)
  */
-@Slf4j
 @Configuration
 public class ModelMapperConfig {
 
 	@Bean
-	public ModelMapper modelMapper() {
+	ModelMapper modelMapper() {
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setAmbiguityIgnored(true);
 		addProjectUserMapping(modelMapper);

@@ -15,12 +15,14 @@
  */
 package com.redhat.parodos.workflow.definition.entity;
 
-import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.UUID;
+import javax.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * workflow checker definition entity primary key
@@ -33,7 +35,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Getter
+@Setter
 public class WorkFlowCheckerDefinitionPK implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private UUID workFlowCheckerId;
 

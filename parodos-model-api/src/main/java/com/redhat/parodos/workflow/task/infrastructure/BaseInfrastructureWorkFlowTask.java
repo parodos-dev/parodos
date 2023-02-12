@@ -16,11 +16,8 @@
 package com.redhat.parodos.workflow.task.infrastructure;
 
 import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
-import com.redhat.parodos.workflow.task.WorkFlowTask;
 import com.redhat.parodos.workflow.task.WorkFlowTaskType;
-import com.redhat.parodos.workflow.task.checker.BaseWorkFlowCheckerTask;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
-import lombok.Getter;
 
 /**
  * Base Class for an InfrastrcutureWorkFlowTask.
@@ -45,6 +42,10 @@ public abstract class BaseInfrastructureWorkFlowTask extends BaseWorkFlowTask {
 
 	public void setWorkFlowChecker(WorkFlow checkerWorkflow) {
 		this.checkerWorkflow = checkerWorkflow;
+	}
+
+	public WorkFlowTaskType getType() {
+		return type;
 	}
 
 }

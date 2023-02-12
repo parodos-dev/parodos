@@ -15,22 +15,19 @@
  */
 package com.redhat.parodos.notification.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.ArrayList;
 import java.util.List;
-
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 import com.redhat.parodos.notification.controller.AbstractNotificationsIntegrationTest;
 import com.redhat.parodos.notification.jpa.NotificationsDataCreator;
 import com.redhat.parodos.notification.jpa.entity.NotificationUser;
 import com.redhat.parodos.notification.jpa.repository.NotificationGroupRepository;
 import com.redhat.parodos.notification.jpa.repository.NotificationUserRepository;
-import com.redhat.parodos.notification.service.NotificationUserService;
-import org.junit.jupiter.api.Test;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Richard Wang (Github: RichardW98)

@@ -60,8 +60,6 @@ public class NotificationUserGroupRelationshipTests extends AbstractNotification
 		// associate a group with a user
 		user.get().addNotificationGroup(group.get());
 
-		NotificationUser u = this.notificationUserRepository.save(user.get());
-
 		Optional<NotificationUser> u2 = this.notificationUserRepository
 				.findByUsername(NotificationsDataCreator.USERNAME);
 		assertThat(u2.isPresent());

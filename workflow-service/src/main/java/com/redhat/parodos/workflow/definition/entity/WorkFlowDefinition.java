@@ -15,15 +15,18 @@
  */
 package com.redhat.parodos.workflow.definition.entity;
 
-import com.redhat.parodos.common.AbstractEntity;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+
+import com.redhat.parodos.common.AbstractEntity;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -60,12 +63,15 @@ public class WorkFlowDefinition extends AbstractEntity {
 	private Date modifyDate;
 
 	@OneToMany(mappedBy = "workFlowDefinition", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@Builder.Default
 	private List<WorkFlowTaskDefinition> workFlowTaskDefinitions = new ArrayList<>();
 
 	@OneToMany(mappedBy = "checkWorkFlow", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@Builder.Default
 	private List<WorkFlowCheckerDefinition> checkerWorkFlowDefinitions = new ArrayList<>();
 
 	@OneToMany(mappedBy = "nextWorkFlow", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@Builder.Default
 	private List<WorkFlowCheckerDefinition> nextWorkFlowDefinitions = new ArrayList<>();
 
 	private String commitId;

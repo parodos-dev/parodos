@@ -15,17 +15,18 @@
  */
 package com.redhat.parodos.project.service;
 
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
+import org.springframework.stereotype.Service;
+
 import com.redhat.parodos.project.dto.ProjectRequestDTO;
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
 import com.redhat.parodos.project.entity.Project;
 import com.redhat.parodos.project.repository.ProjectRepository;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
-import org.springframework.stereotype.Service;
 
 /**
  * Project service implementation
@@ -33,7 +34,6 @@ import org.springframework.stereotype.Service;
  * @author Annel Ketcha (Github: anludke)
  */
 
-@Slf4j
 @Service
 public class ProjectServiceImpl implements ProjectService {
 

@@ -16,11 +16,9 @@
 package com.redhat.parodos.workflow.task.checker;
 
 import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
-import com.redhat.parodos.workflow.task.WorkFlowTask;
 import com.redhat.parodos.workflow.task.WorkFlowTaskType;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
-import lombok.Getter;
 
 /**
  * Basic Contract for checking if a manual process initiated by a @see WorkFlowTask has
@@ -48,6 +46,10 @@ public abstract class BaseWorkFlowCheckerTask extends BaseWorkFlowTask {
 	@Override
 	public WorkReport execute(WorkContext workContext) {
 		return checkWorkFlowStatus(workContext);
+	}
+
+	public WorkFlowTaskType getType() {
+		return type;
 	}
 
 }
