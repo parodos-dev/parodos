@@ -243,6 +243,74 @@ In this configuration section a Workflow is created that does an Assessment and 
 
 ```
 
+The WorkflowOption references a specific Workflow bean definition defined in the same file (onboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW).
+
+This Workflow defintion can be found in the same configuration. For simplicity sake, the LoggingWorkFlowTask is used as the Task in this example by defining different instances of it, and refering to those instances by bean name when being referenced by a Workflow.
+
+```java
+
+	// Start onboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW definition (this is the Workflow described in the WorkflowOption above)
+	@Bean
+	LoggingWorkFlowTask certWorkFlowTask(@Qualifier("namespaceWorkFlow"
+			+ WorkFlowConstants.CHECKER_WORKFLOW) WorkFlow namespaceWorkFlowCheckerWorkFlow) {
+		LoggingWorkFlowTask loggingWorkFlow = new LoggingWorkFlowTask();
+		loggingWorkFlow.setWorkFlowChecker(namespaceWorkFlowCheckerWorkFlow);
+		return loggingWorkFlow;
+	}
+
+	@Bean
+	LoggingWorkFlowTask adGroupWorkFlowTask(@Qualifier("onboardingWorkFlow"
+			+ WorkFlowConstants.CHECKER_WORKFLOW) WorkFlow onboardingWorkFlowCheckerWorkFlow) {
+		LoggingWorkFlowTask loggingWorkFlow = new LoggingWorkFlowTask();
+		loggingWorkFlow.setWorkFlowChecker(onboardingWorkFlowCheckerWorkFlow);
+		return loggingWorkFlow;
+	}
+
+	@Bean
+	LoggingWorkFlowTask dynatraceWorkFlowTask(@Qualifier("onboardingWorkFlow"
+			+ WorkFlowConstants.CHECKER_WORKFLOW) WorkFlow onboardingWorkFlowCheckerWorkFlow) {
+		LoggingWorkFlowTask loggingWorkFlow = new LoggingWorkFlowTask();
+		loggingWorkFlow.setWorkFlowChecker(onboardingWorkFlowCheckerWorkFlow);
+		return loggingWorkFlow;
+	}
+
+	//runs the set of Tasks associated with "Onboarding"
+	@Bean(name = "onboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+	@Infrastructure
+	WorkFlow onboardingWorkflow(@Qualifier("certWorkFlowTask") LoggingWorkFlowTask certWorkFlowTask,
+			@Qualifier("adGroupWorkFlowTask") LoggingWorkFlowTask adGroupWorkFlowTask,
+			@Qualifier("dynatraceWorkFlowTask") LoggingWorkFlowTask dynatraceWorkFlowTask) {
+		// @formatter:off
+		return ParallelFlow.Builder.aNewParallelFlow()
+				.named("onboarding Infrastructure WorkFlow")
+				.execute(certWorkFlowTask, adGroupWorkFlowTask, dynatraceWorkFlowTask)
+				.with(Executors.newFixedThreadPool(3))
+				.build();
+		// @formatter:on
+	}
+	// End onboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW definition definition
+
+```
+
+Here the concept of WorkflowChecker can be seen in the WorkflowTask configurations. For example certWorkFlowTask references the WorkflowChecker namespaceWorkFlowCheckerWorkFlow.
+
+The definition of that Workflow can be seen in the same configuration file.
+
+```java
+
+	@Bean("namespaceWorkFlow" + WorkFlowConstants.CHECKER_WORKFLOW)
+	@Checker(nextWorkFlowName = "networkingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW,
+			cronExpression = "0 0/1 * * * ?")
+	WorkFlow namespaceWorkFlowCheckerWorkFlow(@Qualifier("gateThree") MockApprovalWorkFlowCheckerTask gateThree) {
+		return SequentialFlow.Builder.aNewSequentialFlow().named("namespace Checker WorkFlow").execute(gateThree)
+				.build();
+	}
+
+```
+
+In the @Checker definition, the nextWorkFlowName can be specified. This is the Workflow that can run, provided the WorkflowChecker workflow successfully completes (meaning all WorkfTasks return COMPLETED).
+
+
 #### A Note On Defining WorkflowTasks for Usage In A Workflow
 
 ***Creating a Single Instance Of The Same Workflow Tasks***

@@ -73,7 +73,7 @@ public class ComplexWorkFlowConfiguration {
 
 	// END assessmentWorkFlow definition
 
-	// Start onboardingWorkflow definition
+	// Start onboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW definition (this is the Workflow described in the WorkflowOption above)
 	@Bean
 	LoggingWorkFlowTask certWorkFlowTask(@Qualifier("namespaceWorkFlow"
 			+ WorkFlowConstants.CHECKER_WORKFLOW) WorkFlow namespaceWorkFlowCheckerWorkFlow) {
@@ -98,6 +98,7 @@ public class ComplexWorkFlowConfiguration {
 		return loggingWorkFlow;
 	}
 
+	//runs the set of Tasks associated with "Onboarding"
 	@Bean(name = "onboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
 	@Infrastructure
 	WorkFlow onboardingWorkflow(@Qualifier("certWorkFlowTask") LoggingWorkFlowTask certWorkFlowTask,
@@ -111,7 +112,7 @@ public class ComplexWorkFlowConfiguration {
 				.build();
 		// @formatter:on
 	}
-	// End onboardingWorkflow definition
+	// End onboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW definition definition
 
 	// Start Name Space Logic
 	@Bean
@@ -125,8 +126,12 @@ public class ComplexWorkFlowConfiguration {
 	@Bean(name = "nameSpaceWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
 	@Infrastructure
 	WorkFlow nameSpaceWorkFlow(@Qualifier("nameSpaceWorkFlowTask") LoggingWorkFlowTask nameSpaceWorkFlowTask) {
-		return SequentialFlow.Builder.aNewSequentialFlow().named("nameSpace Infrastructure WorkFlow")
-				.execute(nameSpaceWorkFlowTask).build();
+		// @formatter:off
+		return SequentialFlow.Builder.aNewSequentialFlow()
+				.named("nameSpace Infrastructure WorkFlow")
+				.execute(nameSpaceWorkFlowTask)
+				.build();
+		// @formatter:on
 	}
 	// End Name Space Logic
 
@@ -145,8 +150,13 @@ public class ComplexWorkFlowConfiguration {
 	@Infrastructure
 	WorkFlow networkingWorkFlow(@Qualifier("loadBalancerFlowTask") LoggingWorkFlowTask networkingFlowTask,
 			@Qualifier("failOverWorkFlowTask") LoggingWorkFlowTask failOverWorkFlowTask) {
-		return SequentialFlow.Builder.aNewSequentialFlow().named("networking Infrastructure WorkFlow")
-				.execute(networkingFlowTask).then(failOverWorkFlowTask).build();
+		// @formatter:off
+		return SequentialFlow.Builder.aNewSequentialFlow()
+				.named("networking Infrastructure WorkFlow")
+				.execute(networkingFlowTask)
+				.then(failOverWorkFlowTask)
+				.build();
+		// @formatter:on
 	}
 	// End networking workflow Logic
 
@@ -160,8 +170,12 @@ public class ComplexWorkFlowConfiguration {
 	@Checker(nextWorkFlowName = "nameSpaceWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW,
 			cronExpression = "0 0/1 * * * ?")
 	WorkFlow onboardingWorkFlowCheckerWorkFlow(@Qualifier("gateTwo") MockApprovalWorkFlowCheckerTask gateTwo) {
-		return SequentialFlow.Builder.aNewSequentialFlow().named("onboarding Checker WorkFlow").execute(gateTwo)
+		// @formatter:off
+		return SequentialFlow.Builder.aNewSequentialFlow()
+				.named("onboarding Checker WorkFlow")
+				.execute(gateTwo)
 				.build();
+		// @formatter:on
 	}
 	// End onboardingWorkFlowCheck Logic
 
@@ -175,8 +189,12 @@ public class ComplexWorkFlowConfiguration {
 	@Checker(nextWorkFlowName = "networkingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW,
 			cronExpression = "0 0/1 * * * ?")
 	WorkFlow namespaceWorkFlowCheckerWorkFlow(@Qualifier("gateThree") MockApprovalWorkFlowCheckerTask gateThree) {
-		return SequentialFlow.Builder.aNewSequentialFlow().named("namespace Checker WorkFlow").execute(gateThree)
+		// @formatter:off
+		return SequentialFlow.Builder.aNewSequentialFlow()
+				.named("namespace Checker WorkFlow")
+				.execute(gateThree)
 				.build();
+		// @formatter:on
 	}
 	// End namespaceWorkFlowCheck Logic
 

@@ -48,7 +48,8 @@ public class SimpleWorkFlowConfiguration {
 			LoggingWorkFlowTask loggingTask) {
 		// @formatter:off
 		return SequentialFlow
-				.Builder.aNewSequentialFlow().named("simple Sequential WorkFlow")
+				.Builder.aNewSequentialFlow()
+				.named("simple Sequential WorkFlow")
 				.execute(restCall)
 				.then(loggingTask)
 				.build();
@@ -79,9 +80,11 @@ public class SimpleWorkFlowConfiguration {
 			@Qualifier("simpleParallelTask3") LoggingWorkFlowTask simpleParallelTask3) {
 		// @formatter:off
 		return ParallelFlow
-				.Builder.aNewParallelFlow().named("simple Parallel WorkFlow")
+				.Builder.aNewParallelFlow()
+				.named("simple Parallel WorkFlow")
 				.execute(simpleParallelTask1, simpleParallelTask2, simpleParallelTask3)
-				.with(Executors.newFixedThreadPool(3)).build();
+				.with(Executors.newFixedThreadPool(3))
+				.build();
 		// @formatter:on
 	}
 	// END Parallel Example (WorkflowTasks and Workflow Definitions)
