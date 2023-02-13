@@ -42,6 +42,11 @@ public class SimpleWorkFlowConfiguration {
 		return new RestAPIWorkFlowTask(URL_DEFINED_AT_CONFIGURATION_OF_TASK);
 	}
 
+	@Bean
+	LoggingWorkFlowTask loggingTask() {
+		return new LoggingWorkFlowTask();
+	}
+
 	@Bean(name = "simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
 	@Infrastructure
 	WorkFlow simpleSequentialWorkFlowTask(@Qualifier("restCall") RestAPIWorkFlowTask restCall,

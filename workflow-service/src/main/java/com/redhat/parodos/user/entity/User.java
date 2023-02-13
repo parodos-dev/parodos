@@ -25,6 +25,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 
+import com.nimbusds.jose.shaded.json.annotate.JsonIgnore;
 import com.redhat.parodos.common.AbstractEntity;
 import com.redhat.parodos.project.entity.Project;
 
@@ -49,6 +50,13 @@ import lombok.Setter;
 public class User extends AbstractEntity {
 
 	private String username;
+
+	@JsonIgnore
+	private String password;
+
+	private String authority;
+
+	private boolean enabled;
 
 	private String firstName;
 
