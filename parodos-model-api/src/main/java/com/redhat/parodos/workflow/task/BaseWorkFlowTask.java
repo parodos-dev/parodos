@@ -30,8 +30,9 @@ import java.util.Map;
 /**
  * Base Class for a WorkFlowTask.
  * <p>
- * This includes logic for getting Parameter values from the WorkContext. The bean name is used when Reading from the WorkContextDelegate
- * as more than one WorkflowTask might have the same ParameterName
+ * This includes logic for getting Parameter values from the WorkContext. The bean name is
+ * used when Reading from the WorkContextDelegate as more than one WorkflowTask might have
+ * the same ParameterName
  *
  * @author Luke Shannon (Github: lshannon)
  */

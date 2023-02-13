@@ -30,7 +30,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Simple Assessment to determine if Onboarding is appropriate
+ * Simple Assessment to determine if an Onboarding Workflow is appropriate. It returns a
+ * WorkflowOption to represent the Onboarding Workflow
  *
  * @author Luke Shannon (Github: lshannon)
  */

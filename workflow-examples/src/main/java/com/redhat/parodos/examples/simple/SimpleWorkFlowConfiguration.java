@@ -34,24 +34,29 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SimpleWorkFlowConfiguration {
 
-	@Bean
-	RestAPIWorkFlowTask simpleTask1() {
-		return new RestAPIWorkFlowTask();
-	}
+	private final String URL_DEFINED_AT_CONFIGURATION_OF_TASK = "https://httpbin.org/post";
 
+	// START Sequential Example (WorkflowTasks and Workflow Definitions)
 	@Bean
-	LoggingWorkFlowTask simpleTask2() {
-		return new LoggingWorkFlowTask();
+	RestAPIWorkFlowTask restCall() {
+		return new RestAPIWorkFlowTask(URL_DEFINED_AT_CONFIGURATION_OF_TASK);
 	}
 
 	@Bean(name = "simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
 	@Infrastructure
-	WorkFlow simpleSequentialWorkFlowTask(@Qualifier("simpleTask1") RestAPIWorkFlowTask simpleTask1,
-			@Qualifier("simpleTask2") LoggingWorkFlowTask simpleTask2) {
-		return SequentialFlow.Builder.aNewSequentialFlow().named("simple Sequential Infrastructure WorkFlow")
-				.execute(simpleTask1).then(simpleTask2).build();
+	WorkFlow simpleSequentialWorkFlowTask(@Qualifier("restCall") RestAPIWorkFlowTask restCall,
+			LoggingWorkFlowTask loggingTask) {
+		// @formatter:off
+		return SequentialFlow
+				.Builder.aNewSequentialFlow().named("simple Sequential WorkFlow")
+				.execute(restCall)
+				.then(loggingTask)
+				.build();
+		// @formatter:on
 	}
+	// END Sequential Example (WorkflowTasks and Workflow Definitions)
 
+	// START Parallel Example (WorkflowTasks and Workflow Definitions)
 	@Bean
 	LoggingWorkFlowTask simpleParallelTask1() {
 		return new LoggingWorkFlowTask();
@@ -72,9 +77,13 @@ public class SimpleWorkFlowConfiguration {
 	WorkFlow simpleParallelWorkFlowTask(@Qualifier("simpleParallelTask1") LoggingWorkFlowTask simpleParallelTask1,
 			@Qualifier("simpleParallelTask2") LoggingWorkFlowTask simpleParallelTask2,
 			@Qualifier("simpleParallelTask3") LoggingWorkFlowTask simpleParallelTask3) {
-		return ParallelFlow.Builder.aNewParallelFlow().named("simple Parallel Infrastructure WorkFlow")
+		// @formatter:off
+		return ParallelFlow
+				.Builder.aNewParallelFlow().named("simple Parallel WorkFlow")
 				.execute(simpleParallelTask1, simpleParallelTask2, simpleParallelTask3)
 				.with(Executors.newFixedThreadPool(3)).build();
+		// @formatter:on
 	}
+	// END Parallel Example (WorkflowTasks and Workflow Definitions)
 
 }

@@ -16,9 +16,10 @@
 package com.redhat.parodos.examples.simple;
 
 import java.util.List;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
 import com.redhat.parodos.workflow.task.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
@@ -38,19 +39,23 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @Slf4j
-@Component
 public class RestAPIWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
-	public static final String PAYLOAD_PASSED_IN_FROM_SERVICE = "PAYLOAD_PASSED_IN_FROM_SERVICE";
+	private static final String PAYLOAD_PASSED_IN_FROM_SERVICE = "PAYLOAD_PASSED_IN_FROM_SERVICE";
 
-	public static final String URL_PASSED_IN_FROM_SERVICE = "URL_PASSED_IN_FROM_SERVICE";
+	private String urlDefinedAtTaskCreation;
+
+	public RestAPIWorkFlowTask(String urlDefinedAtTaskCreation) {
+		super();
+		this.urlDefinedAtTaskCreation = urlDefinedAtTaskCreation;
+	}
 
 	/**
 	 * Executed by the InfrastructureTask engine as part of the Workflow
 	 */
 	public WorkReport execute(WorkContext workContext) {
 		try {
-			String urlString = getParameterValue(workContext, URL_PASSED_IN_FROM_SERVICE);
+			String urlString = getParameterValue(workContext, urlDefinedAtTaskCreation);
 			String payload = getParameterValue(workContext, PAYLOAD_PASSED_IN_FROM_SERVICE);
 			log.info("Running Task REST API Call: urlString: {} payload: {} ", urlString, payload);
 			RestTemplate restTemplate = new RestTemplate();
@@ -71,7 +76,7 @@ public class RestAPIWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	@Override
 	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
 		return List.of(
-				WorkFlowTaskParameter.builder().key(URL_PASSED_IN_FROM_SERVICE)
+				WorkFlowTaskParameter.builder().key(urlDefinedAtTaskCreation)
 						.description("The Url of the service (ie: https://httpbin.org/post").optional(false)
 						.type(WorkFlowTaskParameterType.URL).build(),
 				WorkFlowTaskParameter.builder().key(PAYLOAD_PASSED_IN_FROM_SERVICE)

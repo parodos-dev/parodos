@@ -38,8 +38,10 @@ import java.util.concurrent.Executors;
 @Configuration
 public class ComplexWorkFlowConfiguration {
 
-	// Start Assessment Logic
-	// Infrastructure Option for Onboarding
+	// START assessmentWorkFlow definition
+
+	// A WorkflowOption describing in user friendly terms what a Workflow does - this can
+	// be used in a UI to provide choices to a User on which Workflow to run
 	@Bean
 	WorkFlowOption onboardingOption() {
 		return new WorkFlowOption.Builder("onboardingOption",
@@ -48,23 +50,30 @@ public class ComplexWorkFlowConfiguration {
 						.setDescription("An example of a complex WorkFlow").build();
 	}
 
-	// Determines what WorkFlowOption if available based on Input
+	// An AssessmentTask returns one or more WorkFlowOption wrapped in a WorkflowOptions
 	@Bean
 	OnboardingAssessmentTask onboardingAssessmentTask(
 			@Qualifier("onboardingOption") WorkFlowOption awesomeToolsOption) {
 		return new OnboardingAssessmentTask(awesomeToolsOption);
 	}
 
+	// A Workflow designed to execute and return WorkflowOption(s) that can be executed
+	// next. In this case there is only one.
 	@Bean(name = "onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
 	@Assessment
 	WorkFlow assessmentWorkFlow(
 			@Qualifier("onboardingAssessmentTask") OnboardingAssessmentTask onboardingAssessmentTask) {
-		return SequentialFlow.Builder.aNewSequentialFlow().named("onboarding Assessment WorkFlow")
-				.execute(onboardingAssessmentTask).build();
+		// @formatter:off
+		return SequentialFlow.Builder.aNewSequentialFlow()
+				.named("onboarding Assessment WorkFlow")
+				.execute(onboardingAssessmentTask)
+				.build();
+		// @formatter:on
 	}
-	// End Assessment Logic
 
-	// Start Onboarding Logic
+	// END assessmentWorkFlow definition
+
+	// Start onboardingWorkflow definition
 	@Bean
 	LoggingWorkFlowTask certWorkFlowTask(@Qualifier("namespaceWorkFlow"
 			+ WorkFlowConstants.CHECKER_WORKFLOW) WorkFlow namespaceWorkFlowCheckerWorkFlow) {
@@ -94,11 +103,15 @@ public class ComplexWorkFlowConfiguration {
 	WorkFlow onboardingWorkflow(@Qualifier("certWorkFlowTask") LoggingWorkFlowTask certWorkFlowTask,
 			@Qualifier("adGroupWorkFlowTask") LoggingWorkFlowTask adGroupWorkFlowTask,
 			@Qualifier("dynatraceWorkFlowTask") LoggingWorkFlowTask dynatraceWorkFlowTask) {
-		return ParallelFlow.Builder.aNewParallelFlow().named("onboarding Infrastructure WorkFlow")
+		// @formatter:off
+		return ParallelFlow.Builder.aNewParallelFlow()
+				.named("onboarding Infrastructure WorkFlow")
 				.execute(certWorkFlowTask, adGroupWorkFlowTask, dynatraceWorkFlowTask)
-				.with(Executors.newFixedThreadPool(3)).build();
+				.with(Executors.newFixedThreadPool(3))
+				.build();
+		// @formatter:on
 	}
-	// End Onboarding Logic
+	// End onboardingWorkflow definition
 
 	// Start Name Space Logic
 	@Bean
