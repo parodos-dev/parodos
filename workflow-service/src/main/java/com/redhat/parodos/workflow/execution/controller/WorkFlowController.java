@@ -58,7 +58,7 @@ public class WorkFlowController {
 						WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ID).toString())
 				.workFlowOptions((WorkFlowOptions) WorkContextDelegate.read(workReport.getWorkContext(),
 						WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-						WorkContextDelegate.Resource.INFRASTRUCTURE_OPTIONS))
+						WorkContextDelegate.Resource.WORKFLOW_OPTIONS))
 				.build());
 	}
 

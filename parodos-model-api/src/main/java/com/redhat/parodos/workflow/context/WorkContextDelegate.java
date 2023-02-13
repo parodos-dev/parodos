@@ -31,53 +31,102 @@ public class WorkContextDelegate {
 	private WorkContextDelegate() {
 	}
 
-	private static String spaceChar = " ";
+	private static final String spaceChar = " ";
 
-	private static String underscoreChar = "_";
+	private static final String underscoreChar = "_";
 
-	public enum ProcessType {
+	public static enum ProcessType {
 
 		PROJECT, WORKFLOW_DEFINITION, WORKFLOW_TASK_DEFINITION, WORKFLOW_EXECUTION, WORKFLOW_TASK_EXECUTION
 
 	}
 
-	public enum Resource {
+	public static enum Resource {
 
-		ID, NAME, PARAMETERS, ARGUMENTS, STATUS, INFRASTRUCTURE_OPTIONS
-
+		ID, NAME, PARAMETERS, ARGUMENTS, STATUS, WORKFLOW_OPTIONS
+		
 	}
 
+	/**
+	 * Used for creating a Key to store a value in the WorkFlowContext
+	 * 
+	 * @param processType the type of Workflow object being persisted (ie: WORKFLOW_TASK_DEFINITION)
+	 * @param resource the object related to the processType (ie: PARAMETERS)
+	 * @return the generated key
+	 */
 	public static String buildKey(ProcessType processType, Resource resource) {
 		return String.format("%s%s%s", processType.name(), underscoreChar, resource.name()).toUpperCase();
 	}
 
-	public static String buildKey(ProcessType processType, String processName, Resource resource) {
+	/**
+	 * Used for creating a Key to store a value in the WorkFlowContext
+	 * 
+	 * @param processType the type of Workflow object being persisted (ie: WORKFLOW_TASK_DEFINITION)
+	 * @param workflowTaskName a unique identifier of a WorkflowTask in the event that multiple WorkflowTasks are persisting values for the the same processTpe and resource
+	 * @param resource resource the object related to the processType (ie: PARAMETERS)
+	 * @return
+	 */
+	public static String buildKey(ProcessType processType, String workflowTaskName, Resource resource) {
 		return String.format("%s%s%s%s%s", processType.name(), underscoreChar,
-				processName.replace(spaceChar, underscoreChar), underscoreChar, resource.name()).toUpperCase();
+				workflowTaskName.replace(spaceChar, underscoreChar), underscoreChar, resource.name()).toUpperCase();
 	}
 
-	public static Object read(WorkContext workContext, ProcessType processType, String processName, Resource resource) {
-		return workContext.get(buildKey(processType, processName, resource));
+	/**
+	 * Gets a value from the WorkflowContext by generating a Key based on the characteristics of the value supplied to this method
+	 * 
+	 * @param workContext reference to the context
+	 * @param processType the type of Workflow object being persisted (ie: WORKFLOW_TASK_DEFINITION)
+	 * @param workflowTaskName a unique identifier of a WorkflowTask in the event that multiple WorkflowTasks have persisted this information
+	 * @param resource the object related to the processType (ie: PARAMETERS)
+	 * @return the object obtained from the WorkflowContext using the generated key. A null is returned if the key does not return a value
+	 */
+	public static Object read(WorkContext workContext, ProcessType processType, String workflowTaskName, Resource resource) {
+		return workContext.get(buildKey(processType, workflowTaskName, resource));
 	}
 
-	public static void write(WorkContext workContext, ProcessType processType, String processName, Resource resource,
+	/**
+	 * Writes a value to the WorkflowContext. A Key will be generated based on the characteristics of the value supplied to this method
+	 * 
+	 * @param workContext reference to the context
+	 * @param processType the type of Workflow object being persisted (ie: WORKFLOW_TASK_DEFINITION)
+	 * @param workflowTaskName a unique identifier of a WorkflowTask in the event that multiple WorkflowTasks have persisted this information
+	 * @param resource the object related to the processType (ie: PARAMETERS)
+	 * @param object the reference to store
+	 */
+	public static void write(WorkContext workContext, ProcessType processType, String workFlowTaskName, Resource resource,
 			Object object) {
-		workContext.put(buildKey(processType, processName, resource), object);
+		workContext.put(buildKey(processType, workFlowTaskName, resource), object);
 	}
 
+	/**
+	  * Gets a value from the WorkflowContext by generating a Key based on the characteristics of the value supplied to this method
+	 * 
+	 * @param workContext reference to the context
+	 * @param processType the type of Workflow object being persisted (ie: WORKFLOW_TASK_DEFINITION)
+	 * @param resource the object related to the processType (ie: PARAMETERS)
+	 * @return the object obtained from the WorkflowContext using the generated key. A null is returned if the key does not return a value
+	 */
 	public static Object read(WorkContext workContext, ProcessType processType, Resource resource) {
 		return workContext.get(buildKey(processType, resource));
 	}
 
+	/**
+	 * Gets a value from the WorkflowContext by generating a Key based on the characteristics of the value supplied to this method
+	 * 
+	 * @param workContext reference to the context
+	 * @param processType the type of Workflow object being persisted (ie: WORKFLOW_TASK_DEFINITION)
+	 * @param resource the object related to the processType (ie: PARAMETERS)
+	 * @return the object obtained from the WorkflowContext using the generated key. A null is returned if the key does not return a value
+	 */
 	public static void write(WorkContext workContext, ProcessType processType, Resource resource, Object object) {
 		workContext.put(buildKey(processType, resource), object);
 	}
 
 	/**
 	 *
-	 * Gets a String value from the WorkContext
-	 * @param workContext reference from the workflow-engine that is shared across
-	 * WorkFlowTasks. It wraps a Map
+	 * Gets a required value from the WorkContext with a known key
+	 * 
+	 * @param workContext reference from the workflow-engine that is shared across WorkFlowTasks
 	 * @param key used to put/get values from the WorkContext
 	 * @return String value from the Map
 	 * @throws MissingParameterException if the value not found
@@ -92,9 +141,9 @@ public class WorkContextDelegate {
 	}
 
 	/**
-	 * Gets a String value from the WorkContext
-	 * @param workContext reference from the workflow-engine that is shared across
-	 * WorkFlowTasks. It wraps a Map
+	 * Gets an optional String value from the WorkContext with a known key
+	 * 
+	 * @param workContext reference from the workflow-engine that is shared across WorkFlowTasks
 	 * @param key used to put/get values from the WorkContext
 	 * @return String value from the Map or a null if that key does not exist
 	 *

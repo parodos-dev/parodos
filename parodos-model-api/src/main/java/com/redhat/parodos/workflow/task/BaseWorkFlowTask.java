@@ -30,9 +30,8 @@ import java.util.Map;
 /**
  * Base Class for a WorkFlowTask.
  * <p>
- * This includes the option for a @see WorkFlowChecker to be specified in the event that
- * this WorkFlowTask triggers a long running process that will block further Workflows
- * from being able to execute
+ * This includes logic for getting Parameter values from the WorkContext. The bean name is used when Reading from the WorkContextDelegate
+ * as more than one WorkflowTask might have the same ParameterName
  *
  * @author Luke Shannon (Github: lshannon)
  */

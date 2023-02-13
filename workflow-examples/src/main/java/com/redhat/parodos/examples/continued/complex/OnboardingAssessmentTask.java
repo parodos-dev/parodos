@@ -45,7 +45,7 @@ public class OnboardingAssessmentTask extends BaseAssessmentTask {
 	@Override
 	public WorkReport execute(WorkContext workContext) {
 		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-				WorkContextDelegate.Resource.INFRASTRUCTURE_OPTIONS,
+				WorkContextDelegate.Resource.WORKFLOW_OPTIONS,
 				new WorkFlowOptions.Builder().addNewOption(getWorkFlowOptions().get(0)).build());
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
