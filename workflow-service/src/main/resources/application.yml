@@ -27,3 +27,7 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: ${keycloak_url:http://localhost:3434/realms/Parodos/protocol/openid-connect/certs}
+
+springdoc:
+  swagger-ui:
+    tagsSorter: alpha
