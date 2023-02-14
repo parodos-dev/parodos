@@ -15,20 +15,18 @@
  */
 package com.redhat.parodos.security;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
+import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
-import javax.sql.DataSource;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 /**
  * Turn off security for Local testing only. Do not enable this profile in production
@@ -48,10 +46,19 @@ public class LocalSecurityConfiguration {
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.cors().disable().csrf().disable().authorizeRequests()
-				.antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/login**", "/h2/**").permitAll().antMatchers("/**")
-				.authenticated().and().httpBasic(withDefaults()).headers().frameOptions().disable().and()
-				.formLogin(form -> form.loginProcessingUrl("/perform_login")).logout().logoutSuccessUrl("/login")
+		// @formatter:off
+				http
+				.cors().disable()
+				.csrf().disable()
+				.authorizeRequests()
+				.antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/login**", "/h2/**")
+				.permitAll().antMatchers("/**")
+				.authenticated()
+				.and()
+				.httpBasic(withDefaults()).headers().frameOptions().disable()
+				.and()
+				.formLogin(form -> form.loginProcessingUrl("/perform_login"))
+				.logout().logoutSuccessUrl("/login")
 				.permitAll();
 		// @formatter:on
 		return http.build();
