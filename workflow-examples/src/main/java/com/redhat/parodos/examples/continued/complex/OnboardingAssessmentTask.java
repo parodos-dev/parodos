@@ -39,15 +39,20 @@ public class OnboardingAssessmentTask extends BaseAssessmentTask {
 
 	private static final String INPUT = "INPUT";
 
-	public OnboardingAssessmentTask(WorkFlowOption infrastructureOption) {
-		super(List.of(infrastructureOption));
+	public OnboardingAssessmentTask(WorkFlowOption workflowOption) {
+		super(List.of(workflowOption));
 	}
+	
 
 	@Override
 	public WorkReport execute(WorkContext workContext) {
 		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
 				WorkContextDelegate.Resource.WORKFLOW_OPTIONS,
-				new WorkFlowOptions.Builder().addNewOption(getWorkFlowOptions().get(0)).build());
+				// @formatter:off
+				new WorkFlowOptions.Builder()
+				.addNewOption(getWorkFlowOptions().get(0))
+				.build());
+				// @formatter:on
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 

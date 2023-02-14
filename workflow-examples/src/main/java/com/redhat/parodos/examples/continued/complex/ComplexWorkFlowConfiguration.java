@@ -162,18 +162,18 @@ public class ComplexWorkFlowConfiguration {
 
 	// Start onboardingWorkFlowCheck Logic
 	@Bean
-	MockApprovalWorkFlowCheckerTask gateTwo() {
+	MockApprovalWorkFlowCheckerTask approvalChecker() {
 		return new MockApprovalWorkFlowCheckerTask();
 	}
 
 	@Bean("onboardingWorkFlow" + WorkFlowConstants.CHECKER_WORKFLOW)
 	@Checker(nextWorkFlowName = "nameSpaceWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW,
 			cronExpression = "0 0/1 * * * ?")
-	WorkFlow onboardingWorkFlowCheckerWorkFlow(@Qualifier("gateTwo") MockApprovalWorkFlowCheckerTask gateTwo) {
+	WorkFlow onboardingWorkFlowCheckerWorkFlow(@Qualifier("approvalChecker") MockApprovalWorkFlowCheckerTask approvalChecker) {
 		// @formatter:off
 		return SequentialFlow.Builder.aNewSequentialFlow()
 				.named("onboarding Checker WorkFlow")
-				.execute(gateTwo)
+				.execute(approvalChecker)
 				.build();
 		// @formatter:on
 	}
@@ -181,18 +181,18 @@ public class ComplexWorkFlowConfiguration {
 
 	// Start namespaceWorkFlowCheck Logic
 	@Bean
-	MockApprovalWorkFlowCheckerTask gateThree() {
+	MockApprovalWorkFlowCheckerTask processCompletionChecker() {
 		return new MockApprovalWorkFlowCheckerTask();
 	}
 
 	@Bean("namespaceWorkFlow" + WorkFlowConstants.CHECKER_WORKFLOW)
 	@Checker(nextWorkFlowName = "networkingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW,
 			cronExpression = "0 0/1 * * * ?")
-	WorkFlow namespaceWorkFlowCheckerWorkFlow(@Qualifier("gateThree") MockApprovalWorkFlowCheckerTask gateThree) {
+	WorkFlow namespaceWorkFlowCheckerWorkFlow(@Qualifier("processCompletionChecker") MockApprovalWorkFlowCheckerTask processCompletionChecker) {
 		// @formatter:off
 		return SequentialFlow.Builder.aNewSequentialFlow()
 				.named("namespace Checker WorkFlow")
-				.execute(gateThree)
+				.execute(processCompletionChecker)
 				.build();
 		// @formatter:on
 	}

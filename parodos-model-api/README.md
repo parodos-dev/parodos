@@ -84,6 +84,8 @@ The following is a brief overview of the object model.
 
 ## Object Overview
 
+The following is a quick description of the important objects and base types in this project. All of these objects are intended to be created (and configured) using Spring beans.
+
 
 ### Parodos WorkflowTask
 
@@ -95,20 +97,162 @@ WorkflowTask objects do work (as defined in the execute method) and are placed i
 
 ** WorkFlowCheckerTask ** - Checks the status of manual processes triggered by other Workflows. WorkFlowCheckerTasks can be long running when place into a WorkFlow when the definition of the Workflow its contained inside is of type WorkFlowCheckerDefinition (the workflow-service provides scheduling for these tasks) and its outcomes 
 
+The following is an example of a WorkflowTask being defined.
 
-### Workflow Definitions and Options
+```java
 
-There are objects to represent the descriptions of Workflow and WorkflowTask. These are used to provide descriptions to the user from the UI layer, but also in persistance
+public class RestAPIWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
-** WorkFlowDefinition ** - a description of a WorkFlow including its WorkFlowType
+	private static final String PAYLOAD_PASSED_IN_FROM_SERVICE = "PAYLOAD_PASSED_IN_FROM_SERVICE";
 
-** WorkFlowCheckerDefinition ** - a description of a WorkFlow that performs checks on the outcome of previous WorkFlows. The workflow-service will execute these on a schedule
+	private String urlDefinedAtTaskCreation;
 
-** WorkFlowTaskDefinition ** - a description of WorkFlowTask. Specific tasks can extend this, pre-populating fields based on their specificity 
+	public RestAPIWorkFlowTask(String urlDefinedAtTaskCreation) {
+		super();
+		this.urlDefinedAtTaskCreation = urlDefinedAtTaskCreation;
+	}
 
-** WorkFlowOption ** - a description of a Workflow that can be presented to a user as a potential Workflow to execute
+	/**
+	 * Executed by the InfrastructureTask engine as part of the Workflow
+	 */
+	public WorkReport execute(WorkContext workContext) {
+		try {
+			String urlString = getParameterValue(workContext, urlDefinedAtTaskCreation);
+			String payload = getParameterValue(workContext, PAYLOAD_PASSED_IN_FROM_SERVICE);
+			log.info("Running Task REST API Call: urlString: {} payload: {} ", urlString, payload);
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<String> result = restTemplate.postForEntity(urlString, payload, String.class);
+			if (result.getStatusCode().is2xxSuccessful()) {
+				log.info("Rest call completed: {}", result.getBody());
+				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
+			}
+			log.error("Call to the API was not successful. Response: {}", result.getStatusCode());
+		}
+		catch (Exception e) {
+			log.error("There was an issue with the REST call: {}", e.getMessage());
 
-** WorkFlowOptions ** - a collection of WorkFlow options grouped in a categories specific to IDP common workflows. These are upgrade, migrate, new (this is onboarding for the first time) and other (these are team related workflows like adding a new developer to a project)
+		}
+		return new DefaultWorkReport(WorkStatus.FAILED, workContext);
+	}
+
+	@Override
+	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
+		return List.of(
+				WorkFlowTaskParameter.builder().key(urlDefinedAtTaskCreation)
+						.description("The Url of the service (ie: https://httpbin.org/post").optional(false)
+						.type(WorkFlowTaskParameterType.URL).build(),
+				WorkFlowTaskParameter.builder().key(PAYLOAD_PASSED_IN_FROM_SERVICE)
+						.description("Json of what to provide for data. (ie: 'Hello!')").optional(false)
+						.type(WorkFlowTaskParameterType.PASSWORD).build());
+	}
+
+	public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
+		return List.of(WorkFlowTaskOutput.HTTP2XX, WorkFlowTaskOutput.OTHER);
+	}
+
+}
+
+
+
+```
+
+
+### Workflow Definitions and Workflow Types
+
+The Parodos model provides some annotations that can be placed on a Bean creating a Workflow object.
+
+There are:
+
+- Assessment
+- Checker
+- Infrastructure
+
+The annotations provide a means of configuring the Workflow and also indicating to the workflow-service these specific types of Workflows so it can provide the related functionality for these Workflows (ie: Checker workflows can be scheduled to execute based on a cron expression specific in the Checker annotation).
+
+Here is an example of a Workflow bean being created (and the WorkflowTask it uses), and a Workflow annotation being used:
+
+```java
+
+	@Bean
+	MockApprovalWorkFlowCheckerTask approvalChecker() {
+		return new MockApprovalWorkFlowCheckerTask();
+	}
+
+	@Bean("onboardingWorkFlow" + WorkFlowConstants.CHECKER_WORKFLOW)
+	@Checker(nextWorkFlowName = "nameSpaceWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW,
+			cronExpression = "0 0/1 * * * ?")
+	WorkFlow onboardingWorkFlowCheckerWorkFlow(@Qualifier("gateTwo") MockApprovalWorkFlowCheckerTask gateTwo) {
+		// @formatter:off
+		return SequentialFlow.Builder.aNewSequentialFlow()
+				.named("onboarding Checker WorkFlow")
+				.execute(gateTwo)
+				.build();
+		// @formatter:on
+	}
+
+```
+
+### Describing Workflows To Users
+
+** WorkFlowOption ** - a description of a Workflow that can be presented to a user as a potential Workflow to execute. These can be created using a building in a methond returning a Bean.
+
+```java
+
+	@Bean
+	WorkFlowOption onboardingOption() {
+		return new WorkFlowOption.Builder("onboardingOption",
+				"onboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+						.addToDetails("A Sample of what could be soon to a user").displayName("Start Using Our Awesome Platform")
+						.setDescription("An Awesome Collection of tools and environments configured for the team to use").build();
+	}
+
+```
+
+** WorkFlowOptions ** - a collection of WorkFlow options grouped in a categories specific to IDP common workflows. These are upgrade, migrate, new (this is onboarding for the first time) and other (these are team related workflows like adding a new developer to a project). WorkflowOptions are created by an AssessmentTask. In a Workflow there might be many of these WorkflowTasks
+
+Here is a sample of a AssessmentTasks.
+
+```java
+
+
+public class OnboardingAssessmentTask extends BaseAssessmentTask {
+
+	private static final String INPUT = "INPUT";
+
+	public OnboardingAssessmentTask(WorkFlowOption workflowOption) {
+		super(List.of(workflowOption));
+	}
+	
+
+	@Override
+	public WorkReport execute(WorkContext workContext) {
+		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.WORKFLOW_OPTIONS,
+				// @formatter:off
+				new WorkFlowOptions.Builder()
+				.addNewOption(getWorkFlowOptions().get(0))
+				.build());
+				// @formatter:on
+		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
+	}
+
+	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
+		return List.of(WorkFlowTaskParameter.builder().key(INPUT)
+				.description("Enter some information to use for the Assessment to determine if they can onboard")
+				.optional(false).type(WorkFlowTaskParameterType.TEXT).build());
+	}
+
+	@Override
+	public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
+		return Collections.emptyList();
+	}
+
+}
+
+```
+
+For a complete example of how to use this API, please refer to the 'workflow-example' project. To learn more about the workflow-service (the Parodos API that executes Workflows and maintains all relevant state), refer to the README of the workflow-service folder.
+
 
 ### Delegates
 
@@ -119,37 +263,9 @@ The model includes some classes that contain useful logic related to creating an
 This project also specifies definition classes, which are required for versioning and for UI related functionality.
 
 
-## Using The API
+## Using This API with the Workflow Service
 
-The following provides some simple examples of how to use the API
-
-### Creating WorkFlowTask
-
-TODO
-
-#### Creaing an AssessmentTask
-
-TODO
-
-### Creating WorkFlowCheckerTasks
-
-TODO
-
-### Creating A WorkFlow
-
-TODO
-
-### Creating A AssessmentWorkflow
-
-TODO
-
-### Creating A WorkFlowCheckerWorkFlow
-
-TODO
-
-## Registering the Customizations With The Infrastructure Service For BeanWorkflowRegistryImpl Consumption
-
-Provided all the code was created in accordance with the above examples, simply generate a Jar file and place this in the classpath of the Infrastructure Service. Upon start up it will register the configured Task(s) and WorkFlow(s).
+Provided all the code was created in following the standards outlined , simply generate a Jar file and place this in the classpath of the Infrastructure Service. Upon start up it will register the configured Task(s) and WorkFlow(s). Its key that 
 
 Future versions of Parodos will include other options for creating and registering WorkFlowTasks and WorkFlows
 
