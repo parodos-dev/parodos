@@ -26,18 +26,7 @@ java -Dspring.profiles.active=local -jar target/workflow-service-0.0.1-SNAPSHOT.
 
 For convience there is a shell script at the root of the folder that will run this command as well (start_workflow_service.sh).
 
-The 'local' is intended for local testing and runs the application without security (Keycloak managed Oauth2 flow is the default). **DO NOT USE THIS PROFILE IN PRODUCTION**
-
-Upon start-up the Swagger Endpoints can be accessed with the following URL: http://localhost:8080/
-
-For more information on configuring Keycloak:
-
-https://www.keycloak.org/server/all-config
-
-https://www.keycloak.org/guides#getting-started
-
-
-![UML](readme-images/swagger.png)
+The 'local' is intended for local testing and runs the application without security (Keycloak managed Oauth2 flow is the default). Documentation is currently being produced for production grade security configurations.
 
 ## Defining Workflows And WorkFlowTasks
 
