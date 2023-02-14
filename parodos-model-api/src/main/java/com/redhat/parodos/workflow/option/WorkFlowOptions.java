@@ -86,8 +86,8 @@ public class WorkFlowOptions {
 	}
 
 	public List<WorkFlowOption> addContinuationOption(WorkFlowOption continuationOption) {
-		upgradeOptions.add(continuationOption);
-		return upgradeOptions;
+		continuationOptions.add(continuationOption);
+		return continuationOptions;
 	}
 
 	public void setContinuationOptions(List<WorkFlowOption> continuationOptions) {
