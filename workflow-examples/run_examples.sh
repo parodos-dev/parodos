@@ -10,6 +10,7 @@ get_workflow_name() {
   curl -X 'GET' -s \
     "http://localhost:8080/api/v1/workflowdefinitions" \
     -H 'accept: */*' \
+    -H 'Authorization: Basic dGVzdDp0ZXN0' \
     -H 'Content-Type: application/json' | jq '.[] | select(.id=="'$1'")' | jq -r '.name'
 }
 
@@ -17,6 +18,7 @@ get_workflow_id() {
   curl -X 'GET' -s \
     "http://localhost:8080/api/v1/workflowdefinitions" \
     -H 'accept: */*' \
+    -H 'Authorization: Basic dGVzdDp0ZXN0' \
     -H 'Content-Type: application/json' | jq '.[] | select(.name=="'$1'")' | jq -r '.id'
 }
 
@@ -24,6 +26,7 @@ get_checker_workflow() {
   curl -X 'GET' -s \
     "http://localhost:8080/api/v1/workflowdefinitions/$1/" \
     -H 'accept: */*' \
+    -H 'Authorization: Basic dGVzdDp0ZXN0' \
     -H 'Content-Type: application/json' | jq '.tasks[] | select(has("workFlowChecker"))' | jq -r '.workFlowChecker' | head -n 1
 }
 
@@ -31,6 +34,7 @@ get_next_workflow() {
   curl -X 'GET' -s \
     "http://localhost:8080/api/v1/workflowdefinitions/$1/" \
     -H 'accept: */*' \
+    -H 'Authorization: Basic dGVzdDp0ZXN0' \
     -H 'Content-Type: application/json' | jq '.tasks[] | select(has("nextWorkFlow"))' | jq -r '.nextWorkFlow' | head -n 1
 }
 
@@ -58,6 +62,7 @@ run_complex_flow() {
   PROJECT_ID=$(curl -X 'POST' -s \
     'http://localhost:8080/api/v1/projects' \
     -H 'accept: */*' \
+    -H 'Authorization: Basic dGVzdDp0ZXN0' \
     -H 'Content-Type: application/json' \
     -d '{
                  "name": "project-1",
@@ -72,6 +77,7 @@ run_complex_flow() {
   INFRASTRUCTURE_OPTION=$(curl -X 'POST' -s \
     'http://localhost:8080/api/v1/workflows' \
     -H 'accept: */*' \
+    -H 'Authorization: Basic dGVzdDp0ZXN0' \
     -H 'Content-Type: application/json' \
     -d '{
           "projectId": "'$PROJECT_ID'",
@@ -89,6 +95,7 @@ run_complex_flow() {
   EXECUTION_ID="$(curl -X 'POST' -s \
     'http://localhost:8080/api/v1/workflows/' \
     -H 'accept: */*' \
+    -H 'Authorization: Basic dGVzdDp0ZXN0' \
     -H 'Content-Type: application/json' \
     -d '{
           "projectId": "'$PROJECT_ID'",
@@ -125,6 +132,7 @@ run_complex_flow() {
   EXECUTION_ID="$(curl -X 'POST' -s \
     "http://localhost:8080/api/v1/workflows/" \
     -H 'accept: */*' \
+    -H 'Authorization: Basic dGVzdDp0ZXN0' \
     -H 'Content-Type: application/json' \
     -d '{
           "projectId": "'$PROJECT_ID'",
@@ -140,6 +148,7 @@ run_complex_flow() {
   EXECUTION_ID="$(curl -X 'POST' -s \
     "http://localhost:8080/api/v1/workflows/" \
     -H 'accept: */*' \
+    -H 'Authorization: Basic dGVzdDp0ZXN0' \
     -H 'Content-Type: application/json' \
     -d '{
           "projectId": "'$PROJECT_ID'",
@@ -159,6 +168,7 @@ run_complex_flow() {
   EXECUTION_ID="$(curl -X 'POST' -s \
     "http://localhost:8080/api/v1/workflows/" \
     -H 'accept: */*' \
+    -H 'Authorization: Basic dGVzdDp0ZXN0' \
     -H 'Content-Type: application/json' \
     -d '{
           "projectId": "'$PROJECT_ID'",
@@ -174,6 +184,7 @@ run_complex_flow() {
   EXECUTION_ID="$(curl -X 'POST' -s \
     "http://localhost:8080/api/v1/workflows/" \
     -H 'accept: */*' \
+    -H 'Authorization: Basic dGVzdDp0ZXN0' \
     -H 'Content-Type: application/json' \
     -d '{
           "projectId": "'$PROJECT_ID'",

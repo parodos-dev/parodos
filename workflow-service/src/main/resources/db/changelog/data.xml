@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="1" author="luke" runAlways="true" runOnChange="true">
+        <!-- insert to User Table -->
+        <insert tableName="user">
+            <column name="username" value="test"/>
+            <column name="password" value="$2a$04$Bq4K2efcqJe8Ofe4ZUB8Aej7FN.DlnVna9OjRD1mKNx8cYhaTsF8G"/>
+            <column name="authority" value="ROLE_ADMIN"/>
+            <column name="enabled" value="1"/>
+            <column name="first_name" value="test"/>
+            <column name="last_name" value="test"/>
+            <column name="email" value="test"/>
+            <column name="object_version" value="0"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
