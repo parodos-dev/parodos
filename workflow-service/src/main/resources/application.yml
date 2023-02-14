@@ -1,29 +1,33 @@
 spring:
   application:
     name: workflow-service
+
   jackson:
     serialization:
       indent-output: true
+
   jpa:
     hibernate:
       ddl-auto: none
-      
+
   datasource:
     url: jdbc:h2:mem:workflow_service
     driverClassName: org.h2.Driver
     username: postgres
     password: postgres
-    
-    
+
   liquibase:
     change-log: classpath:/db/master.xml
 
-  
   main:
     allow-bean-definition-overriding: true
-    
+
   security:
     oauth2:
       resourceserver:
         jwt:
           jwk-set-uri: ${keycloak_url:http://localhost:3434/realms/Parodos/protocol/openid-connect/certs}
+
+springdoc:
+  swagger-ui:
+    tagsSorter: alpha

@@ -18,9 +18,12 @@ package com.redhat.parodos.notification.dto;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
-import lombok.Data;
+
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * Notification record response DTO
@@ -30,38 +33,33 @@ import org.springframework.hateoas.server.core.Relation;
  */
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Relation(collectionRelation = "notificationrecords", itemRelation = "notificationrecord")
 public class NotificationRecordResponseDTO extends RepresentationModel<NotificationRecordResponseDTO> {
-    private UUID id;
 
-    private String subject;
+	private UUID id;
 
-    private Instant createdOn;
+	private String subject;
 
-    private String messageType;
+	private Instant createdOn;
 
-    private String body;
+	private String messageType;
 
-    private String fromuser;
+	private String body;
 
-    private boolean read;
+	private String fromuser;
 
-    private List<String> tags;
+	private boolean read;
 
-    private String folder;
+	private List<String> tags;
 
-    @Override
-    public String toString() {
-        return "NotificationDTO {" +
-                "id=" + id +
-                ", subject='" + subject + '\'' +
-                ", createdOn=" + createdOn +
-                ", messageType='" + messageType + '\'' +
-                ", body='" + body + '\'' +
-                ", fromuser='" + fromuser + '\'' +
-                ", read=" + read +
-                ", tags=" + tags +
-                ", folder='" + folder + '\'' +
-                '}';
-    }
+	private String folder;
+
+	@Override
+	public String toString() {
+		return "NotificationDTO {" + "id=" + id + ", subject='" + subject + '\'' + ", createdOn=" + createdOn
+				+ ", messageType='" + messageType + '\'' + ", body='" + body + '\'' + ", fromuser='" + fromuser + '\''
+				+ ", read=" + read + ", tags=" + tags + ", folder='" + folder + '\'' + '}';
+	}
+
 }

@@ -27,28 +27,27 @@ import java.util.stream.Stream;
 
 /**
  * Helper methods for working with Files and their contents.
- * 
+ *
  * @author Luke Shannon (Github: lshannon)
  *
  */
 public class FileContentsDelegate {
-	
+
 	/**
 	 * Provides a list of Files in a base directory
-	 * 
 	 * @param basePath
-	 * @return list of Strings containing the full path of all the files in the base directory
+	 * @return list of Strings containing the full path of all the files in the base
+	 * directory
 	 * @throws IOException
 	 */
 	public List<String> getFilePaths(String basePath) throws IOException {
 		if (!doesTargetDirectoryExist(basePath)) {
-		      throw new IOException("Supplied path to scan: " + basePath + " does not exist");
-		    }
-		    List<String> filePaths;
-		    try (Stream<Path> walk = Files.walk(Paths.get(basePath))) {
-		      filePaths = walk.filter(Files::isRegularFile)
-		          .map(Path::toString).collect(Collectors.toList());
-		    }
+			throw new IOException("Supplied path to scan: " + basePath + " does not exist");
+		}
+		List<String> filePaths;
+		try (Stream<Path> walk = Files.walk(Paths.get(basePath))) {
+			filePaths = walk.filter(Files::isRegularFile).map(Path::toString).collect(Collectors.toList());
+		}
 		return filePaths;
 	}
 
@@ -58,42 +57,42 @@ public class FileContentsDelegate {
 		}
 		return new File(basePath).exists();
 	}
-	
+
 	/**
 	 * Provides a list of Folders (and Sub Folders) under a base directory
-	 * 
 	 * @param basePath
-	 * @return List of String values, each value containing the full path of a folder or sub-folder found under the base directory
+	 * @return List of String values, each value containing the full path of a folder or
+	 * sub-folder found under the base directory
 	 * @throws IOException
 	 */
 	public List<String> getFolderPaths(String basePath) {
 		File f = new File(basePath);
-	    List<String> paths = new ArrayList<>();
-	    getPaths(f, basePath, paths);
-	    return paths;
+		List<String> paths = new ArrayList<>();
+		getPaths(f, basePath, paths);
+		return paths;
 	}
-	
+
 	/**
-	 * A recursive method that updates the passed in List of strings to contains the paths of each file/folder found
-	 * under the directory
-	 * 
-	 * @param dir Current location in the scan (can be a file or folder). If its a folder it triggers a recursive call
+	 * A recursive method that updates the passed in List of strings to contains the paths
+	 * of each file/folder found under the directory
+	 * @param dir Current location in the scan (can be a file or folder). If its a folder
+	 * it triggers a recursive call
 	 * @param base the location from which the scan started
-	 * @param paths the list of file system locations as a String that is being recursively brought up
+	 * @param paths the list of file system locations as a String that is being
+	 * recursively brought up
 	 */
 	public void getPaths(File dir, String base, List<String> paths) {
 		File[] files = dir.listFiles();
-	     for (File file : files) {
-	      if (file.isDirectory()) {
-	       paths.add(file.getPath().replace(base, ""));
-	       getPaths(file, base, paths);
-	      }
-	     }
+		for (File file : files) {
+			if (file.isDirectory()) {
+				paths.add(file.getPath().replace(base, ""));
+				getPaths(file, base, paths);
+			}
+		}
 	}
-	
+
 	/**
 	 * Gets the contents of a file as List of Strings
-	 * 
 	 * @param currentFile
 	 * @return List of Strings with the contents of the file
 	 * @throws IOException

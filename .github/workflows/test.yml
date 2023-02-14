@@ -6,7 +6,8 @@ on:
       - main
       - 'releases/**'
   pull_request:
-    branches: [main]
+    branches:
+      - '**'
 
 jobs:
   build:
@@ -18,6 +19,12 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '11'
+
+      - name: Maven Build
+        run: mvn clean package
+
+      - name: Maven Validate
+        run: mvn validate
 
       - name: Maven Test
         run: mvn test --file ./workflow-engine/pom.xml

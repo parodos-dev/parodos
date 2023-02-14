@@ -30,12 +30,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * @author Richard Wang (Github: RichardW98)
  */
 @Transactional
 @ActiveProfiles("test")
 public class NotificationUserGroupRelationshipTests extends AbstractNotificationsIntegrationTest {
+
 	@Autowired
 	private NotificationUserRepository notificationUserRepository;
 
@@ -47,27 +49,29 @@ public class NotificationUserGroupRelationshipTests extends AbstractNotification
 		NotificationsDataCreator.createNotificationsUser(notificationUserRepository);
 		NotificationsDataCreator.createNotificationsGroup(notificationGroupRepository);
 
-		Optional<NotificationUser> user = this.notificationUserRepository.findByUsername(NotificationsDataCreator.USERNAME);
+		Optional<NotificationUser> user = this.notificationUserRepository
+				.findByUsername(NotificationsDataCreator.USERNAME);
 		assertThat(user.isPresent());
 
-		Optional<NotificationGroup> group = this.notificationGroupRepository.findByGroupname(NotificationsDataCreator.ADMIN_GROUP);
+		Optional<NotificationGroup> group = this.notificationGroupRepository
+				.findByGroupname(NotificationsDataCreator.ADMIN_GROUP);
 		assertThat(group.isPresent());
 
 		// associate a group with a user
 		user.get().addNotificationGroup(group.get());
 
-		NotificationUser u = this.notificationUserRepository.save(user.get());
-
-		Optional<NotificationUser> u2 = this.notificationUserRepository.findByUsername(NotificationsDataCreator.USERNAME);
+		Optional<NotificationUser> u2 = this.notificationUserRepository
+				.findByUsername(NotificationsDataCreator.USERNAME);
 		assertThat(u2.isPresent());
 		List<NotificationGroup> notificationGroupList = u2.get().getNotificationGroupList();
 		assertThat(notificationGroupList).hasSize(1);
 		assertThat(notificationGroupList.get(0).getGroupname()).isEqualTo(NotificationsDataCreator.ADMIN_GROUP);
 
-		//remove the group from the user
+		// remove the group from the user
 		u2.get().removeNotificationGroup(group.get());
 
 		NotificationUser u3 = this.notificationUserRepository.save(u2.get());
 		assertThat(u3.getNotificationGroupList()).isEmpty();
 	}
+
 }

@@ -38,15 +38,17 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*")
 @Tag(name = "Notification Message", description = "Operations about notification message in the system")
 public class NotificationMessageController {
-    private final NotificationMessageService notificationMessageService;
 
-    public NotificationMessageController(NotificationMessageService notificationMessageService) {
-        this.notificationMessageService = notificationMessageService;
-    }
+	private final NotificationMessageService notificationMessageService;
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody NotificationMessageCreateRequestDTO messageCreateRequest) {
-        this.notificationMessageService.createNotificationMessage(messageCreateRequest);
-    }
+	public NotificationMessageController(NotificationMessageService notificationMessageService) {
+		this.notificationMessageService = notificationMessageService;
+	}
+
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	public void create(@RequestBody NotificationMessageCreateRequestDTO messageCreateRequest) {
+		this.notificationMessageService.createNotificationMessage(messageCreateRequest);
+	}
+
 }

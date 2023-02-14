@@ -52,53 +52,57 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*")
 @Tag(name = "Notification Record", description = "Operations about notification record in the system")
 public class NotificationRecordController {
-    private final NotificationRecordService notificationRecordService;
-    private final PagedResourcesAssembler<NotificationRecord> notificationRecordPagedResourcesAssembler;
-    private final SecurityUtil securityUtil;
-    private final NotificationAssemblerDTO notificationAssemblerDTO = new NotificationAssemblerDTO();
 
-    public NotificationRecordController(NotificationRecordService notificationRecordService,
-                                        PagedResourcesAssembler<NotificationRecord> notificationRecordPagedResourcesAssembler,
-                                        SecurityUtil securityUtil) {
-        this.notificationRecordService = notificationRecordService;
-        this.notificationRecordPagedResourcesAssembler = notificationRecordPagedResourcesAssembler;
-        this.securityUtil = securityUtil;
-    }
+	private final NotificationRecordService notificationRecordService;
 
-    /**
-     * Returns all notifications for a user with option to apply filter or search term.
-     */
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public PagedModel<NotificationRecordResponseDTO> getNotifications(@PageableDefault(size = 100) Pageable pageable,
-                                                                      @RequestParam(value = "state", required = false) State state,
-                                                                      @RequestParam(value = "searchTerm", required = false) String searchTerm) {
-        Page<NotificationRecord> notificationsRecordPage = this.notificationRecordService.getNotificationRecords(pageable,
-                securityUtil.getUsername(),
-                state,
-                searchTerm);
-        return this.notificationRecordPagedResourcesAssembler.toModel(notificationsRecordPage, this.notificationAssemblerDTO);
-    }
+	private final PagedResourcesAssembler<NotificationRecord> notificationRecordPagedResourcesAssembler;
 
-    /**
-     * Returns unread notifications for a user.
-     */
-    @GetMapping("/count")
-    @ResponseStatus(HttpStatus.OK)
-    public int countUnreadNotifications(@RequestParam State state) {
-        return this.notificationRecordService.countNotificationRecords(securityUtil.getUsername(), state);
-    }
+	private final SecurityUtil securityUtil;
 
-    @PutMapping("/{id}")
-    public NotificationRecordResponseDTO updateNotificationStatusById(@PathVariable("id") UUID id,
-                                                                      @RequestParam Operation operation) {
-        NotificationRecord notificationRecord = this.notificationRecordService.updateNotificationStatus(id, operation);
-        return notificationAssemblerDTO.toModel(notificationRecord);
-    }
+	private final NotificationAssemblerDTO notificationAssemblerDTO = new NotificationAssemblerDTO();
 
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteNotification(@PathVariable("id") UUID id) {
-        this.notificationRecordService.deleteNotificationRecord(id);
-    }
+	public NotificationRecordController(NotificationRecordService notificationRecordService,
+			PagedResourcesAssembler<NotificationRecord> notificationRecordPagedResourcesAssembler,
+			SecurityUtil securityUtil) {
+		this.notificationRecordService = notificationRecordService;
+		this.notificationRecordPagedResourcesAssembler = notificationRecordPagedResourcesAssembler;
+		this.securityUtil = securityUtil;
+	}
+
+	/**
+	 * Returns all notifications for a user with option to apply filter or search term.
+	 */
+	@GetMapping
+	@ResponseStatus(HttpStatus.OK)
+	public PagedModel<NotificationRecordResponseDTO> getNotifications(@PageableDefault(size = 100) Pageable pageable,
+			@RequestParam(value = "state", required = false) State state,
+			@RequestParam(value = "searchTerm", required = false) String searchTerm) {
+		Page<NotificationRecord> notificationsRecordPage = this.notificationRecordService
+				.getNotificationRecords(pageable, securityUtil.getUsername(), state, searchTerm);
+		return this.notificationRecordPagedResourcesAssembler.toModel(notificationsRecordPage,
+				this.notificationAssemblerDTO);
+	}
+
+	/**
+	 * Returns unread notifications for a user.
+	 */
+	@GetMapping("/count")
+	@ResponseStatus(HttpStatus.OK)
+	public int countUnreadNotifications(@RequestParam State state) {
+		return this.notificationRecordService.countNotificationRecords(securityUtil.getUsername(), state);
+	}
+
+	@PutMapping("/{id}")
+	public NotificationRecordResponseDTO updateNotificationStatusById(@PathVariable("id") UUID id,
+			@RequestParam Operation operation) {
+		NotificationRecord notificationRecord = this.notificationRecordService.updateNotificationStatus(id, operation);
+		return notificationAssemblerDTO.toModel(notificationRecord);
+	}
+
+	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deleteNotification(@PathVariable("id") UUID id) {
+		this.notificationRecordService.deleteNotificationRecord(id);
+	}
+
 }

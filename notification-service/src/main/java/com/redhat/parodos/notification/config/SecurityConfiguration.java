@@ -32,17 +32,14 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 @Configuration
 @Profile("!local")
 public class SecurityConfiguration {
-    @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(authorize -> authorize
-                        .mvcMatchers(HttpMethod.OPTIONS, "/**")
-                        .permitAll()
-                        .mvcMatchers("/api/v1/**")
-                        .authenticated()
-                        .anyRequest()
-                        .denyAll())
-                .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
-                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
-        return http.build();
-    }
+
+	@Bean
+	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		http.authorizeHttpRequests(authorize -> authorize.mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+				.mvcMatchers("/api/v1/**").authenticated().anyRequest().denyAll())
+				.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+				.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
+		return http.build();
+	}
+
 }

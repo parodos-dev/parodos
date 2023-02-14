@@ -34,13 +34,12 @@ import com.redhat.parodos.workflows.workflow.WorkFlow;
  */
 public interface WorkFlowEngine {
 
-    /**
-     * Run the given workflow and return its report.
-     *
-     * @param workFlow to run
-     * @param workContext context in which the workflow will be run
-     * @return workflow report
-     */
-    WorkReport run(WorkFlow workFlow, WorkContext workContext);
+	/**
+	 * Run the given workflow and return its report.
+	 * @param workFlow to run
+	 * @param workContext context in which the workflow will be run
+	 * @return workflow report
+	 */
+	WorkReport run(WorkFlow workFlow, WorkContext workContext);
 
 }

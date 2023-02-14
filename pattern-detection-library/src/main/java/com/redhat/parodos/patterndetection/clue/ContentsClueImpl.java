@@ -31,11 +31,12 @@ import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 
- * Implementation of a Clue that scans the contents of a file for specific strings. Supports regular expressions
- * 
+ *
+ * Implementation of a Clue that scans the contents of a file for specific strings.
+ * Supports regular expressions
+ *
  * @author Luke Shannon (Github: lshannon)
- * 
+ *
  */
 @Slf4j
 @EqualsAndHashCode(callSuper = true)
@@ -43,6 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ContentsClueImpl extends AbstractClue {
 
 	private Pattern targetContentPattern = null;
+
 	private FileContentsDelegate fileContentsDelegate = new FileContentsDelegate();
 
 	@Override
@@ -51,8 +53,10 @@ public class ContentsClueImpl extends AbstractClue {
 			for (File thisFile : workContextDelegate.getFilesToScan(workContext)) {
 				try {
 					processFileForContentMatches(workContext, thisFile);
-				} catch (IOException e) {
-					log.error("Unable to execute Scan of {} clue on File: {}", this.name, thisFile.getAbsolutePath(),e);
+				}
+				catch (IOException e) {
+					log.error("Unable to execute Scan of {} clue on File: {}", this.name, thisFile.getAbsolutePath(),
+							e);
 					return new DefaultWorkReport(WorkStatus.FAILED, workContext);
 				}
 			}
@@ -75,17 +79,18 @@ public class ContentsClueImpl extends AbstractClue {
 			}
 		}
 	}
-	
+
 	public static class Builder extends AbstractClue.Builder<ContentsClueImpl.Builder> {
 
 		String targetContentPatternString;
-		
+
 		Builder() {
 		}
-		
+
 		public Builder targetContentPatternString(String targetContentPatternString) {
 			if (targetContentPatternString == null || targetContentPatternString.isEmpty()) {
-				throw new PatternDetectionConfigurationException("The targetContentPattern must not be blank or null for a ContentsClue");
+				throw new PatternDetectionConfigurationException(
+						"The targetContentPattern must not be blank or null for a ContentsClue");
 			}
 			this.targetContentPatternString = targetContentPatternString;
 			return this;
@@ -95,8 +100,10 @@ public class ContentsClueImpl extends AbstractClue {
 			ContentsClueImpl instance = new ContentsClueImpl();
 			try {
 				instance.setTargetContentPattern(Pattern.compile(targetContentPatternString));
-			} catch (PatternSyntaxException patternException) {
-				throw new PatternDetectionConfigurationException(targetContentPatternString + " is not a valid pattern. " + patternException.getMessage());
+			}
+			catch (PatternSyntaxException patternException) {
+				throw new PatternDetectionConfigurationException(
+						targetContentPatternString + " is not a valid pattern. " + patternException.getMessage());
 			}
 			return super.build(instance);
 		}
@@ -104,8 +111,7 @@ public class ContentsClueImpl extends AbstractClue {
 		public static Builder builder() {
 			return new Builder();
 		}
-		
-		
+
 	}
 
 }

@@ -15,168 +15,83 @@
  */
 package com.redhat.parodos.examples.simple;
 
-import java.util.Date;
-import java.util.List;
-
-import com.redhat.parodos.workflows.definition.WorkFlowCheckerDefinition;
-import com.redhat.parodos.workflows.definition.WorkFlowDefinition;
-import com.redhat.parodos.workflows.common.enums.WorkFlowType;
-import com.redhat.parodos.workflows.definition.task.WorkFlowTaskDefinition;
-import com.redhat.parodos.workflows.definition.task.WorkFlowTaskParameter;
-import com.redhat.parodos.workflows.definition.task.WorkFlowTaskParameterType;
+import com.redhat.parodos.workflow.annotation.Infrastructure;
+import com.redhat.parodos.workflow.consts.WorkFlowConstants;
+import com.redhat.parodos.workflows.workflow.ParallelFlow;
+import com.redhat.parodos.workflows.workflow.SequentialFlow;
+import com.redhat.parodos.workflows.workflow.WorkFlow;
+import java.util.concurrent.Executors;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.redhat.parodos.workflows.workflow.SequentialFlow;
-import com.redhat.parodos.workflows.workflow.WorkFlow;
-
 
 /**
  * Very simple workflow configurations
- * 
- * @author Luke Shannon (Github: lshannon)
  *
+ * @author Luke Shannon (Github: lshannon)
  */
+
 @Configuration
 public class SimpleWorkFlowConfiguration {
 
-	//Task 1
-	@Bean(name = "restAPIWorkFlowTaskDefinition")
-	WorkFlowTaskDefinition restAPIWorkFlowTaskDefinition() {
-		return WorkFlowTaskDefinition.builder()
-				.name("restAPIWorkFlowTaskDefinition")
-				.description("A rest api workflow task test")
-				.parameters(List.of(WorkFlowTaskParameter.builder()
-						.key("username")
-						.type(WorkFlowTaskParameterType.TEXT)
-						.optional(false)
-						.description("The username of the requester")
-						.build()))
-				.outputs(null)
-				.previousTask(null)
+	private final String URL_DEFINED_AT_CONFIGURATION_OF_TASK = "https://httpbin.org/post";
+
+	// START Sequential Example (WorkflowTasks and Workflow Definitions)
+	@Bean
+	RestAPIWorkFlowTask restCall() {
+		return new RestAPIWorkFlowTask(URL_DEFINED_AT_CONFIGURATION_OF_TASK);
+	}
+
+	@Bean
+	LoggingWorkFlowTask loggingTask() {
+		return new LoggingWorkFlowTask();
+	}
+
+	@Bean(name = "simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+	@Infrastructure
+	WorkFlow simpleSequentialWorkFlowTask(@Qualifier("restCall") RestAPIWorkFlowTask restCall,
+			LoggingWorkFlowTask loggingTask) {
+		// @formatter:off
+		return SequentialFlow
+				.Builder.aNewSequentialFlow()
+				.named("simple Sequential WorkFlow")
+				.execute(restCall)
+				.then(loggingTask)
 				.build();
+		// @formatter:on
+	}
+	// END Sequential Example (WorkflowTasks and Workflow Definitions)
+
+	// START Parallel Example (WorkflowTasks and Workflow Definitions)
+	@Bean
+	LoggingWorkFlowTask simpleParallelTask1() {
+		return new LoggingWorkFlowTask();
 	}
 
-	@Bean(name = "restAPIWorkFlowTaskExecution")
-	RestAPIWorkFlowTaskExecution restAPIWorkFlowTaskExecution(@Qualifier("restAPIWorkFlowTaskDefinition") WorkFlowTaskDefinition restAPIWorkFlowTaskDefinition) {
-		return new RestAPIWorkFlowTaskExecution(restAPIWorkFlowTaskDefinition);
+	@Bean
+	LoggingWorkFlowTask simpleParallelTask2() {
+		return new LoggingWorkFlowTask();
 	}
 
-	//Task 2
-	@Bean(name = "loggingWorkFlowTaskDefinition")
-	WorkFlowTaskDefinition loggingWorkFlowTaskDefinition(@Qualifier("restAPIWorkFlowTaskDefinition") WorkFlowTaskDefinition restAPIWorkFlowTaskDefinition, @Qualifier("simpleWorkFlowCheckerDefinition") WorkFlowCheckerDefinition simpleWorkFlowCheckerDefinition) {
-		WorkFlowTaskDefinition loggingWorkFlowTaskDefinition = WorkFlowTaskDefinition.builder()
-				.name("loggingWorkFlowTaskDefinition")
-				.description("A logging workflow task test")
-				.parameters(List.of(WorkFlowTaskParameter.builder()
-						.key("api-server")
-						.type(WorkFlowTaskParameterType.URL)
-						.optional(false)
-						.description("The api server to push logs")
-						.build()))
-				.outputs(null)
-				.previousTask(restAPIWorkFlowTaskDefinition)
-				.nextTask(null)
-				.workFlowCheckerDefinition(simpleWorkFlowCheckerDefinition)
+	@Bean
+	LoggingWorkFlowTask simpleParallelTask3() {
+		return new LoggingWorkFlowTask();
+	}
+
+	@Bean(name = "simpleParallelWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+	@Infrastructure
+	WorkFlow simpleParallelWorkFlowTask(@Qualifier("simpleParallelTask1") LoggingWorkFlowTask simpleParallelTask1,
+			@Qualifier("simpleParallelTask2") LoggingWorkFlowTask simpleParallelTask2,
+			@Qualifier("simpleParallelTask3") LoggingWorkFlowTask simpleParallelTask3) {
+		// @formatter:off
+		return ParallelFlow
+				.Builder.aNewParallelFlow()
+				.named("simple Parallel WorkFlow")
+				.execute(simpleParallelTask1, simpleParallelTask2, simpleParallelTask3)
+				.with(Executors.newFixedThreadPool(3))
 				.build();
-		restAPIWorkFlowTaskDefinition.setNextTask(loggingWorkFlowTaskDefinition);
-		return loggingWorkFlowTaskDefinition;
+		// @formatter:on
 	}
+	// END Parallel Example (WorkflowTasks and Workflow Definitions)
 
-	@Bean(name = "loggingWorkFlowTaskExecution")
-	LoggingWorkFlowTaskExecution loggingWorkFlowTaskExecution(@Qualifier("loggingWorkFlowTaskDefinition") WorkFlowTaskDefinition loggingWorkFlowTaskDefinition) {
-		return new LoggingWorkFlowTaskExecution(loggingWorkFlowTaskDefinition);
-	}
-
-	//Start simpleWorkFlowChecker Task
-	@Bean(name = "simpleWorkFlowCheckerTaskDefinition")
-	WorkFlowTaskDefinition simpleWorkFlowCheckerTaskDefinition() {
-		return WorkFlowTaskDefinition.builder()
-				.name("simpleWorkFlowCheckerTaskDefinition")
-				.description("A  workflow Checker task test")
-				.build();
-	}
-
-    @Bean(name = "simpleWorkFlowCheckerTaskExecution")
-	SimpleWorkFlowCheckerTaskExecution simpleWorkFlowCheckerTaskExecution(@Qualifier("simpleWorkFlowCheckerTaskDefinition") WorkFlowTaskDefinition simpleWorkFlowCheckerTaskDefinition) {
-    	return new SimpleWorkFlowCheckerTaskExecution(simpleWorkFlowCheckerTaskDefinition);
-    }
-	//End simpleWorkFlowChecker Task
-
-	//Start simpleWorkFlowChecker Workflow
-	@Bean(name = "simpleWorkFlowCheckerDefinition")
-	WorkFlowCheckerDefinition simpleWorkFlowCheckerDefinition(@Qualifier("simpleWorkFlowCheckerTaskDefinition") WorkFlowTaskDefinition simpleWorkFlowCheckerTaskDefinition, @Qualifier("simpleNextSequentialWorkFlowDefinition") WorkFlowDefinition simpleNextSequentialWorkFlowDefinition){
-		return WorkFlowCheckerDefinition.builder()
-				.name("simpleWorkFlowCheckerDefinition")
-				.description("A simple workflow checker test")
-				.type(WorkFlowType.CHECKER)
-				.author("Peter")
-				.tasks(List.of(simpleWorkFlowCheckerTaskDefinition))
-				.createdDate(new Date())
-				.modifiedDate(new Date())
-				.cronExpression("0 0/1 * * * ?")
-				.nextWorkFlowDefinition(simpleNextSequentialWorkFlowDefinition)
-				.build();
-	}
-
-    @Bean(name = "simpleWorkFlowCheckerExecution")
-    WorkFlow simpleWorkFlowCheckerExecution(@Qualifier("simpleWorkFlowCheckerDefinition") WorkFlowCheckerDefinition simpleWorkFlowCheckerDefinition, @Qualifier("simpleWorkFlowCheckerTaskExecution") SimpleWorkFlowCheckerTaskExecution simpleWorkFlowCheckerTaskExecution) {
-        return SequentialFlow.Builder
-        		.aNewSequentialFlow()
-        		.named(simpleWorkFlowCheckerDefinition.getName())
-        		.execute(simpleWorkFlowCheckerTaskExecution)
-        		.build();
-    }
-    //End simpleWorkFlowChecker
-
-	//Simple workflow
-	@Bean(name = "simpleSequentialWorkFlowDefinition")
-	WorkFlowDefinition simpleSequentialWorkFlowDefinition(@Qualifier("loggingWorkFlowTaskDefinition") WorkFlowTaskDefinition loggingWorkFlowTaskDefinition,
-														  @Qualifier("restAPIWorkFlowTaskDefinition") WorkFlowTaskDefinition restAPIWorkFlowTaskDefinition){
-		return WorkFlowDefinition.builder()
-				.name("simpleSequentialWorkFlowDefinition")
-				.description("A simple sequential workflow test")
-				.type(WorkFlowType.INFRASTRUCTURE)
-				.author("Peter")
-				.tasks(List.of(restAPIWorkFlowTaskDefinition, loggingWorkFlowTaskDefinition))
-				.createdDate(new Date())
-				.modifiedDate(new Date())
-				.build();
-	}
-
-	@Bean(name = "simpleSequentialWorkFlowExecution")
-	WorkFlow simpleSequentialWorkFlowExecution(@Qualifier("simpleSequentialWorkFlowDefinition") WorkFlowDefinition simpleSequentialWorkFlowDefinition,
-														@Qualifier("restAPIWorkFlowTaskExecution") RestAPIWorkFlowTaskExecution restAPIWorkFlowTaskExecution,
-														@Qualifier("loggingWorkFlowTaskExecution") LoggingWorkFlowTaskExecution loggingWorkFlowTaskExecution){
-		return SequentialFlow.Builder.aNewSequentialFlow()
-                .named(simpleSequentialWorkFlowDefinition.getName())
-                .execute(restAPIWorkFlowTaskExecution)
-                .then(loggingWorkFlowTaskExecution)
-                .build();
-	}
-	//End simple sequential workflow
-
-	//Simple next workflow
-	@Bean(name = "simpleNextSequentialWorkFlowDefinition")
-	WorkFlowDefinition simpleNextSequentialWorkFlowDefinition(
-			@Qualifier("restAPIWorkFlowTaskDefinition") WorkFlowTaskDefinition restAPIWorkFlowTaskDefinition){
-		return WorkFlowDefinition.builder()
-				.name("simpleNextSequentialWorkFlowDefinition")
-				.description("A simple sequential workflow test")
-				.type(WorkFlowType.INFRASTRUCTURE)
-				.author("Peter")
-				.tasks(List.of(restAPIWorkFlowTaskDefinition))
-				.createdDate(new Date())
-				.modifiedDate(new Date())
-				.build();
-	}
-
-	@Bean(name = "simpleNextSequentialWorkFlowExecution")
-	WorkFlow simpleNextSequentialWorkFlowExecution(@Qualifier("simpleNextSequentialWorkFlowDefinition") WorkFlowDefinition simpleNextSequentialWorkFlowDefinition,
-											   @Qualifier("restAPIWorkFlowTaskExecution") RestAPIWorkFlowTaskExecution restAPIWorkFlowTaskExecution){
-		return SequentialFlow.Builder.aNewSequentialFlow()
-				.named(simpleNextSequentialWorkFlowDefinition.getName())
-				.execute(restAPIWorkFlowTaskExecution)
-				.build();
-	}
 }

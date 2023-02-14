@@ -35,38 +35,44 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Service
 public class NotificationMessageServiceImpl implements NotificationMessageService {
-    private final NotificationMessageRepository notificationMessageRepository;
-    private final NotificationUserService notificationUserService;
-    private final NotificationRecordService notificationRecordService;
-    private final SecurityUtil securityUtil;
 
-    public NotificationMessageServiceImpl(NotificationMessageRepository notificationMessageRepository,
-                                          NotificationUserService notificationUserService,
-                                          NotificationRecordService notificationRecordService,
-                                          SecurityUtil securityUtil) {
-        this.notificationMessageRepository = notificationMessageRepository;
-        this.notificationUserService = notificationUserService;
-        this.notificationRecordService = notificationRecordService;
-        this.securityUtil = securityUtil;
-    }
+	private final NotificationMessageRepository notificationMessageRepository;
 
-    @Override
-    public void createNotificationMessage(NotificationMessageCreateRequestDTO notificationMessageCreateRequestDTO) {
-        NotificationMessage notificationMessage = buildNotificationMessage(notificationMessageCreateRequestDTO);
-        NotificationMessage savedNotificationMessage = this.notificationMessageRepository.save(notificationMessage);
-        List<NotificationUser> usersToNotify = this.notificationUserService.findUsers(notificationMessageCreateRequestDTO.getUsernames());
-        this.notificationRecordService.createNotificationRecords(usersToNotify, savedNotificationMessage);
-    }
+	private final NotificationUserService notificationUserService;
 
-    private NotificationMessage buildNotificationMessage(NotificationMessageCreateRequestDTO notificationMessageCreateRequestDTO) {
-        NotificationMessage notificationMessage = new NotificationMessage();
-        notificationMessage.setMessageType(notificationMessageCreateRequestDTO.getMessageType());
-        notificationMessage.setCreatedOn(Instant.now());
-        notificationMessage.setBody(notificationMessageCreateRequestDTO.getBody());
-        notificationMessage.setSubject(notificationMessageCreateRequestDTO.getSubject());
-        notificationMessage.setUsernames(notificationMessageCreateRequestDTO.getUsernames());
-        notificationMessage.setGroupnames(notificationMessageCreateRequestDTO.getGroupnames());
-        notificationMessage.setFromuser(securityUtil.getUsername());
-        return notificationMessage;
-    }
+	private final NotificationRecordService notificationRecordService;
+
+	private final SecurityUtil securityUtil;
+
+	public NotificationMessageServiceImpl(NotificationMessageRepository notificationMessageRepository,
+			NotificationUserService notificationUserService, NotificationRecordService notificationRecordService,
+			SecurityUtil securityUtil) {
+		this.notificationMessageRepository = notificationMessageRepository;
+		this.notificationUserService = notificationUserService;
+		this.notificationRecordService = notificationRecordService;
+		this.securityUtil = securityUtil;
+	}
+
+	@Override
+	public void createNotificationMessage(NotificationMessageCreateRequestDTO notificationMessageCreateRequestDTO) {
+		NotificationMessage notificationMessage = buildNotificationMessage(notificationMessageCreateRequestDTO);
+		NotificationMessage savedNotificationMessage = this.notificationMessageRepository.save(notificationMessage);
+		List<NotificationUser> usersToNotify = this.notificationUserService
+				.findUsers(notificationMessageCreateRequestDTO.getUsernames());
+		this.notificationRecordService.createNotificationRecords(usersToNotify, savedNotificationMessage);
+	}
+
+	private NotificationMessage buildNotificationMessage(
+			NotificationMessageCreateRequestDTO notificationMessageCreateRequestDTO) {
+		NotificationMessage notificationMessage = new NotificationMessage();
+		notificationMessage.setMessageType(notificationMessageCreateRequestDTO.getMessageType());
+		notificationMessage.setCreatedOn(Instant.now());
+		notificationMessage.setBody(notificationMessageCreateRequestDTO.getBody());
+		notificationMessage.setSubject(notificationMessageCreateRequestDTO.getSubject());
+		notificationMessage.setUsernames(notificationMessageCreateRequestDTO.getUsernames());
+		notificationMessage.setGroupnames(notificationMessageCreateRequestDTO.getGroupnames());
+		notificationMessage.setFromuser(securityUtil.getUsername());
+		return notificationMessage;
+	}
+
 }

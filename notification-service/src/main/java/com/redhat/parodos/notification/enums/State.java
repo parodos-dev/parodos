@@ -7,6 +7,7 @@ package com.redhat.parodos.notification.enums;
  */
 
 public enum State {
-    ARCHIVED,
-    UNREAD
+
+	ARCHIVED, UNREAD
+
 }

@@ -15,11 +15,11 @@
  */
 package com.redhat.parodos.notification.config;
 
-import io.swagger.v3.oas.models.ExternalDocumentation;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Info;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
 
 /**
  * @author Richard Wang (Github: RichardW98)
@@ -27,12 +27,13 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class SwaggerConfiguration {
-    @Bean
-    OpenAPI springShopOpenAPI() {
-        return new OpenAPI()
-                .info(new Info().title("Parodos Notification Service")
-                        .description("This is the API documentation for the Parodos Notification Service. " +
-                                "The APIs are secured with oAuth2/OpenID and cannot be accessed without a valid token.")
-                        .version("v1.0.0"));
-    }
+
+	@Bean
+	OpenAPI springShopOpenAPI() {
+		return new OpenAPI().info(new Info().title("Parodos Notification Service")
+				.description("This is the API documentation for the Parodos Notification Service. "
+						+ "The APIs are secured with oAuth2/OpenID and cannot be accessed without a valid token.")
+				.version("v1.0.0"));
+	}
+
 }

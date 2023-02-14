@@ -27,7 +27,7 @@ import java.time.Instant;
 import java.util.List;
 
 /**
- * The message associated with a notification.  Want to ensure that the potentially large
+ * The message associated with a notification. Want to ensure that the potentially large
  * message is not duplicated for each notification, as such, it is stored separately.
  * There is some work to be done to ensure this is happening efficiently from the DB
  * perspective.
@@ -39,115 +39,109 @@ import java.util.List;
 @Table(name = "NotificationMessage")
 public class NotificationMessage extends AbstractEntity {
 
-    /**
-     * Users that the message will be delivered to
-     */
-    @ElementCollection
-    private List<String> usernames;
+	/**
+	 * Users that the message will be delivered to
+	 */
+	@ElementCollection
+	private List<String> usernames;
 
-    /**
-     * Groups that the message will be delivered to
-     */
-    @ElementCollection
-    private List<String> groupnames;
+	/**
+	 * Groups that the message will be delivered to
+	 */
+	@ElementCollection
+	private List<String> groupnames;
 
-    @OneToOne(mappedBy = "notificationMessage")
-    private NotificationRecord notificationRecord;
+	@OneToOne(mappedBy = "notificationMessage")
+	private NotificationRecord notificationRecord;
 
-    @Column(columnDefinition = "text")
-    private String subject;
+	@Column(columnDefinition = "text")
+	private String subject;
 
-    @Column(name = "created_on")
-    private Instant createdOn;
+	@Column(name = "created_on")
+	private Instant createdOn;
 
-    /**
-     * maybe useful for selecting messages without looking at the body.
-     * Can make an enum
-     */
-    @Column(name = "message_type")
-    private String messageType;
+	/**
+	 * maybe useful for selecting messages without looking at the body. Can make an enum
+	 */
+	@Column(name = "message_type")
+	private String messageType;
 
-    @NotNull
-    @Column(columnDefinition = "text")
-    private String body;
+	@NotNull
+	@Column(columnDefinition = "text")
+	private String body;
 
-    private String fromuser;
+	private String fromuser;
 
-    public List<String> getUsernames() {
-        return usernames;
-    }
+	public List<String> getUsernames() {
+		return usernames;
+	}
 
-    public void setUsernames(List<String> usernames) {
-        this.usernames = usernames;
-    }
+	public void setUsernames(List<String> usernames) {
+		this.usernames = usernames;
+	}
 
-    public List<String> getGroupnames() {
-        return groupnames;
-    }
+	public List<String> getGroupnames() {
+		return groupnames;
+	}
 
-    public void setGroupnames(List<String> groupnames) {
-        this.groupnames = groupnames;
-    }
+	public void setGroupnames(List<String> groupnames) {
+		this.groupnames = groupnames;
+	}
 
-    public NotificationRecord getNotificationsRecord() {
-        return notificationRecord;
-    }
+	public NotificationRecord getNotificationsRecord() {
+		return notificationRecord;
+	}
 
-    public void setNotificationsRecord(NotificationRecord notificationRecord) {
-        this.notificationRecord = notificationRecord;
-    }
+	public void setNotificationsRecord(NotificationRecord notificationRecord) {
+		this.notificationRecord = notificationRecord;
+	}
 
-    public String getSubject() {
-        return subject;
-    }
+	public String getSubject() {
+		return subject;
+	}
 
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
 
-    public Instant getCreatedOn() {
-        return createdOn;
-    }
+	public Instant getCreatedOn() {
+		return createdOn;
+	}
 
-    public void setCreatedOn(Instant createdOn) {
-        this.createdOn = createdOn;
-    }
+	public void setCreatedOn(Instant createdOn) {
+		this.createdOn = createdOn;
+	}
 
-    public String getMessageType() {
-        return messageType;
-    }
+	public String getMessageType() {
+		return messageType;
+	}
 
-    public void setMessageType(String messageType) {
-        this.messageType = messageType;
-    }
+	public void setMessageType(String messageType) {
+		this.messageType = messageType;
+	}
 
-    public String getBody() {
-        return body;
-    }
+	public String getBody() {
+		return body;
+	}
 
-    public void setBody(String body) {
-        this.body = body;
-    }
+	public void setBody(String body) {
+		this.body = body;
+	}
 
-    public String getFromuser() {
-        return fromuser;
-    }
+	public String getFromuser() {
+		return fromuser;
+	}
 
-    public void setFromuser(String fromuser) {
-        this.fromuser = fromuser;
-    }
+	public void setFromuser(String fromuser) {
+		this.fromuser = fromuser;
+	}
 
-    @Override
-    public String toString() {
-        return "NotificationMessage{" +
-                "usernames=" + usernames +
-                ", groupnames=" + groupnames +
-                ", notificationRecord=" + notificationRecord +
-                ", subject='" + subject + '\'' +
-                ", createdOn=" + createdOn +
-                ", messageType='" + messageType + '\'' +
-                ", body='" + body + '\'' +
-                ", from='" + fromuser + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "NotificationMessage{" + "usernames=" + usernames + ", groupnames=" + groupnames
+				+ ", notificationRecord=" + notificationRecord + ", subject='" + subject + '\'' + ", createdOn="
+				+ createdOn + ", messageType='" + messageType + '\'' + ", body='" + body + '\'' + ", from='" + fromuser
+				+ '\'' + '}';
+	}
+
 }

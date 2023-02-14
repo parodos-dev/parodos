@@ -25,13 +25,14 @@ package com.redhat.parodos.workflows.workflow;
 
 abstract class AbstractWorkFlow implements WorkFlow {
 
-    private final String name;
+	private final String name;
 
-    AbstractWorkFlow(String name) {
-        this.name = name;
-    }
+	AbstractWorkFlow(String name) {
+		this.name = name;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
+
 }

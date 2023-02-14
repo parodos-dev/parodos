@@ -15,21 +15,19 @@
  */
 package com.redhat.parodos.workflow.definition.repository;
 
-import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinitionEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
-
+import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * workflow definition repository
  *
- * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
-public interface WorkFlowDefinitionRepository extends JpaRepository<WorkFlowDefinitionEntity, UUID> {
-    List<WorkFlowDefinitionEntity> findByName(String name);
+public interface WorkFlowDefinitionRepository extends JpaRepository<WorkFlowDefinition, UUID> {
 
-    WorkFlowDefinitionEntity findFirstByName(String name);
+	List<WorkFlowDefinition> findByName(String name);
+
 }

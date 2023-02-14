@@ -33,8 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a user in the system, not definitive owner, can create a record per user that
- * authenticates to the system.
+ * Represents a user in the system, not definitive owner, can create a record per user
+ * that authenticates to the system.
  * <p>
  * Users can belong to one or more groups
  * <p>
@@ -50,67 +50,67 @@ import java.util.List;
 @NoArgsConstructor
 public class NotificationUser extends AbstractEntity {
 
-    @Column(name = "username", unique = true)
-    @NotNull
-    private String username;
+	@Column(name = "username", unique = true)
+	@NotNull
+	private String username;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "user_group", joinColumns = @JoinColumn(name = "notificationuser_id"),
-            inverseJoinColumns = @JoinColumn(name = "notificationgroup_id"))
-    private List<NotificationGroup> notificationGroupList = new ArrayList<>();
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinTable(name = "user_group", joinColumns = @JoinColumn(name = "notificationuser_id"),
+			inverseJoinColumns = @JoinColumn(name = "notificationgroup_id"))
+	@Builder.Default
+	private List<NotificationGroup> notificationGroupList = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "notificationUserList", fetch = FetchType.LAZY)
-    private List<NotificationRecord> notificationRecordList = new ArrayList<>();
+	@ManyToMany(mappedBy = "notificationUserList", fetch = FetchType.LAZY)
+	@Builder.Default
+	private List<NotificationRecord> notificationRecordList = new ArrayList<>();
 
-    public String getUsername() {
-        return username;
-    }
+	public String getUsername() {
+		return username;
+	}
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
-    public List<NotificationGroup> getNotificationGroupList() {
-        return notificationGroupList;
-    }
+	public List<NotificationGroup> getNotificationGroupList() {
+		return notificationGroupList;
+	}
 
-    public void setNotificationGroupList(List<NotificationGroup> notificationGroupList) {
-        this.notificationGroupList = notificationGroupList;
-    }
+	public void setNotificationGroupList(List<NotificationGroup> notificationGroupList) {
+		this.notificationGroupList = notificationGroupList;
+	}
 
-    public void addNotificationGroup(NotificationGroup notificationGroup) {
-        this.notificationGroupList.add(notificationGroup);
-        notificationGroup.getNotificationsUserList().add(this);
-    }
+	public void addNotificationGroup(NotificationGroup notificationGroup) {
+		this.notificationGroupList.add(notificationGroup);
+		notificationGroup.getNotificationsUserList().add(this);
+	}
 
-    public void removeNotificationGroup(NotificationGroup notificationGroup) {
-        this.notificationGroupList.remove(notificationGroup);
-        notificationGroup.getNotificationsUserList().remove(this);
-    }
+	public void removeNotificationGroup(NotificationGroup notificationGroup) {
+		this.notificationGroupList.remove(notificationGroup);
+		notificationGroup.getNotificationsUserList().remove(this);
+	}
 
-    public List<NotificationRecord> getNotificationRecordList() {
-        return notificationRecordList;
-    }
+	public List<NotificationRecord> getNotificationRecordList() {
+		return notificationRecordList;
+	}
 
-    public void setNotificationRecordList(List<NotificationRecord> notificationRecordList) {
-        this.notificationRecordList = notificationRecordList;
-    }
+	public void setNotificationRecordList(List<NotificationRecord> notificationRecordList) {
+		this.notificationRecordList = notificationRecordList;
+	}
 
-    public void addNotificationRecord(NotificationRecord notificationRecord) {
-        this.notificationRecordList.add(notificationRecord);
-        notificationRecord.getNotificationUserList().add(this);
-    }
+	public void addNotificationRecord(NotificationRecord notificationRecord) {
+		this.notificationRecordList.add(notificationRecord);
+		notificationRecord.getNotificationUserList().add(this);
+	}
 
-    public void removeNotificationRecord(NotificationRecord notificationRecord) {
-        this.notificationRecordList.remove(notificationRecord);
-        notificationRecord.getNotificationUserList().remove(this);
-    }
+	public void removeNotificationRecord(NotificationRecord notificationRecord) {
+		this.notificationRecordList.remove(notificationRecord);
+		notificationRecord.getNotificationUserList().remove(this);
+	}
 
-    @Override
-    public String toString() {
-        return "NotificationUser{" +
-                "id=" + getId() +
-                ", username='" + username + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "NotificationUser{" + "id=" + getId() + ", username='" + username + '\'' + '}';
+	}
+
 }

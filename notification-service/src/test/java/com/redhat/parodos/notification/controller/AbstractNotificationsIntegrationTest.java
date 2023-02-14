@@ -34,7 +34,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
  * @author Richard Wang (Github: RichardW98)
  */
 
-@SpringBootTest(webEnvironment= WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
@@ -43,12 +43,11 @@ public class AbstractNotificationsIntegrationTest {
 	public static MockHttpServletRequestBuilder postJson(String uri, Object body) {
 		try {
 			String json = new ObjectMapper().writeValueAsString(body);
-			return post(uri)
-					.contentType(MediaType.APPLICATION_JSON)
-					.accept(MediaType.APPLICATION_JSON)
-					.content(json);
-		} catch (JsonProcessingException e) {
+			return post(uri).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).content(json);
+		}
+		catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}
 	}
+
 }

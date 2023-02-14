@@ -22,29 +22,32 @@ import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Utility Method for assessing the Username and Accesstoken fron the authenticated session
- * 
+ * Utility Method for assessing the Username and Accesstoken fron the authenticated
+ * session
+ *
  * @author Jennifer Ubah, Luke Shannon (Github: lshannon)
  *
  */
+
 @Component
 @Slf4j
 public class SecurityUtils {
-	
-    private SecurityUtils() {
-    }
 
-    /**
-     * Extract preferred username from security context.
-     *
-     * @return username.
-     */
-    public String getUsername() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication instanceof JwtAuthenticationToken) {
-            return ((JwtAuthenticationToken) authentication).getToken().getClaim("preferred_username");
-        }
-        log.error("Unable to find the username for the authenticated user - if this is being ran under the 'local' profile this behavior is expected");
-        return null;
-   }
+	private SecurityUtils() {
+	}
+
+	/**
+	 * Extract preferred username from security context.
+	 * @return username.
+	 */
+	public String getUsername() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication instanceof JwtAuthenticationToken) {
+			return ((JwtAuthenticationToken) authentication).getToken().getClaim("preferred_username");
+		}
+		log.error(
+				"Unable to find the username for the authenticated user - if this is being ran under the 'local' profile this behavior is expected");
+		return null;
+	}
+
 }

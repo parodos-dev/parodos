@@ -15,25 +15,57 @@
  */
 package com.redhat.parodos.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
+import javax.sql.DataSource;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 /**
  * Turn off security for Local testing only. Do not enable this profile in production
- * 
- * @author Luke Shannon (Github: lshannon)
  *
+ * @author Luke Shannon (Github: lshannon)
  */
+
 @Profile("local")
 @Configuration
 public class LocalSecurityConfiguration {
 
-   @Bean
-   SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-      http.mvcMatcher("/").anonymous();
-          return http.build();
-   }
+	private final DataSource dataSource;
+
+	public LocalSecurityConfiguration(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+
+	@Bean
+	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		http.cors().disable().csrf().disable().authorizeRequests()
+				.antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/login**", "/h2/**").permitAll().antMatchers("/**")
+				.authenticated().and().httpBasic(withDefaults()).headers().frameOptions().disable().and()
+				.formLogin(form -> form.loginProcessingUrl("/perform_login")).logout().logoutSuccessUrl("/login")
+				.permitAll();
+		// @formatter:on
+		return http.build();
+	}
+
+	@Autowired
+	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+		auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(passwordEncoder())
+				.usersByUsernameQuery("select username,password,enabled from user where username = ?")
+				.authoritiesByUsernameQuery("select username,authority from user where username = ?");
+	}
+
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+
 }

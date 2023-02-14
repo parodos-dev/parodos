@@ -23,25 +23,25 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Utility method to get the Username from the Authenticated Session
- *  
+ *
  * @author Richard Wang (Github: RichardW98)
  */
 @Component
 @Slf4j
 public class SecurityUtil {
 
-    /**
-     * Extract preferred username from security context.
-     *
-     * @return username.
-     */
-    public String getUsername() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication instanceof JwtAuthenticationToken) {
-            return ((JwtAuthenticationToken) authentication).getToken().getClaim("preferred_username");
-        }
-        log.error("Unable to find the username for the authenticated user - if this is being ran under the 'local' profile this behavior is expected");
-        return null;
-   }
-}
+	/**
+	 * Extract preferred username from security context.
+	 * @return username.
+	 */
+	public String getUsername() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication instanceof JwtAuthenticationToken) {
+			return ((JwtAuthenticationToken) authentication).getToken().getClaim("preferred_username");
+		}
+		log.error(
+				"Unable to find the username for the authenticated user - if this is being ran under the 'local' profile this behavior is expected");
+		return null;
+	}
 
+}

@@ -23,22 +23,23 @@ import java.util.concurrent.ThreadPoolExecutor.AbortPolicy;
 
 /**
  * Provides access to the ThreadPool executor for all Scans to share.
- * 
+ *
  * @author Luke Shannon (Github: lshannon)
  *
  */
 public class ScanningThreadPool {
-	
+
 	private static ExecutorService executorService;
 
-    private ScanningThreadPool(){}
-    
-    public static synchronized ExecutorService getThreadPoolExecutor() {
-    	 if (executorService == null) {
-             var boundedQueue = new ArrayBlockingQueue<Runnable>(1000);
-     		executorService = new ThreadPoolExecutor(10, 20, 60, TimeUnit.SECONDS, boundedQueue, new AbortPolicy());
-         }
-         return executorService;
-    }
+	private ScanningThreadPool() {
+	}
+
+	public static synchronized ExecutorService getThreadPoolExecutor() {
+		if (executorService == null) {
+			var boundedQueue = new ArrayBlockingQueue<Runnable>(1000);
+			executorService = new ThreadPoolExecutor(10, 20, 60, TimeUnit.SECONDS, boundedQueue, new AbortPolicy());
+		}
+		return executorService;
+	}
 
 }

@@ -63,6 +63,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @Transactional
 public class NotificationMessageControllerTests extends AbstractControllerTests {
+
 	@Autowired
 	private NotificationMessageRepository notificationMessageRepository;
 
@@ -80,10 +81,12 @@ public class NotificationMessageControllerTests extends AbstractControllerTests 
 
 	@TestConfiguration
 	private class TestConfig {
+
 		@Bean
 		SecurityUtil securityUtil() {
 			return securityUtil;
 		}
+
 	}
 
 	@BeforeEach
@@ -96,19 +99,21 @@ public class NotificationMessageControllerTests extends AbstractControllerTests 
 	void messageCreateAndNotifications() throws Exception {
 		// Creates GROUP_A and GROUP_B with
 		// users USER_A_1, USER_A2 in GROUP_A and USER_B_1,USER_B_2 in GROUP_B
-		NotificationsDataCreator.createAndSaveTwoGroupsAndTwoUsersPerGroup(this.notificationGroupRepository, this.notificationUserRepository);
+		NotificationsDataCreator.createAndSaveTwoGroupsAndTwoUsersPerGroup(this.notificationGroupRepository,
+				this.notificationUserRepository);
 
 		NotificationMessageCreateRequestDTO createRequest = createRequestForUser1A();
 
-		this.mockMvc.perform(postJson("/api/v1/messages", createRequest))
-				.andDo(print())
+		this.mockMvc.perform(postJson("/api/v1/messages", createRequest)).andDo(print())
 				.andExpect(status().isCreated());
 
 		List<NotificationMessage> notificationMessages = this.notificationMessageRepository.findAll();
 		assertThat(notificationMessages).isNotEmpty();
 		assertThat(notificationMessages).hasSize(1);
 		NotificationMessage notificationMessage = notificationMessages.get(0);
-		assertThat(notificationMessage.getFromuser()).isEqualTo(USER_A_1);  // default user from @WithMockUser
+		assertThat(notificationMessage.getFromuser()).isEqualTo(USER_A_1); // default user
+																			// from
+																			// @WithMockUser
 		assertThat(notificationMessage.getBody()).isEqualTo(NotificationsDataCreator.MESSAGE_BODY);
 		assertThat(notificationMessage.getSubject()).isEqualTo(NotificationsDataCreator.MESSAGE_SUBJECT);
 		assertThat(notificationMessage.getMessageType()).isEqualTo(NotificationsDataCreator.MESSAGE_TYPE);
@@ -121,29 +126,26 @@ public class NotificationMessageControllerTests extends AbstractControllerTests 
 		NotificationRecord notificationRecord = records.get(0);
 
 		assertThat(notificationRecord.isRead()).isEqualTo(false);
-		assertThat(notificationRecord.getNotificationMessage().getBody()).isEqualTo(NotificationsDataCreator.MESSAGE_BODY);
+		assertThat(notificationRecord.getNotificationMessage().getBody())
+				.isEqualTo(NotificationsDataCreator.MESSAGE_BODY);
 
 		Optional<NotificationUser> notificationsUserOptional = this.notificationUserRepository.findByUsername(USER_A_1);
 		NotificationUser notificationUser = notificationsUserOptional.get();
 
-		Page<NotificationRecord> notificationsRecordPage =
-				this.notificationRecordRepository.findByNotificationUserListContaining(
-						notificationUser,
-						PageRequest.of(0, 5));
+		Page<NotificationRecord> notificationsRecordPage = this.notificationRecordRepository
+				.findByNotificationUserListContaining(notificationUser, PageRequest.of(0, 5));
 		assertThat(notificationsRecordPage.getTotalElements()).isEqualTo(1);
-		assertThat(notificationsRecordPage.getContent().get(0).getNotificationMessage().getBody()).isEqualTo(NotificationsDataCreator.MESSAGE_BODY);
+		assertThat(notificationsRecordPage.getContent().get(0).getNotificationMessage().getBody())
+				.isEqualTo(NotificationsDataCreator.MESSAGE_BODY);
 
-		notificationsRecordPage =
-				this.notificationRecordRepository.findByReadFalseAndNotificationUserListContaining(
-						notificationUser,
-						PageRequest.of(0, 5));
+		notificationsRecordPage = this.notificationRecordRepository
+				.findByReadFalseAndNotificationUserListContaining(notificationUser, PageRequest.of(0, 5));
 		assertThat(notificationsRecordPage.getTotalElements()).isEqualTo(1);
-		assertThat(notificationsRecordPage.getContent().get(0).getNotificationMessage().getBody()).isEqualTo(NotificationsDataCreator.MESSAGE_BODY);
+		assertThat(notificationsRecordPage.getContent().get(0).getNotificationMessage().getBody())
+				.isEqualTo(NotificationsDataCreator.MESSAGE_BODY);
 
-		Page<NotificationRecord> notificationsRecordPageReadTrue =
-				this.notificationRecordRepository.findByReadTrueAndNotificationUserListContaining(
-						notificationUser,
-						PageRequest.of(0, 5));
+		Page<NotificationRecord> notificationsRecordPageReadTrue = this.notificationRecordRepository
+				.findByReadTrueAndNotificationUserListContaining(notificationUser, PageRequest.of(0, 5));
 		assertThat(notificationsRecordPageReadTrue.getTotalElements()).isEqualTo(0);
 
 		NotificationRecord nr = notificationsRecordPage.getContent().get(0);
@@ -153,12 +155,12 @@ public class NotificationMessageControllerTests extends AbstractControllerTests 
 		Optional<NotificationRecord> nr2 = this.notificationRecordRepository.findById(nr.getId());
 		assertThat(nr2.isPresent()).isTrue();
 
-		Page<NotificationRecord> notificationsRecordsHasReadTrue =
-				this.notificationRecordRepository.findByReadTrueAndNotificationUserListContaining(
-						notificationUser,
-						PageRequest.of(0, 5));
+		Page<NotificationRecord> notificationsRecordsHasReadTrue = this.notificationRecordRepository
+				.findByReadTrueAndNotificationUserListContaining(notificationUser, PageRequest.of(0, 5));
 		assertThat(notificationsRecordsHasReadTrue.getTotalElements()).isEqualTo(1);
 
-		assertThat(notificationsRecordsHasReadTrue.getContent().get(0).getNotificationMessage().getBody()).isEqualTo(NotificationsDataCreator.MESSAGE_BODY);
+		assertThat(notificationsRecordsHasReadTrue.getContent().get(0).getNotificationMessage().getBody())
+				.isEqualTo(NotificationsDataCreator.MESSAGE_BODY);
 	}
+
 }

@@ -15,10 +15,8 @@
  */
 package com.redhat.parodos.notification.jpa.entity;
 
-import com.redhat.parodos.notification.jpa.entity.base.AbstractEntity;
-import lombok.Data;
-import lombok.Setter;
-
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -29,12 +27,14 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
+import com.redhat.parodos.notification.jpa.entity.base.AbstractEntity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
- * The record that keeps track of notifications for a user, if it read and what tags/folder
- * the associated message for the notification is stored in from the user perspective
+ * The record that keeps track of notifications for a user, if it read and what
+ * tags/folder the associated message for the notification is stored in from the user
+ * perspective
  *
  * @author Richard Wang (Github: RichardW98)
  * @author Annel Ketcha (Github: anludke)
@@ -43,34 +43,31 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "NotificationRecord")
+@EqualsAndHashCode(callSuper = false)
 public class NotificationRecord extends AbstractEntity {
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "notificationmessage_id")
-    private NotificationMessage notificationMessage;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "notificationmessage_id")
+	private NotificationMessage notificationMessage;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "user_notificationrecord", joinColumns = @JoinColumn(name = "notificationrecord_id"),
-            inverseJoinColumns = @JoinColumn(name = "notificationuser_id"))
-    private List<NotificationUser> notificationUserList = new ArrayList<>();
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinTable(name = "user_notificationrecord", joinColumns = @JoinColumn(name = "notificationrecord_id"),
+			inverseJoinColumns = @JoinColumn(name = "notificationuser_id"))
+	private List<NotificationUser> notificationUserList = new ArrayList<>();
 
-    @Column(name = "read")
-    private boolean read;
+	@Column(name = "read")
+	private boolean read;
 
-    @ElementCollection
-    private List<String> tags;
+	@ElementCollection
+	private List<String> tags;
 
-    @Column(name = "folder")
-    private String folder;
+	@Column(name = "folder")
+	private String folder;
 
-    @Override
-    public String toString() {
-        return "NotificationRecord {" +
-                "notificationMessage=" + notificationMessage +
-                ", read=" + read +
-                ", tags=" + tags +
-                ", folder='" + folder + '\'' +
-                ", notificationUserList=" + notificationUserList +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "NotificationRecord {" + "notificationMessage=" + notificationMessage + ", read=" + read + ", tags="
+				+ tags + ", folder='" + folder + '\'' + ", notificationUserList=" + notificationUserList + '}';
+	}
+
 }
