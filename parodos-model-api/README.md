@@ -1,12 +1,16 @@
 # Parodos Model API
 
-This project contains all the dependencies to externally create and configure Workflows which are composed of WorkflowTasks. 
+## Introduction
 
-The goal of a Workflow is to achieve an outcome for a developer. For example, the OCP onboarding Workflow might perform all the steps to set up permissions, networking, required monitoring and security tooling and OCP configuration for a developer to start using OCP to develop applications.
+This project contains all the dependencies to create and configure Parodos Workflows. 
 
-The goal of WorkflowTasks are too perform the necessary steps in the Workflow to achieve the desired outcome.
+The goal of a Workflow is to achieve an outcome for a developer. For example,the OCP onboarding Workflow might perform all the steps to set up tooling, environment but also permissions, networking and required monitoring and security tooling. After running this Workflow, not only can add developer build, deploy and test in lower level environments, but they also have an easier path to get to production with their code.
 
-Developers/Quality Assurance/Application Support and any other member of a software delivery team consume Workflows via the Parodos Backstage plugins (https://github.com/janus-idp/backstage-plugins), or through another interface developed by the enterprise.
+Parodos Workflows are composed of Parodos WorkflowTasks. These perform the necessary steps in the Workflow to achieve the desired outcome. How many WorkflowTasks (steps) are required to achieve an outcome will vary across environments.
+
+The README of the workflow-example folder in this project will provide an overview of what a Parodos configuration will look like.
+
+Developers/Quality Assurance/Application Support and any other member of a software delivery can consume Parodos workflows via a Backstage plugins (https://github.com/janus-idp/backstage-plugins), or using the Parodos backing APIs integrated with another interface developed by the enterprise.
 
 The IDP internal development team build Workflows and their composing WorkflowTasks in partnership with infrastructure operations/networking/audit/security/DevOps (any team in the enterprise owning/operating/governing tools and environment) using this API.
 
@@ -14,7 +18,7 @@ The following is a UML diagram of the current Parodos Object Model.
 
 ![UML](readme-images/uml.png)
 
-# Adding The Client Library To A Project
+## Adding The Client Library To A Project
 
 ```xml
 
@@ -34,17 +38,15 @@ mvn clean install
 
 ```
 
-# Concepts and Example Usage
+## Concepts and Example Usage
 
-The foundation of Parodos is the Workflow object. In Parodos there are a few specified Workflows that are common in the IDP space. They can be found in the WorkFlowType enum. At present these are:
+The foundation of Parodos is the Workflow object (see the workflow-engine folder of this project for more details about Workflows). In Parodos there are a few specified Workflows that are common in the IDP space. They can be found in the WorkFlowType enum. At present these are:
 
 - Assessment (takes inputs and gives a list of Workflow options for a user to choose from)
 - Checker (determines the status of a manual process that is blocking other workflows from running)
 - Infrastructure (creates tooling and environments)
 
-Each of these Workflows are composed of WorkflowTasks that are perform actions relevant to the WorkFlowType. These are covered in detail below.
-
-Executions of the WorkflowTasks can be done in:
+Executions of the WorkflowTasks (which is done by the Workflow object) can be done in:
 
 - Serial
 - Parallel
@@ -53,19 +55,20 @@ Executions of the WorkflowTasks can be done in:
 
 At present the Parodos Workflow engine wraps the Easy Flows project (https://github.com/j-easy/easy-flows). Future releases of Parodos may provide options to leverage other Workflow engines. For this first version of Parodos, easy-flows provides all the necessary functionality.
 
-With this structure a developer can use the base type of Workflow and WorkflowTask to create any Workflow they wish.
+The following is a brief overview of the object model.
 
-However, Parodos has provided some structure around WorkflowTask to help developers create Workflows that are specific to the IDP space and can be consumed by the Parodos UI (Backstage plugins found in https://github.com/janus-idp/backstage-plugins)
+## Object Overview
 
-## Parodos WorkflowTask
 
-Parodos provides to structure around the types of tasks with some abstract implementations.
+### Parodos WorkflowTask
 
-** BaseAssessmentTask ** - these WorkflowTasks accepts a collection of inputs, and returns WorkflowOptions based on custom logic that can be defined in the task. These are foundation of Workflows that help developers (and other team members) determine what Workflows they can run for their use case. For example, an assessment might review code looking for a pipeline definition or the presence of a certain 3rd party service - both of which would imply different workflows.
+WorkflowTask objects do work (as defined in the execute method) and are placed in a Workflow object where they will be executed when the Workflow itself is executed. Parodos provides to structure around the types of tasks with some abstract implementations. These are useful implementations for an IDP.
 
-** BaseWorkFlowTask ** - these WorkflowTasks are intended to call downstream systems that iniate automation. The class can optionally contain a WorkflowChecker workflow. This is a Workflow that contains one or more WorkFlowCheckerTask
+** BaseAssessmentTask ** - these WorkflowTasks accepts a collection of inputs, and returns WorkflowOptions based on custom logic that can be defined in the task. These tasks are intended to be used in Workflows to help developers (and other team members) determine what Workflows they can run for their use case. For example, an assessment might review code looking for a pipeline definition or the presence of a certain 3rd party service - both of which would imply different workflows.
 
-** WorkFlowCheckerTask ** - WorkflowTasks that check the status of manual processes triggered by other Workflows. WorkFlowCheckerTasks can be long running when place into a WorkFlow when the definition of the Workflow its contained inside is of type WorkFlowCheckerDefinition (the workflow-service provides scheduling for these tasks) and its outcomes 
+** BaseWorkFlowTask ** - these WorkflowTasks are intended to call downstream systems that initiate automation. The class can optionally can reference a WorkflowChecker workflow
+
+** WorkFlowCheckerTask ** - Checks the status of manual processes triggered by other Workflows. WorkFlowCheckerTasks can be long running when place into a WorkFlow when the definition of the Workflow its contained inside is of type WorkFlowCheckerDefinition (the workflow-service provides scheduling for these tasks) and its outcomes 
 
 
 ### Workflow Definitions and Options
