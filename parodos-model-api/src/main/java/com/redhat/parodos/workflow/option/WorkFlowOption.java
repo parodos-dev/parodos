@@ -31,7 +31,7 @@ import java.util.List;
  * <p>
  * <p>
  * workFlowId: unique identifier for this Workflow option. An example could be
- * platformname + workflowName (ie: AwsOcpAnsibleSelfHealingV1). This should corespond to
+ * platformname + workflowName (ie: AwsOcpAnsibleSelfHealingV1). This should correspond to
  * the value the workflow-service end points expect to execute a Workflow
  * <p>
  * name: a readable/user-friendly label for the WorkflowOption

@@ -308,8 +308,9 @@ The definition of that Workflow can be seen in the same configuration file.
 
 ```
 
-In the @Checker definition, the nextWorkFlowName can be specified. This is the Workflow that can run, provided the WorkflowChecker workflow successfully completes (meaning all WorkfTasks return COMPLETED).
+In the @Checker definition, the nextWorkFlowName can be specified. This is the Workflow that can run, provided the WorkflowChecker workflow successfully completes (meaning all WorkfTasks return COMPLETED). The ccronExpression of the annotation will determine how often the Workflow will be executed. This is useful for manual processes that might take hours (or even days). As all state is persisted, when the workflow-service is restarted, execution will resume.
 
+WorkflowCheckers can be used to determine if required manual processes, outside of the scope of Parodos, have completed.
 
 #### A Note On Defining WorkflowTasks for Usage In A Workflow
 
