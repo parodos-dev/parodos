@@ -105,8 +105,8 @@ public class WorkFlowOptions {
 	}
 
 	public List<WorkFlowOption> addOtherOption(WorkFlowOption otherOption) {
-		upgradeOptions.add(otherOption);
-		return upgradeOptions;
+		otherOptions.add(otherOption);
+		return otherOptions;
 	}
 
 	public void setOtherOptions(List<WorkFlowOption> otherOptions) {

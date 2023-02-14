@@ -15,6 +15,12 @@
  */
 package com.redhat.parodos.examples.continued.complex;
 
+import java.util.concurrent.Executors;
+
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
 import com.redhat.parodos.examples.simple.LoggingWorkFlowTask;
 import com.redhat.parodos.workflow.annotation.Assessment;
 import com.redhat.parodos.workflow.annotation.Checker;
@@ -24,11 +30,6 @@ import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflows.workflow.ParallelFlow;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import java.util.concurrent.Executors;
 
 /**
  * A more complex WorkFlow
