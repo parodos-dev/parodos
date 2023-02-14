@@ -33,7 +33,7 @@ public abstract class BaseAssessmentTask extends BaseWorkFlowTask {
 	/**
 	 * These are the options this AssessmentTasks can return
 	 */
-	List<WorkFlowOption> workflowOptions;
+	private List<WorkFlowOption> workflowOptions;
 
 	protected BaseAssessmentTask(List<WorkFlowOption> workflowOptions) {
 		this.workflowOptions = workflowOptions;
