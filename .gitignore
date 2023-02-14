@@ -57,3 +57,7 @@ local.properties
 .DS_Store
 **/.DS_Store
 /.idea/
+
+
+## VSCODE ***
+/.vscode/
