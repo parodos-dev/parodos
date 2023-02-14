@@ -32,7 +32,7 @@ The 'local' is intended for local testing and runs the application without secur
 
 More detail on this subject will be covered in the 'parodos-model-api' folder of this project. For a complete example please review 'workflow-example'.
 
-In this present release teams are encouraged to think of Workflows and WorkflowTasks as stand along Java projects. As such they should have test coverage, undergo a full software release cycle and should not be updated in production trivally. Due to the persistance of both workflow definitions and WorkflowTask executions, the workflow-service can be restarted to update the definition of Workflows and WorkflowTasks.
+In this present release teams are encouraged to think of Workflows and WorkflowTasks as stand alone Java projects. As such they should have test coverage, undergo a full software release cycle and should not be updated in production trivally. Due to the persistance of both workflow definitions and WorkflowTask executions, the workflow-service can be restarted to update the definition of Workflows and WorkflowTasks.
 
 **Note:** Future release of this service will include WorkFlowTask/WorkFlow creation/configuration options that do not require having to write Java code.
 
@@ -60,6 +60,10 @@ The BeanWorkflowRegistryImpl will load all Spring Beans of type: com.redhat.paro
 This can be done as part of the workflow-service's code base, or in a separate Jar that can add to the class path of the workflow-service. 
 
 Please review the Parodos project 'workflow-examples' for more details.
+
+## Service Endpoint Overview
+
+Swagger can be accessed when running locally with http://localhost:8080. The username/password of test/test will grant access locally.
 
 ![Workflow-Service](readme-images/swagger.png)
 
