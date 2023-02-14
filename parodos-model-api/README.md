@@ -2,13 +2,21 @@
 
 ## Introduction
 
+The goal of Parodos is to provide Java based Workflows that blend modern automation tooling with integrations and insight into legacy (and even manual) processes to provide developers everything they need to start quickly and effectively coding and deploying their code in their unique environment.
+
 This project contains all the dependencies to create and configure Parodos Workflows. 
 
 The goal of a Workflow is to achieve an outcome for a developer. For example,the OCP onboarding Workflow might perform all the steps to set up tooling, environment but also permissions, networking and required monitoring and security tooling. After running this Workflow, not only can add developer build, deploy and test in lower level environments, but they also have an easier path to get to production with their code.
 
 Parodos Workflows are composed of Parodos WorkflowTasks. These perform the necessary steps in the Workflow to achieve the desired outcome. How many WorkflowTasks (steps) are required to achieve an outcome will vary across environments.
 
-The README of the workflow-example folder in this project will provide an overview of what a Parodos configuration will look like.
+Parodos Workflows can be executed by the Parodos workflow-service.
+
+This is a high level view of a complete Workflow and WorkflowTasks, running in the workflow-service (this also shows how the notification-service) interacting with a tooling and process in a legacy environment to get a developer set up to work.
+
+![UML](readme-images/complete-workflow-outcomes.png)
+
+The README of the workflow-example folder in this project will provide an overview of what a Parodos Workflow/WorkflowTask configuration can look like.
 
 Developers/Quality Assurance/Application Support and any other member of a software delivery can consume Parodos workflows via a Backstage plugins (https://github.com/janus-idp/backstage-plugins), or using the Parodos backing APIs integrated with another interface developed by the enterprise.
 
@@ -18,19 +26,11 @@ The following is a UML diagram of the current Parodos Object Model.
 
 ![UML](readme-images/uml.png)
 
-## Adding The Client Library To A Project
+This document will provide more details around how to use the Parodos model to created Worksflow that can be executed by the Parodos workflow-service.
 
-```xml
+## Building The Code
 
-	<dependency>
-		<groupId>com.redhat.parodos.workflow</groupId>
-		<artifactId>workflow-engine</artifactId>
-		<version>${parodos.version}</version>
-	</dependency>
-
-```
-
-The source for this package is in the Parodos repo. Use the parent pom.xml at the root of the project to build and install it into your local maven repo.
+The source for this package is in the Parodos repo. Use the **parent** pom.xml at the **root of the project** to build and install it into your local maven repo.
 
 ```shell
 
@@ -38,13 +38,35 @@ mvn clean install
 
 ```
 
+After a successful build the libraries can be added to a Java project by adding the following to a maven POM file.
+
+```xml
+
+		<dependency>
+			<groupId>com.redhat.parodos</groupId>
+			<artifactId>parodos-model-api</artifactId>
+			<version>${revision}</version>
+		</dependency>
+
+```
+
 ## Concepts and Example Usage
 
-The foundation of Parodos is the Workflow object (see the workflow-engine folder of this project for more details about Workflows). In Parodos there are a few specified Workflows that are common in the IDP space. They can be found in the WorkFlowType enum. At present these are:
+The foundation of Parodos is the Workflow object (see the workflow-engine folder of this project for more details about Workflows). Workflows are Composed of WorkflowTasks. WorkflowTasks do the work of the Workflow. A WorkContext is shared throughout the Workflow's execution. This provides a means of passing information into the Workflow before execution, but also a means of collecting information created during the execution. A WorkReport is returned at the end of an execution for a Workflow that provides an indication of the final outcome of the Workflow and the final state of the WorkContext. Workflows are consumed by the workflow-service where additional functionality around persistence and execution is made available.
+
+
+![UML](readme-images/basic-objects.png)
+
+
+In Parodos there are a few specified Workflows that are common in the IDP space.  They can be found in the WorkFlowType enum. At present these are:
 
 - Assessment (takes inputs and gives a list of Workflow options for a user to choose from)
-- Checker (determines the status of a manual process that is blocking other workflows from running)
+- Checker (determines the status of a manual process that is blocking other Workflows from running)
 - Infrastructure (creates tooling and environments)
+
+Here is a overview of how an Assessment workflow works.
+
+![UML](readme-images/assessment-workflow.png)
 
 Executions of the WorkflowTasks (which is done by the Workflow object) can be done in:
 
@@ -54,6 +76,9 @@ Executions of the WorkflowTasks (which is done by the Workflow object) can be do
 - Repeating
 
 At present the Parodos Workflow engine wraps the Easy Flows project (https://github.com/j-easy/easy-flows). Future releases of Parodos may provide options to leverage other Workflow engines. For this first version of Parodos, easy-flows provides all the necessary functionality.
+
+![UML](readme-images/assessment-workflow.png)
+
 
 The following is a brief overview of the object model.
 
