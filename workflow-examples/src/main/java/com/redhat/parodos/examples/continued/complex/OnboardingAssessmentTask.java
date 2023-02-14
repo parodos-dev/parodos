@@ -42,7 +42,6 @@ public class OnboardingAssessmentTask extends BaseAssessmentTask {
 	public OnboardingAssessmentTask(WorkFlowOption workflowOption) {
 		super(List.of(workflowOption));
 	}
-	
 
 	@Override
 	public WorkReport execute(WorkContext workContext) {

@@ -73,7 +73,8 @@ public class ComplexWorkFlowConfiguration {
 
 	// END assessmentWorkFlow definition
 
-	// Start onboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW definition (this is the Workflow described in the WorkflowOption above)
+	// Start onboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW definition
+	// (this is the Workflow described in the WorkflowOption above)
 	@Bean
 	LoggingWorkFlowTask certWorkFlowTask(@Qualifier("namespaceWorkFlow"
 			+ WorkFlowConstants.CHECKER_WORKFLOW) WorkFlow namespaceWorkFlowCheckerWorkFlow) {
@@ -98,7 +99,7 @@ public class ComplexWorkFlowConfiguration {
 		return loggingWorkFlow;
 	}
 
-	//runs the set of Tasks associated with "Onboarding"
+	// runs the set of Tasks associated with "Onboarding"
 	@Bean(name = "onboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
 	@Infrastructure
 	WorkFlow onboardingWorkflow(@Qualifier("certWorkFlowTask") LoggingWorkFlowTask certWorkFlowTask,
@@ -112,7 +113,8 @@ public class ComplexWorkFlowConfiguration {
 				.build();
 		// @formatter:on
 	}
-	// End onboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW definition definition
+	// End onboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW definition
+	// definition
 
 	// Start Name Space Logic
 	@Bean
@@ -169,7 +171,8 @@ public class ComplexWorkFlowConfiguration {
 	@Bean("onboardingWorkFlow" + WorkFlowConstants.CHECKER_WORKFLOW)
 	@Checker(nextWorkFlowName = "nameSpaceWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW,
 			cronExpression = "0 0/1 * * * ?")
-	WorkFlow onboardingWorkFlowCheckerWorkFlow(@Qualifier("approvalChecker") MockApprovalWorkFlowCheckerTask approvalChecker) {
+	WorkFlow onboardingWorkFlowCheckerWorkFlow(
+			@Qualifier("approvalChecker") MockApprovalWorkFlowCheckerTask approvalChecker) {
 		// @formatter:off
 		return SequentialFlow.Builder.aNewSequentialFlow()
 				.named("onboarding Checker WorkFlow")
@@ -188,7 +191,8 @@ public class ComplexWorkFlowConfiguration {
 	@Bean("namespaceWorkFlow" + WorkFlowConstants.CHECKER_WORKFLOW)
 	@Checker(nextWorkFlowName = "networkingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW,
 			cronExpression = "0 0/1 * * * ?")
-	WorkFlow namespaceWorkFlowCheckerWorkFlow(@Qualifier("processCompletionChecker") MockApprovalWorkFlowCheckerTask processCompletionChecker) {
+	WorkFlow namespaceWorkFlowCheckerWorkFlow(
+			@Qualifier("processCompletionChecker") MockApprovalWorkFlowCheckerTask processCompletionChecker) {
 		// @formatter:off
 		return SequentialFlow.Builder.aNewSequentialFlow()
 				.named("namespace Checker WorkFlow")
