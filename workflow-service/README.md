@@ -1,8 +1,6 @@
 # Parodos Workflow Service
 
-This service is designed to call existing automation and tools to help get software teams get what they need to begin coding. This  __service is not intended to replace automation frameworks or complex business rules engines that already exist__  in enterprise environments looking to run a Parodos based Developer Platform.
-
-Think of this service as a way to tie together existing tools/process/automation into end-to-end WorkFlows with the outcome being developers and teams can start working on software project faster and with less frustration.
+This service is designed run Parodos Workflows (composed of Parodos WorkflowTasks) created using the Parodos Model API.
 
 ## Starting The Service Locally
 
@@ -18,33 +16,23 @@ Note: It is assumed 'mvn install' has already been executed at the root level of
 
 The 'workflow-examples' dependency can be found in the pom.xml of the workflow-service. This is a demo configuration to test the service. It should be removed once actual Tasks and WorkFlows start getting created.
 
-To start the application run the following from the root folder of 'infrastructure-service'.
+To start the application run the following from the root folder of 'workflow-service'.
 
 ```shell
 
 java -Dspring.profiles.active=local -jar target/workflow-service-0.0.1-SNAPSHOT.jar
 
 ```
-The 'local' is intended for local testing and runs the application without security (Keycloak managed Oauth2 flow is the default). **DO NOT USE THIS PROFILE IN PRODUCTION**
 
-Upon start-up the Swagger Endpoints can be accessed with the following URL: http://localhost:8080/
+For convience there is a shell script at the root of the folder that will run this command as well (start_workflow_service.sh).
 
-For more information on configuring Keycloak:
-
-https://www.keycloak.org/server/all-config
-
-https://www.keycloak.org/guides#getting-started
-
-
-![UML](readme-images/swagger.png)
+The 'local' is intended for local testing and runs the application without security (Keycloak managed Oauth2 flow is the default). Documentation is currently being produced for production grade security configurations.
 
 ## Defining Workflows And WorkFlowTasks
 
-More detail on this subject will be covered in the 'parodos-model-api' folder of this project. To briefly review, Workflow are composed on WorkflowTasks. Both translate to Spring Beans that can be defined in their own java project and added as a dependency to the 'workflow-service'.
+More detail on this subject will be covered in the 'parodos-model-api' folder of this project. For a complete example please review 'workflow-example'.
 
-For a full review of the domain model and how it can be used, refer to the 'parodos-model-api' project.
-
-In this present release teams are encouraged to think of Workflows and WorkflowTasks as stand along Java projects. As such they should have test coverage, undergo a full software release cycle and should not be updated in production trivally. Due to the persistance of both workflow definitions and WorkflowTask executions, the workflow-service can be restarted to update the definition of Workflows and WorkflowTasks.
+In this present release teams are encouraged to think of Workflows and WorkflowTasks as stand alone Java projects. As such they should have test coverage, undergo a full software release cycle and should not be updated in production trivally. Due to the persistance of both workflow definitions and WorkflowTask executions, the workflow-service can be restarted to update the definition of Workflows and WorkflowTasks.
 
 **Note:** Future release of this service will include WorkFlowTask/WorkFlow creation/configuration options that do not require having to write Java code.
 
@@ -73,17 +61,28 @@ This can be done as part of the workflow-service's code base, or in a separate J
 
 Please review the Parodos project 'workflow-examples' for more details.
 
-![Infrastructure](readme-images/6.png)
+## Service Endpoint Overview
+
+Swagger can be accessed when running locally with http://localhost:8080. The username/password of test/test will grant access locally.
+
+![Workflow-Service](readme-images/swagger.png)
 
 ## Service Endpoints
 
-The Infrastructure Service provides the following endpoints:
+The workflow-service provides the following endpoints:
 
-**work-flow-controller**
+***Projects***
 
-- GET /api/v1/workflows/infrastructures - Gets a list of all 'id' the InfrastructureWorkFlows available for execution
-- GET /api/v1/workflows/infrastructures/{id}/parameter - Scans the InfrastructureWorkFlow and captures all the WorkFlow Parameters required for the Tasks in the WorkFlow to execute. This is consumed by the Parodos UI to dynamically generate prompts for the user to complete when requesting a WorkFlow execution
-- POST /api/v1/workflows/infrastructures - Allows for the execution of an InfrastructureWorkFlow
+- GET  http://localhost:8080/api/v1/projects - Gets all the projects being managed with the workflow-service. Workflows act upon Projects
+- POST  http://localhost:8080/api/v1/projects - Create a new Project
+- GET http://localhost:8080/api/v1/projects/{projectId} - Gets a specific Project reference
+
+***Workflow***
+- POST http://localhost:8080/api/v1/workflows - Used to execute a Workflow
+
+***Workflow Definition***
+- GET http://localhost:8080/api/v1/workflowdefinitions - Gets all the workflow definitions (this is the meta data of a Workflow and includes associated WorkflowTasks and WorkflowParameters)
+- GET http://localhost:8080/api/v1/workflowdefinitions/{workflowId} - Gets a specific workflow definition (this is the meta data of a Workflow and includes associated WorkflowTasks and WorkflowParameters)
 
 
 ## FAQ
@@ -99,10 +98,6 @@ If you are finding Parodos's simple workflows not advanced enough to manage the 
 ### Will there be support to configure rules beyond Spring Beans?
 
 Yes. In this first release a configuration pattern widely used across many enterprise environments was chosen. However future release will include a DSL (domain specific language) for configuring Workflows without have to write Java code.
-
-### Is there a way to keep track of what WorkFlows have executed and their state of execution?
-
-The 'workflow-service' provides persistence of all WorkflowTask execution. This allows the service to resume execution of WorkflowTasks after the service has been restarted. The Parodos Janus-IDP plugins also provide a view of these persistant events to provide an execution history for Workflows.
 
 
 

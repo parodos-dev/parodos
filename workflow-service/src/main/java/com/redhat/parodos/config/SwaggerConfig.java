@@ -31,7 +31,7 @@ import org.springframework.context.annotation.Configuration;
 public class SwaggerConfig {
 
 	@Bean
-	OpenAPI springShopOpenAPI() {
+	OpenAPI parodosOpenAPI() {
 		return new OpenAPI().info(new Info().title("Parodos Workflow Service").description(
 				"Executes assessments to determine InfrastructureOptions (tooling + environments). Also executes Infrastructure Task Workflows to call downstream systems to stand-up an InfrastructureOption")
 				.version("v.0.0.1"));

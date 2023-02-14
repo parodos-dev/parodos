@@ -50,7 +50,7 @@ public class SimpleWorkFlowConfiguration {
 	@Bean(name = "simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
 	@Infrastructure
 	WorkFlow simpleSequentialWorkFlowTask(@Qualifier("restCall") RestAPIWorkFlowTask restCall,
-			LoggingWorkFlowTask loggingTask) {
+			@Qualifier("loggingTask") LoggingWorkFlowTask loggingTask) {
 		// @formatter:off
 		return SequentialFlow
 				.Builder.aNewSequentialFlow()
