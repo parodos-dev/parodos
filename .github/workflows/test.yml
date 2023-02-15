@@ -50,7 +50,7 @@ jobs:
         id: jacoco
         uses: madrapps/jacoco-report@main
         with:
-          paths: ./coverage/target/site/jacoco-aggregate/jacoco.xml
+          paths: ${{ github.workspace }}/coverage/target/site/jacoco-aggregate/jacoco.xml
           min-coverage-overall: 40
           min-coverage-changed-files: 60
           token: ${{ secrets.GITHUB_TOKEN }}
