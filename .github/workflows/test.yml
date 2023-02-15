@@ -14,12 +14,14 @@ on:
 
 permissions:
   pull-requests: write
+  contents: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
+      contents: read
     steps:
       - uses: actions/checkout@v3
 
