@@ -7,7 +7,7 @@ on:
       - 'releases/**'
       - 'GHActions'
 
-  pull_request:
+  pull_request_target:
     branches:
       - '**'
 
