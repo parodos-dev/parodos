@@ -48,7 +48,7 @@ jobs:
 
       - name: Add coverage to PR
         id: jacoco
-        uses: madrapps/jacoco-report@main
+        uses: madrapps/jacoco-report@v1.3
         with:
           paths: ${{ github.workspace }}/coverage/target/site/jacoco-aggregate/jacoco.xml
           min-coverage-overall: 40
