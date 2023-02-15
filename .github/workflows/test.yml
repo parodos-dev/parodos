@@ -40,7 +40,11 @@ jobs:
         run: |
           mvn test --file ./pom.xml
           mvn jacoco:report-aggregate
-          ls ./coverage/target/site/jacoco-aggregate/ -la 
+          ls ./coverage/target/site/jacoco-aggregate/ -la
+          ls ${{ github.workspace }}/ -lah
+          ls ${{ github.workspace }}/coverage/target/site/jacoco-aggregate/ -la 
+
+
 
       - name: Add coverage to PR
         id: jacoco
