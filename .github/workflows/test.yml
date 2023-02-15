@@ -30,16 +30,17 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
 
-      - name: Maven Build
-        run: mvn clean package
+      # - name: Maven Build
+      #   run: mvn clean package
 
-      - name: Maven Validate
-        run: mvn validate
+      # - name: Maven Validate
+      #   run: mvn validate
 
       - name: Maven Test
         run: |
           mvn test --file ./pom.xml
           mvn jacoco:report-aggregate
+          ls ./coverage/target/site/jacoco-aggregate/ -la 
 
       - name: Add coverage to PR
         id: jacoco
