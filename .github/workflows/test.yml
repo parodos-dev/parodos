@@ -5,9 +5,15 @@ on:
     branches:
       - main
       - 'releases/**'
+      - 'GHActions'
+
   pull_request:
     branches:
       - '**'
+
+
+permissions:
+  pull-requests: write
 
 jobs:
   build:
