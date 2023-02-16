@@ -67,6 +67,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(workFlowName)
 				.description(workFlowDescription).type(workFlowType.name()).createDate(new Date())
 				.modifyDate(new Date()).build();
+
 		workFlowDefinition.setWorkFlowTaskDefinitions(hmWorkFlowTasks.entrySet().stream()
 				.map(entry -> WorkFlowTaskDefinition.builder().name(entry.getKey())
 						.parameters(WorkFlowDTOUtil.writeObjectValueAsString(
@@ -116,12 +117,14 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 					.findByName(workFlowCheckerName).get(0);
 			WorkFlowDefinition nextWorkFlowDefinitionEntity = workFlowDefinitionRepository
 					.findByName(workFlowCheckerDTO.getNextWorkFlowName()).get(0);
-			workFlowTaskDefinitionEntity.setWorkFlowCheckerDefinition(WorkFlowCheckerDefinition.builder()
+
+			WorkFlowCheckerDefinition wfChecker = WorkFlowCheckerDefinition.builder()
 					.id(WorkFlowCheckerDefinitionPK.builder().workFlowCheckerId(checkerWorkFlowDefinitionEntity.getId())
 							.taskId(workFlowTaskDefinitionEntity.getId()).build())
 					.task(workFlowTaskDefinitionEntity).checkWorkFlow(checkerWorkFlowDefinitionEntity)
 					.nextWorkFlow(nextWorkFlowDefinitionEntity).cronExpression(workFlowCheckerDTO.getCronExpression())
-					.build());
+					.build();
+			workFlowTaskDefinitionEntity.setWorkFlowCheckerDefinition(wfChecker);
 			workFlowTaskDefinitionRepository.save(workFlowTaskDefinitionEntity);
 		}
 		catch (Exception e) {
