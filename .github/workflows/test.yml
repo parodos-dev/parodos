@@ -5,7 +5,8 @@ on:
     branches:
       - main
       - 'releases/**'
-  pull_request:
+
+  pull_request_target:
     branches:
       - '**'
 
@@ -13,7 +14,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: write
+      checks: write
     steps:
       - uses: actions/checkout@v3
 
@@ -33,11 +34,18 @@ jobs:
           mvn test --file ./pom.xml
           mvn jacoco:report-aggregate
 
-      - name: Add coverage to PR
-        id: jacoco
-        uses: madrapps/jacoco-report@v1.3
+      - name: JaCoCo Code Coverage Report
+        id: jacoco_reporter
+        uses: PavanMudigonda/jacoco-reporter@v4.8
         with:
-          paths: ./coverage/target/site/jacoco-aggregate/jacoco.xml
-          min-coverage-overall: 40
-          min-coverage-changed-files: 60
-          token: ${{ secrets.GITHUB_TOKEN }}
+          coverage_results_path: ${{ github.workspace }}/coverage/target/site/jacoco-aggregate/jacoco.xml
+          coverage_report_name: Coverage
+          coverage_report_title: Coverage
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          skip_check_run: false
+          minimum_coverage: 60
+          fail_below_threshold: false
+          publish_only_summary: false
+
+      - name: Add Coverage Job Summary
+        run: echo "${{ steps.jacoco_reporter.outputs.coverageSummary }}" >> $GITHUB_STEP_SUMMARY

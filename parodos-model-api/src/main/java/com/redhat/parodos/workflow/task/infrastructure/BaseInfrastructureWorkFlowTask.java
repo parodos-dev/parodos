@@ -34,14 +34,14 @@ public abstract class BaseInfrastructureWorkFlowTask extends BaseWorkFlowTask {
 
 	// WorkFlowChecker check a process that has been initiated by a WorkFlow to see if its
 	// been completed
-	private WorkFlow checkerWorkflow;
+	private WorkFlow workFlowChecker;
 
-	public WorkFlow getGetWorkFlowChecker() {
-		return checkerWorkflow;
+	public WorkFlow getWorkFlowChecker() {
+		return workFlowChecker;
 	}
 
-	public void setWorkFlowChecker(WorkFlow checkerWorkflow) {
-		this.checkerWorkflow = checkerWorkflow;
+	public void setWorkFlowChecker(WorkFlow workFlowChecker) {
+		this.workFlowChecker = workFlowChecker;
 	}
 
 	public WorkFlowTaskType getType() {

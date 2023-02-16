@@ -19,23 +19,26 @@ import com.redhat.parodos.workflow.WorkFlowType;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerDefinition;
-import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerDefinitionPK;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
+import com.redhat.parodos.workflow.definition.repository.WorkFlowCheckerDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
-import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * workflow definition service implementation
@@ -52,12 +55,16 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 
 	private final WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository;
 
+	private final WorkFlowCheckerDefinitionRepository workFlowCheckerDefinitionRepository;
+
 	private final ModelMapper modelMapper;
 
 	public WorkFlowDefinitionServiceImpl(WorkFlowDefinitionRepository workFlowDefinitionRepository,
-			WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository, ModelMapper modelMapper) {
+			WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository,
+			WorkFlowCheckerDefinitionRepository workFlowCheckerDefinitionRepository, ModelMapper modelMapper) {
 		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
 		this.workFlowTaskDefinitionRepository = workFlowTaskDefinitionRepository;
+		this.workFlowCheckerDefinitionRepository = workFlowCheckerDefinitionRepository;
 		this.modelMapper = modelMapper;
 	}
 
@@ -67,6 +74,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(workFlowName)
 				.description(workFlowDescription).type(workFlowType.name()).createDate(new Date())
 				.modifyDate(new Date()).build();
+
 		workFlowDefinition.setWorkFlowTaskDefinitions(hmWorkFlowTasks.entrySet().stream()
 				.map(entry -> WorkFlowTaskDefinition.builder().name(entry.getKey())
 						.parameters(WorkFlowDTOUtil.writeObjectValueAsString(
@@ -116,17 +124,19 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 					.findByName(workFlowCheckerName).get(0);
 			WorkFlowDefinition nextWorkFlowDefinitionEntity = workFlowDefinitionRepository
 					.findByName(workFlowCheckerDTO.getNextWorkFlowName()).get(0);
-			workFlowTaskDefinitionEntity.setWorkFlowCheckerDefinition(WorkFlowCheckerDefinition.builder()
-					.id(WorkFlowCheckerDefinitionPK.builder().workFlowCheckerId(checkerWorkFlowDefinitionEntity.getId())
-							.taskId(workFlowTaskDefinitionEntity.getId()).build())
-					.task(workFlowTaskDefinitionEntity).checkWorkFlow(checkerWorkFlowDefinitionEntity)
-					.nextWorkFlow(nextWorkFlowDefinitionEntity).cronExpression(workFlowCheckerDTO.getCronExpression())
-					.build());
+			WorkFlowCheckerDefinition workFlowCheckerDefinition = Optional
+					.ofNullable(workFlowCheckerDefinitionRepository
+							.findFirstByCheckWorkFlow(checkerWorkFlowDefinitionEntity))
+					.orElse(WorkFlowCheckerDefinition.builder().checkWorkFlow(checkerWorkFlowDefinitionEntity)
+							.nextWorkFlow(nextWorkFlowDefinitionEntity)
+							.cronExpression(workFlowCheckerDTO.getCronExpression()).tasks(new ArrayList<>()).build());
+			workFlowTaskDefinitionEntity.setWorkFlowCheckerDefinition(workFlowCheckerDefinition);
 			workFlowTaskDefinitionRepository.save(workFlowTaskDefinitionEntity);
 		}
 		catch (Exception e) {
 			log.error(e.getMessage());
 		}
+
 	}
 
 }

@@ -59,7 +59,9 @@
             <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="name" type="varchar(255)"/>
+            <column name="name" type="varchar(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
             <column name="parameters" type="varchar(4000)"/>
             <column name="outputs" type="varchar(4000)"/>
             <column name="create_date" type="timestamp" defaultValue="${now}"/>
@@ -112,27 +114,36 @@
             <column name="object_version" type="bigint"/>
         </createTable>
 
-        <!-- Workflow Task Execution Table -->
+        <!-- Workflow Checker Table -->
         <createTable tableName="workflow_checker_definition">
-            <column name="task_id" type="${uuidType}" defaultValue="${uuidFunction}">
-                <constraints nullable="false" foreignKeyName="fk_workflow_checker_definition_task_definition_id"
-                             references="workflow_task_definition(id)"/>
+            <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
+                <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="workflow_checker_id" type="${uuidType}" defaultValue="${uuidFunction}">
-                <constraints nullable="false"
+            <column name="object_version" type="bigint"/>
+            <column name="workflow_checker_id" type="${uuidType}">
+                <constraints unique="true"
+                             nullable="false"
                              foreignKeyName="fk_workflow_checker_definition_checker_workflow_definition_id"
                              references="workflow_definition(id)"/>
             </column>
             <column name="cron_expression" type="varchar(255)"/>
-            <column name="next_workflow_id" type="${uuidType}" defaultValue="${uuidFunction}">
-                <constraints nullable="false" foreignKeyName="fk_workflow_checker_definition_next_workflow_id"
+            <column name="next_workflow_id" type="${uuidType}">
+                <constraints nullable="false"
+                             foreignKeyName="fk_workflow_checker_definition_next_workflow_id"
                              references="workflow_definition(id)"/>
             </column>
         </createTable>
 
-        <addPrimaryKey
-                columnNames="workflow_checker_id, task_id"
-                constraintName="pk_workflow_checker_definition"
-                tableName="workflow_checker_definition"/>
+        <!-- Workflow Checker join Table -->
+        <createTable tableName="workflow_task_checker_definition_mapping">
+            <column name="workflow_task_definition_id" type="${uuidType}">
+                <constraints nullable="false" foreignKeyName="fk_workflow_task_checker_definition_mapping_workflow_task_definition_id"
+                             referencedTableName="workflow_task_definition" referencedColumnNames="id"/>
+            </column>
+            <column name="workflow_checker_definition_id" type="${uuidType}">
+                <constraints nullable="false" foreignKeyName="fk_workflow_task_checker_definition_mapping_workflow_checker_definition_id"
+                             referencedTableName="workflow_checker_definition" referencedColumnNames="id"/>
+            </column>
+        </createTable>
     </changeSet>
 </databaseChangeLog>

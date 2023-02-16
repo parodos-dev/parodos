@@ -16,8 +16,9 @@
 package com.redhat.parodos.workflow.execution.repository;
 
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
-import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.UUID;
 
 /**
  * workflow execution repository

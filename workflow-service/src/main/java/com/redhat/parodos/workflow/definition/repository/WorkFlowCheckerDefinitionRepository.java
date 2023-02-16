@@ -13,36 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow.definition.entity;
+package com.redhat.parodos.workflow.definition.repository;
 
-import java.io.Serializable;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerDefinition;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import java.util.UUID;
-import javax.persistence.Embeddable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
- * workflow checker definition entity primary key
+ * workflow checker definition repository
  *
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
+public interface WorkFlowCheckerDefinitionRepository extends JpaRepository<WorkFlowCheckerDefinition, UUID> {
 
-@Embeddable
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Getter
-@Setter
-public class WorkFlowCheckerDefinitionPK implements Serializable {
-
-	private static final long serialVersionUID = 1L;
-
-	private UUID workFlowCheckerId;
-
-	private UUID taskId;
+	WorkFlowCheckerDefinition findFirstByCheckWorkFlow(WorkFlowDefinition CheckWorkFlow);
 
 }
