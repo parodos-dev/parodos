@@ -2,10 +2,10 @@
 
 # This script pulls the latest version of Parodos services locally, builds Docker images, runs Docker Compose to start it up.
 
-## folder with script and docker-compose files
+## The script and docker-compose file path.
 export DOCKER_COMPOSE_FILE_PATH="docker-compose"
 
-## function of each step
+## Function for each step.
 function header {
    echo "------------------------------------------------------------------------";
    echo " Parodos Running Locally                                                ";
@@ -50,7 +50,7 @@ function run {
   docker-compose -f docker-compose.yml up
 }
 
-## Execution steps
+## Execution steps.
 header
 check_mvn_install
 check_docker_install
