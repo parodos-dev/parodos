@@ -13,7 +13,7 @@
   <name>notification-service</name>
   <description>Notification Service to sent out notification messages</description>
   <properties>
-    <springdoc-openapi-ui.version>1.5.10</springdoc-openapi-ui.version>
+    <springdoc-openapi-ui.version>1.6.4</springdoc-openapi-ui.version>
     <maven.compiler.target>11</maven.compiler.target>
     <java.version>11</java.version>
     <maven.compiler.source>11</maven.compiler.source>
