@@ -11,12 +11,14 @@ import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepos
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
-import net.bytebuddy.asm.Advice;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
 import com.redhat.parodos.workflow.task.WorkFlowTask;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 
 import org.mockito.ArgumentCaptor;
@@ -29,7 +31,6 @@ import java.util.UUID;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 class WorkFlowDefinitionServiceImplTest {
 
@@ -260,4 +261,3 @@ class WorkFlowDefinitionServiceImplTest {
 	}
 
 }
->>>>>>> main
