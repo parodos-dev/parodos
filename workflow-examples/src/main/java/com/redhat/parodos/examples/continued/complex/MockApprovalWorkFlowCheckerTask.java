@@ -30,7 +30,7 @@ import java.util.Collections;
  * A simple example of a WorkFlowChecker that always returns true
  *
  * @author Luke Shannon (Github: lshannon)
- * 
+ *
  */
 @Slf4j
 public class MockApprovalWorkFlowCheckerTask extends BaseWorkFlowCheckerTask {

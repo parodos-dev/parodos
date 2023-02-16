@@ -35,13 +35,13 @@ public class WorkContextDelegate {
 
 	private static final String underscoreChar = "_";
 
-	public static enum ProcessType {
+	public enum ProcessType {
 
 		PROJECT, WORKFLOW_DEFINITION, WORKFLOW_TASK_DEFINITION, WORKFLOW_EXECUTION, WORKFLOW_TASK_EXECUTION
 
 	}
 
-	public static enum Resource {
+	public enum Resource {
 
 		ID, NAME, PARAMETERS, ARGUMENTS, STATUS, WORKFLOW_OPTIONS
 

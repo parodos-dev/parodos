@@ -22,6 +22,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
@@ -60,9 +61,17 @@ public class WorkFlowTaskDefinition extends AbstractEntity {
 	@JoinColumn(name = "workflow_definition_id")
 	private WorkFlowDefinition workFlowDefinition;
 
-	@OneToOne(mappedBy = "task", fetch = FetchType.LAZY, cascade = { CascadeType.MERGE })
+	@ManyToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+	@JoinTable(name = "workflow_task_checker_definition_mapping",
+			joinColumns = @JoinColumn(name = "workflow_task_definition_id"),
+			inverseJoinColumns = @JoinColumn(name = "workflow_checker_definition_id"))
 	private WorkFlowCheckerDefinition workFlowCheckerDefinition;
 
 	private String commitId;
+
+	public void setWorkFlowCheckerDefinition(WorkFlowCheckerDefinition workFlowCheckerDefinition) {
+		this.workFlowCheckerDefinition = workFlowCheckerDefinition;
+		workFlowCheckerDefinition.getTasks().add(this);
+	}
 
 }

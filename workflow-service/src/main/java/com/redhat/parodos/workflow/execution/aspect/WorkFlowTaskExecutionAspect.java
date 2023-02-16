@@ -15,13 +15,6 @@
  */
 package com.redhat.parodos.workflow.execution.aspect;
 
-import java.util.Date;
-import java.util.UUID;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.stereotype.Component;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
@@ -29,8 +22,15 @@ import com.redhat.parodos.workflow.task.WorkFlowTask;
 import com.redhat.parodos.workflow.task.WorkFlowTaskStatus;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
-
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
+
+import java.util.Date;
+import java.util.UUID;
 
 /**
  * Aspect pointcut to perform state management for a workflow task executions
@@ -66,8 +66,7 @@ public class WorkFlowTaskExecutionAspect {
 	 * @return WorkReport with the results of the Workflow execution
 	 */
 	@Around("pointcutScopeTask() && args(workContext)")
-	public WorkReport executeAroundAdviceTask(ProceedingJoinPoint proceedingJoinPoint, WorkContext workContext)
-			throws NoSuchMethodException {
+	public WorkReport executeAroundAdviceTask(ProceedingJoinPoint proceedingJoinPoint, WorkContext workContext) {
 		WorkReport report = null;
 		String workFlowTaskName = ((WorkFlowTask) proceedingJoinPoint.getTarget()).getName();
 		log.info("Before invoking execute() on workflow task name: {}, work context is: {}", workFlowTaskName,
