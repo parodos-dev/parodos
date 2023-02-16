@@ -1,6 +1,6 @@
 spring:
   application:
-    name: workflow-service
+    name: parodos-workflow-service
 
   jackson:
     serialization:

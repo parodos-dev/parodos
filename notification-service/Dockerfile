@@ -1,19 +1,13 @@
-#Multi-staged Docker
+FROM registry.access.redhat.com/ubi9/openjdk-11-runtime
 
-FROM maven:3-adoptopenjdk-11 as build
 WORKDIR /app
-COPY pom.xml .
-RUN mvn dependency:go-offline
-
-COPY src/ ./src
-RUN mvn clean package
-
-FROM adoptopenjdk/openjdk11:latest
 
 RUN addgroup --system spring && adduser --system spring --ingroup spring
+
 USER spring:spring
 
-COPY --from=build /app/target/*.jar /app.jar
+COPY target/*.jar ./notification-service.jar
+
 EXPOSE 8080
 
-ENTRYPOINT ["java","-jar","-Djava.security.egd=file:/dev/./urandom", "/app.jar"]
+ENTRYPOINT ["java","-jar","-Djava.security.egd=file:/dev/./urandom", "notification-service.jar"]
