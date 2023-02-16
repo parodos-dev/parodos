@@ -6,7 +6,6 @@
 export DOCKER_COMPOSE_FILE_PATH="docker-compose"
 
 ## function of each step
-
 function header {
    echo "------------------------------------------------------------------------";
    echo " Parodos Running Locally                                                ";
@@ -52,10 +51,9 @@ function run {
 }
 
 ## Execution steps
-
 header
 check_mvn_install
 check_docker_install
-#pull_latest_source
+pull_latest_source
 build_source
 run
