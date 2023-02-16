@@ -49,7 +49,7 @@ public class AbstractEntity {
 		return this.id;
 	}
 
-	void setId(UUID id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 
