@@ -74,9 +74,11 @@ public class WorkFlowTaskTest {
 
 		SequentialFlow flow = SequentialFlow.Builder.aNewSequentialFlow().named("test WorkFlow").execute((Work) task)
 				.build();
-		flow.execute(context);
+		WorkReport report = flow.execute(context);
 
 		assertTrue(task.isExecuted());
+		assertEquals(WorkStatus.COMPLETED, report.getStatus());
+		assertEquals(WorkFlowTaskStatus.COMPLETED, WorkFlowTaskStatus.valueOf(report.getStatus().name()));
 	}
 
 	@Test
@@ -110,6 +112,14 @@ public class WorkFlowTaskTest {
 		TestTask task = new TestTask();
 
 		assertNotEquals(WorkFlowTaskOutput.HTTP2XX, task.getWorkFlowTaskOutputs().get(0));
+	}
+
+	@Test
+	public void checkTaskParams() {
+		TestTask task = new TestTask();
+		List<WorkFlowTaskParameter> params = task.getWorkFlowTaskParameters();
+
+		assertEquals(WorkFlowTaskParameterType.TEXT, params.get(0).getType());
 	}
 
 }
