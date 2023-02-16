@@ -31,10 +31,12 @@ import org.springframework.context.annotation.Configuration;
 public class SwaggerConfig {
 
 	@Bean
-	OpenAPI parodosOpenAPI() {
-		return new OpenAPI().info(new Info().title("Parodos Workflow Service").description(
-				"Executes assessments to determine InfrastructureOptions (tooling + environments). Also executes Infrastructure Task Workflows to call downstream systems to stand-up an InfrastructureOption")
-				.version("v.0.0.1"));
+	OpenAPI parodosWorkFlowServiceOpenAPI() {
+		return new OpenAPI().info(new Info().title("Parodos Workflow Service API")
+				.description("This is the API documentation for the Parodos Workflow Service. "
+						+ "It provides operations to execute assessments to determine infrastructure options (tooling + environments). "
+						+ "Also executes infrastructure task workflows to call downstream systems to stand-up an infrastructure option.")
+				.version("v1.0.0"));
 	}
 
 }

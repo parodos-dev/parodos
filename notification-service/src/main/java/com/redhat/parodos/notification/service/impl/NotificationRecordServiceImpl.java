@@ -97,7 +97,7 @@ public class NotificationRecordServiceImpl implements NotificationRecordService 
 					.map(notificationRecordRepository::countDistinctByReadFalseAndNotificationUserListContaining)
 					.orElse(0);
 		}
-		throw new RuntimeException(String.format("State %s is found/supported", state));
+		throw new RuntimeException(String.format("State %s is not found/supported", state));
 	}
 
 	@Override

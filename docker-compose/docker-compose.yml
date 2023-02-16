@@ -1,0 +1,23 @@
+version: "3"
+services:
+  notification-service:
+    build:
+      context: ../notification-service
+      dockerfile: ./Dockerfile
+    container_name: notification-service
+    ports:
+      - 9010:8080
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
+
+  workflow-service:
+    build:
+      context: ../workflow-service
+      dockerfile: ./Dockerfile
+    container_name: workflow-service
+    ports:
+      - 9000:8080
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
+    depends_on:
+      - notification-service

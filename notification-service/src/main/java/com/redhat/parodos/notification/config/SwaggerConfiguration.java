@@ -29,10 +29,11 @@ import io.swagger.v3.oas.models.info.Info;
 public class SwaggerConfiguration {
 
 	@Bean
-	OpenAPI springShopOpenAPI() {
-		return new OpenAPI().info(new Info().title("Parodos Notification Service")
+	OpenAPI parodosNotificationServiceOpenAPI() {
+		return new OpenAPI().info(new Info().title("Parodos Notification Service API")
 				.description("This is the API documentation for the Parodos Notification Service. "
-						+ "The APIs are secured with oAuth2/OpenID and cannot be accessed without a valid token.")
+						+ "It provides operations to send out and check notification. "
+						+ "The endpoints are secured with oAuth2/OpenID and cannot be accessed without a valid token.")
 				.version("v1.0.0"));
 	}
 

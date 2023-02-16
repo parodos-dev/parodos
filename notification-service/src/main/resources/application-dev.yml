@@ -32,9 +32,6 @@ spring:
     username: postgres
     password: postgres
 
-server:
-  port: ${SERVER_PORT:8088}
-
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the
