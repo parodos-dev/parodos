@@ -28,14 +28,15 @@ import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
-import java.util.Date;
-import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
+
+import java.util.Date;
+import java.util.UUID;
 
 /**
  * Aspect pointcut to perform state management for a workflow execution
@@ -87,12 +88,14 @@ public class WorkFlowExecutionAspect {
 		// get workflow definition entity
 		WorkFlowDefinition workFlowDefinition = this.workFlowDefinitionRepository.findByName(workFlowName).stream()
 				.findFirst().get();
+
 		// save work execution entity
 		WorkFlowExecution workFlowExecution = this.workFlowService
 				.saveWorkFlow(
 						UUID.fromString(WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.PROJECT,
 								WorkContextDelegate.Resource.ID).toString()),
 						workFlowDefinition.getId(), WorkFlowStatus.IN_PROGRESS);
+
 		// update work context
 		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION,
 				WorkContextDelegate.Resource.ID, workFlowDefinition.getId().toString());
@@ -116,8 +119,8 @@ public class WorkFlowExecutionAspect {
 		// schedule workflow checker for dynamic run on cron expression or stop if done
 		if (WorkFlowType.CHECKER.name().toUpperCase().equals(workFlowDefinition.getType())) {
 			startOrStopWorkFlowCheckerOnSchedule(workFlowDefinition.getName(),
-					(WorkFlow) proceedingJoinPoint.getTarget(),
-					workFlowDefinition.getCheckerWorkFlowDefinitions().get(0), report.getStatus(), workContext);
+					(WorkFlow) proceedingJoinPoint.getTarget(), workFlowDefinition.getCheckerWorkFlowDefinition(),
+					report.getStatus(), workContext);
 		}
 		return report;
 	}

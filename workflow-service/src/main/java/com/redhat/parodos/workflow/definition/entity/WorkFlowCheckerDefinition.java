@@ -15,19 +15,22 @@
  */
 package com.redhat.parodos.workflow.definition.entity;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
-import javax.persistence.OneToOne;
+import com.redhat.parodos.common.AbstractEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Workflow checker definition entity
@@ -42,27 +45,19 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class WorkFlowCheckerDefinition {
+public class WorkFlowCheckerDefinition extends AbstractEntity {
 
-	@EmbeddedId
-	@AttributeOverride(name = "workFlowCheckerId", column = @Column(name = "workflow_checker_id"))
-	@AttributeOverride(name = "taskId", column = @Column(name = "task_id"))
-	private WorkFlowCheckerDefinitionPK id;
-
-	@MapsId("workFlowCheckerId")
-	@ManyToOne(optional = false)
+	@OneToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "workflow_checker_id")
 	private WorkFlowDefinition checkWorkFlow;
 
-	@MapsId("taskId")
-	@OneToOne
-	@JoinColumn(name = "task_id")
-	private WorkFlowTaskDefinition task;
+	@OneToMany(mappedBy = "workFlowCheckerDefinition", cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+	private List<WorkFlowTaskDefinition> tasks = new ArrayList<>();
 
 	@Column(name = "cron_expression")
 	private String cronExpression;
 
-	@ManyToOne(optional = false)
+	@OneToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "next_workflow_id")
 	private WorkFlowDefinition nextWorkFlow;
 

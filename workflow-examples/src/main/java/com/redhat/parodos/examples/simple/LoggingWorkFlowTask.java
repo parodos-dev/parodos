@@ -43,8 +43,8 @@ public class LoggingWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	@Override
 	public WorkReport execute(WorkContext workContext) {
 		log.info("Writing a message to the logs from: {}", getName());
-		if (getGetWorkFlowChecker() != null) {
-			workContext.put(WorkFlowConstants.WORKFLOW_CHECKER_ID, getGetWorkFlowChecker().getName());
+		if (getWorkFlowChecker() != null) {
+			workContext.put(WorkFlowConstants.WORKFLOW_CHECKER_ID, getWorkFlowChecker().getName());
 		}
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}

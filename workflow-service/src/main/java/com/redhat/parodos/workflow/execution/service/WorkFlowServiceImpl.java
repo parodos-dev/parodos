@@ -81,6 +81,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 			return WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(workFlow, workContext);
 		}
 		else {
+			log.error("workflow {} is not found!", workFlowName);
 			return new DefaultWorkReport(WorkStatus.FAILED, new WorkContext());
 		}
 	}
