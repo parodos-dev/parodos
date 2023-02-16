@@ -17,6 +17,8 @@ package com.redhat.parodos.workflow.option;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -83,6 +85,17 @@ public class WorkFlowOptionsTest {
 	}
 
 	@Test
+	public void verifyOtherOptions() {
+		WorkFlowOptions options = new WorkFlowOptions.Builder().build();
+
+		assertTrue(options.getOtherOptions().size() == 0);
+
+		options.addOtherOption(option);
+
+		assertTrue(options.getOtherOptions().size() == 1);
+	}
+
+	@Test
 	public void checkInfra() {
 		WorkFlowOptions options = new WorkFlowOptions.Builder().setCurrentInfrastructure(option).build();
 
@@ -91,6 +104,17 @@ public class WorkFlowOptionsTest {
 		options.addNewInfrastrutureOption(option);
 
 		assertTrue(options.getNewOptions().size() == 1);
+	}
+
+	@Test
+	public void checkCurrent() {
+		WorkFlowOptions options = new WorkFlowOptions.Builder().build();
+
+		assertNull(options.getCurrentVersion());
+
+		options.setCurrentVersion(option);
+
+		assertNotNull(options.getCurrentVersion());
 	}
 
 }
