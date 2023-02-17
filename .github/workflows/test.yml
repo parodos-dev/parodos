@@ -36,7 +36,7 @@ jobs:
 
       - name: JaCoCo Code Coverage Report
         id: jacoco_reporter
-        uses: PavanMudigonda/jacoco-reporter@v4.8
+        uses: PavanMudigonda/jacoco-reporter@ffe0b95c14292be4d076e56d50ba6c3b94c43a77 #v4.8
         with:
           coverage_results_path: ${{ github.workspace }}/coverage/target/site/jacoco-aggregate/jacoco.xml
           coverage_report_name: Coverage
