@@ -1,5 +1,5 @@
 ---
-name: Tests
+name: Build
 on:
   push:
     branches:
@@ -13,8 +13,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      checks: write
     steps:
       - uses: actions/checkout@v3
 
@@ -23,6 +21,11 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
 
+      - name: Restore Maven cache
+        uses: skjolber/maven-cache-github-action@v1
+        with:
+          step: restore
+
       - name: Maven Build
         run: mvn clean package
 
@@ -30,11 +33,38 @@ jobs:
         run: mvn validate
 
       - name: Maven Test
+        id: test
         run: |
           mvn test --file ./pom.xml
           mvn jacoco:report-aggregate
 
-      - name: JaCoCo Code Coverage Report
+      - name: Upload current-info
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts
+          path: |
+            ${{ github.workspace }}/coverage/target/site/jacoco-aggregate/jacoco.xml
+            ${{ github.workspace }}/notification-service/target/*.jar
+            ${{ github.workspace }}/workflow-service/target/*.jar
+
+      - name: Save Maven cache
+        uses: skjolber/maven-cache-github-action@v1
+        with:
+          step: save
+
+  coverage:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    permissions:
+      checks: write
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: artifacts
+
+      - name: "JaCoCo Code Coverage Report ${{ needs.build.outputs.test }}"
         id: jacoco_reporter
         uses: PavanMudigonda/jacoco-reporter@v4.8
         with:
@@ -49,3 +79,90 @@ jobs:
 
       - name: Add Coverage Job Summary
         run: echo "${{ steps.jacoco_reporter.outputs.coverageSummary }}" >> $GITHUB_STEP_SUMMARY
+
+  containers:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    steps:
+
+      - uses: actions/checkout@v3
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: artifacts
+
+      - name: "Build container images to quay ${{ needs.build.outputs.test }}"
+        run: |
+          make build-images
+
+      - name: Upload image
+        uses: ishworkh/docker-image-artifact-upload@v1
+        with:
+          image: "docker-compose_workflow-service:latest"
+
+      - name: Upload image
+        uses: ishworkh/docker-image-artifact-upload@v1
+        with:
+          image: "docker-compose_notification-service:latest"
+
+      - name: "finished"
+        id: container-finished
+        run: echo 1
+
+  integration:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    steps:
+
+      - uses: actions/checkout@v3
+
+      - uses: engineerd/setup-kind@v0.5.0
+        with:
+          version: "v0.16.0"
+
+      - name: Waiting for kind to be ready
+        run: |
+          kubectl cluster-info
+          kubectl get pods -n kube-system
+          echo "current-context:" $(kubectl config current-context)
+          echo "environment-kubeconfig:" ${KUBECONFIG}
+
+      - name: Install kubernetes dependencies
+        run: |
+          make install-kubernetes-dependencies
+          make wait-kubernetes-dependencies
+
+      - id: wait-for-jobs
+        uses: yogeshlonkar/wait-for-jobs@v0
+        with:
+          gh-token: ${{ secrets.GITHUB_TOKEN }}
+          jobs: |
+            containers
+
+      - name: Download images
+        uses: ishworkh/docker-image-artifact-download@v1
+        with:
+          image: "docker-compose_notification-service:latest"
+
+      - name: Download images
+        uses: ishworkh/docker-image-artifact-download@v1
+        with:
+          image: "docker-compose_workflow-service:latest"
+
+      - name: Load images inside kind
+        run: |
+          make push-images-to-kind
+
+      - name: Deploy
+        run: |
+          kubectl kustomize hack/manifests/testing| kubectl apply -f -
+          kubectl wait --timeout=120s --for=condition=Ready pods --all -n default
+          kubectl get pods --all-namespaces
+
+      - name: Run example script
+        run: |
+          export SERVERIP=$(kubectl get nodes kind-control-plane -o json  |  jq -r '[.status.addresses[] | select(.type=="InternalIP")] | .[0].address')
+          SERVER_IP="${SERVERIP}" SERVERPORT=80 ./workflow-examples/run_examples.sh

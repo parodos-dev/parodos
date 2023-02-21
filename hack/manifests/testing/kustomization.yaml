@@ -1,0 +1,12 @@
+bases:
+- ../base
+resources:
+- ingress.yaml
+images:
+- name: quay.io/parados/workflow-service:latest
+  newTag: test
+
+- name: quay.io/parados/notification-service:latest
+  newTag: test
+
+

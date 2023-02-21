@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service
+spec:
+  selector:
+    matchLabels:
+      app: notification-service
+  template:
+    metadata:
+      labels:
+        app: notification-service
+    spec:
+      containers:
+      - name: notification-service
+        image: quay.io/parados/notification-service:latest
+        env:
+          - name: SPRING_PROFILES_ACTIVE
+            value: "local"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workflow-service
+spec:
+  selector:
+    matchLabels:
+      app: workflow-service
+  template:
+    metadata:
+      labels:
+        app: workflow-service
+    spec:
+      containers:
+      - name: workflow-service
+        image: quay.io/parados/workflow-service:latest
+        env:
+          - name: SPRING_PROFILES_ACTIVE
+            value: "local"
