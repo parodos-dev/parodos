@@ -77,15 +77,11 @@ Executions of the WorkflowTasks (which is done by the Workflow object) can be do
 
 At present the Parodos Workflow engine wraps the Easy Flows project (https://github.com/j-easy/easy-flows). Future releases of Parodos may provide options to leverage other Workflow engines. For this first version of Parodos, easy-flows provides all the necessary functionality.
 
-![UML](readme-images/assessment-workflow.png)
-
-
 The following is a brief overview of the object model.
 
 ## Object Overview
 
 The following is a quick description of the important objects and base types in this project. All of these objects are intended to be created (and configured) using Spring beans.
-
 
 ### Parodos WorkflowTask
 
