@@ -74,7 +74,7 @@ workflow-service: ## Build workload service
 	$(MAVEN) $(ARGS) install -pl workflow-service
 
 fast-build-workflow-service: ARGS = $(FAST_BUILD_ARGS) ## Fast build workflow service
-fast-build-workflow-service: workflow-engine
+fast-build-workflow-service: workflow-service
 
 notification-service: ## Build notification-service
 	$(MAVEN) $(ARGS) install -pl notification-service
@@ -144,7 +144,7 @@ install-nginx: ## Install nginx
 
 install-kubernetes-dependencies: install-nginx
 
-wait-kubernetes-dependencies: ## Wait for ingress to become ready
+wait-kubernetes-dependencies: ## Wait for dependencies to be ready
 	kubectl wait --namespace ingress-nginx \
 	  --for=condition=ready pod \
 	  --selector=app.kubernetes.io/component=controller \
