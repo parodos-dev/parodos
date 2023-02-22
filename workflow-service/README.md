@@ -27,8 +27,8 @@ java -Dspring.profiles.active=local -jar target/workflow-service-0.0.1-SNAPSHOT.
 
 ```
 
-For convience there is a shell script at the root of the folder that will run this command as well (
-start_workflow_service.sh).
+For convenience there is a shell script at the root of the folder that will run this command as well 
+(`start_workflow_service.sh`).
 
 The 'local' is intended for local testing and runs the application without security (Keycloak managed Oauth2 flow is the
 default). Documentation is currently being produced for production grade security configurations.
@@ -40,7 +40,7 @@ please review 'workflow-example'.
 
 In this present release teams are encouraged to think of Workflows and WorkflowTasks as stand alone Java projects. As
 such they should have test coverage, undergo a full software release cycle and should not be updated in production
-trivally. Due to the persistance of both workflow definitions and WorkflowTask executions, the workflow-service can be
+trivially. Due to the persistence of both workflow definitions and WorkflowTask executions, the workflow-service can be
 restarted to update the definition of Workflows and WorkflowTasks.
 
 **Note:** Future release of this service will include WorkFlowTask/WorkFlow creation/configuration options that do not
@@ -54,13 +54,13 @@ WorkFlowRegistry.
 ```java
 
 public interface WorkFlowRegistry<T> {
-	
+
     Set<T> getRegisteredWorkFlowNames();
-    
-    Map<T,WorkFlow> getAllRegisteredWorkFlows();
-    
+
+    Map<T, WorkFlow> getAllRegisteredWorkFlows();
+
     WorkFlow getWorkFlowById(T id);
-    
+
     Collection<T> getRegisteredWorkFlowNamesByWorkType(String typeName);
 }
 
@@ -100,17 +100,17 @@ The workflow-service provides the following endpoints:
 
 ***Workflow Definition***
 
-- GET http://localhost:8080/api/v1/workflowdefinitions - Gets all the workflow definitions (this is the meta data of a
+- GET http://localhost:8080/api/v1/workflowdefinitions - Gets all the workflow definitions (this is the metadata of a
   Workflow and includes associated WorkflowTasks and WorkflowParameters)
 - GET http://localhost:8080/api/v1/workflowdefinitions/{workflowId} - Gets a specific workflow definition (this is the
-  meta data of a Workflow and includes associated WorkflowTasks and WorkflowParameters)
+  metadata of a Workflow and includes associated WorkflowTasks and WorkflowParameters)
 
 ## FAQ
 
 ### Why doesn't the service use a more mature/feature rich Business Rules engine?
 
 It is assumed that Parodos will be running in enterprise environments where there will be many tools and platforms
-available. As a result Parodos has not interest in trying to compete with such tools. The approach is to send the
+available. As a result Parodos has not interested in trying to compete with such tools. The approach is to send the
 appropriate data to these existing tools, and the most appropriate time to allow for them to be more effectively used
 and integrated with other tools.
 
@@ -118,16 +118,12 @@ and integrated with other tools.
 
 If you are finding Parodos's simple workflows not advanced enough to manage the creation and configuration of your tools
 you are not using Parodos in its intended purpose. Automation tools such as Ansible or Terraform should be used to
-manage the creation and update of infrastructure. Tools such as Jira Service desk and should manage permission
+manage the creation and update of infrastructure. Tools such as Jira Service desk should manage permission
 workflows. Think of Parodos as a way to tie these disparate systems together for a more comprehensive experience for
 consumers of the tools. If you are lacking such automation and tools, it might not be the right time for you to use
 Parodos
 
 ### Will there be support to configure rules beyond Spring Beans?
 
-Yes. In this first release a configuration pattern widely used across many enterprise environments was chosen. However
+Yes. In this first release a configuration pattern widely used across many enterprise environments was chosen. However,
 future release will include a DSL (domain specific language) for configuring Workflows without have to write Java code.
-
-
-
-
