@@ -39,18 +39,15 @@ class WorkFlowServiceImplTest {
 		this.workFlowTaskRepository = Mockito.mock(WorkFlowTaskRepository.class);
 		this.workFlowDelegate = Mockito.mock(WorkFlowDelegate.class);
 
-		this.workFlowService = new WorkFlowServiceImpl(this.workFlowDelegate, this.workFlowDefinitionRepository, this.workFlowRepository, this.workFlowTaskRepository);
+		this.workFlowService = new WorkFlowServiceImpl(this.workFlowDelegate, this.workFlowDefinitionRepository,
+				this.workFlowRepository, this.workFlowTaskRepository);
 	}
 
 	@Test
 	void executeTestwithValidData() {
 		// given
 		Work work = Mockito.mock(Work.class);
-		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow()
-				.named("test")
-				.execute(work)
-				.build();
-
+		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow().named("test").execute(work).build();
 
 		Mockito.when(work.execute(Mockito.any()))
 				.thenReturn(new DefaultWorkReport(WorkStatus.COMPLETED, new WorkContext() {
@@ -59,7 +56,8 @@ class WorkFlowServiceImplTest {
 					}
 				}));
 		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
-		Mockito.when(this.workFlowDelegate.getWorkFlowContext(Mockito.any(), Mockito.any())).thenReturn(new WorkContext());
+		Mockito.when(this.workFlowDelegate.getWorkFlowContext(Mockito.any(), Mockito.any()))
+				.thenReturn(new WorkContext());
 		Mockito.when(this.workFlowDefinitionRepository.findByName(Mockito.any()))
 				.thenReturn(List.of(this.sampleWorkflowDefinition("test")));
 
@@ -190,8 +188,8 @@ class WorkFlowServiceImplTest {
 				.workFlowExecutionId(wfExecutionID).build();
 		workFlowTaskExecution.setId(UUID.randomUUID());
 
-		Mockito.when(this.workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(wfExecutionID, wfTaskDefID))
-				.thenReturn(List.of(workFlowTaskExecution));
+		Mockito.when(this.workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(wfExecutionID,
+				wfTaskDefID)).thenReturn(List.of(workFlowTaskExecution));
 		// when
 
 		WorkFlowTaskExecution res = this.workFlowService.getWorkFlowTask(wfExecutionID, wfTaskDefID);
@@ -210,8 +208,8 @@ class WorkFlowServiceImplTest {
 		// given
 		UUID wfTaskDefID = UUID.randomUUID();
 		UUID wfExecutionID = UUID.randomUUID();
-		Mockito.when(this.workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(wfExecutionID, wfTaskDefID))
-				.thenReturn(null);
+		Mockito.when(this.workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(wfExecutionID,
+				wfTaskDefID)).thenReturn(null);
 
 		// when
 		WorkFlowTaskExecution res = this.workFlowService.getWorkFlowTask(wfExecutionID, wfTaskDefID);
@@ -226,8 +224,8 @@ class WorkFlowServiceImplTest {
 		// given
 		UUID wfTaskDefID = UUID.randomUUID();
 		UUID wfExecutionID = UUID.randomUUID();
-		Mockito.when(this.workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(wfExecutionID, wfTaskDefID))
-				.thenReturn(new LinkedList<>());
+		Mockito.when(this.workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(wfExecutionID,
+				wfTaskDefID)).thenReturn(new LinkedList<>());
 
 		// when
 		WorkFlowTaskExecution res = this.workFlowService.getWorkFlowTask(wfExecutionID, wfTaskDefID);

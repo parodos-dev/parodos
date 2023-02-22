@@ -4,17 +4,20 @@ on:
   push:
     branches:
       - main
+      - ActionsTest
       - 'releases/**'
 
   pull_request_target:
     branches:
       - '**'
-
+permissions: read-all
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha != '' &&  github.event.pull_request.head.sha ||  github.sha }}
 
       - uses: actions/setup-java@v3
         with:
@@ -87,6 +90,8 @@ jobs:
     steps:
 
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha != '' &&  github.event.pull_request.head.sha ||  github.sha }}
 
       - name: Download artifacts
         uses: actions/download-artifact@v3
@@ -116,8 +121,9 @@ jobs:
     needs:
       - build
     steps:
-
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha != '' &&  github.event.pull_request.head.sha ||  github.sha }}
 
       - uses: engineerd/setup-kind@v0.5.0
         with:
