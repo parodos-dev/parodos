@@ -6,7 +6,7 @@ The goal of Parodos is to provide Java based Workflows that blend modern automat
 
 This project contains all the dependencies to create and configure Parodos Workflows. 
 
-The goal of a Workflow is to achieve an outcome for a developer. For example,the OCP onboarding Workflow might perform all the steps to set up tooling, environment but also permissions, networking and required monitoring and security tooling. After running this Workflow, not only can add developer build, deploy and test in lower level environments, but they also have an easier path to get to production with their code.
+The goal of a Workflow is to achieve an outcome for a developer. For example, the OCP onboarding Workflow might perform all the steps to set up tooling, environment but also permissions, networking and required monitoring and security tooling. After running this Workflow, not only can add developer build, deploy and test in lower level environments, but they also have an easier path to get to production with their code.
 
 Parodos Workflows are composed of Parodos WorkflowTasks. These perform the necessary steps in the Workflow to achieve the desired outcome. How many WorkflowTasks (steps) are required to achieve an outcome will vary across environments.
 
@@ -52,13 +52,13 @@ After a successful build the libraries can be added to a Java project by adding 
 
 ## Concepts and Example Usage
 
-The foundation of Parodos is the Workflow object (see the workflow-engine folder of this project for more details about Workflows). Workflows are Composed of WorkflowTasks. WorkflowTasks do the work of the Workflow. A WorkContext is shared throughout the Workflow's execution. This provides a means of passing information into the Workflow before execution, but also a means of collecting information created during the execution. A WorkReport is returned at the end of an execution for a Workflow that provides an indication of the final outcome of the Workflow and the final state of the WorkContext. Workflows are consumed by the workflow-service where additional functionality around persistence and execution is made available.
+The foundation of Parodos is the Workflow object (see the workflow-engine folder of this project for more details about Workflows). Workflows are composed of WorkflowTasks. WorkflowTasks do the work of the Workflow. A WorkContext is shared throughout the Workflow's execution. This provides a means of passing information into the Workflow before execution, but also a means of collecting information created during the execution. A WorkReport is returned at the end of an execution for a Workflow that provides an indication of the final outcome of the Workflow and the final state of the WorkContext. Workflows are consumed by the workflow-service where additional functionality around persistence and execution is made available.
 
 
 ![UML](readme-images/basic-objects.png)
 
 
-In Parodos there are a few specified Workflows that are common in the IDP space.  They can be found in the WorkFlowType enum. At present these are:
+In Parodos there are a few specified Workflows that are common in the IDP space.  They can be found in the `WorkFlowType` enum. At present these are:
 
 - Assessment (takes inputs and gives a list of Workflow options for a user to choose from)
 - Checker (determines the status of a manual process that is blocking other Workflows from running)
@@ -89,9 +89,9 @@ WorkflowTask objects do work (as defined in the execute method) and are placed i
 
 ** BaseAssessmentTask ** - these WorkflowTasks accepts a collection of inputs, and returns WorkflowOptions based on custom logic that can be defined in the task. These tasks are intended to be used in Workflows to help developers (and other team members) determine what Workflows they can run for their use case. For example, an assessment might review code looking for a pipeline definition or the presence of a certain 3rd party service - both of which would imply different workflows.
 
-** BaseWorkFlowTask ** - these WorkflowTasks are intended to call downstream systems that initiate automation. The class can optionally can reference a WorkflowChecker workflow
+** BaseWorkFlowTask ** - these WorkflowTasks are intended to call downstream systems that initiate automation. The class can optionally reference a WorkflowChecker workflow
 
-** WorkFlowCheckerTask ** - Checks the status of manual processes triggered by other Workflows. WorkFlowCheckerTasks can be long running when place into a WorkFlow when the definition of the Workflow its contained inside is of type WorkFlowCheckerDefinition (the workflow-service provides scheduling for these tasks) and its outcomes 
+** WorkFlowCheckerTask ** - Checks the status of manual processes triggered by other Workflows. WorkFlowCheckerTasks can be long-running when placed into a WorkFlow when the definition of the Workflow it's contained inside the type WorkFlowCheckerDefinition (the workflow-service provides scheduling for these tasks) and its outcomes.
 
 The following is an example of a WorkflowTask being defined.
 
@@ -163,7 +163,7 @@ There are:
 - Checker
 - Infrastructure
 
-The annotations provide a means of configuring the Workflow and also indicating to the workflow-service these specific types of Workflows so it can provide the related functionality for these Workflows (ie: Checker workflows can be scheduled to execute based on a cron expression specific in the Checker annotation).
+The annotations provide a means of configuring the Workflow and also indicating to the workflow-service these specific types of Workflows, so it can provide the related functionality for these Workflows (ie: Checker workflows can be scheduled to execute based on a cron expression specific in the Checker annotation).
 
 Here is an example of a Workflow bean being created (and the WorkflowTask it uses), and a Workflow annotation being used:
 
@@ -190,7 +190,7 @@ Here is an example of a Workflow bean being created (and the WorkflowTask it use
 
 ### Describing Workflows To Users
 
-** WorkFlowOption ** - a description of a Workflow that can be presented to a user as a potential Workflow to execute. These can be created using a building in a methond returning a Bean.
+** WorkFlowOption ** - a description of a Workflow that can be presented to a user as a potential Workflow to execute. These can be created using a building method returning a Bean.
 
 ```java
 
@@ -261,10 +261,10 @@ This project also specifies definition classes, which are required for versionin
 
 ## Using This API with the Workflow Service
 
-Provided all the code was created in following the standards outlined , simply generate a Jar file and place this in the classpath of the Infrastructure Service. Upon start up it will register the configured Task(s) and WorkFlow(s). Its key that 
+Provided all the code was created in following the standards outlined, simply generate a Jar file and place this in the classpath of the Infrastructure Service. Upon start up it will register the configured Task(s) and WorkFlow(s).
 
-Future versions of Parodos will include other options for creating and registering WorkFlowTasks and WorkFlows
+Future versions of Parodos will include other options for creating and registering WorkFlowTasks and WorkFlows.
 
 ## Demo Implementation
 
-For a full example show how to configure all these Task(s) and WorkFlows(s), please refer to the 'workflow-examples'
+For a full example show how to configure all these Task(s) and WorkFlows(s), please refer to the 'workflow-examples'.
