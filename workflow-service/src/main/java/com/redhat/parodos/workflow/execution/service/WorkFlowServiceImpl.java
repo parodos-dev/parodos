@@ -34,6 +34,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -69,26 +70,27 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	public WorkReport execute(String projectId, String workFlowName,
 			Map<String, Map<String, String>> workFlowTaskArguments) {
 		WorkFlow workFlow = workFlowDelegate.getWorkFlowExecutionByName(workFlowName);
-		log.info("execute workFlow: {}", workFlow);
-		if (null != workFlow) {
-			WorkContext workContext = workFlowDelegate.getWorkFlowContext(
-					workFlowDefinitionRepository.findByName(workFlowName).stream().findFirst().get(),
-					workFlowTaskArguments);
-			WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.PROJECT,
-					WorkContextDelegate.Resource.ID, projectId);
-			WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION,
-					WorkContextDelegate.Resource.NAME, workFlowName);
-			return WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(workFlow, workContext);
+		if (workFlow == null) {
+			log.error("workflow '{}' is not found!", workFlowName);
+			return new DefaultWorkReport(WorkStatus.FAILED, new WorkContext(),
+					new Throwable(String.format("workflow '{}' cannot be found!", workFlowName)));
 		}
-		else {
-			log.error("workflow {} is not found!", workFlowName);
-			return new DefaultWorkReport(WorkStatus.FAILED, new WorkContext());
-		}
+
+		log.info("execute workFlow '{}': {}", workFlowName, workFlow);
+		WorkContext workContext = workFlowDelegate.getWorkFlowContext(
+				workFlowDefinitionRepository.findByName(workFlowName).stream().findFirst().get(),
+				workFlowTaskArguments);
+		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.PROJECT, WorkContextDelegate.Resource.ID,
+				projectId);
+		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION,
+				WorkContextDelegate.Resource.NAME, workFlowName);
+		return WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(workFlow, workContext);
 	}
 
 	@Override
+
 	public WorkFlowExecution getWorkFlowById(UUID workFlowExecutionId) {
-		return this.workFlowRepository.findById(workFlowExecutionId).get();
+		return this.workFlowRepository.findById(workFlowExecutionId).orElse(null);
 	}
 
 	@Override
