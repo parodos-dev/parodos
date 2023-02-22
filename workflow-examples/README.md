@@ -16,7 +16,7 @@ The examples in this project can be found in two different packages.
 ### Simple
 
 This package shows different WorkflowTask(s) being created. The project shows how to create both Sequential and
-Parrellel workflows.
+Parallel workflows.
 
 ### Complex
 
@@ -34,10 +34,10 @@ mvn install
 
 ```
 
-### Adding The workflow-examples To The workflow-service
+### Adding The workflow-examples to the workflow-service
 
-Once the Jar has been compiled, ensure its added to the pom.xml of the workflow-service. This will allow the
-BeanWorkflowRegistryImpl to register the WorkflowTasks and Workflows.
+Once the Jar has been compiled, ensure it's added to the pom.xml of the workflow-service. This will allow the
+`BeanWorkflowRegistryImpl` to register the WorkflowTasks and Workflows.
 
 ```xml
 
@@ -51,9 +51,9 @@ BeanWorkflowRegistryImpl to register the WorkflowTasks and Workflows.
 ```
 
 Care must be taken when adding Workflow projects to the service to ensure that Workflows do not contradict other
-Workflows or dependencies in the Workflow do not override existing dependencies in the workflow-service.
+Workflows or dependencies in the Workflow and to not override existing dependencies in the workflow-service.
 
-Refer to the README of the workflow-service for how to build and start the application with this dependency in place.
+Refer to the README of the `workflow-service` for how to build and start the application with this dependency in place.
 
 ### Running to Examples
 
@@ -167,8 +167,8 @@ In this sample two such workflows can be seen:
 ```
 
 For the Workflow, the LogginWorkFlowTask argument is not defined in a @Bean method. This is because that WorkflowTask
-has the @Component annotation and can be created by Spring's bean factory using the default constructure. In contracts
-RestAPIWorkFlowTask needs a value supplied in the constructure to be created. As a result it is created in a method
+has the @Component annotation and can be created by Spring's bean factory using the default constructor. In contracts
+RestAPIWorkFlowTask needs a value supplied in the constructor to be created. As a result it is created in a method
 using the @Bean annotation. It's best practise to create a unique name for this Bean as there might be multiple version
 of Bean of this type created. In this example the default name is used (method name) to identify the Bean.
 
@@ -209,7 +209,7 @@ In this same configuration file, a simple Parallel Workflow can be defined.
 ```
 
 In this example 3 instances of the LoggingWorkFlowTask tasks are created and used in the Workflow. This is obviously
-just for example purposes as the instance of the Bean created by the Component could have been sufficied for refence in
+just for example purposes as the instance of the Bean created by the Component could have been sufficed for reference in
 the Workflow.
 
 In this example the usage of @Infrastructure can also be seen. By providing this annotation on the Workflow definition
@@ -223,8 +223,8 @@ To run these examples:
 
 ### Complex Workflow
 
-In this package the concept of a WorkflowChecker is demonstrated. This is a special WorkflowTask who's execute method
-calls a checkWorkFlowStatus method. It is intended to monitor if a manual process initated by another Workflow has
+In this package the concept of a WorkflowChecker is demonstrated. This is a special WorkflowTask who executes calls to a 
+checkWorkFlowStatus method. It is intended to monitor if a manual process initiated by another Workflow has
 completed.
 
 As can be seen in the MockApprovalWorkFlowCheckerTask when defining a WorkflowTask, after extending
@@ -236,11 +236,11 @@ and checking on their status before running other Workflows.
 
 Let's review the Workflows and their WorkflowCheckers.
 
-The concept of an Assessment Workflow is introduced in this configuration. This is specific WorkflowType that runs it's
+The concept of an Assessment Workflow is introduced in this configuration. This specific WorkflowType runs its
 execution logic and returns WorkflowOptions. A WorkflowOption provides a description of a Workflow and is useful when
 creating a UI that provides Users with a choice of which workflow to run.
 
-When defining a AssessmentTask, one or more WorkflowOption have to be supplied to the Task. In the execution logic it
+When defining an AssessmentTask, one or more WorkflowOption have to be supplied to the Task. In the execution logic it
 will determine which (if any) of these Options can be returned. The WorkflowOptions wrapper contains some groupings to
 place Workflow options that are IDP (internal developer platform) specific (ie: upgrading, migrating, onboarding
 workflows).
@@ -280,9 +280,9 @@ In this configuration section a Workflow is created that does an Assessment and 
 The WorkflowOption references a specific Workflow bean definition defined in the same file (onboardingWorkFlow" +
 WorkFlowConstants.INFRASTRUCTURE_WORKFLOW).
 
-This Workflow defintion can be found in the same configuration. For simplicity sake, the LoggingWorkFlowTask is used as
-the Task in this example by defining different instances of it, and refering to those instances by bean name when being
-referenced by a Workflow.
+This Workflow definition can be found in the same configuration. For simplicity’s sake, the LoggingWorkFlowTask is used
+as WorkflowTask in this example by defining different instances of it, and referring to those instances by bean name 
+when being referenced by a Workflow.
 
 ```java
 
@@ -347,28 +347,28 @@ The definition of that Workflow can be seen in the same configuration file.
 ```
 
 In the @Checker definition, the nextWorkFlowName can be specified. This is the Workflow that can run, provided the
-WorkflowChecker workflow successfully completes (meaning all WorkfTasks return COMPLETED). The ccronExpression of the
+WorkflowChecker workflow successfully completes (meaning all WorkflowTasks return COMPLETED). The cronExpression of the
 annotation will determine how often the Workflow will be executed. This is useful for manual processes that might take
 hours (or even days). As all state is persisted, when the workflow-service is restarted, execution will resume.
 
-WorkflowCheckers can be used to determine if required manual processes, outside of the scope of Parodos, have completed.
+WorkflowCheckers can be used to determine if required manual processes, outside the scope of Parodos, have completed.
 
 #### A Note On Defining WorkflowTasks for Usage In A Workflow
 
 ***Creating a Single Instance Of The Same Workflow Tasks***
 
-WorkflowTasks can be defined a Spring Components (@Component). In this case the workflow-service will detect the
-@Component tag and create a bean for this type. NOTE: When taking this option it key that all dependencies required to
+WorkflowTasks can be defined as Spring Components (@Component). In this case the workflow-service will detect the
+@Component tag and create a bean for this type. NOTE: When taking this option it keys that all dependencies required to
 create the WorkflowTasks are available as other Spring Components and/or configuration values. Any unspecified
 dependencies in a WorkflowTasks with @Component will result in the workflow-service being unable to start. By taking
-this approach the WorkflowTask can be used by multiple Workflows without any extra code outside of that used in the when
+this approach the WorkflowTask can be used by multiple Workflows without any extra code outside of that used in when
 defining the WorkflowTasks where @Component was declared.
 
 ***Defining a WorkflowTasks that can be change with Configuration***
 
 The values passed into a WorkflowTasks may vary depending on the Workflow using it. In this case the WorkflowTask can be
 defined as a regular Java class (do not use the @Component declaration). In a class with the declaration @Configuration,
-methods an be created returning an instance of the WorkflowTasks with different configurations applied to the reference.
+methods can be created returning an instance of the WorkflowTasks with different configurations applied to the reference.
 These methods should have the @Bean declaration. Also, multiple instances of the same type will be created (and Spring
 wires by type), the @Bean declaration should include a name (@Bean("myBean") or @Bean(name = "myBean")) . How this name
 is reference will be covered in the next section.
@@ -389,5 +389,4 @@ that the workflow-service has.
 
 If you find yourself creating over complex Tasks and WorkFlow, you are not using Parodos for its intended use case.
 Parodos is intended to tie together existing logic and tools. Tasks and WorkFlows should be posting messages on queues,
-calling APIs and other light weight integrations.
-
+calling APIs and other lightweight integrations.
