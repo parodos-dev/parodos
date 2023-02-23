@@ -12,10 +12,10 @@ This library can be used by any Parodos Service, or Infrastructure workflow to d
 
 **Pattern**
 
-A combination of Clues that might be found in code base.
+A combination of _Clues_ that might be found in code base.
 
-A Pattern has a collection of needOneOfClues, and a collection of needAllOfClues. Provided the appropriate Clues are
-detected in these collection, the Pattern is considered to be detected.
+A Pattern has a collection of `needOneOfClues`, and a collection of `needAllOfClues`. Provided the appropriate _Clues_
+are detected in these collection, the Pattern is considered to be detected.
 
 A pattern can be programmatically configured like this:
 
@@ -56,7 +56,7 @@ ContentsClueImpl.Builder
 
 ```
 
-This clue looks for a .java file that contains the annotation '@RestController'. By default the engine will stop
+This clue looks for a .java file that contains the annotation '@RestController'. By default, the engine will stop
 scanning for this Clue after it's been detected. However, the clue can be configured to continue to scan resulting in
 positive match and the list of all files that met the Clue criteria.
 
@@ -78,14 +78,13 @@ this:
 
 ```java
 
-WorkContext context=WorkContextDelegate.WorkContextBuilder.builder()
+WorkContext context = WorkContextDelegate.WorkContextBuilder.builder()
         .startDirectory(new File(SRC_TEST_RESOURCES_JAVA_WEB_CONTROLLER_CLUE).getAbsolutePath())
         .addThisToDesiredPatterns(controllerMavenPattern)
         .build();
-        DetectionResults results=PatternDetector.detect(context);
-
+        DetectionResults results = PatternDetector.detect(context);
 ```
 
-The DectionResults object will contain the detected Patterns, start time (or the detection run), end time (of the
+The `DectionResults` object will contain the detected Patterns, start time (or the detection run), end time (of the
 detection run) and all discovered Clue (regardless of if they were part of a detected Pattern).
 
