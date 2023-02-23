@@ -17,14 +17,14 @@ The service is based on the following Entities:
 * NotificationUser - Contains metadata about a User as well as a List of NotificationGroup(s) the User is associated
   with
 
-* NotificationGroup - Contains meta data about the group and list of a Users associated with it
+* NotificationGroup - Contains metadata about the group and list of a Users associated with it
 
 ## Services and Controllers
 
 Each Domain entity has an associated Service and ServiceImpl for performing CRUD operations.
 
 The **NotificationMessageController** provides a single endpoint for creating NotificationMessages. This is the endpoint
-that downstream services/systems can POST too.
+that downstream services/systems can POST to.
 
 The **NotificationRecordController** provides both GET endpoints (for obtaining NotificationMessages) and PUT endpoints
 for updating their metadata (ie: message has been read).
