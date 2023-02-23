@@ -11,13 +11,16 @@ on:
     branches:
       - '**'
 
+permissions: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions: read
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: "${{ github.event.pull_request.head.sha}}" || ''
+          ref: ${{ github.event.pull_request.head.sha != '' &&  github.event.pull_request.head.sha ||  github.sha }}
 
       - uses: actions/setup-java@v3
         with:
@@ -116,6 +119,7 @@ jobs:
 
   integration:
     runs-on: ubuntu-latest
+    permissions: read
     needs:
       - build
     steps:
