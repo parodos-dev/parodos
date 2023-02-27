@@ -10,17 +10,17 @@ progress).
 https://github.com/janus-idp
 
 The focus of Parodos is around Workflows (composed of WorkflowTasks) that bring together the existing tools and
-processes of the enterpise in an end-to-end experience that developers, quality assurance, produnction support and other
+processes of the enterpise in an end-to-end experience that developers, quality assurance, production support and other
 enterprise software development/delivery team members can consume (through our Backstage plugins or by your own
-interfaces calling these backing services) to get the outcomes they need with less tickets/meetings/frustration.
+interfaces calling these backing services) to get the outcomes they need with fewer tickets/meetings/frustration.
 
 # Building Developer Platforms In Enterprise Environments
 
 Building an IDP provides a centralized place to improve the experience for developers trying to build and release code
 in large environments.
 
-For many enterprise environments, especially regulated ones, the source of some of the friction preventing a positive
-developer experience is that they are entangled with long standing processes and tools which are tied to audit,
+For many enterprise environments, especially regulated ones, the source of some friction preventing a positive
+developer experience is that they are entangled with long-standing processes and tools which are tied to audit,
 compliance and regulation. These components are often:
 
 - Unique to the enterprise
@@ -49,14 +49,14 @@ Some enterprises may struggle with Javascript heavy approaches. That is not to s
 platforms are not suited for the task. On the contrary they might be just what is needed, but a chasm might exist to
 fully adopt in an enterprise environment that has legacy technology and processes.
 
-Other enterprises might have existing IDP tools that are home grown over years and might need to be leveraged in the
+Other enterprises might have existing IDP tools that are home-grown over years and might need to be leveraged in the
 initial stages of any new IDP work.
 
 Parodos is ancient Greek and translates to 'a side-entrance to the stage'. In this theme, Parodos provides Java based
 building blocks (specifically Spring beans) to bring together backend processes and components that might be considered
 more 'legacy' as workflows (including existing IDP components) that can be consumed in Backstage.
 
-The most common usecase for Parodos is giving developers a place where they can provide inputs for Assessments (ie: a
+The most common use case for Parodos is giving developers a place where they can provide inputs for Assessments (ie: a
 link to their project code and/or an application identifying code), and based on logic determined by the enterprise a
 list of Workflows are presented to them.
 
@@ -98,24 +98,24 @@ Parodos is composed of the following components
 
 **workflow-service**
 
-Provides the APIs to run Workflows defined usinmg the Parodos model. It also persists Workflow definitions (and tracks
-changes of definitions), persists execution state and provides scheduling for long running WorkFlowTasks.
+Provides the APIs to run Workflows defined using the Parodos model. It also persists Workflow definitions (and tracks
+changes of definitions), persists execution state and provides scheduling for long-running WorkFlowTasks.
 
 **parodos-model-api**
 
 This is the model used by all services. It also contains some abstract definition of WorkflowTask for specific use
 cases (ie: Assessment, checking a downstream approval). At present all Workflows and WorkflowTasks are define as Spring
-Framework beans. More information can be found the the READ of the workflow-service, parodos-model-api and
+Framework beans. More information can be found the READ of the workflow-service, parodos-model-api and 
 workflow-examples.
 
 **workflow-examples**
 
-A stand alone project that can be added to the workflow-service's classpath to provide some samples of what WorkFlows
+A standalone project that can be added to the workflow-service's classpath to provide some samples of what WorkFlows
 could look like. This is basically a 'Hello Wold' for the workflow-service
 
 **workflow-engine**
 
-The current library for exeucting WorkFlow(s) in Parodos service
+The current library for executing WorkFlow(s) in Parodos service
 
 **notification-service**
 
@@ -164,7 +164,7 @@ via the Parodos backing services
 
 ### Backing Services Only
 
-In the event that an environment is chosing to enhancing an existing IDP, or create their own, Parodos's Java APIs can
+In the event that an environment is choosing to enhancing an existing IDP, or create their own, Parodos's Java APIs can
 be used to provide backing Workflows. 
 
 
