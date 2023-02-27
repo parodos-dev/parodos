@@ -51,6 +51,7 @@
             <column name="create_date" type="timestamp" defaultValue="${now}"/>
             <column name="modify_date" type="timestamp" defaultValue="${now}"/>
             <column name="commit_id" type="varchar(255)"/>
+            <column name="parameters" type="varchar(4000)"/>
             <column name="object_version" type="bigint"/>
         </createTable>
 
@@ -82,6 +83,7 @@
             <column name="status" type="varchar(255)"/>
             <column name="start_date" type="timestamp" defaultValue="${now}"/>
             <column name="end_date" type="timestamp" defaultValue="${now}"/>
+            <column name="arguments" type="varchar(4000)"/>
             <column name="workflow_definition_id" type="${uuidType}">
                 <constraints nullable="false" foreignKeyName="fk_workflow_execution_workflow_definition"
                              references="workflow_definition(id)"/>

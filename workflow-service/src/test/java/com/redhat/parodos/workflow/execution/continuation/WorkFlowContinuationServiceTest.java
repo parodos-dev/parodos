@@ -72,7 +72,8 @@ class WorkFlowContinuationServiceTest {
 
 		// then
 		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findAll();
-		Mockito.verify(this.workFlowService, Mockito.times(0)).execute(Mockito.any(), Mockito.any(), Mockito.any());
+		Mockito.verify(this.workFlowService, Mockito.times(0)).execute(Mockito.any(), Mockito.any(), Mockito.any(),
+				Mockito.any());
 	}
 
 	@Test
@@ -95,7 +96,7 @@ class WorkFlowContinuationServiceTest {
 						return ((HashMap<?, ?>) argument).isEmpty();
 					}
 					return false;
-				}));
+				}), Mockito.anyMap());
 	}
 
 	@Test
@@ -128,7 +129,7 @@ class WorkFlowContinuationServiceTest {
 						return !((HashMap<?, ?>) argument).isEmpty();
 					}
 					return false;
-				}));
+				}), Mockito.anyMap());
 	}
 
 	@Test
@@ -159,13 +160,15 @@ class WorkFlowContinuationServiceTest {
 		assertTrue(exception.getMessage().contains("JsonParseException"));
 
 		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findAll();
-		Mockito.verify(this.workFlowService, Mockito.times(0)).execute(Mockito.any(), Mockito.any(), Mockito.any());
+		Mockito.verify(this.workFlowService, Mockito.times(0)).execute(Mockito.any(), Mockito.any(), Mockito.any(),
+				Mockito.any());
 	}
 
 	private WorkFlowExecution sampleWorkFlowExecution() {
 		WorkFlowExecution wf = WorkFlowExecution.builder().projectId(UUID.randomUUID())
 				.status(WorkFlowStatus.IN_PROGRESS).build();
 		wf.setId(UUID.randomUUID());
+		wf.setArguments("{\"test\": \"test\"}");
 		return wf;
 	}
 

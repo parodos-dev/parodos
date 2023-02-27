@@ -19,6 +19,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
+import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -46,6 +48,9 @@ public class WorkFlowDefinitionResponseDTO {
 	private Date createDate;
 
 	private Date modifyDate;
+
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private List<WorkFlowTaskParameter> parameters;
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private List<WorkFlowTaskDefinitionResponseDTO> tasks;

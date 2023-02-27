@@ -17,11 +17,14 @@ package com.redhat.parodos.workflow;
 
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
+import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO.WorkFlowTaskRequestDTO.ArgumentRequestDTO;
 import org.springframework.stereotype.Component;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.registry.BeanWorkFlowRegistryImpl;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
+
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +51,7 @@ public class WorkFlowDelegate {
 	}
 
 	public WorkContext getWorkFlowContext(WorkFlowDefinition workFlowDefinition,
-			Map<String, Map<String, String>> workFlowTaskParameterValues) {
+			Map<String, Map<String, String>> workFlowTaskParameterValues, Map<String, String> argumentRequestDTOs) {
 		WorkContext workContext = new WorkContext();
 		workFlowDefinition.getWorkFlowTaskDefinitions().forEach(workFlowTaskDefinition -> {
 			log.info("****** workflow task name: {}, parameter values: {}", workFlowTaskDefinition.getName(),
@@ -61,6 +64,8 @@ public class WorkFlowDelegate {
 					workFlowTaskParameterValues.get(workFlowTaskDefinition.getName()) == null ? Map.of()
 							: workFlowTaskParameterValues.get(workFlowTaskDefinition.getName()));
 		});
+		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ARGUMENTS, argumentRequestDTOs);
 		return workContext;
 	}
 

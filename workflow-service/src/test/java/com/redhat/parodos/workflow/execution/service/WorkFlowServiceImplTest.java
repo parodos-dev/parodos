@@ -56,13 +56,13 @@ class WorkFlowServiceImplTest {
 					}
 				}));
 		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
-		Mockito.when(this.workFlowDelegate.getWorkFlowContext(Mockito.any(), Mockito.any()))
+		Mockito.when(this.workFlowDelegate.getWorkFlowContext(Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenReturn(new WorkContext());
 		Mockito.when(this.workFlowDefinitionRepository.findByName(Mockito.any()))
 				.thenReturn(List.of(this.sampleWorkflowDefinition("test")));
 
 		// when
-		WorkReport report = this.workFlowService.execute("test-project", "test-workflow", null);
+		WorkReport report = this.workFlowService.execute("test-project", "test-workflow", null, Map.of());
 		// then
 		assertNotNull(report);
 		assertEquals(report.getStatus().toString(), "COMPLETED");
@@ -72,7 +72,8 @@ class WorkFlowServiceImplTest {
 		assertEquals(report.getWorkContext().get("foo"), "bar");
 
 		Mockito.verify(this.workFlowDelegate, Mockito.times(1)).getWorkFlowExecutionByName(Mockito.any());
-		Mockito.verify(this.workFlowDelegate, Mockito.times(1)).getWorkFlowContext(Mockito.any(), Mockito.any());
+		Mockito.verify(this.workFlowDelegate, Mockito.times(1)).getWorkFlowContext(Mockito.any(), Mockito.any(),
+				Mockito.any());
 		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).findByName(Mockito.any());
 		Mockito.verify(work, Mockito.times(1)).execute(Mockito.any());
 
@@ -84,7 +85,7 @@ class WorkFlowServiceImplTest {
 		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName(Mockito.any())).thenReturn(null);
 
 		// when
-		WorkReport report = this.workFlowService.execute("test-project", "test-workflow", null);
+		WorkReport report = this.workFlowService.execute("test-project", "test-workflow", null, Map.of());
 		// then
 		assertNotNull(report);
 		assertEquals(report.getStatus().toString(), "FAILED");
@@ -93,7 +94,8 @@ class WorkFlowServiceImplTest {
 		assertNotNull(report.getWorkContext());
 
 		Mockito.verify(this.workFlowDelegate, Mockito.times(1)).getWorkFlowExecutionByName(Mockito.any());
-		Mockito.verify(this.workFlowDelegate, Mockito.times(0)).getWorkFlowContext(Mockito.any(), Mockito.any());
+		Mockito.verify(this.workFlowDelegate, Mockito.times(0)).getWorkFlowContext(Mockito.any(), Mockito.any(),
+				Mockito.any());
 		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(0)).findByName(Mockito.any());
 	}
 

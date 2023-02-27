@@ -19,14 +19,16 @@ import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import com.redhat.parodos.workflow.task.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
+import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterScope;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * logging task execution
@@ -43,16 +45,30 @@ public class LoggingWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	@Override
 	public WorkReport execute(WorkContext workContext) {
 		log.info("Writing a message to the logs from: {}", getName());
-		if (getWorkFlowChecker() != null) {
-			workContext.put(WorkFlowConstants.WORKFLOW_CHECKER_ID, getWorkFlowChecker().getName());
+		try {
+			String userId = getParameterValue(workContext, "user-id");
+			String apiServer = getParameterValue(workContext, "api-server");
+			log.info("task parameter 'api-server' value in {} is {}", getName(), apiServer);
+			log.info("workflow parameter 'user-id' value in {} is {}", getName(), userId);
+			if (getWorkFlowChecker() != null) {
+				workContext.put(WorkFlowConstants.WORKFLOW_CHECKER_ID, getWorkFlowChecker().getName());
+			}
+			return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 		}
-		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
+		catch (Exception e) {
+			log.error("There was an issue with the task {}: {}", getName(), e.getMessage());
+		}
+		return new DefaultWorkReport(WorkStatus.FAILED, workContext);
 	}
 
 	@Override
 	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
-		return List.of(WorkFlowTaskParameter.builder().key("api-server").description("The api server")
-				.type(WorkFlowTaskParameterType.URL).optional(false).build());
+		return List.of(
+				WorkFlowTaskParameter.builder().key("api-server").description("The api server")
+						.type(WorkFlowTaskParameterType.URL).optional(false).build(),
+				WorkFlowTaskParameter.builder().key("user-id").description("The user id")
+						.type(WorkFlowTaskParameterType.TEXT).optional(false)
+						.scope(WorkFlowTaskParameterScope.WORK_FLOW).build());
 	}
 
 	@Override

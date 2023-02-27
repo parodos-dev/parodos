@@ -24,6 +24,7 @@ import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepos
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.scheduler.WorkFlowSchedulerServiceImpl;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
+import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
@@ -115,6 +116,8 @@ public class WorkFlowExecutionAspect {
 		// update workflow execution entity
 		workFlowExecution.setStatus(WorkFlowStatus.valueOf(report.getStatus().name()));
 		workFlowExecution.setEndDate(new Date());
+		workFlowExecution.setArguments(WorkFlowDTOUtil.writeObjectValueAsString(WorkContextDelegate.read(workContext,
+				WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ARGUMENTS)));
 		workFlowService.updateWorkFlow(workFlowExecution);
 		// schedule workflow checker for dynamic run on cron expression or stop if done
 		if (WorkFlowType.CHECKER.name().toUpperCase().equals(workFlowDefinition.getType())) {

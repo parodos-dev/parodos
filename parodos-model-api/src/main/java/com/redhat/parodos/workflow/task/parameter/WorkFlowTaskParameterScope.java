@@ -15,33 +15,15 @@
  */
 package com.redhat.parodos.workflow.task.parameter;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 /**
- * An input to a @see WorkFlowTask. The @see WorkFlowTaskParameterType is used by the UI
- * to render inputs to collect the values from users running the workflow
+ * The supported scopes for an @see WorkFlowTaskParameter. A UI layer can render
+ * appropriate components to collect user inputs for different scopes using these values
  *
- * @author Luke Shannon (Github: lshannon)
+ * @author Richard Wang (Github: RichardW98)
  *
  */
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class WorkFlowTaskParameter {
+public enum WorkFlowTaskParameterScope {
 
-	private String key;
-
-	private String description;
-
-	private boolean optional;
-
-	private WorkFlowTaskParameterType type;
-
-	@Builder.Default
-	private WorkFlowTaskParameterScope scope = WorkFlowTaskParameterScope.TASK;
+	WORK_FLOW, TASK,
 
 }

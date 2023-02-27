@@ -15,25 +15,27 @@
  */
 package com.redhat.parodos.workflow.definition.entity;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-
 import com.redhat.parodos.common.AbstractEntity;
-
+import com.redhat.parodos.workflow.definition.dto.converter.WorkFlowParametersConverter;
+import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Workflow definition entity
@@ -75,5 +77,9 @@ public class WorkFlowDefinition extends AbstractEntity {
 	private WorkFlowCheckerDefinition nextWorkFlowDefinition;
 
 	private String commitId;
+
+	@Convert(converter = WorkFlowParametersConverter.class)
+	@Builder.Default
+	private Set<WorkFlowTaskParameter> parameters = new HashSet<>();
 
 }

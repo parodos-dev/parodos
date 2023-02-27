@@ -15,20 +15,20 @@
  */
 package com.redhat.parodos.examples.simple;
 
-import java.util.List;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-
 import com.redhat.parodos.workflow.task.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
+import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterScope;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 /**
  * rest api task execution
@@ -81,7 +81,10 @@ public class RestAPIWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 						.type(WorkFlowTaskParameterType.URL).build(),
 				WorkFlowTaskParameter.builder().key(PAYLOAD_PASSED_IN_FROM_SERVICE)
 						.description("Json of what to provide for data. (ie: 'Hello!')").optional(false)
-						.type(WorkFlowTaskParameterType.PASSWORD).build());
+						.type(WorkFlowTaskParameterType.PASSWORD).build(),
+				WorkFlowTaskParameter.builder().key("user-id").description("The user id")
+						.type(WorkFlowTaskParameterType.URL).optional(false).scope(WorkFlowTaskParameterScope.WORK_FLOW)
+						.build());
 	}
 
 	public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {

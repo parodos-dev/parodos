@@ -22,18 +22,21 @@ import com.redhat.parodos.workflow.WorkFlowStatus;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
+import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * When the application starts up it will run any workflows in Progress @see
@@ -99,8 +102,12 @@ public class WorkFlowContinuationService {
 							throw new RuntimeException(e);
 						}
 					});
+					Map<String, String> workFlowArguments;
+					workFlowArguments = WorkFlowDTOUtil.readStringAsObject(workFlowExecution.getArguments(),
+							new TypeReference<>() {
+							}, Map.of());
 					workFlowService.execute(workFlowExecution.getProjectId().toString(), workFlowDefinition.getName(),
-							workFlowTaskArguments);
+							workFlowTaskArguments, workFlowArguments);
 				});
 	}
 

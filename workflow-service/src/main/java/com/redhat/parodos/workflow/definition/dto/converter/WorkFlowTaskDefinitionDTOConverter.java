@@ -20,14 +20,17 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowTaskDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
+import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterScope;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 /**
- * Workflow definition controller
+ * Workflow task definition converter
  *
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
@@ -46,9 +49,12 @@ public class WorkFlowTaskDefinitionDTOConverter
 				return WorkFlowTaskDefinitionResponseDTO.builder().id(workFlowTaskDefinition.getId().toString())
 						.name(workFlowTaskDefinition.getName())
 						.outputs(objectMapper.readValue(workFlowTaskDefinition.getOutputs(), new TypeReference<>() {
-						})).parameters(
-								objectMapper.readValue(workFlowTaskDefinition.getParameters(), new TypeReference<>() {
-								}))
+						})).parameters(objectMapper.readValue(workFlowTaskDefinition.getParameters(),
+								new TypeReference<List<WorkFlowTaskParameter>>() {
+								}).stream()
+								.filter(workFlowTaskParameter -> WorkFlowTaskParameterScope.TASK
+										.equals(workFlowTaskParameter.getScope()))
+								.collect(Collectors.toList()))
 						.workFlowChecker(Optional.ofNullable(workFlowTaskDefinition.getWorkFlowCheckerDefinition())
 								.map(checker -> checker.getCheckWorkFlow().getId()).orElse(null))
 						.nextWorkFlow(Optional.ofNullable(workFlowTaskDefinition.getWorkFlowCheckerDefinition())

@@ -15,7 +15,6 @@
  */
 package com.redhat.parodos.workflow.execution.controller;
 
-import com.redhat.parodos.project.dto.ProjectResponseDTO;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowResponseDTO;
@@ -37,6 +36,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.stream.Collectors;
 
 /**
  * Workflow controller to execute workflow and get status
@@ -68,7 +69,10 @@ public class WorkFlowController {
 	public ResponseEntity<WorkFlowResponseDTO> execute(@RequestBody @Valid WorkFlowRequestDTO workFlowRequestDTO) {
 		WorkReport workReport = workFlowService.execute(workFlowRequestDTO.getProjectId(),
 				workFlowRequestDTO.getWorkFlowName(),
-				WorkFlowDTOUtil.convertWorkFlowTaskRequestDTOListToMap(workFlowRequestDTO.getWorkFlowTasks()));
+				WorkFlowDTOUtil.convertWorkFlowTaskRequestDTOListToMap(workFlowRequestDTO.getWorkFlowTasks()),
+				workFlowRequestDTO.getArguments().stream()
+						.collect(Collectors.toMap(WorkFlowRequestDTO.WorkFlowTaskRequestDTO.ArgumentRequestDTO::getKey,
+								WorkFlowRequestDTO.WorkFlowTaskRequestDTO.ArgumentRequestDTO::getValue)));
 		return ResponseEntity.ok(WorkFlowResponseDTO.builder()
 				.workFlowExecutionId(WorkContextDelegate.read(workReport.getWorkContext(),
 						WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ID).toString())

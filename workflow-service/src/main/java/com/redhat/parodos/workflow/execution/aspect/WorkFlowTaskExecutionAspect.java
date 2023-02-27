@@ -20,6 +20,7 @@ import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
 import com.redhat.parodos.workflow.task.WorkFlowTaskStatus;
+import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import lombok.extern.slf4j.Slf4j;
@@ -90,8 +91,9 @@ public class WorkFlowTaskExecutionAspect {
 
 		if (workFlowTaskExecution == null) {
 			workFlowExecutionService.saveWorkFlowTask(
-					WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
-							workFlowTaskName, WorkContextDelegate.Resource.ARGUMENTS).toString(),
+					WorkFlowDTOUtil.writeObjectValueAsString(WorkContextDelegate.read(workContext,
+							WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION, workFlowTaskName,
+							WorkContextDelegate.Resource.ARGUMENTS)),
 					UUID.fromString(WorkContextDelegate
 							.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_DEFINITION,
 									workFlowTaskName, WorkContextDelegate.Resource.ID)
