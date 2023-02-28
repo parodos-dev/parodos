@@ -81,34 +81,41 @@ public class NotificationRecordServiceImpl implements NotificationRecordService 
 				return this.notificationRecordRepository.findByNotificationUserListContaining(notificationUser,
 						pageable);
 			case BY_USERNAME_AND_SEARCH_TERM:
-				return this.getNotificationRecordsBySearchTerm(pageable, username, searchTerm);
+				return this.notificationRecordRepository.search(notificationUser, searchTerm.toLowerCase(), pageable);
 			case BY_USERNAME_AND_STATE_UNREAD:
-				return getUnreadNotificationRecords(pageable, username);
+				return this.notificationRecordRepository
+						.findByReadFalseAndNotificationUserListContaining(notificationUser, pageable);
 			case BY_USERNAME_AND_STATE_ARCHIVED:
-				return getArchivedNotificationRecords(pageable, username);
+				return this.notificationRecordRepository.findByFolderAndNotificationUserListContaining(ARCHIVE_FOLDER,
+						notificationUser, pageable);
+			default:
+				return Page.empty();
 		}
-		return Page.empty();
 	}
 
 	@Override
 	public int countNotificationRecords(String username, State state) {
-		if (State.UNREAD.equals(state)) {
-			return this.notificationUserRepository.findByUsername(username)
-					.map(notificationRecordRepository::countDistinctByReadFalseAndNotificationUserListContaining)
-					.orElse(0);
+		switch (state) {
+			case UNREAD:
+				return this.notificationUserRepository.findByUsername(username)
+						.map(notificationRecordRepository::countDistinctByReadFalseAndNotificationUserListContaining)
+						.orElse(0);
+			default:
+				throw new RuntimeException(String.format("State %s is not supported", state));
 		}
-		throw new RuntimeException(String.format("State %s is not found/supported", state));
+
 	}
 
 	@Override
 	public NotificationRecord updateNotificationStatus(UUID id, Operation operation) {
-		if (Operation.READ.equals(operation)) {
-			return updateReadNotification(id);
+		switch (operation) {
+			case READ:
+				return updateReadNotification(id);
+			case ARCHIVE:
+				return updateArchiveFolder(id);
+			default:
+				throw new RuntimeException(String.format("Operation %s is not supported", operation));
 		}
-		if (Operation.ARCHIVE.equals(operation)) {
-			return updateArchiveFolder(id);
-		}
-		throw new RuntimeException(String.format("Operation %s is invalid", operation));
 	}
 
 	@Override
@@ -127,40 +134,6 @@ public class NotificationRecordServiceImpl implements NotificationRecordService 
 			throw new RuntimeException(String.format("Username %s not found", username));
 		}
 		return notificationsUser.get();
-	}
-
-	private Page<NotificationRecord> getNotificationRecordsBySearchTerm(Pageable pageable, String username,
-			String searchTerm) {
-		Optional<NotificationUser> notificationsUser = this.notificationUserRepository.findByUsername(username);
-		if (notificationsUser.isPresent()) {
-			return this.notificationRecordRepository.search(notificationsUser.get(), searchTerm.toLowerCase(),
-					pageable);
-		}
-		else {
-			throw new RuntimeException(String.format("Username %s not found", username));
-		}
-	}
-
-	private Page<NotificationRecord> getUnreadNotificationRecords(Pageable pageable, String username) {
-		Optional<NotificationUser> notificationsUser = this.notificationUserRepository.findByUsername(username);
-		if (notificationsUser.isPresent()) {
-			return this.notificationRecordRepository
-					.findByReadFalseAndNotificationUserListContaining(notificationsUser.get(), pageable);
-		}
-		else {
-			throw new RuntimeException(String.format("Username %s not found", username));
-		}
-	}
-
-	private Page<NotificationRecord> getArchivedNotificationRecords(Pageable pageable, String username) {
-		Optional<NotificationUser> notificationsUser = this.notificationUserRepository.findByUsername(username);
-		if (notificationsUser.isPresent()) {
-			return this.notificationRecordRepository.findByFolderAndNotificationUserListContaining(ARCHIVE_FOLDER,
-					notificationsUser.get(), pageable);
-		}
-		else {
-			throw new RuntimeException(String.format("Username %s not found", username));
-		}
 	}
 
 	private NotificationRecord updateReadNotification(UUID id) {
