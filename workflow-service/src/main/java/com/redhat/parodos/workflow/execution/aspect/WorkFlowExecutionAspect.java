@@ -131,11 +131,11 @@ public class WorkFlowExecutionAspect {
 			log.info("Schedule workflow checker: {} to run per cron expression: {}", workFlowName,
 					workFlowCheckerDefinition.getCronExpression());
 			workFlowSchedulerService.schedule(workFlow, workContext, workFlowCheckerDefinition.getCronExpression());
+			return;
 		}
-		else {
-			log.info("Stop workflow checker: {} schedule", workFlowName);
-			workFlowSchedulerService.stop(workFlow);
-		}
+
+		log.info("Stop workflow checker: {} schedule", workFlowName);
+		workFlowSchedulerService.stop(workFlow);
 	}
 
 }
