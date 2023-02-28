@@ -15,9 +15,12 @@
  */
 package com.redhat.parodos.notification.service.impl;
 
+import com.redhat.parodos.notification.enums.Operation;
 import com.redhat.parodos.notification.enums.SearchCriteria;
 import com.redhat.parodos.notification.enums.State;
-import com.redhat.parodos.notification.enums.Operation;
+import com.redhat.parodos.notification.exceptions.NotificationRecordNotFoundException;
+import com.redhat.parodos.notification.exceptions.StateNotFoundOrUnsupportedException;
+import com.redhat.parodos.notification.exceptions.UsernameNotFoundException;
 import com.redhat.parodos.notification.jpa.entity.NotificationMessage;
 import com.redhat.parodos.notification.jpa.entity.NotificationRecord;
 import com.redhat.parodos.notification.jpa.entity.NotificationUser;
@@ -25,14 +28,15 @@ import com.redhat.parodos.notification.jpa.repository.NotificationRecordReposito
 import com.redhat.parodos.notification.jpa.repository.NotificationUserRepository;
 import com.redhat.parodos.notification.service.NotificationRecordService;
 import com.redhat.parodos.notification.util.SearchUtil;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * @author Richard Wang (Github: RichardW98)
@@ -101,9 +105,8 @@ public class NotificationRecordServiceImpl implements NotificationRecordService 
 						.map(notificationRecordRepository::countDistinctByReadFalseAndNotificationUserListContaining)
 						.orElse(0);
 			default:
-				throw new RuntimeException(String.format("State %s is not supported", state));
+				throw new StateNotFoundOrUnsupportedException(String.format("State %s is not supported", state));
 		}
-
 	}
 
 	@Override
@@ -114,7 +117,7 @@ public class NotificationRecordServiceImpl implements NotificationRecordService 
 			case ARCHIVE:
 				return updateArchiveFolder(id);
 			default:
-				throw new RuntimeException(String.format("Operation %s is not supported", operation));
+				throw new UnsupportedOperationException(String.format("Operation %s is not supported", operation));
 		}
 	}
 
@@ -131,7 +134,7 @@ public class NotificationRecordServiceImpl implements NotificationRecordService 
 	private NotificationUser getNotificationUser(String username) {
 		Optional<NotificationUser> notificationsUser = this.notificationUserRepository.findByUsername(username);
 		if (notificationsUser.isEmpty()) {
-			throw new RuntimeException(String.format("Username %s not found", username));
+			throw new UsernameNotFoundException(String.format("Username %s not found", username));
 		}
 		return notificationsUser.get();
 	}
@@ -151,7 +154,8 @@ public class NotificationRecordServiceImpl implements NotificationRecordService 
 	private Optional<NotificationRecord> findRecordById(UUID id) {
 		Optional<NotificationRecord> notificationsRecordOptional = this.notificationRecordRepository.findById(id);
 		if (notificationsRecordOptional.isEmpty()) {
-			throw new RuntimeException(String.format("Could not find NotificationRecord for id = %s", id));
+			throw new NotificationRecordNotFoundException(
+					String.format("Could not find NotificationRecord for id = %s", id));
 		}
 		return notificationsRecordOptional;
 	}
