@@ -18,6 +18,8 @@ package com.redhat.parodos.security;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 import javax.sql.DataSource;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,43 +38,15 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Profile("local")
 @Configuration
-public class LocalSecurityConfiguration {
+@Slf4j
+public class LocalSecurityConfiguration extends SecurityConfiguration {
 
-	private final DataSource dataSource;
-
-	public LocalSecurityConfiguration(DataSource dataSource) {
-		this.dataSource = dataSource;
-	}
-
-	@Bean
-	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		// @formatter:off
-				http
-				.cors().disable()
-				.csrf().disable()
-				.authorizeRequests()
-				.antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/login**", "/h2/**")
-				.permitAll().antMatchers("/**")
-				.authenticated()
-				.and()
-				.httpBasic(withDefaults()).headers().frameOptions().disable()
-				.and()
-				.formLogin(form -> form.loginProcessingUrl("/perform_login"))
-				.logout().logoutSuccessUrl("/login")
-				.permitAll();
-		// @formatter:on
-		return http.build();
-	}
-
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(passwordEncoder())
-				.usersByUsernameQuery("select username,password,enabled from user where username = ?")
-				.authoritiesByUsernameQuery("select username,authority from user where username = ?");
-	}
-
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
+	@Override
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		HttpSecurity httpSec = this.setHttpSecurity(http);
+		httpSec.cors().disable();
+		httpSec.csrf().disable();
+		return httpSec.build();
 	}
 
 }

@@ -12,6 +12,14 @@ export TARGET_URL="http://${SERVERIP}:${SERVERPORT}"
 
 echo "Starting example with '${TARGET_URL}' server"
 
+COOKIEFP="$(mktemp)"
+TOKEN=""
+
+refresh_token() {
+    TOKEN=$(grep "XSRF-TOKEN" $COOKIEFP | awk '{print $7}')
+}
+
+
 echo_red() {
   COLOR="\e[31m";
   ENDCOLOR="\e[0m";
@@ -56,6 +64,8 @@ get_workflow_id() {
     "${TARGET_URL}/api/v1/workflowdefinitions" \
     -H 'accept: */*' \
     -H 'Authorization: Basic dGVzdDp0ZXN0' \
+    -H "X-XSRF-TOKEN: ${TOKEN}" \
+    -b $COOKIEFP \
     -H 'Content-Type: application/json' | jq '.[] | select(.name=="'$1'")' | jq -r '.id'
 }
 
@@ -64,6 +74,8 @@ get_checker_workflow() {
     "${TARGET_URL}/api/v1/workflowdefinitions/$1/" \
     -H 'accept: */*' \
     -H 'Authorization: Basic dGVzdDp0ZXN0' \
+    -H "X-XSRF-TOKEN: ${TOKEN}" \
+    -b $COOKIEFP \
     -H 'Content-Type: application/json' | jq '.tasks[] | select(has("workFlowChecker"))' | jq -r '.workFlowChecker' | head -n 1
 }
 
@@ -72,6 +84,8 @@ get_next_workflow() {
     "${TARGET_URL}/api/v1/workflowdefinitions/$1/" \
     -H 'accept: */*' \
     -H 'Authorization: Basic dGVzdDp0ZXN0' \
+    -H "X-XSRF-TOKEN: ${TOKEN}" \
+    -b $COOKIEFP \
     -H 'Content-Type: application/json' | jq '.tasks[] | select(has("nextWorkFlow"))' | jq -r '.nextWorkFlow' | head -n 1
 }
 
@@ -95,28 +109,31 @@ run_simple_flow() {
 
 run_complex_flow() {
   echo "                                                "
+  set -x
   echo_blue "******** Checking project is running ********"
   for i in {1..100}
   do
-    CODE=$(curl -LI -s "${TARGET_URL}/api/v1/projects" \
+    CODE=$(curl -LI -c $COOKIEFP -s "${TARGET_URL}/api/v1/projects" \
       -H 'accept: */*' \
       -o /dev/null \
       -H 'Authorization: Basic dGVzdDp0ZXN0' \
       -H 'Content-Type: application/json' \
       -w '%{http_code}\n')
+    refresh_token
     [ $CODE -eq "200" ] && break
     sleep 2s
     [ $i -eq "100" ] && @fail "Project didn't started yet"
   done
   echo "Project is ✔️ on ${TARGET_URL}"
   echo " "
-
   echo_blue "******** Create Project ********"
   echo "                                                "
   PROJECT_ID=$(curl -X 'POST' -s \
     "${TARGET_URL}/api/v1/projects" \
     -H 'accept: */*' \
     -H 'Authorization: Basic dGVzdDp0ZXN0' \
+    -H "X-XSRF-TOKEN: ${TOKEN}" \
+    -b $COOKIEFP \
     -H 'Content-Type: application/json' \
     -d '{
                  "name": "project-1",
@@ -132,6 +149,8 @@ run_complex_flow() {
     "${TARGET_URL}/api/v1/workflows" \
     -H 'accept: */*' \
     -H 'Authorization: Basic dGVzdDp0ZXN0' \
+    -H "X-XSRF-TOKEN: ${TOKEN}" \
+    -b $COOKIEFP \
     -H 'Content-Type: application/json' \
     -d '{
           "projectId": "'$PROJECT_ID'",
@@ -156,6 +175,8 @@ run_complex_flow() {
     "${TARGET_URL}/api/v1/workflows/" \
     -H 'accept: */*' \
     -H 'Authorization: Basic dGVzdDp0ZXN0' \
+    -H "X-XSRF-TOKEN: ${TOKEN}" \
+    -b $COOKIEFP \
     -H 'Content-Type: application/json' \
     -d '{
           "projectId": "'$PROJECT_ID'",
@@ -196,6 +217,8 @@ run_complex_flow() {
     "${TARGET_URL}/api/v1/workflows/" \
     -H 'accept: */*' \
     -H 'Authorization: Basic dGVzdDp0ZXN0' \
+    -H "X-XSRF-TOKEN: ${TOKEN}" \
+    -b $COOKIEFP \
     -H 'Content-Type: application/json' \
     -d '{
           "projectId": "'$PROJECT_ID'",
@@ -233,6 +256,8 @@ run_complex_flow() {
     "${TARGET_URL}/api/v1/workflows/" \
     -H 'accept: */*' \
     -H 'Authorization: Basic dGVzdDp0ZXN0' \
+    -H "X-XSRF-TOKEN: ${TOKEN}" \
+    -b $COOKIEFP \
     -H 'Content-Type: application/json' \
     -d '{
           "projectId": "'$PROJECT_ID'",
@@ -254,6 +279,8 @@ run_complex_flow() {
     "${TARGET_URL}/api/v1/workflows/" \
     -H 'accept: */*' \
     -H 'Authorization: Basic dGVzdDp0ZXN0' \
+    -H "X-XSRF-TOKEN: ${TOKEN}" \
+    -b $COOKIEFP \
     -H 'Content-Type: application/json' \
     -d '{
           "projectId": "'$PROJECT_ID'",

@@ -2,6 +2,7 @@ bases:
 - ../base
 resources:
 - ingress.yaml
+- ldap.yaml
 images:
 - name: quay.io/parados/workflow-service:latest
   newTag: test
@@ -9,4 +10,7 @@ images:
 - name: quay.io/parados/notification-service:latest
   newTag: test
 
-
+configMapGenerator:
+- name: ldif-config
+  files:
+  - test-server.ldif
