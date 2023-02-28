@@ -22,6 +22,7 @@ import com.redhat.parodos.workflow.WorkFlowStatus;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
+import com.redhat.parodos.workflow.exceptions.WorkflowDefinitionException;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
@@ -96,7 +97,7 @@ public class WorkFlowContinuationService {
 									}));
 						}
 						catch (JsonProcessingException e) {
-							throw new RuntimeException(e);
+							throw new WorkflowDefinitionException(e);
 						}
 					});
 					workFlowService.execute(workFlowExecution.getProjectId().toString(), workFlowDefinition.getName(),
