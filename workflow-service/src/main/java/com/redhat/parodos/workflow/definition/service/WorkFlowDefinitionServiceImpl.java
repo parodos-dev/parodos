@@ -25,6 +25,7 @@ import com.redhat.parodos.workflow.definition.repository.WorkFlowCheckerDefiniti
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
+import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterScope;
 import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -84,6 +85,9 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 									hm.put("description", workFlowTaskParameter.getDescription());
 									hm.put("type", workFlowTaskParameter.getType().name());
 									hm.put("optional", workFlowTaskParameter.isOptional());
+									hm.put("scope", workFlowTaskParameter.getScope());
+									if (WorkFlowTaskParameterScope.WORK_FLOW.equals(workFlowTaskParameter.getScope()))
+										workFlowDefinition.getParameters().add(workFlowTaskParameter);
 									return hm;
 								}).collect(Collectors.toList())))
 						.outputs(WorkFlowDTOUtil.writeObjectValueAsString(entry.getValue().getWorkFlowTaskOutputs()))

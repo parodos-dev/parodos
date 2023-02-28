@@ -38,6 +38,8 @@ public class WorkFlowRequestDTO {
 
 	private String workFlowName;
 
+	private List<WorkFlowTaskRequestDTO.ArgumentRequestDTO> arguments;
+
 	private List<WorkFlowTaskRequestDTO> workFlowTasks;
 
 	@Data
@@ -46,7 +48,7 @@ public class WorkFlowRequestDTO {
 	@NoArgsConstructor
 	public static class WorkFlowTaskRequestDTO {
 
-		String name;
+		String taskName;
 
 		List<ArgumentRequestDTO> arguments;
 

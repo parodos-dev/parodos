@@ -13,32 +13,32 @@ export TARGET_URL="http://${SERVERIP}:${SERVERPORT}"
 echo "Starting example with '${TARGET_URL}' server"
 
 echo_red() {
-  COLOR="\e[31m";
-  ENDCOLOR="\e[0m";
-  printf "$COLOR%b$ENDCOLOR\n" "$1";
+  COLOR="\e[31m"
+  ENDCOLOR="\e[0m"
+  printf "$COLOR%b$ENDCOLOR\n" "$1"
 }
 
 echo_green() {
-  COLOR="\e[32m";
-  ENDCOLOR="\e[0m";
-  printf "$COLOR%b$ENDCOLOR\n" "$1";
+  COLOR="\e[32m"
+  ENDCOLOR="\e[0m"
+  printf "$COLOR%b$ENDCOLOR\n" "$1"
 }
 
 echo_yellow() {
-  COLOR="\e[33m";
-  ENDCOLOR="\e[0m";
-  printf "$COLOR%b$ENDCOLOR\n" "$1";
+  COLOR="\e[33m"
+  ENDCOLOR="\e[0m"
+  printf "$COLOR%b$ENDCOLOR\n" "$1"
 }
 
 echo_blue() {
-  COLOR="\e[34m";
-  ENDCOLOR="\e[0m";
-  printf "$COLOR%b$ENDCOLOR\n" "$1";
+  COLOR="\e[34m"
+  ENDCOLOR="\e[0m"
+  printf "$COLOR%b$ENDCOLOR\n" "$1"
 }
 
 @fail() {
-    echo_red "ERROR: $1"
-    exit 1
+  echo_red "ERROR: $1"
+  exit 1
 }
 
 #set -x
@@ -86,6 +86,7 @@ run_simple_flow() {
     -H 'Content-Type: application/json' \
     -d '{
         "name": "simpleSequentialWorkFlow_INFRASTRUCTURE_WORKFLOW",
+        "arguments": [],
         "tasks": []
       }'
   echo "                                                "
@@ -96,8 +97,7 @@ run_simple_flow() {
 run_complex_flow() {
   echo "                                                "
   echo_blue "******** Checking project is running ********"
-  for i in {1..100}
-  do
+  for i in {1..100}; do
     CODE=$(curl -LI -s "${TARGET_URL}/api/v1/projects" \
       -H 'accept: */*' \
       -o /dev/null \
@@ -136,6 +136,7 @@ run_complex_flow() {
     -d '{
           "projectId": "'$PROJECT_ID'",
           "workFlowName": "onboardingAssessment_ASSESSMENT_WORKFLOW",
+          "arguments": [],
           "workFlowTasks": []
         }' | jq -r '.workFlowOptions.newOptions[0].workFlowName')
   echo "The Following Option Is Available:" $(echo_green ${INFRASTRUCTURE_OPTION})
@@ -159,28 +160,43 @@ run_complex_flow() {
     -H 'Content-Type: application/json' \
     -d '{
           "projectId": "'$PROJECT_ID'",
-      "workFlowName": "'$ONBOARDING_WORKFLOW_NAME'",
-      "workFlowTasks": [
-    {
-                    "taskName": "certWorkFlowTask",
-                    "arguments": [
-                      {
-                        "key": "username",
-                        "value": "Peter"
-                      }
-                    ]
-                  },
-                  {
-                    "taskName": "adGroupWorkFlowTask",
-                    "arguments": [
-                      {
-                        "key": "api-server",
-                        "value": "api.com"
-                      }
-                    ]
-                  }
-      ]
-    }' | jq -r '.workFlowExecutionId')"
+          "workFlowName": "'$ONBOARDING_WORKFLOW_NAME'",
+          "arguments": [
+            {
+              "key": "user-id",
+              "value": "Peter"
+            }
+          ],
+          "workFlowTasks": [
+            {
+              "taskName": "certWorkFlowTask",
+              "arguments": [
+                {
+                  "key": "api-server",
+                  "value": "cert.com"
+                }
+              ]
+            },
+            {
+              "taskName": "adGroupWorkFlowTask",
+              "arguments": [
+                {
+                  "key": "api-server",
+                  "value": "adgroup.com"
+                }
+              ]
+            },
+            {
+             "taskName": "dynatraceWorkFlowTask",
+             "arguments": [
+               {
+                 "key": "api-server",
+                 "value": "dynatrace.com"
+               }
+             ]
+            }
+          ]
+        }' | jq -r '.workFlowExecutionId')"
   echo "                                               "
   echo "                                               "
   echo "Onboarding workflow execution id:" $(echo_green $EXECUTION_ID)
@@ -199,8 +215,9 @@ run_complex_flow() {
     -H 'Content-Type: application/json' \
     -d '{
           "projectId": "'$PROJECT_ID'",
-      "workFlowName": "'"$ONBOARDING_WORKFLOW_CHECKER_NAME"'",
-      "workFlowTasks": []
+          "workFlowName": "'"$ONBOARDING_WORKFLOW_CHECKER_NAME"'",
+          "arguments": [],
+          "workFlowTasks": []
     }' | jq -r '.workFlowExecutionId')"
 
   echo "Onboarding workflow Checker execution id:" $(echo_green $EXECUTION_ID)
@@ -218,6 +235,7 @@ run_complex_flow() {
     -d '{
           "projectId": "'$PROJECT_ID'",
         "workFlowName": "'$NAMESPACE_WORKFLOW_NAME'",
+          "arguments": [],
         "workFlowTasks": []
       }' | jq -r '.workFlowExecutionId')"
 
@@ -237,12 +255,12 @@ run_complex_flow() {
     -d '{
           "projectId": "'$PROJECT_ID'",
         "workFlowName": "'$NAMESPACE_WORKFLOW_CHECKER_NAME'",
+          "arguments": [],
         "workFlowTasks": []
       }' | jq -r '.workFlowExecutionId')"
 
   [ ${#EXECUTION_ID} -eq "36" ] || @fail "There is no valid EXECUTION_ID: '${EXECUTION_ID}'"
   echo "Namespace workflow Checker execution id:" $(echo_green $EXECUTION_ID)
-
 
   NETWORK_WORKFLOW_ID=$(get_next_workflow "$NAMESPACE_WORKFLOW_ID")
   [ ${#NETWORK_WORKFLOW_ID} -eq "36" ] || @fail "There is no valid NETWORK_WORKFLOW_ID: '${NETWORK_WORKFLOW_ID}'"
@@ -258,6 +276,7 @@ run_complex_flow() {
     -d '{
           "projectId": "'$PROJECT_ID'",
         "workFlowName": "'$NETWORK_WORKFLOW_NAME'",
+          "arguments": [],
         "workFlowTasks": []
       }' | jq -r '.workFlowExecutionId')"
   echo "network workflow execution id:" $(echo_green $EXECUTION_ID)

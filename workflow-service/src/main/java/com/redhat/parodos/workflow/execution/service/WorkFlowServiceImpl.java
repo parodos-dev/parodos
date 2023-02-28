@@ -19,6 +19,7 @@ import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.WorkFlowStatus;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
+import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO.WorkFlowTaskRequestDTO.ArgumentRequestDTO;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
@@ -30,13 +31,14 @@ import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import java.util.stream.Collectors;
 
 /**
  * Workflow execution service implementation
@@ -68,7 +70,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
 	@Override
 	public WorkReport execute(String projectId, String workFlowName,
-			Map<String, Map<String, String>> workFlowTaskArguments) {
+			Map<String, Map<String, String>> workFlowTaskArguments, Map<String, String> workFlowArguments) {
 		WorkFlow workFlow = workFlowDelegate.getWorkFlowExecutionByName(workFlowName);
 		if (workFlow == null) {
 			log.error("workflow '{}' is not found!", workFlowName);
@@ -78,8 +80,8 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
 		log.info("execute workFlow '{}': {}", workFlowName, workFlow);
 		WorkContext workContext = workFlowDelegate.getWorkFlowContext(
-				workFlowDefinitionRepository.findByName(workFlowName).stream().findFirst().get(),
-				workFlowTaskArguments);
+				workFlowDefinitionRepository.findByName(workFlowName).stream().findFirst().get(), workFlowTaskArguments,
+				workFlowArguments);
 		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.PROJECT, WorkContextDelegate.Resource.ID,
 				projectId);
 		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION,

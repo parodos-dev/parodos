@@ -56,4 +56,6 @@ public class WorkFlowExecution extends AbstractEntity {
 	@Column(name = "project_id")
 	private UUID projectId;
 
+	private String arguments;
+
 }
