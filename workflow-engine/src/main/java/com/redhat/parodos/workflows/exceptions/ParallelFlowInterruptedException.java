@@ -13,21 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.notification.exceptions;
+package com.redhat.parodos.workflows.exceptions;
 
 /**
- * The StateNotFoundOrUnsupportedException wraps unchecked standard Java exception and
- * enriches them with a custom error code. You can use this execution when a Notification
- * State is not found or is unsupported.
+ * The ParallelFlowInterruptedException wraps unchecked standard Java exception and
+ * enriches them with a custom error code. You can use this execution when a flow is
+ * interrupted during a parallel execution.
  *
  * @author Gloria Ciavarrini (Github: gciavarrini)
  */
-public class StateNotFoundOrUnsupportedException extends RuntimeException {
+
+public class ParallelFlowInterruptedException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 
-	public StateNotFoundOrUnsupportedException(String message) {
-		super(message);
+	public ParallelFlowInterruptedException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
 }

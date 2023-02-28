@@ -26,19 +26,8 @@ public class SearchByStateAndTermNotSupportedException extends RuntimeException 
 
 	private static final long serialVersionUID = 1L;
 
-	public SearchByStateAndTermNotSupportedException() {
-	}
-
 	public SearchByStateAndTermNotSupportedException(String message) {
 		super(message);
-	}
-
-	public SearchByStateAndTermNotSupportedException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	public SearchByStateAndTermNotSupportedException(Throwable cause) {
-		super(cause);
 	}
 
 }

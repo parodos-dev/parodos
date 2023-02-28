@@ -27,19 +27,8 @@ public class NotificationRecordNotFoundException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public NotificationRecordNotFoundException() {
-	}
-
 	public NotificationRecordNotFoundException(String message) {
 		super(message);
-	}
-
-	public NotificationRecordNotFoundException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	public NotificationRecordNotFoundException(Throwable cause) {
-		super(cause);
 	}
 
 }

@@ -27,15 +27,8 @@ public class WorkflowDefinitionException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public WorkflowDefinitionException() {
-	}
-
 	public WorkflowDefinitionException(String message) {
 		super(message);
-	}
-
-	public WorkflowDefinitionException(String message, Throwable cause) {
-		super(message, cause);
 	}
 
 	public WorkflowDefinitionException(Throwable cause) {
