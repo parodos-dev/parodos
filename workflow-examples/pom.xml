@@ -1,49 +1,58 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <artifactId>workflow-examples</artifactId>
-  <name>workflow-examples</name>
-
-        <parent>
-            <groupId>com.redhat.parodos</groupId>
-            <artifactId>parados-parent</artifactId>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>workflow-examples</artifactId>
+    <name>workflow-examples</name>
+    <url>https://github.com/redhat-developer/parodos</url>
+    <parent>
+        <groupId>dev.parodos</groupId>
+        <artifactId>parados-parent</artifactId>
+        <version>${revision}</version>
+    </parent>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <scm>
+        <connection>scm:git:git://github.com/redhat-developer/parodos.git</connection>
+        <developerConnection>scm:git:ssh://github.com/redhat-developer/parodos.git</developerConnection>
+        <url>http://github.com/redhat-developer/parodos/tree/master</url>
+    </scm>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>11</java.version>
+        <junit.version>4.13.1</junit.version>
+        <assertj.version>3.17.2</assertj.version>
+        <mockito.version>3.5.13</mockito.version>
+        <slf4j.version>1.7.30</slf4j.version>
+        <lombok.version>1.18.24</lombok.version>
+        <spring.framework.version>5.3.10</spring.framework.version>
+        <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.framework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.framework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>dev.parodos</groupId>
+            <artifactId>workflow-engine</artifactId>
             <version>${revision}</version>
-        </parent>
-  
-        <properties>
-            <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-            <java.version>11</java.version>
-            <junit.version>4.13.1</junit.version>
-            <assertj.version>3.17.2</assertj.version>
-            <mockito.version>3.5.13</mockito.version>
-            <slf4j.version>1.7.30</slf4j.version>
-            <lombok.version>1.18.24</lombok.version>
-            <spring.framework.version>5.3.10</spring.framework.version>
-            <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
-            <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-            <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
-        </properties>
-	
-		<dependencies>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>${spring.framework.version}</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.springframework</groupId>
-		    <artifactId>spring-web</artifactId>
-		    <version>${spring.framework.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.redhat.parodos</groupId>
-			<artifactId>workflow-engine</artifactId>
-			<version>${revision}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.redhat.parodos</groupId>
-			<artifactId>parodos-model-api</artifactId>
-			<version>${revision}</version>
-		</dependency>
+        </dependency>
+        <dependency>
+            <groupId>dev.parodos</groupId>
+            <artifactId>parodos-model-api</artifactId>
+            <version>${revision}</version>
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -54,32 +63,25 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
         </dependency>
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.assertj</groupId>
-                <artifactId>assertj-core</artifactId>
-                <version>${assertj.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-inline</artifactId>
-                <version>${mockito.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-simple</artifactId>
-                <version>${slf4j.version}</version>
-                <scope>test</scope>
-            </dependency>
-	</dependencies>
-
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <plugin>
@@ -108,6 +110,4 @@
             </plugin>
         </plugins>
     </build>
-	
-	
 </project>

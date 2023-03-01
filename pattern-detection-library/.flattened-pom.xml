@@ -3,14 +3,26 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.redhat.parodos</groupId>
+    <groupId>dev.parodos</groupId>
     <artifactId>parados-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
-  <groupId>com.redhat.parodos</groupId>
+  <groupId>dev.parodos</groupId>
   <artifactId>pattern-detection-library</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <name>pattern-detection-library</name>
+  <url>https://github.com/redhat-developer/parodos</url>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+  <scm>
+    <connection>scm:git:git://github.com/redhat-developer/parodos.git</connection>
+    <developerConnection>scm:git:ssh://github.com/redhat-developer/parodos.git</developerConnection>
+    <url>http://github.com/redhat-developer/parodos/tree/master</url>
+  </scm>
   <properties>
     <maven.compiler.release>11</maven.compiler.release>
     <slf4j-simple.version>1.7.30</slf4j-simple.version>
@@ -39,7 +51,7 @@
       <version>${jackson.dataformat.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.redhat.parodos</groupId>
+      <groupId>dev.parodos</groupId>
       <artifactId>workflow-engine</artifactId>
       <version>${revision}</version>
     </dependency>
