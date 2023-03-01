@@ -17,6 +17,10 @@ package com.redhat.parodos.notification.service;
 
 import com.redhat.parodos.notification.enums.Operation;
 import com.redhat.parodos.notification.enums.State;
+import com.redhat.parodos.notification.exceptions.NotificationRecordNotFoundException;
+import com.redhat.parodos.notification.exceptions.SearchByStateAndTermNotSupportedException;
+import com.redhat.parodos.notification.exceptions.UnsupportedStateException;
+import com.redhat.parodos.notification.exceptions.UsernameNotFoundException;
 import com.redhat.parodos.notification.jpa.entity.NotificationMessage;
 import com.redhat.parodos.notification.jpa.entity.NotificationRecord;
 import com.redhat.parodos.notification.jpa.entity.NotificationUser;
@@ -37,7 +41,6 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 
 /**
  * @author Nir Argaman (Github: nirarg)
@@ -88,7 +91,7 @@ public class NotificationRecordServiceTests {
 
 		// Notification User doesn't exist
 		Mockito.when(this.notificationUserRepository.findByUsername(userName)).thenReturn(emptyOptional);
-		Exception exception = assertThrows(RuntimeException.class, () -> {
+		Exception exception = assertThrows(UsernameNotFoundException.class, () -> {
 			this.notificationRecordServiceImpl.getNotificationRecords(pageable, userName, State.UNREAD, searchTerm);
 		});
 		assertEquals(String.format("Username %s not found", userName), exception.getMessage());
@@ -141,7 +144,7 @@ public class NotificationRecordServiceTests {
 
 		// Notification User exists, state and searchTerm valid - exception expected
 		Mockito.when(this.notificationUserRepository.findByUsername(userName)).thenReturn(validOptional);
-		exception = assertThrows(RuntimeException.class, () -> {
+		exception = assertThrows(SearchByStateAndTermNotSupportedException.class, () -> {
 			this.notificationRecordServiceImpl.getNotificationRecords(pageable, userName, State.UNREAD, searchTerm);
 		});
 		assertEquals("Search by state and search term combined not supported", exception.getMessage());
@@ -171,7 +174,7 @@ public class NotificationRecordServiceTests {
 			}
 			else {
 				// Test state value is not "UNREAD", exception is expected
-				Exception exception = assertThrows(RuntimeException.class, () -> {
+				Exception exception = assertThrows(UnsupportedStateException.class, () -> {
 					this.notificationRecordServiceImpl.countNotificationRecords(userName, state);
 				});
 				assertEquals(String.format("State %s is not supported", state), exception.getMessage());
@@ -190,7 +193,7 @@ public class NotificationRecordServiceTests {
 		// expected
 		for (Operation operation : Operation.values()) {
 			Mockito.when(this.notificationRecordRepository.findById(uuid)).thenReturn(emptyOptional);
-			Exception exception = assertThrows(RuntimeException.class, () -> {
+			Exception exception = assertThrows(NotificationRecordNotFoundException.class, () -> {
 				this.notificationRecordServiceImpl.updateNotificationStatus(uuid, operation);
 			});
 			assertEquals(String.format("Could not find NotificationRecord for id = %s", uuid), exception.getMessage());

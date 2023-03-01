@@ -19,7 +19,7 @@ import com.redhat.parodos.notification.enums.Operation;
 import com.redhat.parodos.notification.enums.SearchCriteria;
 import com.redhat.parodos.notification.enums.State;
 import com.redhat.parodos.notification.exceptions.NotificationRecordNotFoundException;
-import com.redhat.parodos.notification.exceptions.StateNotFoundOrUnsupportedException;
+import com.redhat.parodos.notification.exceptions.UnsupportedStateException;
 import com.redhat.parodos.notification.exceptions.UsernameNotFoundException;
 import com.redhat.parodos.notification.jpa.entity.NotificationMessage;
 import com.redhat.parodos.notification.jpa.entity.NotificationRecord;
@@ -105,7 +105,7 @@ public class NotificationRecordServiceImpl implements NotificationRecordService 
 						.map(notificationRecordRepository::countDistinctByReadFalseAndNotificationUserListContaining)
 						.orElse(0);
 			default:
-				throw new StateNotFoundOrUnsupportedException(String.format("State %s is not supported", state));
+				throw new UnsupportedStateException(String.format("State %s is not supported", state));
 		}
 	}
 

@@ -22,11 +22,11 @@ package com.redhat.parodos.notification.exceptions;
  *
  * @author Gloria Ciavarrini (Github: gciavarrini)
  */
-public class StateNotFoundOrUnsupportedException extends RuntimeException {
+public class UnsupportedStateException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public StateNotFoundOrUnsupportedException(String message) {
+	public UnsupportedStateException(String message) {
 		super(message);
 	}
 
