@@ -23,6 +23,8 @@ import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import com.redhat.parodos.workflow.exceptions.WorkflowDefinitionException;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 
@@ -56,7 +58,7 @@ public class WorkFlowTaskDefinitionDTOConverter
 						.build();
 			}
 			catch (JsonProcessingException e) {
-				throw new RuntimeException(e);
+				throw new WorkflowDefinitionException(e);
 			}
 		}).collect(Collectors.toList());
 	}

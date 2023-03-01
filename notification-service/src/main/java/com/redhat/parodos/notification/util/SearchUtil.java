@@ -4,6 +4,7 @@ import static java.util.Objects.isNull;
 
 import com.redhat.parodos.notification.enums.SearchCriteria;
 import com.redhat.parodos.notification.enums.State;
+import com.redhat.parodos.notification.exceptions.SearchByStateAndTermNotSupportedException;
 
 /**
  * Notification records search util
@@ -30,7 +31,7 @@ public class SearchUtil {
 		else if (isStateUnset) {
 			return SearchCriteria.BY_USERNAME_AND_SEARCH_TERM;
 		}
-		throw new RuntimeException("Search by state and search term combined not supported");
+		throw new SearchByStateAndTermNotSupportedException("Search by state and search term combined not supported");
 	}
 
 }

@@ -22,6 +22,7 @@ import com.redhat.parodos.workflow.annotation.Checker;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
 import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
+import com.redhat.parodos.workflow.exceptions.WorkflowDefinitionException;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import javax.annotation.PostConstruct;
@@ -135,7 +136,7 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 							metadata.getAnnotationAttributes(clazz.getName())))
 					.orElseThrow(() -> new RuntimeException("workflow missing type!"));
 		}
-		throw new RuntimeException("workflow with no annotated type metadata!");
+		throw new WorkflowDefinitionException("workflow with no annotated type metadata!");
 	}
 
 	@Override
