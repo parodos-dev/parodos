@@ -59,9 +59,7 @@ public class SecureAPIGetTestTask extends BaseInfrastructureWorkFlowTask {
 			String username = getParameterValue(workContext, USERNAME);
 			String password = getParameterValue(workContext, PASSWORD);
 			log.info("Calling: urlString: {} username: {}", urlString, username);
-			RestTemplate restTemplate = new RestTemplate();
-			ResponseEntity<String> result = restTemplate.exchange(urlString, HttpMethod.GET,
-					getRequestWithHeaders(username, password), String.class);
+			ResponseEntity<String> result = restExchange(urlString, username, password);
 			if (result.getStatusCode().is2xxSuccessful()) {
 				log.info("Rest call completed: {}", result.getBody());
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
@@ -75,14 +73,26 @@ public class SecureAPIGetTestTask extends BaseInfrastructureWorkFlowTask {
 		return new DefaultWorkReport(WorkStatus.FAILED, workContext);
 	}
 
+	ResponseEntity<String> restExchange(String urlString, String username, String password) {
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<String> result = restTemplate.exchange(urlString, HttpMethod.GET,
+				getRequestWithHeaders(username, password), String.class);
+		return result;
+	}
+
 	HttpEntity<String> getRequestWithHeaders(String username, String password) {
+		String base64Creds = getBase64Creds(username, password);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "Basic " + base64Creds);
+		return new HttpEntity<String>(headers);
+	}
+
+	String getBase64Creds(String username, String password) {
 		String plainCreds = username + ":" + password;
 		byte[] plainCredsBytes = plainCreds.getBytes();
 		byte[] base64CredsBytes = Base64.getEncoder().encode(plainCredsBytes);
 		String base64Creds = new String(base64CredsBytes);
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Authorization", "Basic " + base64Creds);
-		return new HttpEntity<String>(headers);
+		return base64Creds;
 	}
 
 	@Override
