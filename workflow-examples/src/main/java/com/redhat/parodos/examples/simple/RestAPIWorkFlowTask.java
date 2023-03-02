@@ -15,11 +15,6 @@
  */
 package com.redhat.parodos.examples.simple;
 
-import java.util.List;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-
 import com.redhat.parodos.workflow.task.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
@@ -29,6 +24,10 @@ import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 /**
  * rest api task execution
@@ -58,8 +57,7 @@ public class RestAPIWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 			String urlString = getParameterValue(workContext, urlDefinedAtTaskCreation);
 			String payload = getParameterValue(workContext, PAYLOAD_PASSED_IN_FROM_SERVICE);
 			log.info("Running Task REST API Call: urlString: {} payload: {} ", urlString, payload);
-			RestTemplate restTemplate = new RestTemplate();
-			ResponseEntity<String> result = restTemplate.postForEntity(urlString, payload, String.class);
+			ResponseEntity<String> result = executePost(urlString, payload);
 			if (result.getStatusCode().is2xxSuccessful()) {
 				log.info("Rest call completed: {}", result.getBody());
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
@@ -68,9 +66,13 @@ public class RestAPIWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 		}
 		catch (Exception e) {
 			log.error("There was an issue with the REST call: {}", e.getMessage());
-
 		}
 		return new DefaultWorkReport(WorkStatus.FAILED, workContext);
+	}
+
+	ResponseEntity<String> executePost(String urlString, String payload) {
+		RestTemplate restTemplate = new RestTemplate();
+		return restTemplate.postForEntity(urlString, payload, String.class);
 	}
 
 	@Override
