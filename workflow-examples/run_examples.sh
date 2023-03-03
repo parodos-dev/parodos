@@ -137,7 +137,7 @@ run_complex_flow() {
           "projectId": "'$PROJECT_ID'",
           "workFlowName": "onboardingAssessment_ASSESSMENT_WORKFLOW",
           "arguments": [],
-          "workFlowTasks": []
+          "works": []
         }' | jq -r '.workFlowOptions.newOptions[0].workFlowName')
   echo "The Following Option Is Available:" $(echo_green ${INFRASTRUCTURE_OPTION})
   [ ${#INFRASTRUCTURE_OPTION} -gt "10" ] || @fail "There is no valid INFRASTRUCTURE_OPTION"
@@ -167,9 +167,9 @@ run_complex_flow() {
               "value": "Peter"
             }
           ],
-          "workFlowTasks": [
+          "works": [
             {
-              "taskName": "certWorkFlowTask",
+              "workName": "certWorkFlowTask",
               "arguments": [
                 {
                   "key": "api-server",
@@ -178,7 +178,7 @@ run_complex_flow() {
               ]
             },
             {
-              "taskName": "adGroupWorkFlowTask",
+              "workName": "adGroupWorkFlowTask",
               "arguments": [
                 {
                   "key": "api-server",
@@ -187,7 +187,7 @@ run_complex_flow() {
               ]
             },
             {
-             "taskName": "dynatraceWorkFlowTask",
+             "workName": "dynatraceWorkFlowTask",
              "arguments": [
                {
                  "key": "api-server",
@@ -217,7 +217,7 @@ run_complex_flow() {
           "projectId": "'$PROJECT_ID'",
           "workFlowName": "'"$ONBOARDING_WORKFLOW_CHECKER_NAME"'",
           "arguments": [],
-          "workFlowTasks": []
+          "works": []
     }' | jq -r '.workFlowExecutionId')"
 
   echo "Onboarding workflow Checker execution id:" $(echo_green $EXECUTION_ID)
@@ -236,7 +236,7 @@ run_complex_flow() {
           "projectId": "'$PROJECT_ID'",
         "workFlowName": "'$NAMESPACE_WORKFLOW_NAME'",
           "arguments": [],
-        "workFlowTasks": []
+        "works": []
       }' | jq -r '.workFlowExecutionId')"
 
   echo "Executing the WorkFlowChecker (namespaceWorkFlowCheck)."
@@ -256,7 +256,7 @@ run_complex_flow() {
           "projectId": "'$PROJECT_ID'",
         "workFlowName": "'$NAMESPACE_WORKFLOW_CHECKER_NAME'",
           "arguments": [],
-        "workFlowTasks": []
+        "works": []
       }' | jq -r '.workFlowExecutionId')"
 
   [ ${#EXECUTION_ID} -eq "36" ] || @fail "There is no valid EXECUTION_ID: '${EXECUTION_ID}'"
@@ -277,7 +277,7 @@ run_complex_flow() {
           "projectId": "'$PROJECT_ID'",
         "workFlowName": "'$NETWORK_WORKFLOW_NAME'",
           "arguments": [],
-        "workFlowTasks": []
+        "works": []
       }' | jq -r '.workFlowExecutionId')"
   echo "network workflow execution id:" $(echo_green $EXECUTION_ID)
 }

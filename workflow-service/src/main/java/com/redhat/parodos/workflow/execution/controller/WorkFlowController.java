@@ -69,10 +69,10 @@ public class WorkFlowController {
 	public ResponseEntity<WorkFlowResponseDTO> execute(@RequestBody @Valid WorkFlowRequestDTO workFlowRequestDTO) {
 		WorkReport workReport = workFlowService.execute(workFlowRequestDTO.getProjectId(),
 				workFlowRequestDTO.getWorkFlowName(),
-				WorkFlowDTOUtil.convertWorkFlowTaskRequestDTOListToMap(workFlowRequestDTO.getWorkFlowTasks()),
+				WorkFlowDTOUtil.convertWorkFlowTaskRequestDTOListToMap(workFlowRequestDTO.getWorks()),
 				workFlowRequestDTO.getArguments().stream()
-						.collect(Collectors.toMap(WorkFlowRequestDTO.WorkFlowTaskRequestDTO.ArgumentRequestDTO::getKey,
-								WorkFlowRequestDTO.WorkFlowTaskRequestDTO.ArgumentRequestDTO::getValue)));
+						.collect(Collectors.toMap(WorkFlowRequestDTO.WorkRequestDTO.ArgumentRequestDTO::getKey,
+								WorkFlowRequestDTO.WorkRequestDTO.ArgumentRequestDTO::getValue)));
 		return ResponseEntity.ok(WorkFlowResponseDTO.builder()
 				.workFlowExecutionId(WorkContextDelegate.read(workReport.getWorkContext(),
 						WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ID).toString())

@@ -29,6 +29,8 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.util.ArrayList;
@@ -81,5 +83,12 @@ public class WorkFlowDefinition extends AbstractEntity {
 	@Convert(converter = WorkFlowParametersConverter.class)
 	@Builder.Default
 	private Set<WorkFlowTaskParameter> parameters = new HashSet<>();
+
+	@ManyToOne
+	@JoinColumn(name = "parent_id")
+	private WorkFlowDefinition parentWorkFlowDefinition;
+
+	@OneToMany(mappedBy = "parentWorkFlowDefinition", cascade = { CascadeType.ALL })
+	private List<WorkFlowDefinition> subWorkFlows = new ArrayList<>();
 
 }

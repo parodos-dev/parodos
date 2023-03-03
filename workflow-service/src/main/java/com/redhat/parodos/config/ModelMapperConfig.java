@@ -46,7 +46,7 @@ public class ModelMapperConfig {
 	private void addWorkFlowDefinitionResponseDTOMapping(ModelMapper modelMapper) {
 		PropertyMap<WorkFlowDefinition, WorkFlowDefinitionResponseDTO> workFlowDefinitionResponseDTOMap = new PropertyMap<>() {
 			protected void configure() {
-				using(new WorkFlowTaskDefinitionDTOConverter()).map(source.getWorkFlowTaskDefinitions()).setTasks(null);
+				using(new WorkFlowTaskDefinitionDTOConverter()).map(source.getWorkFlowTaskDefinitions()).setWorks(null);
 			}
 		};
 		modelMapper.addMappings(workFlowDefinitionResponseDTOMap);

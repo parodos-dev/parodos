@@ -38,12 +38,23 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class WorkFlowTaskDefinitionResponseDTO {
+public class WorkDefinitionResponseDTO {
 
 	private String id;
 
 	private String name;
 
+	// workType of workflow or task
+	private String workType;
+
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private String author;
+
+	// recursive works
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private List<WorkDefinitionResponseDTO> works;
+
+	// rename to WorkParameter
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private List<WorkFlowTaskParameter> parameters;
 
