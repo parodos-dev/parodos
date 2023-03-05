@@ -31,4 +31,6 @@ public interface WorkFlowRegistry<T> {
 
 	WorkFlow getWorkFlowByName(T workFlowName);
 
+	WorkFlow getMasterWorkFlow(T workFlowName);
+
 }

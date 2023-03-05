@@ -17,19 +17,20 @@ package com.redhat.parodos.workflow.registry;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.workflow.WorkFlowType;
-import com.redhat.parodos.workflow.annotation.Assessment;
 import com.redhat.parodos.workflow.annotation.Checker;
-import com.redhat.parodos.workflow.annotation.Infrastructure;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
 import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
+import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
+import com.redhat.parodos.workflows.work.Work;
+import com.redhat.parodos.workflows.workflow.ParallelFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import javax.annotation.PostConstruct;
 import java.lang.annotation.Annotation;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -60,6 +61,8 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 
 	private final Map<String, WorkFlowTask> workFlowTaskMap;
 
+	private Map<String, WorkFlow> masterWorkFlows = new HashMap<>();
+
 	public BeanWorkFlowRegistryImpl(ConfigurableListableBeanFactory beanFactory,
 			WorkFlowDefinitionServiceImpl workFlowDefinitionService, Map<String, WorkFlowTask> workFlowTaskMap,
 			Map<String, WorkFlow> workFlows) {
@@ -82,23 +85,96 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 	@PostConstruct
 	void postInit() {
 		workFlows.forEach((key, value) -> saveWorkFlow(value, key));
+		log.info("print workflow masterWorkFlow: {}", masterWorkFlows);
 		saveChecker(workFlowTaskMap);
+	}
+
+	@Override
+	public WorkFlow getWorkFlowByName(String workFlowName) {
+		return workFlows.get(workFlowName);
+	}
+
+	@Override
+	public WorkFlow getMasterWorkFlow(String workFlowName) {
+		return masterWorkFlows.get(workFlowName);
 	}
 
 	private void saveWorkFlow(Object bean, String name) {
 		Map<String, WorkFlowTask> hmWorkFlowTasks = new HashMap<>();
-		Arrays.stream(beanFactory.getDependenciesForBean(name)).filter(dependency -> {
+		Map<String, WorkFlow> hmWorkFlowCheckers = new HashMap<>();
+
+		List<Work> works = getWorkUnits(bean, name);
+		log.info("print workflow: {}, works: {}", name, works);
+
+		List<WorkFlow> workFlowCheckers = new ArrayList<>();
+		works.forEach(w -> scanWorkFlowChecker(w, workFlowCheckers));
+		log.info("print workFlowCheckers contain in workflow {}: {}", name, workFlowCheckers);
+		if (!workFlowCheckers.isEmpty()) {
+			WorkFlow masterWorkFlow = buildMasterWorkFlow(bean, name, workFlowCheckers);
+			log.info("master workflow from user workflow: {}, is {}, {}", name, masterWorkFlow.getName(),
+					masterWorkFlow);
+			masterWorkFlows.put(name, masterWorkFlow);
+		}
+
+		// workFlowDefinitionService.save(name, ((WorkFlow) bean).getName(),
+		// getWorkFlowTypeDetails(name, List.of(Assessment.class, Checker.class,
+		// Infrastructure.class)).getFirst(),
+		// hmWorkFlowTasks);
+
+	}
+
+	private List<Work> getWorkUnits(Object bean, String name) {
+		return Arrays.stream(beanFactory.getDependenciesForBean(name)).filter(dependency -> {
 			try {
-				beanFactory.getBean(dependency, WorkFlowTask.class);
+				beanFactory.getBean(dependency, WorkFlow.class);
 				return true;
 			}
-			catch (BeansException e) {
-				return false;
+			catch (BeansException e1) {
+				try {
+					beanFactory.getBean(dependency, WorkFlowTask.class);
+					return true;
+				}
+				catch (BeansException e2) {
+					return false;
+				}
 			}
-		}).forEach(dependency -> hmWorkFlowTasks.put(dependency, beanFactory.getBean(dependency, WorkFlowTask.class)));
-		workFlowDefinitionService.save(name, ((WorkFlow) bean).getName(),
-				getWorkFlowTypeDetails(name, List.of(Assessment.class, Checker.class, Infrastructure.class)).getFirst(),
-				hmWorkFlowTasks);
+		}).map(dependency -> beanFactory.getBean(dependency, Work.class)).collect(Collectors.toList());
+	}
+
+	private void scanWorkFlowChecker(Work work, List workFlowCheckers) {
+		if (work instanceof BaseInfrastructureWorkFlowTask) {
+			BaseInfrastructureWorkFlowTask baseInfrastructureWorkFlowTask = (BaseInfrastructureWorkFlowTask) work;
+			if (null != baseInfrastructureWorkFlowTask.getWorkFlowChecker()) {
+				workFlowCheckers.add(baseInfrastructureWorkFlowTask.getWorkFlowChecker());
+			}
+		}
+		else if (work instanceof WorkFlow) {
+			Arrays.stream(beanFactory.getDependenciesForBean(work.getName())).filter(dependency -> {
+				try {
+					beanFactory.getBean(dependency, WorkFlow.class);
+					return true;
+				}
+				catch (BeansException e1) {
+					try {
+						beanFactory.getBean(dependency, WorkFlowTask.class);
+						return true;
+					}
+					catch (BeansException e2) {
+						return false;
+					}
+				}
+			}).forEach(
+					dependency -> scanWorkFlowChecker(beanFactory.getBean(dependency, Work.class), workFlowCheckers));
+		}
+	}
+
+	private WorkFlow buildMasterWorkFlow(Object bean, String name, List<WorkFlow> workFlowCheckers) {
+		List<Work> workUnits = new ArrayList<>();
+		workUnits.add((Work) bean);
+		workUnits.addAll(workFlowCheckers);
+		WorkFlow masterWorkFlow = ParallelFlow.Builder.aNewParallelFlow().named("master_" + name)
+				.execute(workUnits.toArray(new Work[0])).with(Executors.newFixedThreadPool(workUnits.size())).build();
+		return masterWorkFlow;
 	}
 
 	private void saveChecker(Map<String, WorkFlowTask> workFlowTaskMap) {
@@ -136,11 +212,6 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 					.orElseThrow(() -> new RuntimeException("workflow missing type!"));
 		}
 		throw new RuntimeException("workflow with no annotated type metadata!");
-	}
-
-	@Override
-	public WorkFlow getWorkFlowByName(String workFlowName) {
-		return workFlows.get(workFlowName);
 	}
 
 }
