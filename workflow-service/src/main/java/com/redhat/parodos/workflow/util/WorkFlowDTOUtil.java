@@ -35,12 +35,12 @@ import java.util.Map;
 public class WorkFlowDTOUtil {
 
 	public static Map<String, Map<String, String>> convertWorkFlowTaskRequestDTOListToMap(
-			List<WorkFlowRequestDTO.WorkFlowTaskRequestDTO> workFlowTaskRequestDTOs) {
+			List<WorkFlowRequestDTO.WorkRequestDTO> workRequestDTOS) {
 		Map<String, Map<String, String>> output = new HashMap<>();
-		workFlowTaskRequestDTOs.forEach(arg -> {
+		workRequestDTOS.forEach(arg -> {
 			Map<String, String> hm = new HashMap<>();
 			arg.getArguments().forEach(i -> hm.put(i.getKey(), i.getValue()));
-			output.put(arg.getTaskName(), hm);
+			output.put(arg.getWorkName(), hm);
 		});
 		return output;
 	}

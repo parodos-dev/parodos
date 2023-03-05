@@ -53,6 +53,6 @@ public class WorkFlowDefinitionResponseDTO {
 	private List<WorkFlowTaskParameter> parameters;
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private List<WorkFlowTaskDefinitionResponseDTO> tasks;
+	private List<WorkDefinitionResponseDTO> works;
 
 }
