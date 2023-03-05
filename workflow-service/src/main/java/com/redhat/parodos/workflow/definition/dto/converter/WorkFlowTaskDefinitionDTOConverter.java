@@ -18,7 +18,7 @@ package com.redhat.parodos.workflow.definition.dto.converter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.redhat.parodos.workflow.definition.dto.WorkFlowTaskDefinitionResponseDTO;
+import com.redhat.parodos.workflow.definition.dto.WorkDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterScope;
@@ -37,16 +37,16 @@ import java.util.stream.Collectors;
  */
 
 public class WorkFlowTaskDefinitionDTOConverter
-		implements Converter<List<WorkFlowTaskDefinition>, List<WorkFlowTaskDefinitionResponseDTO>> {
+		implements Converter<List<WorkFlowTaskDefinition>, List<WorkDefinitionResponseDTO>> {
 
 	@Override
-	public List<WorkFlowTaskDefinitionResponseDTO> convert(
-			MappingContext<List<WorkFlowTaskDefinition>, List<WorkFlowTaskDefinitionResponseDTO>> context) {
+	public List<WorkDefinitionResponseDTO> convert(
+			MappingContext<List<WorkFlowTaskDefinition>, List<WorkDefinitionResponseDTO>> context) {
 		ObjectMapper objectMapper = new ObjectMapper();
 		List<WorkFlowTaskDefinition> source = context.getSource();
 		return source.stream().map(workFlowTaskDefinition -> {
 			try {
-				return WorkFlowTaskDefinitionResponseDTO.builder().id(workFlowTaskDefinition.getId().toString())
+				return WorkDefinitionResponseDTO.builder().id(workFlowTaskDefinition.getId().toString())
 						.name(workFlowTaskDefinition.getName())
 						.outputs(objectMapper.readValue(workFlowTaskDefinition.getOutputs(), new TypeReference<>() {
 						})).parameters(objectMapper.readValue(workFlowTaskDefinition.getParameters(),

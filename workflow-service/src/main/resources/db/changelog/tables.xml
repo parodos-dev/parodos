@@ -52,6 +52,10 @@
             <column name="modify_date" type="timestamp" defaultValue="${now}"/>
             <column name="commit_id" type="varchar(255)"/>
             <column name="parameters" type="varchar(4000)"/>
+            <column name="parent_id" type="uuid">
+                <constraints nullable="true" foreignKeyName="fk_workflow_definition_parent_workflow_definition"
+                             references="workflow_definition(id)"/>
+            </column>
             <column name="object_version" type="bigint"/>
         </createTable>
 

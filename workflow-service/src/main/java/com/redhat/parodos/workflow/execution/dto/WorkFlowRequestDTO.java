@@ -38,19 +38,22 @@ public class WorkFlowRequestDTO {
 
 	private String workFlowName;
 
-	private List<WorkFlowTaskRequestDTO.ArgumentRequestDTO> arguments;
+	private List<WorkRequestDTO.ArgumentRequestDTO> arguments;
 
-	private List<WorkFlowTaskRequestDTO> workFlowTasks;
+	private List<WorkRequestDTO> works;
 
 	@Data
 	@Builder
 	@AllArgsConstructor
 	@NoArgsConstructor
-	public static class WorkFlowTaskRequestDTO {
+	public static class WorkRequestDTO {
 
-		String taskName;
+		String workName;
 
 		List<ArgumentRequestDTO> arguments;
+
+		// recursive works
+		List<WorkRequestDTO> works;
 
 		@Data
 		@Builder
