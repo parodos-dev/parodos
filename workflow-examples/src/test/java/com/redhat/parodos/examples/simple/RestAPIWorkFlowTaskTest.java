@@ -1,6 +1,7 @@
 package com.redhat.parodos.examples.simple;
 
 import com.redhat.parodos.examples.base.BaseInfrastructureWorkFlowTaskTest;
+import com.redhat.parodos.examples.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
@@ -11,16 +12,15 @@ import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-import static com.redhat.parodos.examples.simple.RestAPIWorkFlowTask.PAYLOAD_PASSED_IN_FROM_SERVICE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
@@ -34,17 +34,23 @@ public class RestAPIWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 
 	private RestAPIWorkFlowTask restAPIWorkflowTask;
 
+	private final String valueUrl = "value_url";
+
+	private final String valuePayload = "value_payload";
+
 	private final String testUrlDefinedAtCreation = "Test_urlDefinedAtTaskCreation";
+
+	private static final String PAYLOAD_PASSED_IN_FROM_SERVICE_TEST = "PAYLOAD_PASSED_IN_FROM_SERVICE";
 
 	@Before
 	public void setUp() {
 		this.restAPIWorkflowTask = spy((RestAPIWorkFlowTask) getConcretePersonImplementation());
 
 		try {
-			doReturn("value_url").when(this.restAPIWorkflowTask).getParameterValue(Mockito.any(WorkContext.class),
+			doReturn(valueUrl).when(this.restAPIWorkflowTask).getParameterValue(Mockito.any(WorkContext.class),
 					eq(testUrlDefinedAtCreation));
-			doReturn("payload").when(this.restAPIWorkflowTask).getParameterValue(Mockito.any(WorkContext.class),
-					eq(PAYLOAD_PASSED_IN_FROM_SERVICE));
+			doReturn(valuePayload).when(this.restAPIWorkflowTask).getParameterValue(Mockito.any(WorkContext.class),
+					eq(PAYLOAD_PASSED_IN_FROM_SERVICE_TEST));
 
 		}
 		catch (MissingParameterException e) {
@@ -61,28 +67,32 @@ public class RestAPIWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 	public void executeSuccess() {
 		// given
 		WorkContext workContext = Mockito.mock(WorkContext.class);
-		doReturn(new ResponseEntity("body", HttpStatus.OK)).when(restAPIWorkflowTask).executePost(anyString(),
-				anyString());
+		try (MockedStatic<RestUtils> restUtilsMockedStatic = Mockito.mockStatic(RestUtils.class)) {
+			restUtilsMockedStatic.when(() -> RestUtils.executePost(eq(valueUrl), eq(valuePayload)))
+					.thenReturn(new ResponseEntity("body", HttpStatus.OK));
+			// when
+			WorkReport workReport = restAPIWorkflowTask.execute(workContext);
 
-		// when
-		WorkReport workReport = restAPIWorkflowTask.execute(workContext);
-
-		// then
-		assertEquals(WorkStatus.COMPLETED, workReport.getStatus());
+			// then
+			assertEquals(WorkStatus.COMPLETED, workReport.getStatus());
+		}
 	}
 
 	@Test
 	public void executeFail() {
 		// given
 		WorkContext workContext = Mockito.mock(WorkContext.class);
-		doReturn(new ResponseEntity("body", HttpStatus.BAD_REQUEST)).when(restAPIWorkflowTask).executePost(anyString(),
-				anyString());
 
-		// when
-		WorkReport workReport = restAPIWorkflowTask.execute(workContext);
+		try (MockedStatic<RestUtils> restUtilsMockedStatic = Mockito.mockStatic(RestUtils.class)) {
+			restUtilsMockedStatic.when(() -> RestUtils.executePost(eq(valueUrl), eq(valuePayload)))
+					.thenReturn(new ResponseEntity("body", HttpStatus.BAD_REQUEST));
 
-		// then
-		assertEquals(WorkStatus.FAILED, workReport.getStatus());
+			// when
+			WorkReport workReport = restAPIWorkflowTask.execute(workContext);
+
+			// then
+			assertEquals(WorkStatus.FAILED, workReport.getStatus());
+		}
 	}
 
 	@Test
@@ -97,7 +107,7 @@ public class RestAPIWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 		assertEquals("The Url of the service (ie: https://httpbin.org/post",
 				workFlowTaskParameters.get(0).getDescription());
 		assertEquals(WorkFlowTaskParameterType.URL, workFlowTaskParameters.get(0).getType());
-		assertEquals(PAYLOAD_PASSED_IN_FROM_SERVICE, workFlowTaskParameters.get(1).getKey());
+		assertEquals(PAYLOAD_PASSED_IN_FROM_SERVICE_TEST, workFlowTaskParameters.get(1).getKey());
 		assertEquals("Json of what to provide for data. (ie: 'Hello!')",
 				workFlowTaskParameters.get(1).getDescription());
 		assertEquals(WorkFlowTaskParameterType.PASSWORD, workFlowTaskParameters.get(1).getType());
