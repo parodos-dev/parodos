@@ -37,7 +37,7 @@ import java.util.List;
  */
 public class OnboardingAssessmentTask extends BaseAssessmentTask {
 
-	static final String INPUT = "INPUT";
+	private static final String INPUT = "INPUT";
 
 	public OnboardingAssessmentTask(WorkFlowOption workflowOption) {
 		super(List.of(workflowOption));
