@@ -1,6 +1,7 @@
 package com.redhat.parodos.examples.simple;
 
 import com.redhat.parodos.examples.base.BaseInfrastructureWorkFlowTaskTest;
+import com.redhat.parodos.examples.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
@@ -11,6 +12,7 @@ import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -18,12 +20,12 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-import static com.redhat.parodos.examples.simple.RestAPIWorkFlowTask.PAYLOAD_PASSED_IN_FROM_SERVICE;
 import static com.redhat.parodos.examples.simple.SecureAPIGetTestTask.PASSWORD;
 import static com.redhat.parodos.examples.simple.SecureAPIGetTestTask.SECURED_URL;
 import static com.redhat.parodos.examples.simple.SecureAPIGetTestTask.USERNAME;
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
@@ -70,19 +72,19 @@ public class SecureAPIGetTestTaskTest extends BaseInfrastructureWorkFlowTaskTest
 	@Test
 	public void executeSuccess() {
 		// given
-
 		WorkContext workContext = Mockito.mock(WorkContext.class);
+		try (MockedStatic<RestUtils> restUtilsMockedStatic = Mockito.mockStatic(RestUtils.class)) {
+			restUtilsMockedStatic.when(() -> RestUtils.restExchange(eq(testUrl), eq(testUsername), eq(testPassword)))
+					.thenReturn(new ResponseEntity<>("body", HttpStatus.OK));
 
-		doReturn(new ResponseEntity("body", HttpStatus.OK)).when(secureAPIGetTestTask).restExchange(eq(testUrl),
-				eq(testUsername), eq(testPassword));
+			// when
+			WorkReport workReport = secureAPIGetTestTask.execute(workContext);
 
-		// when
-		WorkReport workReport = secureAPIGetTestTask.execute(workContext);
-
-		// then
-		assertNull(secureAPIGetTestTask.getWorkFlowChecker());
-		assertEquals(WorkStatus.COMPLETED, workReport.getStatus());
-		Mockito.verifyNoInteractions(workContext);
+			// then
+			assertNull(secureAPIGetTestTask.getWorkFlowChecker());
+			assertEquals(WorkStatus.COMPLETED, workReport.getStatus());
+			Mockito.verifyNoInteractions(workContext);
+		}
 	}
 
 	@Test
@@ -90,16 +92,18 @@ public class SecureAPIGetTestTaskTest extends BaseInfrastructureWorkFlowTaskTest
 		// given
 		WorkContext workContext = Mockito.mock(WorkContext.class);
 
-		// when
-		WorkReport workReport = secureAPIGetTestTask.execute(workContext);
+		try (MockedStatic<RestUtils> restUtilsMockedStatic = Mockito.mockStatic(RestUtils.class)) {
 
-		// then
-		assertNull(secureAPIGetTestTask.getWorkFlowChecker());
-		doReturn(new ResponseEntity("body", HttpStatus.BAD_REQUEST)).when(secureAPIGetTestTask)
-				.restExchange(eq(testUrl), eq(testUsername), eq(testPassword));
+			restUtilsMockedStatic.when(() -> RestUtils.restExchange(eq(testUrl), eq(testUsername), eq(testPassword)))
+					.thenReturn(new ResponseEntity<>("body", HttpStatus.BAD_REQUEST));
+			// when
+			WorkReport workReport = secureAPIGetTestTask.execute(workContext);
 
-		assertEquals(WorkStatus.FAILED, workReport.getStatus());
-		Mockito.verifyNoInteractions(workContext);
+			// then
+			assertNull(secureAPIGetTestTask.getWorkFlowChecker());
+			assertEquals(WorkStatus.FAILED, workReport.getStatus());
+			Mockito.verifyNoInteractions(workContext);
+		}
 	}
 
 	@Test
@@ -118,7 +122,7 @@ public class SecureAPIGetTestTaskTest extends BaseInfrastructureWorkFlowTaskTest
 
 	@Test
 	public void getBase64Creds() {
-		String base64Creds = secureAPIGetTestTask.getBase64Creds(testUsername, testPassword);
+		String base64Creds = RestUtils.getBase64Creds(testUsername, testPassword);
 		assertNotNull(expectedBase64Creds, base64Creds);
 		assertEquals(expectedBase64Creds, base64Creds);
 	}
