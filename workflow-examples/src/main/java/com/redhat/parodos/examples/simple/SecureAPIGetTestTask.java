@@ -46,57 +46,58 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class SecureAPIGetTestTask extends BaseInfrastructureWorkFlowTask {
 
-    public static final String SECURED_URL = "SECURED_URL";
+	public static final String SECURED_URL = "SECURED_URL";
 
-    public static final String USERNAME = "USERNAME";
+	public static final String USERNAME = "USERNAME";
 
-    public static final String PASSWORD = "PASSWORD";
+	public static final String PASSWORD = "PASSWORD";
 
-    /**
-     * Executed by the InfrastructureTask engine as part of the Workflow
-     */
-    public WorkReport execute(WorkContext workContext) {
-        try {
-            String urlString = getParameterValue(workContext, SECURED_URL);
-            String username = getParameterValue(workContext, USERNAME);
-            String password = getParameterValue(workContext, PASSWORD);
-            log.info("Calling: urlString: {} username: {}", urlString, username);
-            ResponseEntity<String> result = RestUtils.restExchange(urlString, username, password);
-            if (result.getStatusCode().is2xxSuccessful()) {
-                log.info("Rest call completed: {}", result.getBody());
-                return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
-            }
-            log.error("Call to the API was not successful. Response: {}", result.getStatusCode());
-        } catch (Exception e) {
-            log.error("There was an issue with the REST call: {}", e.getMessage());
+	/**
+	 * Executed by the InfrastructureTask engine as part of the Workflow
+	 */
+	public WorkReport execute(WorkContext workContext) {
+		try {
+			String urlString = getParameterValue(workContext, SECURED_URL);
+			String username = getParameterValue(workContext, USERNAME);
+			String password = getParameterValue(workContext, PASSWORD);
+			log.info("Calling: urlString: {} username: {}", urlString, username);
+			ResponseEntity<String> result = RestUtils.restExchange(urlString, username, password);
+			if (result.getStatusCode().is2xxSuccessful()) {
+				log.info("Rest call completed: {}", result.getBody());
+				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
+			}
+			log.error("Call to the API was not successful. Response: {}", result.getStatusCode());
+		}
+		catch (Exception e) {
+			log.error("There was an issue with the REST call: {}", e.getMessage());
 
-        }
-        return new DefaultWorkReport(WorkStatus.FAILED, workContext);
-    }
+		}
+		return new DefaultWorkReport(WorkStatus.FAILED, workContext);
+	}
 
-    HttpEntity<String> getRequestWithHeaders(String username, String password) {
-        String base64Creds = RestUtils.getBase64Creds(username, password);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Basic " + base64Creds);
-        return new HttpEntity<String>(headers);
-    }
+	HttpEntity<String> getRequestWithHeaders(String username, String password) {
+		String base64Creds = RestUtils.getBase64Creds(username, password);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "Basic " + base64Creds);
+		return new HttpEntity<String>(headers);
+	}
 
-    @Override
-    public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
-        return List.of(
-                WorkFlowTaskParameter.builder().key(SECURED_URL)
-                        .description("The URL of the Secured API you wish to call").optional(false)
-                        .type(WorkFlowTaskParameterType.URL).build(),
-                WorkFlowTaskParameter.builder().key(USERNAME).description("Please enter your username authentication")
-                        .optional(false).type(WorkFlowTaskParameterType.TEXT).build(),
-                WorkFlowTaskParameter.builder().key(PASSWORD)
-                        .description("Please enter your password for authentication (it will not be stored)")
-                        .optional(false).type(WorkFlowTaskParameterType.PASSWORD).build());
-    }
+	@Override
+	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
+		return List.of(
+				WorkFlowTaskParameter.builder().key(SECURED_URL)
+						.description("The URL of the Secured API you wish to call").optional(false)
+						.type(WorkFlowTaskParameterType.URL).build(),
+				WorkFlowTaskParameter.builder().key(USERNAME).description("Please enter your username authentication")
+						.optional(false).type(WorkFlowTaskParameterType.TEXT).build(),
+				WorkFlowTaskParameter.builder().key(PASSWORD)
+						.description("Please enter your password for authentication (it will not be stored)")
+						.optional(false).type(WorkFlowTaskParameterType.PASSWORD).build());
+	}
 
-    @Override
-    public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
-        return List.of(WorkFlowTaskOutput.HTTP2XX, WorkFlowTaskOutput.OTHER);
-    }
+	@Override
+	public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
+		return List.of(WorkFlowTaskOutput.HTTP2XX, WorkFlowTaskOutput.OTHER);
+	}
 
 }

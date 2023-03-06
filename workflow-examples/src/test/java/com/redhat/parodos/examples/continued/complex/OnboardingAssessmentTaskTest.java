@@ -1,14 +1,11 @@
 package com.redhat.parodos.examples.continued.complex;
 
 import com.redhat.parodos.examples.base.BaseAssessmentTaskTest;
-import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
-import com.redhat.parodos.workflow.option.WorkFlowOptions;
 import com.redhat.parodos.workflow.task.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.assessment.BaseAssessmentTask;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
-import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
@@ -33,6 +30,8 @@ public class OnboardingAssessmentTaskTest extends BaseAssessmentTaskTest {
 	private OnboardingAssessmentTask onboardingAssessmentTask;
 
 	private WorkFlowOption workflowOption;
+
+	private static final String INPUT = "INPUT";
 
 	@Before
 	public void setUp() {
@@ -68,7 +67,7 @@ public class OnboardingAssessmentTaskTest extends BaseAssessmentTaskTest {
 		// then
 		assertNotNull(workFlowTaskParameters);
 		assertEquals(1, workFlowTaskParameters.size());
-		assertEquals(OnboardingAssessmentTask.INPUT, workFlowTaskParameters.get(0).getKey());
+		assertEquals(INPUT, workFlowTaskParameters.get(0).getKey());
 		assertEquals("Enter some information to use for the Assessment to determine if they can onboard",
 				workFlowTaskParameters.get(0).getDescription());
 		assertEquals(WorkFlowTaskParameterType.TEXT, workFlowTaskParameters.get(0).getType());
