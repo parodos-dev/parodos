@@ -15,6 +15,7 @@
  */
 package com.redhat.parodos.examples.simple;
 
+import com.redhat.parodos.examples.utils.RestUtils;
 import com.redhat.parodos.workflow.task.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
@@ -57,7 +58,7 @@ public class RestAPIWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 			String urlString = getParameterValue(workContext, urlDefinedAtTaskCreation);
 			String payload = getParameterValue(workContext, PAYLOAD_PASSED_IN_FROM_SERVICE);
 			log.info("Running Task REST API Call: urlString: {} payload: {} ", urlString, payload);
-			ResponseEntity<String> result = executePost(urlString, payload);
+			ResponseEntity<String> result = RestUtils.executePost(urlString, payload);
 			if (result.getStatusCode().is2xxSuccessful()) {
 				log.info("Rest call completed: {}", result.getBody());
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
@@ -68,11 +69,6 @@ public class RestAPIWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 			log.error("There was an issue with the REST call: {}", e.getMessage());
 		}
 		return new DefaultWorkReport(WorkStatus.FAILED, workContext);
-	}
-
-	ResponseEntity<String> executePost(String urlString, String payload) {
-		RestTemplate restTemplate = new RestTemplate();
-		return restTemplate.postForEntity(urlString, payload, String.class);
 	}
 
 	@Override
