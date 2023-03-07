@@ -21,6 +21,8 @@ import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -37,7 +39,8 @@ public class WorkFlowDTOUtil {
 		Map<String, Map<String, String>> output = new HashMap<>();
 		workFlowTaskRequestDTOs.forEach(arg -> {
 			Map<String, String> hm = new HashMap<>();
-			arg.getArguments().forEach(i -> hm.put(i.getKey(), i.getValue()));
+			Optional.ofNullable(arg.getArguments())
+					.ifPresent(item -> item.forEach(i -> hm.put(i.getKey(), i.getValue())));
 			output.put(arg.getName(), hm);
 		});
 		return output;
