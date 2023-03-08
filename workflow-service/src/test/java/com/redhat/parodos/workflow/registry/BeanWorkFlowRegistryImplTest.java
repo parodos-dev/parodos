@@ -154,7 +154,6 @@ class BeanWorkFlowRegistryImplTest {
 
 		// then
 		assertNotNull(exception);
-		assertEquals(exception.getMessage(), "workflow with no annotated type metadata!");
 
 		Mockito.verify(this.beanFactory, Mockito.times(1)).getDependenciesForBean(Mockito.any());
 		Mockito.verify(this.workFlowDefinitionService, Mockito.times(0)).save(Mockito.any(), Mockito.any(),

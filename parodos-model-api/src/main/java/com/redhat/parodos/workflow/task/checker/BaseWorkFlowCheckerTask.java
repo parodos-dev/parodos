@@ -15,10 +15,15 @@
  */
 package com.redhat.parodos.workflow.task.checker;
 
+import java.util.Date;
+
 import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
 import com.redhat.parodos.workflow.task.WorkFlowTaskType;
+import com.redhat.parodos.workflows.engine.WorkFlowEngineBuilder;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
+import com.redhat.parodos.workflows.work.WorkStatus;
+import com.redhat.parodos.workflows.workflow.WorkFlow;
 
 /**
  * Basic Contract for checking if a manual process initiated by a @see WorkFlowTask has
@@ -29,6 +34,24 @@ import com.redhat.parodos.workflows.work.WorkReport;
 public abstract class BaseWorkFlowCheckerTask extends BaseWorkFlowTask {
 
 	private WorkFlowTaskType type = WorkFlowTaskType.CHECKER;
+
+	/**
+	 * A Workflow that runs when the Checking logic extends a specified SLA (i.e: run
+	 * escalation is Checking exceeds 48 hrs)
+	 */
+	private WorkFlow escalationWorkflow;
+
+	private long expectedCompletionDate;
+
+	public BaseWorkFlowCheckerTask(WorkFlow escalationWorkflow, long expectedSlaBeforeEscalationInSeconds) {
+		super();
+		this.expectedCompletionDate = expectedSlaBeforeEscalationInSeconds;
+		this.escalationWorkflow = escalationWorkflow;
+	}
+
+	public BaseWorkFlowCheckerTask() {
+		super();
+	}
 
 	/**
 	 * Method to check if a WorkFlow that is in a holding status, i.e: waiting for an
@@ -45,7 +68,17 @@ public abstract class BaseWorkFlowCheckerTask extends BaseWorkFlowTask {
 	 */
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		return checkWorkFlowStatus(workContext);
+		// run the checker
+		WorkReport report = checkWorkFlowStatus(workContext);
+		// determine if there is an escalation path for a failing checker
+		if (!(escalationWorkflow == null) && report.getStatus() == WorkStatus.FAILED) {
+			// run escalation if SLA is exceeded
+			if (new Date().getTime() > expectedCompletionDate) {
+				// execute the escalation workflow
+				WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(escalationWorkflow, workContext);
+			}
+		}
+		return report;
 	}
 
 	public WorkFlowTaskType getType() {

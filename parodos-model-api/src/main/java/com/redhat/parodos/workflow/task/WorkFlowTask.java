@@ -15,11 +15,11 @@
  */
 package com.redhat.parodos.workflow.task;
 
+import java.util.Collections;
+import java.util.List;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import com.redhat.parodos.workflows.work.Work;
 import lombok.NonNull;
-
-import java.util.List;
 
 /**
  * Basic Contract for Work in the Infrastructure Service
@@ -29,10 +29,26 @@ import java.util.List;
  */
 public interface WorkFlowTask extends Work {
 
+	/**
+	 * Parameters required for the Task to execute. These are generally obtained from
+	 * the @see WorkContext. The @see BaseWorkFlowTask has a method to simplify getting
+	 * these values
+	 * @return List of @see WorkFlowTaskParameter that need to be obtained from the @see
+	 * WorkContext
+	 */
 	@NonNull
-	List<WorkFlowTaskParameter> getWorkFlowTaskParameters();
+	default List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
+		return Collections.emptyList();
+	}
 
+	/**
+	 * The expected Output/result of the Task.
+	 * @return List of @see WorkFlowTaskOutput
+	 */
 	@NonNull
-	List<WorkFlowTaskOutput> getWorkFlowTaskOutputs();
+	default List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
+		return Collections.emptyList();
+
+	}
 
 }

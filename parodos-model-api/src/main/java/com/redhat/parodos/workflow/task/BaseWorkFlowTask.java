@@ -15,17 +15,19 @@
  */
 package com.redhat.parodos.workflow.task;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.BeanNameAware;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflows.work.WorkContext;
+
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.BeanNameAware;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Base Class for a WorkFlowTask.

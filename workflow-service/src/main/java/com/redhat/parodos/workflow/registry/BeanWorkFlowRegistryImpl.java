@@ -15,29 +15,34 @@
  */
 package com.redhat.parodos.workflow.registry;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.redhat.parodos.workflow.WorkFlowType;
-import com.redhat.parodos.workflow.annotation.Assessment;
-import com.redhat.parodos.workflow.annotation.Checker;
-import com.redhat.parodos.workflow.annotation.Infrastructure;
-import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
-import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
-import com.redhat.parodos.workflow.exceptions.WorkflowDefinitionException;
-import com.redhat.parodos.workflow.task.WorkFlowTask;
-import com.redhat.parodos.workflows.workflow.WorkFlow;
-import javax.annotation.PostConstruct;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import lombok.extern.slf4j.Slf4j;
+
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.redhat.parodos.workflow.WorkFlowType;
+import com.redhat.parodos.workflow.annotation.Assessment;
+import com.redhat.parodos.workflow.annotation.Checker;
+import com.redhat.parodos.workflow.annotation.Escalation;
+import com.redhat.parodos.workflow.annotation.Infrastructure;
+import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
+import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
+import com.redhat.parodos.workflow.exceptions.WorkflowDefinitionException;
+import com.redhat.parodos.workflow.task.WorkFlowTask;
+import com.redhat.parodos.workflows.workflow.WorkFlow;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * An implementation of the WorkflowRegistry that loads all Bean definitions of type
@@ -98,7 +103,8 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 			}
 		}).forEach(dependency -> hmWorkFlowTasks.put(dependency, beanFactory.getBean(dependency, WorkFlowTask.class)));
 		workFlowDefinitionService.save(name, ((WorkFlow) bean).getName(),
-				getWorkFlowTypeDetails(name, List.of(Assessment.class, Checker.class, Infrastructure.class)).getFirst(),
+				getWorkFlowTypeDetails(name,
+						List.of(Assessment.class, Checker.class, Infrastructure.class, Escalation.class)).getFirst(),
 				hmWorkFlowTasks);
 	}
 
@@ -136,7 +142,7 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 							metadata.getAnnotationAttributes(clazz.getName())))
 					.orElseThrow(() -> new RuntimeException("workflow missing type!"));
 		}
-		throw new WorkflowDefinitionException("workflow with no annotated type metadata!");
+		throw new RuntimeException("workflow with no annotated type metadata!");
 	}
 
 	@Override
