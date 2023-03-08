@@ -102,9 +102,11 @@ public class WorkFlowContinuationService {
 						}
 					});
 					Map<String, String> workFlowArguments;
+					// TODO:  needs to load workContext from db
 					workFlowArguments = WorkFlowDTOUtil.readStringAsObject(workFlowExecution.getArguments(),
 							new TypeReference<>() {
 							}, Map.of());
+					// TODO: continue with the same execution id
 					workFlowService.execute(workFlowExecution.getProjectId().toString(), workFlowDefinition.getName(),
 							workFlowTaskArguments, workFlowArguments);
 				});

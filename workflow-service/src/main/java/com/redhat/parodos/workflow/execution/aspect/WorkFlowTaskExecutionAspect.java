@@ -15,6 +15,7 @@
  */
 package com.redhat.parodos.workflow.execution.aspect;
 
+import com.redhat.parodos.workflow.WorkFlowType;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
@@ -23,6 +24,7 @@ import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
 import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
+import com.redhat.parodos.workflows.workflow.WorkFlow;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -72,6 +74,7 @@ public class WorkFlowTaskExecutionAspect {
 		String workFlowTaskName = ((WorkFlowTask) proceedingJoinPoint.getTarget()).getName();
 		log.info("Before invoking execute() on workflow task name: {}, work context is: {}", workFlowTaskName,
 				workContext);
+		// TODO: skip the task if it's already successful
 		try {
 			report = (WorkReport) proceedingJoinPoint.proceed();
 		}
@@ -108,6 +111,20 @@ public class WorkFlowTaskExecutionAspect {
 			workFlowTaskExecution.setLastUpdateDate(new Date());
 			workFlowExecutionService.updateWorkFlowTask(workFlowTaskExecution);
 		}
+
+		// TODO: save workContext
+
+		// TODO: if this task has checker
+
+		// TODO: if this task's checker is running
+
+		// TODO: schedule workflow checker for dynamic run on cron expression
+		// done
+//		if (WorkFlowType.CHECKER.name().toUpperCase().equals(workFlowDefinition.getType())) {
+//			startOrStopWorkFlowCheckerOnSchedule(workFlowDefinition.getName(),
+//					(WorkFlow) proceedingJoinPoint.getTarget(), workFlowDefinition.getCheckerWorkFlowDefinition(),
+//					report.getStatus(), workContext);
+//		}
 		return report;
 	}
 

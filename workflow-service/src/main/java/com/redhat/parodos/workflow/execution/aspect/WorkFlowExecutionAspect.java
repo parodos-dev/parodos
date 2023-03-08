@@ -86,6 +86,8 @@ public class WorkFlowExecutionAspect {
 		String workFlowName = WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION,
 				WorkContextDelegate.Resource.NAME).toString();
 		log.info("Before invoking execute() on workflow: {} with workContext: {}", workFlowName, workContext);
+
+		// TODO:  skip the workflow if it's already successful from db
 		// get workflow definition entity
 		WorkFlowDefinition workFlowDefinition = this.workFlowDefinitionRepository.findByName(workFlowName).stream()
 				.findFirst().get();
@@ -119,7 +121,14 @@ public class WorkFlowExecutionAspect {
 		workFlowExecution.setArguments(WorkFlowDTOUtil.writeObjectValueAsString(WorkContextDelegate.read(workContext,
 				WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ARGUMENTS)));
 		workFlowService.updateWorkFlow(workFlowExecution);
-		// schedule workflow checker for dynamic run on cron expression or stop if done
+
+		// TODO: save workContext
+
+		// TODO: if this is infras/assess workflow, fail it and persist as 'pending' if any of its checkers' execution is not successful/not started
+
+		// TODO: if this workflow is checker and it's successful, call continuation service to restart master workflow execution with same execution Id
+		// if this workflow is a checker, schedule workflow checker for dynamic run on
+		// cron expression or stop if done
 		if (WorkFlowType.CHECKER.name().toUpperCase().equals(workFlowDefinition.getType())) {
 			startOrStopWorkFlowCheckerOnSchedule(workFlowDefinition.getName(),
 					(WorkFlow) proceedingJoinPoint.getTarget(), workFlowDefinition.getCheckerWorkFlowDefinition(),
