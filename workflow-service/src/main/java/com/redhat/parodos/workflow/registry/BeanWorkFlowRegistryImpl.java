@@ -125,7 +125,7 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 								WorkFlowCheckerDTO.class);
 						workFlowDefinitionService.saveWorkFlowChecker(name, dependency, workFlowCheckerDTO);
 					}
-					catch (IllegalArgumentException ignored) {
+					catch (RuntimeException ignored) {
 						log.info("{} is not a checker for {}", dependency, name);
 					}
 				}));
@@ -138,9 +138,12 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 			AnnotatedTypeMetadata metadata = (AnnotatedTypeMetadata) beanDefinition.getSource();
 			return workFlowTypeList.stream().filter(clazz -> metadata.getAnnotationAttributes(clazz.getName()) != null)
 					.findFirst()
-					.map(clazz -> Pair.of(WorkFlowType.valueOf(clazz.getSimpleName().toUpperCase()),
-							metadata.getAnnotationAttributes(clazz.getName())))
-					.orElseThrow(() -> new RuntimeException("workflow missing type!"));
+					.map(clazz -> {
+						log.info(beanName + ":" + WorkFlowType.valueOf(clazz.getSimpleName().toUpperCase()) + " " + (metadata.getAnnotationAttributes(clazz.getName()) != null));
+						return Pair.of(WorkFlowType.valueOf(clazz.getSimpleName().toUpperCase()),
+								metadata.getAnnotationAttributes(clazz.getName()));
+					})
+					.orElseThrow(() -> new RuntimeException("workflow missing type! beanname: " + beanName));
 		}
 		throw new RuntimeException("workflow with no annotated type metadata!");
 	}

@@ -33,6 +33,7 @@ public class EsclationConfiguration {
 		// @formatter:off
 		return SequentialFlow.Builder
 				.aNewSequentialFlow()
+				.named("workflowStartingCheckingAndEscalation")
 				.execute(simpleTaskOne)
 				.build();
 		// @formatter:on
@@ -57,6 +58,7 @@ public class EsclationConfiguration {
 		// @formatter:off
 		return SequentialFlow.Builder
 				.aNewSequentialFlow()
+				.named("simpleTaskOneCheckerWorkflow")
 				.execute(simpleTaskOneCheckerTask)
 				.build();
 		// @formatter:on
@@ -75,6 +77,7 @@ public class EsclationConfiguration {
 		// @formatter:off
 		return SequentialFlow.Builder
 				.aNewSequentialFlow()
+				.named("simpleTaskOneEscalatorWorkflow")
 				.execute(simpleTaskOneEscalator)
 				.build();
 		// @formatter:on
@@ -97,6 +100,7 @@ public class EsclationConfiguration {
 		// @formatter:off
 		return SequentialFlow.Builder
 				.aNewSequentialFlow()
+				.named("workflowContinuesAfterCheckingEscalation")
 				.execute(simpleTaskTwo)
 				.build();
 		// @formatter:on
