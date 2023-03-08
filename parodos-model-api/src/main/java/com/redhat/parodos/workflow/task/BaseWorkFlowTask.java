@@ -47,7 +47,7 @@ public abstract class BaseWorkFlowTask implements WorkFlowTask, BeanNameAware {
 		this.name = name;
 	}
 
-	protected String getParameterValue(WorkContext workContext, String parameterName) throws MissingParameterException {
+	public String getParameterValue(WorkContext workContext, String parameterName) throws MissingParameterException {
 		return new ObjectMapper()
 				.convertValue(
 						WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,

@@ -49,6 +49,11 @@
       <version>${project.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>workflow-examples</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -57,6 +62,11 @@
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>0.8.8</version>
+        <configuration>
+          <excludes>
+            <exclude>**/*Configuration.*</exclude>
+          </excludes>
+        </configuration>
         <executions>
           <execution>
             <id>report-aggregate</id>
