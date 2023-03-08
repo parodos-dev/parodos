@@ -95,7 +95,11 @@ public class ProjectController {
 			@ApiResponse(responseCode = "404", description = "Not found", content = @Content) })
 	@GetMapping("/{id}")
 	public ResponseEntity<ProjectResponseDTO> getProjectById(@PathVariable String id) {
-		return ResponseEntity.ok(projectService.getProjectById(UUID.fromString(id)));
+		ProjectResponseDTO projectResponseDTO = projectService.getProjectById(UUID.fromString(id));
+		if (projectResponseDTO == null) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(projectResponseDTO);
 	}
 
 }
