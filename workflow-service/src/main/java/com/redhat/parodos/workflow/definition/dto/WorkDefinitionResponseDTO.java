@@ -15,12 +15,13 @@
  */
 package com.redhat.parodos.workflow.definition.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.redhat.parodos.workflow.task.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import java.util.List;
-import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -44,27 +45,27 @@ public class WorkDefinitionResponseDTO {
 
 	private String name;
 
-	// workType of workflow or task
 	private String workType;
+
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private String processingType;
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private String author;
 
-	// recursive works
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private List<WorkDefinitionResponseDTO> works;
 
-	// rename to WorkParameter
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private List<WorkFlowTaskParameter> parameters;
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private List<WorkFlowTaskOutput> outputs;
 
-	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private UUID workFlowChecker;
+	@JsonIgnore
+	private Integer numberOfWorkUnits;
 
-	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private UUID nextWorkFlow;
+	// @JsonInclude(JsonInclude.Include.NON_NULL)
+	// private UUID workFlowChecker;
 
 }

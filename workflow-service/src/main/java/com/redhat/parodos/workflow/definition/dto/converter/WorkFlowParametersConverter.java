@@ -21,6 +21,7 @@ import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -32,17 +33,17 @@ import java.util.Set;
  */
 
 @Converter
-public class WorkFlowParametersConverter implements AttributeConverter<Set<WorkFlowTaskParameter>, String> {
+public class WorkFlowParametersConverter implements AttributeConverter<List<WorkFlowTaskParameter>, String> {
 
 	@Override
-	public String convertToDatabaseColumn(Set<WorkFlowTaskParameter> parameters) {
+	public String convertToDatabaseColumn(List<WorkFlowTaskParameter> parameters) {
 		return WorkFlowDTOUtil.writeObjectValueAsString(parameters);
 	}
 
 	@Override
-	public Set<WorkFlowTaskParameter> convertToEntityAttribute(String parameters) {
-		return WorkFlowDTOUtil.readStringAsObject(parameters, new TypeReference<Set<WorkFlowTaskParameter>>() {
-		}, Set.of());
+	public List<WorkFlowTaskParameter> convertToEntityAttribute(String parameters) {
+		return WorkFlowDTOUtil.readStringAsObject(parameters, new TypeReference<List<WorkFlowTaskParameter>>() {
+		}, List.of());
 	}
 
 }

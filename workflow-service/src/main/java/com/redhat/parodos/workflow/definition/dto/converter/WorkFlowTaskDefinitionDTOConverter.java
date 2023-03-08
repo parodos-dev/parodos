@@ -21,12 +21,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.workflow.definition.dto.WorkDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterScope;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -49,16 +48,15 @@ public class WorkFlowTaskDefinitionDTOConverter
 				return WorkDefinitionResponseDTO.builder().id(workFlowTaskDefinition.getId().toString())
 						.name(workFlowTaskDefinition.getName())
 						.outputs(objectMapper.readValue(workFlowTaskDefinition.getOutputs(), new TypeReference<>() {
-						})).parameters(objectMapper.readValue(workFlowTaskDefinition.getParameters(),
+						})).parameters(new ArrayList<>(objectMapper.readValue(workFlowTaskDefinition.getParameters(),
 								new TypeReference<List<WorkFlowTaskParameter>>() {
-								}).stream()
-								.filter(workFlowTaskParameter -> WorkFlowTaskParameterScope.TASK
-										.equals(workFlowTaskParameter.getScope()))
-								.collect(Collectors.toList()))
-						.workFlowChecker(Optional.ofNullable(workFlowTaskDefinition.getWorkFlowCheckerDefinition())
-								.map(checker -> checker.getCheckWorkFlow().getId()).orElse(null))
-						.nextWorkFlow(Optional.ofNullable(workFlowTaskDefinition.getWorkFlowCheckerDefinition())
-								.map(checker -> checker.getNextWorkFlow().getId()).orElse(null))
+								})))
+						// .workFlowChecker(Optional.ofNullable(workFlowTaskDefinition.getWorkFlowCheckerDefinition())
+						// .map(checker ->
+						// checker.getCheckWorkFlow().getId()).orElse(null))
+						// .nextWorkFlow(Optional.ofNullable(workFlowTaskDefinition.getWorkFlowCheckerDefinition())
+						// .map(checker ->
+						// checker.getNextWorkFlow().getId()).orElse(null))
 						.build();
 			}
 			catch (JsonProcessingException e) {

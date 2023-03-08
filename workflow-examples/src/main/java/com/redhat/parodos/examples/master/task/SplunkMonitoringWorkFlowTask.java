@@ -3,9 +3,11 @@ package com.redhat.parodos.examples.master.task;
 import com.redhat.parodos.workflow.task.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
+import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
+import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
-import lombok.NonNull;
+import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -17,17 +19,22 @@ public class SplunkMonitoringWorkFlowTask extends BaseInfrastructureWorkFlowTask
 
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		return null;
+		log.info("SplunkMonitoringWorkFlowTask");
+		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
 	@Override
-	public @NonNull List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
-		return null;
+	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
+		return List.of(
+				WorkFlowTaskParameter.builder().key("api-server").description("The api server")
+						.type(WorkFlowTaskParameterType.URL).optional(false).build(),
+				WorkFlowTaskParameter.builder().key("user-id").description("The user id")
+						.type(WorkFlowTaskParameterType.TEXT).optional(false).build());
 	}
 
 	@Override
-	public @NonNull List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
-		return null;
+	public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
+		return List.of(WorkFlowTaskOutput.OTHER);
 	}
 
 }

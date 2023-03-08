@@ -149,25 +149,4 @@ public class MasterWorkFlowConfiguration {
 				.then(subWorkFlowFour).build();
 	}
 
-	// MASTER WORKFLOW
-	// Parallel Flow:
-	// - UserWorkFlow
-	// - All workflow checker
-
-	// @Bean(name = "masterWorkFlow") // IMPORTANT FOR UI + EXECUTION AND ORCHESTRATION
-	// @Infrastructure
-	// WorkFlow masterFlow(@Qualifier("userWorkFlow") WorkFlow userWorkFlow,
-	// @Qualifier("namespaceApprovalWorkFlowChecker") WorkFlow
-	// namespaceApprovalWorkFlowChecker,
-	// @Qualifier("sslCertificationApprovalWorkFlowChecker") WorkFlow
-	// sslCertificationApprovalWorkFlowChecker) {
-	// return ParallelFlow
-	// .Builder.aNewParallelFlow()
-	// .named("masterWorkFlow")
-	// .execute(userWorkFlow, namespaceApprovalWorkFlowChecker,
-	// sslCertificationApprovalWorkFlowChecker)
-	// .with(Executors.newFixedThreadPool(3))
-	// .build();
-	// }
-
 }

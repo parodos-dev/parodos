@@ -18,12 +18,11 @@ package com.redhat.parodos.workflow.definition.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * Workflow definition response dto
@@ -32,6 +31,8 @@ import lombok.NoArgsConstructor;
  * @author Annel Ketcha (Github: anludke)
  */
 
+@EqualsAndHashCode
+@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -42,6 +43,8 @@ public class WorkFlowDefinitionResponseDTO {
 	private String name;
 
 	private String type;
+
+	private String processingType;
 
 	private String author;
 

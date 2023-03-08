@@ -19,7 +19,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterScope;
 import com.redhat.parodos.workflows.work.WorkContext;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -51,13 +50,15 @@ public abstract class BaseWorkFlowTask implements WorkFlowTask, BeanNameAware {
 		return getWorkFlowTaskParameters().stream().filter(parameter -> parameter.getKey().equals(parameterName))
 				.findFirst()
 				.map(parameter -> new ObjectMapper().convertValue(
-						WorkFlowTaskParameterScope.WORK_FLOW.equals(parameter.getScope())
-								? WorkContextDelegate.read(workContext,
-										WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-										WorkContextDelegate.Resource.ARGUMENTS)
-								: WorkContextDelegate.read(workContext,
-										WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION, name,
-										WorkContextDelegate.Resource.ARGUMENTS),
+						WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
+								name, WorkContextDelegate.Resource.ARGUMENTS),
+						// WorkFlowTaskParameterScope.WORK_FLOW.equals(parameter.getScope())
+						// ? WorkContextDelegate.read(workContext,
+						// WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+						// WorkContextDelegate.Resource.ARGUMENTS)
+						// : WorkContextDelegate.read(workContext,
+						// WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION, name,
+						// WorkContextDelegate.Resource.ARGUMENTS),
 						new TypeReference<HashMap<String, String>>() {
 						}).get(parameterName))
 				.orElseThrow(() -> {

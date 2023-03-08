@@ -30,4 +30,6 @@ public interface WorkFlowDefinitionRepository extends JpaRepository<WorkFlowDefi
 
 	List<WorkFlowDefinition> findByName(String name);
 
+	WorkFlowDefinition findFirstByName(String name);
+
 }

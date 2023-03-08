@@ -16,9 +16,9 @@ import java.util.List;
 public class NamespaceApprovalWorkFlowCheckerTask extends BaseWorkFlowCheckerTask {
 
 	@Override
-	public WorkReport checkWorkFlowStatus(WorkContext context) {
+	public WorkReport checkWorkFlowStatus(WorkContext workContext) {
 		log.info("NamespaceApprovalWorkFlowCheckerTask");
-		return new DefaultWorkReport(WorkStatus.COMPLETED, context);
+		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
 	@Override

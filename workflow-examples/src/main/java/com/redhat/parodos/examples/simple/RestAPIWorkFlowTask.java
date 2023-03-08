@@ -18,7 +18,6 @@ package com.redhat.parodos.examples.simple;
 import com.redhat.parodos.workflow.task.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterScope;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
@@ -83,8 +82,7 @@ public class RestAPIWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 						.description("Json of what to provide for data. (ie: 'Hello!')").optional(false)
 						.type(WorkFlowTaskParameterType.PASSWORD).build(),
 				WorkFlowTaskParameter.builder().key("user-id").description("The user id")
-						.type(WorkFlowTaskParameterType.URL).optional(false).scope(WorkFlowTaskParameterScope.WORK_FLOW)
-						.build());
+						.type(WorkFlowTaskParameterType.URL).optional(false).build());
 	}
 
 	public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {

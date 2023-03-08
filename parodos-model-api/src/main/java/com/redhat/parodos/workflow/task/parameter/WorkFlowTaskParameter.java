@@ -41,7 +41,4 @@ public class WorkFlowTaskParameter {
 
 	private WorkFlowTaskParameterType type;
 
-	@Builder.Default
-	private WorkFlowTaskParameterScope scope = WorkFlowTaskParameterScope.TASK;
-
 }

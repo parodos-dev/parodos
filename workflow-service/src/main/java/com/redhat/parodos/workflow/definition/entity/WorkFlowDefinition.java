@@ -29,15 +29,11 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Workflow definition entity
@@ -68,6 +64,14 @@ public class WorkFlowDefinition extends AbstractEntity {
 
 	private Date modifyDate;
 
+	@Convert(converter = WorkFlowParametersConverter.class)
+	@Builder.Default
+	private List<WorkFlowTaskParameter> parameters = new ArrayList<>();
+
+	private String processingType;
+
+	private Integer numberWorkUnits;
+
 	@OneToMany(mappedBy = "workFlowDefinition", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Builder.Default
 	private List<WorkFlowTaskDefinition> workFlowTaskDefinitions = new ArrayList<>();
@@ -75,20 +79,6 @@ public class WorkFlowDefinition extends AbstractEntity {
 	@OneToOne(mappedBy = "checkWorkFlow", cascade = CascadeType.ALL)
 	private WorkFlowCheckerDefinition checkerWorkFlowDefinition;
 
-	@OneToOne(mappedBy = "nextWorkFlow", cascade = CascadeType.ALL)
-	private WorkFlowCheckerDefinition nextWorkFlowDefinition;
-
 	private String commitId;
-
-	@Convert(converter = WorkFlowParametersConverter.class)
-	@Builder.Default
-	private Set<WorkFlowTaskParameter> parameters = new HashSet<>();
-
-	@ManyToOne
-	@JoinColumn(name = "parent_id")
-	private WorkFlowDefinition parentWorkFlowDefinition;
-
-	@OneToMany(mappedBy = "parentWorkFlowDefinition", cascade = { CascadeType.ALL })
-	private List<WorkFlowDefinition> subWorkFlows = new ArrayList<>();
 
 }

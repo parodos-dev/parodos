@@ -16,9 +16,9 @@ import java.util.List;
 public class SslCertificationApprovalWorkFlowCheckerTask extends BaseWorkFlowCheckerTask {
 
 	@Override
-	public WorkReport checkWorkFlowStatus(WorkContext context) {
+	public WorkReport checkWorkFlowStatus(WorkContext workContext) {
 		log.info("SslCertificationApprovalWorkFlowCheckerTask");
-		return new DefaultWorkReport(WorkStatus.COMPLETED, context);
+		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
 	@Override

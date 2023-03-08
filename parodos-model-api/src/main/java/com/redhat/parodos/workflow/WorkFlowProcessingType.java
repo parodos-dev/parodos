@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow.task.parameter;
+package com.redhat.parodos.workflow;
 
 /**
- * The supported scopes for an @see WorkFlowTaskParameter. A UI layer can render
- * appropriate components to collect user inputs for different scopes using these values
+ * Workflow processing type
  *
- * @author Richard Wang (Github: RichardW98)
- *
+ * @author Richard Wang (Github: richardw98)
+ * @author Annel Ketcha (Github: anludke)
  */
-public enum WorkFlowTaskParameterScope {
 
-	WORK_FLOW, TASK,
+public enum WorkFlowProcessingType {
+
+	SEQUENTIAL, PARALLEL, OTHER
 
 }

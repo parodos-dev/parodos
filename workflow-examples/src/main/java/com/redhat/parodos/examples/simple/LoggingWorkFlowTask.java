@@ -19,7 +19,6 @@ import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import com.redhat.parodos.workflow.task.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterScope;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
@@ -67,8 +66,7 @@ public class LoggingWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 				WorkFlowTaskParameter.builder().key("api-server").description("The api server")
 						.type(WorkFlowTaskParameterType.URL).optional(false).build(),
 				WorkFlowTaskParameter.builder().key("user-id").description("The user id")
-						.type(WorkFlowTaskParameterType.TEXT).optional(false)
-						.scope(WorkFlowTaskParameterScope.WORK_FLOW).build());
+						.type(WorkFlowTaskParameterType.TEXT).optional(false).build());
 	}
 
 	@Override
