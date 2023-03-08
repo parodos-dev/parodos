@@ -41,6 +41,8 @@ public interface WorkFlowDefinitionService {
 
 	List<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitions();
 
+	WorkFlowDefinitionResponseDTO getWorkFlowDefinitionByName(String name);
+
 	WorkFlowDefinitionResponseDTO getWorkFlowDefinitionById(UUID id);
 
 	List<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitionsByName(String name);

@@ -240,7 +240,43 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 	public WorkFlowDefinitionResponseDTO getWorkFlowDefinitionById(UUID id) {
 		WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException(String.format("Workflow definition id %s not found", id)));
-		return modelMapper.map(workFlowDefinition, WorkFlowDefinitionResponseDTO.class);
+
+		List<WorkFlowWorkDependency> workFlowWorkDependencies = workFlowWorkDependencyRepository
+				.findByWorkFlowDefinitionId(workFlowDefinition.getId()).stream()
+				.sorted(Comparator.comparing(WorkFlowWorkDependency::getCreateDate))
+				.collect(Collectors.toList());
+
+		//		return modelMapper.map(workFlowDefinition, WorkFlowDefinitionResponseDTO.class);
+		return WorkFlowDefinitionResponseDTO.builder()
+				.id(workFlowDefinition.getId()).name(workFlowDefinition.getName())
+				.parameters(workFlowDefinition.getParameters()).author(workFlowDefinition.getAuthor())
+				.createDate(workFlowDefinition.getCreateDate())
+				.modifyDate(workFlowDefinition.getModifyDate()).type(workFlowDefinition.getType())
+				.processingType(workFlowDefinition.getProcessingType())
+				.works(buildWorkDefinitionResponseDTO(workFlowDefinition, workFlowWorkDependencies))
+				.build();
+	}
+
+	@Override
+	public WorkFlowDefinitionResponseDTO getWorkFlowDefinitionByName(String name) {
+		WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository.findFirstByName(name);
+		if (null == workFlowDefinition) {
+			throw new RuntimeException(String.format("Workflow definition name %s not found", name));
+		}
+		List<WorkFlowWorkDependency> workFlowWorkDependencies = workFlowWorkDependencyRepository
+				.findByWorkFlowDefinitionId(workFlowDefinition.getId()).stream()
+				.sorted(Comparator.comparing(WorkFlowWorkDependency::getCreateDate))
+				.collect(Collectors.toList());
+
+		//		return modelMapper.map(workFlowDefinition, WorkFlowDefinitionResponseDTO.class);
+		return WorkFlowDefinitionResponseDTO.builder()
+				.id(workFlowDefinition.getId()).name(workFlowDefinition.getName())
+				.parameters(workFlowDefinition.getParameters()).author(workFlowDefinition.getAuthor())
+				.createDate(workFlowDefinition.getCreateDate())
+				.modifyDate(workFlowDefinition.getModifyDate()).type(workFlowDefinition.getType())
+				.processingType(workFlowDefinition.getProcessingType())
+				.works(buildWorkDefinitionResponseDTO(workFlowDefinition, workFlowWorkDependencies))
+				.build();
 	}
 
 	@Override
