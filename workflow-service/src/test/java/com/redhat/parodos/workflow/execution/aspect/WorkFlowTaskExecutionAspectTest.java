@@ -1,20 +1,18 @@
 package com.redhat.parodos.workflow.execution.aspect;
 
+import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
+import com.redhat.parodos.workflow.execution.scheduler.WorkFlowSchedulerServiceImpl;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
-import com.redhat.parodos.workflow.task.assessment.BaseAssessmentTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
-import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.UUID;
@@ -27,10 +25,16 @@ class WorkFlowTaskExecutionAspectTest {
 
 	private WorkFlowTaskExecutionAspect workFlowTaskExecutionAspect;
 
+	@Mock
+	private WorkFlowSchedulerServiceImpl workFlowSchedulerService;
+
+	@Mock
+	private WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository;
+
 	@BeforeEach
 	public void setUp() {
 		this.workFlowExecutionService = Mockito.mock(WorkFlowServiceImpl.class);
-		this.workFlowTaskExecutionAspect = new WorkFlowTaskExecutionAspect(this.workFlowExecutionService);
+		this.workFlowTaskExecutionAspect = new WorkFlowTaskExecutionAspect(this.workFlowExecutionService, workFlowSchedulerService, workFlowTaskDefinitionRepository);
 	}
 
 	@Test
