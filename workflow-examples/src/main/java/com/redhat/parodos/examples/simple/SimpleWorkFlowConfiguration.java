@@ -34,12 +34,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SimpleWorkFlowConfiguration {
 
-	private final String URL_DEFINED_AT_CONFIGURATION_OF_TASK = "https://httpbin.org/post";
-
 	// START Sequential Example (WorkflowTasks and Workflow Definitions)
 	@Bean
-	RestAPIWorkFlowTask restCall() {
-		return new RestAPIWorkFlowTask(URL_DEFINED_AT_CONFIGURATION_OF_TASK);
+	RestAPIWorkFlowTask restCallTask() {
+		return new RestAPIWorkFlowTask();
 	}
 
 	@Bean
@@ -49,13 +47,13 @@ public class SimpleWorkFlowConfiguration {
 
 	@Bean(name = "simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
 	@Infrastructure
-	WorkFlow simpleSequentialWorkFlowTask(@Qualifier("restCall") RestAPIWorkFlowTask restCall,
+	WorkFlow simpleSequentialWorkFlowTask(@Qualifier("restCallTask") RestAPIWorkFlowTask restCallTask,
 			@Qualifier("loggingTask") LoggingWorkFlowTask loggingTask) {
 		// @formatter:off
 		return SequentialFlow
 				.Builder.aNewSequentialFlow()
-				.named("simple Sequential WorkFlow")
-				.execute(restCall)
+				.named("simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+				.execute(restCallTask)
 				.then(loggingTask)
 				.build();
 		// @formatter:on
