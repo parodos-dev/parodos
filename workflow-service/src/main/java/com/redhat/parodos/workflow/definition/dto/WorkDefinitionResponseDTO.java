@@ -57,10 +57,10 @@ public class WorkDefinitionResponseDTO {
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private List<WorkDefinitionResponseDTO> works;
 
-	@JsonInclude(JsonInclude.Include.NON_NULL)
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private List parameters;
 
-	@JsonInclude(JsonInclude.Include.NON_NULL)
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private List<WorkFlowTaskOutput> outputs;
 
 	@JsonIgnore

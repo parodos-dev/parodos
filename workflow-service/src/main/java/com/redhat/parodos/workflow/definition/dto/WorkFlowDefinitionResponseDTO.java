@@ -52,10 +52,10 @@ public class WorkFlowDefinitionResponseDTO {
 
 	private Date modifyDate;
 
-	@JsonInclude(JsonInclude.Include.NON_NULL)
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private List<WorkFlowTaskParameter> parameters;
 
-	@JsonInclude(JsonInclude.Include.NON_NULL)
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private List<WorkDefinitionResponseDTO> works;
 
 }

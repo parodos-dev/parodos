@@ -35,7 +35,9 @@ public class MasterWorkFlowConfiguration {
 	}
 
 	@Bean(name = "subWorkFlowOne")
-	@Infrastructure
+	@Infrastructure(parameters = {
+			@Parameter(key = "comment", description = "The comment", type = WorkFlowParameterType.TEXT,
+					optional = false)})
 	WorkFlow subWorkFlowOne(@Qualifier("adGroupsWorkFlowTask") AdGroupsWorkFlowTask adGroupsWorkFlowTask,
 			@Qualifier("splunkMonitoringWorkFlowTask") SplunkMonitoringWorkFlowTask splunkMonitoringWorkFlowTask) {
 		return ParallelFlow.Builder.aNewParallelFlow().named("subWorkFlowOne")
