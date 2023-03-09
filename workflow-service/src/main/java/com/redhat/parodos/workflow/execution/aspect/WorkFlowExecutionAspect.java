@@ -20,7 +20,7 @@ import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefin
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
-import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkDependencyRepository;
+import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkUnitRepository;
 import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.execution.continuation.WorkFlowContinuationService;
@@ -76,19 +76,19 @@ public class WorkFlowExecutionAspect {
 
     private final WorkFlowContinuationService workFlowContinuationService;
 
-    private final WorkFlowWorkDependencyRepository workFlowWorkDependencyRepository;
+    private final WorkFlowWorkUnitRepository workFlowWorkUnitRepository;
 
     public WorkFlowExecutionAspect(WorkFlowServiceImpl workFlowService,
                                    WorkFlowSchedulerServiceImpl workFlowSchedulerService,
                                    WorkFlowDefinitionRepository workFlowDefinitionRepository, WorkFlowRepository workFlowRepository,
-                                   WorkFlowContinuationService workFlowContinuationService, WorkFlowTaskRepository workFlowTaskRepository, WorkFlowWorkDependencyRepository workFlowWorkDependencyRepository) {
+                                   WorkFlowContinuationService workFlowContinuationService, WorkFlowTaskRepository workFlowTaskRepository, WorkFlowWorkUnitRepository workFlowWorkUnitRepository) {
         this.workFlowService = workFlowService;
         this.workFlowSchedulerService = workFlowSchedulerService;
         this.workFlowDefinitionRepository = workFlowDefinitionRepository;
         this.workFlowRepository = workFlowRepository;
         this.workFlowContinuationService = workFlowContinuationService;
         this.workFlowTaskRepository = workFlowTaskRepository;
-        this.workFlowWorkDependencyRepository = workFlowWorkDependencyRepository;
+        this.workFlowWorkUnitRepository = workFlowWorkUnitRepository;
     }
 
     /**
@@ -120,7 +120,7 @@ public class WorkFlowExecutionAspect {
         // get workflow definition entity
         WorkFlowDefinition workFlowDefinition = this.workFlowDefinitionRepository.findFirstByName(workFlowName);
 
-        boolean isMaster = workFlowWorkDependencyRepository.findByWorkDefinitionId(workFlowDefinition.getId()).isEmpty() && !workFlowDefinition.getType().equals(WorkFlowType.CHECKER.name());
+        boolean isMaster = workFlowWorkUnitRepository.findByWorkDefinitionId(workFlowDefinition.getId()).isEmpty() && !workFlowDefinition.getType().equals(WorkFlowType.CHECKER.name());
         // get/set master WorkFlowExecution
         UUID masterWorkFlowExecutionId = Optional.ofNullable(WorkContextDelegate.read(workContext,
                         WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ID))
