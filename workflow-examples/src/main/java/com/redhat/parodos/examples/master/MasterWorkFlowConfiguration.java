@@ -1,6 +1,11 @@
 package com.redhat.parodos.examples.master;
 
-import com.redhat.parodos.examples.master.task.*;
+import com.redhat.parodos.examples.master.task.AdGroupsWorkFlowTask;
+import com.redhat.parodos.examples.master.task.LoadBalancerWorkFlowTask;
+import com.redhat.parodos.examples.master.task.NamespaceWorkFlowTask;
+import com.redhat.parodos.examples.master.task.SingleSignOnWorkFlowTask;
+import com.redhat.parodos.examples.master.task.SplunkMonitoringWorkFlowTask;
+import com.redhat.parodos.examples.master.task.SslCertificationWorkFlowTask;
 import com.redhat.parodos.examples.master.task.checker.NamespaceApprovalWorkFlowCheckerTask;
 import com.redhat.parodos.examples.master.task.checker.SslCertificationApprovalWorkFlowCheckerTask;
 import com.redhat.parodos.workflow.annotation.Checker;
@@ -35,9 +40,8 @@ public class MasterWorkFlowConfiguration {
 	}
 
 	@Bean(name = "subWorkFlowOne")
-	@Infrastructure(parameters = {
-			@Parameter(key = "comment", description = "The comment", type = WorkFlowParameterType.TEXT,
-					optional = false)})
+	@Infrastructure(parameters = { @Parameter(key = "comment", description = "The comment",
+			type = WorkFlowParameterType.TEXT, optional = false) })
 	WorkFlow subWorkFlowOne(@Qualifier("adGroupsWorkFlowTask") AdGroupsWorkFlowTask adGroupsWorkFlowTask,
 			@Qualifier("splunkMonitoringWorkFlowTask") SplunkMonitoringWorkFlowTask splunkMonitoringWorkFlowTask) {
 		return ParallelFlow.Builder.aNewParallelFlow().named("subWorkFlowOne")
@@ -153,7 +157,7 @@ public class MasterWorkFlowConfiguration {
 					optional = true) })
 	WorkFlow userWorkFlow(@Qualifier("subWorkFlowThree") WorkFlow subWorkFlowThree,
 			@Qualifier("subWorkFlowFour") WorkFlow subWorkFlowFour) {
-		return SequentialFlow.Builder.aNewSequentialFlow().named("masterWorkFlow").execute(subWorkFlowThree)
+		return SequentialFlow.Builder.aNewSequentialFlow().named("userWorkFlow").execute(subWorkFlowThree)
 				.then(subWorkFlowFour).build();
 	}
 
