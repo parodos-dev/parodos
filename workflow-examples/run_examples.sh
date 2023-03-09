@@ -372,4 +372,16 @@ run_escalation_flow() {
   echo "                                                "
 }
 
-run_escalation_flow
+if [ $# -eq 0 ] || [ $1 = "escalation" ]; then
+  echo_blue "##### Running escalation flow #####"
+  run_escalation_flow
+elif [ $1 = "complex" ]; then
+  echo_blue "##### Running complex flow #####"
+  run_complex_flow
+elif [ $1 = "simple" ]; then
+echo_blue "##### Running simple flow #####"
+  run_simple_flow
+else
+  echo_red "##### Unsupported argument #####"
+  echo "Options: escalation (default) , complex, simple"
+fi
