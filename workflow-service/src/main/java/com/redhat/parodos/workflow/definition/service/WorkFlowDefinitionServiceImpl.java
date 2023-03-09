@@ -27,7 +27,7 @@ import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowWorkUnit;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowCheckerDefinitionRepository;
-import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkDependencyRepository;
+import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkUnitRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
 import com.redhat.parodos.workflow.parameter.WorkFlowParameter;
@@ -68,18 +68,18 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 
 	private final WorkFlowCheckerDefinitionRepository workFlowCheckerDefinitionRepository;
 
-	private final WorkFlowWorkDependencyRepository workFlowWorkDependencyRepository;
+	private final WorkFlowWorkUnitRepository workFlowWorkUnitRepository;
 
 	private final ModelMapper modelMapper;
 
 	public WorkFlowDefinitionServiceImpl(WorkFlowDefinitionRepository workFlowDefinitionRepository,
-			WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository,
-			WorkFlowCheckerDefinitionRepository workFlowCheckerDefinitionRepository,
-			WorkFlowWorkDependencyRepository workFlowWorkDependencyRepository, ModelMapper modelMapper) {
+										 WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository,
+										 WorkFlowCheckerDefinitionRepository workFlowCheckerDefinitionRepository,
+										 WorkFlowWorkUnitRepository workFlowWorkUnitRepository, ModelMapper modelMapper) {
 		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
 		this.workFlowTaskDefinitionRepository = workFlowTaskDefinitionRepository;
 		this.workFlowCheckerDefinitionRepository = workFlowCheckerDefinitionRepository;
-		this.workFlowWorkDependencyRepository = workFlowWorkDependencyRepository;
+		this.workFlowWorkUnitRepository = workFlowWorkUnitRepository;
 		this.modelMapper = modelMapper;
 	}
 
@@ -122,7 +122,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 				workFlowDefinition -> workFlowDefinition.getType().equalsIgnoreCase(WorkFlowType.ASSESSMENT.name())
 						|| workFlowDefinition.getType().equalsIgnoreCase(WorkFlowType.INFRASTRUCTURE.name()))
 				.forEach(workFlowDefinition -> {
-					List<WorkFlowWorkUnit> workFlowWorkDependencies = workFlowWorkDependencyRepository
+					List<WorkFlowWorkUnit> workFlowWorkUnits = workFlowWorkUnitRepository
 							.findByWorkFlowDefinitionId(workFlowDefinition.getId()).stream()
 							.sorted(Comparator.comparing(WorkFlowWorkUnit::getCreateDate)).collect(Collectors.toList());
 					workFlowDefinitionResponseDTOs.add(WorkFlowDefinitionResponseDTO.builder()
@@ -133,7 +133,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 							.author(workFlowDefinition.getAuthor()).createDate(workFlowDefinition.getCreateDate())
 							.modifyDate(workFlowDefinition.getModifyDate()).type(workFlowDefinition.getType())
 							.processingType(workFlowDefinition.getProcessingType())
-							.works(buildWorkDefinitionResponseDTO(workFlowDefinition, workFlowWorkDependencies))
+							.works(buildWorkFlowWorkUnitDTOs(workFlowDefinition, workFlowWorkUnits))
 							.build());
 				});
 		return workFlowDefinitionResponseDTOs;
@@ -143,7 +143,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 	public WorkFlowDefinitionResponseDTO getWorkFlowDefinitionById(UUID id) {
 		WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException(String.format("Workflow definition id %s not found", id)));
-		List<WorkFlowWorkUnit> workFlowWorkDependencies = workFlowWorkDependencyRepository
+		List<WorkFlowWorkUnit> workFlowWorkDependencies = workFlowWorkUnitRepository
 				.findByWorkFlowDefinitionId(workFlowDefinition.getId()).stream()
 				.sorted(Comparator.comparing(WorkFlowWorkUnit::getCreateDate)).collect(Collectors.toList());
 		return WorkFlowDefinitionResponseDTO.builder().id(workFlowDefinition.getId()).name(workFlowDefinition.getName())
@@ -153,7 +153,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 				.author(workFlowDefinition.getAuthor()).createDate(workFlowDefinition.getCreateDate())
 				.modifyDate(workFlowDefinition.getModifyDate()).type(workFlowDefinition.getType())
 				.processingType(workFlowDefinition.getProcessingType())
-				.works(buildWorkDefinitionResponseDTO(workFlowDefinition, workFlowWorkDependencies)).build();
+				.works(buildWorkFlowWorkUnitDTOs(workFlowDefinition, workFlowWorkDependencies)).build();
 	}
 
 	@Override
@@ -162,7 +162,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 		if (null == workFlowDefinition) {
 			throw new RuntimeException(String.format("Workflow definition name %s not found", name));
 		}
-		List<WorkFlowWorkUnit> workFlowWorkDependencies = workFlowWorkDependencyRepository
+		List<WorkFlowWorkUnit> workFlowWorkDependencies = workFlowWorkUnitRepository
 				.findByWorkFlowDefinitionId(workFlowDefinition.getId()).stream()
 				.sorted(Comparator.comparing(WorkFlowWorkUnit::getCreateDate)).collect(Collectors.toList());
 		return WorkFlowDefinitionResponseDTO.builder().id(workFlowDefinition.getId()).name(workFlowDefinition.getName())
@@ -172,7 +172,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 				.author(workFlowDefinition.getAuthor()).createDate(workFlowDefinition.getCreateDate())
 				.modifyDate(workFlowDefinition.getModifyDate()).type(workFlowDefinition.getType())
 				.processingType(workFlowDefinition.getProcessingType())
-				.works(buildWorkDefinitionResponseDTO(workFlowDefinition, workFlowWorkDependencies)).build();
+				.works(buildWorkFlowWorkUnitDTOs(workFlowDefinition, workFlowWorkDependencies)).build();
 	}
 
 	@Override
@@ -205,7 +205,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 	}
 
 	private void saveWorkUnits(WorkFlowDefinition workFlowDefinition, List<Work> works) {
-		List<WorkFlowWorkUnit> workFlowWorkDependencies = works.stream().map(work -> {
+		List<WorkFlowWorkUnit> workFlowWorkUnits = works.stream().map(work -> {
 			UUID workId;
 			String workType;
 			if (work instanceof WorkFlow) {
@@ -219,11 +219,11 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 			return WorkFlowWorkUnit.builder().workDefinitionId(workId).workDefinitionType(workType)
 					.workFlowDefinitionId(workFlowDefinition.getId()).createDate(new Date()).build();
 		}).collect(Collectors.toList());
-		workFlowWorkDependencyRepository.saveAll(workFlowWorkDependencies);
+		workFlowWorkUnitRepository.saveAll(workFlowWorkUnits);
 	}
 
-	private List<WorkDefinitionResponseDTO> buildWorkDefinitionResponseDTO(WorkFlowDefinition workFlowDefinition,
-			List<WorkFlowWorkUnit> workFlowWorkUnits) {
+	private List<WorkDefinitionResponseDTO> buildWorkFlowWorkUnitDTOs(WorkFlowDefinition workFlowDefinition,
+																	  List<WorkFlowWorkUnit> workFlowWorkUnits) {
 		CopyOnWriteArrayList<WorkDefinitionResponseDTO> workDefinitionResponseDTOs = new CopyOnWriteArrayList<>();
 		Map<String, Integer> workFlowWorkUnitsStartIndex = new HashMap<>();
 
@@ -251,7 +251,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 			else { // WorkFlow
 				WorkFlowDefinition wd = workFlowDefinitionRepository.findById(workFlowWorkUnit.getWorkDefinitionId())
 						.get();
-				List<WorkFlowWorkUnit> wdWorkFlowWorkDependencies = workFlowWorkDependencyRepository
+				List<WorkFlowWorkUnit> wdWorkFlowWorkDependencies = workFlowWorkUnitRepository
 						.findByWorkFlowDefinitionId(wd.getId()).stream()
 						.sorted(Comparator.comparing(WorkFlowWorkUnit::getCreateDate)).collect(Collectors.toList());
 				workDefinitionResponseDTOs.add(WorkDefinitionResponseDTO.builder().id(wd.getId().toString())
@@ -269,12 +269,12 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 				workFlowWorkUnitsStartIndex.put(workDefinitionResponseDTOs.get(i).getName(),
 						workDefinitionResponseDTOs.size());
 
-				List<WorkFlowWorkUnit> workFlowWorkDependencies1 = workFlowWorkDependencyRepository
+				List<WorkFlowWorkUnit> workFlowWorkUnits1 = workFlowWorkUnitRepository
 						.findByWorkFlowDefinitionId(UUID.fromString(workDefinitionResponseDTOs.get(i).getId()))
 						.stream().sorted(Comparator.comparing(WorkFlowWorkUnit::getCreateDate))
 						.collect(Collectors.toList());
 
-				workFlowWorkDependencies1.forEach(wwdt1 -> {
+				workFlowWorkUnits1.forEach(wwdt1 -> {
 					if (wwdt1.getWorkDefinitionType().equalsIgnoreCase(WorkType.TASK.name())) { // Task
 						WorkFlowTaskDefinition wdt1 = workFlowTaskDefinitionRepository
 								.findById(wwdt1.getWorkDefinitionId()).get();
@@ -288,7 +288,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 					else { // WorkFlow
 						WorkFlowDefinition wd1 = workFlowDefinitionRepository.findById(wwdt1.getWorkDefinitionId())
 								.get();
-						List<WorkFlowWorkUnit> wd1WorkFlowWorkDependencies = workFlowWorkDependencyRepository
+						List<WorkFlowWorkUnit> wd1WorkFlowWorkUnits = workFlowWorkUnitRepository
 								.findByWorkFlowDefinitionId(wd1.getId()).stream()
 								.sorted(Comparator.comparing(WorkFlowWorkUnit::getCreateDate))
 								.collect(Collectors.toList());
@@ -297,7 +297,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 										WorkFlowDTOUtil.readStringAsObject(wd1.getParameters(), new TypeReference<>() {
 										}, List.of()))
 								.works(new ArrayList<>()).processingType(wd1.getProcessingType())
-								.numberOfWorkUnits(wd1WorkFlowWorkDependencies.size()).build());
+								.numberOfWorkUnits(wd1WorkFlowWorkUnits.size()).build());
 					}
 				});
 			}
