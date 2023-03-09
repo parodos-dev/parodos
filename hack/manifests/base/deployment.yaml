@@ -36,4 +36,4 @@ spec:
         image: quay.io/parados/workflow-service:latest
         env:
           - name: SPRING_PROFILES_ACTIVE
-            value: "local"
+            value: "dev"

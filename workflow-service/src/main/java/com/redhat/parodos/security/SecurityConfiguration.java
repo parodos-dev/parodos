@@ -15,14 +15,38 @@
  */
 package com.redhat.parodos.security;
 
+import com.redhat.parodos.config.properties.LdapConnectionProperties;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 /**
  * Security configuration for the application to ensure the main endpoints are locked down
@@ -33,16 +57,40 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
  *
  */
 
+@Component
 @Configuration
 @Profile("!local")
+@Slf4j
+@DependsOn("org.springframework.boot.context.properties.ConfigurationPropertiesBindingPostProcessor")
 public class SecurityConfiguration {
 
+	@Autowired
+	private LdapConnectionProperties ldapConnectionProperties;
+
+	public HttpSecurity setHttpSecurity(HttpSecurity http) throws Exception {
+		http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+
+		http.authorizeRequests().mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll().mvcMatchers("/api/**")
+				.fullyAuthenticated().and().httpBasic(withDefaults()).headers().frameOptions().disable().and()
+				.formLogin(form -> form.loginProcessingUrl("/login")).logout().logoutSuccessUrl("/login").permitAll();
+		return http;
+	}
+
 	@Bean
-	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and().authorizeRequests()
-				.mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll().mvcMatchers("/api/**").authenticated().and()
-				.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
-		return http.build();
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		HttpSecurity httpSec = this.setHttpSecurity(http);
+
+		return httpSec.build();
+	}
+
+	@Autowired
+	public void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.ldapAuthentication().userDnPatterns(this.ldapConnectionProperties.getUserDNPatterns())
+				.groupSearchBase(this.ldapConnectionProperties.getGroupSearchBase()).contextSource()
+				.url(this.ldapConnectionProperties.getUrl()).managerDn(this.ldapConnectionProperties.getManagerDN())
+				.managerPassword(this.ldapConnectionProperties.getManagerPassword()).and().passwordCompare()
+				.passwordEncoder(new BCryptPasswordEncoder())
+				.passwordAttribute(this.ldapConnectionProperties.getPasswordAttribute());
 	}
 
 }
