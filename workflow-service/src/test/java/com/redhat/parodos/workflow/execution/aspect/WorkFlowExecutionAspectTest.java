@@ -1,5 +1,6 @@
 package com.redhat.parodos.workflow.execution.aspect;
 
+import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
@@ -29,7 +30,7 @@ class WorkFlowExecutionAspectTest {
 
 	private WorkFlowDefinitionRepository workFlowDefinitionRepository;
 
-	private WorkFlowExecutionAspect workFlowExecutionAspect; // private WorkFlow workFlow;
+	private WorkFlowExecutionAspect workFlowExecutionAspect;
 
 	@BeforeEach
 	public void initEach() {

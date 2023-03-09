@@ -149,7 +149,7 @@ public class MasterWorkFlowConfiguration {
 	// - subWorkFlowThree
 	// - subWorkFlowFour
 
-	@Bean(name = "userWorkFlow")
+	@Bean(name = "masterWorkFlow")
 	@Infrastructure(parameters = {
 			@Parameter(key = "projectId", description = "The project id", type = WorkFlowParameterType.TEXT,
 					optional = false),

@@ -15,17 +15,18 @@
  */
 package com.redhat.parodos.workflow;
 
-import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
-import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
-import org.springframework.stereotype.Component;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
+import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
+import com.redhat.parodos.workflow.enums.WorkType;
+import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.registry.BeanWorkFlowRegistryImpl;
+import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
-
-import java.util.Map;
-import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 /**
  * Provides functionality that is common to any WorkFlow composition in Parodos
@@ -48,23 +49,29 @@ public class WorkFlowDelegate {
 		this.workFlowDefinitionService = workFlowDefinitionService;
 	}
 
-	public WorkContext getWorkFlowContext(WorkFlowDefinition workFlowDefinition,
-			Map<String, Map<String, String>> workFlowTaskParameterValues, Map<String, String> argumentRequestDTOs) {
+	public WorkContext initWorkFlowContext(WorkFlowRequestDTO workFlowRequestDTO) {
 		WorkContext workContext = new WorkContext();
-		workFlowDefinition.getWorkFlowTaskDefinitions().forEach(workFlowTaskDefinition -> {
-			log.info("****** workflow task name: {}, parameter values: {}", workFlowTaskDefinition.getName(),
-					workFlowTaskParameterValues.get(workFlowTaskDefinition.getName()));
-			WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_DEFINITION,
-					workFlowTaskDefinition.getName(), WorkContextDelegate.Resource.ID,
-					getWorkFlowTaskDefinitionId(workFlowDefinition.getName(), workFlowTaskDefinition.getName()));
-			WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
-					workFlowTaskDefinition.getName(), WorkContextDelegate.Resource.ARGUMENTS,
-					workFlowTaskParameterValues.get(workFlowTaskDefinition.getName()) == null ? Map.of()
-							: workFlowTaskParameterValues.get(workFlowTaskDefinition.getName()));
-		});
-		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-				WorkContextDelegate.Resource.ARGUMENTS, argumentRequestDTOs);
+
+		if (!workFlowRequestDTO.getArguments().isEmpty()) {
+			WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+					workFlowRequestDTO.getWorkFlowName(), WorkContextDelegate.Resource.ARGUMENTS,
+					WorkFlowDTOUtil.convertArgumentListToMap(workFlowRequestDTO.getArguments()));
+		}
+		if (workFlowRequestDTO.getWorks() != null)
+			workFlowRequestDTO.getWorks().forEach(work -> initWorkContext(workContext, work));
 		return workContext;
+	}
+
+	private void initWorkContext(WorkContext workContext, WorkFlowRequestDTO.WorkRequestDTO workRequestDTO) {
+		if (!workRequestDTO.getArguments().isEmpty())
+			WorkContextDelegate.write(workContext,
+					WorkType.WORKFLOW.name().equals(workRequestDTO.getType())
+							? WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION
+							: WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
+					workRequestDTO.getWorkName(), WorkContextDelegate.Resource.ARGUMENTS,
+					WorkFlowDTOUtil.convertArgumentListToMap(workRequestDTO.getArguments()));
+		if (workRequestDTO.getWorks() != null)
+			workRequestDTO.getWorks().forEach(work -> initWorkContext(workContext, work));
 	}
 
 	public WorkFlow getWorkFlowExecutionByName(String workFlowName) {

@@ -67,19 +67,17 @@ public class WorkFlowController {
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content) })
 	@PostMapping
 	public ResponseEntity<WorkFlowResponseDTO> execute(@RequestBody @Valid WorkFlowRequestDTO workFlowRequestDTO) {
-		WorkReport workReport = workFlowService.execute(workFlowRequestDTO.getProjectId(),
-				workFlowRequestDTO.getWorkFlowName(),
-				WorkFlowDTOUtil.convertWorkFlowTaskRequestDTOListToMap(workFlowRequestDTO.getWorks()),
-				workFlowRequestDTO.getArguments().stream()
-						.collect(Collectors.toMap(WorkFlowRequestDTO.WorkRequestDTO.ArgumentRequestDTO::getKey,
-								WorkFlowRequestDTO.WorkRequestDTO.ArgumentRequestDTO::getValue)));
-		return ResponseEntity.ok(WorkFlowResponseDTO.builder()
-				.workFlowExecutionId(WorkContextDelegate.read(workReport.getWorkContext(),
-						WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ID).toString())
-				.workFlowOptions((WorkFlowOptions) WorkContextDelegate.read(workReport.getWorkContext(),
-						WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-						WorkContextDelegate.Resource.WORKFLOW_OPTIONS))
-				.build());
+		WorkReport workReport = workFlowService.execute(workFlowRequestDTO);
+		return ResponseEntity
+				.ok(WorkFlowResponseDTO.builder()
+						.workFlowExecutionId(WorkContextDelegate
+								.read(workReport.getWorkContext(), WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+										workFlowRequestDTO.getWorkFlowName(), WorkContextDelegate.Resource.ID)
+								.toString())
+						.workFlowOptions((WorkFlowOptions) WorkContextDelegate.read(workReport.getWorkContext(),
+								WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+								WorkContextDelegate.Resource.WORKFLOW_OPTIONS))
+						.build());
 	}
 
 }

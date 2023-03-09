@@ -16,9 +16,12 @@
 package com.redhat.parodos.workflow.execution.service;
 
 import com.redhat.parodos.workflow.WorkFlowDelegate;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
+import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkDependencyRepository;
 import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
+import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
@@ -35,7 +38,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -57,38 +59,46 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
 	private final WorkFlowTaskRepository workFlowTaskRepository;
 
+	private final WorkFlowWorkDependencyRepository workFlowWorkDependencyRepository;
+
 	public WorkFlowServiceImpl(WorkFlowDelegate workFlowDelegate,
 			WorkFlowDefinitionRepository workFlowDefinitionRepository, WorkFlowRepository workFlowRepository,
-			WorkFlowTaskRepository workFlowTaskRepository) {
+			WorkFlowTaskRepository workFlowTaskRepository,
+			WorkFlowWorkDependencyRepository workFlowWorkDependencyRepository) {
 		this.workFlowDelegate = workFlowDelegate;
 		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
 		this.workFlowRepository = workFlowRepository;
 		this.workFlowTaskRepository = workFlowTaskRepository;
+		this.workFlowWorkDependencyRepository = workFlowWorkDependencyRepository;
 	}
 
 	@Override
-	public WorkReport execute(String projectId, String workFlowName,
-			Map<String, Map<String, String>> workFlowTaskArguments, Map<String, String> workFlowArguments) {
-		WorkFlow workFlow = workFlowDelegate.getWorkFlowExecutionByName(workFlowName);
-		if (workFlow == null) {
-			log.error("workflow '{}' is not found!", workFlowName);
-			return new DefaultWorkReport(WorkStatus.FAILED, new WorkContext(),
-					new Throwable(String.format("workflow '{}' cannot be found!", workFlowName)));
+	public WorkReport execute(WorkFlowRequestDTO workFlowRequestDTO) {
+		String workflowName = workFlowRequestDTO.getWorkFlowName();
+
+		WorkFlow workFlow = workFlowDelegate.getWorkFlowExecutionByName(workflowName);
+		String validationFailedMsg = validateWorkflow(workflowName, workFlow);
+		if (validationFailedMsg != null) {
+			return new DefaultWorkReport(WorkStatus.FAILED, new WorkContext(), new Throwable(validationFailedMsg));
 		}
 
-		log.info("execute workFlow '{}': {}", workFlowName, workFlow);
-		WorkContext workContext = workFlowDelegate.getWorkFlowContext(
-				workFlowDefinitionRepository.findByName(workFlowName).stream().findFirst().get(), workFlowTaskArguments,
-				workFlowArguments);
+		WorkContext workContext = workFlowDelegate.initWorkFlowContext(workFlowRequestDTO);
+
+		String projectId = workFlowRequestDTO.getProjectId();
+		return execute(projectId, workflowName, workFlow, workContext);
+	}
+
+	public WorkReport execute(String projectId, String workflowName, WorkFlow workFlow, WorkContext workContext) {
+		log.info("execute workFlow '{}': {}", workflowName, workFlow);
 		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.PROJECT, WorkContextDelegate.Resource.ID,
 				projectId);
+
 		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION,
-				WorkContextDelegate.Resource.NAME, workFlowName);
+				WorkContextDelegate.Resource.NAME, workflowName);
 		return WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(workFlow, workContext);
 	}
 
 	@Override
-
 	public WorkFlowExecution getWorkFlowById(UUID workFlowExecutionId) {
 		return this.workFlowRepository.findById(workFlowExecutionId).orElse(null);
 	}
@@ -123,6 +133,24 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	@Override
 	public WorkFlowTaskExecution updateWorkFlowTask(WorkFlowTaskExecution workFlowTaskExecution) {
 		return workFlowTaskRepository.save(workFlowTaskExecution);
+	}
+
+	private String validateWorkflow(String workflowName, WorkFlow workFlow) {
+		// validate if workflow exists
+		if (workFlow == null) {
+			log.error("workflow '{}' is not found!", workflowName);
+			return String.format("workflow '%s' cannot be found!", workflowName);
+		}
+
+		// validate if workflow is master
+		WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository.findFirstByName(workflowName);
+		if (!workFlowWorkDependencyRepository.findByWorkDefinitionId(workFlowDefinition.getId()).isEmpty()) {
+			log.error("workflow '{}' is not found!", workflowName);
+			return String.format("workflow '%s' is not master workflow!", workflowName);
+		}
+
+		// TODO: validate required parameters from definition
+		return null;
 	}
 
 }

@@ -24,6 +24,6 @@ package com.redhat.parodos.workflow.task.enums;
  */
 public enum WorkFlowTaskStatus {
 
-	FAILED, COMPLETED
+	FAILED, COMPLETED, IN_PROGRESS
 
 }

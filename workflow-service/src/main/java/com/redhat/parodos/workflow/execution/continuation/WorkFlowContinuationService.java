@@ -18,6 +18,7 @@ package com.redhat.parodos.workflow.execution.continuation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
@@ -28,6 +29,7 @@ import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
+import com.redhat.parodos.workflows.work.WorkContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -61,16 +63,19 @@ public class WorkFlowContinuationService {
 
 	private final ObjectMapper objectMapper;
 
+	private final WorkFlowDelegate workFlowDelegate;
+
 	public WorkFlowContinuationService(WorkFlowDefinitionRepository workFlowDefinitionRepository,
 			WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository, WorkFlowRepository workFlowRepository,
 			WorkFlowTaskRepository workFlowTaskRepository, WorkFlowServiceImpl workFlowService,
-			ObjectMapper objectMapper) {
+			ObjectMapper objectMapper, WorkFlowDelegate workFlowDelegate) {
 		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
 		this.workFlowTaskDefinitionRepository = workFlowTaskDefinitionRepository;
 		this.workFlowRepository = workFlowRepository;
 		this.workFlowTaskRepository = workFlowTaskRepository;
 		this.workFlowService = workFlowService;
 		this.objectMapper = objectMapper;
+		this.workFlowDelegate = workFlowDelegate;
 	}
 
 	/**
@@ -102,13 +107,14 @@ public class WorkFlowContinuationService {
 						}
 					});
 					Map<String, String> workFlowArguments;
-					// TODO:  needs to load workContext from db
+					// TODO: needs to load workContext from db
 					workFlowArguments = WorkFlowDTOUtil.readStringAsObject(workFlowExecution.getArguments(),
 							new TypeReference<>() {
 							}, Map.of());
 					// TODO: continue with the same execution id
 					workFlowService.execute(workFlowExecution.getProjectId().toString(), workFlowDefinition.getName(),
-							workFlowTaskArguments, workFlowArguments);
+							workFlowDelegate.getWorkFlowExecutionByName(workFlowDefinition.getName()),
+							new WorkContext());
 				});
 	}
 

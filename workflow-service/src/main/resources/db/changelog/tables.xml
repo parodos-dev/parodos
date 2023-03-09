@@ -105,6 +105,10 @@
                 <constraints nullable="false" foreignKeyName="fk_workflow_execution_workflow_definition"
                              references="workflow_definition(id)"/>
             </column>
+            <column name="master_workflow_execution_id" type="${uuidType}">
+                <constraints nullable="true" foreignKeyName="fk_workflow_execution_master_workflow_execution_id"
+                             references="workflow_execution(id)"/>
+            </column>
             <column name="project_id" type="${uuidType}">
                 <constraints nullable="false" foreignKeyName="fk_workflow_execution_project" references="project(id)"/>
             </column>
