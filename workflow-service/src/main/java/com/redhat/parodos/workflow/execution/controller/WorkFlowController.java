@@ -19,11 +19,8 @@ import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowResponseDTO;
 import com.redhat.parodos.workflow.execution.service.WorkFlowService;
-import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import com.redhat.parodos.workflow.option.WorkFlowOptions;
 import com.redhat.parodos.workflows.work.WorkReport;
-import javax.validation.Valid;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -37,7 +34,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.stream.Collectors;
+import javax.validation.Valid;
 
 /**
  * Workflow controller to execute workflow and get status
@@ -71,13 +68,13 @@ public class WorkFlowController {
 		return ResponseEntity
 				.ok(WorkFlowResponseDTO.builder()
 						.workFlowExecutionId(WorkContextDelegate
-								.read(workReport.getWorkContext(), WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-										workFlowRequestDTO.getWorkFlowName(), WorkContextDelegate.Resource.ID)
+								.read(workReport.getWorkContext(), WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ID)
 								.toString())
 						.workFlowOptions((WorkFlowOptions) WorkContextDelegate.read(workReport.getWorkContext(),
 								WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
 								WorkContextDelegate.Resource.WORKFLOW_OPTIONS))
 						.build());
+
 	}
 
 }

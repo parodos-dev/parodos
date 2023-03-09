@@ -137,6 +137,19 @@
             <column name="object_version" type="bigint"/>
         </createTable>
 
+        <!-- WorkFlow Context Table -->
+        <createTable tableName="workflow_execution_context">
+            <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="workflow_execution_id" type="${uuidType}">
+                <constraints nullable="false" foreignKeyName="fk_workflow_execution_context_workflow_execution"
+                             references="workflow_execution(id)"/>
+            </column>
+            <column name="work_context" type="longtext"/>
+            <column name="object_version" type="bigint"/>
+        </createTable>
+
         <!-- Workflow Checker Table -->
         <createTable tableName="workflow_checker_definition">
             <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
@@ -150,11 +163,6 @@
                              references="workflow_definition(id)"/>
             </column>
             <column name="cron_expression" type="varchar(255)"/>
-            <column name="next_workflow_id" type="${uuidType}">
-                <constraints nullable="false"
-                             foreignKeyName="fk_workflow_checker_definition_next_workflow_id"
-                             references="workflow_definition(id)"/>
-            </column>
         </createTable>
 
         <!-- Workflow Checker join Table -->

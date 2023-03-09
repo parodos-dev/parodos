@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Slf4j
-@Component
 public class SingleSignOnWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
 	@Override

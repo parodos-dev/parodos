@@ -30,6 +30,7 @@ import java.util.UUID;
 
 public interface WorkFlowRepository extends JpaRepository<WorkFlowExecution, UUID> {
 
-    WorkFlowExecution findFirstByWorkFlowDefinitionIdAndMasterWorkFlowExecutionId(UUID workFlowDefinitionId, UUID masterWorkFlowExecutionId);
+	WorkFlowExecution findFirstByWorkFlowDefinitionIdAndMasterWorkFlowExecution(UUID workFlowDefinitionId,
+			WorkFlowExecution masterWorkFlowExecution);
 
 }

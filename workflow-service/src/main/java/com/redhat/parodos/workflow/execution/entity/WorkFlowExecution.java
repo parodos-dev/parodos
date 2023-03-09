@@ -30,6 +30,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -71,4 +72,8 @@ public class WorkFlowExecution extends AbstractEntity {
 
 	@OneToMany(mappedBy = "masterWorkFlowExecution", cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
 	private List<WorkFlowExecution> subWorkFlowExecution = new ArrayList<>();
+
+	@OneToOne(mappedBy = "masterWorkFlowExecution", cascade = CascadeType.ALL)
+	private WorkFlowExecutionContext workFlowExecutionContext;
+
 }

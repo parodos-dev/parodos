@@ -33,8 +33,10 @@ import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -85,14 +87,17 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		WorkContext workContext = workFlowDelegate.initWorkFlowContext(workFlowRequestDTO);
 
 		String projectId = workFlowRequestDTO.getProjectId();
-		return execute(projectId, workflowName, workFlow, workContext);
+		return execute(projectId, workflowName, workContext, null);
 	}
 
-	public WorkReport execute(String projectId, String workflowName, WorkFlow workFlow, WorkContext workContext) {
+	public WorkReport execute(String projectId, String workflowName, WorkContext workContext, UUID executionId) {
+		WorkFlow workFlow = workFlowDelegate.getWorkFlowExecutionByName(workflowName);
 		log.info("execute workFlow '{}': {}", workflowName, workFlow);
 		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.PROJECT, WorkContextDelegate.Resource.ID,
 				projectId);
-
+		if (executionId != null)
+			WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+					WorkContextDelegate.Resource.ID, executionId.toString());
 		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION,
 				WorkContextDelegate.Resource.NAME, workflowName);
 		return WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(workFlow, workContext);
@@ -104,14 +109,20 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	}
 
 	@Override
-	public WorkFlowExecution saveWorkFlow(UUID projectId, UUID workFlowDefinitionId, WorkFlowStatus workFlowStatus) {
-		return workFlowRepository.save(WorkFlowExecution.builder().workFlowDefinitionId(workFlowDefinitionId)
-				.projectId(projectId).status(workFlowStatus).startDate(new Date()).build());
+	@Synchronized
+	@Transactional
+	public synchronized WorkFlowExecution saveWorkFlow(UUID projectId, UUID workFlowDefinitionId, WorkFlowStatus workFlowStatus,
+			WorkFlowExecution masterWorkFlowExecution) {
+		return workFlowRepository.saveAndFlush(WorkFlowExecution.builder().workFlowDefinitionId(workFlowDefinitionId)
+				.projectId(projectId).status(workFlowStatus).startDate(new Date())
+				.masterWorkFlowExecution(masterWorkFlowExecution).build());
 	}
 
 	@Override
-	public WorkFlowExecution updateWorkFlow(WorkFlowExecution workFlowExecution) {
-		return workFlowRepository.save(workFlowExecution);
+	@Synchronized
+	@Transactional
+	public synchronized WorkFlowExecution updateWorkFlow(WorkFlowExecution workFlowExecution) {
+		return workFlowRepository.saveAndFlush(workFlowExecution);
 	}
 
 	@Override
@@ -123,16 +134,20 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	}
 
 	@Override
-	public WorkFlowTaskExecution saveWorkFlowTask(String arguments, UUID workFlowTaskDefinitionId,
+	@Synchronized
+	@Transactional
+	public synchronized WorkFlowTaskExecution saveWorkFlowTask(String arguments, UUID workFlowTaskDefinitionId,
 			UUID workFlowExecutionId, WorkFlowTaskStatus workFlowTaskStatus) {
-		return workFlowTaskRepository.save(WorkFlowTaskExecution.builder().workFlowExecutionId(workFlowExecutionId)
+		return workFlowTaskRepository.saveAndFlush(WorkFlowTaskExecution.builder().workFlowExecutionId(workFlowExecutionId)
 				.workFlowTaskDefinitionId(workFlowTaskDefinitionId).arguments(arguments).status(workFlowTaskStatus)
 				.startDate(new Date()).build());
 	}
 
 	@Override
+	@Synchronized
+	@Transactional
 	public WorkFlowTaskExecution updateWorkFlowTask(WorkFlowTaskExecution workFlowTaskExecution) {
-		return workFlowTaskRepository.save(workFlowTaskExecution);
+		return workFlowTaskRepository.saveAndFlush(workFlowTaskExecution);
 	}
 
 	private String validateWorkflow(String workflowName, WorkFlow workFlow) {
@@ -145,7 +160,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		// validate if workflow is master
 		WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository.findFirstByName(workflowName);
 		if (!workFlowWorkDependencyRepository.findByWorkDefinitionId(workFlowDefinition.getId()).isEmpty()) {
-			log.error("workflow '{}' is not found!", workflowName);
+			log.error("workflow '{}' is not master workflow!", workflowName);
 			return String.format("workflow '%s' is not master workflow!", workflowName);
 		}
 

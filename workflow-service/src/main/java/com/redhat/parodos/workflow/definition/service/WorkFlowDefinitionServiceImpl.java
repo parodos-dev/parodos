@@ -22,11 +22,11 @@ import com.redhat.parodos.workflow.enums.WorkType;
 import com.redhat.parodos.workflow.definition.dto.WorkDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
-import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerDefinition;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowWorkUnit;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
-import com.redhat.parodos.workflow.definition.repository.WorkFlowCheckerDefinitionRepository;
+import com.redhat.parodos.workflow.definition.repository.WorkFlowCheckerMappingDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkUnitRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
@@ -66,7 +66,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 
 	private final WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository;
 
-	private final WorkFlowCheckerDefinitionRepository workFlowCheckerDefinitionRepository;
+	private final WorkFlowCheckerMappingDefinitionRepository workFlowCheckerMappingDefinitionRepository;
 
 	private final WorkFlowWorkUnitRepository workFlowWorkUnitRepository;
 
@@ -74,11 +74,11 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 
 	public WorkFlowDefinitionServiceImpl(WorkFlowDefinitionRepository workFlowDefinitionRepository,
 			WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository,
-			WorkFlowCheckerDefinitionRepository workFlowCheckerDefinitionRepository,
+			WorkFlowCheckerMappingDefinitionRepository workFlowCheckerMappingDefinitionRepository,
 			WorkFlowWorkUnitRepository workFlowWorkUnitRepository, ModelMapper modelMapper) {
 		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
 		this.workFlowTaskDefinitionRepository = workFlowTaskDefinitionRepository;
-		this.workFlowCheckerDefinitionRepository = workFlowCheckerDefinitionRepository;
+		this.workFlowCheckerMappingDefinitionRepository = workFlowCheckerMappingDefinitionRepository;
 		this.workFlowWorkUnitRepository = workFlowWorkUnitRepository;
 		this.modelMapper = modelMapper;
 	}
@@ -189,12 +189,12 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 					.findFirstByName(workFlowTaskName);
 			WorkFlowDefinition checkerWorkFlowDefinitionEntity = workFlowDefinitionRepository
 					.findByName(workFlowCheckerName).get(0);
-			WorkFlowCheckerDefinition workFlowCheckerDefinition = Optional
-					.ofNullable(workFlowCheckerDefinitionRepository
+			WorkFlowCheckerMappingDefinition workFlowCheckerMappingDefinition = Optional
+					.ofNullable(workFlowCheckerMappingDefinitionRepository
 							.findFirstByCheckWorkFlow(checkerWorkFlowDefinitionEntity))
-					.orElse(WorkFlowCheckerDefinition.builder().checkWorkFlow(checkerWorkFlowDefinitionEntity)
+					.orElse(WorkFlowCheckerMappingDefinition.builder().checkWorkFlow(checkerWorkFlowDefinitionEntity)
 							.cronExpression(workFlowCheckerDTO.getCronExpression()).tasks(new ArrayList<>()).build());
-			workFlowTaskDefinitionEntity.setWorkFlowCheckerDefinition(workFlowCheckerDefinition);
+			workFlowTaskDefinitionEntity.setWorkFlowCheckerMappingDefinition(workFlowCheckerMappingDefinition);
 			workFlowTaskDefinitionRepository.save(workFlowTaskDefinitionEntity);
 		}
 		catch (Exception e) {
