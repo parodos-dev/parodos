@@ -34,7 +34,7 @@
 		    <artifactId>spring-web</artifactId>
 		    <version>${spring.framework.version}</version>
 		</dependency>
-		 <dependency>
+		<dependency>
 			<groupId>com.redhat.parodos</groupId>
 			<artifactId>workflow-engine</artifactId>
 			<version>${revision}</version>

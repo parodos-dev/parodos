@@ -144,7 +144,7 @@ run_complex_flow() {
 
   echo "                                                "
   echo_blue "******** Running The Complex WorkFlow ********"
-  echo "Running the Assessment to see what WorkFlows are eligable for this situation:"
+  echo "Running the Assessment to see what WorkFlows are eligible for this situation:"
   INFRASTRUCTURE_OPTION=$(curl -X 'POST' -s \
     "${TARGET_URL}/api/v1/workflows" \
     -H 'accept: */*' \
