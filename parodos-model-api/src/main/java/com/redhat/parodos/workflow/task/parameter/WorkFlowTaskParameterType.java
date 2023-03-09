@@ -16,8 +16,8 @@
 package com.redhat.parodos.workflow.task.parameter;
 
 /**
- * The supported types for an @see WorkFlowTaskParameter. A UI layer can render
- * appropriate components to collect/validate user inputs using these values
+ * The supported types for a @see WorkFlowTaskParameter. A UI layer can render appropriate
+ * components to collect/validate user inputs using these values
  *
  * @author Luke Shannon (Github: lshannon)
  *
