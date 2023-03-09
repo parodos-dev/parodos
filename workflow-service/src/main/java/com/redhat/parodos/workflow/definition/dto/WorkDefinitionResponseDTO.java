@@ -65,8 +65,4 @@ public class WorkDefinitionResponseDTO {
 
 	@JsonIgnore
 	private Integer numberOfWorkUnits;
-
-	// @JsonInclude(JsonInclude.Include.NON_NULL)
-	// private UUID workFlowChecker;
-
 }

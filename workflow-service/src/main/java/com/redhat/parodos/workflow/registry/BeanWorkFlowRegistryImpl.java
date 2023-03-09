@@ -105,7 +105,7 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 				.get("parameters");
 		List<WorkFlowParameter> workFlowParameters = new ArrayList<>();
 		if (annotationAttributes != null && annotationAttributes.length > 0) {
-			workFlowParameters = Arrays.asList(annotationAttributes).stream()
+			workFlowParameters = Arrays.stream(annotationAttributes)
 					.map(annotationAttribute -> WorkFlowParameter.builder().key(annotationAttribute.getString("key"))
 							.description(annotationAttribute.getString("description"))
 							.type((WorkFlowParameterType) annotationAttribute.get("type"))

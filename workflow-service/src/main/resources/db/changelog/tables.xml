@@ -78,14 +78,14 @@
         </createTable>
 
         <!-- Workflow Definition Chain Table -->
-        <createTable tableName="workflow_work_dependency">
+        <createTable tableName="workflow_work_unit">
             <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="work_definition_id" type="uuid"/>
             <column name="work_definition_type" type="varchar(255)"/>
             <column name="workflow_definition_id" type="uuid">
-                <constraints nullable="true" foreignKeyName="fk_workflow_work_dependency_workflow_definition"
+                <constraints nullable="true" foreignKeyName="fk_workflow_work_unit_workflow_definition"
                              references="workflow_definition(id)"/>
             </column>
             <column name="create_date" type="timestamp" defaultValue="${now}"/>
