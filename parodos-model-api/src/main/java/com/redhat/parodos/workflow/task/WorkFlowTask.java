@@ -15,6 +15,7 @@
  */
 package com.redhat.parodos.workflow.task;
 
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import com.redhat.parodos.workflows.work.Work;
 import lombok.NonNull;

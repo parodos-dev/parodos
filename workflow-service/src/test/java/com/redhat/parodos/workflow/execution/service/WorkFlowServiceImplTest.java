@@ -1,14 +1,14 @@
 package com.redhat.parodos.workflow.execution.service;
 
 import com.redhat.parodos.workflow.WorkFlowDelegate;
-import com.redhat.parodos.workflow.WorkFlowStatus;
+import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
-import com.redhat.parodos.workflow.task.WorkFlowTaskStatus;
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
 import com.redhat.parodos.workflows.work.*;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import org.junit.jupiter.api.BeforeEach;

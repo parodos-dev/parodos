@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow;
+package com.redhat.parodos.workflow.enums;
 
 /**
- * Workflows themselves are defined by the WorkFlowTasks that compose them, but it is
- * useful to provide a type for a Workflow
+ * The status of a @see WorkFlow once it has started/completed execution
  *
+ * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
-public enum WorkType {
+public enum WorkFlowStatus {
 
-	TASK, WORKFLOW
+	FAILED, IN_PROGRESS, COMPLETED
 
 }

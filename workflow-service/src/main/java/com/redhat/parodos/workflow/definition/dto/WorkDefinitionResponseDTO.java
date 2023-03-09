@@ -18,7 +18,8 @@ package com.redhat.parodos.workflow.definition.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.redhat.parodos.workflow.task.WorkFlowTaskOutput;
+import com.redhat.parodos.workflow.parameter.WorkFlowParameter;
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class WorkDefinitionResponseDTO {
 	private List<WorkDefinitionResponseDTO> works;
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private List<WorkFlowTaskParameter> parameters;
+	private List parameters;
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private List<WorkFlowTaskOutput> outputs;

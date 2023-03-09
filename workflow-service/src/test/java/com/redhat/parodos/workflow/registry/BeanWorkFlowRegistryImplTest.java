@@ -1,6 +1,6 @@
 // package com.redhat.parodos.workflow.registry;
 //
-// import com.redhat.parodos.workflow.WorkFlowType;
+// import com.redhat.parodos.workflow.enums.WorkFlowType;
 // import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
 // import com.redhat.parodos.workflow.task.WorkFlowTask;
 // import com.redhat.parodos.workflows.work.Work;

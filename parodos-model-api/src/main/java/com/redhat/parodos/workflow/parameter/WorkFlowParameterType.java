@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow.task;
+package com.redhat.parodos.workflow.parameter;
 
 /**
- * The expected result returned by a @see WorkFlowTask
+ * Workflow parameter type
  *
- * @author Luke Shannon (Github: lshannon)
- * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
+ *
  */
-public enum WorkFlowTaskOutput {
+public enum WorkFlowParameterType {
 
-	EXCEPTION, HTTP2XX, NO_EXCEPTION, OTHER
+	PASSWORD, TEXT, EMAIL, DATE, NUMBER, URL
 
 }

@@ -1,6 +1,6 @@
 package com.redhat.parodos.examples.master.task.checker;
 
-import com.redhat.parodos.workflow.task.WorkFlowTaskOutput;
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.checker.BaseWorkFlowCheckerTask;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;

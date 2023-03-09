@@ -18,7 +18,7 @@
 // import com.redhat.parodos.workflow.context.WorkContextDelegate;
 // import com.redhat.parodos.workflow.option.WorkFlowOption;
 // import com.redhat.parodos.workflow.option.WorkFlowOptions;
-// import com.redhat.parodos.workflow.task.WorkFlowTaskOutput;
+// import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 // import com.redhat.parodos.workflow.task.assessment.BaseAssessmentTask;
 // import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 // import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;

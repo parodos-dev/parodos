@@ -15,8 +15,8 @@
  */
 package com.redhat.parodos.workflow.execution.aspect;
 
-import com.redhat.parodos.workflow.WorkFlowStatus;
-import com.redhat.parodos.workflow.WorkFlowType;
+import com.redhat.parodos.workflow.enums.WorkFlowStatus;
+import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;

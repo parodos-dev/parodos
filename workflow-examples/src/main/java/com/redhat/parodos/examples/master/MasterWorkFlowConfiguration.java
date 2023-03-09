@@ -5,6 +5,8 @@ import com.redhat.parodos.examples.master.task.checker.NamespaceApprovalWorkFlow
 import com.redhat.parodos.examples.master.task.checker.SslCertificationApprovalWorkFlowCheckerTask;
 import com.redhat.parodos.workflow.annotation.Checker;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
+import com.redhat.parodos.workflow.annotation.Parameter;
+import com.redhat.parodos.workflow.parameter.WorkFlowParameterType;
 import com.redhat.parodos.workflows.workflow.ParallelFlow;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
@@ -142,7 +144,11 @@ public class MasterWorkFlowConfiguration {
 	// - subWorkFlowFour
 
 	@Bean(name = "userWorkFlow")
-	@Infrastructure
+	@Infrastructure(parameters = {
+			@Parameter(key = "projectId", description = "The project id", type = WorkFlowParameterType.TEXT,
+					optional = false),
+			@Parameter(key = "projectRepoUrl", description = "The project repo url", type = WorkFlowParameterType.URL,
+					optional = true) })
 	WorkFlow userWorkFlow(@Qualifier("subWorkFlowThree") WorkFlow subWorkFlowThree,
 			@Qualifier("subWorkFlowFour") WorkFlow subWorkFlowFour) {
 		return SequentialFlow.Builder.aNewSequentialFlow().named("masterWorkFlow").execute(subWorkFlowThree)

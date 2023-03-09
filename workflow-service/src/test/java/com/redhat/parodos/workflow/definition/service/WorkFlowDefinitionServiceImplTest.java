@@ -1,6 +1,6 @@
 // package com.redhat.parodos.workflow.definition.service;
 //
-// import com.redhat.parodos.workflow.WorkFlowType;
+// import com.redhat.parodos.workflow.enums.WorkFlowType;
 // import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
 // import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
 // import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerDefinition;

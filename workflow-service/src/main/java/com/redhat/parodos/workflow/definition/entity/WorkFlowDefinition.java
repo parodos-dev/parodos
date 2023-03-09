@@ -16,8 +16,6 @@
 package com.redhat.parodos.workflow.definition.entity;
 
 import com.redhat.parodos.common.AbstractEntity;
-import com.redhat.parodos.workflow.definition.dto.converter.WorkFlowParametersConverter;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,7 +24,6 @@ import lombok.Setter;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
@@ -64,9 +61,7 @@ public class WorkFlowDefinition extends AbstractEntity {
 
 	private Date modifyDate;
 
-	@Convert(converter = WorkFlowParametersConverter.class)
-	@Builder.Default
-	private List<WorkFlowTaskParameter> parameters = new ArrayList<>();
+	private String parameters;
 
 	private String processingType;
 

@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow;
+package com.redhat.parodos.workflow.task.enums;
 
 /**
- * Workflow processing type
+ * The outcome of a @see WorkFlowTask after execution
  *
+ * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
+public enum WorkFlowTaskStatus {
 
-public enum WorkFlowProcessingType {
-
-	SEQUENTIAL, PARALLEL, OTHER
+	FAILED, COMPLETED
 
 }

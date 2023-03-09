@@ -15,7 +15,7 @@
  */
 package com.redhat.parodos.workflow.execution.entity.converter;
 
-import com.redhat.parodos.workflow.WorkFlowStatus;
+import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 

@@ -16,7 +16,7 @@
 package com.redhat.parodos.workflow.execution.entity;
 
 import com.redhat.parodos.common.AbstractEntity;
-import com.redhat.parodos.workflow.task.WorkFlowTaskStatus;
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import java.util.Date;

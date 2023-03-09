@@ -61,8 +61,9 @@ public class WorkFlowDefinitionController {
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content) })
 	@GetMapping
-	public ResponseEntity<List<WorkFlowDefinitionResponseDTO>> getWorkFlowDefinitions(@RequestParam(required = false) String name) {
-		if (isNull(name) || name.isEmpty()){
+	public ResponseEntity<List<WorkFlowDefinitionResponseDTO>> getWorkFlowDefinitions(
+			@RequestParam(required = false) String name) {
+		if (isNull(name) || name.isEmpty()) {
 			return ResponseEntity.ok(workFlowDefinitionService.getWorkFlowDefinitions());
 		}
 		return ResponseEntity.ok(List.of(workFlowDefinitionService.getWorkFlowDefinitionByName(name)));
@@ -79,4 +80,5 @@ public class WorkFlowDefinitionController {
 	public ResponseEntity<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitionById(@PathVariable String id) {
 		return ResponseEntity.ok(workFlowDefinitionService.getWorkFlowDefinitionById(UUID.fromString(id)));
 	}
+
 }

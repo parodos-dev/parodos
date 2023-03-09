@@ -16,7 +16,6 @@
 package com.redhat.parodos.workflow.definition.dto.converter;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.redhat.parodos.workflow.parameter.WorkFlowParameter;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 
@@ -25,22 +24,22 @@ import javax.persistence.Converter;
 import java.util.List;
 
 /**
- * Workflow parameters converter
+ * Workflow task parameters converter
  *
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
 
 @Converter
-public class WorkFlowParametersConverter implements AttributeConverter<List<WorkFlowParameter>, String> {
+public class WorkFlowTaskParametersConverter implements AttributeConverter<List<WorkFlowTaskParameter>, String> {
 
 	@Override
-	public String convertToDatabaseColumn(List<WorkFlowParameter> parameters) {
+	public String convertToDatabaseColumn(List<WorkFlowTaskParameter> parameters) {
 		return WorkFlowDTOUtil.writeObjectValueAsString(parameters);
 	}
 
 	@Override
-	public List<WorkFlowParameter> convertToEntityAttribute(String parameters) {
+	public List<WorkFlowTaskParameter> convertToEntityAttribute(String parameters) {
 		return WorkFlowDTOUtil.readStringAsObject(parameters, new TypeReference<>() {
 		}, List.of());
 	}

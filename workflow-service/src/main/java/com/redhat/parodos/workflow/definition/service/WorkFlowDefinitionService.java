@@ -15,12 +15,11 @@
  */
 package com.redhat.parodos.workflow.definition.service;
 
-import com.redhat.parodos.workflow.WorkFlowProcessingType;
-import com.redhat.parodos.workflow.WorkFlowType;
+import com.redhat.parodos.workflow.enums.WorkFlowProcessingType;
+import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
-import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
-import com.redhat.parodos.workflow.definition.entity.WorkFlowWorkDependency;
+import com.redhat.parodos.workflow.parameter.WorkFlowParameter;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
 import com.redhat.parodos.workflows.work.Work;
 
@@ -37,7 +36,8 @@ import java.util.UUID;
 public interface WorkFlowDefinitionService {
 
 	WorkFlowDefinitionResponseDTO save(String workFlowName, String workFlowDescription, WorkFlowType workFlowType,
-			Map<String, WorkFlowTask> workFlowTasks, List<Work> works, WorkFlowProcessingType workFlowProcessingType);
+			List<WorkFlowParameter> workFlowParameters, Map<String, WorkFlowTask> workFlowTasks, List<Work> works,
+			WorkFlowProcessingType workFlowProcessingType);
 
 	List<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitions();
 

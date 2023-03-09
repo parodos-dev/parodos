@@ -16,7 +16,7 @@
 package com.redhat.parodos.examples.simple;
 
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
-import com.redhat.parodos.workflow.task.WorkFlowTaskOutput;
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;

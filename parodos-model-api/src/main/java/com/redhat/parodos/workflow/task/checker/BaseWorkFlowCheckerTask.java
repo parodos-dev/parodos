@@ -16,7 +16,7 @@
 package com.redhat.parodos.workflow.task.checker;
 
 import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
-import com.redhat.parodos.workflow.task.WorkFlowTaskType;
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskType;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 

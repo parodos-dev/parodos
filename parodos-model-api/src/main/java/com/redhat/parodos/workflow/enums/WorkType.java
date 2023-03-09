@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow.task;
+package com.redhat.parodos.workflow.enums;
 
 /**
- * A type for a WorkflowTask
+ * Workflows themselves are defined by the WorkFlowTasks that compose them, but it is
+ * useful to provide a type for a Workflow
  *
- * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
-public enum WorkFlowTaskType {
+public enum WorkType {
 
-	ASSESSMENT, CHECKER, INFRASTRUCTURE
+	TASK, WORKFLOW
 
 }

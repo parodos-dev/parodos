@@ -13,27 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow.annotation;
-
-import static java.lang.annotation.ElementType.METHOD;
-
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package com.redhat.parodos.workflow.enums;
 
 /**
- * Infrastructure Annotation
+ * Workflows themselves are defined by the WorkFlowTasks that compose them, but it is
+ * useful to provide a type for a Workflow
  *
  * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
-@Target(METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-@Inherited
-public @interface Infrastructure {
+public enum WorkFlowType {
 
-	Parameter[] parameters() default {};
+	ASSESSMENT, CHECKER, INFRASTRUCTURE
 
 }

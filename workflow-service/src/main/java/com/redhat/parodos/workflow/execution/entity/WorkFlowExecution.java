@@ -16,7 +16,7 @@
 package com.redhat.parodos.workflow.execution.entity;
 
 import com.redhat.parodos.common.AbstractEntity;
-import com.redhat.parodos.workflow.WorkFlowStatus;
+import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
