@@ -82,8 +82,10 @@ public class WorkFlowExecutionAspect {
 	@Around("pointcutScope() && args(workContext)")
 	public WorkReport executeAroundAdvice(ProceedingJoinPoint proceedingJoinPoint, WorkContext workContext) {
 		WorkReport report = null;
-		String workFlowName = WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION,
-				WorkContextDelegate.Resource.NAME).toString();
+		// String workFlowName = WorkContextDelegate.read(workContext,
+		// WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION,
+		// WorkContextDelegate.Resource.NAME).toString();
+		String workFlowName = ((WorkFlow) proceedingJoinPoint.getTarget()).getName();
 		log.info("Before invoking execute() on workflow: {} with workContext: {}", workFlowName, workContext);
 		// get workflow definition entity
 		WorkFlowDefinition workFlowDefinition = this.workFlowDefinitionRepository.findByName(workFlowName).stream()

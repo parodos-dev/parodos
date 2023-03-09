@@ -34,7 +34,8 @@ class WorkFlowTaskExecutionAspectTest {
 	@BeforeEach
 	public void setUp() {
 		this.workFlowExecutionService = Mockito.mock(WorkFlowServiceImpl.class);
-		this.workFlowTaskExecutionAspect = new WorkFlowTaskExecutionAspect(this.workFlowExecutionService, workFlowSchedulerService, workFlowTaskDefinitionRepository);
+		this.workFlowTaskExecutionAspect = new WorkFlowTaskExecutionAspect(this.workFlowExecutionService,
+				workFlowSchedulerService, workFlowTaskDefinitionRepository);
 	}
 
 	@Test
