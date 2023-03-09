@@ -73,9 +73,9 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 	private final ModelMapper modelMapper;
 
 	public WorkFlowDefinitionServiceImpl(WorkFlowDefinitionRepository workFlowDefinitionRepository,
-										 WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository,
-										 WorkFlowCheckerDefinitionRepository workFlowCheckerDefinitionRepository,
-										 WorkFlowWorkUnitRepository workFlowWorkUnitRepository, ModelMapper modelMapper) {
+			WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository,
+			WorkFlowCheckerDefinitionRepository workFlowCheckerDefinitionRepository,
+			WorkFlowWorkUnitRepository workFlowWorkUnitRepository, ModelMapper modelMapper) {
 		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
 		this.workFlowTaskDefinitionRepository = workFlowTaskDefinitionRepository;
 		this.workFlowCheckerDefinitionRepository = workFlowCheckerDefinitionRepository;
@@ -133,8 +133,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 							.author(workFlowDefinition.getAuthor()).createDate(workFlowDefinition.getCreateDate())
 							.modifyDate(workFlowDefinition.getModifyDate()).type(workFlowDefinition.getType())
 							.processingType(workFlowDefinition.getProcessingType())
-							.works(buildWorkFlowWorkUnitDTOs(workFlowDefinition, workFlowWorkUnits))
-							.build());
+							.works(buildWorkFlowWorkUnitDTOs(workFlowDefinition, workFlowWorkUnits)).build());
 				});
 		return workFlowDefinitionResponseDTOs;
 	}
@@ -223,7 +222,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 	}
 
 	private List<WorkDefinitionResponseDTO> buildWorkFlowWorkUnitDTOs(WorkFlowDefinition workFlowDefinition,
-																	  List<WorkFlowWorkUnit> workFlowWorkUnits) {
+			List<WorkFlowWorkUnit> workFlowWorkUnits) {
 		CopyOnWriteArrayList<WorkDefinitionResponseDTO> workDefinitionResponseDTOs = new CopyOnWriteArrayList<>();
 		Map<String, Integer> workFlowWorkUnitsStartIndex = new HashMap<>();
 
@@ -270,9 +269,8 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 						workDefinitionResponseDTOs.size());
 
 				List<WorkFlowWorkUnit> workFlowWorkUnits1 = workFlowWorkUnitRepository
-						.findByWorkFlowDefinitionId(UUID.fromString(workDefinitionResponseDTOs.get(i).getId()))
-						.stream().sorted(Comparator.comparing(WorkFlowWorkUnit::getCreateDate))
-						.collect(Collectors.toList());
+						.findByWorkFlowDefinitionId(UUID.fromString(workDefinitionResponseDTOs.get(i).getId())).stream()
+						.sorted(Comparator.comparing(WorkFlowWorkUnit::getCreateDate)).collect(Collectors.toList());
 
 				workFlowWorkUnits1.forEach(wwdt1 -> {
 					if (wwdt1.getWorkDefinitionType().equalsIgnoreCase(WorkType.TASK.name())) { // Task
@@ -305,16 +303,17 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 
 		for (int j = workDefinitionResponseDTOs.size() - 1; j >= 0; j--) {
 			if (workDefinitionResponseDTOs.get(j).getWorkType().equalsIgnoreCase(WorkType.WORKFLOW.name())) {
-				List<WorkDefinitionResponseDTO> tmp = new ArrayList<>();
+				List<WorkDefinitionResponseDTO> tmpList = new ArrayList<>();
 				for (int k = workFlowWorkUnitsStartIndex
 						.get(workDefinitionResponseDTOs.get(j).getName()); k < workFlowWorkUnitsStartIndex
 								.get(workDefinitionResponseDTOs.get(j).getName())
 								+ workDefinitionResponseDTOs.get(j).getNumberOfWorkUnits(); k++) {
-					tmp.add(workDefinitionResponseDTOs.get(k));
+					tmpList.add(workDefinitionResponseDTOs.get(k));
 				}
-				workDefinitionResponseDTOs.get(j).setWorks(tmp);
+				workDefinitionResponseDTOs.get(j).setWorks(tmpList);
 			}
 		}
 		return workDefinitionResponseDTOs.get(0).getWorks();
 	}
+
 }

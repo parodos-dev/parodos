@@ -65,4 +65,5 @@ public class WorkDefinitionResponseDTO {
 
 	@JsonIgnore
 	private Integer numberOfWorkUnits;
+
 }
