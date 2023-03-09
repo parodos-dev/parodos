@@ -15,6 +15,7 @@
  */
 package com.redhat.parodos.workflow.execution.aspect;
 
+import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.WorkFlowStatus;
 import com.redhat.parodos.workflow.WorkFlowType;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
@@ -57,12 +58,15 @@ public class WorkFlowExecutionAspect {
 
 	private final WorkFlowDefinitionRepository workFlowDefinitionRepository;
 
+	private final WorkFlowDelegate workFlowDelegate;
+
 	public WorkFlowExecutionAspect(WorkFlowServiceImpl workFlowService,
 			WorkFlowSchedulerServiceImpl workFlowSchedulerService,
-			WorkFlowDefinitionRepository workFlowDefinitionRepository) {
+			WorkFlowDefinitionRepository workFlowDefinitionRepository, WorkFlowDelegate workFlowDelegate) {
 		this.workFlowService = workFlowService;
 		this.workFlowSchedulerService = workFlowSchedulerService;
 		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
+		this.workFlowDelegate = workFlowDelegate;
 	}
 
 	/**
@@ -138,6 +142,8 @@ public class WorkFlowExecutionAspect {
 
 		log.info("Stop workflow checker: {} schedule", workFlowName);
 		workFlowSchedulerService.stop(workFlow);
+		workFlowDelegate.getWorkFlowExecutionByName(workFlowCheckerDefinition.getNextWorkFlow().getName())
+				.execute(workContext);
 	}
 
 }

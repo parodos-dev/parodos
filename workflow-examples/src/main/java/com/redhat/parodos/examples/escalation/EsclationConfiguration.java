@@ -52,7 +52,7 @@ public class EsclationConfiguration {
 
 	// ********** Start Checker + Escalation **************
 	@Bean
-	@Checker(cronExpression = "0 0/1 * * * ?", nextWorkFlowName = "workflowContinuesAfterCheckingEscalation")
+	@Checker(cronExpression = "*/5 * * * * ?", nextWorkFlowName = "workflowContinuesAfterCheckingEscalation")
 	public WorkFlow simpleTaskOneCheckerWorkflow(
 			@Qualifier("simpleTaskOneCheckerTask") SimpleTaskOneChecker simpleTaskOneCheckerTask) {
 		// @formatter:off

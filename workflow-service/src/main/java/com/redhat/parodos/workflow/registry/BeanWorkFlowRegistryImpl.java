@@ -137,12 +137,10 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 		if (beanDefinition.getSource() instanceof AnnotatedTypeMetadata) {
 			AnnotatedTypeMetadata metadata = (AnnotatedTypeMetadata) beanDefinition.getSource();
 			return workFlowTypeList.stream().filter(clazz -> metadata.getAnnotationAttributes(clazz.getName()) != null)
-					.findFirst().map(clazz -> {
-						log.info(beanName + ":" + WorkFlowType.valueOf(clazz.getSimpleName().toUpperCase()) + " "
-								+ (metadata.getAnnotationAttributes(clazz.getName()) != null));
-						return Pair.of(WorkFlowType.valueOf(clazz.getSimpleName().toUpperCase()),
-								metadata.getAnnotationAttributes(clazz.getName()));
-					}).orElseThrow(() -> new RuntimeException("workflow missing type! beanName: " + beanName));
+					.findFirst()
+					.map(clazz -> Pair.of(WorkFlowType.valueOf(clazz.getSimpleName().toUpperCase()),
+							metadata.getAnnotationAttributes(clazz.getName())))
+					.orElseThrow(() -> new RuntimeException("workflow missing type! beanName: " + beanName));
 		}
 		throw new RuntimeException("workflow with no annotated type metadata!");
 	}
