@@ -85,7 +85,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 
 	@Override
 	public WorkFlowDefinitionResponseDTO save(String workFlowName, WorkFlowType workFlowType,
-			List<WorkFlowParameter> workFlowParameters, Map<String, WorkFlowTask> workFlowTasks, List<Work> works,
+			List<WorkFlowParameter> workFlowParameters, List<WorkFlowTask> workFlowTasks, List<Work> works,
 			WorkFlowProcessingType workFlowProcessingType) {
 		// prepare workFlowDefinition entity
 		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(workFlowName)
@@ -93,10 +93,10 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 				.parameters(WorkFlowDTOUtil.writeObjectValueAsString(workFlowParameters)).modifyDate(new Date())
 				.numberWorkUnits(works.size()).processingType(workFlowProcessingType.name()).build();
 		// set workflowTasks to workFlowDefinition entity
-		workFlowDefinition.setWorkFlowTaskDefinitions(workFlowTasks.entrySet().stream()
-				.map(entry -> WorkFlowTaskDefinition.builder().name(entry.getKey())
+		workFlowDefinition.setWorkFlowTaskDefinitions(workFlowTasks.stream()
+				.map(workFlowTask -> WorkFlowTaskDefinition.builder().name(workFlowTask.getName())
 						.parameters(WorkFlowDTOUtil.writeObjectValueAsString(
-								entry.getValue().getWorkFlowTaskParameters().stream().map(workFlowTaskParameter -> {
+								workFlowTask.getWorkFlowTaskParameters().stream().map(workFlowTaskParameter -> {
 									var hm = new HashMap<>();
 									hm.put("key", workFlowTaskParameter.getKey());
 									hm.put("description", workFlowTaskParameter.getDescription());
@@ -104,7 +104,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 									hm.put("optional", workFlowTaskParameter.isOptional());
 									return hm;
 								}).collect(Collectors.toList())))
-						.outputs(WorkFlowDTOUtil.writeObjectValueAsString(entry.getValue().getWorkFlowTaskOutputs()))
+						.outputs(WorkFlowDTOUtil.writeObjectValueAsString(workFlowTask.getWorkFlowTaskOutputs()))
 						.workFlowDefinition(workFlowDefinition).createDate(new Date()).modifyDate(new Date()).build())
 				.collect(Collectors.toList()));
 		// save workFlowDefinition entity

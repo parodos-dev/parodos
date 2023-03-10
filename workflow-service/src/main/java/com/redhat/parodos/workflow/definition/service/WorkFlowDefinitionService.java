@@ -36,7 +36,7 @@ import java.util.UUID;
 public interface WorkFlowDefinitionService {
 
 	WorkFlowDefinitionResponseDTO save(String workFlowName, WorkFlowType workFlowType,
-			List<WorkFlowParameter> workFlowParameters, Map<String, WorkFlowTask> workFlowTasks, List<Work> works,
+			List<WorkFlowParameter> workFlowParameters, List<WorkFlowTask> workFlowTasks, List<Work> works,
 			WorkFlowProcessingType workFlowProcessingType);
 
 	List<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitions();
