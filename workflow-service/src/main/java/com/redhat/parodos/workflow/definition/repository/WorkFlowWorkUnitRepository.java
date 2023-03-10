@@ -10,4 +10,6 @@ public interface WorkFlowWorkUnitRepository extends JpaRepository<WorkFlowWorkUn
 
 	List<WorkFlowWorkUnit> findByWorkFlowDefinitionId(UUID workFlowDefinitionId);
 
+	List<WorkFlowWorkUnit> findByWorkDefinitionId(UUID workDefinitionId);
+
 }

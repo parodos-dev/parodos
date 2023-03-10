@@ -61,7 +61,7 @@ public class MasterWorkFlowConfiguration {
 	}
 
 	@Bean(name = "namespaceApprovalWorkFlowChecker")
-	@Checker(cronExpression = "0 0/1 * * * ?")
+	@Checker(cronExpression = "*/5 * * * * ?")
 	WorkFlow namespaceApprovalWorkFlowChecker(
 			@Qualifier("namespaceApprovalWorkFlowCheckerTask") NamespaceApprovalWorkFlowCheckerTask namespaceApprovalWorkFlowCheckerTask) {
 		return SequentialFlow.Builder.aNewSequentialFlow().named("namespaceApprovalWorkFlowChecker")
@@ -96,7 +96,7 @@ public class MasterWorkFlowConfiguration {
 	}
 
 	@Bean(name = "sslCertificationApprovalWorkFlowChecker")
-	@Checker(cronExpression = "0 0/1 * * * ?")
+	@Checker(cronExpression = "*/5 * * * * ?")
 	WorkFlow sslCertificationApprovalWorkFlowChecker(
 			@Qualifier("sslCertificationApprovalWorkFlowCheckerTask") SslCertificationApprovalWorkFlowCheckerTask sslCertificationApprovalWorkFlowCheckerTask) {
 		return SequentialFlow.Builder.aNewSequentialFlow().named("sslCertificationApprovalWorkFlowChecker")
@@ -149,15 +149,15 @@ public class MasterWorkFlowConfiguration {
 	// - subWorkFlowThree
 	// - subWorkFlowFour
 
-	@Bean(name = "userWorkFlow")
+	@Bean(name = "masterWorkFlow")
 	@Infrastructure(parameters = {
 			@Parameter(key = "projectId", description = "The project id", type = WorkFlowParameterType.TEXT,
 					optional = false),
 			@Parameter(key = "projectRepoUrl", description = "The project repo url", type = WorkFlowParameterType.URL,
 					optional = true) })
-	WorkFlow userWorkFlow(@Qualifier("subWorkFlowThree") WorkFlow subWorkFlowThree,
+	WorkFlow masterWorkFlow(@Qualifier("subWorkFlowThree") WorkFlow subWorkFlowThree,
 			@Qualifier("subWorkFlowFour") WorkFlow subWorkFlowFour) {
-		return SequentialFlow.Builder.aNewSequentialFlow().named("userWorkFlow").execute(subWorkFlowThree)
+		return SequentialFlow.Builder.aNewSequentialFlow().named("masterWorkFlow").execute(subWorkFlowThree)
 				.then(subWorkFlowFour).build();
 	}
 

@@ -16,6 +16,7 @@
 package com.redhat.parodos.workflow.execution.service;
 
 import com.redhat.parodos.workflow.enums.WorkFlowStatus;
+import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
@@ -32,12 +33,12 @@ import java.util.UUID;
  */
 public interface WorkFlowService {
 
-	WorkReport execute(String projectId, String workFlowName, Map<String, Map<String, String>> workFlowTaskArguments,
-			Map<String, String> workFlowArguments);
+	WorkReport execute(WorkFlowRequestDTO workFlowRequestDTO);
 
 	WorkFlowExecution getWorkFlowById(UUID workFlowExecutionId);
 
-	WorkFlowExecution saveWorkFlow(UUID projectId, UUID workFlowDefinitionId, WorkFlowStatus workFlowStatus);
+	WorkFlowExecution saveWorkFlow(UUID projectId, UUID workFlowDefinitionId, WorkFlowStatus workFlowStatus,
+			WorkFlowExecution masterWorkFlowExecution);
 
 	WorkFlowExecution updateWorkFlow(WorkFlowExecution workFlowExecution);
 

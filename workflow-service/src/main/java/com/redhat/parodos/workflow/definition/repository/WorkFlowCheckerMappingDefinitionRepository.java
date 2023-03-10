@@ -15,7 +15,7 @@
  */
 package com.redhat.parodos.workflow.definition.repository;
 
-import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerDefinition;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -27,8 +27,8 @@ import java.util.UUID;
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
-public interface WorkFlowCheckerDefinitionRepository extends JpaRepository<WorkFlowCheckerDefinition, UUID> {
+public interface WorkFlowCheckerMappingDefinitionRepository extends JpaRepository<WorkFlowCheckerMappingDefinition, UUID> {
 
-	WorkFlowCheckerDefinition findFirstByCheckWorkFlow(WorkFlowDefinition CheckWorkFlow);
+	WorkFlowCheckerMappingDefinition findFirstByCheckWorkFlow(WorkFlowDefinition CheckWorkFlow);
 
 }

@@ -45,20 +45,17 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class WorkFlowCheckerDefinition extends AbstractEntity {
+public class WorkFlowCheckerMappingDefinition extends AbstractEntity {
 
-	@OneToOne(optional = false, fetch = FetchType.LAZY)
+	@OneToOne(optional = false, fetch = FetchType.EAGER)
 	@JoinColumn(name = "workflow_checker_id")
 	private WorkFlowDefinition checkWorkFlow;
 
-	@OneToMany(mappedBy = "workFlowCheckerDefinition", cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "workFlowCheckerMappingDefinition", cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+	@Builder.Default
 	private List<WorkFlowTaskDefinition> tasks = new ArrayList<>();
 
 	@Column(name = "cron_expression")
 	private String cronExpression;
-
-	@OneToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "next_workflow_id")
-	private WorkFlowDefinition nextWorkFlow;
 
 }

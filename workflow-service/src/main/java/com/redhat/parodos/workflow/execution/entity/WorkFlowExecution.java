@@ -23,9 +23,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -57,5 +65,15 @@ public class WorkFlowExecution extends AbstractEntity {
 	private UUID projectId;
 
 	private String arguments;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "master_workflow_execution_id")
+	private WorkFlowExecution masterWorkFlowExecution;
+
+	@OneToMany(mappedBy = "masterWorkFlowExecution", cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+	private List<WorkFlowExecution> subWorkFlowExecution = new ArrayList<>();
+
+	@OneToOne(mappedBy = "masterWorkFlowExecution", cascade = CascadeType.ALL)
+	private WorkFlowExecutionContext workFlowExecutionContext;
 
 }
