@@ -15,6 +15,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class WorkFlowSchedulerServiceImplTest {
 
+	private static final String CRON_EXPRESSION = "* * * * * *";
+
+	private static final String TEST = "test";
+
 	private TaskScheduler taskScheduler;
 
 	private WorkFlowSchedulerServiceImpl service;
@@ -29,7 +33,7 @@ class WorkFlowSchedulerServiceImplTest {
 		this.service = new WorkFlowSchedulerServiceImpl(taskScheduler);
 
 		this.work = Mockito.mock(Work.class);
-		this.workFlow = SequentialFlow.Builder.aNewSequentialFlow().named("test").execute(work).build();
+		this.workFlow = SequentialFlow.Builder.aNewSequentialFlow().named(TEST).execute(work).build();
 	}
 
 	@Test
@@ -38,7 +42,7 @@ class WorkFlowSchedulerServiceImplTest {
 		Mockito.when(this.taskScheduler.schedule(Mockito.any(Runnable.class), Mockito.any(CronTrigger.class)))
 				.thenReturn(null);
 		// when
-		this.service.schedule(this.workFlow, new WorkContext(), "* * * * * *");
+		this.service.schedule(this.workFlow, new WorkContext(), CRON_EXPRESSION);
 		// then
 		Mockito.verify(this.taskScheduler, Mockito.times(1)).schedule(Mockito.any(Runnable.class),
 				Mockito.any(CronTrigger.class));
@@ -49,24 +53,26 @@ class WorkFlowSchedulerServiceImplTest {
 		// given
 		Mockito.when(this.taskScheduler.schedule(Mockito.any(Runnable.class), Mockito.any(CronTrigger.class)))
 				.thenReturn(null);
-		this.service.schedule(this.workFlow, new WorkContext(), "* * * * * *");
+		this.service.schedule(this.workFlow, new WorkContext(), CRON_EXPRESSION);
 
 		// when
-		this.service.schedule(this.workFlow, new WorkContext(), "* * * * * *");
+		this.service.schedule(this.workFlow, new WorkContext(), CRON_EXPRESSION);
 
 		// then
 		Mockito.verify(this.taskScheduler, Mockito.times(1)).schedule(Mockito.any(Runnable.class),
 				Mockito.any(CronTrigger.class));
 	}
 
+	
+	@SuppressWarnings("unchecked")
 	@Test
 	void workFlowCanBeCancel() {
 		// given
-		ScheduledFuture mockScheduledFuture = Mockito.mock(ScheduledFuture.class);
+		var mockScheduledFuture = Mockito.mock(ScheduledFuture.class);
 		Mockito.when(mockScheduledFuture.cancel(false)).thenReturn(true);
 		Mockito.when(this.taskScheduler.schedule(Mockito.any(Runnable.class), Mockito.any(CronTrigger.class)))
 				.thenReturn(mockScheduledFuture);
-		this.service.schedule(this.workFlow, new WorkContext(), "* * * * * *");
+		this.service.schedule(this.workFlow, new WorkContext(), CRON_EXPRESSION);
 
 		// when
 		this.service.stop(this.workFlow);
@@ -75,9 +81,11 @@ class WorkFlowSchedulerServiceImplTest {
 		Mockito.verify(mockScheduledFuture, Mockito.times(1)).cancel(Mockito.anyBoolean());
 	}
 
+	
 	@Test
 	void workFlowIsNotCalledIfNoPresent() {
 		// given
+		@SuppressWarnings("rawtypes")
 		ScheduledFuture mockScheduledFuture = Mockito.mock(ScheduledFuture.class);
 		Mockito.when(mockScheduledFuture.cancel(Mockito.anyBoolean())).thenReturn(true);
 		// when
