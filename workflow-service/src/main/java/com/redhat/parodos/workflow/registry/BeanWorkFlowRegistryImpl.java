@@ -165,7 +165,7 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 	}
 
 	private boolean isBeanInstanceOf(ConfigurableListableBeanFactory configurableListableBeanFactory, String beanName,
-									 Class<?>... classes) {
+			Class<?>... classes) {
 		return Arrays.stream(classes).anyMatch(clazz -> {
 			try {
 				configurableListableBeanFactory.getBean(beanName, clazz);
