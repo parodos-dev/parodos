@@ -34,6 +34,7 @@ spec:
       containers:
       - name: workflow-service
         image: quay.io/parodos/workflow-service:latest
+        imagePullPolicy: Always
         env:
           - name: SPRING_PROFILES_ACTIVE
             value: "dev"
