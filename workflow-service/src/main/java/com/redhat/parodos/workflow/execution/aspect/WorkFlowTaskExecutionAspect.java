@@ -96,8 +96,7 @@ public class WorkFlowTaskExecutionAspect {
 	public WorkReport executeAroundAdviceTask(ProceedingJoinPoint proceedingJoinPoint, WorkContext workContext) {
 		WorkReport report = null;
 		String workFlowTaskName = ((WorkFlowTask) proceedingJoinPoint.getTarget()).getName();
-		log.info("Before invoking execute() on workflow task name: {}, work context is: {}", workFlowTaskName,
-				workContext);
+		log.info("Before invoking execute() on workflow task name: {}", workFlowTaskName);
 		WorkFlowTaskDefinition workFlowTaskDefinition = workFlowTaskDefinitionRepository
 				.findFirstByName(workFlowTaskName);
 

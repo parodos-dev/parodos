@@ -61,7 +61,7 @@ public class MasterWorkFlowConfiguration {
 	}
 
 	@Bean(name = "namespaceApprovalWorkFlowChecker")
-	@Checker(cronExpression = "*/15 * * * * ?")
+	@Checker(cronExpression = "*/5 * * * * ?")
 	WorkFlow namespaceApprovalWorkFlowChecker(
 			@Qualifier("namespaceApprovalWorkFlowCheckerTask") NamespaceApprovalWorkFlowCheckerTask namespaceApprovalWorkFlowCheckerTask) {
 		return SequentialFlow.Builder.aNewSequentialFlow().named("namespaceApprovalWorkFlowChecker")
@@ -96,7 +96,7 @@ public class MasterWorkFlowConfiguration {
 	}
 
 	@Bean(name = "sslCertificationApprovalWorkFlowChecker")
-	@Checker(cronExpression = "*/15 * * * * ?")
+	@Checker(cronExpression = "*/5 * * * * ?")
 	WorkFlow sslCertificationApprovalWorkFlowChecker(
 			@Qualifier("sslCertificationApprovalWorkFlowCheckerTask") SslCertificationApprovalWorkFlowCheckerTask sslCertificationApprovalWorkFlowCheckerTask) {
 		return SequentialFlow.Builder.aNewSequentialFlow().named("sslCertificationApprovalWorkFlowChecker")

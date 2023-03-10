@@ -154,7 +154,7 @@ public class WorkFlowExecutionAspect {
                         UUID.fromString(WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.PROJECT,
                                 WorkContextDelegate.Resource.ID).toString()),
                         workFlowDefinition.getId(), WorkFlowStatus.IN_PROGRESS, masterWorkFlowExecution);
-            } else if (workFlowExecution.getStatus().equals(WorkFlowStatus.COMPLETED) && !workFlowDefinition.getType().equals(WorkFlowType.CHECKER.name()))
+            } else if (workFlowExecution.getStatus().equals(WorkFlowStatus.COMPLETED))
                 // skip the workflow if it's already successful
                 return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
         }
@@ -201,18 +201,19 @@ public class WorkFlowExecutionAspect {
             if (workFlowCheckerMappingDefinitions.stream()
                     .map(workFlowCheckerDefinition -> workFlowRepository
                             .findFirstByWorkFlowDefinitionIdAndMasterWorkFlowExecution(
-                                    workFlowCheckerDefinition.getId(), masterWorkFlowExecution))
+                                    workFlowCheckerDefinition.getCheckWorkFlow().getId(), masterWorkFlowExecution))
                     .anyMatch(checkerExecution -> checkerExecution == null || !checkerExecution.getStatus().equals(WorkFlowStatus.COMPLETED))) {
                 log.info("failed wf: {}", workFlowName);
                 workFlowExecution.setStatus(WorkFlowStatus.PENDING);
                 workFlowService.updateWorkFlow(workFlowExecution);
                 return new DefaultWorkReport(WorkStatus.FAILED, workContext);
             }
-            updateWorkFlowExecution(workFlowExecution);
+            workFlowService.updateWorkFlow(workFlowExecution);
 
         } else {
             // if this workflow is a checker, schedule workflow checker for dynamic run on
             // cron expression or stop if done
+            workFlowService.updateWorkFlow(workFlowExecution);
             startOrStopWorkFlowCheckerOnSchedule(workFlowDefinition.getName(),
                     (WorkFlow) proceedingJoinPoint.getTarget(), workFlowDefinition.getCheckerWorkFlowDefinition(),
                     report.getStatus(), workContext, workFlowExecution.getProjectId().toString(), masterWorkFlowExecutionId, WorkContextDelegate.read(workContext,
@@ -238,11 +239,6 @@ public class WorkFlowExecutionAspect {
         // TODO: if this workflow is checker and it's successful, call continuation
         // service to restart master workflow execution with same execution Id
         workFlowContinuationService.continueWorkFlow(projectId, masterWorkFlowName, workContext, masterWorkFlowExecution);
-    }
-
-    @Synchronized
-    private void updateWorkFlowExecution(WorkFlowExecution workFlowExecution) {
-        workFlowService.updateWorkFlow(workFlowExecution);
     }
 
 }
