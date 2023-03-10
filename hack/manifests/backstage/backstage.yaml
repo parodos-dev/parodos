@@ -1,0 +1,56 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backstage
+  namespace: backstage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backstage
+  template:
+    metadata:
+      labels:
+        app: backstage
+    spec:
+      volumes:
+        - name: app-config
+          configMap:
+            name: app-config
+      containers:
+        - name: backstage
+          #command: ["sleep", "1000h"]
+          command:
+            - "node"
+            - "packages/backend"
+            - "--config"
+            - "/app/app-config.yaml"
+          image: quay.io/parodos/orion-ui:latest
+          imagePullPolicy: Always
+          ports:
+            - name: backend
+              containerPort: 7007
+          envFrom:
+            - secretRef:
+                name: postgres-secrets
+          volumeMounts:
+            - name: app-config
+              mountPath: /app/app-config.yaml
+              subPath: app-config.yaml
+            - name: app-config
+              mountPath: /app/app-config.production.yaml
+              subPath: app-config.yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backstage
+  namespace: backstage
+spec:
+  selector:
+    app: backstage
+  ports:
+    - name: backend
+      port: 7007
+      targetPort: backend
