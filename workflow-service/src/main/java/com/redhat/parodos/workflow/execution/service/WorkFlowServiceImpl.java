@@ -75,7 +75,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
 	@Override
 	public WorkReport execute(WorkFlowRequestDTO workFlowRequestDTO) {
-		String workflowName = workFlowRequestDTO.getWorkFlowName();
+		String workflowName = workFlowRequestDTO.getName();
 
 		WorkFlow workFlow = workFlowDelegate.getWorkFlowExecutionByName(workflowName);
 		String validationFailedMsg = validateWorkflow(workflowName, workFlow);

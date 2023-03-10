@@ -54,7 +54,7 @@ public class WorkFlowDelegate {
 
 		if (!workFlowRequestDTO.getArguments().isEmpty()) {
 			WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-					workFlowRequestDTO.getWorkFlowName(), WorkContextDelegate.Resource.ARGUMENTS,
+					workFlowRequestDTO.getName(), WorkContextDelegate.Resource.ARGUMENTS,
 					WorkFlowDTOUtil.convertArgumentListToMap(workFlowRequestDTO.getArguments()));
 		}
 		if (workFlowRequestDTO.getWorks() != null)

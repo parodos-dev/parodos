@@ -17,7 +17,6 @@ package com.redhat.parodos.workflow.execution.dto;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,7 +37,7 @@ public class WorkFlowRequestDTO {
 
 	private String projectId;
 
-	private String workFlowName;
+	private String name;
 
 	private List<WorkRequestDTO.ArgumentRequestDTO> arguments;
 

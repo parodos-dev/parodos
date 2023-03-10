@@ -18,6 +18,7 @@ package com.redhat.parodos.workflow.execution.controller;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowResponseDTO;
+import com.redhat.parodos.workflow.execution.dto.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.service.WorkFlowService;
 import com.redhat.parodos.workflow.option.WorkFlowOptions;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -28,11 +29,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -66,13 +63,25 @@ public class WorkFlowController {
 	public ResponseEntity<WorkFlowResponseDTO> execute(@RequestBody @Valid WorkFlowRequestDTO workFlowRequestDTO) {
 		WorkReport workReport = workFlowService.execute(workFlowRequestDTO);
 		return ResponseEntity.ok(WorkFlowResponseDTO.builder()
-				.workFlowExecutionId(WorkContextDelegate.read(workReport.getWorkContext(),
+				.id(WorkContextDelegate.read(workReport.getWorkContext(),
 						WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ID).toString())
 				.workFlowOptions((WorkFlowOptions) WorkContextDelegate.read(workReport.getWorkContext(),
 						WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
 						WorkContextDelegate.Resource.WORKFLOW_OPTIONS))
 				.build());
 
+	}
+
+	@Operation(summary = "Returns a workflow status")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Succeeded",
+					content = { @Content(mediaType = "application/json",
+							schema = @Schema(implementation = WorkFlowStatusResponseDTO.class)) }),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content) })
+	@GetMapping("/{id}/status")
+	public ResponseEntity<WorkFlowStatusResponseDTO> getStatus(@PathVariable String id) {
+		return null;
 	}
 
 }
