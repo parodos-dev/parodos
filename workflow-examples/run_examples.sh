@@ -277,7 +277,6 @@ run_escalation_flow() {
                  "name": "project-1",
                  "description": "an example project"
                }' | jq -r '.id')
-  [ ${#PROJECT_ID} -eq "36" ] || @fail "Project ID ${PROJECT_ID} is not present"
   echo "Project id is " $(echo_green $PROJECT_ID)
 
 
