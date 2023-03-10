@@ -45,7 +45,6 @@
             <column name="name" type="varchar(255)">
                 <constraints unique="true" nullable="false"/>
             </column>
-            <column name="description" type="varchar(255)"/>
             <column name="type" type="varchar(255)"/>
             <column name="author" type="varchar(255)"/>
             <column name="create_date" type="timestamp" defaultValue="${now}"/>

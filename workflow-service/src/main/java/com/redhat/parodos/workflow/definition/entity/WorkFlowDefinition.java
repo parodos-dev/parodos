@@ -50,8 +50,6 @@ public class WorkFlowDefinition extends AbstractEntity {
 
 	private String name;
 
-	private String description;
-
 	private String type;
 
 	private String author;

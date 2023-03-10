@@ -84,12 +84,12 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 	}
 
 	@Override
-	public WorkFlowDefinitionResponseDTO save(String workFlowName, String workFlowDescription,
-			WorkFlowType workFlowType, List<WorkFlowParameter> workFlowParameters,
-			Map<String, WorkFlowTask> workFlowTasks, List<Work> works, WorkFlowProcessingType workFlowProcessingType) {
+	public WorkFlowDefinitionResponseDTO save(String workFlowName, WorkFlowType workFlowType,
+			List<WorkFlowParameter> workFlowParameters, Map<String, WorkFlowTask> workFlowTasks, List<Work> works,
+			WorkFlowProcessingType workFlowProcessingType) {
 		// prepare workFlowDefinition entity
 		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(workFlowName)
-				.description(workFlowDescription).type(workFlowType.name()).createDate(new Date())
+				.type(workFlowType.name()).createDate(new Date())
 				.parameters(WorkFlowDTOUtil.writeObjectValueAsString(workFlowParameters)).modifyDate(new Date())
 				.numberWorkUnits(works.size()).processingType(workFlowProcessingType.name()).build();
 		// set workflowTasks to workFlowDefinition entity

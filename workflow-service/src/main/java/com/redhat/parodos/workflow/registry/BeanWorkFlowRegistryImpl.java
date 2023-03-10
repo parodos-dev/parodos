@@ -83,7 +83,7 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 
 	@PostConstruct
 	void postInit() {
-		workFlows.forEach((key, value) -> saveWorkFlow(value, key));
+		workFlows.forEach(this::saveWorkFlow);
 		saveChecker(workFlowTasks);
 	}
 
@@ -92,15 +92,18 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 		return workFlows.get(workFlowName);
 	}
 
-	private void saveWorkFlow(Object bean, String name) {
-		List<Work> works = getWorkUnits(bean, name);
+	private void saveWorkFlow(String workFlowName, Object workFlowBean) {
+		List<Work> works = getWorkUnits(workFlowName);
 		// save workflow -> workFlowTasks
 		Map<String, WorkFlowTask> workTasks = new HashMap<>();
 		works.stream().filter(work -> work instanceof WorkFlowTask)
 				.forEach(work -> workTasks.put(work.getName(), (WorkFlowTask) work));
 
-		Pair<WorkFlowType, Map<String, Object>> workFlowTypeDetailsPair = getWorkFlowTypeDetails(name,
+		Pair<WorkFlowType, Map<String, Object>> workFlowTypeDetailsPair = getWorkFlowTypeDetails(workFlowName,
 				List.of(Assessment.class, Checker.class, Infrastructure.class));
+		// workflow type
+		WorkFlowType workFlowType = workFlowTypeDetailsPair.getFirst();
+		// workflow parameters from annotation attributes
 		AnnotationAttributes[] annotationAttributes = (AnnotationAttributes[]) workFlowTypeDetailsPair.getSecond()
 				.get("parameters");
 		List<WorkFlowParameter> workFlowParameters = new ArrayList<>();
@@ -112,39 +115,20 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 							.optional(annotationAttribute.getBoolean("optional")).build())
 					.collect(Collectors.toList());
 		}
-		workFlowDefinitionService.save(name, ((WorkFlow) bean).getName(), workFlowTypeDetailsPair.getFirst(),
-				workFlowParameters, workTasks, works, getWorkFlowProcessingType(bean));
+		workFlowDefinitionService.save(workFlowName, workFlowType, workFlowParameters, workTasks, works,
+				getWorkFlowProcessingType(workFlowBean));
 	}
 
-	private List<Work> getWorkUnits(Object bean, String name) {
-		return Arrays.stream(beanFactory.getDependenciesForBean(name)).filter(dependency -> {
-			try {
-				beanFactory.getBean(dependency, WorkFlow.class);
-				return true;
-			}
-			catch (BeansException e1) {
-				try {
-					beanFactory.getBean(dependency, WorkFlowTask.class);
-					return true;
-				}
-				catch (BeansException e2) {
-					return false;
-				}
-			}
-		}).map(dependency -> beanFactory.getBean(dependency, Work.class)).collect(Collectors.toList());
+	private List<Work> getWorkUnits(String workFlowName) {
+		return Arrays.stream(beanFactory.getDependenciesForBean(workFlowName))
+				.filter(dependency -> isBeanInstanceOf(beanFactory, dependency, WorkFlow.class, WorkFlowTask.class))
+				.map(dependency -> beanFactory.getBean(dependency, Work.class)).collect(Collectors.toList());
 	}
 
-	private void saveChecker(Map<String, WorkFlowTask> workFlowTaskMap) {
-		workFlowTaskMap
-				.forEach((name, value) -> Arrays.stream(beanFactory.getDependenciesForBean(name)).filter(dependency -> {
-					try {
-						beanFactory.getBean(dependency, WorkFlow.class);
-						return true;
-					}
-					catch (BeansException e) {
-						return false;
-					}
-				}).findFirst().ifPresent(dependency -> {
+	private void saveChecker(Map<String, WorkFlowTask> workFlowTasks) {
+		workFlowTasks.forEach((name, value) -> Arrays.stream(beanFactory.getDependenciesForBean(name))
+				.filter(dependency -> isBeanInstanceOf(beanFactory, dependency, WorkFlow.class)).findFirst()
+				.ifPresent(dependency -> {
 					try {
 						WorkFlowCheckerDTO workFlowCheckerDTO = new ObjectMapper().convertValue(
 								getWorkFlowTypeDetails(dependency, List.of(Checker.class)).getSecond(),
@@ -157,9 +141,9 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 				}));
 	}
 
-	private Pair<WorkFlowType, Map<String, Object>> getWorkFlowTypeDetails(String beanName,
+	private Pair<WorkFlowType, Map<String, Object>> getWorkFlowTypeDetails(String workFlowName,
 			List<Class<? extends Annotation>> workFlowTypeAnnotations) {
-		BeanDefinition beanDefinition = beanFactory.getBeanDefinition(beanName);
+		BeanDefinition beanDefinition = beanFactory.getBeanDefinition(workFlowName);
 		if (beanDefinition.getSource() instanceof AnnotatedTypeMetadata) {
 			AnnotatedTypeMetadata metadata = (AnnotatedTypeMetadata) beanDefinition.getSource();
 			return workFlowTypeAnnotations.stream()
@@ -171,13 +155,32 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 		throw new RuntimeException("workflow with no annotated type metadata!");
 	}
 
-	private WorkFlowProcessingType getWorkFlowProcessingType(Object bean) {
-		String className = bean.getClass().getTypeName();
+	private WorkFlowProcessingType getWorkFlowProcessingType(Object workFlowBean) {
+		String className = workFlowBean.getClass().getTypeName();
 		if (className.toUpperCase().contains(WorkFlowProcessingType.PARALLEL.name()))
 			return WorkFlowProcessingType.PARALLEL;
 		if (className.toUpperCase().contains(WorkFlowProcessingType.SEQUENTIAL.name()))
 			return WorkFlowProcessingType.SEQUENTIAL;
 		return WorkFlowProcessingType.OTHER;
+	}
+
+	private boolean isBeanInstanceOf(ConfigurableListableBeanFactory configurableListableBeanFactory, String beanName,
+									 Class<?>... classes) {
+		return Arrays.stream(classes).anyMatch(clazz -> {
+			try {
+				configurableListableBeanFactory.getBean(beanName, WorkFlow.class);
+				return true;
+			}
+			catch (BeansException e1) {
+				try {
+					configurableListableBeanFactory.getBean(beanName, WorkFlowTask.class);
+					return true;
+				}
+				catch (BeansException e2) {
+					return false;
+				}
+			}
+		});
 	}
 
 }

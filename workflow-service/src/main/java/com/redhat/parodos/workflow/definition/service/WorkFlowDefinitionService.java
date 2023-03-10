@@ -35,7 +35,7 @@ import java.util.UUID;
  */
 public interface WorkFlowDefinitionService {
 
-	WorkFlowDefinitionResponseDTO save(String workFlowName, String workFlowDescription, WorkFlowType workFlowType,
+	WorkFlowDefinitionResponseDTO save(String workFlowName, WorkFlowType workFlowType,
 			List<WorkFlowParameter> workFlowParameters, Map<String, WorkFlowTask> workFlowTasks, List<Work> works,
 			WorkFlowProcessingType workFlowProcessingType);
 
