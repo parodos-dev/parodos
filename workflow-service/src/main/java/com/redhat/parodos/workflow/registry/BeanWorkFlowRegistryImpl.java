@@ -168,17 +168,11 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 									 Class<?>... classes) {
 		return Arrays.stream(classes).anyMatch(clazz -> {
 			try {
-				configurableListableBeanFactory.getBean(beanName, WorkFlow.class);
+				configurableListableBeanFactory.getBean(beanName, clazz);
 				return true;
 			}
 			catch (BeansException e1) {
-				try {
-					configurableListableBeanFactory.getBean(beanName, WorkFlowTask.class);
-					return true;
-				}
-				catch (BeansException e2) {
-					return false;
-				}
+				return false;
 			}
 		});
 	}
