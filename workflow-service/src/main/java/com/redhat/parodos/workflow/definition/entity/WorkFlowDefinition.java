@@ -64,7 +64,7 @@ public class WorkFlowDefinition extends AbstractEntity {
 
 	private Date modifyDate;
 
-	@OneToMany(mappedBy = "workFlowDefinition", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "workFlowDefinition", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@Builder.Default
 	private List<WorkFlowTaskDefinition> workFlowTaskDefinitions = new ArrayList<>();
 

@@ -57,7 +57,7 @@ public class WorkFlowCheckerDefinition extends AbstractEntity {
 	@Column(name = "cron_expression")
 	private String cronExpression;
 
-	@OneToOne(optional = false, fetch = FetchType.LAZY)
+	@OneToOne(optional = false, fetch = FetchType.EAGER)
 	@JoinColumn(name = "next_workflow_id")
 	private WorkFlowDefinition nextWorkFlow;
 

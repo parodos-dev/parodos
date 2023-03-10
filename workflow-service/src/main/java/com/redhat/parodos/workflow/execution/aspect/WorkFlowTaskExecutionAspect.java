@@ -15,22 +15,31 @@
  */
 package com.redhat.parodos.workflow.execution.aspect;
 
-import com.redhat.parodos.workflow.context.WorkContextDelegate;
-import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
-import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
-import com.redhat.parodos.workflow.task.WorkFlowTask;
-import com.redhat.parodos.workflow.task.WorkFlowTaskStatus;
-import com.redhat.parodos.workflows.work.WorkContext;
-import com.redhat.parodos.workflows.work.WorkReport;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Date;
+import java.util.Optional;
+import java.util.UUID;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.UUID;
+import com.redhat.parodos.workflow.context.WorkContextDelegate;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerDefinition;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
+import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
+import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
+import com.redhat.parodos.workflow.execution.scheduler.WorkFlowSchedulerServiceImpl;
+import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
+import com.redhat.parodos.workflow.task.WorkFlowTask;
+import com.redhat.parodos.workflow.task.WorkFlowTaskStatus;
+import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
+import com.redhat.parodos.workflows.work.WorkContext;
+import com.redhat.parodos.workflows.work.WorkReport;
+import com.redhat.parodos.workflows.workflow.WorkFlow;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Aspect pointcut to perform state management for a workflow task executions
@@ -47,8 +56,16 @@ public class WorkFlowTaskExecutionAspect {
 
 	private final WorkFlowServiceImpl workFlowExecutionService;
 
-	public WorkFlowTaskExecutionAspect(WorkFlowServiceImpl workFlowExecutionService) {
+	private final WorkFlowSchedulerServiceImpl workFlowSchedulerService;
+
+	private final WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository;
+
+	public WorkFlowTaskExecutionAspect(WorkFlowServiceImpl workFlowExecutionService,
+			WorkFlowSchedulerServiceImpl workFlowSchedulerService,
+			WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository) {
 		this.workFlowExecutionService = workFlowExecutionService;
+		this.workFlowSchedulerService = workFlowSchedulerService;
+		this.workFlowTaskDefinitionRepository = workFlowTaskDefinitionRepository;
 	}
 
 	/**
@@ -69,6 +86,8 @@ public class WorkFlowTaskExecutionAspect {
 	public WorkReport executeAroundAdviceTask(ProceedingJoinPoint proceedingJoinPoint, WorkContext workContext) {
 		WorkReport report = null;
 		String workFlowTaskName = ((WorkFlowTask) proceedingJoinPoint.getTarget()).getName();
+		WorkFlowTaskDefinition workFlowTaskDefinition = workFlowTaskDefinitionRepository
+				.findFirstByName(workFlowTaskName);
 		log.info("Before invoking execute() on workflow task name: {}, work context is: {}", workFlowTaskName,
 				workContext);
 		try {
@@ -80,33 +99,47 @@ public class WorkFlowTaskExecutionAspect {
 		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
 				workFlowTaskName, WorkContextDelegate.Resource.STATUS, report.getStatus().name());
 
-		WorkFlowTaskExecution workFlowTaskExecution = workFlowExecutionService.getWorkFlowTask(
-				UUID.fromString(
-						WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-								WorkContextDelegate.Resource.ID).toString()),
-				UUID.fromString(
-						WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_DEFINITION,
-								workFlowTaskName, WorkContextDelegate.Resource.ID).toString()));
+		WorkFlowTaskExecution workFlowTaskExecution = workFlowExecutionService.getWorkFlowTask(UUID
+				.fromString(WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+						WorkContextDelegate.Resource.ID).toString()),
+				workFlowTaskDefinition.getId());
 
 		if (workFlowTaskExecution == null) {
-			workFlowExecutionService.saveWorkFlowTask(
-					WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
-							workFlowTaskName, WorkContextDelegate.Resource.ARGUMENTS).toString(),
-					UUID.fromString(WorkContextDelegate
-							.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_DEFINITION,
-									workFlowTaskName, WorkContextDelegate.Resource.ID)
-							.toString()),
-					UUID.fromString(
-							WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-									WorkContextDelegate.Resource.ID).toString()),
-					WorkFlowTaskStatus.valueOf(report.getStatus().name()));
+			workFlowExecutionService
+					.saveWorkFlowTask(
+							Optional.ofNullable(WorkContextDelegate.read(workContext,
+									WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION, workFlowTaskName,
+									WorkContextDelegate.Resource.ARGUMENTS)).orElse("").toString(),
+							workFlowTaskDefinition.getId(),
+							UUID.fromString(WorkContextDelegate.read(workContext,
+									WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ID)
+									.toString()),
+							WorkFlowTaskStatus.valueOf(report.getStatus().name()));
 		}
 		else {
 			workFlowTaskExecution.setStatus(WorkFlowTaskStatus.valueOf(report.getStatus().name()));
 			workFlowTaskExecution.setLastUpdateDate(new Date());
 			workFlowExecutionService.updateWorkFlowTask(workFlowTaskExecution);
 		}
+
+		// schedule workflow checker for dynamic run on cron expression or stop if done
+		if (workFlowTaskDefinition.getWorkFlowCheckerDefinition() != null) {
+			WorkFlow checkerWorkFlow = ((BaseInfrastructureWorkFlowTask) proceedingJoinPoint.getTarget())
+					.getWorkFlowChecker();
+			startCheckerOnSchedule(workFlowTaskDefinition.getWorkFlowCheckerDefinition().getCheckWorkFlow().getName(),
+					checkerWorkFlow, workFlowTaskDefinition.getWorkFlowCheckerDefinition(), workContext);
+		}
+
 		return report;
+	}
+
+	private void startCheckerOnSchedule(String workFlowName, WorkFlow workFlow,
+			WorkFlowCheckerDefinition workFlowCheckerDefinition, WorkContext workContext) {
+
+		log.info("Schedule workflow checker: {} to run per cron expression: {}", workFlowName,
+				workFlowCheckerDefinition.getCronExpression());
+		workFlowSchedulerService.schedule(workFlow, workContext, workFlowCheckerDefinition.getCronExpression());
+
 	}
 
 }

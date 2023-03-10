@@ -13,18 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow;
+package com.redhat.parodos.workflow.annotation;
+
+import static java.lang.annotation.ElementType.METHOD;
+
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Workflows themselves are defined by the WorkFlowTasks that compose them, but it is
- * useful to provide a type for a Workflow
+ * Escalation Annotation
  *
  * @author Luke Shannon (Github: lshannon)
- * @author Richard Wang (Github: richardw98)
- * @author Annel Ketcha (Github: anludke)
+ * @author Gloria Ciavarrini (Github: gciavarrini)
+ * 
  */
-public enum WorkFlowType {
-
-	ASSESSMENT, CHECKER, INFRASTRUCTURE, ESCALATION
+@Target(METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+public @interface Escalation {
 
 }

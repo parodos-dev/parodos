@@ -1,5 +1,17 @@
 package com.redhat.parodos.workflow.execution.continuation;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mockito;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.workflow.WorkFlowStatus;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
@@ -11,26 +23,11 @@ import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
-import com.redhat.parodos.workflow.task.WorkFlowTask;
 import com.redhat.parodos.workflow.task.WorkFlowTaskStatus;
-import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
-import org.mockito.internal.matchers.Matches;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class WorkFlowContinuationServiceTest {
+
+	private static final String TEST = "test";
 
 	private WorkFlowDefinitionRepository workFlowDefinitionRepository;
 
@@ -81,7 +78,7 @@ class WorkFlowContinuationServiceTest {
 		WorkFlowExecution wfExecution = this.sampleWorkFlowExecution();
 		Mockito.when(this.workFlowRepository.findAll()).thenReturn(List.of(wfExecution));
 		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.any()))
-				.thenReturn(Optional.of(sampleWorkFlowDefinition("test")));
+				.thenReturn(Optional.of(sampleWorkFlowDefinition(TEST)));
 
 		// when
 		this.service.workFlowRunAfterStartup();
@@ -89,7 +86,7 @@ class WorkFlowContinuationServiceTest {
 		// then
 		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findAll();
 		Mockito.verify(this.workFlowService, Mockito.times(1)).execute(
-				Mockito.eq(wfExecution.getProjectId().toString()), Mockito.eq("test"),
+				Mockito.eq(wfExecution.getProjectId().toString()), Mockito.eq(TEST),
 				ArgumentMatchers.argThat(argument -> {
 					if (argument instanceof HashMap) {
 						return ((HashMap<?, ?>) argument).isEmpty();
@@ -104,7 +101,7 @@ class WorkFlowContinuationServiceTest {
 		WorkFlowExecution wfExecution = this.sampleWorkFlowExecution();
 		Mockito.when(this.workFlowRepository.findAll()).thenReturn(List.of(wfExecution));
 		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.any()))
-				.thenReturn(Optional.of(sampleWorkFlowDefinition("test")));
+				.thenReturn(Optional.of(sampleWorkFlowDefinition(TEST)));
 
 		WorkFlowTaskDefinition wfTaskDef = sampleWorkFlowTaskDefinition();
 		Mockito.when(this.workFlowTaskDefinitionRepository.findById(Mockito.any())).thenReturn(Optional.of(wfTaskDef));
@@ -122,7 +119,7 @@ class WorkFlowContinuationServiceTest {
 		// then
 		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findAll();
 		Mockito.verify(this.workFlowService, Mockito.times(1)).execute(
-				Mockito.eq(wfExecution.getProjectId().toString()), Mockito.eq("test"),
+				Mockito.eq(wfExecution.getProjectId().toString()), Mockito.eq(TEST),
 				ArgumentMatchers.argThat(argument -> {
 					if (argument instanceof HashMap) {
 						return !((HashMap<?, ?>) argument).isEmpty();
@@ -137,7 +134,7 @@ class WorkFlowContinuationServiceTest {
 		WorkFlowExecution wfExecution = this.sampleWorkFlowExecution();
 		Mockito.when(this.workFlowRepository.findAll()).thenReturn(List.of(wfExecution));
 		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.any()))
-				.thenReturn(Optional.of(sampleWorkFlowDefinition("test")));
+				.thenReturn(Optional.of(sampleWorkFlowDefinition(TEST)));
 
 		WorkFlowTaskDefinition wfTaskDef = sampleWorkFlowTaskDefinition();
 		Mockito.when(this.workFlowTaskDefinitionRepository.findById(Mockito.any())).thenReturn(Optional.of(wfTaskDef));
@@ -170,7 +167,7 @@ class WorkFlowContinuationServiceTest {
 	}
 
 	private WorkFlowTaskDefinition sampleWorkFlowTaskDefinition() {
-		WorkFlowTaskDefinition wfTaskDef = WorkFlowTaskDefinition.builder().name("test").build();
+		WorkFlowTaskDefinition wfTaskDef = WorkFlowTaskDefinition.builder().name(TEST).build();
 		wfTaskDef.setId(UUID.randomUUID());
 		return wfTaskDef;
 	}
