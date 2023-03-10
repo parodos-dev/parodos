@@ -18,6 +18,8 @@ VERSION = $(shell sed -n "s/<revision>\(.*\)<\/revision>/\1/p" $(PWD)/pom.xml | 
 GIT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD | sed s,^main$$,latest,g)
 GIT_HASH := $(shell git rev-parse HEAD)
 
+JAVA_VERSION_MAX_SUPPORTED=11
+JAVA_VERSION_MIN_SUPPORTED=11
 # Setting SHELL to bash allows bash commands to be executed by recipes.
 # This is a requirement for 'setup-envtest.sh' in the test target.
 # Options are set to exit when a recipe line exits non-zero or a piped command fails.
@@ -27,16 +29,23 @@ SHELL = /usr/bin/env bash -o pipefail
 # check if maven is installed
 ifeq (,$(shell which $(MAVEN)))
   $(error "No maven found in $(PATH). Please install maven")
+else
+  MVN_JAVA_VERSION=$(shell mvn --version | egrep -o "Java version: [[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+"| head -n 1 | cut -c15-16)
+  MVN_VERSION_IS_SUPPORTED=$(shell [ $(MVN_JAVA_VERSION) -lt $(JAVA_VERSION_MAX_SUPPORTED)  ] && [ $(MVN_JAVA_VERSION) -gt $(JAVA_VERSION_MIN_SUPPORTED)  ] && echo true)
+  ifeq ($(MVN_VERSION_IS_SUPPORTED), )
+    $(error "Maven Java $(MVN_JAVA_VERSION) version should be [$(JAVA_VERSION_MIN_SUPPORTED) ; $(JAVA_VERSION_MAX_SUPPORTED)]. Please use Java within these bounds with mvn")
+  endif
 endif
-
 # check java version
 ifeq (,$(shell java --version))
   $(error "No java found in $(PATH). Please install java >= 11")
 else
-  JAVA_VERSION=$(shell java --version | egrep -o "1[[:digit:]]\.[[:digit:]]+\.[[:digit:]]+" | head -n 1)
-    ifeq (,$(JAVA_VERSION))
-      $(error "Java version inferior to 11. Please install Java >= 11")
-    endif
+  JAVA_VERSION=$(shell java --version | egrep -o "[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+" | head -n 1 | cut -c1-2)
+  $(info $$JAVA_VERSION is [${JAVA_VERSION}])
+  JAVA_VERSION_IS_SUPPORTED=$(shell [ $(JAVA_VERSION) -lt $(JAVA_VERSION_MAX_SUPPORTED)  ] && [ $(JAVA_VERSION) -gt $(JAVA_VERSION_MIN_SUPPORTED)  ]&& echo true)
+	ifeq ($(JAVA_VERSION_IS_SUPPORTED), )
+		$(error "Java version $(JAVA_VERSION) should be [$(JAVA_VERSION_MIN_SUPPORTED) ; $(JAVA_VERSION_MAX_SUPPORTED)]. Please install Java within those bounds")
+	endif
 endif
 
 ##@ General
