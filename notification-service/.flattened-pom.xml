@@ -3,15 +3,27 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.redhat.parodos</groupId>
+    <groupId>dev.parodos</groupId>
     <artifactId>parados-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
-  <groupId>com.redhat.parodos</groupId>
+  <groupId>dev.parodos</groupId>
   <artifactId>notification-service</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <name>notification-service</name>
   <description>Notification Service to sent out notification messages</description>
+  <url>https://github.com/redhat-developer/parodos</url>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+  <scm>
+    <connection>scm:git:git://github.com/redhat-developer/parodos.git</connection>
+    <developerConnection>scm:git:ssh://github.com/redhat-developer/parodos.git</developerConnection>
+    <url>http://github.com/redhat-developer/parodos/tree/master</url>
+  </scm>
   <properties>
     <springdoc-openapi-ui.version>1.6.4</springdoc-openapi-ui.version>
     <maven.compiler.target>11</maven.compiler.target>

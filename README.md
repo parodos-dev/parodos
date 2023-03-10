@@ -148,6 +148,43 @@ This will build the dependencies and install them into your local mvn directory.
 Parodos 'workflow-engine' is not in Maven Central. If you wish to use it in a project like the workflow-examples, you
 will need to build it locally first.
 
+## Releasing the Code
+
+In the root of this folder we can execute:
+
+to push module snapshots to sonatype repository:
+
+```shell
+
+mvn deploy
+
+```
+
+to release and push modules to sonatype repository which is later synchronized to maven central:
+
+```shell
+
+mvn deploy -P release
+
+```
+
+In order to push modules or snapshots to sonatype repository following changes needs to be configured:
+* [Jira](https://issues.sonatype.org) user details provided in settings file with permissions to push
+
+```xml
+<settings>
+  <servers>
+    <server>
+      <id>ossrh</id>
+      <username>your-jira-id</username>
+      <password>your-jira-pwd</password>
+    </server>
+  </servers>
+</settings>
+```
+* [GPG client](http://www.gnupg.org/) installed and on your command line path as required by the
+  [Maven GPG plugin](http://maven.apache.org/plugins/maven-gpg-plugin/)
+
 ## Is Parodos an Application?
 
 Parodos provides an API and object model that can be used as a backing service for an IDP. If Backstage is in use, the
