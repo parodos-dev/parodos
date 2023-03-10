@@ -263,4 +263,40 @@ run_complex_flow() {
   echo "network workflow execution id:" $(echo_green $EXECUTION_ID)
 }
 
-run_complex_flow
+run_escalation_flow() {
+  echo "******** Running The Escalation WorkFlow ********"
+  echo "                                                  "
+  echo "                                                  "
+
+   PROJECT_ID=$(curl -X 'POST' -s \
+    "${TARGET_URL}/api/v1/projects" \
+    -H 'accept: */*' \
+    -H 'Authorization: Basic dGVzdDp0ZXN0' \
+    -H 'Content-Type: application/json' \
+    -d '{
+                 "name": "project-1",
+                 "description": "an example project"
+               }' | jq -r '.id')
+  [ ${#PROJECT_ID} -eq "36" ] || @fail "Project ID ${PROJECT_ID} is not present"
+  echo "Project id is " $(echo_green $PROJECT_ID)
+
+
+  echo_blue "******** Running the Starting WorkFlow ***********"
+  echo "executes 1 task with a WorkFlowChecker"
+  EXECUTION_ID="$(curl -X 'POST' -s \
+    "${TARGET_URL}/api/v1/workflows/" \
+    -H 'accept: */*' \
+    -H 'Authorization: Basic dGVzdDp0ZXN0' \
+    -H 'Content-Type: application/json' \
+    -d '{
+          "projectId": "'$PROJECT_ID'",
+        "workFlowName": "workflowStartingCheckingAndEscalation",
+        "workFlowTasks": []
+      }' | jq -r '.workFlowExecutionId')"
+
+  echo "                                                "
+  echo "******** Simple Esalation Flow Completed (check logs as the checkers are still running) ********"
+  echo "                                                "
+}
+
+run_escalation_flow
