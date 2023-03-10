@@ -106,13 +106,13 @@ public class WorkFlowTaskExecutionAspect {
 				.toString());
 
 		WorkFlowExecution masterWorkFlowExecution = workFlowRepository.findById(masterWorkFlowExecutionId).get();
-		// get the workflow if it's already started
+		// get the workflow if it's executed again from continuation
 		WorkFlowExecution workFlowExecution = workFlowRepository
 				.findFirstByWorkFlowDefinitionIdAndMasterWorkFlowExecution(
 						workFlowTaskDefinition.getWorkFlowDefinition().getId(), masterWorkFlowExecution);
 
 		WorkFlowTaskExecution workFlowTaskExecution = workFlowExecutionService
-				.getWorkFlowTask(workFlowExecution.getWorkFlowDefinitionId(), workFlowTaskDefinition.getId());
+				.getWorkFlowTask(workFlowExecution.getId(), workFlowTaskDefinition.getId());
 		if (workFlowTaskExecution == null) {
 			workFlowTaskExecution = workFlowExecutionService
 					.saveWorkFlowTask(
