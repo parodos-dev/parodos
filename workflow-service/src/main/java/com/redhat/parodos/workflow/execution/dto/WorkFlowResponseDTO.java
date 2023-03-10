@@ -37,7 +37,7 @@ public class WorkFlowResponseDTO {
 
 	private String workFlowExecutionId;
 
-	@JsonInclude(JsonInclude.Include.NON_NULL)
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private WorkFlowOptions workFlowOptions;
 
 }

@@ -152,7 +152,8 @@ public class WorkFlowTaskExecutionAspect {
 			// TODO: if this task has no running checker
 			WorkFlowExecution checkerWorkFlowExecution = workFlowRepository
 					.findFirstByWorkFlowDefinitionIdAndMasterWorkFlowExecution(
-							workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition().getId(), masterWorkFlowExecution);
+							workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition().getId(),
+							masterWorkFlowExecution);
 			if (checkerWorkFlowExecution == null) {
 				// TODO: schedule workflow checker for dynamic run on cron expression
 				WorkFlow checkerWorkFlow = ((BaseInfrastructureWorkFlowTask) proceedingJoinPoint.getTarget())
@@ -167,7 +168,7 @@ public class WorkFlowTaskExecutionAspect {
 	}
 
 	private void startCheckerOnSchedule(String workFlowName, WorkFlow workFlow,
-										WorkFlowCheckerMappingDefinition workFlowCheckerMappingDefinition, WorkContext workContext) {
+			WorkFlowCheckerMappingDefinition workFlowCheckerMappingDefinition, WorkContext workContext) {
 
 		log.info("Schedule workflow checker: {} to run per cron expression: {}", workFlowName,
 				workFlowCheckerMappingDefinition.getCronExpression());

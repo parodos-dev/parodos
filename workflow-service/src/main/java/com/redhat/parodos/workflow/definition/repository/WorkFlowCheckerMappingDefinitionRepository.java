@@ -27,7 +27,8 @@ import java.util.UUID;
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
-public interface WorkFlowCheckerMappingDefinitionRepository extends JpaRepository<WorkFlowCheckerMappingDefinition, UUID> {
+public interface WorkFlowCheckerMappingDefinitionRepository
+		extends JpaRepository<WorkFlowCheckerMappingDefinition, UUID> {
 
 	WorkFlowCheckerMappingDefinition findFirstByCheckWorkFlow(WorkFlowDefinition CheckWorkFlow);
 

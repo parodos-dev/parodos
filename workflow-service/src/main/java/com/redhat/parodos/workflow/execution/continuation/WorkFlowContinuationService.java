@@ -98,7 +98,8 @@ public class WorkFlowContinuationService {
 
 					// TODO: continue with the same execution id
 					continueWorkFlow(workFlowExecution.getProjectId().toString(), workFlowDefinition.getName(),
-							workFlowExecution.getWorkFlowExecutionContext().getWorkContext(), workFlowExecution.getId());
+							workFlowExecution.getWorkFlowExecutionContext().getWorkContext(),
+							workFlowExecution.getId());
 				});
 	}
 

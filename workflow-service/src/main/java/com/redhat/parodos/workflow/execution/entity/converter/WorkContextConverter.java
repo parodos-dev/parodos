@@ -34,17 +34,17 @@ import java.util.Set;
 @Converter(autoApply = true)
 public class WorkContextConverter implements AttributeConverter<WorkContext, String> {
 
-    @Override
-    public String convertToDatabaseColumn(WorkContext workContext) {
-        return WorkFlowDTOUtil.writeObjectValueAsString(workContext.getEntrySet());
-    }
+	@Override
+	public String convertToDatabaseColumn(WorkContext workContext) {
+		return WorkFlowDTOUtil.writeObjectValueAsString(workContext.getEntrySet());
+	}
 
-    @Override
-    public WorkContext convertToEntityAttribute(String dbData) {
-        WorkContext workContext = new WorkContext();
-        WorkFlowDTOUtil.readStringAsObject(dbData, new TypeReference<Set<Map.Entry<String, Object>>>() {
-        }, Set.of()).forEach(entry -> workContext.put(entry.getKey(), entry.getValue()));
-        return workContext;
-    }
+	@Override
+	public WorkContext convertToEntityAttribute(String dbData) {
+		WorkContext workContext = new WorkContext();
+		WorkFlowDTOUtil.readStringAsObject(dbData, new TypeReference<Set<Map.Entry<String, Object>>>() {
+		}, Set.of()).forEach(entry -> workContext.put(entry.getKey(), entry.getValue()));
+		return workContext;
+	}
 
 }
