@@ -63,7 +63,6 @@ class WorkFlowSchedulerServiceImplTest {
 				Mockito.any(CronTrigger.class));
 	}
 
-	
 	@SuppressWarnings("unchecked")
 	@Test
 	void workFlowCanBeCancel() {
@@ -81,7 +80,6 @@ class WorkFlowSchedulerServiceImplTest {
 		Mockito.verify(mockScheduledFuture, Mockito.times(1)).cancel(Mockito.anyBoolean());
 	}
 
-	
 	@Test
 	void workFlowIsNotCalledIfNoPresent() {
 		// given
