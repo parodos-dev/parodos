@@ -40,7 +40,7 @@ public class MasterWorkFlowConfiguration {
 	}
 
 	@Bean(name = "subWorkFlowOne")
-	@Infrastructure(parameters = { @Parameter(key = "comment", description = "The comment",
+	@Infrastructure(parameters = { @Parameter(key = "comment", description = "The workflow comment",
 			type = WorkFlowParameterType.TEXT, optional = false) })
 	WorkFlow subWorkFlowOne(@Qualifier("adGroupsWorkFlowTask") AdGroupsWorkFlowTask adGroupsWorkFlowTask,
 			@Qualifier("splunkMonitoringWorkFlowTask") SplunkMonitoringWorkFlowTask splunkMonitoringWorkFlowTask) {
@@ -151,9 +151,9 @@ public class MasterWorkFlowConfiguration {
 
 	@Bean(name = "masterWorkFlow")
 	@Infrastructure(parameters = {
-			@Parameter(key = "projectId", description = "The project id", type = WorkFlowParameterType.TEXT,
+			@Parameter(key = "workloadId", description = "The workload id", type = WorkFlowParameterType.TEXT,
 					optional = false),
-			@Parameter(key = "projectRepoUrl", description = "The project repo url", type = WorkFlowParameterType.URL,
+			@Parameter(key = "projectUrl", description = "The project url", type = WorkFlowParameterType.URL,
 					optional = true) })
 	WorkFlow masterWorkFlow(@Qualifier("subWorkFlowThree") WorkFlow subWorkFlowThree,
 			@Qualifier("subWorkFlowFour") WorkFlow subWorkFlowFour) {

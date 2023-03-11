@@ -25,10 +25,10 @@ public class SingleSignOnWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	@Override
 	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
 		return List.of(
-				WorkFlowTaskParameter.builder().key("api-server").description("The api server")
-						.type(WorkFlowTaskParameterType.URL).optional(false).build(),
-				WorkFlowTaskParameter.builder().key("user-id").description("The user id")
-						.type(WorkFlowTaskParameterType.TEXT).optional(false).build());
+				WorkFlowTaskParameter.builder().key("userId").description("The user id")
+						.type(WorkFlowTaskParameterType.TEXT).optional(false).build(),
+				WorkFlowTaskParameter.builder().key("password").description("The password")
+						.type(WorkFlowTaskParameterType.PASSWORD).optional(false).build());
 	}
 
 	@Override
