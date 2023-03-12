@@ -7,6 +7,7 @@ import com.redhat.parodos.workflow.task.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
+import com.redhat.parodos.workflow.utils.CredUtils;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
@@ -20,12 +21,8 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-import static com.redhat.parodos.examples.simple.SecureAPIGetTestTask.PASSWORD;
-import static com.redhat.parodos.examples.simple.SecureAPIGetTestTask.SECURED_URL;
-import static com.redhat.parodos.examples.simple.SecureAPIGetTestTask.USERNAME;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static com.redhat.parodos.examples.simple.SecureAPIGetTestTask.*;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
@@ -122,7 +119,7 @@ public class SecureAPIGetTestTaskTest extends BaseInfrastructureWorkFlowTaskTest
 
 	@Test
 	public void getBase64Creds() {
-		String base64Creds = RestUtils.getBase64Creds(testUsername, testPassword);
+		String base64Creds = CredUtils.getBase64Creds(testUsername, testPassword);
 		assertNotNull(expectedBase64Creds, base64Creds);
 		assertEquals(expectedBase64Creds, base64Creds);
 	}
