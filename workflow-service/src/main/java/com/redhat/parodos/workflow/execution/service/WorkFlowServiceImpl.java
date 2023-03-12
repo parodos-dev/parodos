@@ -19,7 +19,7 @@ import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
-import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkUnitRepository;
+import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
 import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
@@ -61,21 +61,21 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
 	private final WorkFlowTaskRepository workFlowTaskRepository;
 
-	private final WorkFlowWorkUnitRepository workFlowWorkUnitRepository;
+	private final WorkFlowWorkRepository workFlowWorkRepository;
 
 	public WorkFlowServiceImpl(WorkFlowDelegate workFlowDelegate,
 			WorkFlowDefinitionRepository workFlowDefinitionRepository, WorkFlowRepository workFlowRepository,
-			WorkFlowTaskRepository workFlowTaskRepository, WorkFlowWorkUnitRepository workFlowWorkUnitRepository) {
+			WorkFlowTaskRepository workFlowTaskRepository, WorkFlowWorkRepository workFlowWorkRepository) {
 		this.workFlowDelegate = workFlowDelegate;
 		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
 		this.workFlowRepository = workFlowRepository;
 		this.workFlowTaskRepository = workFlowTaskRepository;
-		this.workFlowWorkUnitRepository = workFlowWorkUnitRepository;
+		this.workFlowWorkRepository = workFlowWorkRepository;
 	}
 
 	@Override
 	public WorkReport execute(WorkFlowRequestDTO workFlowRequestDTO) {
-		String workflowName = workFlowRequestDTO.getName();
+		String workflowName = workFlowRequestDTO.getWorkFlowName();
 
 		WorkFlow workFlow = workFlowDelegate.getWorkFlowExecutionByName(workflowName);
 		String validationFailedMsg = validateWorkflow(workflowName, workFlow);
@@ -158,7 +158,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
 		// validate if workflow is master
 		WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository.findFirstByName(workflowName);
-		if (!workFlowWorkUnitRepository.findByWorkDefinitionId(workFlowDefinition.getId()).isEmpty()) {
+		if (!workFlowWorkRepository.findByWorkDefinitionId(workFlowDefinition.getId()).isEmpty()) {
 			log.error("workflow '{}' is not master workflow!", workflowName);
 			return String.format("workflow '%s' is not master workflow!", workflowName);
 		}

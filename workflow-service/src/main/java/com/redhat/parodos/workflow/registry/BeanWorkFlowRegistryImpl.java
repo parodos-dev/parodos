@@ -95,8 +95,9 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 	private void saveWorkFlow(String workFlowName, Object workFlowBean) {
 		List<Work> workUnits = getWorkUnits(workFlowName);
 		// save workflow -> workFlowTasks
-		List<WorkFlowTask> workFlowTasks = workUnits.stream().filter(work -> work instanceof WorkFlowTask)
-				.map(work -> (WorkFlowTask) work).collect(Collectors.toList());
+		// List<WorkFlowTask> workFlowTasks = workUnits.stream().filter(work -> work
+		// instanceof WorkFlowTask)
+		// .map(work -> (WorkFlowTask) work).collect(Collectors.toList());
 
 		Pair<WorkFlowType, Map<String, Object>> workFlowTypeDetailsPair = getWorkFlowTypeDetails(workFlowName,
 				List.of(Assessment.class, Checker.class, Infrastructure.class));
@@ -114,7 +115,7 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 							.optional(annotationAttribute.getBoolean("optional")).build())
 					.collect(Collectors.toList());
 		}
-		workFlowDefinitionService.save(workFlowName, workFlowType, workFlowParameters, workFlowTasks, workUnits,
+		workFlowDefinitionService.save(workFlowName, workFlowType, workFlowParameters, workUnits,
 				getWorkFlowProcessingType(workFlowBean));
 	}
 

@@ -9,23 +9,26 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.util.Date;
 import java.util.UUID;
 
-@Entity(name = "workflow_work_unit")
+@Entity(name = "workflow_work_definition")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class WorkFlowWorkUnit extends AbstractEntity {
+public class WorkFlowWorkDefinition extends AbstractEntity {
 
 	private UUID workDefinitionId;
 
 	private String workDefinitionType;
 
-	@Column(name = "workflow_definition_id")
-	private UUID workFlowDefinitionId;
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "workflow_definition_id")
+	private WorkFlowDefinition workFlowDefinition;
 
 	@Column(updatable = false)
 	private Date createDate;

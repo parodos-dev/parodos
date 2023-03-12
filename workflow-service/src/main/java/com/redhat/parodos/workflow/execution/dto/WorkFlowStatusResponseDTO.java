@@ -36,9 +36,9 @@ import java.util.List;
 @NoArgsConstructor
 public class WorkFlowStatusResponseDTO {
 
-	private String id;
+	private String workFlowExecutionId;
 
-	private String name;
+	private String workFlowName;
 
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private List<WorkStatusResponseDTO> works;

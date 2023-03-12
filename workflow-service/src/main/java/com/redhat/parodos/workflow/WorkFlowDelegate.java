@@ -16,7 +16,6 @@
 package com.redhat.parodos.workflow;
 
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
-import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
 import com.redhat.parodos.workflow.enums.WorkType;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.registry.BeanWorkFlowRegistryImpl;
@@ -25,8 +24,6 @@ import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import java.util.UUID;
 
 /**
  * Provides functionality that is common to any WorkFlow composition in Parodos
@@ -39,14 +36,10 @@ import java.util.UUID;
 @Component
 public class WorkFlowDelegate {
 
-	private final BeanWorkFlowRegistryImpl workFlowRegistry;
+	private final BeanWorkFlowRegistryImpl beanWorkFlowRegistry;
 
-	private final WorkFlowDefinitionServiceImpl workFlowDefinitionService;
-
-	public WorkFlowDelegate(BeanWorkFlowRegistryImpl workFlowRegistry,
-			WorkFlowDefinitionServiceImpl workFlowDefinitionService) {
-		this.workFlowRegistry = workFlowRegistry;
-		this.workFlowDefinitionService = workFlowDefinitionService;
+	public WorkFlowDelegate(BeanWorkFlowRegistryImpl beanWorkFlowRegistry) {
+		this.beanWorkFlowRegistry = beanWorkFlowRegistry;
 	}
 
 	public WorkContext initWorkFlowContext(WorkFlowRequestDTO workFlowRequestDTO) {
@@ -54,7 +47,7 @@ public class WorkFlowDelegate {
 
 		if (!workFlowRequestDTO.getArguments().isEmpty()) {
 			WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-					workFlowRequestDTO.getName(), WorkContextDelegate.Resource.ARGUMENTS,
+					workFlowRequestDTO.getWorkFlowName(), WorkContextDelegate.Resource.ARGUMENTS,
 					WorkFlowDTOUtil.convertArgumentListToMap(workFlowRequestDTO.getArguments()));
 		}
 		if (workFlowRequestDTO.getWorks() != null)
@@ -75,13 +68,7 @@ public class WorkFlowDelegate {
 	}
 
 	public WorkFlow getWorkFlowExecutionByName(String workFlowName) {
-		return workFlowRegistry.getWorkFlowByName(workFlowName);
-	}
-
-	public UUID getWorkFlowTaskDefinitionId(String workFlowName, String workFlowTaskName) {
-		return UUID.fromString(workFlowDefinitionService.getWorkFlowDefinitionsByName(workFlowName).stream().findFirst()
-				.get().getWorks().stream().filter(task -> task.getName().equalsIgnoreCase(workFlowTaskName)).findFirst()
-				.get().getId());
+		return beanWorkFlowRegistry.getWorkFlowByName(workFlowName);
 	}
 
 }

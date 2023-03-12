@@ -37,7 +37,7 @@ public class WorkFlowRequestDTO {
 
 	private String projectId;
 
-	private String name;
+	private String workFlowName;
 
 	private List<WorkRequestDTO.ArgumentRequestDTO> arguments;
 

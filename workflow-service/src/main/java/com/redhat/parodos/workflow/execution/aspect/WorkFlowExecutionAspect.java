@@ -20,10 +20,10 @@ import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefin
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
-import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkUnitRepository;
+import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
 import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
-import com.redhat.parodos.workflow.execution.continuation.WorkFlowContinuationService;
+import com.redhat.parodos.workflow.execution.continuation.WorkFlowContinuationServiceImpl;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionContext;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
@@ -36,7 +36,6 @@ import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
-import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -74,22 +73,22 @@ public class WorkFlowExecutionAspect {
 
 	private final WorkFlowDefinitionRepository workFlowDefinitionRepository;
 
-	private final WorkFlowContinuationService workFlowContinuationService;
+	private final WorkFlowContinuationServiceImpl workFlowContinuationServiceImpl;
 
-	private final WorkFlowWorkUnitRepository workFlowWorkUnitRepository;
+	private final WorkFlowWorkRepository workFlowWorkRepository;
 
 	public WorkFlowExecutionAspect(WorkFlowServiceImpl workFlowService,
 			WorkFlowSchedulerServiceImpl workFlowSchedulerService,
 			WorkFlowDefinitionRepository workFlowDefinitionRepository, WorkFlowRepository workFlowRepository,
-			WorkFlowContinuationService workFlowContinuationService, WorkFlowTaskRepository workFlowTaskRepository,
-			WorkFlowWorkUnitRepository workFlowWorkUnitRepository) {
+			WorkFlowContinuationServiceImpl workFlowContinuationServiceImpl,
+			WorkFlowTaskRepository workFlowTaskRepository, WorkFlowWorkRepository workFlowWorkRepository) {
 		this.workFlowService = workFlowService;
 		this.workFlowSchedulerService = workFlowSchedulerService;
 		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
 		this.workFlowRepository = workFlowRepository;
-		this.workFlowContinuationService = workFlowContinuationService;
+		this.workFlowContinuationServiceImpl = workFlowContinuationServiceImpl;
 		this.workFlowTaskRepository = workFlowTaskRepository;
-		this.workFlowWorkUnitRepository = workFlowWorkUnitRepository;
+		this.workFlowWorkRepository = workFlowWorkRepository;
 	}
 
 	/**
@@ -120,7 +119,7 @@ public class WorkFlowExecutionAspect {
 		// get workflow definition entity
 		WorkFlowDefinition workFlowDefinition = this.workFlowDefinitionRepository.findFirstByName(workFlowName);
 
-		boolean isMaster = workFlowWorkUnitRepository.findByWorkDefinitionId(workFlowDefinition.getId()).isEmpty()
+		boolean isMaster = workFlowWorkRepository.findByWorkDefinitionId(workFlowDefinition.getId()).isEmpty()
 				&& !workFlowDefinition.getType().equals(WorkFlowType.CHECKER.name());
 		// get/set master WorkFlowExecution
 		UUID masterWorkFlowExecutionId = Optional.ofNullable(WorkContextDelegate.read(workContext,
@@ -246,7 +245,7 @@ public class WorkFlowExecutionAspect {
 
 		// TODO: if this workflow is checker and it's successful, call continuation
 		// service to restart master workflow execution with same execution Id
-		workFlowContinuationService.continueWorkFlow(projectId, masterWorkFlowName, workContext,
+		workFlowContinuationServiceImpl.continueWorkFlow(projectId, masterWorkFlowName, workContext,
 				masterWorkFlowExecution);
 	}
 

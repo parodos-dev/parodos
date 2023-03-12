@@ -51,7 +51,7 @@
             <column name="modify_date" type="timestamp" defaultValue="${now}"/>
             <column name="parameters" type="varchar(4000)"/>
             <column name="processing_type" type="varchar(255)"/>
-            <column name="number_work_units" type="int"/>
+            <column name="number_of_works" type="int"/>
             <column name="commit_id" type="varchar(255)"/>
             <column name="object_version" type="bigint"/>
         </createTable>
@@ -77,7 +77,7 @@
         </createTable>
 
         <!-- Workflow Definition Chain Table -->
-        <createTable tableName="workflow_work_unit">
+        <createTable tableName="workflow_work_definition">
             <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
