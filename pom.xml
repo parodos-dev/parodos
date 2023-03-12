@@ -62,6 +62,8 @@
         <module>notification-service</module>
         <module>pattern-detection-library</module>
         <module>coverage</module>
+        <module>external-dependencies</module>
+        <module>prebuilt-tasks</module>
     </modules>
     <dependencies>
         <dependency>

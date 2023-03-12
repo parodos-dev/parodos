@@ -11,7 +11,7 @@ the 'workflow-service' will explain how to execute the workflow.
 In this version of Parodos, Workflow projects are Java project. All configuration is done using the Spring Framework.
 These samples are built with Maven, however Gradle could also be used.
 
-The examples in this project can be found in two different packages.
+These are the examples in this project:
 
 ### Simple
 
@@ -22,6 +22,10 @@ Parallel workflows.
 
 This package shows how to work with WorkflowTasks that create a manual process that needs to be monitored before further
 WorkFlowTasks can be created. In this project WorkflowCheckers and other related concepts are created and configured.
+
+### TIBCO
+
+A workflow configuration that demonstrates use of TibcoWorkflowTask
 
 ## Compiling The Code
 
@@ -42,9 +46,14 @@ Once the Jar has been compiled, ensure it's added to the pom.xml of the workflow
 ```xml
 
 <dependency>
-	 <groupId>com.redhat.parodos</groupId>
+	 <groupId>dev.parodos</groupId>
 	 <artifactId>workflow-examples</artifactId>
 	 <version>${parodos.version}</version>
+</dependency>
+<dependency>
+    <groupId>dev.parodos</groupId>
+    <artifactId>prebuilt-tasks</artifactId>
+    <version>${revision}</version>
 </dependency>
 
 
@@ -352,6 +361,11 @@ annotation will determine how often the Workflow will be executed. This is usefu
 hours (or even days). As all state is persisted, when the workflow-service is restarted, execution will resume.
 
 WorkflowCheckers can be used to determine if required manual processes, outside the scope of Parodos, have completed.
+
+### TIBCO workflow
+
+'TibcoWorkFlowConfiguration.java' is the workflow code. You'll find details inside the file.
+Use the script 'run_tibco.sh' to execute the workflow.
 
 #### A Note On Defining WorkflowTasks for Usage In A Workflow
 
