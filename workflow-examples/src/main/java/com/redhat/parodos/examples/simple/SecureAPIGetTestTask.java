@@ -17,6 +17,8 @@ package com.redhat.parodos.examples.simple;
 
 import java.util.Base64;
 import java.util.List;
+
+import com.redhat.parodos.examples.utils.RestUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -59,9 +61,7 @@ public class SecureAPIGetTestTask extends BaseInfrastructureWorkFlowTask {
 			String username = getParameterValue(workContext, USERNAME);
 			String password = getParameterValue(workContext, PASSWORD);
 			log.info("Calling: urlString: {} username: {}", urlString, username);
-			RestTemplate restTemplate = new RestTemplate();
-			ResponseEntity<String> result = restTemplate.exchange(urlString, HttpMethod.GET,
-					getRequestWithHeaders(username, password), String.class);
+			ResponseEntity<String> result = RestUtils.restExchange(urlString, username, password);
 			if (result.getStatusCode().is2xxSuccessful()) {
 				log.info("Rest call completed: {}", result.getBody());
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
@@ -76,10 +76,7 @@ public class SecureAPIGetTestTask extends BaseInfrastructureWorkFlowTask {
 	}
 
 	HttpEntity<String> getRequestWithHeaders(String username, String password) {
-		String plainCreds = username + ":" + password;
-		byte[] plainCredsBytes = plainCreds.getBytes();
-		byte[] base64CredsBytes = Base64.getEncoder().encode(plainCredsBytes);
-		String base64Creds = new String(base64CredsBytes);
+		String base64Creds = RestUtils.getBase64Creds(username, password);
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Authorization", "Basic " + base64Creds);
 		return new HttpEntity<String>(headers);

@@ -25,6 +25,6 @@ package com.redhat.parodos.workflow.enums;
  */
 public enum WorkFlowType {
 
-	ASSESSMENT, CHECKER, INFRASTRUCTURE
+	ASSESSMENT, CHECKER, INFRASTRUCTURE, ESCALATION
 
 }

@@ -2,3 +2,16 @@ logging:
   level:
     ROOT: INFO
     com.redhat.parodos: DEBUG
+spring:
+  ldap:
+    embedded:
+      ldif: classpath:test-server.ldif
+      base-dn: dc=springframework,dc=org
+      port: 8389
+    connection:
+      userDNPatterns: "uid={0},ou=people"
+      groupSearchBase: "ou=groups"
+      url: "ldap://ldap:389/dc=parodos,dc=dev"
+      passwordAttribute: "userPassword"
+      managerDN: "cn=admin,dc=parodos,dc=dev"
+      managerPassword: "admin"

@@ -22,7 +22,6 @@ import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionR
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
-import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
 import com.redhat.parodos.workflow.execution.scheduler.WorkFlowSchedulerServiceImpl;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
@@ -35,14 +34,13 @@ import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import lombok.extern.slf4j.Slf4j;
+import java.util.Date;
+import java.util.UUID;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
-import java.util.UUID;
 
 /**
  * Aspect pointcut to perform state management for a workflow task executions
@@ -59,22 +57,18 @@ public class WorkFlowTaskExecutionAspect {
 
 	private final WorkFlowRepository workFlowRepository;
 
-	private final WorkFlowTaskRepository workFlowTaskRepository;
-
 	private final WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository;
 
-	private final WorkFlowServiceImpl workFlowExecutionService;
+	private final WorkFlowServiceImpl workFlowService;
 
 	private final WorkFlowSchedulerServiceImpl workFlowSchedulerService;
 
-	public WorkFlowTaskExecutionAspect(WorkFlowServiceImpl workFlowExecutionService,
-			WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository,
-			WorkFlowTaskRepository workFlowTaskRepository, WorkFlowRepository workFlowRepository,
+	public WorkFlowTaskExecutionAspect(WorkFlowRepository workFlowRepository,
+			WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository, WorkFlowServiceImpl workFlowService,
 			WorkFlowSchedulerServiceImpl workFlowSchedulerService) {
-		this.workFlowExecutionService = workFlowExecutionService;
-		this.workFlowTaskDefinitionRepository = workFlowTaskDefinitionRepository;
-		this.workFlowTaskRepository = workFlowTaskRepository;
 		this.workFlowRepository = workFlowRepository;
+		this.workFlowTaskDefinitionRepository = workFlowTaskDefinitionRepository;
+		this.workFlowService = workFlowService;
 		this.workFlowSchedulerService = workFlowSchedulerService;
 	}
 
@@ -111,10 +105,10 @@ public class WorkFlowTaskExecutionAspect {
 				.findFirstByWorkFlowDefinitionIdAndMasterWorkFlowExecution(
 						workFlowTaskDefinition.getWorkFlowDefinition().getId(), masterWorkFlowExecution);
 
-		WorkFlowTaskExecution workFlowTaskExecution = workFlowExecutionService
-				.getWorkFlowTask(workFlowExecution.getId(), workFlowTaskDefinition.getId());
+		WorkFlowTaskExecution workFlowTaskExecution = workFlowService.getWorkFlowTask(workFlowExecution.getId(),
+				workFlowTaskDefinition.getId());
 		if (workFlowTaskExecution == null) {
-			workFlowTaskExecution = workFlowExecutionService
+			workFlowTaskExecution = workFlowService
 					.saveWorkFlowTask(
 							WorkFlowDTOUtil.writeObjectValueAsString(WorkContextDelegate.read(workContext,
 									WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION, workFlowTaskName,
@@ -142,7 +136,7 @@ public class WorkFlowTaskExecutionAspect {
 
 		workFlowTaskExecution.setStatus(WorkFlowTaskStatus.valueOf(report.getStatus().name()));
 		workFlowTaskExecution.setLastUpdateDate(new Date());
-		workFlowExecutionService.updateWorkFlowTask(workFlowTaskExecution);
+		workFlowService.updateWorkFlowTask(workFlowTaskExecution);
 
 		// TODO: save workContext
 
@@ -163,17 +157,14 @@ public class WorkFlowTaskExecutionAspect {
 						checkerWorkFlow, workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition(), workContext);
 			}
 		}
-
 		return report;
 	}
 
 	private void startCheckerOnSchedule(String workFlowName, WorkFlow workFlow,
 			WorkFlowCheckerMappingDefinition workFlowCheckerMappingDefinition, WorkContext workContext) {
-
 		log.info("Schedule workflow checker: {} to run per cron expression: {}", workFlowName,
 				workFlowCheckerMappingDefinition.getCronExpression());
 		workFlowSchedulerService.schedule(workFlow, workContext, workFlowCheckerMappingDefinition.getCronExpression());
-
 	}
 
 }

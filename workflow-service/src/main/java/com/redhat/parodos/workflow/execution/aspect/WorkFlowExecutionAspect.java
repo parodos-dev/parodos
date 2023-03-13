@@ -108,11 +108,6 @@ public class WorkFlowExecutionAspect {
 	@Around("pointcutScope() && args(workContext)")
 	public WorkReport executeAroundAdvice(ProceedingJoinPoint proceedingJoinPoint, WorkContext workContext) {
 		WorkReport report = null;
-
-		// String workFlowName = WorkContextDelegate.read(workContext,
-		// WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION,
-		// WorkContextDelegate.Resource.NAME).toString();
-		// TODO: name vs description
 		String workFlowName = ((WorkFlow) proceedingJoinPoint.getTarget()).getName();
 		log.info("Before invoking execute() on workflow: {} with workContext: {}", workFlowName, workContext);
 
@@ -193,9 +188,9 @@ public class WorkFlowExecutionAspect {
 				masterWorkFlowExecution = workFlowRepository.findById(masterWorkFlowExecutionId).get();
 			}
 
-			// TODO: if this is infras/assess workflow, fail it and persist as 'pending'
-			// if
-			// any of its checkers' execution is not successful/not started
+			// TODO: if this is infrastructure/assessment workflow, fail it and persist as
+			// 'pending'
+			// if any of its checkers' execution is not successful/not started
 			Set<WorkFlowCheckerMappingDefinition> workFlowCheckerMappingDefinitions = workFlowDefinition
 					.getWorkFlowTaskDefinitions().stream()
 					.map(WorkFlowTaskDefinition::getWorkFlowCheckerMappingDefinition).filter(Objects::nonNull)

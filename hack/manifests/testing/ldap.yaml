@@ -1,0 +1,69 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ldap-deployment
+spec:
+  selector:
+    matchLabels:
+      app: ldap-service
+  template:
+    metadata:
+      labels:
+        app: ldap-service
+    spec:
+      volumes:
+        - name: ldif-volume
+          configMap:
+            name: ldif-config
+      containers:
+      - name: ldap-service
+        image: osixia/openldap:1.5.0
+        args:
+          - "--copy-service"
+          - "--loglevel"
+          - "debug"
+        volumeMounts:
+          - name: ldif-volume
+            mountPath: /ldif/
+        ports:
+          - containerPort: 389
+            name: ldap-insecure
+        env:
+          - name: LDAP_PORT
+            value: "389"
+          - name: LDAP_SEED_INTERNAL_LDIF_PATH
+            value: "/ldif"
+          - name: SPRING_PROFILES_ACTIVE
+            value: "local"
+          - name: LDAP_LOG_LEVEL
+            value: "256"
+          - name: LDAP_ORGANISATION
+            value: "parodos"
+          - name: LDAP_DOMAIN
+            value: "parodos.dev"
+          - name: LDAP_BASE_DN
+            value: "dc=parodos,dc=dev"
+          - name: LDAP_ADMIN_PASSWORD
+            value: "admin"
+          - name: LDAP_CONFIG_PASSWORD
+            value: "config"
+          - name: LDAP_TLS_CRT_FILENAME
+            value: "tls.crt"
+          - name: LDAP_TLS_KEY_FILENAME
+            value: "tls.key"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: ldap-service
+  name: ldap
+spec:
+  selector:
+    app: ldap-service
+  ports:
+    - protocol: TCP
+      name: ldap-insecure
+      port: 389
+      targetPort: 389

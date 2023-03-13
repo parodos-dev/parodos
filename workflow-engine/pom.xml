@@ -1,14 +1,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <artifactId>workflow-engine</artifactId>
     <name>workflow-engine</name>
-    
+    <url>https://github.com/redhat-developer/parodos</url>
+
     <parent>
-        <groupId>com.redhat.parodos</groupId>
+        <groupId>dev.parodos</groupId>
         <artifactId>parados-parent</artifactId>
         <version>${revision}</version>
     </parent>
+
+    <scm>
+        <connection>scm:git:git://github.com/redhat-developer/parodos.git</connection>
+        <developerConnection>scm:git:ssh://github.com/redhat-developer/parodos.git</developerConnection>
+        <url>http://github.com/redhat-developer/parodos/tree/master</url>
+    </scm>
 
     <properties>
         <java.version>11</java.version>
@@ -38,7 +46,6 @@
             <version>${slf4j.version}</version>
         </dependency>
         <!-- END Slf4j Dependencies -->
-
         <!-- START Test Dependencies -->
         <dependency>
             <groupId>junit</groupId>

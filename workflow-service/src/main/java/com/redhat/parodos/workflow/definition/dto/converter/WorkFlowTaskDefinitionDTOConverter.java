@@ -20,13 +20,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.workflow.definition.dto.WorkDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
+import java.util.List;
+import java.util.stream.Collectors;
+import com.redhat.parodos.workflow.exceptions.WorkflowDefinitionException;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Workflow task definition converter
@@ -51,16 +52,10 @@ public class WorkFlowTaskDefinitionDTOConverter
 						})).parameters(new ArrayList<>(objectMapper.readValue(workFlowTaskDefinition.getParameters(),
 								new TypeReference<List<WorkFlowTaskParameter>>() {
 								})))
-						// .workFlowChecker(Optional.ofNullable(workFlowTaskDefinition.getWorkFlowCheckerDefinition())
-						// .map(checker ->
-						// checker.getCheckWorkFlow().getId()).orElse(null))
-						// .nextWorkFlow(Optional.ofNullable(workFlowTaskDefinition.getWorkFlowCheckerDefinition())
-						// .map(checker ->
-						// checker.getNextWorkFlow().getId()).orElse(null))
 						.build();
 			}
 			catch (JsonProcessingException e) {
-				throw new RuntimeException(e);
+				throw new WorkflowDefinitionException(e);
 			}
 		}).collect(Collectors.toList());
 	}

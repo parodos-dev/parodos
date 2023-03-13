@@ -47,29 +47,15 @@ public class WorkFlowContinuationServiceImpl implements WorkFlowContinuationServ
 
 	private final WorkFlowDefinitionRepository workFlowDefinitionRepository;
 
-	private final WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository;
-
 	private final WorkFlowRepository workFlowRepository;
-
-	private final WorkFlowTaskRepository workFlowTaskRepository;
 
 	private final WorkFlowServiceImpl workFlowService;
 
-	private final WorkFlowDelegate workFlowDelegate;
-
-	private final ObjectMapper objectMapper;
-
 	public WorkFlowContinuationServiceImpl(WorkFlowDefinitionRepository workFlowDefinitionRepository,
-			WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository, WorkFlowRepository workFlowRepository,
-			WorkFlowTaskRepository workFlowTaskRepository, WorkFlowServiceImpl workFlowService,
-			WorkFlowDelegate workFlowDelegate, ObjectMapper objectMapper) {
+			WorkFlowRepository workFlowRepository, WorkFlowServiceImpl workFlowService) {
 		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
-		this.workFlowTaskDefinitionRepository = workFlowTaskDefinitionRepository;
 		this.workFlowRepository = workFlowRepository;
-		this.workFlowTaskRepository = workFlowTaskRepository;
 		this.workFlowService = workFlowService;
-		this.objectMapper = objectMapper;
-		this.workFlowDelegate = workFlowDelegate;
 	}
 
 	/**

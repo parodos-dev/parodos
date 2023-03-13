@@ -41,7 +41,7 @@ public class ComplexWorkFlowConfiguration {
 
 	// START assessmentWorkFlow definition
 
-	// A WorkflowOption describing in user friendly terms what a Workflow does - this can
+	// A WorkflowOption describing in user-friendly terms what a Workflow does - this can
 	// be used in a UI to provide choices to a User on which Workflow to run
 	@Bean
 	WorkFlowOption onboardingOption() {
@@ -115,7 +115,6 @@ public class ComplexWorkFlowConfiguration {
 		// @formatter:on
 	}
 	// End onboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW definition
-	// definition
 
 	// Start Name Space Logic
 	@Bean

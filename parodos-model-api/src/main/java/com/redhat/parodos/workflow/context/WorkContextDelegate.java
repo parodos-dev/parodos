@@ -98,7 +98,7 @@ public class WorkContextDelegate {
 	 * @param workContext reference to the context
 	 * @param processType the type of Workflow object being persisted (ie:
 	 * WORKFLOW_TASK_DEFINITION)
-	 * @param workflowTaskName a unique identifier of a WorkflowTask in the event that
+	 * @param workFlowTaskName a unique identifier of a WorkflowTask in the event that
 	 * multiple WorkflowTasks have persisted this information
 	 * @param resource the object related to the processType (ie: PARAMETERS)
 	 * @param object the reference to store

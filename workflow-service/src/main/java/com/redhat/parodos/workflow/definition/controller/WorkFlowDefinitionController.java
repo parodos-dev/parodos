@@ -78,7 +78,12 @@ public class WorkFlowDefinitionController {
 			@ApiResponse(responseCode = "404", description = "Not found", content = @Content) })
 	@GetMapping("/{id}")
 	public ResponseEntity<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitionById(@PathVariable String id) {
-		return ResponseEntity.ok(workFlowDefinitionService.getWorkFlowDefinitionById(UUID.fromString(id)));
+		WorkFlowDefinitionResponseDTO response = workFlowDefinitionService
+				.getWorkFlowDefinitionById(UUID.fromString(id));
+		if (response == null) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(response);
 	}
 
 }

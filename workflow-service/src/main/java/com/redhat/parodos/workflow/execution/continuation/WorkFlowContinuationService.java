@@ -16,7 +16,6 @@
 package com.redhat.parodos.workflow.execution.continuation;
 
 import com.redhat.parodos.workflows.work.WorkContext;
-
 import java.util.UUID;
 
 /**

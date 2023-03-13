@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
 /**
  * DTO util class for request and response objects conversion
@@ -53,7 +54,8 @@ public class WorkFlowDTOUtil {
 		Map<String, Map<String, String>> output = new HashMap<>();
 		workRequestDTOS.forEach(arg -> {
 			Map<String, String> hm = new HashMap<>();
-			arg.getArguments().forEach(i -> hm.put(i.getKey(), i.getValue()));
+			Optional.ofNullable(arg.getArguments())
+					.ifPresent(item -> item.forEach(i -> hm.put(i.getKey(), i.getValue())));
 			output.put(arg.getWorkName(), hm);
 		});
 		return output;

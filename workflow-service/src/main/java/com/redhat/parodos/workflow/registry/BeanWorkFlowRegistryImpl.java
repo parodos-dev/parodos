@@ -30,9 +30,12 @@ import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import javax.annotation.PostConstruct;
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -41,6 +44,7 @@ import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
+import com.redhat.parodos.workflow.annotation.Escalation;
 
 /**
  * An implementation of the WorkflowRegistry that loads all Bean definitions of type
@@ -92,15 +96,12 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 		return workFlows.get(workFlowName);
 	}
 
-	private void saveWorkFlow(String workFlowName, Object workFlowBean) {
-		List<Work> workUnits = getWorkUnits(workFlowName);
-		// save workflow -> workFlowTasks
-		// List<WorkFlowTask> workFlowTasks = workUnits.stream().filter(work -> work
-		// instanceof WorkFlowTask)
-		// .map(work -> (WorkFlowTask) work).collect(Collectors.toList());
-
-		Pair<WorkFlowType, Map<String, Object>> workFlowTypeDetailsPair = getWorkFlowTypeDetails(workFlowName,
-				List.of(Assessment.class, Checker.class, Infrastructure.class));
+	private void saveWorkFlow(String workFlowBeanName, Object workFlowBean) {
+		// extract work units
+		List<Work> works = getWorks(workFlowBeanName);
+		// get workflow type and parameters from annotation
+		Pair<WorkFlowType, Map<String, Object>> workFlowTypeDetailsPair = getWorkFlowTypeDetails(workFlowBeanName,
+				List.of(Assessment.class, Checker.class, Infrastructure.class, Escalation.class));
 		// workflow type
 		WorkFlowType workFlowType = workFlowTypeDetailsPair.getFirst();
 		// workflow parameters from annotation attributes
@@ -115,11 +116,11 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 							.optional(annotationAttribute.getBoolean("optional")).build())
 					.collect(Collectors.toList());
 		}
-		workFlowDefinitionService.save(workFlowName, workFlowType, workFlowParameters, workUnits,
+		workFlowDefinitionService.save(workFlowBeanName, workFlowType, workFlowParameters, works,
 				getWorkFlowProcessingType(workFlowBean));
 	}
 
-	private List<Work> getWorkUnits(String workFlowName) {
+	private List<Work> getWorks(String workFlowName) {
 		return Arrays.stream(beanFactory.getDependenciesForBean(workFlowName))
 				.filter(dependency -> isBeanInstanceOf(beanFactory, dependency, WorkFlow.class, WorkFlowTask.class))
 				.map(dependency -> beanFactory.getBean(dependency, Work.class)).collect(Collectors.toList());
@@ -135,22 +136,22 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 								WorkFlowCheckerDTO.class);
 						workFlowDefinitionService.saveWorkFlowChecker(name, dependency, workFlowCheckerDTO);
 					}
-					catch (IllegalArgumentException ignored) {
+					catch (RuntimeException ignored) {
 						log.info("{} is not a checker for {}", dependency, name);
 					}
 				}));
 	}
 
-	private Pair<WorkFlowType, Map<String, Object>> getWorkFlowTypeDetails(String workFlowName,
+	private Pair<WorkFlowType, Map<String, Object>> getWorkFlowTypeDetails(String workFlowBeanName,
 			List<Class<? extends Annotation>> workFlowTypeAnnotations) {
-		BeanDefinition beanDefinition = beanFactory.getBeanDefinition(workFlowName);
+		BeanDefinition beanDefinition = beanFactory.getBeanDefinition(workFlowBeanName);
 		if (beanDefinition.getSource() instanceof AnnotatedTypeMetadata) {
 			AnnotatedTypeMetadata metadata = (AnnotatedTypeMetadata) beanDefinition.getSource();
 			return workFlowTypeAnnotations.stream()
 					.filter(clazz -> metadata.getAnnotationAttributes(clazz.getName()) != null).findFirst()
 					.map(clazz -> Pair.of(WorkFlowType.valueOf(clazz.getSimpleName().toUpperCase()),
 							metadata.getAnnotationAttributes(clazz.getName())))
-					.orElseThrow(() -> new RuntimeException("workflow missing type!"));
+					.orElseThrow(() -> new RuntimeException("workflow missing type! beanName: " + workFlowBeanName));
 		}
 		throw new RuntimeException("workflow with no annotated type metadata!");
 	}
