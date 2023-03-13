@@ -17,6 +17,7 @@ package com.redhat.parodos.workflow.task;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.BeanNameAware;
 
@@ -50,14 +51,14 @@ public abstract class BaseWorkFlowTask implements WorkFlowTask, BeanNameAware {
 	}
 
 	public String getParameterValue(WorkContext workContext, String parameterName) throws MissingParameterException {
-		return new ObjectMapper()
-				.convertValue(
+		return Optional
+				.ofNullable(new ObjectMapper().convertValue(
 						WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
 								name, WorkContextDelegate.Resource.ARGUMENTS),
 						new TypeReference<HashMap<String, String>>() {
-						})
-				.entrySet().stream().filter(entry -> parameterName.equals(entry.getKey())).map(Map.Entry::getValue)
-				.findFirst().orElseThrow(() -> {
+						}))
+				.orElse(new HashMap<>()).entrySet().stream().filter(entry -> parameterName.equals(entry.getKey()))
+				.map(Map.Entry::getValue).findFirst().orElseThrow(() -> {
 					log.error(String.format("parameter %s is not provided for task %s!", parameterName, name));
 					return new MissingParameterException("missing parameter(s)");
 				});

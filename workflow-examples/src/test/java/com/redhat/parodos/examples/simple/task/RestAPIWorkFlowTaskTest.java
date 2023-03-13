@@ -1,7 +1,6 @@
 package com.redhat.parodos.examples.simple.task;
 
 import com.redhat.parodos.examples.base.BaseInfrastructureWorkFlowTaskTest;
-import com.redhat.parodos.examples.simple.task.RestAPIWorkFlowTask;
 import com.redhat.parodos.examples.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
@@ -103,7 +102,7 @@ public class RestAPIWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 
 		// then
 		assertNotNull(workFlowTaskParameters);
-		assertEquals(2, workFlowTaskParameters.size());
+		assertEquals(3, workFlowTaskParameters.size());
 		assertEquals(testUrlDefinedAtCreation, workFlowTaskParameters.get(0).getKey());
 		assertEquals("The Url of the service (ie: https://httpbin.org/post",
 				workFlowTaskParameters.get(0).getDescription());

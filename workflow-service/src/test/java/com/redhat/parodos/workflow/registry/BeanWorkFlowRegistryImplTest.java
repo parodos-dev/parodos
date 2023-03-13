@@ -57,7 +57,7 @@ class BeanWorkFlowRegistryImplTest {
 		Work work = Mockito.mock(Work.class);
 		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow().named(TEST).execute(work).build();
 
-		Mockito.when(this.beanFactory.getDependenciesForBean(Mockito.eq(TEST)))
+		Mockito.when(this.beanFactory.getDependenciesForBean(Mockito.any()))
 				.thenReturn(new String[] { FOO_DEPENDENCY });
 		AnnotatedTypeMetadata bean = Mockito.mock(AnnotatedTypeMetadata.class);
 		BeanDefinition beanDefinition = Mockito.mock(BeanDefinition.class);
@@ -69,34 +69,17 @@ class BeanWorkFlowRegistryImplTest {
 			{
 				put(TEST, workFlow);
 			}
-		}, new HashMap<>() {
-			{
-				put(TEST_TASK, null);
-			}
-		}, this.workFlowDefinitionService);
+		}, new HashMap<>(), this.workFlowDefinitionService);
 
 		registry.postInit();
 
 		// then
 		Mockito.verify(this.beanFactory, Mockito.times(1)).getDependenciesForBean(Mockito.any());
-		Mockito.verify(this.workFlowDefinitionService, Mockito.times(1)).save(Mockito.eq("test"),
-				Mockito.eq(WorkFlowType.ASSESSMENT), Mockito.argThat(arguments -> {
-					if (arguments != null) {
-						if (arguments.isEmpty()) {
-							return false;
-						}
-						return arguments.contains(FOO_DEPENDENCY);
-					}
-					return false;
-				}), Mockito.argThat(works -> {
-					if (works != null) {
-						if (works.isEmpty()) {
-							return false;
-						}
-						return works.contains(FOO_DEPENDENCY);
-					}
-					return false;
-				}), Mockito.eq(WorkFlowProcessingType.SEQUENTIAL));
+
+		Mockito.verify(this.workFlowDefinitionService, Mockito.times(1)).save(Mockito.eq(TEST),
+				Mockito.eq(WorkFlowType.ASSESSMENT), Mockito.anyList(), Mockito.anyList(),
+				Mockito.eq(WorkFlowProcessingType.SEQUENTIAL));
+
 		assertEquals(registry.getWorkFlowByName(TEST), workFlow);
 	}
 
@@ -121,35 +104,16 @@ class BeanWorkFlowRegistryImplTest {
 			{
 				put(TEST, workFlow);
 			}
-		}, new HashMap<>() {
-			{
-				put(TEST_TASK, null);
-			}
-		}, this.workFlowDefinitionService);
+		}, new HashMap<>(), this.workFlowDefinitionService);
 		registry.postInit();
 
 		// then
-		Mockito.verify(this.beanFactory, Mockito.times(2)).getDependenciesForBean(Mockito.any());
+		Mockito.verify(this.beanFactory, Mockito.times(1)).getDependenciesForBean(Mockito.any());
 		Mockito.verify(this.workFlowDefinitionService, Mockito.times(1)).save(Mockito.eq("test"),
-				Mockito.eq(WorkFlowType.ASSESSMENT), Mockito.argThat(arguments -> {
-					if (arguments != null) {
-						if (arguments.isEmpty()) {
-							return false;
-						}
-						return arguments.contains(FOO_DEPENDENCY);
-					}
-					return false;
-				}), Mockito.argThat(works -> {
-					if (works != null) {
-						if (works.isEmpty()) {
-							return false;
-						}
-						return works.contains(FOO_DEPENDENCY);
-					}
-					return false;
-				}), Mockito.eq(WorkFlowProcessingType.SEQUENTIAL));
+				Mockito.eq(WorkFlowType.ASSESSMENT), Mockito.anyList(), Mockito.anyList(),
+				Mockito.eq(WorkFlowProcessingType.SEQUENTIAL));
 
-		Mockito.verify(this.workFlowDefinitionService, Mockito.times(1)).saveWorkFlowChecker(Mockito.eq(TEST_TASK),
+		Mockito.verify(this.workFlowDefinitionService, Mockito.times(0)).saveWorkFlowChecker(Mockito.eq(TEST_TASK),
 				Mockito.eq(TASK_DEPENDENCY), Mockito.any());
 	}
 

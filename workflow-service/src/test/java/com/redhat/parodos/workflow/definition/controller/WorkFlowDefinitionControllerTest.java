@@ -47,10 +47,10 @@ class WorkFlowDefinitionControllerTest extends ControllerMockClient {
 				.andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)))
 				.andExpect(MockMvcResultMatchers.jsonPath("$[0].id", Matchers.is(WFDefFoo.getId().toString())))
 				.andExpect(MockMvcResultMatchers.jsonPath("$[0].name", Matchers.is(WFDefFoo.getName())))
-				.andExpect(MockMvcResultMatchers.jsonPath("$[0].tasks", Matchers.hasSize(1)))
-				.andExpect(MockMvcResultMatchers.jsonPath("$[0].tasks[0].name", Matchers.is("task1")))
-				.andExpect(MockMvcResultMatchers.jsonPath("$[0].tasks[0].parameters[0].key", Matchers.is("param1")))
-				.andExpect(MockMvcResultMatchers.jsonPath("$[0].tasks[0].parameters[0].description",
+				.andExpect(MockMvcResultMatchers.jsonPath("$[0].works", Matchers.hasSize(1)))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[0].works[0].name", Matchers.is("task1")))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[0].works[0].parameters[0].key", Matchers.is("param1")))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[0].works[0].parameters[0].description",
 						Matchers.is("param1")))
 				.andExpect(MockMvcResultMatchers.jsonPath("$[1].id", Matchers.is(WFDefBar.getId().toString())))
 				.andExpect(MockMvcResultMatchers.jsonPath("$[1].name", Matchers.is(WFDefBar.getName())));
@@ -82,11 +82,11 @@ class WorkFlowDefinitionControllerTest extends ControllerMockClient {
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(WFDef.getId().toString())))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.is(WFDef.getName())))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.tasks", Matchers.hasSize(1)))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.tasks[0].name", Matchers.is("task1")))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.tasks[0].parameters[0].key", Matchers.is("param1")))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.works", Matchers.hasSize(1)))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.works[0].name", Matchers.is("task1")))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.works[0].parameters[0].key", Matchers.is("param1")))
 				.andExpect(
-						MockMvcResultMatchers.jsonPath("$.tasks[0].parameters[0].description", Matchers.is("param1")));
+						MockMvcResultMatchers.jsonPath("$.works[0].parameters[0].description", Matchers.is("param1")));
 
 		// then
 		Mockito.verify(this.workFlowDefinitionService, Mockito.times(1)).getWorkFlowDefinitionById(WFDef.getId());
