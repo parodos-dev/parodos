@@ -4,10 +4,10 @@ resources:
 - ingress.yaml
 - ldap.yaml
 images:
-- name: quay.io/parados/workflow-service:latest
+- name: quay.io/parodos/workflow-service:latest
   newTag: test
 
-- name: quay.io/parados/notification-service:latest
+- name: quay.io/parodos/notification-service:latest
   newTag: test
 
 configMapGenerator:

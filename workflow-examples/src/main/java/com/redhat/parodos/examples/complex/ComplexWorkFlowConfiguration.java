@@ -68,7 +68,7 @@ public class ComplexWorkFlowConfiguration {
 			@Qualifier("onboardingAssessmentTask") OnboardingAssessmentTask onboardingAssessmentTask) {
 		// @formatter:off
 		return SequentialFlow.Builder.aNewSequentialFlow()
-				.named("onboarding Assessment WorkFlow")
+				.named("onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
 				.execute(onboardingAssessmentTask)
 				.build();
 		// @formatter:on
@@ -110,7 +110,7 @@ public class ComplexWorkFlowConfiguration {
 			@Qualifier("dynatraceWorkFlowTask") LoggingWorkFlowTask dynatraceWorkFlowTask) {
 		// @formatter:off
 		return ParallelFlow.Builder.aNewParallelFlow()
-				.named("onboarding Infrastructure WorkFlow")
+				.named("onboardingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
 				.execute(certWorkFlowTask, adGroupWorkFlowTask, dynatraceWorkFlowTask)
 				.with(Executors.newFixedThreadPool(3))
 				.build();
@@ -132,7 +132,7 @@ public class ComplexWorkFlowConfiguration {
 	WorkFlow nameSpaceWorkFlow(@Qualifier("nameSpaceWorkFlowTask") LoggingWorkFlowTask nameSpaceWorkFlowTask) {
 		// @formatter:off
 		return SequentialFlow.Builder.aNewSequentialFlow()
-				.named("nameSpace Infrastructure WorkFlow")
+				.named("nameSpaceWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
 				.execute(nameSpaceWorkFlowTask)
 				.build();
 		// @formatter:on
@@ -156,7 +156,7 @@ public class ComplexWorkFlowConfiguration {
 			@Qualifier("failOverWorkFlowTask") LoggingWorkFlowTask failOverWorkFlowTask) {
 		// @formatter:off
 		return SequentialFlow.Builder.aNewSequentialFlow()
-				.named("networking Infrastructure WorkFlow")
+				.named("networkingWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
 				.execute(networkingFlowTask)
 				.then(failOverWorkFlowTask)
 				.build();
@@ -176,7 +176,7 @@ public class ComplexWorkFlowConfiguration {
 			@Qualifier("approvalChecker") MockApprovalWorkFlowCheckerTask approvalChecker) {
 		// @formatter:off
 		return SequentialFlow.Builder.aNewSequentialFlow()
-				.named("onboarding Checker WorkFlow")
+				.named("onboardingWorkFlow" + WorkFlowConstants.CHECKER_WORKFLOW)
 				.execute(approvalChecker)
 				.build();
 		// @formatter:on
@@ -195,7 +195,7 @@ public class ComplexWorkFlowConfiguration {
 			@Qualifier("processCompletionChecker") MockApprovalWorkFlowCheckerTask processCompletionChecker) {
 		// @formatter:off
 		return SequentialFlow.Builder.aNewSequentialFlow()
-				.named("namespace Checker WorkFlow")
+				.named("namespaceWorkFlow" + WorkFlowConstants.CHECKER_WORKFLOW)
 				.execute(processCompletionChecker)
 				.build();
 		// @formatter:on

@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: notification-service
-        image: quay.io/parados/notification-service:latest
+        image: quay.io/parodos/notification-service:latest
         env:
           - name: SPRING_PROFILES_ACTIVE
             value: "local"
@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
       - name: workflow-service
-        image: quay.io/parados/workflow-service:latest
+        image: quay.io/parodos/workflow-service:latest
         env:
           - name: SPRING_PROFILES_ACTIVE
             value: "dev"
