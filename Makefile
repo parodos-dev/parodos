@@ -43,7 +43,7 @@ java-checks:
     $(error "No java found in $(PATH). Please install java >= 11")
   else
     JAVA_VERSION=$(shell java --version | head -n 1 | sed -rn "s/.*\s([[:digit:]]+)\.[[:digit:]]+\.[[:digit:]]+\s.*/\1/p")
-    JAVA_VERSION_IS_SUPPORTED=$(shell [ $(JAVA_VERSION) -le $(JAVA_VERSION_MAX_SUPPORTED)  ] && [ $(JAVA_VERSION) -ge $(JAVA_VERSION_MIN_SUPPORTED)  ]&& echo true)
+    JAVA_VERSION_IS_SUPPORTED=$(shell [ $(JAVA_VERSION) -le $(JAVA_VERSION_MAX_SUPPORTED)  ] && [ $(JAVA_VERSION) -ge $(JAVA_VERSION_MIN_SUPPORTED)  ] && echo true)
     ifeq ($(JAVA_VERSION_IS_SUPPORTED), )
       $(error "Java version $(JAVA_VERSION) should be [$(JAVA_VERSION_MIN_SUPPORTED) ; $(JAVA_VERSION_MAX_SUPPORTED)]. Please install Java within those bounds")
     endif
