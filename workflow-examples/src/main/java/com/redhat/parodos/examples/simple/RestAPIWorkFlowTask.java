@@ -41,22 +41,17 @@ import java.util.List;
 @Slf4j
 public class RestAPIWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
-	private static final String PAYLOAD_PASSED_IN_FROM_SERVICE = "PAYLOAD_PASSED_IN_FROM_SERVICE";
+	private static final String PAYLOAD_KEY = "payload";
 
-	private String urlDefinedAtTaskCreation;
-
-	public RestAPIWorkFlowTask(String urlDefinedAtTaskCreation) {
-		super();
-		this.urlDefinedAtTaskCreation = urlDefinedAtTaskCreation;
-	}
+	private static final String URL_KEY = "url";
 
 	/**
 	 * Executed by the InfrastructureTask engine as part of the Workflow
 	 */
 	public WorkReport execute(WorkContext workContext) {
 		try {
-			String urlString = getParameterValue(workContext, urlDefinedAtTaskCreation);
-			String payload = getParameterValue(workContext, PAYLOAD_PASSED_IN_FROM_SERVICE);
+			String urlString = getParameterValue(workContext, URL_KEY);
+			String payload = getParameterValue(workContext, PAYLOAD_KEY);
 			log.info("Running Task REST API Call: urlString: {} payload: {} ", urlString, payload);
 			ResponseEntity<String> result = RestUtils.executePost(urlString, payload);
 			if (result.getStatusCode().is2xxSuccessful()) {
@@ -74,10 +69,10 @@ public class RestAPIWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	@Override
 	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
 		return List.of(
-				WorkFlowTaskParameter.builder().key(urlDefinedAtTaskCreation)
+				WorkFlowTaskParameter.builder().key(URL_KEY)
 						.description("The Url of the service (ie: https://httpbin.org/post").optional(false)
 						.type(WorkFlowTaskParameterType.URL).build(),
-				WorkFlowTaskParameter.builder().key(PAYLOAD_PASSED_IN_FROM_SERVICE)
+				WorkFlowTaskParameter.builder().key(PAYLOAD_KEY)
 						.description("Json of what to provide for data. (ie: 'Hello!')").optional(false)
 						.type(WorkFlowTaskParameterType.PASSWORD).build());
 	}
