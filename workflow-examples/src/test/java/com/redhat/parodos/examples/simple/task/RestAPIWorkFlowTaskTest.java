@@ -102,7 +102,7 @@ public class RestAPIWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 
 		// then
 		assertNotNull(workFlowTaskParameters);
-		assertEquals(2, workFlowTaskParameters.size());
+		assertEquals(3, workFlowTaskParameters.size());
 		assertEquals(URL_KEY, workFlowTaskParameters.get(0).getKey());
 		assertEquals("The Url of the service (ie: https://httpbin.org/post",
 				workFlowTaskParameters.get(0).getDescription());
