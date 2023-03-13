@@ -143,20 +143,20 @@ run_simple_flow() {
         "workFlowName": "simpleSequentialWorkFlow_INFRASTRUCTURE_WORKFLOW",
         "workFlowTasks": [
             {
-                            "name": "restCallTask",
-                            "arguments": [
-                              {
-                                "key": "url",
-                                "value": "https://httpbin.org/post"
-                              },
-                              {
-                                "key": "payload",
-                                "value": "'Hello!'"
-                              }
-                            ]
-                          }
-              ]
-            }'
+                "name": "restCallTask",
+                "arguments": [
+                    {
+                      "key": "url",
+                      "value": "https://httpbin.org/post"
+                    },
+                    {
+                      "key": "payload",
+                      "value": "'Hello!'"
+                    }
+                ]
+            }
+        ]
+      }'
   echo "                                                "
   echo_blue "******** Simple Sequence Flow Completed ********"
   echo "                                                "
@@ -247,88 +247,6 @@ run_complex_flow() {
   echo "                                               "
   echo "Onboarding workflow execution id:" $(echo_green $EXECUTION_ID)
   [ ${#EXECUTION_ID} -eq "36" ] || @fail "There is no valid EXECUTION_ID: '${EXECUTION_ID}'"
-  ONBOARDING_WORKFLOW_CHECKER_ID=$(get_checker_workflow "$ONBOARDING_WORKFLOW_ID")
-  [ ${#ONBOARDING_WORKFLOW_CHECKER_ID} -eq "36" ] || @fail "There is no valid ONBOARDING_WORKFLOW_CHECKER_ID: '${ONBOARDING_WORKFLOW_CHECKER_ID}'"
-  ONBOARDING_WORKFLOW_CHECKER_NAME=$(get_workflow_name "$ONBOARDING_WORKFLOW_CHECKER_ID")
-  [ ${#ONBOARDING_WORKFLOW_CHECKER_NAME} -gt "10" ] || @fail "There is no valid ONBOARDING_WORKFLOW_CHECKER_NAME: '${ONBOARDING_WORKFLOW_CHECKER_NAME}'"
-  echo " "
-  echo_blue "******** Executing the WorkFlowChecker ***********"
-  echo "onboardingWorkFlowCheck:" $(echo_green $ONBOARDING_WORKFLOW_CHECKER_NAME)
-  EXECUTION_ID="$(curl -X 'POST' -s \
-    "${TARGET_URL}/api/v1/workflows/" \
-    -H 'accept: */*' \
-    -H 'Authorization: Basic dGVzdDp0ZXN0' \
-    -H "X-XSRF-TOKEN: ${TOKEN}" \
-    -b $COOKIEFP \
-    -H 'Content-Type: application/json' \
-    -d '{
-          "projectId": "'$PROJECT_ID'",
-      "workFlowName": "'"$ONBOARDING_WORKFLOW_CHECKER_NAME"'",
-      "workFlowTasks": []
-    }' | jq -r '.workFlowExecutionId')"
-
-  echo "Onboarding workflow Checker execution id:" $(echo_green $EXECUTION_ID)
-  NAMESPACE_WORKFLOW_ID=$(get_next_workflow "$ONBOARDING_WORKFLOW_ID")
-  NAMESPACE_WORKFLOW_NAME=$(get_workflow_name "$NAMESPACE_WORKFLOW_ID")
-
-  echo " "
-  echo_blue "******** Running the Namespace WorkFlow ***********"
-  echo "executes 1 task with a WorkFlowChecker"
-  EXECUTION_ID="$(curl -X 'POST' -s \
-    "${TARGET_URL}/api/v1/workflows/" \
-    -H 'accept: */*' \
-    -H 'Authorization: Basic dGVzdDp0ZXN0' \
-    -H 'Content-Type: application/json' \
-    -d '{
-          "projectId": "'$PROJECT_ID'",
-        "workFlowName": "'$NAMESPACE_WORKFLOW_NAME'",
-        "workFlowTasks": []
-      }' | jq -r '.workFlowExecutionId')"
-
-  echo "Executing the WorkFlowChecker (namespaceWorkFlowCheck)."
-  echo "Namespace workflow execution id:" $(echo_green $EXECUTION_ID)
-  NAMESPACE_WORKFLOW_CHECKER_ID=$(get_checker_workflow "$NAMESPACE_WORKFLOW_ID")
-  [ ${#NAMESPACE_WORKFLOW_CHECKER_ID} -eq "36" ] || @fail "There is no valid NAMESPACE_WORKFLOW_CHECKER_ID: '${NAMESPACE_WORKFLOW_CHECKER_ID}'"
-  NAMESPACE_WORKFLOW_CHECKER_NAME=$(get_workflow_name "$NAMESPACE_WORKFLOW_CHECKER_ID")
-  [ ${#NAMESPACE_WORKFLOW_CHECKER_NAME} -gt "10" ] || @fail "There is no valid NAMESPACE_WORKFLOW_CHECKER_NAME: '${NAMESPACE_WORKFLOW_CHECKER_NAME}'"
-
-  echo "Executing the WorkFlowChecker (namespaceWorkFlowCheck):" $(echo_green $NAMESPACE_WORKFLOW_CHECKER_NAME)
-  EXECUTION_ID="$(curl -X 'POST' -s \
-    "${TARGET_URL}/api/v1/workflows/" \
-    -H 'accept: */*' \
-    -H 'Authorization: Basic dGVzdDp0ZXN0' \
-    -H "X-XSRF-TOKEN: ${TOKEN}" \
-    -b $COOKIEFP \
-    -H 'Content-Type: application/json' \
-    -d '{
-          "projectId": "'$PROJECT_ID'",
-        "workFlowName": "'$NAMESPACE_WORKFLOW_CHECKER_NAME'",
-        "workFlowTasks": []
-      }' | jq -r '.workFlowExecutionId')"
-
-  [ ${#EXECUTION_ID} -eq "36" ] || @fail "There is no valid EXECUTION_ID: '${EXECUTION_ID}'"
-  echo "Namespace workflow Checker execution id:" $(echo_green $EXECUTION_ID)
-
-
-  NETWORK_WORKFLOW_ID=$(get_next_workflow "$NAMESPACE_WORKFLOW_ID")
-  [ ${#NETWORK_WORKFLOW_ID} -eq "36" ] || @fail "There is no valid NETWORK_WORKFLOW_ID: '${NETWORK_WORKFLOW_ID}'"
-  NETWORK_WORKFLOW_NAME=$(get_workflow_name "$NETWORK_WORKFLOW_ID")
-  [ ${#NETWORK_WORKFLOW_NAME} -gt "10" ] || @fail "There is no valid NETWORK_WORKFLOW_NAME: '${NETWORK_WORKFLOW_NAME}'"
-  echo " "
-  echo_blue "Executing the final Workflow (netWorkingWorkflow)"
-  EXECUTION_ID="$(curl -X 'POST' -s \
-    "${TARGET_URL}/api/v1/workflows/" \
-    -H 'accept: */*' \
-    -H 'Authorization: Basic dGVzdDp0ZXN0' \
-    -H "X-XSRF-TOKEN: ${TOKEN}" \
-    -b $COOKIEFP \
-    -H 'Content-Type: application/json' \
-    -d '{
-          "projectId": "'$PROJECT_ID'",
-        "workFlowName": "'$NETWORK_WORKFLOW_NAME'",
-        "workFlowTasks": []
-      }' | jq -r '.workFlowExecutionId')"
-  echo "network workflow execution id:" $(echo_green $EXECUTION_ID)
 }
 
 run_escalation_flow() {

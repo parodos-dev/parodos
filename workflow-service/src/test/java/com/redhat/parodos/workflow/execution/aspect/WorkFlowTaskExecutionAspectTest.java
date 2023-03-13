@@ -4,9 +4,16 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.Optional;
 import java.util.UUID;
 
+import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
+import com.redhat.parodos.workflow.enums.WorkFlowStatus;
+import com.redhat.parodos.workflow.enums.WorkFlowType;
+import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +40,10 @@ class WorkFlowTaskExecutionAspectTest {
 	private static final String WORKFLOW_TASK_DEFINITION_TESTTASK_ID = "WORKFLOW_TASK_DEFINITION_TESTTASK_ID";
 
 	private static final String WORKFLOW_EXECUTION_ID = "WORKFLOW_EXECUTION_ID";
+
+	private static final String WORKFLOW_DEFINITION_NAME = "WORKFLOW_DEFINITION_NAME";
+
+	private static final String TEST_WORK_FLOW = "testWorkFlow";
 
 	private static final String TEST_TASK = "testTask";
 
@@ -73,6 +84,13 @@ class WorkFlowTaskExecutionAspectTest {
 					.thenReturn(new DefaultWorkReport(WorkStatus.COMPLETED, workContext));
 		});
 
+		WorkFlowExecution workFlowExecution = getSampleWorkFlowExecution();
+		Mockito.when(workFlowRepository.findById(Mockito.any())).thenReturn(Optional.of(workFlowExecution));
+		Mockito.when(workFlowTaskDefinitionRepository.findFirstByName(Mockito.anyString()))
+				.thenReturn(getSampleWorkFlowTaskDefinition(TEST_TASK));
+		Mockito.when(workFlowService.saveWorkFlowTask(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+				.thenReturn(getSampleWorkFlowTaskExecution());
+
 		// when
 		WorkReport report = this.workFlowTaskExecutionAspect.executeAroundAdviceTask(proceedingJoinPoint, workContext);
 
@@ -105,7 +123,14 @@ class WorkFlowTaskExecutionAspectTest {
 		});
 
 		Mockito.when(this.workFlowService.getWorkFlowTask(Mockito.any(), Mockito.any()))
-				.thenReturn(new WorkFlowTaskExecution());
+				.thenReturn(getSampleWorkFlowTaskExecution());
+
+		WorkFlowExecution workFlowExecution = getSampleWorkFlowExecution();
+		Mockito.when(workFlowRepository.findById(Mockito.any())).thenReturn(Optional.of(workFlowExecution));
+		Mockito.when(workFlowTaskDefinitionRepository.findFirstByName(Mockito.anyString()))
+				.thenReturn(getSampleWorkFlowTaskDefinition(TEST_TASK));
+		Mockito.when(workFlowService.saveWorkFlowTask(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+				.thenReturn(getSampleWorkFlowTaskExecution());
 
 		// when
 		WorkReport report = this.workFlowTaskExecutionAspect.executeAroundAdviceTask(proceedingJoinPoint, workContext);
@@ -130,6 +155,7 @@ class WorkFlowTaskExecutionAspectTest {
 				put(String.format("WORKFLOW_TASK_DEFINITION_%s_ID", taskName.toUpperCase()), UUID.randomUUID());
 				put(String.format("WORKFLOW_TASK_EXECUTION_%s_ARGUMENTS", taskName.toUpperCase()), "{}");
 				put(PROJECT_ID, projectID);
+				put(WORKFLOW_DEFINITION_NAME, TEST_WORK_FLOW);
 			}
 		};
 	}
@@ -138,6 +164,42 @@ class WorkFlowTaskExecutionAspectTest {
 		WorkFlowTask workFlowTask = Mockito.mock(WorkFlowTask.class);
 		Mockito.when(workFlowTask.getName()).thenReturn(taskName);
 		return workFlowTask;
+	}
+
+	WorkFlowExecution getSampleWorkFlowExecution() {
+		return new WorkFlowExecution() {
+			{
+				setId(UUID.randomUUID());
+				setStatus(WorkFlowStatus.IN_PROGRESS);
+				setProjectId(UUID.randomUUID());
+			}
+		};
+	}
+
+	WorkFlowDefinition getSampleWorkFlowDefinition(String name) {
+		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder()
+				.type(WorkFlowType.INFRASTRUCTURE.toString()).name(name).build();
+		workFlowDefinition.setId(UUID.randomUUID());
+		return workFlowDefinition;
+	}
+
+	WorkFlowTaskDefinition getSampleWorkFlowTaskDefinition(String name) {
+
+		WorkFlowTaskDefinition workFlowTaskDefinition = WorkFlowTaskDefinition.builder().name(name)
+				.workFlowDefinition(getSampleWorkFlowDefinition(TEST_WORK_FLOW)).build();
+		workFlowTaskDefinition.setId(UUID.randomUUID());
+		return workFlowTaskDefinition;
+	}
+
+	WorkFlowTaskExecution getSampleWorkFlowTaskExecution() {
+		return new WorkFlowTaskExecution() {
+			{
+				setId(UUID.randomUUID());
+				setStatus(WorkFlowTaskStatus.IN_PROGRESS);
+				setWorkFlowExecutionId(getSampleWorkFlowExecution().getId());
+				setWorkFlowTaskDefinitionId(getSampleWorkFlowTaskDefinition(TEST_TASK).getId());
+			}
+		};
 	}
 
 }

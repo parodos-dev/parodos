@@ -45,7 +45,7 @@ public class WorkFlowDelegate {
 	public WorkContext initWorkFlowContext(WorkFlowRequestDTO workFlowRequestDTO) {
 		WorkContext workContext = new WorkContext();
 
-		if (!workFlowRequestDTO.getArguments().isEmpty()) {
+		if (workFlowRequestDTO.getArguments() != null && !workFlowRequestDTO.getArguments().isEmpty()) {
 			WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
 					workFlowRequestDTO.getWorkFlowName(), WorkContextDelegate.Resource.ARGUMENTS,
 					WorkFlowDTOUtil.convertArgumentListToMap(workFlowRequestDTO.getArguments()));

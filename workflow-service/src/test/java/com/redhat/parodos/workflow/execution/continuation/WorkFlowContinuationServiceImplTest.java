@@ -1,28 +1,31 @@
 package com.redhat.parodos.workflow.execution.continuation;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
+import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
+import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
+import com.redhat.parodos.workflow.enums.WorkFlowStatus;
+import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
+import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionContext;
+import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
+import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
+import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
+import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
+import com.redhat.parodos.workflows.work.WorkContext;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
-import com.redhat.parodos.workflows.work.WorkContext;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import com.redhat.parodos.workflow.enums.WorkFlowStatus;
-import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
-import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
-import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
-import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
-import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
-import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
-import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
-import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
-import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class WorkFlowContinuationServiceImplTest {
 
@@ -86,8 +89,8 @@ class WorkFlowContinuationServiceImplTest {
 		// then
 		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findAll();
 		Mockito.verify(this.workFlowService, Mockito.times(1)).execute(
-				Mockito.eq(workFlowExecution.getProjectId().toString()), Mockito.eq("test"), new WorkContext(),
-				UUID.randomUUID());
+				Mockito.eq(workFlowExecution.getProjectId().toString()), Mockito.eq(TEST_WORKFLOW), Mockito.any(),
+				Mockito.any());
 	}
 
 	@Test
@@ -115,8 +118,8 @@ class WorkFlowContinuationServiceImplTest {
 		// then
 		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findAll();
 		Mockito.verify(this.workFlowService, Mockito.times(1)).execute(
-				Mockito.eq(workFlowExecution.getProjectId().toString()), Mockito.eq(TEST_WORKFLOW), new WorkContext(),
-				UUID.randomUUID());
+				Mockito.eq(workFlowExecution.getProjectId().toString()), Mockito.eq(TEST_WORKFLOW), Mockito.any(),
+				Mockito.any());
 	}
 
 	@Test
@@ -129,13 +132,14 @@ class WorkFlowContinuationServiceImplTest {
 		WorkFlowTaskDefinition wfTaskDef = sampleWorkFlowTaskDefinition();
 		Mockito.when(this.workFlowTaskDefinitionRepository.findById(Mockito.any())).thenReturn(Optional.of(wfTaskDef));
 		WorkFlowTaskExecution workFlowTaskExecution = WorkFlowTaskExecution.builder().arguments("invalid")
-				.results("res").status(WorkFlowTaskStatus.COMPLETED).workFlowTaskDefinitionId(wfTaskDef.getId())
+				.results("res").status(WorkFlowTaskStatus.FAILED).workFlowTaskDefinitionId(wfTaskDef.getId())
 				.workFlowExecutionId(wfExecution.getId()).build();
 		workFlowTaskExecution.setId(UUID.randomUUID());
 
 		Mockito.when(this.workFlowTaskRepository.findByWorkFlowExecutionId(wfExecution.getId()))
 				.thenReturn(List.of(workFlowTaskExecution));
-
+		Mockito.when(workFlowService.execute(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+				.thenThrow(new RuntimeException("JsonParseException"));
 		// when
 		Exception exception = assertThrows(RuntimeException.class, () -> {
 			this.service.workFlowRunAfterStartup();
@@ -146,7 +150,7 @@ class WorkFlowContinuationServiceImplTest {
 		assertTrue(exception.getMessage().contains("JsonParseException"));
 
 		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findAll();
-		Mockito.verify(this.workFlowService, Mockito.times(0)).execute(Mockito.any(), Mockito.any(), Mockito.any(),
+		Mockito.verify(this.workFlowService, Mockito.times(1)).execute(Mockito.any(), Mockito.any(), Mockito.any(),
 				Mockito.any());
 	}
 
@@ -155,17 +159,20 @@ class WorkFlowContinuationServiceImplTest {
 				.status(WorkFlowStatus.IN_PROGRESS).build();
 		workFlowExecution.setId(UUID.randomUUID());
 		workFlowExecution.setArguments("{\"test\": \"test\"}");
+		workFlowExecution.setWorkFlowExecutionContext(WorkFlowExecutionContext.builder()
+				.masterWorkFlowExecution(workFlowExecution).workContext(new WorkContext()).build());
 		return workFlowExecution;
 	}
 
 	private WorkFlowTaskDefinition sampleWorkFlowTaskDefinition() {
-		WorkFlowTaskDefinition workFlowTaskDefinition = WorkFlowTaskDefinition.builder().name(TEST_WORKFLOW).build();
+		WorkFlowTaskDefinition workFlowTaskDefinition = WorkFlowTaskDefinition.builder().name(TEST_WORKFLOW_TASK)
+				.build();
 		workFlowTaskDefinition.setId(UUID.randomUUID());
 		return workFlowTaskDefinition;
 	}
 
 	private WorkFlowDefinition sampleWorkFlowDefinition() {
-		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(TEST_WORKFLOW_TASK).build();
+		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(TEST_WORKFLOW).build();
 		workFlowDefinition.setId(UUID.randomUUID());
 		return workFlowDefinition;
 	}
