@@ -1,15 +1,10 @@
 package com.redhat.parodos;
 
-import com.redhat.parodos.examples.utils.RestUtils;
+import com.redhat.parodos.workflow.utils.CredUtils;
 import lombok.Getter;
 import lombok.Setter;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Headers;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-
-import java.util.Base64;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -59,11 +54,11 @@ public abstract class ControllerMockClient {
 	}
 
 	public String invalidCredentials() {
-		return String.format("Basic %s", RestUtils.getBase64Creds("foo", "bar"));
+		return String.format("Basic %s", CredUtils.getBase64Creds("foo", "bar"));
 	}
 
 	public String credentials() {
-		return String.format("Basic %s", RestUtils.getBase64Creds(this.getValidUser(), this.getValidPassword()));
+		return String.format("Basic %s", CredUtils.getBase64Creds(this.getValidUser(), this.getValidPassword()));
 	}
 
 }
