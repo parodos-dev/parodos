@@ -25,6 +25,7 @@ import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepos
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.scheduler.WorkFlowSchedulerServiceImpl;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
+import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
@@ -86,9 +87,6 @@ public class WorkFlowExecutionAspect {
 	@Around("pointcutScope() && args(workContext)")
 	public WorkReport executeAroundAdvice(ProceedingJoinPoint proceedingJoinPoint, WorkContext workContext) {
 		WorkReport report = null;
-		// String workFlowName = WorkContextDelegate.read(workContext,
-		// WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION,
-		// WorkContextDelegate.Resource.NAME).toString();
 		String workFlowName = ((WorkFlow) proceedingJoinPoint.getTarget()).getName();
 		log.info("Before invoking execute() on workflow: {} with workContext: {}", workFlowName, workContext);
 		// get workflow definition entity
@@ -115,7 +113,8 @@ public class WorkFlowExecutionAspect {
 			report = (WorkReport) proceedingJoinPoint.proceed();
 		}
 		catch (Throwable e) {
-			log.error("Workflow {} has failed!", workFlowName);
+			report = new DefaultWorkReport(WorkStatus.FAILED, workContext);
+			log.error("Workflow {} has failed! with error: {}", workFlowName, e);
 		}
 		log.info("Workflow {} is {}!", workFlowName, report.getStatus().name());
 		// update workflow execution entity
