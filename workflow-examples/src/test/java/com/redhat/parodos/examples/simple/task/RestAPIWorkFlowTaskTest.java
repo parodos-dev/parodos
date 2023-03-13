@@ -38,9 +38,9 @@ public class RestAPIWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 
 	private final String valuePayload = "value_payload";
 
-	private final String testUrlDefinedAtCreation = "Test_urlDefinedAtTaskCreation";
+	private static final String PAYLOAD_KEY = "payload";
 
-	private static final String PAYLOAD_PASSED_IN_FROM_SERVICE_TEST = "PAYLOAD_PASSED_IN_FROM_SERVICE";
+	private static final String URL_KEY = "url";
 
 	@Before
 	public void setUp() {
@@ -48,9 +48,9 @@ public class RestAPIWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 
 		try {
 			doReturn(valueUrl).when(this.restAPIWorkflowTask).getParameterValue(Mockito.any(WorkContext.class),
-					eq(testUrlDefinedAtCreation));
+					eq(URL_KEY));
 			doReturn(valuePayload).when(this.restAPIWorkflowTask).getParameterValue(Mockito.any(WorkContext.class),
-					eq(PAYLOAD_PASSED_IN_FROM_SERVICE_TEST));
+					eq(PAYLOAD_KEY));
 
 		}
 		catch (MissingParameterException e) {
@@ -60,7 +60,7 @@ public class RestAPIWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 
 	@Override
 	protected BaseInfrastructureWorkFlowTask getConcretePersonImplementation() {
-		return new RestAPIWorkFlowTask(testUrlDefinedAtCreation);
+		return new RestAPIWorkFlowTask();
 	}
 
 	@Test
@@ -102,12 +102,12 @@ public class RestAPIWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 
 		// then
 		assertNotNull(workFlowTaskParameters);
-		assertEquals(3, workFlowTaskParameters.size());
-		assertEquals(testUrlDefinedAtCreation, workFlowTaskParameters.get(0).getKey());
+		assertEquals(2, workFlowTaskParameters.size());
+		assertEquals(URL_KEY, workFlowTaskParameters.get(0).getKey());
 		assertEquals("The Url of the service (ie: https://httpbin.org/post",
 				workFlowTaskParameters.get(0).getDescription());
 		assertEquals(WorkFlowTaskParameterType.URL, workFlowTaskParameters.get(0).getType());
-		assertEquals(PAYLOAD_PASSED_IN_FROM_SERVICE_TEST, workFlowTaskParameters.get(1).getKey());
+		assertEquals(PAYLOAD_KEY, workFlowTaskParameters.get(1).getKey());
 		assertEquals("Json of what to provide for data. (ie: 'Hello!')",
 				workFlowTaskParameters.get(1).getDescription());
 		assertEquals(WorkFlowTaskParameterType.PASSWORD, workFlowTaskParameters.get(1).getType());
