@@ -47,7 +47,7 @@ import java.util.List;
 @Setter
 public class WorkFlowCheckerDefinition extends AbstractEntity {
 
-	@OneToOne(optional = false, fetch = FetchType.LAZY)
+	@OneToOne(optional = false, fetch = FetchType.EAGER)
 	@JoinColumn(name = "workflow_checker_id")
 	private WorkFlowDefinition checkWorkFlow;
 
