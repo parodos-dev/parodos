@@ -1,6 +1,7 @@
-package com.redhat.parodos.examples.continued.complex;
+package com.redhat.parodos.examples.complex.task;
 
 import com.redhat.parodos.examples.base.BaseAssessmentTaskTest;
+import com.redhat.parodos.examples.complex.task.OnboardingAssessmentTask;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflow.task.assessment.BaseAssessmentTask;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
@@ -39,7 +40,7 @@ public class OnboardingAssessmentTaskTest extends BaseAssessmentTaskTest {
 		workflowOption = new WorkFlowOption.Builder("identifier", "workflowName")
 				.setDescription("a test workflow option").displayName("WorkflowOption_A").addToDetails("Other details")
 				.build();
-		onboardingAssessmentTask = spy((OnboardingAssessmentTask) getConcretePersonImplementation());
+		onboardingAssessmentTask = Mockito.spy((OnboardingAssessmentTask) getConcretePersonImplementation());
 	}
 
 	@Override

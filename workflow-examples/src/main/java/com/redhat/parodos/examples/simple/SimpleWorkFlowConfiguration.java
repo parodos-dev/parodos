@@ -15,6 +15,8 @@
  */
 package com.redhat.parodos.examples.simple;
 
+import com.redhat.parodos.examples.simple.task.LoggingWorkFlowTask;
+import com.redhat.parodos.examples.simple.task.RestAPIWorkFlowTask;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import com.redhat.parodos.workflows.workflow.ParallelFlow;

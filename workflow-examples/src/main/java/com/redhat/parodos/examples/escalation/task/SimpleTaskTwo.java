@@ -1,4 +1,4 @@
-package com.redhat.parodos.examples.escalation;
+package com.redhat.parodos.examples.escalation.task;
 
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;

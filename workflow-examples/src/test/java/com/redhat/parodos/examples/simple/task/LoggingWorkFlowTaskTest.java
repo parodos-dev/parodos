@@ -1,6 +1,7 @@
-package com.redhat.parodos.examples.simple;
+package com.redhat.parodos.examples.simple.task;
 
 import com.redhat.parodos.examples.base.BaseInfrastructureWorkFlowTaskTest;
+import com.redhat.parodos.examples.simple.task.LoggingWorkFlowTask;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;

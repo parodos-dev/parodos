@@ -2,6 +2,10 @@ package com.redhat.parodos.examples.escalation;
 
 import java.util.Date;
 
+import com.redhat.parodos.examples.escalation.task.SimpleTaskOne;
+import com.redhat.parodos.examples.escalation.task.SimpleTaskOneEscalator;
+import com.redhat.parodos.examples.escalation.task.SimpleTaskTwo;
+import com.redhat.parodos.examples.escalation.task.checker.SimpleTaskOneChecker;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +27,7 @@ import com.redhat.parodos.workflows.workflow.WorkFlow;
  *
  */
 @Configuration
-public class EsclationConfiguration {
+public class EscalationWorkFlowConfiguration {
 
 	// ********** Start First Workflow **************
 

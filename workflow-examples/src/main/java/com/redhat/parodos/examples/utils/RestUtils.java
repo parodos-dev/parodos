@@ -8,17 +8,15 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.util.Base64;
-import java.util.Map;
 
 /**
- * RestUtils is an utility class. All its methods must be declared as static so they can't
+ * RestUtils is a utility class. All its methods must be declared as static so they can't
  * be overridden.
  */
 public final class RestUtils {
 
 	/**
 	 * The constructor is private so it'll prevent instantiation.
-	 * @throws UnsupportedOperationException
 	 */
 	private RestUtils() {
 		throw new UnsupportedOperationException("Suppress default constructor for non instantiability");
@@ -50,9 +48,8 @@ public final class RestUtils {
 	 */
 	public static ResponseEntity<String> restExchange(String urlString, String username, String password) {
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<String> result = restTemplate.exchange(urlString, HttpMethod.GET,
-				getRequestWithHeaders(username, password), String.class);
-		return result;
+		return restTemplate.exchange(urlString, HttpMethod.GET, getRequestWithHeaders(username, password),
+				String.class);
 	}
 
 	/**
@@ -79,8 +76,7 @@ public final class RestUtils {
 		String plainCreds = username + ":" + password;
 		byte[] plainCredsBytes = plainCreds.getBytes();
 		byte[] base64CredsBytes = Base64.getEncoder().encode(plainCredsBytes);
-		String base64Creds = new String(base64CredsBytes);
-		return base64Creds;
+		return new String(base64CredsBytes);
 	}
 
 }

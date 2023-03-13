@@ -1,6 +1,7 @@
-package com.redhat.parodos.examples.continued.complex;
+package com.redhat.parodos.examples.complex.checker;
 
 import com.redhat.parodos.examples.base.BaseWorkFlowCheckerTaskTest;
+import com.redhat.parodos.examples.complex.checker.MockApprovalWorkFlowCheckerTask;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.checker.BaseWorkFlowCheckerTask;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
@@ -29,7 +30,8 @@ public class MockApprovalWorkFlowCheckerTaskTest extends BaseWorkFlowCheckerTask
 
 	@Before
 	public void setUp() {
-		mockApprovalWorkFlowCheckerTask = spy((MockApprovalWorkFlowCheckerTask) getConcretePersonImplementation());
+		mockApprovalWorkFlowCheckerTask = Mockito
+				.spy((MockApprovalWorkFlowCheckerTask) getConcretePersonImplementation());
 	}
 
 	@Override

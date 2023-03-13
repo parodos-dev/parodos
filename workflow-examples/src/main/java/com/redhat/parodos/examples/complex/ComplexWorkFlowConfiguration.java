@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.examples.continued.complex;
+package com.redhat.parodos.examples.complex;
 
 import java.util.concurrent.Executors;
 
+import com.redhat.parodos.examples.complex.checker.MockApprovalWorkFlowCheckerTask;
+import com.redhat.parodos.examples.complex.task.OnboardingAssessmentTask;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.redhat.parodos.examples.simple.LoggingWorkFlowTask;
+import com.redhat.parodos.examples.simple.task.LoggingWorkFlowTask;
 import com.redhat.parodos.workflow.annotation.Assessment;
 import com.redhat.parodos.workflow.annotation.Checker;
 import com.redhat.parodos.workflow.annotation.Infrastructure;

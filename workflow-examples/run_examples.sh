@@ -341,7 +341,7 @@ run_escalation_flow() {
       }' | jq -r '.workFlowExecutionId')"
 
   echo "                                                "
-  echo "******** Simple Esalation Flow Completed (check logs as the checkers are still running) ********"
+  echo "******** Simple Escalation Flow Completed (check logs as the checkers are still running) ********"
   echo "                                                "
 }
 

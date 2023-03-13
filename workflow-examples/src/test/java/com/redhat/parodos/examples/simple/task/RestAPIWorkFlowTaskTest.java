@@ -1,6 +1,7 @@
-package com.redhat.parodos.examples.simple;
+package com.redhat.parodos.examples.simple.task;
 
 import com.redhat.parodos.examples.base.BaseInfrastructureWorkFlowTaskTest;
+import com.redhat.parodos.examples.simple.task.RestAPIWorkFlowTask;
 import com.redhat.parodos.examples.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
