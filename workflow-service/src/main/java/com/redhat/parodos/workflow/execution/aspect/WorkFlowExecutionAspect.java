@@ -173,7 +173,8 @@ public class WorkFlowExecutionAspect {
 			report = (WorkReport) proceedingJoinPoint.proceed();
 		}
 		catch (Throwable e) {
-			log.error("Workflow {} has error!", workFlowName);
+			log.error("Workflow {} has failed! with error: {}", workFlowName, e);
+			report = new DefaultWorkReport(WorkStatus.FAILED, workContext);
 		}
 		log.info("Workflow {} is {}!", workFlowName, report.getStatus().name());
 		// update workflow execution entity
