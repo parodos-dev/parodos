@@ -8,7 +8,7 @@ MAVEN ?= mvn
 # set quiet mode by default
 Q=@
 
-ORG=quay.io/parados/
+ORG=quay.io/parodos/
 WORKFLOW_SERVICE_IMAGE=workflow-service
 NOTIFICATION_SERVICE_IMAGE=notification-service
 
@@ -132,11 +132,11 @@ tag-images: ## Tag docker images with git hash and branch name
 	$(DOCKER) tag docker-compose_notification-service:latest $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(GIT_BRANCH)
 
 push-images: ## Push docker images to quay.io registry
-	$(DOCKER) push  $(ORG)/$(WORKFLOW_SERVICE_IMAGE):$(GIT_HASH)
-	$(DOCKER) push  $(ORG)/$(NOTIFICATION_SERVICE_IMAGE):$(GIT_HASH)
+	$(DOCKER) push  $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(GIT_HASH)
+	$(DOCKER) push  $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(GIT_HASH)
 
-	$(DOCKER) push  $(ORG)/$(WORKFLOW_SERVICE_IMAGE):$(GIT_BRANCH)
-	$(DOCKER) push  $(ORG)/$(NOTIFICATION_SERVICE_IMAGE):$(GIT_BRANCH)
+	$(DOCKER) push  $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(GIT_BRANCH)
+	$(DOCKER) push  $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(GIT_BRANCH)
 
 push-images-to-kind: ## Push docker images to kind
 	$(DOCKER) tag docker-compose_workflow-service:latest $(ORG)$(WORKFLOW_SERVICE_IMAGE):test
