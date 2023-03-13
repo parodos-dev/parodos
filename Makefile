@@ -30,8 +30,8 @@ SHELL = /usr/bin/env bash -o pipefail
 ifeq (,$(shell which $(MAVEN)))
   $(error "No maven found in $(PATH). Please install maven")
 else
-  MVN_JAVA_VERSION=$(shell mvn --version | egrep -o "Java version: [[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+"| head -n 1 | cut -c15-16)
-  MVN_VERSION_IS_SUPPORTED=$(shell [ $(MVN_JAVA_VERSION) -lt $(JAVA_VERSION_MAX_SUPPORTED)  ] && [ $(MVN_JAVA_VERSION) -gt $(JAVA_VERSION_MIN_SUPPORTED)  ] && echo true)
+  MVN_JAVA_VERSION=$(shell mvn --version | sed -rn "s/.*Java version: ([[:digit:]]+)\.[[:digit:]]+\.[[:digit:]]+.*/\1/p")
+  MVN_VERSION_IS_SUPPORTED=$(shell [ $(MVN_JAVA_VERSION) -le $(JAVA_VERSION_MAX_SUPPORTED)  ] && [ $(MVN_JAVA_VERSION) -ge $(JAVA_VERSION_MIN_SUPPORTED)  ] && echo true)
   ifeq ($(MVN_VERSION_IS_SUPPORTED), )
     $(error "Maven Java $(MVN_JAVA_VERSION) version should be [$(JAVA_VERSION_MIN_SUPPORTED) ; $(JAVA_VERSION_MAX_SUPPORTED)]. Please use Java within these bounds with mvn")
   endif
@@ -40,12 +40,11 @@ endif
 ifeq (,$(shell java --version))
   $(error "No java found in $(PATH). Please install java >= 11")
 else
-  JAVA_VERSION=$(shell java --version | egrep -o "[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+" | head -n 1 | cut -c1-2)
-  $(info $$JAVA_VERSION is [${JAVA_VERSION}])
-  JAVA_VERSION_IS_SUPPORTED=$(shell [ $(JAVA_VERSION) -lt $(JAVA_VERSION_MAX_SUPPORTED)  ] && [ $(JAVA_VERSION) -gt $(JAVA_VERSION_MIN_SUPPORTED)  ]&& echo true)
-	ifeq ($(JAVA_VERSION_IS_SUPPORTED), )
-		$(error "Java version $(JAVA_VERSION) should be [$(JAVA_VERSION_MIN_SUPPORTED) ; $(JAVA_VERSION_MAX_SUPPORTED)]. Please install Java within those bounds")
-	endif
+  JAVA_VERSION=$(shell java --version | head -n 1 | sed -rn "s/.*\s([[:digit:]]+)\.[[:digit:]]+\.[[:digit:]]+\s.*/\1/p")
+  JAVA_VERSION_IS_SUPPORTED=$(shell [ $(JAVA_VERSION) -le $(JAVA_VERSION_MAX_SUPPORTED)  ] && [ $(JAVA_VERSION) -ge $(JAVA_VERSION_MIN_SUPPORTED)  ]&& echo true)
+  ifeq ($(JAVA_VERSION_IS_SUPPORTED), )
+    $(error "Java version $(JAVA_VERSION) should be [$(JAVA_VERSION_MIN_SUPPORTED) ; $(JAVA_VERSION_MAX_SUPPORTED)]. Please install Java within those bounds")
+  endif
 endif
 
 ##@ General
