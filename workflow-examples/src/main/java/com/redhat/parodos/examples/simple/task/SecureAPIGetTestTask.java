@@ -15,16 +15,14 @@
  */
 package com.redhat.parodos.examples.simple.task;
 
-import java.util.Base64;
 import java.util.List;
 
 import com.redhat.parodos.examples.utils.RestUtils;
+import com.redhat.parodos.workflow.utils.CredUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
@@ -76,7 +74,7 @@ public class SecureAPIGetTestTask extends BaseInfrastructureWorkFlowTask {
 	}
 
 	HttpEntity<String> getRequestWithHeaders(String username, String password) {
-		String base64Creds = RestUtils.getBase64Creds(username, password);
+		String base64Creds = CredUtils.getBase64Creds(username, password);
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Authorization", "Basic " + base64Creds);
 		return new HttpEntity<String>(headers);
