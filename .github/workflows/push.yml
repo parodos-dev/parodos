@@ -1,0 +1,41 @@
+---
+name: Main push
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha != '' &&  github.event.pull_request.head.sha ||  github.sha }}
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Maven Build
+        run: mvn clean package
+
+
+      - name: Build cotainer
+        run: mvn clean package
+
+      - name: "Build container images"
+        run: |
+          make build-images GIT_BRANCH=${GITHUB_REF##*/}
+          make tag-images GIT_BRANCH=${GITHUB_REF##*/}
+
+
+      - name: Login to quay
+        env:
+          QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
+        run: |
+          echo "$QUAY_TOKEN" | docker login quay.io --username parodos+githubpush --password-stdin
+
+      - name: "Push images"
+        run: |
+          make push-images GIT_BRANCH=${GITHUB_REF##*/} 
