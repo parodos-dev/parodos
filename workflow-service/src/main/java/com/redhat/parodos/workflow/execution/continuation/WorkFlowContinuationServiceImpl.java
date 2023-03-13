@@ -74,7 +74,7 @@ public class WorkFlowContinuationServiceImpl implements WorkFlowContinuationServ
 					WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository
 							.findById(workFlowExecution.getWorkFlowDefinitionId()).get();
 
-					// TODO: continue with the same execution id
+					// continue with the same execution id
 					continueWorkFlow(workFlowExecution.getProjectId().toString(), workFlowDefinition.getName(),
 							workFlowExecution.getWorkFlowExecutionContext().getWorkContext(),
 							workFlowExecution.getId());

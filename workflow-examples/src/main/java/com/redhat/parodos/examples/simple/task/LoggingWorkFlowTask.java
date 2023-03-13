@@ -57,7 +57,7 @@ public class LoggingWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 		catch (Exception e) {
 			log.error("There was an issue with the task {}: {}", getName(), e.getMessage());
 		}
-		return new DefaultWorkReport(WorkStatus.FAILED, workContext);
+		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
 	@Override

@@ -108,20 +108,16 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	}
 
 	@Override
-	@Synchronized
-	@Transactional
 	public synchronized WorkFlowExecution saveWorkFlow(UUID projectId, UUID workFlowDefinitionId,
 			WorkFlowStatus workFlowStatus, WorkFlowExecution masterWorkFlowExecution) {
-		return workFlowRepository.saveAndFlush(WorkFlowExecution.builder().workFlowDefinitionId(workFlowDefinitionId)
+		return workFlowRepository.save(WorkFlowExecution.builder().workFlowDefinitionId(workFlowDefinitionId)
 				.projectId(projectId).status(workFlowStatus).startDate(new Date())
 				.masterWorkFlowExecution(masterWorkFlowExecution).build());
 	}
 
 	@Override
-	@Synchronized
-	@Transactional
 	public synchronized WorkFlowExecution updateWorkFlow(WorkFlowExecution workFlowExecution) {
-		return workFlowRepository.saveAndFlush(workFlowExecution);
+		return workFlowRepository.save(workFlowExecution);
 	}
 
 	@Override
@@ -133,20 +129,16 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	}
 
 	@Override
-	@Synchronized
-	@Transactional
 	public synchronized WorkFlowTaskExecution saveWorkFlowTask(String arguments, UUID workFlowTaskDefinitionId,
 			UUID workFlowExecutionId, WorkFlowTaskStatus workFlowTaskStatus) {
-		return workFlowTaskRepository.saveAndFlush(WorkFlowTaskExecution.builder()
-				.workFlowExecutionId(workFlowExecutionId).workFlowTaskDefinitionId(workFlowTaskDefinitionId)
-				.arguments(arguments).status(workFlowTaskStatus).startDate(new Date()).build());
+		return workFlowTaskRepository.save(WorkFlowTaskExecution.builder().workFlowExecutionId(workFlowExecutionId)
+				.workFlowTaskDefinitionId(workFlowTaskDefinitionId).arguments(arguments).status(workFlowTaskStatus)
+				.startDate(new Date()).build());
 	}
 
 	@Override
-	@Synchronized
-	@Transactional
 	public WorkFlowTaskExecution updateWorkFlowTask(WorkFlowTaskExecution workFlowTaskExecution) {
-		return workFlowTaskRepository.saveAndFlush(workFlowTaskExecution);
+		return workFlowTaskRepository.save(workFlowTaskExecution);
 	}
 
 	private String validateWorkflow(String workflowName, WorkFlow workFlow) {

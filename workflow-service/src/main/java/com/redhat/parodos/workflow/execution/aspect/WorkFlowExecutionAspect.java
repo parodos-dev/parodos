@@ -153,9 +153,13 @@ public class WorkFlowExecutionAspect {
 								WorkContextDelegate.Resource.ID).toString()),
 						workFlowDefinition.getId(), WorkFlowStatus.IN_PROGRESS, masterWorkFlowExecution);
 			}
-			else if (workFlowExecution.getStatus().equals(WorkFlowStatus.COMPLETED))
+			else if (workFlowExecution.getStatus().equals(WorkFlowStatus.COMPLETED)) {
 				// skip the workflow if it's already successful
+				if (workFlowDefinition.getType().equals(WorkFlowType.CHECKER.name())) {
+					workFlowSchedulerService.stop((WorkFlow) proceedingJoinPoint.getTarget());
+				}
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
+			}
 		}
 
 		if (!isMaster)

@@ -171,7 +171,7 @@ public class ComplexWorkFlowConfiguration {
 	}
 
 	@Bean("onboardingWorkFlow" + WorkFlowConstants.CHECKER_WORKFLOW)
-	@Checker(cronExpression = "0 0/1 * * * ?")
+	@Checker(cronExpression = "0/5 * * * * ?")
 	WorkFlow onboardingWorkFlowCheckerWorkFlow(
 			@Qualifier("approvalChecker") MockApprovalWorkFlowCheckerTask approvalChecker) {
 		// @formatter:off
@@ -190,7 +190,7 @@ public class ComplexWorkFlowConfiguration {
 	}
 
 	@Bean("namespaceWorkFlow" + WorkFlowConstants.CHECKER_WORKFLOW)
-	@Checker(cronExpression = "0 0/1 * * * ?")
+	@Checker(cronExpression = "0/5 * * * * ?")
 	WorkFlow namespaceWorkFlowCheckerWorkFlow(
 			@Qualifier("processCompletionChecker") MockApprovalWorkFlowCheckerTask processCompletionChecker) {
 		// @formatter:off

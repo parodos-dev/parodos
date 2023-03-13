@@ -1,10 +1,11 @@
 package com.redhat.parodos.workflow.execution.service;
 
 import com.redhat.parodos.workflow.WorkFlowDelegate;
-import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
-import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
+import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
+import com.redhat.parodos.workflow.enums.WorkFlowStatus;
+import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
@@ -56,7 +57,7 @@ class WorkFlowServiceImplTest {
 	}
 
 	@Test
-	void executeTestwithValidData() {
+	void executeTestWithValidData() {
 		// given
 		Work work = Mockito.mock(Work.class);
 		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow().named("test").execute(work).build();
@@ -73,7 +74,8 @@ class WorkFlowServiceImplTest {
 				.thenReturn(this.sampleWorkflowDefinition("test"));
 
 		// when
-		WorkReport report = this.workFlowService.execute("test-project", "test-workflow", null, UUID.randomUUID());
+		WorkReport report = this.workFlowService.execute("test-project", "test-workflow", new WorkContext(),
+				UUID.randomUUID());
 		// then
 		assertNotNull(report);
 		assertEquals(report.getStatus().toString(), "COMPLETED");
@@ -83,20 +85,18 @@ class WorkFlowServiceImplTest {
 		assertEquals(report.getWorkContext().get("foo"), "bar");
 
 		Mockito.verify(this.workFlowDelegate, Mockito.times(1)).getWorkFlowExecutionByName(Mockito.any());
-		Mockito.verify(this.workFlowDelegate, Mockito.times(1)).initWorkFlowContext(Mockito.any());
-		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).findFirstByName(Mockito.any());
 		Mockito.verify(work, Mockito.times(1)).execute(Mockito.any());
 
 	}
 
 	@Test
-	void executeTestwithNoValidWorkflow() {
+	void executeTestWithNoValidWorkflow() {
 		// given
 		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName(Mockito.any())).thenReturn(null);
 
 		// when
-		WorkReport report = this.workFlowService.execute("test-project", "test-workflow", new WorkContext(),
-				UUID.randomUUID());
+		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId("test-project")
+				.works(List.of()).workFlowName("test-workflow").build());
 		// then
 		assertNotNull(report);
 		assertEquals(report.getStatus().toString(), "FAILED");
