@@ -101,25 +101,25 @@ public class WorkFlowTaskExecutionAspect {
 
 		WorkFlowExecution masterWorkFlowExecution = workFlowRepository.findById(masterWorkFlowExecutionId).get();
 		// get the workflow if it's executed again from continuation
-		WorkFlowExecution workFlowExecution = workFlowRepository
-				.findFirstByWorkFlowDefinitionIdAndMasterWorkFlowExecution(
-						workFlowTaskDefinition.getWorkFlowDefinition().getId(), masterWorkFlowExecution);
-
+		WorkFlowExecution workFlowExecution;
+		boolean isParentWorkFlowMaster = workFlowTaskDefinition.getWorkFlowDefinition().getName().equalsIgnoreCase(
+				WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION,
+						WorkContextDelegate.Resource.NAME).toString());
+		if (isParentWorkFlowMaster) {
+			workFlowExecution = masterWorkFlowExecution;
+		}
+		else {
+			workFlowExecution = workFlowRepository.findFirstByWorkFlowDefinitionIdAndMasterWorkFlowExecution(
+					workFlowTaskDefinition.getWorkFlowDefinition().getId(), masterWorkFlowExecution);
+		}
 		WorkFlowTaskExecution workFlowTaskExecution = workFlowService.getWorkFlowTask(workFlowExecution.getId(),
 				workFlowTaskDefinition.getId());
 		if (workFlowTaskExecution == null) {
-			workFlowTaskExecution = workFlowService
-					.saveWorkFlowTask(
-							WorkFlowDTOUtil.writeObjectValueAsString(WorkContextDelegate.read(workContext,
-									WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION, workFlowTaskName,
-									WorkContextDelegate.Resource.ARGUMENTS)),
-							workFlowTaskDefinition.getId(),
-							UUID.fromString(WorkContextDelegate
-									.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-											workFlowTaskDefinition.getWorkFlowDefinition().getName(),
-											WorkContextDelegate.Resource.ID)
-									.toString()),
-							WorkFlowTaskStatus.IN_PROGRESS);
+			workFlowTaskExecution = workFlowService.saveWorkFlowTask(
+					WorkFlowDTOUtil.writeObjectValueAsString(WorkContextDelegate.read(workContext,
+							WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION, workFlowTaskName,
+							WorkContextDelegate.Resource.ARGUMENTS)),
+					workFlowTaskDefinition.getId(), workFlowExecution.getId(), WorkFlowTaskStatus.IN_PROGRESS);
 		}
 		else if (workFlowTaskExecution.getStatus().equals(WorkFlowTaskStatus.COMPLETED))
 			// skip the task if it's already successful

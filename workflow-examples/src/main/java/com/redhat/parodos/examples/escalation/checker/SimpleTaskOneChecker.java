@@ -1,4 +1,4 @@
-package com.redhat.parodos.examples.escalation.task.checker;
+package com.redhat.parodos.examples.escalation.checker;
 
 import com.redhat.parodos.workflow.task.checker.BaseWorkFlowCheckerTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;

@@ -27,6 +27,10 @@ import java.util.UUID;
 @DirtiesContext
 public class ProjectControllerTest extends ControllerMockClient {
 
+	private static final String PROJECT_NAME_1 = "project1";
+
+	private static final String PROJECT_NAME_2 = "project2";
+
 	@Autowired
 	private MockMvc mockMvc;
 
@@ -37,12 +41,12 @@ public class ProjectControllerTest extends ControllerMockClient {
 	public void testCreateValidProject() throws Exception {
 		// given
 		ProjectRequestDTO project1DTO = new ProjectRequestDTO();
-		project1DTO.setName("project1");
+		project1DTO.setName(PROJECT_NAME_1);
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = objectMapper.writeValueAsString(project1DTO);
 
-		ProjectResponseDTO response = createSampleProject("project1");
+		ProjectResponseDTO response = createSampleProject(PROJECT_NAME_1);
 
 		Mockito.when(projectService.save(Mockito.eq(project1DTO))).thenReturn(response);
 
@@ -61,7 +65,7 @@ public class ProjectControllerTest extends ControllerMockClient {
 	public void testCreateValidProjectWithInvalidAuth() throws Exception {
 		// given
 		ProjectRequestDTO project1DTO = new ProjectRequestDTO();
-		project1DTO.setName("project1");
+		project1DTO.setName(PROJECT_NAME_1);
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = objectMapper.writeValueAsString(project1DTO);
 		// When
@@ -74,8 +78,8 @@ public class ProjectControllerTest extends ControllerMockClient {
 
 	@Test
 	public void testListProjects() throws Exception {
-		ProjectResponseDTO project1DTO = createSampleProject("project1");
-		ProjectResponseDTO project2DTO = createSampleProject("project2");
+		ProjectResponseDTO project1DTO = createSampleProject(PROJECT_NAME_1);
+		ProjectResponseDTO project2DTO = createSampleProject(PROJECT_NAME_2);
 		Mockito.when(projectService.getProjects()).thenReturn(List.of(project1DTO, project2DTO));
 
 		// When
@@ -103,7 +107,7 @@ public class ProjectControllerTest extends ControllerMockClient {
 
 	@Test
 	public void testGetProjectbyIdWithValidID() throws Exception {
-		ProjectResponseDTO project1DTO = createSampleProject("project1");
+		ProjectResponseDTO project1DTO = createSampleProject(PROJECT_NAME_1);
 		Mockito.when(projectService.getProjectById(UUID.fromString(project1DTO.getId()))).thenReturn(project1DTO);
 
 		// When
@@ -119,7 +123,7 @@ public class ProjectControllerTest extends ControllerMockClient {
 
 	@Test
 	public void testGetProjectbyIdWithInValidID() throws Exception {
-		ProjectResponseDTO project1DTO = createSampleProject("project1");
+		ProjectResponseDTO project1DTO = createSampleProject(PROJECT_NAME_1);
 		Mockito.when(projectService.getProjectById(Mockito.any())).thenReturn(null);
 
 		// When

@@ -115,7 +115,9 @@ public class WorkFlowExecutionAspect {
 		WorkFlowDefinition workFlowDefinition = this.workFlowDefinitionRepository.findFirstByName(workFlowName);
 
 		boolean isMaster = workFlowWorkRepository.findByWorkDefinitionId(workFlowDefinition.getId()).isEmpty()
-				&& !workFlowDefinition.getType().equals(WorkFlowType.CHECKER.name());
+				&& !workFlowDefinition.getType().equals(WorkFlowType.CHECKER.name())
+				&& !workFlowDefinition.getType().equals(WorkFlowType.ESCALATION.name());
+
 		// get/set master WorkFlowExecution
 		UUID masterWorkFlowExecutionId = Optional.ofNullable(WorkContextDelegate.read(workContext,
 				WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ID))
@@ -175,7 +177,8 @@ public class WorkFlowExecutionAspect {
 		workFlowExecution.setEndDate(new Date());
 		workFlowExecution.setArguments(WorkFlowDTOUtil.writeObjectValueAsString(WorkContextDelegate.read(workContext,
 				WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ARGUMENTS)));
-		if (!WorkFlowType.CHECKER.name().equals(workFlowDefinition.getType().toUpperCase())) {
+		if (!WorkFlowType.CHECKER.name().equals(workFlowDefinition.getType().toUpperCase())
+				&& !WorkFlowType.ESCALATION.name().equals(workFlowDefinition.getType().toUpperCase())) {
 			// TODO: save workContext to execution if this is master workflow
 			WorkFlowExecution masterWorkFlowExecution;
 			if (masterWorkFlowExecutionId == null) {

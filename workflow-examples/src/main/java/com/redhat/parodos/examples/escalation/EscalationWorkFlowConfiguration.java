@@ -5,7 +5,7 @@ import java.util.Date;
 import com.redhat.parodos.examples.escalation.task.SimpleTaskOne;
 import com.redhat.parodos.examples.escalation.task.SimpleTaskOneEscalator;
 import com.redhat.parodos.examples.escalation.task.SimpleTaskTwo;
-import com.redhat.parodos.examples.escalation.task.checker.SimpleTaskOneChecker;
+import com.redhat.parodos.examples.escalation.checker.SimpleTaskOneChecker;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -56,8 +56,6 @@ public class EscalationWorkFlowConfiguration {
 
 	// ********** Start Checker + Escalation **************
 	@Bean
-	// @Checker(cronExpression = "*/5 * * * * ?", nextWorkFlowName =
-	// "workflowContinuesAfterCheckingEscalation")
 	@Checker(cronExpression = "*/5 * * * * ?")
 	public WorkFlow simpleTaskOneCheckerWorkflow(
 			@Qualifier("simpleTaskOneCheckerTask") SimpleTaskOneChecker simpleTaskOneCheckerTask) {
