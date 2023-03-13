@@ -5,6 +5,9 @@
 #process_response() {
 #  echo "$1" | awk -F\" '{print $2}'
 #}
+#
+
+set -e
 
 SERVERIP=${SERVERIP:-127.0.0.1}
 SERVERPORT=${SERVERPORT:-8080}
@@ -89,6 +92,24 @@ get_next_workflow() {
     -H 'Content-Type: application/json' | jq '.tasks[] | select(has("nextWorkFlow"))' | jq -r '.nextWorkFlow' | head -n 1
 }
 
+wait_project_start() {
+  echo_blue "******** Checking project is running ********"
+  for i in {1..100}
+  do
+    CODE=$(curl -LI -c $COOKIEFP -s "${TARGET_URL}/api/v1/projects" \
+      -H 'accept: */*' \
+      -o /dev/null \
+      -H 'Authorization: Basic dGVzdDp0ZXN0' \
+      -H 'Content-Type: application/json' \
+      -w '%{http_code}\n' || exit 0)
+    refresh_token
+    [ $CODE -eq "200" ] && break
+    sleep 2s
+    [ $i -eq "100" ] && @fail "Project didn't started yet"
+  done
+}
+
+
 run_simple_flow() {
   echo "******** Running The Simple Sequence Flow ********"
   echo "                                                  "
@@ -110,20 +131,7 @@ run_simple_flow() {
 run_complex_flow() {
   echo "                                                "
   set -x
-  echo_blue "******** Checking project is running ********"
-  for i in {1..100}
-  do
-    CODE=$(curl -LI -c $COOKIEFP -s "${TARGET_URL}/api/v1/projects" \
-      -H 'accept: */*' \
-      -o /dev/null \
-      -H 'Authorization: Basic dGVzdDp0ZXN0' \
-      -H 'Content-Type: application/json' \
-      -w '%{http_code}\n')
-    refresh_token
-    [ $CODE -eq "200" ] && break
-    sleep 2s
-    [ $i -eq "100" ] && @fail "Project didn't started yet"
-  done
+  wait_project_start
   echo "Project is ✔️ on ${TARGET_URL}"
   echo " "
   echo_blue "******** Create Project ********"
@@ -295,10 +303,14 @@ run_escalation_flow() {
   echo "                                                  "
   echo "                                                  "
 
+  wait_project_start
+
    PROJECT_ID=$(curl -X 'POST' -s \
     "${TARGET_URL}/api/v1/projects" \
     -H 'accept: */*' \
     -H 'Authorization: Basic dGVzdDp0ZXN0' \
+    -H "X-XSRF-TOKEN: ${TOKEN}" \
+    -b $COOKIEFP \
     -H 'Content-Type: application/json' \
     -d '{
                  "name": "project-1",
@@ -313,6 +325,8 @@ run_escalation_flow() {
     "${TARGET_URL}/api/v1/workflows/" \
     -H 'accept: */*' \
     -H 'Authorization: Basic dGVzdDp0ZXN0' \
+    -H "X-XSRF-TOKEN: ${TOKEN}" \
+    -b $COOKIEFP \
     -H 'Content-Type: application/json' \
     -d '{
           "projectId": "'$PROJECT_ID'",
