@@ -125,8 +125,10 @@ public class WorkFlowExecutionAspect {
 
 		WorkFlowExecution workFlowExecution;
 		if (masterWorkFlowExecutionId == null) {
-			// this is first time execution for master workflow
-			// save and write execution id to workcontext
+			/*
+			 * this is first time execution for master workflow save and write execution
+			 * id to workContext
+			 */
 			workFlowExecution = this.workFlowService
 					.saveWorkFlow(
 							UUID.fromString(
@@ -184,7 +186,7 @@ public class WorkFlowExecutionAspect {
 				WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ARGUMENTS)));
 		if (!WorkFlowType.CHECKER.name().equals(workFlowDefinition.getType().toUpperCase())
 				&& !WorkFlowType.ESCALATION.name().equals(workFlowDefinition.getType().toUpperCase())) {
-			// TODO: save workContext to execution if this is master workflow
+			// save workContext to execution if this is master workflow
 			WorkFlowExecution masterWorkFlowExecution;
 			if (masterWorkFlowExecutionId == null) {
 				workFlowExecution.setWorkFlowExecutionContext(WorkFlowExecutionContext.builder()
@@ -196,9 +198,10 @@ public class WorkFlowExecutionAspect {
 				masterWorkFlowExecution = workFlowRepository.findById(masterWorkFlowExecutionId).get();
 			}
 
-			// TODO: if this is infrastructure/assessment workflow, fail it and persist as
-			// 'pending'
-			// if any of its checkers' execution is not successful/not started
+			/*
+			 * if this is infrastructure/assessment workflow, fail it and persist as
+			 * 'pending' if any of its checkers' execution is not successful/not started
+			 */
 			Set<WorkFlowCheckerMappingDefinition> workFlowCheckerMappingDefinitions = workFlowDefinition
 					.getWorkFlowTaskDefinitions().stream()
 					.map(WorkFlowTaskDefinition::getWorkFlowCheckerMappingDefinition).filter(Objects::nonNull)
@@ -219,8 +222,10 @@ public class WorkFlowExecutionAspect {
 
 		}
 		else {
-			// if this workflow is a checker, schedule workflow checker for dynamic run on
-			// cron expression or stop if done
+			/*
+			 * if this workflow is a checker, schedule workflow checker for dynamic run on
+			 * cron expression or stop if done
+			 */
 			workFlowService.updateWorkFlow(workFlowExecution);
 			startOrStopWorkFlowCheckerOnSchedule(workFlowDefinition.getName(),
 					(WorkFlow) proceedingJoinPoint.getTarget(), workFlowDefinition.getCheckerWorkFlowDefinition(),
@@ -246,8 +251,10 @@ public class WorkFlowExecutionAspect {
 		log.info("Stop workflow checker: {} schedule", workFlowName);
 		workFlowSchedulerService.stop(workFlow);
 
-		// TODO: if this workflow is checker and it's successful, call continuation
-		// service to restart master workflow execution with same execution Id
+		/*
+		 * if this workflow is checker and it's successful, call continuation service to
+		 * restart master workflow execution with same execution Id
+		 */
 		workFlowContinuationServiceImpl.continueWorkFlow(projectId, masterWorkFlowName, workContext,
 				masterWorkFlowExecution);
 	}

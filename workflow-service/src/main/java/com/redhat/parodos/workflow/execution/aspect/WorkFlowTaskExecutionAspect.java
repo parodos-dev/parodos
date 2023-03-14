@@ -138,18 +138,18 @@ public class WorkFlowTaskExecutionAspect {
 		workFlowTaskExecution.setLastUpdateDate(new Date());
 		workFlowService.updateWorkFlowTask(workFlowTaskExecution);
 
-		// TODO: save workContext
-
-		// TODO: if this task has checker
-		// schedule workflow checker for dynamic run on cron expression or stop if done
+		/*
+		 * if this task has checker schedule workflow checker for dynamic run on cron
+		 * expression or stop if done
+		 */
 		if (workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition() != null) {
-			// TODO: if this task has no running checker
+			// if this task has no running checker
 			WorkFlowExecution checkerWorkFlowExecution = workFlowRepository
 					.findFirstByWorkFlowDefinitionIdAndMasterWorkFlowExecution(
 							workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition().getId(),
 							masterWorkFlowExecution);
 			if (checkerWorkFlowExecution == null) {
-				// TODO: schedule workflow checker for dynamic run on cron expression
+				// schedule workflow checker for dynamic run on cron expression
 				WorkFlow checkerWorkFlow = ((BaseInfrastructureWorkFlowTask) proceedingJoinPoint.getTarget())
 						.getWorkFlowChecker();
 				startCheckerOnSchedule(
