@@ -80,7 +80,7 @@ public class WorkFlowController {
 				.workFlowOptions((WorkFlowOptions) WorkContextDelegate.read(workReport.getWorkContext(),
 						WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
 						WorkContextDelegate.Resource.WORKFLOW_OPTIONS))
-				.build());
+				.workStatus(workReport.getStatus()).build());
 
 	}
 

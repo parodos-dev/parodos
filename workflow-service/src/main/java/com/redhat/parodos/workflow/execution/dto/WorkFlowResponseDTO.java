@@ -17,6 +17,7 @@ package com.redhat.parodos.workflow.execution.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.redhat.parodos.workflow.option.WorkFlowOptions;
+import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -39,5 +40,8 @@ public class WorkFlowResponseDTO {
 
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private WorkFlowOptions workFlowOptions;
+
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	private WorkStatus workStatus;
 
 }
