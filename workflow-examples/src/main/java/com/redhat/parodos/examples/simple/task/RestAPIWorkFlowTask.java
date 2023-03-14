@@ -75,7 +75,7 @@ public class RestAPIWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 						.description("Json of what to provide for data. (ie: 'Hello!')").optional(false)
 						.type(WorkFlowTaskParameterType.PASSWORD).build(),
 				WorkFlowTaskParameter.builder().key("user-id").description("The user id")
-						.type(WorkFlowTaskParameterType.URL).optional(false).build());
+						.type(WorkFlowTaskParameterType.TEXT).optional(false).build());
 	}
 
 	public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {

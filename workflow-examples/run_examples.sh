@@ -146,9 +146,9 @@ run_simple_flow() {
     -d '{
         "projectId": "'$PROJECT_ID'",
         "workFlowName": "simpleSequentialWorkFlow_INFRASTRUCTURE_WORKFLOW",
-        "workFlowTasks": [
+        "works": [
             {
-                "name": "restCallTask",
+                "workName": "restCallTask",
                 "arguments": [
                     {
                       "key": "url",
@@ -202,7 +202,7 @@ run_complex_flow() {
     -d '{
           "projectId": "'$PROJECT_ID'",
           "workFlowName": "onboardingAssessment_ASSESSMENT_WORKFLOW",
-          "workFlowTasks": []
+          "works": []
         }' | jq -r '.workFlowOptions.newOptions[0].workFlowName')
   echo "The Following Option Is Available:" $(echo_green ${INFRASTRUCTURE_OPTION})
   [ ${#INFRASTRUCTURE_OPTION} -gt "10" ] || @fail "There is no valid INFRASTRUCTURE_OPTION"
@@ -228,9 +228,9 @@ run_complex_flow() {
     -d '{
           "projectId": "'$PROJECT_ID'",
       "workFlowName": "'$ONBOARDING_WORKFLOW_NAME'",
-      "workFlowTasks": [
-    {
-                    "taskName": "certWorkFlowTask",
+      "works": [
+                  {
+                    "workName": "certWorkFlowTask",
                     "arguments": [
                       {
                         "key": "username",
@@ -239,7 +239,7 @@ run_complex_flow() {
                     ]
                   },
                   {
-                    "taskName": "adGroupWorkFlowTask",
+                    "workName": "adGroupWorkFlowTask",
                     "arguments": [
                       {
                         "key": "api-server",
@@ -288,7 +288,7 @@ run_escalation_flow() {
     -d '{
           "projectId": "'$PROJECT_ID'",
         "workFlowName": "workflowStartingCheckingAndEscalation",
-        "workFlowTasks": []
+        "works": []
       }' | jq -r '.workFlowExecutionId')"
 
   echo "                                                "
