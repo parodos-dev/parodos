@@ -171,4 +171,6 @@ jobs:
       - name: Run example script
         run: |
           export SERVERIP=$(kubectl get nodes kind-control-plane -o json  |  jq -r '[.status.addresses[] | select(.type=="InternalIP")] | .[0].address')
-          SERVER_IP="${SERVERIP}" SERVERPORT=80 ./workflow-examples/run_examples.sh
+          SERVER_IP="${SERVERIP}" SERVERPORT=80 ./workflow-examples/run_examples.sh escalation
+          SERVER_IP="${SERVERIP}" SERVERPORT=80 ./workflow-examples/run_examples.sh simple
+          SERVER_IP="${SERVERIP}" SERVERPORT=80 ./workflow-examples/run_examples.sh complex

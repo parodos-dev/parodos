@@ -111,6 +111,7 @@ wait_project_start() {
 
 
 run_simple_flow() {
+  echo "Running simple flow"
   wait_project_start
   echo "Project is ✔️ on ${TARGET_URL}"
   echo " "
@@ -122,6 +123,8 @@ run_simple_flow() {
     -H 'accept: */*' \
     -H 'Authorization: Basic dGVzdDp0ZXN0' \
     -H 'Content-Type: application/json' \
+    -H "X-XSRF-TOKEN: ${TOKEN}" \
+    -b $COOKIEFP \
     -d '{
                  "name": "project-1",
                  "description": "an example project"
@@ -138,6 +141,8 @@ run_simple_flow() {
     -H 'accept: */*' \
     -H 'Content-Type: application/json' \
     -H 'Authorization: Basic dGVzdDp0ZXN0' \
+    -H "X-XSRF-TOKEN: ${TOKEN}" \
+    -b $COOKIEFP \
     -d '{
         "projectId": "'$PROJECT_ID'",
         "workFlowName": "simpleSequentialWorkFlow_INFRASTRUCTURE_WORKFLOW",
@@ -164,6 +169,7 @@ run_simple_flow() {
 
 run_complex_flow() {
   echo "                                                "
+  echo "Running Complex Workflow"
   wait_project_start
   echo "Project is ✔️ on ${TARGET_URL}"
   echo " "
@@ -290,16 +296,26 @@ run_escalation_flow() {
   echo "                                                "
 }
 
-if [ $# -eq 0 ] || [ $1 = "escalation" ]; then
-  echo_blue "##### Running escalation flow #####"
+
+if [ $# -eq 0 ]; then
   run_escalation_flow
-elif [ $1 = "complex" ]; then
-  echo_blue "##### Running complex flow #####"
-  run_complex_flow
-elif [ $1 = "simple" ]; then
-echo_blue "##### Running simple flow #####"
-  run_simple_flow
-else
-  echo_red "##### Unsupported argument #####"
-  echo "Options: escalation (default) , complex, simple"
+  exit 0
 fi
+
+case $1 in
+  "escalation")
+    run_escalation_flow
+    ;;
+
+  "complex")
+    run_complex_flow
+    ;;
+
+  "simple")
+    run_simple_flow
+    ;;
+  *)
+    echo_red "##### Unsupported argument #####"
+    echo "Options: escalation (default) , complex, simple"
+    ;;
+esac
