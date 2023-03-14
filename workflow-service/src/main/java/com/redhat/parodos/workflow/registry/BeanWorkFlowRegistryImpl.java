@@ -15,34 +15,36 @@
  */
 package com.redhat.parodos.workflow.registry;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.redhat.parodos.workflow.enums.WorkFlowProcessingType;
+import com.redhat.parodos.workflow.enums.WorkFlowType;
+import com.redhat.parodos.workflow.annotation.Assessment;
+import com.redhat.parodos.workflow.annotation.Checker;
+import com.redhat.parodos.workflow.annotation.Infrastructure;
+import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
+import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
+import com.redhat.parodos.workflow.parameter.WorkFlowParameter;
+import com.redhat.parodos.workflow.parameter.WorkFlowParameterType;
+import com.redhat.parodos.workflow.task.WorkFlowTask;
+import com.redhat.parodos.workflows.work.Work;
+import com.redhat.parodos.workflows.workflow.WorkFlow;
+import javax.annotation.PostConstruct;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.annotation.PostConstruct;
-
+import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.redhat.parodos.workflow.WorkFlowType;
-import com.redhat.parodos.workflow.annotation.Assessment;
-import com.redhat.parodos.workflow.annotation.Checker;
 import com.redhat.parodos.workflow.annotation.Escalation;
-import com.redhat.parodos.workflow.annotation.Infrastructure;
-import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
-import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
-import com.redhat.parodos.workflow.exceptions.WorkflowDefinitionException;
-import com.redhat.parodos.workflow.task.WorkFlowTask;
-import com.redhat.parodos.workflows.workflow.WorkFlow;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * An implementation of the WorkflowRegistry that loads all Bean definitions of type
@@ -60,65 +62,74 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 	// Spring will populate this through classpath scanning when the Context starts up
 	private final ConfigurableListableBeanFactory beanFactory;
 
-	private final WorkFlowDefinitionServiceImpl workFlowDefinitionService;
-
 	private final Map<String, WorkFlow> workFlows;
 
-	private final Map<String, WorkFlowTask> workFlowTaskMap;
+	private final Map<String, WorkFlowTask> workFlowTasks;
 
-	public BeanWorkFlowRegistryImpl(ConfigurableListableBeanFactory beanFactory,
-			WorkFlowDefinitionServiceImpl workFlowDefinitionService, Map<String, WorkFlowTask> workFlowTaskMap,
-			Map<String, WorkFlow> workFlows) {
+	private final WorkFlowDefinitionServiceImpl workFlowDefinitionService;
+
+	public BeanWorkFlowRegistryImpl(ConfigurableListableBeanFactory beanFactory, Map<String, WorkFlow> workFlows,
+			Map<String, WorkFlowTask> workFlowTasks, WorkFlowDefinitionServiceImpl workFlowDefinitionService) {
+		this.beanFactory = beanFactory;
 		this.workFlows = workFlows;
-		this.workFlowTaskMap = workFlowTaskMap;
+		this.workFlowTasks = workFlowTasks;
+		this.workFlowDefinitionService = workFlowDefinitionService;
 
-		if (workFlows == null && workFlowTaskMap == null) {
+		if (workFlows == null && workFlowTasks == null) {
 			log.error(
 					"No workflows or workflowTasks were registered. Initializing an empty collection of workflows so the application can start");
 			workFlows = new HashMap<>();
-			workFlowTaskMap = new HashMap<>();
+			workFlowTasks = new HashMap<>();
 		}
 		log.info(">> Detected {} WorkFlow and {} workFlowTasks from the Bean Registry", workFlows.size(),
-				workFlowTaskMap.size());
-
-		this.beanFactory = beanFactory;
-		this.workFlowDefinitionService = workFlowDefinitionService;
+				workFlowTasks.size());
 	}
 
 	@PostConstruct
 	void postInit() {
-		workFlows.forEach((key, value) -> saveWorkFlow(value, key));
-		saveChecker(workFlowTaskMap);
+		workFlows.forEach(this::saveWorkFlow);
+		saveChecker(workFlowTasks);
 	}
 
-	private void saveWorkFlow(Object bean, String name) {
-		Map<String, WorkFlowTask> hmWorkFlowTasks = new HashMap<>();
-		Arrays.stream(beanFactory.getDependenciesForBean(name)).filter(dependency -> {
-			try {
-				beanFactory.getBean(dependency, WorkFlowTask.class);
-				return true;
-			}
-			catch (BeansException e) {
-				return false;
-			}
-		}).forEach(dependency -> hmWorkFlowTasks.put(dependency, beanFactory.getBean(dependency, WorkFlowTask.class)));
-		workFlowDefinitionService.save(name, ((WorkFlow) bean).getName(),
-				getWorkFlowTypeDetails(name,
-						List.of(Assessment.class, Checker.class, Infrastructure.class, Escalation.class)).getFirst(),
-				hmWorkFlowTasks);
+	@Override
+	public WorkFlow getWorkFlowByName(String workFlowName) {
+		return workFlows.get(workFlowName);
 	}
 
-	private void saveChecker(Map<String, WorkFlowTask> workFlowTaskMap) {
-		workFlowTaskMap
-				.forEach((name, value) -> Arrays.stream(beanFactory.getDependenciesForBean(name)).filter(dependency -> {
-					try {
-						beanFactory.getBean(dependency, WorkFlow.class);
-						return true;
-					}
-					catch (BeansException e) {
-						return false;
-					}
-				}).findFirst().ifPresent(dependency -> {
+	private void saveWorkFlow(String workFlowBeanName, Object workFlowBean) {
+		// extract work units
+		List<Work> works = getWorks(workFlowBeanName);
+		// get workflow type and parameters from annotation
+		Pair<WorkFlowType, Map<String, Object>> workFlowTypeDetailsPair = getWorkFlowTypeDetails(workFlowBeanName,
+				List.of(Assessment.class, Checker.class, Infrastructure.class, Escalation.class));
+		// workflow type
+		WorkFlowType workFlowType = workFlowTypeDetailsPair.getFirst();
+		// workflow parameters from annotation attributes
+		AnnotationAttributes[] annotationAttributes = (AnnotationAttributes[]) workFlowTypeDetailsPair.getSecond()
+				.get("parameters");
+		List<WorkFlowParameter> workFlowParameters = new ArrayList<>();
+		if (annotationAttributes != null && annotationAttributes.length > 0) {
+			workFlowParameters = Arrays.stream(annotationAttributes)
+					.map(annotationAttribute -> WorkFlowParameter.builder().key(annotationAttribute.getString("key"))
+							.description(annotationAttribute.getString("description"))
+							.type((WorkFlowParameterType) annotationAttribute.get("type"))
+							.optional(annotationAttribute.getBoolean("optional")).build())
+					.collect(Collectors.toList());
+		}
+		workFlowDefinitionService.save(workFlowBeanName, workFlowType, workFlowParameters, works,
+				getWorkFlowProcessingType(workFlowBean));
+	}
+
+	private List<Work> getWorks(String workFlowName) {
+		return Arrays.stream(beanFactory.getDependenciesForBean(workFlowName))
+				.filter(dependency -> isBeanInstanceOf(beanFactory, dependency, WorkFlow.class, WorkFlowTask.class))
+				.map(dependency -> beanFactory.getBean(dependency, Work.class)).collect(Collectors.toList());
+	}
+
+	private void saveChecker(Map<String, WorkFlowTask> workFlowTasks) {
+		workFlowTasks.forEach((name, value) -> Arrays.stream(beanFactory.getDependenciesForBean(name))
+				.filter(dependency -> isBeanInstanceOf(beanFactory, dependency, WorkFlow.class)).findFirst()
+				.ifPresent(dependency -> {
 					try {
 						WorkFlowCheckerDTO workFlowCheckerDTO = new ObjectMapper().convertValue(
 								getWorkFlowTypeDetails(dependency, List.of(Checker.class)).getSecond(),
@@ -131,23 +142,40 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 				}));
 	}
 
-	private Pair<WorkFlowType, Map<String, Object>> getWorkFlowTypeDetails(String beanName,
-			List<Class<? extends Annotation>> workFlowTypeList) {
-		BeanDefinition beanDefinition = beanFactory.getBeanDefinition(beanName);
+	private Pair<WorkFlowType, Map<String, Object>> getWorkFlowTypeDetails(String workFlowBeanName,
+			List<Class<? extends Annotation>> workFlowTypeAnnotations) {
+		BeanDefinition beanDefinition = beanFactory.getBeanDefinition(workFlowBeanName);
 		if (beanDefinition.getSource() instanceof AnnotatedTypeMetadata) {
 			AnnotatedTypeMetadata metadata = (AnnotatedTypeMetadata) beanDefinition.getSource();
-			return workFlowTypeList.stream().filter(clazz -> metadata.getAnnotationAttributes(clazz.getName()) != null)
-					.findFirst()
+			return workFlowTypeAnnotations.stream()
+					.filter(clazz -> metadata.getAnnotationAttributes(clazz.getName()) != null).findFirst()
 					.map(clazz -> Pair.of(WorkFlowType.valueOf(clazz.getSimpleName().toUpperCase()),
 							metadata.getAnnotationAttributes(clazz.getName())))
-					.orElseThrow(() -> new RuntimeException("workflow missing type! beanName: " + beanName));
+					.orElseThrow(() -> new RuntimeException("workflow missing type! beanName: " + workFlowBeanName));
 		}
 		throw new RuntimeException("workflow with no annotated type metadata!");
 	}
 
-	@Override
-	public WorkFlow getWorkFlowByName(String workFlowName) {
-		return workFlows.get(workFlowName);
+	private WorkFlowProcessingType getWorkFlowProcessingType(Object workFlowBean) {
+		String className = workFlowBean.getClass().getTypeName();
+		if (className.toUpperCase().contains(WorkFlowProcessingType.PARALLEL.name()))
+			return WorkFlowProcessingType.PARALLEL;
+		if (className.toUpperCase().contains(WorkFlowProcessingType.SEQUENTIAL.name()))
+			return WorkFlowProcessingType.SEQUENTIAL;
+		return WorkFlowProcessingType.OTHER;
+	}
+
+	private boolean isBeanInstanceOf(ConfigurableListableBeanFactory configurableListableBeanFactory, String beanName,
+			Class<?>... classes) {
+		return Arrays.stream(classes).anyMatch(clazz -> {
+			try {
+				configurableListableBeanFactory.getBean(beanName, clazz);
+				return true;
+			}
+			catch (BeansException e1) {
+				return false;
+			}
+		});
 	}
 
 }

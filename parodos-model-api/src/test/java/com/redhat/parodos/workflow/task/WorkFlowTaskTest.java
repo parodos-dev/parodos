@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
 import org.junit.Test;
 
 import com.redhat.parodos.workflow.context.WorkContextDelegate;

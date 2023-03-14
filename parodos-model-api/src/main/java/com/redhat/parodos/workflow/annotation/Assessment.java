@@ -34,4 +34,6 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface Assessment {
 
+	Parameter[] parameters() default {};
+
 }

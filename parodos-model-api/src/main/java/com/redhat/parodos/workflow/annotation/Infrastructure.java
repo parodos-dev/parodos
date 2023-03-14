@@ -34,4 +34,6 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface Infrastructure {
 
+	Parameter[] parameters() default {};
+
 }

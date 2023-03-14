@@ -1,8 +1,8 @@
 package com.redhat.parodos.examples.base;
 
 import com.redhat.parodos.workflow.option.WorkFlowOption;
-import com.redhat.parodos.workflow.task.WorkFlowTaskType;
 import com.redhat.parodos.workflow.task.checker.BaseWorkFlowCheckerTask;
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskType;
 import org.junit.Before;
 
 import java.util.List;

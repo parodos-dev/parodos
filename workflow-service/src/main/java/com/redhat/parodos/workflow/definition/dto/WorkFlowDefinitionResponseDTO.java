@@ -19,8 +19,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
+import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
@@ -30,6 +34,8 @@ import lombok.NoArgsConstructor;
  * @author Annel Ketcha (Github: anludke)
  */
 
+@EqualsAndHashCode
+@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -41,13 +47,18 @@ public class WorkFlowDefinitionResponseDTO {
 
 	private String type;
 
+	private String processingType;
+
 	private String author;
 
 	private Date createDate;
 
 	private Date modifyDate;
 
-	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private List<WorkFlowTaskDefinitionResponseDTO> tasks;
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	private List<WorkFlowTaskParameter> parameters;
+
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	private List<WorkDefinitionResponseDTO> works;
 
 }

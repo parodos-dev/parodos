@@ -15,12 +15,14 @@
  */
 package com.redhat.parodos.workflow.definition.service;
 
-import com.redhat.parodos.workflow.WorkFlowType;
+import com.redhat.parodos.workflow.enums.WorkFlowProcessingType;
+import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
-import com.redhat.parodos.workflow.task.WorkFlowTask;
+import com.redhat.parodos.workflow.parameter.WorkFlowParameter;
+import com.redhat.parodos.workflows.work.Work;
+
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -31,14 +33,15 @@ import java.util.UUID;
  */
 public interface WorkFlowDefinitionService {
 
-	WorkFlowDefinitionResponseDTO save(String workFlowName, String workFlowDescription, WorkFlowType workFlowType,
-			Map<String, WorkFlowTask> hmWorkFlowTasks);
+	WorkFlowDefinitionResponseDTO save(String workFlowName, WorkFlowType workFlowType,
+			List<WorkFlowParameter> workFlowParameters, List<Work> works,
+			WorkFlowProcessingType workFlowProcessingType);
 
-	List<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitions();
+	WorkFlowDefinitionResponseDTO getWorkFlowDefinitionByName(String name);
 
 	WorkFlowDefinitionResponseDTO getWorkFlowDefinitionById(UUID id);
 
-	List<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitionsByName(String name);
+	List<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitions();
 
 	void saveWorkFlowChecker(String workFlowTaskName, String workFlowCheckerName,
 			WorkFlowCheckerDTO workFlowCheckerDTO);

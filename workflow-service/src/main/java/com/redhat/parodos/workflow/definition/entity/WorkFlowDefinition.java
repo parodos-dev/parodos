@@ -15,10 +15,12 @@
  */
 package com.redhat.parodos.workflow.definition.entity;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import com.redhat.parodos.common.AbstractEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -26,14 +28,9 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-
-import com.redhat.parodos.common.AbstractEntity;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Workflow definition entity
@@ -53,8 +50,6 @@ public class WorkFlowDefinition extends AbstractEntity {
 
 	private String name;
 
-	private String description;
-
 	private String type;
 
 	private String author;
@@ -64,15 +59,22 @@ public class WorkFlowDefinition extends AbstractEntity {
 
 	private Date modifyDate;
 
+	private String parameters;
+
+	private String processingType;
+
+	private Integer numberOfWorks;
+
 	@OneToMany(mappedBy = "workFlowDefinition", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@Builder.Default
 	private List<WorkFlowTaskDefinition> workFlowTaskDefinitions = new ArrayList<>();
 
-	@OneToOne(mappedBy = "checkWorkFlow", cascade = CascadeType.ALL)
-	private WorkFlowCheckerDefinition checkerWorkFlowDefinition;
+	@OneToMany(mappedBy = "workFlowDefinition", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@Builder.Default
+	private List<WorkFlowWorkDefinition> workFlowWorkDefinitions = new ArrayList<>();
 
-	@OneToOne(mappedBy = "nextWorkFlow", cascade = CascadeType.ALL)
-	private WorkFlowCheckerDefinition nextWorkFlowDefinition;
+	@OneToOne(mappedBy = "checkWorkFlow", cascade = CascadeType.ALL)
+	private WorkFlowCheckerMappingDefinition checkerWorkFlowDefinition;
 
 	private String commitId;
 

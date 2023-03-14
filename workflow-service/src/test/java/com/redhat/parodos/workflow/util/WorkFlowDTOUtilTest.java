@@ -15,15 +15,15 @@ class WorkFlowDTOUtilTest {
 	@Test
 	public void testConvertWorkFlowTaskToMapWithValidData() {
 		// given
-		WorkFlowRequestDTO.WorkFlowTaskRequestDTO workFlowTaskRequestDTO = WorkFlowRequestDTO.WorkFlowTaskRequestDTO
-				.builder().name("bar").arguments(List.of(getRandomArgument("key1"), getRandomArgument("key2"))).build();
+		WorkFlowRequestDTO.WorkRequestDTO workFlowRequestDTO = WorkFlowRequestDTO.WorkRequestDTO.builder()
+				.workName("bar").arguments(List.of(getRandomArgument("key1"), getRandomArgument("key2"))).build();
 
-		WorkFlowRequestDTO.WorkFlowTaskRequestDTO workFlowTaskRequestDTOB = WorkFlowRequestDTO.WorkFlowTaskRequestDTO
-				.builder().name("foo").arguments(List.of(getRandomArgument("key1"))).build();
+		WorkFlowRequestDTO.WorkRequestDTO workFlowTaskRequestDTOB = WorkFlowRequestDTO.WorkRequestDTO.builder()
+				.workName("foo").arguments(List.of(getRandomArgument("key1"))).build();
 
 		// when
 		Map<String, Map<String, String>> res = WorkFlowDTOUtil
-				.convertWorkFlowTaskRequestDTOListToMap(List.of(workFlowTaskRequestDTO, workFlowTaskRequestDTOB));
+				.convertWorkRequestDTOListToMap(List.of(workFlowRequestDTO, workFlowTaskRequestDTOB));
 
 		// then
 		assertNotNull(res);
@@ -39,15 +39,15 @@ class WorkFlowDTOUtilTest {
 	@Test
 	public void testConvertWorkFlowTaskToMapWithoutTaskArguments() {
 		// given
-		WorkFlowRequestDTO.WorkFlowTaskRequestDTO workFlowTaskRequestDTO = WorkFlowRequestDTO.WorkFlowTaskRequestDTO
-				.builder().name("bar").arguments(new ArrayList<>()).build();
+		WorkFlowRequestDTO.WorkRequestDTO workRequestDTO = WorkFlowRequestDTO.WorkRequestDTO.builder().workName("bar")
+				.arguments(new ArrayList<>()).build();
 
-		WorkFlowRequestDTO.WorkFlowTaskRequestDTO workFlowTaskRequestDTOB = WorkFlowRequestDTO.WorkFlowTaskRequestDTO
-				.builder().name("foo").arguments(null).build();
+		WorkFlowRequestDTO.WorkRequestDTO workRequestDTOB = WorkFlowRequestDTO.WorkRequestDTO.builder().workName("foo")
+				.arguments(null).build();
 
 		// when
 		Map<String, Map<String, String>> res = WorkFlowDTOUtil
-				.convertWorkFlowTaskRequestDTOListToMap(List.of(workFlowTaskRequestDTO, workFlowTaskRequestDTOB));
+				.convertWorkRequestDTOListToMap(List.of(workRequestDTO, workRequestDTOB));
 
 		// then
 		assertNotNull(res);
@@ -74,8 +74,8 @@ class WorkFlowDTOUtilTest {
 		assertEquals(res, "null");
 	}
 
-	WorkFlowRequestDTO.WorkFlowTaskRequestDTO.ArgumentRequestDTO getRandomArgument(String key) {
-		return WorkFlowRequestDTO.WorkFlowTaskRequestDTO.ArgumentRequestDTO.builder().key(key).value(key).build();
+	WorkFlowRequestDTO.WorkRequestDTO.ArgumentRequestDTO getRandomArgument(String key) {
+		return WorkFlowRequestDTO.WorkRequestDTO.ArgumentRequestDTO.builder().key(key).value(key).build();
 	}
 
 }

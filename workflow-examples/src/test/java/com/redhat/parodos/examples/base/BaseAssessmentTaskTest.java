@@ -1,16 +1,10 @@
 package com.redhat.parodos.examples.base;
 
 import com.redhat.parodos.workflow.option.WorkFlowOption;
-import com.redhat.parodos.workflow.task.WorkFlowTaskType;
 import com.redhat.parodos.workflow.task.assessment.BaseAssessmentTask;
-import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
-import com.redhat.parodos.workflows.workflow.WorkFlow;
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskType;
 import org.junit.Before;
-import org.mockito.Mockito;
-
 import java.util.List;
-
-import static org.mockito.Mockito.when;
 
 public abstract class BaseAssessmentTaskTest {
 

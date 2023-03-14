@@ -98,14 +98,14 @@ public class WorkContextDelegate {
 	 * @param workContext reference to the context
 	 * @param processType the type of Workflow object being persisted (ie:
 	 * WORKFLOW_TASK_DEFINITION)
-	 * @param workFlowTaskName a unique identifier of a WorkflowTask in the event that
-	 * multiple WorkflowTasks have persisted this information
+	 * @param workName a unique identifier of a WorkflowTask in the event that multiple
+	 * WorkflowTasks have persisted this information
 	 * @param resource the object related to the processType (ie: PARAMETERS)
 	 * @param object the reference to store
 	 */
-	public static void write(WorkContext workContext, ProcessType processType, String workFlowTaskName,
-			Resource resource, Object object) {
-		workContext.put(buildKey(processType, workFlowTaskName, resource), object);
+	public static void write(WorkContext workContext, ProcessType processType, String workName, Resource resource,
+			Object object) {
+		workContext.put(buildKey(processType, workName, resource), object);
 	}
 
 	/**

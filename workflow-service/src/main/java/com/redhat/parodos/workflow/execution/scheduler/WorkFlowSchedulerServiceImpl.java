@@ -63,7 +63,10 @@ public class WorkFlowSchedulerServiceImpl implements WorkFlowSchedulerService {
 	public boolean stop(WorkFlow workFlow) {
 		if (hm.containsKey(workFlow.getName())) {
 			log.info("Stopping workflow: {}", workFlow.getName());
-			return hm.get(workFlow.getName()).cancel(false);
+			boolean stopped = hm.get(workFlow.getName()).cancel(false);
+			if (stopped)
+				hm.remove(workFlow.getName());
+			return stopped;
 		}
 		log.info("Workflow: {} has not been scheduled!", hm.get(workFlow.getName()));
 		return false;

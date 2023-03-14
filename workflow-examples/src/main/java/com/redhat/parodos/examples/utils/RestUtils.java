@@ -1,6 +1,5 @@
 package com.redhat.parodos.examples.utils;
 
-import com.redhat.parodos.workflow.utils.CredUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -8,16 +7,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
+import java.util.Base64;
 
 /**
- * RestUtils is an utility class. All its methods must be declared as static so they can't
+ * RestUtils is a utility class. All its methods must be declared as static so they can't
  * be overridden.
  */
 public final class RestUtils {
 
 	/**
 	 * The constructor is private so it'll prevent instantiation.
-	 * @throws UnsupportedOperationException
 	 */
 	private RestUtils() {
 		throw new UnsupportedOperationException("Suppress default constructor for non instantiability");
@@ -49,9 +48,8 @@ public final class RestUtils {
 	 */
 	public static ResponseEntity<String> restExchange(String urlString, String username, String password) {
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<String> result = restTemplate.exchange(urlString, HttpMethod.GET,
-				getRequestWithHeaders(username, password), String.class);
-		return result;
+		return restTemplate.exchange(urlString, HttpMethod.GET, getRequestWithHeaders(username, password),
+				String.class);
 	}
 
 	/**
@@ -62,10 +60,23 @@ public final class RestUtils {
 	 * @return the @see org.springframework.http.HttpEntity
 	 */
 	public static HttpEntity<String> getRequestWithHeaders(String username, String password) {
-		String base64Creds = CredUtils.getBase64Creds(username, password);
+		String base64Creds = getBase64Creds(username, password);
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Authorization", "Basic " + base64Creds);
 		return new HttpEntity<>(headers);
+	}
+
+	/**
+	 * Generates a Base64 encoding of username:password string
+	 * @param username the username
+	 * @param password the password
+	 * @return the Base64 encoded string
+	 */
+	public static String getBase64Creds(String username, String password) {
+		String plainCreds = username + ":" + password;
+		byte[] plainCredsBytes = plainCreds.getBytes();
+		byte[] base64CredsBytes = Base64.getEncoder().encode(plainCredsBytes);
+		return new String(base64CredsBytes);
 	}
 
 }

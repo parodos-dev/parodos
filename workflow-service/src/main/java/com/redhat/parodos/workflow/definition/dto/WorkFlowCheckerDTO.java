@@ -33,8 +33,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WorkFlowCheckerDTO {
 
-	private String nextWorkFlowName;
-
 	private String cronExpression;
 
 }

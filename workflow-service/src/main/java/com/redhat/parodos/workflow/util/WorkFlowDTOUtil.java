@@ -16,14 +16,16 @@
 package com.redhat.parodos.workflow.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.Optional;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * DTO util class for request and response objects conversion
@@ -34,14 +36,27 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class WorkFlowDTOUtil {
 
-	public static Map<String, Map<String, String>> convertWorkFlowTaskRequestDTOListToMap(
-			List<WorkFlowRequestDTO.WorkFlowTaskRequestDTO> workFlowTaskRequestDTOs) {
+	public static Map<String, String> convertArgumentListToMap(
+			List<WorkFlowRequestDTO.WorkRequestDTO.ArgumentRequestDTO> argumentRequestDTOList) {
+		return argumentRequestDTOList.stream()
+				.collect(Collectors.toMap(WorkFlowRequestDTO.WorkRequestDTO.ArgumentRequestDTO::getKey,
+						WorkFlowRequestDTO.WorkRequestDTO.ArgumentRequestDTO::getValue));
+	}
+
+	public static Map<String, String> convertWorkRequestDTOToMap(WorkFlowRequestDTO.WorkRequestDTO workRequestDTOS) {
+		Map<String, String> hm = new HashMap<>();
+		workRequestDTOS.getArguments().forEach(i -> hm.put(i.getKey(), i.getValue()));
+		return hm;
+	}
+
+	public static Map<String, Map<String, String>> convertWorkRequestDTOListToMap(
+			List<WorkFlowRequestDTO.WorkRequestDTO> workRequestDTOS) {
 		Map<String, Map<String, String>> output = new HashMap<>();
-		workFlowTaskRequestDTOs.forEach(arg -> {
+		workRequestDTOS.forEach(arg -> {
 			Map<String, String> hm = new HashMap<>();
 			Optional.ofNullable(arg.getArguments())
 					.ifPresent(item -> item.forEach(i -> hm.put(i.getKey(), i.getValue())));
-			output.put(arg.getName(), hm);
+			output.put(arg.getWorkName(), hm);
 		});
 		return output;
 	}
@@ -55,6 +70,16 @@ public class WorkFlowDTOUtil {
 			log.error("Error occurred in string conversion: {}", e.getMessage());
 		}
 		return sb.toString();
+	}
+
+	public static <T> T readStringAsObject(String stringValue, TypeReference<T> typeReference, T defaultValue) {
+		try {
+			return (new ObjectMapper()).readValue(stringValue, typeReference);
+		}
+		catch (JsonProcessingException e) {
+			log.error("Error occurred in object conversion: {}", e.getMessage());
+		}
+		return defaultValue;
 	}
 
 }

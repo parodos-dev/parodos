@@ -1,16 +1,21 @@
 package com.redhat.parodos.workflow.definition.service;
 
-import com.redhat.parodos.workflow.WorkFlowType;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
+import com.redhat.parodos.workflow.definition.repository.WorkFlowCheckerMappingDefinitionRepository;
+import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
+import com.redhat.parodos.workflow.enums.WorkFlowProcessingType;
+import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
-import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
-import com.redhat.parodos.workflow.definition.repository.WorkFlowCheckerDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
+import com.redhat.parodos.workflow.parameter.WorkFlowParameter;
+import com.redhat.parodos.workflow.parameter.WorkFlowParameterType;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
+import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -25,77 +30,80 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.List;
 
 class WorkFlowDefinitionServiceImplTest {
 
 	private static final String _10 = "10 * *";
 
-	private static final String NEXT_WF = "next-wf";
+	private static final String TEST = "test";
 
 	private static final String TEST_WF = "test-wf";
 
 	private static final String TEST_TASK = "testTask";
 
-	private static final String TEST_DESCRIPTION = "test description";
-
 	private static final String KEY = "key";
 
-	private static final String TEST = "test";
+	private static final String KEY_DESCRIPTION = "The key";
 
-	private WorkFlowDefinitionRepository wfDefinitionRepository;
+	private WorkFlowDefinitionRepository workFlowDefinitionRepository;
 
-	private WorkFlowCheckerDefinitionRepository workFlowCheckerDefinitionRepository;
+	private WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository;
 
-	private WorkFlowTaskDefinitionRepository wfTaskDefinitionRepository;
+	private WorkFlowWorkRepository workFlowWorkRepository;
 
-	private WorkFlowDefinitionServiceImpl wkService;
+	private WorkFlowCheckerMappingDefinitionRepository workFlowCheckerMappingDefinitionRepository;
+
+	private WorkFlowDefinitionServiceImpl workFlowDefinitionService;
 
 	@BeforeEach
 	public void initEach() {
-		this.wfDefinitionRepository = Mockito.mock(WorkFlowDefinitionRepository.class);
-		this.wfTaskDefinitionRepository = Mockito.mock(WorkFlowTaskDefinitionRepository.class);
-		this.workFlowCheckerDefinitionRepository = Mockito.mock(WorkFlowCheckerDefinitionRepository.class);
-		this.wkService = getWorkflowService();
+		this.workFlowDefinitionRepository = Mockito.mock(WorkFlowDefinitionRepository.class);
+		this.workFlowTaskDefinitionRepository = Mockito.mock(WorkFlowTaskDefinitionRepository.class);
+		this.workFlowWorkRepository = Mockito.mock(WorkFlowWorkRepository.class);
+		this.workFlowCheckerMappingDefinitionRepository = Mockito
+				.mock(WorkFlowCheckerMappingDefinitionRepository.class);
+		this.workFlowDefinitionService = getWorkflowDefinitionService();
 	}
 
 	@Test
 	public void simpleSaveTest() {
+		String workFlowName = "test";
+		String workFlowTaskName = "testTask";
 		// given
-
-		WorkFlowDefinition wfDefinition = this.sampleWorkflowDefinition(TEST);
-
-		Mockito.when(this.wfDefinitionRepository.save(any())).thenReturn(wfDefinition);
-
-		WorkFlowTask testTask = Mockito.mock(WorkFlowTask.class);
-		WorkFlowTaskParameter taskParameter = WorkFlowTaskParameter.builder().key(KEY).optional(false)
-				.type(WorkFlowTaskParameterType.URL).description(KEY).build();
-		Mockito.when(testTask.getWorkFlowTaskParameters()).thenReturn(Arrays.asList(taskParameter));
+		WorkFlowDefinition workFlowDefinition = this.sampleWorkFlowDefinition(workFlowName);
+		WorkFlowTask workFlowTask = Mockito.mock(WorkFlowTask.class);
+		WorkFlowTaskParameter workFlowTaskParameter = WorkFlowTaskParameter.builder().key("key").description("the key")
+				.optional(false).type(WorkFlowTaskParameterType.URL).build();
+		Mockito.when(workFlowTask.getName()).thenReturn(workFlowTaskName);
+		Mockito.when(workFlowTask.getWorkFlowTaskParameters()).thenReturn(List.of(workFlowTaskParameter));
+		WorkFlowTaskDefinition workFlowTaskDefinition = this.sampleWorkFlowTaskDefinition(workFlowDefinition,
+				workFlowTaskName, workFlowTaskParameter);
+		workFlowDefinition.setWorkFlowTaskDefinitions(List.of(workFlowTaskDefinition));
+		Mockito.when(this.workFlowTaskDefinitionRepository.save(any())).thenReturn(workFlowTaskDefinition);
+		Mockito.when(this.workFlowDefinitionRepository.save(any())).thenReturn(workFlowDefinition);
 
 		// when
-		@SuppressWarnings("serial")
-		WorkFlowDefinitionResponseDTO res = this.wkService.save(TEST, TEST_DESCRIPTION, WorkFlowType.ASSESSMENT,
-				new HashMap<>() {
-					{
-						put(TEST_TASK, testTask);
-					}
-				});
+		WorkFlowDefinitionResponseDTO workFlowDefinitionResponseDTO = this.workFlowDefinitionService.save(workFlowName,
+				WorkFlowType.ASSESSMENT, Collections.emptyList(), List.of(workFlowTask),
+				WorkFlowProcessingType.SEQUENTIAL);
 
 		// then
-		assertNotNull(res);
-		assertNotNull(res.getId());
-		assertEquals(res.getName(), TEST);
+		assertNotNull(workFlowDefinitionResponseDTO);
+		assertNotNull(workFlowDefinitionResponseDTO.getId());
+		assertEquals(workFlowDefinitionResponseDTO.getName(), workFlowName);
 
 		ArgumentCaptor<WorkFlowDefinition> argument = ArgumentCaptor.forClass(WorkFlowDefinition.class);
-		Mockito.verify(this.wfDefinitionRepository, Mockito.times(1)).save(argument.capture());
-		assertEquals(argument.getValue().getName(), TEST);
-		assertEquals(argument.getValue().getDescription(), TEST_DESCRIPTION);
+		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(2)).save(argument.capture());
+		assertEquals(argument.getValue().getName(), workFlowName);
 		assertEquals(argument.getValue().getType(), WorkFlowType.ASSESSMENT.toString());
+		assertEquals(argument.getValue().getProcessingType(), WorkFlowProcessingType.SEQUENTIAL.toString());
+		assertEquals(argument.getValue().getNumberOfWorks(), 1);
 		assertEquals(argument.getValue().getWorkFlowTaskDefinitions().size(), 1);
 		assertEquals(argument.getValue().getWorkFlowTaskDefinitions().stream().findFirst().get().getName(), TEST_TASK);
 	}
@@ -103,32 +111,34 @@ class WorkFlowDefinitionServiceImplTest {
 	@Test
 	public void getWorkFlowDefinitionByIdWithValidUUIDTest() {
 		// given
-		WorkFlowDefinition wfDefinition = this.sampleWorkflowDefinition(TEST);
+		WorkFlowDefinition workFlowDefinition = this.sampleWorkFlowDefinition(TEST);
 
 		UUID uuid = UUID.randomUUID();
-		Mockito.when(this.wfDefinitionRepository.findById(uuid)).thenReturn(Optional.of(wfDefinition));
+		Mockito.when(this.workFlowDefinitionRepository.findById(uuid)).thenReturn(Optional.of(workFlowDefinition));
 
 		// when
-		WorkFlowDefinitionResponseDTO wkDTO = this.wkService.getWorkFlowDefinitionById(uuid);
+		WorkFlowDefinitionResponseDTO wkDTO = this.workFlowDefinitionService.getWorkFlowDefinitionById(uuid);
 
 		// then
 		assertNotNull(wkDTO);
 		assertEquals(wkDTO.getName(), TEST);
 
 		ArgumentCaptor<UUID> argument = ArgumentCaptor.forClass(UUID.class);
-		Mockito.verify(this.wfDefinitionRepository, Mockito.times(1)).findById(argument.capture());
+		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).findById(argument.capture());
 		assertEquals(argument.getValue(), uuid);
 	}
 
 	@Test
 	public void getWorkFlowDefinitionByIdWithInvalidUUIDTest() {
+		// given
+		WorkFlowDefinition workFlowDefinition = this.sampleWorkFlowDefinition(TEST);
 
 		UUID uuid = UUID.randomUUID();
-		Mockito.when(this.wfDefinitionRepository.findById(any())).thenReturn(Optional.empty());
+		Mockito.when(this.workFlowDefinitionRepository.findById(any())).thenReturn(Optional.empty());
 
 		// when
 		Exception exception = assertThrows(RuntimeException.class, () -> {
-			this.wkService.getWorkFlowDefinitionById(uuid);
+			this.workFlowDefinitionService.getWorkFlowDefinitionById(uuid);
 		});
 
 		// then
@@ -138,99 +148,90 @@ class WorkFlowDefinitionServiceImplTest {
 	@Test
 	public void getWorkFlowDefinitionByNameWithValidNameTest() {
 		// given
-		Mockito.when(this.wfDefinitionRepository.findByName(any()))
-				.thenReturn(Arrays.asList(sampleWorkflowDefinition(TEST), sampleWorkflowDefinition(TEST)));
+		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(any()))
+				.thenReturn(sampleWorkFlowDefinition(TEST));
 
 		// when
-		List<WorkFlowDefinitionResponseDTO> resultList = this.wkService.getWorkFlowDefinitionsByName(TEST);
+		WorkFlowDefinitionResponseDTO result = this.workFlowDefinitionService.getWorkFlowDefinitionByName(TEST);
 
 		// then
-		assertNotNull(resultList);
-		assertEquals(resultList.size(), 2);
-		assertEquals(resultList.get(0).getName(), TEST);
+		assertNotNull(result);
+		assertEquals(result.getName(), TEST);
 
-		Mockito.verify(this.wfDefinitionRepository, Mockito.times(1)).findByName(any());
+		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).findFirstByName(any());
 	}
 
 	@Test
 	public void getWorkFlowDefinitionByNameWithInvalidNameTest() {
 		// given
-		Mockito.when(this.wfDefinitionRepository.findByName(any())).thenReturn(new ArrayList<WorkFlowDefinition>());
+		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(any())).thenReturn(null);
 
-		// when
-		List<WorkFlowDefinitionResponseDTO> resultList = this.wkService.getWorkFlowDefinitionsByName(TEST);
+		Exception exception = assertThrows(RuntimeException.class, () -> {
+			this.workFlowDefinitionService.getWorkFlowDefinitionByName(TEST);
+		});
 
-		// then
-		assertNotNull(resultList);
-		assertEquals(resultList.size(), 0);
-
-		Mockito.verify(this.wfDefinitionRepository, Mockito.times(1)).findByName(any());
+		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).findFirstByName(any());
 	}
 
 	@Test
 	public void getWorkFlowDefinitionWithoutData() {
 		// given
-		Mockito.when(this.wfDefinitionRepository.findAll()).thenReturn(new ArrayList<WorkFlowDefinition>());
+		Mockito.when(this.workFlowDefinitionRepository.findByTypeIsNot(any())).thenReturn(new ArrayList<>());
 
 		// when
-		List<WorkFlowDefinitionResponseDTO> resultList = this.wkService.getWorkFlowDefinitions();
+		List<WorkFlowDefinitionResponseDTO> resultList = this.workFlowDefinitionService.getWorkFlowDefinitions();
 
 		// then
 		assertNotNull(resultList);
 		assertEquals(resultList.size(), 0);
 
-		Mockito.verify(this.wfDefinitionRepository, Mockito.times(1)).findAll();
+		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).findByTypeIsNot(any());
 	}
 
 	@Test
-	public void getWorkFlowDefinitionWitData() {
+	public void getWorkFlowDefinitionsWithData() {
 		// given
-		Mockito.when(this.wfDefinitionRepository.findAll())
-				.thenReturn(Arrays.asList(sampleWorkflowDefinition(TEST), sampleWorkflowDefinition("alice")));
+		Mockito.when(this.workFlowDefinitionRepository.findByTypeIsNot(WorkFlowType.CHECKER.name())).thenReturn(
+				Arrays.asList(sampleWorkFlowDefinition("workFLowOne"), sampleWorkFlowDefinition("workFLowTwo")));
 
 		// when
-		List<WorkFlowDefinitionResponseDTO> resultList = this.wkService.getWorkFlowDefinitions();
+		List<WorkFlowDefinitionResponseDTO> workFlowDefinitionResponseDTOs = this.workFlowDefinitionService
+				.getWorkFlowDefinitions();
 
 		// then
-		assertNotNull(resultList);
-		assertEquals(resultList.size(), 2);
-
-		Mockito.verify(this.wfDefinitionRepository, Mockito.times(1)).findAll();
+		assertNotNull(workFlowDefinitionResponseDTOs);
+		assertEquals(workFlowDefinitionResponseDTOs.size(), 2);
+		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1))
+				.findByTypeIsNot(WorkFlowType.CHECKER.name());
 	}
 
 	@Test
 	public void saveWorkFlowCheckerTestWithValidData() {
 		// given
-		WorkFlowTaskDefinition taskDefinition = this.sampleWorkflowTaskDefinition(TEST);
-		Mockito.when(this.wfTaskDefinitionRepository.findFirstByName(any())).thenReturn(taskDefinition);
+		WorkFlowTaskDefinition taskDefinition = this.sampleWorkflowTaskDefinition();
+		Mockito.when(this.workFlowTaskDefinitionRepository.findFirstByName(any())).thenReturn(taskDefinition);
 
-		WorkFlowDefinition wfDefinition = this.sampleWorkflowDefinition(TEST_WF);
-		Mockito.when(this.wfDefinitionRepository.findByName(TEST_WF)).thenReturn(Arrays.asList(wfDefinition));
+		WorkFlowDefinition wfDefinition = this.sampleWorkFlowDefinition(TEST_WF);
+		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(TEST_WF)).thenReturn(wfDefinition);
 
-		WorkFlowDefinition nextWfDefinition = this.sampleWorkflowDefinition(NEXT_WF);
-		Mockito.when(this.wfDefinitionRepository.findByName(NEXT_WF)).thenReturn(Arrays.asList(nextWfDefinition));
-
-		Mockito.when(workFlowCheckerDefinitionRepository.findFirstByCheckWorkFlow(any())).thenReturn(null);
+		Mockito.when(workFlowCheckerMappingDefinitionRepository.findFirstByCheckWorkFlow(any())).thenReturn(null);
 
 		// when
-		this.wkService.saveWorkFlowChecker(TEST, TEST_WF,
-				WorkFlowCheckerDTO.builder().nextWorkFlowName(NEXT_WF).cronExpression(_10).build());
+		this.workFlowDefinitionService.saveWorkFlowChecker(TEST, TEST_WF,
+				WorkFlowCheckerDTO.builder().cronExpression(_10).build());
 		// then
 
 		ArgumentCaptor<WorkFlowTaskDefinition> argument = ArgumentCaptor.forClass(WorkFlowTaskDefinition.class);
-		Mockito.verify(this.wfTaskDefinitionRepository, Mockito.times(1)).save(argument.capture());
+		Mockito.verify(this.workFlowTaskDefinitionRepository, Mockito.times(1)).save(argument.capture());
 
 		assertEquals(argument.getValue().getName(), TEST);
-		WorkFlowCheckerDefinition checkerDefinition = argument.getValue().getWorkFlowCheckerDefinition();
+		WorkFlowCheckerMappingDefinition checkerDefinition = argument.getValue().getWorkFlowCheckerMappingDefinition();
+
 		assertNotNull(checkerDefinition);
 
 		assertNotNull(checkerDefinition.getCheckWorkFlow());
 		assertEquals(checkerDefinition.getCheckWorkFlow().getName(), wfDefinition.getName());
 		assertEquals(checkerDefinition.getCheckWorkFlow().getId(), wfDefinition.getId());
-
-		assertNotNull(checkerDefinition.getNextWorkFlow());
-		assertEquals(checkerDefinition.getNextWorkFlow().getName(), nextWfDefinition.getName());
-		assertEquals(checkerDefinition.getNextWorkFlow().getId(), nextWfDefinition.getId());
 
 		assertEquals(checkerDefinition.getCheckWorkFlow().getId(), wfDefinition.getId());
 		assertEquals(checkerDefinition.getTasks().get(0).getId(), taskDefinition.getId());
@@ -240,31 +241,47 @@ class WorkFlowDefinitionServiceImplTest {
 	public void saveWorkFlowCheckerTestWithInvalidData() {
 		// @TODO not sure if not doing anything is the right thing to do here
 		// given
-		Mockito.when(this.wfTaskDefinitionRepository.findFirstByName(any())).thenReturn(null);
+		WorkFlowTaskDefinition taskDefinition = this.sampleWorkflowTaskDefinition();
+		Mockito.when(this.workFlowTaskDefinitionRepository.findFirstByName(any())).thenReturn(null);
 
 		// when
-		this.wkService.saveWorkFlowChecker(TEST, TEST_WF,
-				WorkFlowCheckerDTO.builder().nextWorkFlowName(NEXT_WF).cronExpression(_10).build());
+		this.workFlowDefinitionService.saveWorkFlowChecker(TEST, TEST_WF,
+				WorkFlowCheckerDTO.builder().cronExpression(_10).build());
+
 		// then
-		Mockito.verify(this.wfTaskDefinitionRepository, Mockito.times(0)).save(any());
+		Mockito.verify(this.workFlowTaskDefinitionRepository, Mockito.times(0)).save(any());
 	}
 
-	private WorkFlowTaskDefinition sampleWorkflowTaskDefinition(String name) {
-		WorkFlowTaskDefinition taskDefinition = WorkFlowTaskDefinition.builder().name(name).build();
-		taskDefinition.setId(UUID.randomUUID());
-		assertNotNull(taskDefinition.getId());
-		return taskDefinition;
+	private WorkFlowTaskDefinition sampleWorkflowTaskDefinition() {
+		WorkFlowTaskDefinition workFlowTaskDefinition = WorkFlowTaskDefinition.builder().name(TEST).build();
+		workFlowTaskDefinition.setId(UUID.randomUUID());
+		return workFlowTaskDefinition;
 	}
 
-	private WorkFlowDefinition sampleWorkflowDefinition(String name) {
-		WorkFlowDefinition wf = WorkFlowDefinition.builder().name(name).build();
-		wf.setId(UUID.randomUUID());
-		return wf;
+	private WorkFlowDefinition sampleWorkFlowDefinition(String name) {
+		WorkFlowParameter workFlowParameter = WorkFlowParameter.builder().key(KEY).description(KEY_DESCRIPTION)
+				.optional(false).type(WorkFlowParameterType.TEXT).build();
+		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(name)
+				.type(WorkFlowType.ASSESSMENT.name()).processingType(WorkFlowProcessingType.SEQUENTIAL.name())
+				.parameters(WorkFlowDTOUtil.writeObjectValueAsString(List.of(workFlowParameter))).numberOfWorks(1)
+				.build();
+		workFlowDefinition.setId(UUID.randomUUID());
+		return workFlowDefinition;
 	}
 
-	private WorkFlowDefinitionServiceImpl getWorkflowService() {
-		return new WorkFlowDefinitionServiceImpl(this.wfDefinitionRepository, this.wfTaskDefinitionRepository,
-				this.workFlowCheckerDefinitionRepository, new ModelMapper());
+	private WorkFlowTaskDefinition sampleWorkFlowTaskDefinition(WorkFlowDefinition workFlowDefinition,
+			String workFlowTaskName, WorkFlowTaskParameter workFlowTaskParameter) {
+		WorkFlowTaskDefinition workFlowTaskDefinition = WorkFlowTaskDefinition.builder()
+				.workFlowDefinition(workFlowDefinition).name(workFlowTaskName)
+				.parameters(WorkFlowDTOUtil.writeObjectValueAsString(List.of(workFlowTaskParameter))).build();
+		workFlowTaskDefinition.setId(UUID.randomUUID());
+		return workFlowTaskDefinition;
+	}
+
+	private WorkFlowDefinitionServiceImpl getWorkflowDefinitionService() {
+		return new WorkFlowDefinitionServiceImpl(this.workFlowDefinitionRepository,
+				this.workFlowTaskDefinitionRepository, this.workFlowCheckerMappingDefinitionRepository,
+				this.workFlowWorkRepository, new ModelMapper());
 	}
 
 }

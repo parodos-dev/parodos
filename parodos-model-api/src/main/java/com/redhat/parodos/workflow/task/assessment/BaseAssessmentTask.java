@@ -18,7 +18,7 @@ package com.redhat.parodos.workflow.task.assessment;
 import java.util.List;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
-import com.redhat.parodos.workflow.task.WorkFlowTaskType;
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskType;
 
 /**
  * Base Class for Assessment WorkFlowTasks. An implementation of this class would do an

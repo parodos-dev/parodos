@@ -1,6 +1,6 @@
 package com.redhat.parodos.examples.base;
 
-import com.redhat.parodos.workflow.task.WorkFlowTaskType;
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskType;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import org.junit.Before;

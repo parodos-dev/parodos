@@ -28,6 +28,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface WorkFlowDefinitionRepository extends JpaRepository<WorkFlowDefinition, UUID> {
 
-	List<WorkFlowDefinition> findByName(String name);
+	WorkFlowDefinition findFirstByName(String name);
+
+	List<WorkFlowDefinition> findByTypeIsNot(String type);
 
 }
