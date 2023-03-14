@@ -15,20 +15,18 @@
  */
 package com.redhat.parodos.workflow.task;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import org.springframework.beans.factory.BeanNameAware;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflows.work.WorkContext;
-
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.BeanNameAware;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Base Class for a WorkFlowTask.
@@ -51,17 +49,37 @@ public abstract class BaseWorkFlowTask implements WorkFlowTask, BeanNameAware {
 	}
 
 	public String getParameterValue(WorkContext workContext, String parameterName) throws MissingParameterException {
-		return Optional
+		Map<String, String> parameters = Optional
 				.ofNullable(new ObjectMapper().convertValue(
 						WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
 								name, WorkContextDelegate.Resource.ARGUMENTS),
 						new TypeReference<HashMap<String, String>>() {
 						}))
-				.orElse(new HashMap<>()).entrySet().stream().filter(entry -> parameterName.equals(entry.getKey()))
+				.orElse(new HashMap<>());
+		parameters.putAll(getParentParameters(workContext, getName()));
+		return parameters.entrySet().stream().filter(entry -> parameterName.equals(entry.getKey()))
 				.map(Map.Entry::getValue).findFirst().orElseThrow(() -> {
 					log.error(String.format("parameter %s is not provided for task %s!", parameterName, name));
 					return new MissingParameterException("missing parameter(s)");
 				});
+	}
+
+	private Map<String, String> getParentParameters(WorkContext workContext, String workName) {
+		String parentWorkflowName = (String) WorkContextDelegate.read(workContext,
+				WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, workName,
+				WorkContextDelegate.Resource.PARENT_WORKFLOW);
+		Map<String, String> map = new HashMap<>();
+		Optional.ofNullable(
+				new ObjectMapper().convertValue(
+						WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+								workName, WorkContextDelegate.Resource.ARGUMENTS),
+						new TypeReference<HashMap<String, String>>() {
+						}))
+				.ifPresent(map::putAll);
+		if (parentWorkflowName != null) {
+			map.putAll(getParentParameters(workContext, parentWorkflowName));
+		}
+		return map;
 	}
 
 }

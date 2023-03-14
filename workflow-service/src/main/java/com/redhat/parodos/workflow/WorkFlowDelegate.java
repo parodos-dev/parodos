@@ -51,20 +51,25 @@ public class WorkFlowDelegate {
 					WorkFlowDTOUtil.convertArgumentListToMap(workFlowRequestDTO.getArguments()));
 		}
 		if (workFlowRequestDTO.getWorks() != null)
-			workFlowRequestDTO.getWorks().forEach(work -> initWorkContext(workContext, work));
+			workFlowRequestDTO.getWorks()
+					.forEach(work -> initWorkContext(workContext, work, workFlowRequestDTO.getWorkFlowName()));
 		return workContext;
 	}
 
-	private void initWorkContext(WorkContext workContext, WorkFlowRequestDTO.WorkRequestDTO workRequestDTO) {
-		if (!workRequestDTO.getArguments().isEmpty())
+	private void initWorkContext(WorkContext workContext, WorkFlowRequestDTO.WorkRequestDTO workRequestDTO,
+			String parentWorkflowName) {
+		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				workRequestDTO.getWorkName(), WorkContextDelegate.Resource.PARENT_WORKFLOW, parentWorkflowName);
+		if (workRequestDTO.getArguments() != null && !workRequestDTO.getArguments().isEmpty()) {
 			WorkContextDelegate.write(workContext,
 					WorkType.WORKFLOW.name().equals(workRequestDTO.getType())
 							? WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION
 							: WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
 					workRequestDTO.getWorkName(), WorkContextDelegate.Resource.ARGUMENTS,
 					WorkFlowDTOUtil.convertArgumentListToMap(workRequestDTO.getArguments()));
+		}
 		if (workRequestDTO.getWorks() != null)
-			workRequestDTO.getWorks().forEach(work -> initWorkContext(workContext, work));
+			workRequestDTO.getWorks().forEach(work -> initWorkContext(workContext, work, workRequestDTO.getWorkName()));
 	}
 
 	public WorkFlow getWorkFlowExecutionByName(String workFlowName) {
