@@ -109,6 +109,30 @@ wait_project_start() {
   done
 }
 
+function execute_workflow() {
+  params="$1"
+  exitOnFailure="$2"
+  response=$(curl -X 'POST' -s \
+    "${TARGET_URL}/api/v1/workflows" \
+    -H 'accept: */*' \
+    -H 'Authorization: Basic dGVzdDp0ZXN0' \
+    -H "X-XSRF-TOKEN: ${TOKEN}" \
+    -b $COOKIEFP \
+    -H 'Content-Type: application/json' \
+    -d "$params")
+
+    status=$(echo "$response" | jq -r '.workStatus')
+    if [[ "$status" == "FAILED" ]]; then
+      if "$exitOnFailure"; then
+        @fail "Error: HTTP request failed" >&2
+      else
+        echo "Info: HTTP request failed" >&2
+      fi
+    fi
+
+    # infrastructureOption=$(echo "$response" | jq -r '.workFlowOptions.newOptions[0].workFlowName')
+    echo "$response"
+}
 
 run_simple_flow() {
   echo "Running simple flow"
@@ -136,32 +160,41 @@ run_simple_flow() {
   echo "                                                  "
   echo "                                                  "
   workflow_id=$(get_workflow_id "simpleSequentialWorkFlowDefinition")
-  curl -X 'POST' -s \
-    "${TARGET_URL}/api/v1/workflows" \
-    -H 'accept: */*' \
-    -H 'Content-Type: application/json' \
-    -H 'Authorization: Basic dGVzdDp0ZXN0' \
-    -H "X-XSRF-TOKEN: ${TOKEN}" \
-    -b $COOKIEFP \
-    -d '{
-        "projectId": "'$PROJECT_ID'",
-        "workFlowName": "simpleSequentialWorkFlow_INFRASTRUCTURE_WORKFLOW",
-        "works": [
-            {
-                "workName": "restCallTask",
-                "arguments": [
-                    {
-                      "key": "url",
-                      "value": "https://httpbin.org/post"
-                    },
-                    {
-                      "key": "payload",
-                      "value": "'Hello!'"
-                    }
-                ]
-            }
-        ]
-      }'
+
+  params='{
+      "projectId": "'$PROJECT_ID'",
+      "workFlowName": "simpleSequentialWorkFlow_INFRASTRUCTURE_WORKFLOW",
+      "works": [
+          {
+              "workName": "restCallTask",
+              "arguments": [
+                  {
+                    "key": "url",
+                    "value": "https://httpbin.org/post"
+                  },
+                  {
+                    "key": "payload",
+                    "value": "'Hello!'"
+                  }
+              ]
+          },
+          {
+              "workName": "loggingTask",
+              "arguments": [
+                  {
+                      "key": "user-id",
+                      "value": "test-user-id"
+                  },
+                  {
+                      "key": "api-server",
+                      "value": "test-api-server"
+                  }
+              ]
+          }
+      ]
+    }'
+  response=$(execute_workflow "$params" true)
+  echo "workflow finished successfully with response: $response"
   echo "                                                "
   echo_blue "******** Simple Sequence Flow Completed ********"
   echo "                                                "
@@ -192,18 +225,16 @@ run_complex_flow() {
   echo "                                                "
   echo_blue "******** Running The Complex WorkFlow ********"
   echo "Running the Assessment to see what WorkFlows are eligible for this situation:"
-  INFRASTRUCTURE_OPTION=$(curl -X 'POST' -s \
-    "${TARGET_URL}/api/v1/workflows" \
-    -H 'accept: */*' \
-    -H 'Authorization: Basic dGVzdDp0ZXN0' \
-    -H "X-XSRF-TOKEN: ${TOKEN}" \
-    -b $COOKIEFP \
-    -H 'Content-Type: application/json' \
-    -d '{
-          "projectId": "'$PROJECT_ID'",
-          "workFlowName": "onboardingAssessment_ASSESSMENT_WORKFLOW",
-          "works": []
-        }' | jq -r '.workFlowOptions.newOptions[0].workFlowName')
+
+  params='{
+      "projectId": "'$PROJECT_ID'",
+      "workFlowName": "onboardingAssessment_ASSESSMENT_WORKFLOW",
+      "works": []
+  }'
+  response=$(execute_workflow "$params" true)
+  echo "workflow finished successfully with response: $response"
+  echo "                                               "
+  INFRASTRUCTURE_OPTION=$(echo "$response" | jq -r '.workFlowOptions.newOptions[0].workFlowName')
   echo "The Following Option Is Available:" $(echo_green ${INFRASTRUCTURE_OPTION})
   [ ${#INFRASTRUCTURE_OPTION} -gt "10" ] || @fail "There is no valid INFRASTRUCTURE_OPTION"
 
@@ -218,37 +249,53 @@ run_complex_flow() {
 
   echo "- ONBOARDING_WORKFLOW_ID:   " $(echo_green $ONBOARDING_WORKFLOW_ID)
   echo "- ONBOARDING_WORKFLOW_NAME: " $(echo_green $ONBOARDING_WORKFLOW_NAME)
-  EXECUTION_ID="$(curl -X 'POST' -s \
-    "${TARGET_URL}/api/v1/workflows/" \
-    -H 'accept: */*' \
-    -H 'Authorization: Basic dGVzdDp0ZXN0' \
-    -H "X-XSRF-TOKEN: ${TOKEN}" \
-    -b $COOKIEFP \
-    -H 'Content-Type: application/json' \
-    -d '{
-          "projectId": "'$PROJECT_ID'",
+  params='{
+      "projectId": "'$PROJECT_ID'",
       "workFlowName": "'$ONBOARDING_WORKFLOW_NAME'",
       "works": [
+          {
+              "workName": "certWorkFlowTask",
+              "arguments": [
                   {
-                    "workName": "certWorkFlowTask",
-                    "arguments": [
-                      {
-                        "key": "username",
-                        "value": "Peter"
-                      }
-                    ]
+                      "key": "user-id",
+                      "value": "test-user-id"
                   },
                   {
-                    "workName": "adGroupWorkFlowTask",
-                    "arguments": [
-                      {
-                        "key": "api-server",
-                        "value": "api.com"
-                      }
-                    ]
+                      "key": "api-server",
+                      "value": "api.com"
                   }
+              ]
+          },
+          {
+              "workName": "adGroupWorkFlowTask",
+              "arguments": [
+                  {
+                      "key": "user-id",
+                      "value": "test-user-id"
+                  },
+                  {
+                      "key": "api-server",
+                      "value": "api.com"
+                  }
+             ]
+          },
+          {
+              "workName": "dynatraceWorkFlowTask",
+              "arguments": [
+                  {
+                      "key": "user-id",
+                      "value": "test-user-id"
+                  },
+                  {
+                      "key": "api-server",
+                      "value": "api.com"
+                  }
+              ]
+          }
       ]
-    }' | jq -r '.workFlowExecutionId')"
+  }'
+  response=$(execute_workflow "$params" true)
+  EXECUTION_ID="$(echo "$response" | jq -r '.workFlowExecutionId')"
   echo "                                               "
   echo "                                               "
   echo "Onboarding workflow execution id:" $(echo_green $EXECUTION_ID)
@@ -278,18 +325,13 @@ run_escalation_flow() {
 
   echo_blue "******** Running the Starting WorkFlow ***********"
   echo "executes 1 task with a WorkFlowChecker"
-  EXECUTION_ID="$(curl -X 'POST' -s \
-    "${TARGET_URL}/api/v1/workflows/" \
-    -H 'accept: */*' \
-    -H 'Authorization: Basic dGVzdDp0ZXN0' \
-    -H "X-XSRF-TOKEN: ${TOKEN}" \
-    -b $COOKIEFP \
-    -H 'Content-Type: application/json' \
-    -d '{
-          "projectId": "'$PROJECT_ID'",
-        "workFlowName": "workflowStartingCheckingAndEscalation",
-        "works": []
-      }' | jq -r '.workFlowExecutionId')"
+  params='{
+      "projectId": "'$PROJECT_ID'",
+      "workFlowName": "workflowStartingCheckingAndEscalation",
+      "works": []
+  }'
+  response=$(execute_workflow "$params" false)
+  EXECUTION_ID="$(echo "$response" | jq -r '.workFlowExecutionId')"
 
   echo "                                                "
   echo "******** Simple Escalation Flow Completed (check logs as the checkers are still running) ********"
