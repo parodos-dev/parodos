@@ -18,26 +18,36 @@ VERSION = $(shell sed -n "s/<revision>\(.*\)<\/revision>/\1/p" $(PWD)/pom.xml | 
 GIT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD | sed s,^main$$,latest,g)
 GIT_HASH := $(shell git rev-parse HEAD)
 
+JAVA_VERSION_MAX_SUPPORTED=11
+JAVA_VERSION_MIN_SUPPORTED=11
 # Setting SHELL to bash allows bash commands to be executed by recipes.
 # This is a requirement for 'setup-envtest.sh' in the test target.
 # Options are set to exit when a recipe line exits non-zero or a piped command fails.
 SHELL = /usr/bin/env bash -o pipefail
 .SHELLFLAGS = -ec
-
-# check if maven is installed
-ifeq (,$(shell which $(MAVEN)))
-  $(error "No maven found in $(PATH). Please install maven")
-endif
-
-# check java version
-ifeq (,$(shell java --version))
-  $(error "No java found in $(PATH). Please install java >= 11")
-else
-  JAVA_VERSION=$(shell java --version | egrep -o "1[[:digit:]]\.[[:digit:]]+\.[[:digit:]]+" | head -n 1)
-    ifeq (,$(JAVA_VERSION))
-      $(error "Java version inferior to 11. Please install Java >= 11")
+mvn-checks:
+  # check if maven is installed
+  ifeq (,$(shell which $(MAVEN)))
+    $(error "No maven found in $(PATH). Please install maven")
+  else
+    MVN_JAVA_VERSION=$(shell mvn --version | sed -rn "s/.*Java version: ([[:digit:]]+)\.[[:digit:]]+\.[[:digit:]]+.*/\1/p")
+    MVN_VERSION_IS_SUPPORTED=$(shell [ $(MVN_JAVA_VERSION) -le $(JAVA_VERSION_MAX_SUPPORTED)  ] && [ $(MVN_JAVA_VERSION) -ge $(JAVA_VERSION_MIN_SUPPORTED)  ] && echo true)
+    ifeq ($(MVN_VERSION_IS_SUPPORTED), )
+      $(error "Maven Java $(MVN_JAVA_VERSION) version should be [$(JAVA_VERSION_MIN_SUPPORTED) ; $(JAVA_VERSION_MAX_SUPPORTED)]. Please use Java within these bounds with mvn")
     endif
-endif
+  endif
+
+java-checks:
+  # check java version
+  ifeq (,$(shell java --version))
+    $(error "No java found in $(PATH). Please install java >= 11")
+  else
+    JAVA_VERSION=$(shell java --version | head -n 1 | sed -rn "s/.*\s([[:digit:]]+)\.[[:digit:]]+\.[[:digit:]]+\s.*/\1/p")
+    JAVA_VERSION_IS_SUPPORTED=$(shell [ $(JAVA_VERSION) -le $(JAVA_VERSION_MAX_SUPPORTED)  ] && [ $(JAVA_VERSION) -ge $(JAVA_VERSION_MIN_SUPPORTED)  ] && echo true)
+    ifeq ($(JAVA_VERSION_IS_SUPPORTED), )
+      $(error "Java version $(JAVA_VERSION) should be [$(JAVA_VERSION_MIN_SUPPORTED) ; $(JAVA_VERSION_MAX_SUPPORTED)]. Please install Java within those bounds")
+    endif
+  endif
 
 ##@ General
 
@@ -64,7 +74,7 @@ FAST_BUILD_ARGS = -Dmaven.test.skip=true -Dmaven.javadoc.skip=true
 clean: ## Clean all modules
 	$(MAVEN) clean
 
-all: clean ## Build all modules
+all: mvn-checks java-checks clean ## Build all modules
 	$(MAVEN) $(ARGS) install
 
 deploy: clean ## push snapshot modules to maven central
@@ -76,43 +86,43 @@ release: clean ## release and push modules to maven central
 fast-build: ARGS = $(FAST_BUILD_ARGS) ## Build all modules without running the tests and generate javadoc
 fast-build: all
 
-workflow-service: ## Build workload service
+workflow-service: mvn-checks ## Build workload service
 	$(MAVEN) $(ARGS) install -pl workflow-service
 
 fast-build-workflow-service: ARGS = $(FAST_BUILD_ARGS) ## Fast build workflow service
 fast-build-workflow-service: workflow-service
 
-notification-service: ## Build notification-service
+notification-service: mvn-checks ## Build notification-service
 	$(MAVEN) $(ARGS) install -pl notification-service
 
 fast-build-notification-service: ARGS = $(FAST_BUILD_ARGS)
 fast-build-notification-service: notification-service
 
-model-api:
+model-api: mvn-checks
 	$(MAVEN) $(ARGS) install -pl parodos-model-api
 
 fast-build-model-api: ARGS = $(FAST_BUILD_ARGS)
 fast-build-model-api: model-api
 
-workflow-engine: ## Build workload engine
+workflow-engine: mvn-checks ## Build workload engine
 	$(MAVEN) $(ARGS) install -pl workflow-engine
 
 fast-build-workflow-engine: ARGS = $(FAST_BUILD_ARGS) ## Fast build workflow engine
 fast-build-workflow-engine: workflow-engine
 
-pattern-detection-library: ## Build pattern detection library
+pattern-detection-library: mvn-checks ## Build pattern detection library
 	$(MAVEN) $(ARGS) install -pl pattern-detection-library
 
 fast-build-pattern-detection-library: ARGS = $(FAST_BUILD_ARGS) ## Fast build pattern detection library
 fast-build-pattern-detection-library: pattern-detection-library
 
-workflow-examples: ## Build worklow examples
+workflow-examples: mvn-checks ## Build worklow examples
 	$(MAVEN) $(ARGS) -pl workflow-examples
 
 fast-build-workflow-examples: ARGS = $(FAST_BUILD_ARGS) ## Fast build workflow examples
 fast-build-workflow-examples: workflow-examples
 
-coverage: ## Build coverage
+coverage: mvn-checks ## Build coverage
 	$(MAVEN) $(ARGS) -pl coverage
 
 fast-build-coverage: ARGS = $(FAST_BUILD_ARGS) ## Fast build coverage
@@ -166,8 +176,8 @@ docker-stop: ## Stop notification and workflow services
 	$(DOCKER-COMPOSE) -f $(PWD)/docker-compose/docker-compose.yml down
 
 JAVA_ARGS = -Dspring.profiles.active=local
-run-workflow-service: ## Run local workflow service
+run-workflow-service: java-checks ## Run local workflow service
 	java -jar $(JAVA_ARGS) workflow-service/target/workflow-service-$(VERSION).jar
 
-run-notification-service: ## Run local notification service
+run-notification-service: java-checks ## Run local notification service
 	java -jar $(JAVA_ARGS) notification-service/target/notification-service-$(VERSION).jar
