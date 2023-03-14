@@ -150,6 +150,10 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
 		// validate if workflow is master
 		WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository.findFirstByName(workflowName);
+		if (workFlowDefinition == null) {
+			return String.format("workflow '%s' is not registered!", workflowName);
+		}
+
 		if (!workFlowWorkRepository.findByWorkDefinitionId(workFlowDefinition.getId()).isEmpty()) {
 			log.error("workflow '{}' is not master workflow!", workflowName);
 			return String.format("workflow '%s' is not master workflow!", workflowName);
