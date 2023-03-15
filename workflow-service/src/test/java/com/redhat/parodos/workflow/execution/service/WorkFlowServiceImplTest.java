@@ -411,7 +411,6 @@ class WorkFlowServiceImplTest {
 		String workFlowCheckerTaskName = "testWorkFlowTask";
 		String workFlowCheckerName = "testWorkFlowCheckerName";
 		UUID workFlowCheckerDefinitionId = UUID.randomUUID();
-
 		UUID projectId = UUID.randomUUID();
 
 		// when
