@@ -94,9 +94,9 @@ public class WorkFlowController {
 					@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
 					@ApiResponse(responseCode = "404", description = "Not found", content = @Content) })
 	@PostMapping("/{workFlowExecutionId}/checkers/{workFlowCheckerTaskName}")
-	public void updateCheckerTaskStatus(@PathVariable String workFlowExecutionId,
+	public void updateWorkFlowCheckerTaskStatus(@PathVariable String workFlowExecutionId,
 			@PathVariable String workFlowCheckerTaskName,
-			@Valid @RequestBody WorkFlowCheckerTaskRequestDTO workFlowCheckerTaskRequestDTO) {
+			@Valid @RequestBody WorkFlowCheckerTaskRequestDTO workFlowCheckerTaskRequestDTO) throws Exception {
 		workFlowService.updateWorkFlowCheckerTaskStatus(UUID.fromString(workFlowExecutionId), workFlowCheckerTaskName,
 				workFlowCheckerTaskRequestDTO.getStatus());
 	}
