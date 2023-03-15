@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow.execution.repository;
+package com.redhat.parodos.workflow.execution.dto;
 
-import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
-import java.util.UUID;
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
- * workflow execution repository
+ * Workflow checker tasks status update request dto
  *
- * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
 
-public interface WorkFlowRepository extends JpaRepository<WorkFlowExecution, UUID> {
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class WorkFlowCheckerTaskRequestDTO {
 
-	WorkFlowExecution findFirstByWorkFlowDefinitionIdAndMasterWorkFlowExecution(UUID workFlowDefinitionId,
-			WorkFlowExecution masterWorkFlowExecution);
-
-	List<WorkFlowExecution> findByMasterWorkFlowExecution(WorkFlowExecution masterWorkFlowExecution);
+	WorkFlowTaskStatus status;
 
 }

@@ -4,6 +4,7 @@ import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowWorkDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
+import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
 import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
@@ -37,6 +38,8 @@ class WorkFlowServiceImplTest {
 
 	private WorkFlowDefinitionRepository workFlowDefinitionRepository;
 
+	private WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository;
+
 	private WorkFlowRepository workFlowRepository;
 
 	private WorkFlowTaskRepository workFlowTaskRepository;
@@ -51,12 +54,14 @@ class WorkFlowServiceImplTest {
 	void init_each() {
 		this.workFlowRepository = Mockito.mock(WorkFlowRepository.class);
 		this.workFlowDefinitionRepository = Mockito.mock(WorkFlowDefinitionRepository.class);
+		this.workFlowTaskDefinitionRepository = Mockito.mock(WorkFlowTaskDefinitionRepository.class);
 		this.workFlowTaskRepository = Mockito.mock(WorkFlowTaskRepository.class);
 		this.workFlowDelegate = Mockito.mock(WorkFlowDelegate.class);
 		this.workFlowWorkRepository = Mockito.mock(WorkFlowWorkRepository.class);
 
 		this.workFlowService = new WorkFlowServiceImpl(this.workFlowDelegate, this.workFlowDefinitionRepository,
-				this.workFlowRepository, this.workFlowTaskRepository, this.workFlowWorkRepository);
+				this.workFlowTaskDefinitionRepository, this.workFlowRepository, this.workFlowTaskRepository,
+				workFlowWorkRepository);
 	}
 
 	@Test

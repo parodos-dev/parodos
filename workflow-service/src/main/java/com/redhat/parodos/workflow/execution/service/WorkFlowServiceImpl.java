@@ -18,14 +18,18 @@ package com.redhat.parodos.workflow.execution.service;
 import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
+import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
 import com.redhat.parodos.workflow.enums.WorkFlowStatus;
+import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
+import com.redhat.parodos.workflow.task.WorkFlowTask;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
 import com.redhat.parodos.workflows.engine.WorkFlowEngineBuilder;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
@@ -35,12 +39,17 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
+import static java.util.Objects.isNull;
 
 /**
  * Workflow execution service implementation
@@ -57,6 +66,8 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
 	private final WorkFlowDefinitionRepository workFlowDefinitionRepository;
 
+	private final WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository;
+
 	private final WorkFlowRepository workFlowRepository;
 
 	private final WorkFlowTaskRepository workFlowTaskRepository;
@@ -64,10 +75,12 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	private final WorkFlowWorkRepository workFlowWorkRepository;
 
 	public WorkFlowServiceImpl(WorkFlowDelegate workFlowDelegate,
-			WorkFlowDefinitionRepository workFlowDefinitionRepository, WorkFlowRepository workFlowRepository,
+			WorkFlowDefinitionRepository workFlowDefinitionRepository,
+			WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository, WorkFlowRepository workFlowRepository,
 			WorkFlowTaskRepository workFlowTaskRepository, WorkFlowWorkRepository workFlowWorkRepository) {
 		this.workFlowDelegate = workFlowDelegate;
 		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
+		this.workFlowTaskDefinitionRepository = workFlowTaskDefinitionRepository;
 		this.workFlowRepository = workFlowRepository;
 		this.workFlowTaskRepository = workFlowTaskRepository;
 		this.workFlowWorkRepository = workFlowWorkRepository;
@@ -139,6 +152,44 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	@Override
 	public WorkFlowTaskExecution updateWorkFlowTask(WorkFlowTaskExecution workFlowTaskExecution) {
 		return workFlowTaskRepository.save(workFlowTaskExecution);
+	}
+
+	@Override
+	public void updateCheckerTaskStatus(UUID workFlowExecutionId, String workFlowTaskName,
+			WorkFlowTaskStatus workFlowTaskStatus) {
+		// get master workflow associated to the execution id
+		WorkFlowExecution masterWorkFlowExecution = workFlowRepository.findById(workFlowExecutionId).orElseThrow(() -> {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					String.format("workflow execution id: %s not found!", workFlowExecutionId));
+		});
+		// get workflow checker task definition
+		WorkFlowTaskDefinition workFlowTaskDefinition = workFlowTaskDefinitionRepository
+				.findFirstByNameAndWorkFlowDefinitionType(workFlowTaskName, WorkFlowType.CHECKER.name());
+		if (isNull(workFlowTaskDefinition)) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					String.format("workflow checker task name: %s not found!", workFlowTaskName));
+		}
+		// find workflow checker execution associated to the checker task
+		List<WorkFlowExecution> workFlowExecutions = workFlowRepository
+				.findByMasterWorkFlowExecution(masterWorkFlowExecution);
+		WorkFlowExecution workFlowCheckerExecution = workFlowExecutions.stream()
+				.filter(workFlowExecution -> workFlowExecution.getWorkFlowDefinitionId()
+						.equals(workFlowTaskDefinition.getWorkFlowDefinition().getId()))
+				.max(Comparator.comparing(WorkFlowExecution::getStartDate)).orElseThrow(() -> {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String
+							.format("workflow checker associated to task: %s has not started!", workFlowTaskName));
+				});
+		// get the workflow checker task execution
+		WorkFlowTaskExecution workFlowTaskExecution = workFlowTaskRepository
+				.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(workFlowCheckerExecution.getId(),
+						workFlowTaskDefinition.getId())
+				.stream().findFirst().orElseThrow(() -> {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+							String.format("workflow checker task name: %s has not been executed!", workFlowTaskName));
+				});
+		// update workflow checker task status
+		workFlowTaskExecution.setStatus(workFlowTaskStatus);
+		workFlowTaskRepository.save(workFlowTaskExecution);
 	}
 
 	private String validateWorkflow(String workflowName, WorkFlow workFlow) {

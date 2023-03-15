@@ -49,4 +49,7 @@ public interface WorkFlowService {
 
 	WorkFlowTaskExecution updateWorkFlowTask(WorkFlowTaskExecution workFlowTaskExecution);
 
+	void updateCheckerTaskStatus(UUID workFlowExecutionId, String workFlowTaskName,
+			WorkFlowTaskStatus workFlowTaskStatus);
+
 }
