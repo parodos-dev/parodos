@@ -97,7 +97,7 @@ public class WorkFlowController {
 	public void updateCheckerTaskStatus(@PathVariable String workFlowExecutionId,
 			@PathVariable String workFlowCheckerTaskName,
 			@Valid @RequestBody WorkFlowCheckerTaskRequestDTO workFlowCheckerTaskRequestDTO) {
-		workFlowService.updateCheckerTaskStatus(UUID.fromString(workFlowExecutionId), workFlowCheckerTaskName,
+		workFlowService.updateWorkFlowCheckerTaskStatus(UUID.fromString(workFlowExecutionId), workFlowCheckerTaskName,
 				workFlowCheckerTaskRequestDTO.getStatus());
 	}
 

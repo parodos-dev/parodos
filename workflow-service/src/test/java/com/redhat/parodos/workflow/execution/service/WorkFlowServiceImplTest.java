@@ -3,6 +3,7 @@ package com.redhat.parodos.workflow.execution.service;
 import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowWorkDefinition;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
@@ -23,7 +24,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
-import org.mockito.stubbing.OngoingStubbing;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +34,8 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 
 class WorkFlowServiceImplTest {
 
@@ -51,7 +54,7 @@ class WorkFlowServiceImplTest {
 	private WorkFlowServiceImpl workFlowService;
 
 	@BeforeEach
-	void init_each() {
+	void initEach() {
 		this.workFlowRepository = Mockito.mock(WorkFlowRepository.class);
 		this.workFlowDefinitionRepository = Mockito.mock(WorkFlowDefinitionRepository.class);
 		this.workFlowTaskDefinitionRepository = Mockito.mock(WorkFlowTaskDefinitionRepository.class);
@@ -397,6 +400,78 @@ class WorkFlowServiceImplTest {
 		assertEquals(argument.getValue().getWorkFlowTaskDefinitionId().toString(), wfTaskDefID.toString());
 		assertEquals(argument.getValue().getArguments(), "test");
 		assertNotNull(argument.getValue().getResults(), "res");
+	}
+
+	@Test
+	void testUpdateWorkFlowCheckerTaskStatusWithValidData() {
+		// given
+		// master workflow execution
+		UUID workFlowExecutionId = UUID.randomUUID();
+		// workflow checker
+		String workFlowCheckerTaskName = "testWorkFlowTask";
+		String workFlowCheckerName = "testWorkFlowCheckerName";
+		UUID workFlowCheckerDefinitionId = UUID.randomUUID();
+
+		UUID projectId = UUID.randomUUID();
+
+		// when
+		// master workflow execution
+		WorkFlowExecution masterWorkFlowExecution = WorkFlowExecution.builder().status(WorkFlowStatus.FAILED)
+				.projectId(projectId).workFlowDefinitionId(UUID.randomUUID()).build();
+		masterWorkFlowExecution.setId(UUID.randomUUID());
+		Mockito.when(this.workFlowRepository.findById(Mockito.any())).thenReturn(Optional.of(masterWorkFlowExecution));
+
+		// workflow checker definition
+		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(workFlowCheckerName).build();
+		workFlowDefinition.setId(workFlowCheckerDefinitionId);
+		// workflow checker task definition
+		WorkFlowTaskDefinition workFlowCheckerTaskDefinition = WorkFlowTaskDefinition.builder()
+				.workFlowDefinition(workFlowDefinition).name(workFlowCheckerTaskName).build();
+		workFlowCheckerTaskDefinition.setId(UUID.randomUUID());
+		Mockito.when(this.workFlowTaskDefinitionRepository.findFirstByNameAndWorkFlowDefinitionType(Mockito.any(),
+				Mockito.any())).thenReturn(workFlowCheckerTaskDefinition);
+
+		// workflow checker task execution
+		WorkFlowExecution workFlowCheckerExecution = WorkFlowExecution.builder().status(WorkFlowStatus.IN_PROGRESS)
+				.projectId(projectId).workFlowDefinitionId(workFlowCheckerDefinitionId).build();
+		workFlowCheckerExecution.setId(UUID.randomUUID());
+		Mockito.when(this.workFlowRepository.findByMasterWorkFlowExecution(Mockito.any()))
+				.thenReturn(List.of(workFlowCheckerExecution));
+
+		WorkFlowTaskExecution workFlowTaskExecution = WorkFlowTaskExecution.builder().arguments("test").results("res")
+				.status(WorkFlowTaskStatus.FAILED).workFlowTaskDefinitionId(workFlowCheckerTaskDefinition.getId())
+				.workFlowExecutionId(workFlowCheckerExecution.getId()).build();
+		workFlowTaskExecution.setId(UUID.randomUUID());
+		Mockito.when(this.workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(Mockito.any(),
+				Mockito.any())).thenReturn(List.of(workFlowTaskExecution));
+
+		this.workFlowService.updateWorkFlowCheckerTaskStatus(workFlowExecutionId, workFlowCheckerTaskName,
+				WorkFlowTaskStatus.COMPLETED);
+
+		// then
+		ArgumentCaptor<WorkFlowTaskExecution> argument = ArgumentCaptor.forClass(WorkFlowTaskExecution.class);
+		Mockito.verify(this.workFlowTaskRepository, Mockito.times(1)).save(argument.capture());
+		assertEquals(argument.getValue().getWorkFlowTaskDefinitionId(), workFlowCheckerTaskDefinition.getId());
+		assertEquals(argument.getValue().getWorkFlowExecutionId(), workFlowCheckerExecution.getId());
+		assertEquals(argument.getValue().getStatus().toString(), "COMPLETED");
+	}
+
+	@Test
+	void testUpdateWorkFlowCheckerTaskStatusWithInvalidData() {
+		// master workflow execution
+		UUID workFlowExecutionId = UUID.randomUUID();
+		// workflow checker
+		String workFlowCheckerTaskName = "testWorkFlowTask";
+
+		// given
+		Mockito.when(this.workFlowRepository.findById(any())).thenReturn(Optional.empty());
+
+		assertThrows(ResponseStatusException.class, () -> {
+			this.workFlowService.updateWorkFlowCheckerTaskStatus(workFlowExecutionId, workFlowCheckerTaskName,
+					WorkFlowTaskStatus.COMPLETED);
+		});
+
+		Mockito.verify(this.workFlowTaskRepository, Mockito.times(0)).save(any());
 	}
 
 	private WorkFlowDefinition sampleWorkflowDefinition(String name) {

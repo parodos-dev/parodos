@@ -155,7 +155,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	}
 
 	@Override
-	public void updateCheckerTaskStatus(UUID workFlowExecutionId, String workFlowTaskName,
+	public void updateWorkFlowCheckerTaskStatus(UUID workFlowExecutionId, String workFlowTaskName,
 			WorkFlowTaskStatus workFlowTaskStatus) {
 		// get master workflow associated to the execution id
 		WorkFlowExecution masterWorkFlowExecution = workFlowRepository.findById(workFlowExecutionId).orElseThrow(() -> {

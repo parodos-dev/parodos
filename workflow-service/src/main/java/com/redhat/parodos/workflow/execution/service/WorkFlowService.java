@@ -22,7 +22,6 @@ import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
 import com.redhat.parodos.workflows.work.WorkReport;
 
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -49,7 +48,7 @@ public interface WorkFlowService {
 
 	WorkFlowTaskExecution updateWorkFlowTask(WorkFlowTaskExecution workFlowTaskExecution);
 
-	void updateCheckerTaskStatus(UUID workFlowExecutionId, String workFlowTaskName,
+	void updateWorkFlowCheckerTaskStatus(UUID workFlowExecutionId, String workFlowTaskName,
 			WorkFlowTaskStatus workFlowTaskStatus);
 
 }
