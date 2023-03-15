@@ -53,6 +53,7 @@
         <maven.plugins.jacoco.version>0.8.8</maven.plugins.jacoco.version>
         <maven.plugins.gpg.version>1.5</maven.plugins.gpg.version>
         <maven.plugin.source>3.2.1</maven.plugin.source>
+        <mockito.version>3.5.13</mockito.version>
     </properties>
     <modules>
         <module>workflow-engine</module>
