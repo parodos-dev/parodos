@@ -294,7 +294,7 @@ run_complex_flow() {
           }
       ]
   }'
-  response=$(execute_workflow "$params" true)
+  response=$(execute_workflow "$params" false)
   EXECUTION_ID="$(echo "$response" | jq -r '.workFlowExecutionId')"
   echo "                                               "
   echo "                                               "
