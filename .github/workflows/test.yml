@@ -174,3 +174,16 @@ jobs:
           SERVER_IP="${SERVERIP}" SERVERPORT=80 ./workflow-examples/run_examples.sh escalation
           SERVER_IP="${SERVERIP}" SERVERPORT=80 ./workflow-examples/run_examples.sh simple
           SERVER_IP="${SERVERIP}" SERVERPORT=80 ./workflow-examples/run_examples.sh complex
+
+      - name: Collect logs
+        if: always()
+        run: |
+          kind export logs dist
+
+      - name: Archive logs
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: logs
+          path: |
+            dist
