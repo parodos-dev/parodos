@@ -68,6 +68,10 @@ public class WorkFlowController {
 	@PostMapping
 	public ResponseEntity<WorkFlowResponseDTO> execute(@RequestBody @Valid WorkFlowRequestDTO workFlowRequestDTO) {
 		WorkReport workReport = workFlowService.execute(workFlowRequestDTO);
+		if (workReport == null) {
+			return ResponseEntity.status(500).build();
+		}
+
 		return ResponseEntity.ok(WorkFlowResponseDTO.builder()
 				.workFlowExecutionId(WorkContextDelegate.read(workReport.getWorkContext(),
 						WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ID).toString())

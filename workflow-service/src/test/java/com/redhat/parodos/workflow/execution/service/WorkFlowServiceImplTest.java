@@ -2,6 +2,7 @@ package com.redhat.parodos.workflow.execution.service;
 
 import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowWorkDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
 import com.redhat.parodos.workflow.enums.WorkFlowStatus;
@@ -21,6 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.mockito.stubbing.OngoingStubbing;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -46,14 +48,15 @@ class WorkFlowServiceImplTest {
 	private WorkFlowServiceImpl workFlowService;
 
 	@BeforeEach
-	void init_earch() {
+	void init_each() {
 		this.workFlowRepository = Mockito.mock(WorkFlowRepository.class);
 		this.workFlowDefinitionRepository = Mockito.mock(WorkFlowDefinitionRepository.class);
 		this.workFlowTaskRepository = Mockito.mock(WorkFlowTaskRepository.class);
 		this.workFlowDelegate = Mockito.mock(WorkFlowDelegate.class);
+		this.workFlowWorkRepository = Mockito.mock(WorkFlowWorkRepository.class);
 
 		this.workFlowService = new WorkFlowServiceImpl(this.workFlowDelegate, this.workFlowDefinitionRepository,
-				this.workFlowRepository, this.workFlowTaskRepository, workFlowWorkRepository);
+				this.workFlowRepository, this.workFlowTaskRepository, this.workFlowWorkRepository);
 	}
 
 	@Test
@@ -107,6 +110,89 @@ class WorkFlowServiceImplTest {
 		Mockito.verify(this.workFlowDelegate, Mockito.times(1)).getWorkFlowExecutionByName(Mockito.any());
 		Mockito.verify(this.workFlowDelegate, Mockito.times(0)).initWorkFlowContext(Mockito.any());
 		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(0)).findFirstByName(Mockito.any());
+	}
+
+	@Test
+	void executeWithDTOWithValidData() {
+		// given
+		Work work = Mockito.mock(Work.class);
+		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow().named("test").execute(work).build();
+		Mockito.when(work.execute(Mockito.any()))
+				.thenReturn(new DefaultWorkReport(WorkStatus.COMPLETED, new WorkContext() {
+					{
+						put("foo", "bar");
+					}
+				}));
+		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(Mockito.any()))
+				.thenReturn(this.sampleWorkflowDefinition("test"));
+		Mockito.when(this.workFlowWorkRepository.findByWorkDefinitionId(Mockito.any())).thenReturn(List.of());
+		Mockito.when(this.workFlowDelegate.initWorkFlowContext(Mockito.any())).thenReturn(new WorkContext());
+		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
+
+		// when
+		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId("test-project")
+				.works(List.of()).workFlowName("test-workflow").build());
+		// then
+		assertNotNull(report);
+		assertEquals(report.getStatus().toString(), "COMPLETED");
+		assertNull(report.getError());
+
+		assertNotNull(report.getWorkContext());
+
+		Mockito.verify(this.workFlowDelegate, Mockito.times(2)).getWorkFlowExecutionByName(Mockito.any());
+		Mockito.verify(this.workFlowDelegate, Mockito.times(1)).initWorkFlowContext(Mockito.any());
+		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).findFirstByName(Mockito.any());
+	}
+
+	@Test
+	void executeWithDTOWithNoMasterWorkFlow() {
+		// given
+		Work work = Mockito.mock(Work.class);
+		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow().named("test").execute(work).build();
+		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(Mockito.any()))
+				.thenReturn(this.sampleWorkflowDefinition("test"));
+		Mockito.when(this.workFlowWorkRepository.findByWorkDefinitionId(Mockito.any()))
+				.thenReturn(List.of(WorkFlowWorkDefinition.builder().build()));
+
+		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
+
+		// when
+		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId("test-project")
+				.works(List.of()).workFlowName("test-workflow").build());
+		// then
+		assertNotNull(report);
+		assertEquals(report.getStatus().toString(), "FAILED");
+		assertNotNull(report.getError());
+
+		assertNotNull(report.getWorkContext());
+
+		Mockito.verify(this.workFlowDelegate, Mockito.times(1)).getWorkFlowExecutionByName(Mockito.any());
+		Mockito.verify(this.workFlowDelegate, Mockito.times(0)).initWorkFlowContext(Mockito.any());
+		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).findFirstByName(Mockito.any());
+	}
+
+	@Test
+	void executeWithDTOWithNoWorkFlowDefinition() {
+		// given
+		Work work = Mockito.mock(Work.class);
+		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow().named("test").execute(work).build();
+		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(Mockito.any())).thenReturn(null);
+		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
+
+		// when
+		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId("test-project")
+				.works(List.of()).workFlowName("test-workflow").build());
+		// then
+		assertNotNull(report);
+		assertEquals(report.getStatus().toString(), "FAILED");
+		assertNotNull(report.getError());
+
+		assertNotNull(report.getWorkContext());
+
+		Mockito.verify(this.workFlowDelegate, Mockito.times(1)).getWorkFlowExecutionByName(Mockito.any());
+		Mockito.verify(this.workFlowDelegate, Mockito.never()).initWorkFlowContext(Mockito.any());
+		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).findFirstByName(Mockito.any());
+		Mockito.verify(this.workFlowWorkRepository, Mockito.never()).findByWorkDefinitionId(Mockito.any());
 	}
 
 	@Test
