@@ -181,3 +181,6 @@ run-workflow-service: java-checks ## Run local workflow service
 
 run-notification-service: java-checks ## Run local notification service
 	java -jar $(JAVA_ARGS) notification-service/target/notification-service-$(VERSION).jar
+
+run:
+	$(MAVEN) spring-boot:run -pl workflow-service -Dspring-boot.run.profiles=local
