@@ -53,9 +53,8 @@ class WorkFlowControllerTest extends ControllerMockClient {
 	public void ExecuteWithValidData() throws Exception {
 
 		// given
-		WorkFlowRequestDTO workFlowRequestDTO = WorkFlowRequestDTO.builder().build();
-		workFlowRequestDTO.setProjectId(UUID.randomUUID().toString());
-		workFlowRequestDTO.setWorkFlowName("FooWorkFlow");
+		WorkFlowRequestDTO workFlowRequestDTO = WorkFlowRequestDTO.builder().projectId(UUID.randomUUID().toString())
+				.workFlowName("FooWorkFlow").build();
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = objectMapper.writeValueAsString(workFlowRequestDTO);
@@ -80,9 +79,8 @@ class WorkFlowControllerTest extends ControllerMockClient {
 	@Test
 	public void ServiceExecuteFails() throws Exception {
 		// given
-		WorkFlowRequestDTO workFlowRequestDTO = WorkFlowRequestDTO.builder().build();
-		workFlowRequestDTO.setProjectId(UUID.randomUUID().toString());
-		workFlowRequestDTO.setWorkFlowName("FooWorkFlow");
+		WorkFlowRequestDTO workFlowRequestDTO = WorkFlowRequestDTO.builder().projectId(UUID.randomUUID().toString())
+				.workFlowName("FooWorkFlow").build();
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = objectMapper.writeValueAsString(workFlowRequestDTO);
@@ -117,11 +115,10 @@ class WorkFlowControllerTest extends ControllerMockClient {
 				Mockito.any());
 
 		// then
-		this.mockMvc
-				.perform(this
-						.postRequestWithValidCredentials(String.format("/api/v1/workflows/%s/checkers/%s",
-								workFlowExecutionId, workFlowCheckerTaskName))
-						.content(getWorkFlowCheckerTaskRequestDTOJsonPayload()))
+		String pathUrl = String.format("/api/v1/workflows/%s/checkers/%s", workFlowExecutionId,
+				workFlowCheckerTaskName);
+		String jsonPayload = getWorkFlowCheckerTaskRequestDTOJsonPayload();
+		this.mockMvc.perform(this.postRequestWithValidCredentials(pathUrl).content(jsonPayload))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
 		Mockito.verify(this.workFlowService, Mockito.times(1)).updateWorkFlowCheckerTaskStatus(Mockito.any(),
@@ -140,11 +137,10 @@ class WorkFlowControllerTest extends ControllerMockClient {
 						Mockito.any(WorkFlowTaskStatus.class));
 
 		// then
-		this.mockMvc
-				.perform(this
-						.postRequestWithValidCredentials(String.format("/api/v1/workflows/%s/checkers/%s",
-								workFlowExecutionId, workFlowCheckerTaskName))
-						.content(getWorkFlowCheckerTaskRequestDTOJsonPayload()))
+		String pathUrl = String.format("/api/v1/workflows/%s/checkers/%s", workFlowExecutionId,
+				workFlowCheckerTaskName);
+		String jsonPayload = getWorkFlowCheckerTaskRequestDTOJsonPayload();
+		this.mockMvc.perform(this.postRequestWithValidCredentials(pathUrl).content(jsonPayload))
 				.andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 
@@ -160,11 +156,10 @@ class WorkFlowControllerTest extends ControllerMockClient {
 						Mockito.any(WorkFlowTaskStatus.class));
 
 		// then
-		this.mockMvc
-				.perform(this
-						.postRequestWithValidCredentials(String.format("/api/v1/workflows/%s/checkers/%s",
-								workFlowExecutionId, workFlowCheckerTaskName))
-						.content(getWorkFlowCheckerTaskRequestDTOJsonPayload()))
+		String pathUrl = String.format("/api/v1/workflows/%s/checkers/%s", workFlowExecutionId,
+				workFlowCheckerTaskName);
+		String jsonPayload = getWorkFlowCheckerTaskRequestDTOJsonPayload();
+		this.mockMvc.perform(this.postRequestWithValidCredentials(pathUrl).content(jsonPayload))
 				.andExpect(MockMvcResultMatchers.status().isNotFound());
 	}
 

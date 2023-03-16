@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
@@ -177,8 +176,8 @@ class WorkFlowTaskExecutionAspectTest {
 	}
 
 	WorkFlowDefinition getSampleWorkFlowDefinition(String name) {
-		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder()
-				.type(WorkFlowType.INFRASTRUCTURE.toString()).name(name).build();
+		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().type(WorkFlowType.INFRASTRUCTURE)
+				.name(name).build();
 		workFlowDefinition.setId(UUID.randomUUID());
 		return workFlowDefinition;
 	}

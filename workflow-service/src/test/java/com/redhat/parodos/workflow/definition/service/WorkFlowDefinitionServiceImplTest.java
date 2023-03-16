@@ -101,7 +101,7 @@ class WorkFlowDefinitionServiceImplTest {
 		ArgumentCaptor<WorkFlowDefinition> argument = ArgumentCaptor.forClass(WorkFlowDefinition.class);
 		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(2)).save(argument.capture());
 		assertEquals(argument.getValue().getName(), workFlowName);
-		assertEquals(argument.getValue().getType(), WorkFlowType.ASSESSMENT.toString());
+		assertEquals(argument.getValue().getType(), WorkFlowType.ASSESSMENT);
 		assertEquals(argument.getValue().getProcessingType(), WorkFlowProcessingType.SEQUENTIAL.toString());
 		assertEquals(argument.getValue().getNumberOfWorks(), 1);
 		assertEquals(argument.getValue().getWorkFlowTaskDefinitions().size(), 1);
@@ -191,7 +191,7 @@ class WorkFlowDefinitionServiceImplTest {
 	@Test
 	public void getWorkFlowDefinitionsWithData() {
 		// given
-		Mockito.when(this.workFlowDefinitionRepository.findByTypeIsNot(WorkFlowType.CHECKER.name())).thenReturn(
+		Mockito.when(this.workFlowDefinitionRepository.findByTypeIsNot(WorkFlowType.CHECKER)).thenReturn(
 				Arrays.asList(sampleWorkFlowDefinition("workFLowOne"), sampleWorkFlowDefinition("workFLowTwo")));
 
 		// when
@@ -201,8 +201,7 @@ class WorkFlowDefinitionServiceImplTest {
 		// then
 		assertNotNull(workFlowDefinitionResponseDTOs);
 		assertEquals(workFlowDefinitionResponseDTOs.size(), 2);
-		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1))
-				.findByTypeIsNot(WorkFlowType.CHECKER.name());
+		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).findByTypeIsNot(WorkFlowType.CHECKER);
 	}
 
 	@Test
@@ -261,8 +260,8 @@ class WorkFlowDefinitionServiceImplTest {
 	private WorkFlowDefinition sampleWorkFlowDefinition(String name) {
 		WorkFlowParameter workFlowParameter = WorkFlowParameter.builder().key(KEY).description(KEY_DESCRIPTION)
 				.optional(false).type(WorkFlowParameterType.TEXT).build();
-		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(name)
-				.type(WorkFlowType.ASSESSMENT.name()).processingType(WorkFlowProcessingType.SEQUENTIAL.name())
+		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(name).type(WorkFlowType.ASSESSMENT)
+				.processingType(WorkFlowProcessingType.SEQUENTIAL.name())
 				.parameters(WorkFlowDTOUtil.writeObjectValueAsString(List.of(workFlowParameter))).numberOfWorks(1)
 				.build();
 		workFlowDefinition.setId(UUID.randomUUID());

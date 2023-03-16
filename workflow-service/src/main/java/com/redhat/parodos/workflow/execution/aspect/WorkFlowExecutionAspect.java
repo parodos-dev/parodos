@@ -115,8 +115,8 @@ public class WorkFlowExecutionAspect {
 		WorkFlowDefinition workFlowDefinition = this.workFlowDefinitionRepository.findFirstByName(workFlowName);
 
 		boolean isMaster = workFlowWorkRepository.findByWorkDefinitionId(workFlowDefinition.getId()).isEmpty()
-				&& !workFlowDefinition.getType().equals(WorkFlowType.CHECKER.name())
-				&& !workFlowDefinition.getType().equals(WorkFlowType.ESCALATION.name());
+				&& !workFlowDefinition.getType().equals(WorkFlowType.CHECKER)
+				&& !workFlowDefinition.getType().equals(WorkFlowType.ESCALATION);
 
 		// get/set master WorkFlowExecution
 		UUID masterWorkFlowExecutionId = Optional.ofNullable(WorkContextDelegate.read(workContext,
@@ -157,7 +157,7 @@ public class WorkFlowExecutionAspect {
 			}
 			else if (workFlowExecution.getStatus().equals(WorkFlowStatus.COMPLETED)) {
 				// skip the workflow if it's already successful
-				if (workFlowDefinition.getType().equals(WorkFlowType.CHECKER.name())) {
+				if (workFlowDefinition.getType().equals(WorkFlowType.CHECKER)) {
 					workFlowSchedulerService.stop((WorkFlow) proceedingJoinPoint.getTarget());
 				}
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
@@ -184,8 +184,8 @@ public class WorkFlowExecutionAspect {
 		workFlowExecution.setEndDate(new Date());
 		workFlowExecution.setArguments(WorkFlowDTOUtil.writeObjectValueAsString(WorkContextDelegate.read(workContext,
 				WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ARGUMENTS)));
-		if (!WorkFlowType.CHECKER.name().equals(workFlowDefinition.getType().toUpperCase())
-				&& !WorkFlowType.ESCALATION.name().equals(workFlowDefinition.getType().toUpperCase())) {
+		if (!WorkFlowType.CHECKER.equals(workFlowDefinition.getType())
+				&& !WorkFlowType.ESCALATION.equals(workFlowDefinition.getType())) {
 			// save workContext to execution if this is master workflow
 			WorkFlowExecution masterWorkFlowExecution;
 			if (masterWorkFlowExecutionId == null) {

@@ -29,7 +29,6 @@ import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
-import com.redhat.parodos.workflow.task.WorkFlowTask;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
 import com.redhat.parodos.workflows.engine.WorkFlowEngineBuilder;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
@@ -37,11 +36,9 @@ import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
-import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Comparator;
@@ -164,7 +161,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		});
 		// get workflow checker task definition
 		WorkFlowTaskDefinition workFlowTaskDefinition = workFlowTaskDefinitionRepository
-				.findFirstByNameAndWorkFlowDefinitionType(workFlowTaskName, WorkFlowType.CHECKER.name());
+				.findFirstByNameAndWorkFlowDefinitionType(workFlowTaskName, WorkFlowType.CHECKER);
 		if (isNull(workFlowTaskDefinition)) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
 					String.format("workflow checker task name: %s not found!", workFlowTaskName));

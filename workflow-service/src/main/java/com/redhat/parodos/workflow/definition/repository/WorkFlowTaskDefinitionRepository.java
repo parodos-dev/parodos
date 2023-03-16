@@ -31,6 +31,6 @@ public interface WorkFlowTaskDefinitionRepository extends JpaRepository<WorkFlow
 
 	WorkFlowTaskDefinition findFirstByName(String name);
 
-	WorkFlowTaskDefinition findFirstByNameAndWorkFlowDefinitionType(String name, String workFlowType);
+	WorkFlowTaskDefinition findFirstByNameAndWorkFlowDefinitionType(String name, WorkFlowType workFlowType);
 
 }

@@ -452,7 +452,7 @@ class WorkFlowServiceImplTest {
 		Mockito.verify(this.workFlowTaskRepository, Mockito.times(1)).save(argument.capture());
 		assertEquals(argument.getValue().getWorkFlowTaskDefinitionId(), workFlowCheckerTaskDefinition.getId());
 		assertEquals(argument.getValue().getWorkFlowExecutionId(), workFlowCheckerExecution.getId());
-		assertEquals(argument.getValue().getStatus().toString(), "COMPLETED");
+		assertEquals(argument.getValue().getStatus(), WorkFlowTaskStatus.COMPLETED);
 	}
 
 	@Test
@@ -471,6 +471,30 @@ class WorkFlowServiceImplTest {
 		});
 
 		Mockito.verify(this.workFlowTaskRepository, Mockito.times(0)).save(any());
+	}
+
+	@Test
+	void testUpdateWorkFlowCheckerTaskStatusWithInvalidTaskData() {
+		// given
+		UUID workFlowExecutionId = UUID.randomUUID();
+		String workFlowCheckerTaskName = "testWorkFlowTask";
+
+		// when
+		Mockito.when(this.workFlowRepository.findById(Mockito.any()))
+				.thenReturn(Optional.of(WorkFlowExecution.builder().status(WorkFlowStatus.FAILED)
+						.projectId(UUID.randomUUID()).workFlowDefinitionId(UUID.randomUUID()).build()));
+
+		Mockito.when(this.workFlowTaskDefinitionRepository.findFirstByNameAndWorkFlowDefinitionType(any(), any()))
+				.thenReturn(null);
+
+		// then
+		assertThrows(ResponseStatusException.class, () -> {
+			this.workFlowService.updateWorkFlowCheckerTaskStatus(workFlowExecutionId, workFlowCheckerTaskName,
+					WorkFlowTaskStatus.COMPLETED);
+		});
+
+		Mockito.verify(this.workFlowTaskRepository, Mockito.never()).save(any());
+
 	}
 
 	private WorkFlowDefinition sampleWorkflowDefinition(String name) {
