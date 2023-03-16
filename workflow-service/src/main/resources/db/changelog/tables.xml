@@ -17,8 +17,8 @@
             <column name="first_name" type="varchar(255)"/>
             <column name="last_name" type="varchar(255)"/>
             <column name="email" type="varchar(255)"/>
-            <column name="create_date" type="timestamp" defaultValue="${now}"/>
-            <column name="modify_date" type="timestamp" defaultValue="${now}"/>
+            <column name="create_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="modify_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="object_version" type="bigint"/>
         </createTable>
 
@@ -29,8 +29,8 @@
             </column>
             <column name="name" type="varchar(255)"/>
             <column name="description" type="varchar(255)"/>
-            <column name="create_date" type="timestamp" defaultValue="${now}"/>
-            <column name="modify_date" type="timestamp" defaultValue="${now}"/>
+            <column name="create_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="modify_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="user_id" type="${uuidType}">
                 <constraints nullable="true" foreignKeyName="fk_project_user" references="user(id)"/>
             </column>
@@ -47,8 +47,8 @@
             </column>
             <column name="type" type="varchar(255)"/>
             <column name="author" type="varchar(255)"/>
-            <column name="create_date" type="timestamp" defaultValue="${now}"/>
-            <column name="modify_date" type="timestamp" defaultValue="${now}"/>
+            <column name="create_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="modify_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="parameters" type="varchar(4000)"/>
             <column name="processing_type" type="varchar(255)"/>
             <column name="number_of_works" type="int"/>
@@ -66,8 +66,8 @@
             </column>
             <column name="parameters" type="varchar(4000)"/>
             <column name="outputs" type="varchar(4000)"/>
-            <column name="create_date" type="timestamp" defaultValue="${now}"/>
-            <column name="modify_date" type="timestamp" defaultValue="${now}"/>
+            <column name="create_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="modify_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="workflow_definition_id" type="${uuidType}">
                 <constraints nullable="false" foreignKeyName="fk_workflow_task_definition_workflow_definition"
                              references="workflow_definition(id)"/>
@@ -87,7 +87,7 @@
                 <constraints nullable="true" foreignKeyName="fk_workflow_work_unit_workflow_definition"
                              references="workflow_definition(id)"/>
             </column>
-            <column name="create_date" type="timestamp" defaultValue="${now}"/>
+            <column name="create_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="object_version" type="bigint"/>
         </createTable>
 
@@ -97,8 +97,8 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="status" type="varchar(255)"/>
-            <column name="start_date" type="timestamp" defaultValue="${now}"/>
-            <column name="end_date" type="timestamp" defaultValue="${now}"/>
+            <column name="start_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="end_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="arguments" type="varchar(4000)"/>
             <column name="workflow_definition_id" type="${uuidType}">
                 <constraints nullable="false" foreignKeyName="fk_workflow_execution_workflow_definition"
@@ -130,9 +130,9 @@
             <column name="arguments" type="varchar(4000)"/>
             <column name="results" type="varchar(4000)"/>
             <column name="status" type="varchar(255)"/>
-            <column name="start_date" type="timestamp" defaultValue="${now}"/>
-            <column name="end_date" type="timestamp" defaultValue="${now}"/>
-            <column name="last_update_date" type="timestamp" defaultValue="${now}"/>
+            <column name="start_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="end_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="last_update_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="object_version" type="bigint"/>
         </createTable>
 

@@ -9,12 +9,20 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-
+      
   datasource:
-    url: jdbc:h2:mem:workflow_service
-    driverClassName: org.h2.Driver
-    username: postgres
-    password: postgres
+    type: com.zaxxer.hikari.HikariDataSource
+    url: ${DATASOURCE_URL:jdbc:h2:mem:workflow_service}
+    driverClassName:  ${DATASOURCE_DRIVER:org.h2.Driver}
+    username: ${DATASOURCE_USERNAME:postgres}
+    password: ${DATASOURCE_PASSWORD:postgres}
+    hikari:
+      poolName: ${DATASOURCE_NAME}
+  
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: deferred
 
   liquibase:
     change-log: classpath:/db/master.xml
