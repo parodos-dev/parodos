@@ -49,10 +49,7 @@ public class WorkFlowTaskDefinitionDTOConverter
 				return WorkDefinitionResponseDTO.builder().id(workFlowTaskDefinition.getId().toString())
 						.name(workFlowTaskDefinition.getName())
 						.outputs(objectMapper.readValue(workFlowTaskDefinition.getOutputs(), new TypeReference<>() {
-						})).parameters(new ArrayList<>(objectMapper.readValue(workFlowTaskDefinition.getParameters(),
-								new TypeReference<List<WorkFlowTaskParameter>>() {
-								})))
-						.build();
+						})).parameterFromString(workFlowTaskDefinition.getParameters()).build();
 			}
 			catch (JsonProcessingException e) {
 				throw new WorkflowDefinitionException(e);

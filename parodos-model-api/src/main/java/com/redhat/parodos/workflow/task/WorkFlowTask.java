@@ -15,9 +15,13 @@
  */
 package com.redhat.parodos.workflow.task;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import com.redhat.parodos.workflows.work.Work;
 import lombok.NonNull;
@@ -50,6 +54,28 @@ public interface WorkFlowTask extends Work {
 	default List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
 		return Collections.emptyList();
 
+	}
+
+	default HashMap<String, Map<String, String>> getAsJsonSchema() {
+		HashMap<String, Map<String, String>> result = new HashMap<>();
+		for (WorkFlowTaskParameter workFlowTaskParameter : this.getWorkFlowTaskParameters()) {
+			if (workFlowTaskParameter == null) {
+				continue;
+			}
+
+			if (workFlowTaskParameter.getType() == null) {
+				continue;
+			}
+
+			Map<String, String> properties = workFlowTaskParameter.getType().getAsJsonSchema();
+			properties.put("required", String.valueOf(!workFlowTaskParameter.isOptional()));
+			properties.put("description", workFlowTaskParameter.getDescription());
+			if (workFlowTaskParameter.getJsonSchemaOptions() != null) {
+				properties.putAll(workFlowTaskParameter.getJsonSchemaOptions());
+			}
+			result.put(workFlowTaskParameter.getKey(), properties);
+		}
+		return result;
 	}
 
 }

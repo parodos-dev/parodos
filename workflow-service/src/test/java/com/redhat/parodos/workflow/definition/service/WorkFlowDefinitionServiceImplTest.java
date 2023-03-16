@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -260,10 +261,12 @@ class WorkFlowDefinitionServiceImplTest {
 	private WorkFlowDefinition sampleWorkFlowDefinition(String name) {
 		WorkFlowParameter workFlowParameter = WorkFlowParameter.builder().key(KEY).description(KEY_DESCRIPTION)
 				.optional(false).type(WorkFlowParameterType.TEXT).build();
+
 		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(name).type(WorkFlowType.ASSESSMENT)
 				.processingType(WorkFlowProcessingType.SEQUENTIAL.name())
-				.parameters(WorkFlowDTOUtil.writeObjectValueAsString(List.of(workFlowParameter))).numberOfWorks(1)
-				.build();
+				.parameters(WorkFlowDTOUtil.writeObjectValueAsString(
+						Map.of(workFlowParameter.getKey(), workFlowParameter.getAsJsonSchema())))
+				.numberOfWorks(1).build();
 		workFlowDefinition.setId(UUID.randomUUID());
 		return workFlowDefinition;
 	}

@@ -18,11 +18,16 @@ package com.redhat.parodos.workflow.definition.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.redhat.parodos.workflow.parameter.WorkFlowParameter;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
-import java.util.List;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -58,12 +63,26 @@ public class WorkDefinitionResponseDTO {
 	private List<WorkDefinitionResponseDTO> works;
 
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
-	private List parameters;
+	private Map<String, Map<String, String>> parameters;
 
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private List<WorkFlowTaskOutput> outputs;
 
 	@JsonIgnore
 	private Integer numberOfWorkUnits;
+
+	public static class WorkDefinitionResponseDTOBuilder {
+
+		public WorkDefinitionResponseDTOBuilder parameterFromString(String parameters) {
+			if (parameters == null) {
+				return this;
+			}
+			this.parameters(WorkFlowDTOUtil.readStringAsObject(parameters,
+					new TypeReference<Map<String, Map<String, String>>>() {
+					}, Map.of()));
+			return this;
+		}
+
+	}
 
 }
