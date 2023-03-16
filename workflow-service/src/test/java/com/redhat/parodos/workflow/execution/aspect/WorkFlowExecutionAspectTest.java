@@ -1,6 +1,5 @@
 package com.redhat.parodos.workflow.execution.aspect;
 
-import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowWorkDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
@@ -202,7 +201,7 @@ class WorkFlowExecutionAspectTest {
 	WorkFlowDefinition getSampleWorkFlowDefinition(String name) {
 		WorkFlowCheckerMappingDefinition workFlowCheckerMappingDefinition = WorkFlowCheckerMappingDefinition.builder()
 				.cronExpression(CRON_EXPRESSION).build();
-		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().type(WorkFlowType.CHECKER.toString())
+		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().type(WorkFlowType.CHECKER)
 				.checkerWorkFlowDefinition(workFlowCheckerMappingDefinition).name(name).build();
 		workFlowDefinition.setId(UUID.randomUUID());
 		return workFlowDefinition;

@@ -16,6 +16,7 @@
 package com.redhat.parodos.workflow.execution.controller;
 
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
+import com.redhat.parodos.workflow.execution.dto.WorkFlowCheckerTaskRequestDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowStatusResponseDTO;
@@ -38,6 +39,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.UUID;
 
 /**
  * Workflow controller to execute workflow and get status
@@ -80,6 +82,23 @@ public class WorkFlowController {
 						WorkContextDelegate.Resource.WORKFLOW_OPTIONS))
 				.build());
 
+	}
+
+	@Operation(summary = "Updates a workflow checker task status")
+	@ApiResponses(
+			value = {
+					@ApiResponse(responseCode = "200", description = "Succeeded",
+							content = { @Content(mediaType = "application/json",
+									schema = @Schema(implementation = void.class)) }),
+					@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+					@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
+					@ApiResponse(responseCode = "404", description = "Not found", content = @Content) })
+	@PostMapping("/{workFlowExecutionId}/checkers/{workFlowCheckerTaskName}")
+	public void updateWorkFlowCheckerTaskStatus(@PathVariable String workFlowExecutionId,
+			@PathVariable String workFlowCheckerTaskName,
+			@Valid @RequestBody WorkFlowCheckerTaskRequestDTO workFlowCheckerTaskRequestDTO) throws Exception {
+		workFlowService.updateWorkFlowCheckerTaskStatus(UUID.fromString(workFlowExecutionId), workFlowCheckerTaskName,
+				workFlowCheckerTaskRequestDTO.getStatus());
 	}
 
 	@Operation(summary = "Returns a workflow status")

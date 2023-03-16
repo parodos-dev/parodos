@@ -13,24 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow.definition.repository;
+package com.redhat.parodos.workflow.execution.dto;
 
-import java.util.UUID;
-
-import com.redhat.parodos.workflow.enums.WorkFlowType;
-import org.springframework.data.jpa.repository.JpaRepository;
-import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
- * workflow task definition repository
+ * Workflow checker tasks status update request dto
  *
- * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
-public interface WorkFlowTaskDefinitionRepository extends JpaRepository<WorkFlowTaskDefinition, UUID> {
 
-	WorkFlowTaskDefinition findFirstByName(String name);
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class WorkFlowCheckerTaskRequestDTO {
 
-	WorkFlowTaskDefinition findFirstByNameAndWorkFlowDefinitionType(String name, WorkFlowType workFlowType);
+	WorkFlowTaskStatus status;
 
 }

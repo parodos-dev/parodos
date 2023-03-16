@@ -88,7 +88,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 			WorkFlowProcessingType workFlowProcessingType) {
 		// set and save workflow definition
 		WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository
-				.save(WorkFlowDefinition.builder().name(workFlowName).type(workFlowType.name()).createDate(new Date())
+				.save(WorkFlowDefinition.builder().name(workFlowName).type(workFlowType).createDate(new Date())
 						.parameters(WorkFlowDTOUtil.writeObjectValueAsString(workFlowParameters)).modifyDate(new Date())
 						.numberOfWorks(works.size()).processingType(workFlowProcessingType.name()).build());
 		// save workflow tasks and set works
@@ -130,13 +130,13 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 	@Override
 	public List<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitions() {
 		List<WorkFlowDefinitionResponseDTO> workFlowDefinitionResponseDTOs = new ArrayList<>();
-		workFlowDefinitionRepository.findByTypeIsNot(WorkFlowType.CHECKER.name()).forEach(
+		workFlowDefinitionRepository.findByTypeIsNot(WorkFlowType.CHECKER).forEach(
 				workFlowDefinition -> workFlowDefinitionResponseDTOs.add(WorkFlowDefinitionResponseDTO.builder()
 						.id(workFlowDefinition.getId()).name(workFlowDefinition.getName()).parameters(WorkFlowDTOUtil
 								.readStringAsObject(workFlowDefinition.getParameters(), new TypeReference<>() {
 								}, List.of()))
 						.author(workFlowDefinition.getAuthor()).createDate(workFlowDefinition.getCreateDate())
-						.modifyDate(workFlowDefinition.getModifyDate()).type(workFlowDefinition.getType())
+						.modifyDate(workFlowDefinition.getModifyDate()).type(workFlowDefinition.getType().name())
 						.processingType(workFlowDefinition.getProcessingType())
 						.works(buildWorkFlowWorksDTOs(workFlowDefinition,
 								workFlowWorkRepository
@@ -157,7 +157,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 						WorkFlowDTOUtil.readStringAsObject(workFlowDefinition.getParameters(), new TypeReference<>() {
 						}, List.of()))
 				.author(workFlowDefinition.getAuthor()).createDate(workFlowDefinition.getCreateDate())
-				.modifyDate(workFlowDefinition.getModifyDate()).type(workFlowDefinition.getType())
+				.modifyDate(workFlowDefinition.getModifyDate()).type(workFlowDefinition.getType().toString())
 				.processingType(workFlowDefinition.getProcessingType())
 				.works(buildWorkFlowWorksDTOs(workFlowDefinition, workFlowWorkDependencies)).build();
 	}
@@ -176,7 +176,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 						WorkFlowDTOUtil.readStringAsObject(workFlowDefinition.getParameters(), new TypeReference<>() {
 						}, List.of()))
 				.author(workFlowDefinition.getAuthor()).createDate(workFlowDefinition.getCreateDate())
-				.modifyDate(workFlowDefinition.getModifyDate()).type(workFlowDefinition.getType())
+				.modifyDate(workFlowDefinition.getModifyDate()).type(workFlowDefinition.getType().name())
 				.processingType(workFlowDefinition.getProcessingType())
 				.works(buildWorkFlowWorksDTOs(workFlowDefinition, workFlowWorkDependencies)).build();
 	}

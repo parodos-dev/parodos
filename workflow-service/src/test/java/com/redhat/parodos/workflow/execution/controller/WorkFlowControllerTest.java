@@ -1,10 +1,12 @@
 package com.redhat.parodos.workflow.execution.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.ControllerMockClient;
-import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
+import com.redhat.parodos.workflow.execution.dto.WorkFlowCheckerTaskRequestDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import org.hamcrest.Matchers;
@@ -14,15 +16,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 
 @SpringBootTest
 @DirtiesContext
@@ -49,9 +53,8 @@ class WorkFlowControllerTest extends ControllerMockClient {
 	public void ExecuteWithValidData() throws Exception {
 
 		// given
-		WorkFlowRequestDTO workFlowRequestDTO = new WorkFlowRequestDTO().builder().build();
-		workFlowRequestDTO.setProjectId(UUID.randomUUID().toString());
-		workFlowRequestDTO.setWorkFlowName("FooWorkFlow");
+		WorkFlowRequestDTO workFlowRequestDTO = WorkFlowRequestDTO.builder().projectId(UUID.randomUUID().toString())
+				.workFlowName("FooWorkFlow").build();
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = objectMapper.writeValueAsString(workFlowRequestDTO);
@@ -76,9 +79,8 @@ class WorkFlowControllerTest extends ControllerMockClient {
 	@Test
 	public void ServiceExecuteFails() throws Exception {
 		// given
-		WorkFlowRequestDTO workFlowRequestDTO = new WorkFlowRequestDTO().builder().build();
-		workFlowRequestDTO.setProjectId(UUID.randomUUID().toString());
-		workFlowRequestDTO.setWorkFlowName("FooWorkFlow");
+		WorkFlowRequestDTO workFlowRequestDTO = WorkFlowRequestDTO.builder().projectId(UUID.randomUUID().toString())
+				.workFlowName("FooWorkFlow").build();
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = objectMapper.writeValueAsString(workFlowRequestDTO);
@@ -103,6 +105,65 @@ class WorkFlowControllerTest extends ControllerMockClient {
 	}
 
 	@Test
+	public void updateWorkFlowCheckerTaskStatusWithValidData() throws Exception {
+		// given
+		UUID workFlowExecutionId = UUID.randomUUID();
+		String workFlowCheckerTaskName = "testWorkflowCheckerTaskName";
+
+		// when
+		doNothing().when(this.workFlowService).updateWorkFlowCheckerTaskStatus(Mockito.any(), Mockito.any(),
+				Mockito.any());
+
+		// then
+		String pathUrl = String.format("/api/v1/workflows/%s/checkers/%s", workFlowExecutionId,
+				workFlowCheckerTaskName);
+		String jsonPayload = getWorkFlowCheckerTaskRequestDTOJsonPayload();
+		this.mockMvc.perform(this.postRequestWithValidCredentials(pathUrl).content(jsonPayload))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+
+		Mockito.verify(this.workFlowService, Mockito.times(1)).updateWorkFlowCheckerTaskStatus(Mockito.any(),
+				Mockito.any(), Mockito.any());
+	}
+
+	@Test
+	public void updateWorkFlowCheckerTaskStatusWithInvalidData() throws Exception {
+		// given
+		UUID workFlowExecutionId = UUID.randomUUID();
+		String workFlowCheckerTaskName = "testWorkflowCheckerTaskName";
+
+		// when
+		doThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST)).when(this.workFlowService)
+				.updateWorkFlowCheckerTaskStatus(Mockito.any(), Mockito.anyString(),
+						Mockito.any(WorkFlowTaskStatus.class));
+
+		// then
+		String pathUrl = String.format("/api/v1/workflows/%s/checkers/%s", workFlowExecutionId,
+				workFlowCheckerTaskName);
+		String jsonPayload = getWorkFlowCheckerTaskRequestDTOJsonPayload();
+		this.mockMvc.perform(this.postRequestWithValidCredentials(pathUrl).content(jsonPayload))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest());
+	}
+
+	@Test
+	public void updateWorkFlowCheckerTaskStatusWithNotFoundData() throws Exception {
+		// given
+		UUID workFlowExecutionId = UUID.randomUUID();
+		String workFlowCheckerTaskName = "testWorkflowCheckerTaskName";
+
+		// when
+		doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(this.workFlowService)
+				.updateWorkFlowCheckerTaskStatus(Mockito.any(), Mockito.anyString(),
+						Mockito.any(WorkFlowTaskStatus.class));
+
+		// then
+		String pathUrl = String.format("/api/v1/workflows/%s/checkers/%s", workFlowExecutionId,
+				workFlowCheckerTaskName);
+		String jsonPayload = getWorkFlowCheckerTaskRequestDTOJsonPayload();
+		this.mockMvc.perform(this.postRequestWithValidCredentials(pathUrl).content(jsonPayload))
+				.andExpect(MockMvcResultMatchers.status().isNotFound());
+	}
+
+	@Test
 	public void TestGetStatusWithValidData() throws Exception {
 		// @TODO this test should be completed when the API is implemented
 		// when
@@ -110,6 +171,13 @@ class WorkFlowControllerTest extends ControllerMockClient {
 				.perform(this.getRequestWithValidCredentials(
 						String.format("/api/v1/workflows/%s/status", UUID.randomUUID().toString())))
 				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	private String getWorkFlowCheckerTaskRequestDTOJsonPayload() throws JsonProcessingException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		WorkFlowCheckerTaskRequestDTO workFlowCheckerTaskRequestDTO = WorkFlowCheckerTaskRequestDTO.builder()
+				.status(WorkFlowTaskStatus.COMPLETED).build();
+		return objectMapper.writeValueAsString(workFlowCheckerTaskRequestDTO);
 	}
 
 }

@@ -16,6 +16,7 @@
 package com.redhat.parodos.workflow.definition.entity;
 
 import com.redhat.parodos.common.AbstractEntity;
+import com.redhat.parodos.workflow.enums.WorkFlowType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,6 +26,8 @@ import lombok.Setter;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -50,7 +53,8 @@ public class WorkFlowDefinition extends AbstractEntity {
 
 	private String name;
 
-	private String type;
+	@Enumerated(EnumType.STRING)
+	private WorkFlowType type;
 
 	private String author;
 
