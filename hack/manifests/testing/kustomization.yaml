@@ -3,6 +3,10 @@ bases:
 resources:
 - ingress.yaml
 - ldap.yaml
+
+patchesStrategicMerge:
+- parodos-patch.yaml
+
 images:
 - name: quay.io/parodos/workflow-service:latest
   newTag: test
