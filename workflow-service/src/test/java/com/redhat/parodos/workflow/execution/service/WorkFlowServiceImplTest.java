@@ -407,7 +407,7 @@ class WorkFlowServiceImplTest {
 		// given
 		// master workflow execution
 		UUID workFlowExecutionId = UUID.randomUUID();
-		// workflow checker
+		// workflow checker task
 		String workFlowCheckerTaskName = "testWorkFlowTask";
 		String workFlowCheckerName = "testWorkFlowCheckerName";
 		UUID workFlowCheckerDefinitionId = UUID.randomUUID();
@@ -417,8 +417,9 @@ class WorkFlowServiceImplTest {
 		// master workflow execution
 		WorkFlowExecution masterWorkFlowExecution = WorkFlowExecution.builder().status(WorkFlowStatus.FAILED)
 				.projectId(projectId).workFlowDefinitionId(UUID.randomUUID()).build();
-		masterWorkFlowExecution.setId(UUID.randomUUID());
-		Mockito.when(this.workFlowRepository.findById(Mockito.any())).thenReturn(Optional.of(masterWorkFlowExecution));
+		masterWorkFlowExecution.setId(workFlowExecutionId);
+		Mockito.when(this.workFlowRepository.findById(Mockito.eq(workFlowExecutionId)))
+				.thenReturn(Optional.of(masterWorkFlowExecution));
 
 		// workflow checker definition
 		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(workFlowCheckerName).build();
@@ -456,14 +457,15 @@ class WorkFlowServiceImplTest {
 	}
 
 	@Test
-	void testUpdateWorkFlowCheckerTaskStatusWithInvalidData() {
+	void testUpdateWorkFlowCheckerTaskStatusWithInvalidExecutionData() {
+		// given
 		// master workflow execution
 		UUID workFlowExecutionId = UUID.randomUUID();
-		// workflow checker
+		// workflow checker task
 		String workFlowCheckerTaskName = "testWorkFlowTask";
 
-		// given
-		Mockito.when(this.workFlowRepository.findById(any())).thenReturn(Optional.empty());
+		// when
+		Mockito.when(this.workFlowRepository.findById(Mockito.eq(workFlowExecutionId))).thenReturn(Optional.empty());
 
 		assertThrows(ResponseStatusException.class, () -> {
 			this.workFlowService.updateWorkFlowCheckerTaskStatus(workFlowExecutionId, workFlowCheckerTaskName,
@@ -476,11 +478,13 @@ class WorkFlowServiceImplTest {
 	@Test
 	void testUpdateWorkFlowCheckerTaskStatusWithInvalidTaskData() {
 		// given
+		// master workflow execution
 		UUID workFlowExecutionId = UUID.randomUUID();
+		// workflow checker task
 		String workFlowCheckerTaskName = "testWorkFlowTask";
 
 		// when
-		Mockito.when(this.workFlowRepository.findById(Mockito.any()))
+		Mockito.when(this.workFlowRepository.findById(Mockito.eq(workFlowExecutionId)))
 				.thenReturn(Optional.of(WorkFlowExecution.builder().status(WorkFlowStatus.FAILED)
 						.projectId(UUID.randomUUID()).workFlowDefinitionId(UUID.randomUUID()).build()));
 
