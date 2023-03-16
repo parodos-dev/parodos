@@ -62,6 +62,7 @@
         <module>notification-service</module>
         <module>pattern-detection-library</module>
         <module>coverage</module>
+        <module>workflow-service-sdk</module>
     </modules>
     <build>
         <pluginManagement>
