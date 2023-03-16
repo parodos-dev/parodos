@@ -61,3 +61,8 @@ local.properties
 
 ## VSCODE ***
 /.vscode/
+
+## Workflow service SDK generated code
+workflow-service-sdk/src/
+workflow-service-sdk/.openapi-generator*
+
