@@ -18,7 +18,7 @@ public class NamespaceApprovalWorkFlowCheckerTask extends BaseWorkFlowCheckerTas
 	@Override
 	public WorkReport checkWorkFlowStatus(WorkContext workContext) {
 		log.info("NamespaceApprovalWorkFlowCheckerTask");
-		return new DefaultWorkReport(WorkStatus.FAILED, workContext);
+		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
 	@Override
