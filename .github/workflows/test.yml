@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - ActionsTest
+      - KindLogs
       - 'releases/**'
 
   pull_request_target:
