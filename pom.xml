@@ -63,6 +63,7 @@
         <module>pattern-detection-library</module>
         <module>coverage</module>
         <module>external-dependencies</module>
+        <module>workflow-service-sdk</module>
         <module>prebuilt-tasks</module>
     </modules>
     <dependencies>
