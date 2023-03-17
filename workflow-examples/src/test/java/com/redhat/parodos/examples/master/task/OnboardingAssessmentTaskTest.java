@@ -1,7 +1,6 @@
-package com.redhat.parodos.examples.complex.task;
+package com.redhat.parodos.examples.master.task;
 
 import com.redhat.parodos.examples.base.BaseAssessmentTaskTest;
-import com.redhat.parodos.examples.complex.task.OnboardingAssessmentTask;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflow.task.assessment.BaseAssessmentTask;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
