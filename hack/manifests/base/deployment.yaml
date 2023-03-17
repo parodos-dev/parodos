@@ -17,6 +17,14 @@ spec:
         env:
           - name: SPRING_PROFILES_ACTIVE
             value: "local"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -38,3 +46,11 @@ spec:
         env:
           - name: SPRING_PROFILES_ACTIVE
             value: "dev"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
