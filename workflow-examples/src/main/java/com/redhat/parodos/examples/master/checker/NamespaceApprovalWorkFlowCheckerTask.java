@@ -1,12 +1,12 @@
 package com.redhat.parodos.examples.master.checker;
 
-import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
+import com.redhat.parodos.workflows.work.WorkStatus;
 import com.redhat.parodos.workflow.task.checker.BaseWorkFlowCheckerTask;
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
-import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
