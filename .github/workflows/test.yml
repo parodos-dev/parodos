@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - ActionsTest
+      - HealthEndpoints
       - 'releases/**'
 
   pull_request_target:
@@ -165,7 +166,7 @@ jobs:
       - name: Deploy
         run: |
           kubectl kustomize hack/manifests/testing| kubectl apply -f -
-          kubectl wait --timeout=120s --for=condition=Ready pods --all -n default
+          kubectl wait --timeout=300s --for=condition=Ready pods --all -n default
           kubectl get pods --all-namespaces
 
       - name: Run example script
@@ -178,6 +179,7 @@ jobs:
       - name: Collect logs
         if: always()
         run: |
+          kubectl get pods --all-namespaces
           kind export logs dist
 
       - name: Archive logs
