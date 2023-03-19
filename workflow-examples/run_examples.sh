@@ -7,7 +7,7 @@
 #}
 #
 
-set -e
+set -e -o pipefail
 
 SERVERIP=${SERVERIP:-127.0.0.1}
 SERVERPORT=${SERVERPORT:-8080}
@@ -19,9 +19,8 @@ COOKIEFP="$(mktemp)"
 TOKEN=""
 
 refresh_token() {
-    TOKEN=$(grep "XSRF-TOKEN" $COOKIEFP | awk '{print $7}')
+    TOKEN=$(grep "XSRF-TOKEN" $COOKIEFP | awk '{print $7}' || true)
 }
-
 
 echo_red() {
   COLOR="\e[31m";
@@ -52,58 +51,46 @@ echo_blue() {
     exit 1
 }
 
-#set -x
+# parodos_v1_curl [uri] [rest of the curl args]
+# all uris are relative to TARGET_URL/api/v1
+parodos_v1_curl() {
+  local uri=$1
+  shift
+  curl "${TARGET_URL}/api/v1/${uri}" \
+    -s \
+    -H 'accept: */*' \
+    -H 'Content-Type: application/json' \
+    -H 'Authorization: Basic dGVzdDp0ZXN0' \
+    -H "X-XSRF-TOKEN: ${TOKEN}" \
+    -b $COOKIEFP \
+    "$@"
+}
 
 get_workflow_name() {
-  curl -X 'GET' -s \
-    "${TARGET_URL}/api/v1/workflowdefinitions" \
-    -H 'accept: */*' \
-    -H 'Authorization: Basic dGVzdDp0ZXN0' \
-    -H 'Content-Type: application/json' | jq '.[] | select(.id=="'$1'")' | jq -r '.name'
+  parodos_v1_curl workflowdefinitions | jq '.[] | select(.id=="'$1'")' | jq -r '.name'
 }
 
 get_workflow_id() {
-  curl -X 'GET' -s \
-    "${TARGET_URL}/api/v1/workflowdefinitions" \
-    -H 'accept: */*' \
-    -H 'Authorization: Basic dGVzdDp0ZXN0' \
-    -H "X-XSRF-TOKEN: ${TOKEN}" \
-    -b $COOKIEFP \
-    -H 'Content-Type: application/json' | jq '.[] | select(.name=="'$1'")' | jq -r '.id'
+  parodos_v1_curl workflowdefinitions | jq '.[] | select(.name=="'$1'")' | jq -r '.id'
 }
 
 get_checker_workflow() {
-  curl -X 'GET' -s \
-    "${TARGET_URL}/api/v1/workflowdefinitions/$1/" \
-    -H 'accept: */*' \
-    -H 'Authorization: Basic dGVzdDp0ZXN0' \
-    -H "X-XSRF-TOKEN: ${TOKEN}" \
-    -b $COOKIEFP \
-    -H 'Content-Type: application/json' | jq '.tasks[] | select(has("workFlowChecker"))' | jq -r '.workFlowChecker' | head -n 1
+  parodos_v1_curl workflowdefinitions/$1/ \
+    | jq '.tasks[] | select(has("workFlowChecker"))' | jq -r '.workFlowChecker' | head -n 1
 }
 
 get_next_workflow() {
-  curl -X 'GET' -s \
-    "${TARGET_URL}/api/v1/workflowdefinitions/$1/" \
-    -H 'accept: */*' \
-    -H 'Authorization: Basic dGVzdDp0ZXN0' \
-    -H "X-XSRF-TOKEN: ${TOKEN}" \
-    -b $COOKIEFP \
-    -H 'Content-Type: application/json' | jq '.tasks[] | select(has("nextWorkFlow"))' | jq -r '.nextWorkFlow' | head -n 1
+  parodos_v1_curl workflowdefinitions/$1/ \
+    | jq '.tasks[] | select(has("nextWorkFlow"))' | jq -r '.nextWorkFlow' | head -n 1
 }
 
 wait_project_start() {
   echo_blue "******** Checking project is running ********"
   for i in {1..100}
   do
-    CODE=$(curl -LI -c $COOKIEFP -s "${TARGET_URL}/api/v1/projects" \
-      -H 'accept: */*' \
-      -o /dev/null \
-      -H 'Authorization: Basic dGVzdDp0ZXN0' \
-      -H 'Content-Type: application/json' \
-      -w '%{http_code}\n' || exit 0)
+    CODE=$(parodos_v1_curl projects -LI -s -o /dev/null -w '%{http_code}\n' || true)
     refresh_token
-    [ $CODE -eq "200" ] && break
+    [ "$CODE" -eq "200" ] && break
     sleep 2s
     [ $i -eq "100" ] && @fail "Project didn't started yet"
   done
@@ -112,14 +99,7 @@ wait_project_start() {
 function execute_workflow() {
   params="$1"
   exitOnFailure="$2"
-  response=$(curl -X 'POST' -s \
-    "${TARGET_URL}/api/v1/workflows" \
-    -H 'accept: */*' \
-    -H 'Authorization: Basic dGVzdDp0ZXN0' \
-    -H "X-XSRF-TOKEN: ${TOKEN}" \
-    -b $COOKIEFP \
-    -H 'Content-Type: application/json' \
-    -d "$params")
+  response=$(parodos_v1_curl workflows -d "$params")
 
     status=$(echo "$response" | jq -r '.workStatus')
     if [[ "$status" == "FAILED" ]]; then
@@ -142,17 +122,8 @@ run_simple_flow() {
 
   echo_blue "******** Create Project ********"
   echo "                                                "
-  PROJECT_ID=$(curl -X 'POST' -s \
-    "${TARGET_URL}/api/v1/projects" \
-    -H 'accept: */*' \
-    -H 'Authorization: Basic dGVzdDp0ZXN0' \
-    -H 'Content-Type: application/json' \
-    -H "X-XSRF-TOKEN: ${TOKEN}" \
-    -b $COOKIEFP \
-    -d '{
-                 "name": "project-1",
-                 "description": "an example project"
-               }' | jq -r '.id')
+
+  PROJECT_ID=$(parodos_v1_curl projects -d '{ "name": "project-1", "description": "an example project" }' | jq -r '.id')
   [ ${#PROJECT_ID} -eq "36" ] || @fail "Project ID ${PROJECT_ID} is not present"
   echo "Project id is " $(echo_green $PROJECT_ID)
 
@@ -195,6 +166,7 @@ run_simple_flow() {
     }'
   response=$(execute_workflow "$params" true)
   echo "workflow finished successfully with response: $response"
+
   echo "                                                "
   echo_blue "******** Simple Sequence Flow Completed ********"
   echo "                                                "
@@ -208,17 +180,7 @@ run_complex_flow() {
   echo " "
   echo_blue "******** Create Project ********"
   echo "                                                "
-  PROJECT_ID=$(curl -X 'POST' -s \
-    "${TARGET_URL}/api/v1/projects" \
-    -H 'accept: */*' \
-    -H 'Authorization: Basic dGVzdDp0ZXN0' \
-    -H "X-XSRF-TOKEN: ${TOKEN}" \
-    -b $COOKIEFP \
-    -H 'Content-Type: application/json' \
-    -d '{
-                 "name": "project-1",
-                 "description": "an example project"
-               }' | jq -r '.id')
+  PROJECT_ID=$(parodos_v1_curl projects -d '{ "name": "project-1", "description": "an example project" }' | jq -r '.id')
   [ ${#PROJECT_ID} -eq "36" ] || @fail "Project ID ${PROJECT_ID} is not present"
   echo "Project id is " $(echo_green $PROJECT_ID)
 
@@ -309,17 +271,7 @@ run_escalation_flow() {
 
   wait_project_start
 
-   PROJECT_ID=$(curl -X 'POST' -s \
-    "${TARGET_URL}/api/v1/projects" \
-    -H 'accept: */*' \
-    -H 'Authorization: Basic dGVzdDp0ZXN0' \
-    -H "X-XSRF-TOKEN: ${TOKEN}" \
-    -b $COOKIEFP \
-    -H 'Content-Type: application/json' \
-    -d '{
-                 "name": "project-1",
-                 "description": "an example project"
-               }' | jq -r '.id')
+  PROJECT_ID=$(parodos_v1_curl projects -d '{ "name": "project-1", "description": "an example project" }' | jq -r '.id')
   echo "Project id is " $(echo_green $PROJECT_ID)
 
 
