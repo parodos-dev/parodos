@@ -9,7 +9,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-      
+
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: ${DATASOURCE_URL:jdbc:h2:mem:workflow_service}
@@ -18,7 +18,7 @@ spring:
     password: ${DATASOURCE_PASSWORD:postgres}
     hikari:
       poolName: ${DATASOURCE_NAME}
-  
+
   data:
     jpa:
       repositories:

@@ -6,10 +6,6 @@ resources:
 - postgres.yaml
 - backstage.yaml
 
-
-patchesStrategicMerge:
-- parodos-patch.yaml
-
 configMapGenerator:
 - name: app-config
   namespace: backstage

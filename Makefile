@@ -2,6 +2,11 @@
 DOCKER ?= docker
 DOCKER-COMPOSE ?= docker-compose
 
+TESTDBPASS := parodos
+TESTDBNAME := parodos
+TESTDBUSER := parodos
+TESTDBPORT := 5432
+
 # maven
 MAVEN ?= mvn
 
@@ -184,3 +189,15 @@ run-notification-service: java-checks ## Run local notification service
 
 run:
 	$(MAVEN) spring-boot:run -pl workflow-service -Dspring-boot.run.profiles=local
+
+run-postgres: # Run a sample postgres instance
+	$(DOCKER) run \
+		--name parodos-postgres \
+		-e POSTGRES_PASSWORD=$(TESTDBPASS) \
+		-e POSTGRES_DB=$(TESTDBNAME) \
+		-e POSTGRES_USER=$(TESTDBUSER) \
+		-p 5432:$(TESTDBPORT) \
+		-d postgres:15.2
+
+stop-postgres:
+	$(DOCKER) rm -f parodos-postgres

@@ -3,6 +3,7 @@ bases:
 resources:
 - ingress.yaml
 - ldap.yaml
+- postgres.yaml
 
 patchesStrategicMerge:
 - parodos-patch.yaml
