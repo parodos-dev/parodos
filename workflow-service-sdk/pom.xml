@@ -101,7 +101,6 @@
                             <invokerPackage>com.redhat.parodos.openapi.api</invokerPackage>
                             <apiPackage>com.redhat.parodos.openapi.api</apiPackage>
                             <modelPackage>com.redhat.parodos.openapi.model</modelPackage>
-                            <modelNameSuffix>Generated</modelNameSuffix>
                             <addCompileSourceRoot>true</addCompileSourceRoot>
 
                             <configOptions>
