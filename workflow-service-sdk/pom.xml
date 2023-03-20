@@ -61,27 +61,28 @@
                 </executions>
             </plugin>
 
-<!--            <plugin>-->
-<!--                <groupId>org.codehaus.mojo</groupId>-->
-<!--                <artifactId>build-helper-maven-plugin</artifactId>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>reserve-tomcat-port</id>-->
-<!--                        <goals>-->
-<!--                            <goal>reserve-network-port</goal>-->
-<!--                        </goals>-->
-<!--                        <phase>process-resources</phase>-->
-<!--                        <configuration>-->
-<!--                            <portNames>-->
-<!--                                <portName>tomcat.http.port</portName>-->
-<!--                            </portNames>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.codehaus.mojo</groupId>-->
+            <!--                <artifactId>build-helper-maven-plugin</artifactId>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <id>reserve-tomcat-port</id>-->
+            <!--                        <goals>-->
+            <!--                            <goal>reserve-network-port</goal>-->
+            <!--                        </goals>-->
+            <!--                        <phase>process-resources</phase>-->
+            <!--                        <configuration>-->
+            <!--                            <portNames>-->
+            <!--                                <portName>tomcat.http.port</portName>-->
+            <!--                            </portNames>-->
+            <!--                        </configuration>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.7.9</version>
                 <executions>
                     <execution>
                         <id>initialize</id>
@@ -104,15 +105,15 @@
                     </execution>
                 </executions>
             </plugin>
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-failsafe-plugin</artifactId>-->
-<!--                <configuration>-->
-<!--                    <systemPropertyVariables>-->
-<!--                        <test.server.port>${tomcat.http.port}</test.server.port>-->
-<!--                    </systemPropertyVariables>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-failsafe-plugin</artifactId>-->
+            <!--                <configuration>-->
+            <!--                    <systemPropertyVariables>-->
+            <!--                        <test.server.port>${tomcat.http.port}</test.server.port>-->
+            <!--                    </systemPropertyVariables>-->
+            <!--                </configuration>-->
+            <!--            </plugin>-->
 
             <!--            -->
             <!--            <plugin>-->
@@ -127,24 +128,24 @@
             <!--                    </execution>-->
             <!--                </executions>-->
             <!--            </plugin>-->
-<!--            <plugin>-->
-<!--                <groupId>com.googlecode.maven-download-plugin</groupId>-->
-<!--                <artifactId>download-maven-plugin</artifactId>-->
-<!--                <version>1.6.8</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <phase>initialize</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>wget</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <url>http://localhost:8080/v3/api-docs</url>-->
-<!--                            <outputFileName>api-docs.json</outputFileName>-->
-<!--                            <outputDirectory>${basedir}</outputDirectory>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
+            <!--            <plugin>-->
+            <!--                <groupId>com.googlecode.maven-download-plugin</groupId>-->
+            <!--                <artifactId>download-maven-plugin</artifactId>-->
+            <!--                <version>1.6.8</version>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <phase>initialize</phase>-->
+            <!--                        <goals>-->
+            <!--                            <goal>wget</goal>-->
+            <!--                        </goals>-->
+            <!--                        <configuration>-->
+            <!--                            <url>http://localhost:8080/v3/api-docs</url>-->
+            <!--                            <outputFileName>api-docs.json</outputFileName>-->
+            <!--                            <outputDirectory>${basedir}</outputDirectory>-->
+            <!--                        </configuration>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
