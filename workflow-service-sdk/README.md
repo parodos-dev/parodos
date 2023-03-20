@@ -2,7 +2,7 @@
 
 Parodos Workflow Service API
 - API version: v1.0.0
-  - Build date: 2023-03-20T09:44:34.015410+01:00[Europe/Rome]
+  - Build date: 2023-03-20T09:46:51.902819+01:00[Europe/Rome]
 
 This is the API documentation for the Parodos Workflow Service. It provides operations to execute assessments to determine infrastructure options (tooling + environments). Also executes infrastructure task workflows to call downstream systems to stand-up an infrastructure option.
 
@@ -80,11 +80,11 @@ Please follow the [installation](#installation) instruction and execute the foll
 ```java
 
 // Import classes:
-import com.redhat.parodos.openapi.api.ApiClient;
-import com.redhat.parodos.openapi.api.ApiException;
-import com.redhat.parodos.openapi.api.Configuration;
-import com.redhat.parodos.openapi.api.models.*;
-import com.redhat.parodos.openapi.api.ProjectApi;
+import com.redhat.parodos.sdk.api.ApiClient;
+import com.redhat.parodos.sdk.api.ApiException;
+import com.redhat.parodos.sdk.api.Configuration;
+import com.redhat.parodos.sdk.api.models.*;
+import com.redhat.parodos.sdk.api.ProjectApi;
 
 public class Example {
   public static void main(String[] args) {
