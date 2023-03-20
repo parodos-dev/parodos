@@ -1,11 +1,11 @@
 package com.redhat.parodos.examples.integration;
 
-import com.redhat.parodos.openapi.api.ApiClient;
-import com.redhat.parodos.openapi.api.ApiException;
-import com.redhat.parodos.openapi.api.Configuration;
-import com.redhat.parodos.openapi.api.ProjectApi;
-import com.redhat.parodos.openapi.model.ProjectRequestDTOGenerated;
-import com.redhat.parodos.openapi.model.ProjectResponseDTOGenerated;
+import com.redhat.parodos.sdk.api.ApiClient;
+import com.redhat.parodos.sdk.api.ApiException;
+import com.redhat.parodos.sdk.api.Configuration;
+import com.redhat.parodos.sdk.api.ProjectApi;
+import com.redhat.parodos.sdk.model.ProjectRequestDTO;
+import com.redhat.parodos.sdk.model.ProjectResponseDTO;
 import com.redhat.parodos.workflow.utils.CredUtils;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
@@ -37,11 +37,11 @@ public class UseSDKExample {
 		defaultClient.addDefaultHeader(HttpHeaders.AUTHORIZATION, "Basic " + CredUtils.getBase64Creds("test", "test"));
 
 		ProjectApi apiInstance = new ProjectApi(defaultClient);
-		ProjectRequestDTOGenerated projectRequestDTOGenerated = new ProjectRequestDTOGenerated();
-		projectRequestDTOGenerated.setName(testPrjName);
-		projectRequestDTOGenerated.setDescription(testPrjDescription);
+		ProjectRequestDTO projectRequestDTO = new ProjectRequestDTO();
+		projectRequestDTO.setName(testPrjName);
+		projectRequestDTO.setDescription(testPrjDescription);
 		try {
-			apiInstance.createProject(projectRequestDTOGenerated);
+			apiInstance.createProject(projectRequestDTO);
 		}
 		catch (ApiException e) {
 			fail(String.format(
@@ -49,7 +49,7 @@ public class UseSDKExample {
 					e.getCode(), e.getResponseBody(), e.getResponseHeaders().toString()));
 		}
 
-		List<ProjectResponseDTOGenerated> projects = null;
+		List<ProjectResponseDTO> projects = null;
 		try {
 			projects = apiInstance.getProjects();
 		}
