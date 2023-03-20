@@ -49,6 +49,7 @@ jobs:
             ${{ github.workspace }}/coverage/target/site/jacoco-aggregate/jacoco.xml
             ${{ github.workspace }}/notification-service/target/*.jar
             ${{ github.workspace }}/workflow-service/target/*.jar
+            ${{ github.workspace }}/workflow-examples/target/*.jar
 
       - name: Save Maven cache
         uses: skjolber/maven-cache-github-action@v1

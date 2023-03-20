@@ -12,12 +12,13 @@ services:
 
   workflow-service:
     build:
-      context: ../workflow-service
-      dockerfile: ./Dockerfile
+      context: ../
+      dockerfile: ./workflow-service/Dockerfile
     container_name: workflow-service
     ports:
       - 9000:8080
     environment:
       - SPRING_PROFILES_ACTIVE=local
+      - LOADER_PATH=./workflow-examples.jar
     depends_on:
       - notification-service
