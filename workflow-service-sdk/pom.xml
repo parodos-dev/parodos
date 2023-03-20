@@ -85,6 +85,7 @@
                 <executions>
                     <execution>
                         <id>initialize</id>
+                        <phase>initialize</phase>
                         <goals>
                             <goal>start</goal>
                         </goals>
