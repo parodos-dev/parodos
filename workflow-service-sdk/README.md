@@ -2,7 +2,7 @@
 
 Parodos Workflow Service API
 - API version: v1.0.0
-  - Build date: 2023-03-20T09:31:41.301064+01:00[Europe/Rome]
+  - Build date: 2023-03-20T09:44:34.015410+01:00[Europe/Rome]
 
 This is the API documentation for the Parodos Workflow Service. It provides operations to execute assessments to determine infrastructure options (tooling + environments). Also executes infrastructure task workflows to call downstream systems to stand-up an infrastructure option.
 
@@ -92,9 +92,9 @@ public class Example {
     defaultClient.setBasePath("http://localhost:8080");
 
     ProjectApi apiInstance = new ProjectApi(defaultClient);
-    ProjectRequestDTOGenerated projectRequestDTOGenerated = new ProjectRequestDTOGenerated(); // ProjectRequestDTOGenerated | 
+    ProjectRequestDTO projectRequestDTO = new ProjectRequestDTO(); // ProjectRequestDTO | 
     try {
-      ProjectResponseDTOGenerated result = apiInstance.createProject(projectRequestDTOGenerated);
+      ProjectResponseDTO result = apiInstance.createProject(projectRequestDTO);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling ProjectApi#createProject");
@@ -125,19 +125,19 @@ Class | Method | HTTP request | Description
 
 ## Documentation for Models
 
- - [ArgumentRequestDTOGenerated](docs/ArgumentRequestDTOGenerated.md)
- - [ProjectRequestDTOGenerated](docs/ProjectRequestDTOGenerated.md)
- - [ProjectResponseDTOGenerated](docs/ProjectResponseDTOGenerated.md)
- - [WorkDefinitionResponseDTOGenerated](docs/WorkDefinitionResponseDTOGenerated.md)
- - [WorkFlowDefinitionResponseDTOGenerated](docs/WorkFlowDefinitionResponseDTOGenerated.md)
- - [WorkFlowOptionGenerated](docs/WorkFlowOptionGenerated.md)
- - [WorkFlowOptionsGenerated](docs/WorkFlowOptionsGenerated.md)
- - [WorkFlowRequestDTOGenerated](docs/WorkFlowRequestDTOGenerated.md)
- - [WorkFlowResponseDTOGenerated](docs/WorkFlowResponseDTOGenerated.md)
- - [WorkFlowStatusResponseDTOGenerated](docs/WorkFlowStatusResponseDTOGenerated.md)
- - [WorkFlowTaskParameterGenerated](docs/WorkFlowTaskParameterGenerated.md)
- - [WorkRequestDTOGenerated](docs/WorkRequestDTOGenerated.md)
- - [WorkStatusResponseDTOGenerated](docs/WorkStatusResponseDTOGenerated.md)
+ - [ArgumentRequestDTO](docs/ArgumentRequestDTO.md)
+ - [ProjectRequestDTO](docs/ProjectRequestDTO.md)
+ - [ProjectResponseDTO](docs/ProjectResponseDTO.md)
+ - [WorkDefinitionResponseDTO](docs/WorkDefinitionResponseDTO.md)
+ - [WorkFlowDefinitionResponseDTO](docs/WorkFlowDefinitionResponseDTO.md)
+ - [WorkFlowOption](docs/WorkFlowOption.md)
+ - [WorkFlowOptions](docs/WorkFlowOptions.md)
+ - [WorkFlowRequestDTO](docs/WorkFlowRequestDTO.md)
+ - [WorkFlowResponseDTO](docs/WorkFlowResponseDTO.md)
+ - [WorkFlowStatusResponseDTO](docs/WorkFlowStatusResponseDTO.md)
+ - [WorkFlowTaskParameter](docs/WorkFlowTaskParameter.md)
+ - [WorkRequestDTO](docs/WorkRequestDTO.md)
+ - [WorkStatusResponseDTO](docs/WorkStatusResponseDTO.md)
 
 
 ## Documentation for Authorization
