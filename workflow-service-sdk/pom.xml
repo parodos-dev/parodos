@@ -85,12 +85,14 @@
                 <version>2.7.9</version>
                 <executions>
                     <execution>
+
                         <id>initialize</id>
                         <phase>initialize</phase>
                         <goals>
                             <goal>start</goal>
                         </goals>
                         <configuration>
+                            <jmxPort>9009</jmxPort>
                             <mainClass>com.redhat.parodos.WorkflowServiceApplication</mainClass>
                             <profiles>
                                 <profile>local</profile>
