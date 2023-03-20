@@ -2,7 +2,7 @@
 
 Parodos Workflow Service API
 - API version: v1.0.0
-  - Build date: 2023-03-17T18:03:38.027364+01:00[Europe/Rome]
+  - Build date: 2023-03-20T09:31:41.301064+01:00[Europe/Rome]
 
 This is the API documentation for the Parodos Workflow Service. It provides operations to execute assessments to determine infrastructure options (tooling + environments). Also executes infrastructure task workflows to call downstream systems to stand-up an infrastructure option.
 
@@ -40,7 +40,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>dev.parodos</groupId>
   <artifactId>workflow-service-sdk</artifactId>
-  <version>v1.0.0-SNAPSHOT</version>
+  <version>1.0.2-SNAPSHOT</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -56,7 +56,7 @@ Add this dependency to your project's build file:
   }
 
   dependencies {
-     implementation "dev.parodos:workflow-service-sdk:v1.0.0-SNAPSHOT"
+     implementation "dev.parodos:workflow-service-sdk:1.0.2-SNAPSHOT"
   }
 ```
 
@@ -70,7 +70,7 @@ mvn clean package
 
 Then manually install the following JARs:
 
-* `target/workflow-service-sdk-v1.0.0-SNAPSHOT.jar`
+* `target/workflow-service-sdk-1.0.2-SNAPSHOT.jar`
 * `target/lib/*.jar`
 
 ## Getting Started

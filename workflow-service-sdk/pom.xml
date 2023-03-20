@@ -110,7 +110,7 @@
                                 <parentArtifactId>parados-parent</parentArtifactId>
                                 <parentGroupId>dev.parodos</parentGroupId>
                                 <parentVersion>${revision}</parentVersion>
-                                <snapshotVersion>true</snapshotVersion>
+                                <artifactVersion>${revision}</artifactVersion>
                                 <dateLibrary>legacy</dateLibrary>
                             </configOptions>
                         </configuration>
