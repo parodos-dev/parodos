@@ -8,3 +8,14 @@ spec:
       containers:
       - name: workflow-service
         imagePullPolicy: IfNotPresent
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: workflow-service-config
+data:
+  DATASOURCE_URL: "jdbc:postgresql://postgres:5432/parodos"
+  DATASOURCE_DRIVER: "org.postgresql.Driver"
+  DATASOURCE_USERNAME: "parodos"
+  DATASOURCE_PASSWORD: "parodos"
+  SPRING_PROFILES_ACTIVE: "dev"

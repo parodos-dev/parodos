@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: workflow-service-config
+  namespace: default
+data:
+  SPRING_PROFILES_ACTIVE: "local"

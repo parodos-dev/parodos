@@ -43,9 +43,9 @@ spec:
       - name: workflow-service
         image: quay.io/parodos/workflow-service:latest
         imagePullPolicy: Always
-        env:
-          - name: SPRING_PROFILES_ACTIVE
-            value: "dev"
+        envFrom:
+          - configMapRef:
+              name: workflow-service-config
         livenessProbe:
           httpGet:
             path: /actuator/health
