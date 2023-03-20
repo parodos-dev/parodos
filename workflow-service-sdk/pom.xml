@@ -92,11 +92,12 @@
                             <goal>start</goal>
                         </goals>
                         <configuration>
-                            <jmxPort>9009</jmxPort>
+<!--                            <jmxPort>9009</jmxPort>-->
                             <mainClass>com.redhat.parodos.WorkflowServiceApplication</mainClass>
                             <profiles>
                                 <profile>local</profile>
                             </profiles>
+                            <fork>false</fork>
                         </configuration>
                     </execution>
                     <execution>
