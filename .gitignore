@@ -75,3 +75,4 @@ workflow-service-sdk/build.*
 workflow-service-sdk/api-docs.json
 workflow-service-sdk/git_push.sh
 workflow-service-sdk/.travis.yml
+openapi/api-docs.json
