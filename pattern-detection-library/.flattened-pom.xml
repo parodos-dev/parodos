@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>dev.parodos</groupId>
-    <artifactId>parados-parent</artifactId>
+    <artifactId>parodos-parent</artifactId>
     <version>1.0.3-SNAPSHOT</version>
   </parent>
   <groupId>dev.parodos</groupId>

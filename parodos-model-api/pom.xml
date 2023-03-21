@@ -9,7 +9,7 @@
 
     <parent>
         <groupId>dev.parodos</groupId>
-        <artifactId>parados-parent</artifactId>
+        <artifactId>parodos-parent</artifactId>
         <version>${revision}</version>
     </parent>
 
