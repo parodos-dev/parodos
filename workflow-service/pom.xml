@@ -255,6 +255,14 @@
                         </goals>
                         <phase>pre-integration-test</phase>
                     </execution>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <layout>ZIP</layout>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -272,22 +280,6 @@
                             <goal>generate</goal>
                         </goals>
                         <phase>package</phase>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${springframework.boot.version}</version>
-                <configuration>
-                    <layout>ZIP</layout>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
