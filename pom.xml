@@ -4,10 +4,10 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>dev.parodos</groupId>
-    <artifactId>parados-parent</artifactId>
+    <artifactId>parodos-parent</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
-    <name>parados</name>
+    <name>parodos</name>
     <description>Parodos is a Java toolkit to help enterprise's with a legacy footprint build internal developer platforms (IDP)</description>
     <url>https://github.com/redhat-developer/parodos</url>
     <licenses>

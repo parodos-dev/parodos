@@ -1,4 +1,4 @@
-# Install parados on plain kubernetes
+# Install parodos on plain kubernetes
 
 
 ## Create kind cluster
