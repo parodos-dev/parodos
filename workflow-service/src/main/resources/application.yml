@@ -39,3 +39,7 @@ spring:
 springdoc:
   swagger-ui:
     tagsSorter: alpha
+
+
+scan:
+  packages: ${CONFIGURATION_PACKAGE:-}

@@ -127,3 +127,32 @@ Parodos
 
 Yes. In this first release a configuration pattern widely used across many enterprise environments was chosen. However,
 future release will include a DSL (domain specific language) for configuring Workflows without have to write Java code.
+
+### How to configure my postgres database and my workflow configuration class in different package?
+
+before starting this workflow-service application, set the following environment variables for the database: , 
+* DATASOURCE_URL
+* DATASOURCE_DRIVER
+* DATASOURCE_USERNAME
+* DATASOURCE_PASSWORD
+
+example:
+```
+export DATASOURCE_URL="jdbc:postgresql://localhost:5432/postgres"
+export DATASOURCE_DRIVER="org.postgresql.Driver"
+export DATASOURCE_USERNAME="postgres"
+export DATASOURCE_PASSWORD="postgres"
+```
+
+the environment variable for workflow configuration in different package:
+* CONFIGURATION_PACKAGE
+
+example: 
+```
+export CONFIGURATION_PACKAGE=org.test.*
+```
+
+for multiple packages:
+```
+export CONFIGURATION_PACKAGE=org.test.*, dev.test2.*
+```
