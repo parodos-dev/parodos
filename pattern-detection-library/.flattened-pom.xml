@@ -5,11 +5,11 @@
   <parent>
     <groupId>dev.parodos</groupId>
     <artifactId>parodos-parent</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.4-SNAPSHOT</version>
   </parent>
   <groupId>dev.parodos</groupId>
   <artifactId>pattern-detection-library</artifactId>
-  <version>1.0.3-SNAPSHOT</version>
+  <version>1.0.4-SNAPSHOT</version>
   <name>pattern-detection-library</name>
   <url>https://github.com/redhat-developer/parodos</url>
   <licenses>
