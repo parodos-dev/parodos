@@ -36,8 +36,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @ConfigurationPropertiesScan("com.redhat.parodos")
 public class WorkflowServiceApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(WorkflowServiceApplication.class, args);
+	public static void main(String[] args) {SpringApplication.run(WorkflowServiceApplication.class, args);
 	}
 
 }

@@ -141,7 +141,7 @@
                         <phase>validate</phase>
                         <inherited>true</inherited>
                         <goals>
-                            <goal>validate</goal>
+                            <goal>apply</goal>
                         </goals>
                     </execution>
                 </executions>
