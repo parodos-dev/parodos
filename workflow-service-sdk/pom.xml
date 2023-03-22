@@ -85,8 +85,8 @@
                             <apiPackage>com.redhat.parodos.sdk.api</apiPackage>
                             <modelPackage>com.redhat.parodos.sdk.model</modelPackage>
                             <addCompileSourceRoot>true</addCompileSourceRoot>
-
                             <configOptions>
+                                <hideGenerationTimestamp>true</hideGenerationTimestamp>
                                 <basePackage>com.redhat.parodos.sdk</basePackage>
                                 <configPackage>com.redhat.parodos.sdk.configuration</configPackage>
                                 <parentArtifactId>parados-parent</parentArtifactId>
