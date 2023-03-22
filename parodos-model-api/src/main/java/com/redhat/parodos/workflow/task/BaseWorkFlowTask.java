@@ -20,11 +20,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflows.work.WorkContext;
+import com.redhat.parodos.workflows.workflow.WorkFlow;
+
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanNameAware;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -46,6 +49,17 @@ public abstract class BaseWorkFlowTask implements WorkFlowTask, BeanNameAware {
 	@Override
 	public void setBeanName(String name) {
 		this.name = name;
+	}
+	
+	// WorkFlowChecker check a process that has been initiated by a WorkFlow to see if its been completed
+	private List<WorkFlow> workFlowCheckers;
+
+	public List<WorkFlow> getWorkFlowCheckers() {
+		return workFlowCheckers;
+	}
+
+	public void setWorkFlowCheckers(List<WorkFlow> workFlowCheckers) {
+		this.workFlowCheckers = workFlowCheckers;
 	}
 
 	public String getParameterValue(WorkContext workContext, String parameterName) throws MissingParameterException {
