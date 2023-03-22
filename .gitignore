@@ -66,13 +66,8 @@ local.properties
 ## Workflow Service SDK Generated files
 ##############################
 
-workflow-service-sdk/src/
-workflow-service-sdk/api/
-workflow-service-sdk/docs/
 workflow-service-sdk/*gradle*
 workflow-service-sdk/.openapi-generator/
 workflow-service-sdk/build.*
-workflow-service-sdk/api-docs.json
 workflow-service-sdk/git_push.sh
 workflow-service-sdk/.travis.yml
-openapi/api-docs.json
