@@ -174,8 +174,13 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 				WorkFlowExecution workExecution = workFlowRepository
 						.findFirstByMasterWorkFlowExecutionAndWorkFlowDefinitionId(masterWorkFlowExecution,
 								workFlowWorkDefinition.getWorkDefinitionId());
-				com.redhat.parodos.workflow.enums.WorkStatus workStatus = WorkFlowStatus.IN_PROGRESS
-						.equals(workExecution.getStatus()) ? com.redhat.parodos.workflow.enums.WorkStatus.PENDING
+				/*
+				 * the workflow execution might be null when there is pending checker
+				 * before it
+				 */
+				com.redhat.parodos.workflow.enums.WorkStatus workStatus = workExecution == null
+						|| WorkFlowStatus.IN_PROGRESS.equals(workExecution.getStatus())
+								? com.redhat.parodos.workflow.enums.WorkStatus.PENDING
 								: com.redhat.parodos.workflow.enums.WorkStatus
 										.valueOf(workExecution.getStatus().name());
 				workStatusResponseDTOs.add(
@@ -191,7 +196,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 								workFlowWorkDefinition.getWorkDefinitionId());
 				Optional<WorkFlowTaskExecution> workFlowTaskExecutionOptional = workFlowTaskExecutions.stream()
 						.max(Comparator.comparing(WorkFlowTaskExecution::getStartDate));
-				com.redhat.parodos.workflow.enums.WorkStatus workStatus = null;
+				com.redhat.parodos.workflow.enums.WorkStatus workStatus = com.redhat.parodos.workflow.enums.WorkStatus.PENDING;
 				if (workFlowTaskExecutionOptional.isPresent()) {
 					workStatus = WorkFlowTaskStatus.IN_PROGRESS.equals(workFlowTaskExecutionOptional.get().getStatus())
 							? com.redhat.parodos.workflow.enums.WorkStatus.PENDING
@@ -233,12 +238,12 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 						WorkFlowExecution workFlowExecution = workFlowRepository
 								.findFirstByMasterWorkFlowExecutionAndWorkFlowDefinitionId(masterWorkFlowExecution,
 										tmpWorkFlowWorkDefinition.getWorkFlowDefinition().getId());
-						List<WorkFlowTaskExecution> workFlowTaskExecutions = workFlowTaskRepository
-								.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(workFlowExecution.getId(),
-										tmpWorkFlowWorkDefinition.getWorkDefinitionId());
+						List<WorkFlowTaskExecution> workFlowTaskExecutions = workFlowExecution == null ? List.of()
+								: workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(
+										workFlowExecution.getId(), tmpWorkFlowWorkDefinition.getWorkDefinitionId());
 						Optional<WorkFlowTaskExecution> workFlowTaskExecutionOptional = workFlowTaskExecutions.stream()
 								.max(Comparator.comparing(WorkFlowTaskExecution::getStartDate));
-						com.redhat.parodos.workflow.enums.WorkStatus workStatus = null;
+						com.redhat.parodos.workflow.enums.WorkStatus workStatus = com.redhat.parodos.workflow.enums.WorkStatus.PENDING;
 						if (workFlowTaskExecutionOptional.isPresent()) {
 							workStatus = WorkFlowTaskStatus.IN_PROGRESS
 									.equals(workFlowTaskExecutionOptional.get().getStatus())
