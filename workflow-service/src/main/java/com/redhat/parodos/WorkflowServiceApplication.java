@@ -28,7 +28,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
  *
  * @author Luke Shannon (Github: lshannon)
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = { "com.redhat.parodos", "${scan.packages}" })
 @EnableScheduling
 @EnableWebSecurity
 @EnableAspectJAutoProxy
