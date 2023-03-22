@@ -20,6 +20,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 /**
  * An input to a @see WorkFlowTask. The @see WorkFlowTaskParameterType is used by the UI
  * to render inputs to collect the values from users running the workflow
@@ -40,5 +42,7 @@ public class WorkFlowTaskParameter {
 	private boolean optional;
 
 	private WorkFlowTaskParameterType type;
+
+	private Map<String, String> JsonSchemaOptions;
 
 }

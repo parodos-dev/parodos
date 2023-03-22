@@ -27,6 +27,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -40,5 +42,15 @@ public class WorkFlowParameter {
 	private String description;
 
 	private boolean optional;
+
+	public Map<String, String> getAsJsonSchema() {
+		if (this.getType() == null) {
+			return Map.of();
+		}
+		Map<String, String> properties = this.getType().getAsJsonSchema();
+		properties.put("required", String.valueOf(!this.isOptional()));
+		properties.put("description", this.getDescription());
+		return properties;
+	}
 
 }

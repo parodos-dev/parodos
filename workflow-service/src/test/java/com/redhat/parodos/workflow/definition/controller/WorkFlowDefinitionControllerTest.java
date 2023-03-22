@@ -4,7 +4,6 @@ import com.redhat.parodos.ControllerMockClient;
 import com.redhat.parodos.workflow.definition.dto.WorkDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -18,6 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.List;
 
@@ -49,8 +49,7 @@ class WorkFlowDefinitionControllerTest extends ControllerMockClient {
 				.andExpect(MockMvcResultMatchers.jsonPath("$[0].name", Matchers.is(WFDefFoo.getName())))
 				.andExpect(MockMvcResultMatchers.jsonPath("$[0].works", Matchers.hasSize(1)))
 				.andExpect(MockMvcResultMatchers.jsonPath("$[0].works[0].name", Matchers.is("task1")))
-				.andExpect(MockMvcResultMatchers.jsonPath("$[0].works[0].parameters[0].key", Matchers.is("param1")))
-				.andExpect(MockMvcResultMatchers.jsonPath("$[0].works[0].parameters[0].description",
+				.andExpect(MockMvcResultMatchers.jsonPath("$[0].works[0].parameters.param1.description",
 						Matchers.is("param1")))
 				.andExpect(MockMvcResultMatchers.jsonPath("$[1].id", Matchers.is(WFDefBar.getId().toString())))
 				.andExpect(MockMvcResultMatchers.jsonPath("$[1].name", Matchers.is(WFDefBar.getName())));
@@ -84,9 +83,8 @@ class WorkFlowDefinitionControllerTest extends ControllerMockClient {
 				.andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.is(WFDef.getName())))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.works", Matchers.hasSize(1)))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.works[0].name", Matchers.is("task1")))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.works[0].parameters[0].key", Matchers.is("param1")))
-				.andExpect(
-						MockMvcResultMatchers.jsonPath("$.works[0].parameters[0].description", Matchers.is("param1")));
+				.andExpect(MockMvcResultMatchers.jsonPath("$.works[0].parameters.param1.description",
+						Matchers.is("param1")));
 
 		// then
 		Mockito.verify(this.workFlowDefinitionService, Mockito.times(1)).getWorkFlowDefinitionById(WFDef.getId());
@@ -128,9 +126,9 @@ class WorkFlowDefinitionControllerTest extends ControllerMockClient {
 	}
 
 	private WorkDefinitionResponseDTO createSampleWorkFlowTaskDefinition(String name) {
+		String parameters = "{\"param1\": {\"description\": \"param1\"}}";
 		return WorkDefinitionResponseDTO.builder().id(UUID.randomUUID().toString()).name(name)
-				.parameters(List.of(WorkFlowTaskParameter.builder().key("param1").description("param1").build()))
-				.build();
+				.parameterFromString(parameters).build();
 	}
 
 }

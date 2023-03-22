@@ -110,7 +110,7 @@ public class RestAPIWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 		assertEquals(PAYLOAD_KEY, workFlowTaskParameters.get(1).getKey());
 		assertEquals("Json of what to provide for data. (ie: 'Hello!')",
 				workFlowTaskParameters.get(1).getDescription());
-		assertEquals(WorkFlowTaskParameterType.PASSWORD, workFlowTaskParameters.get(1).getType());
+		assertEquals(WorkFlowTaskParameterType.TEXT, workFlowTaskParameters.get(1).getType());
 	}
 
 	@Test

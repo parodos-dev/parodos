@@ -15,6 +15,9 @@
  */
 package com.redhat.parodos.workflow.task.parameter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * The supported types for a @see WorkFlowTaskParameter. A UI layer can render appropriate
  * components to collect/validate user inputs using these values
@@ -24,6 +27,38 @@ package com.redhat.parodos.workflow.task.parameter;
  */
 public enum WorkFlowTaskParameterType {
 
-	PASSWORD, TEXT, EMAIL, DATE, NUMBER, URL
+	PASSWORD, TEXT, EMAIL, DATE, NUMBER, URL;
+
+	public Map<String, String> getAsJsonSchema() {
+		Map<String, String> properties = new HashMap<>();
+		switch (this) {
+			case PASSWORD:
+				properties.put("type", "string");
+				properties.put("format", "password");
+				break;
+			case TEXT:
+				properties.put("type", "string");
+				properties.put("format", "text");
+				break;
+			case EMAIL:
+				properties.put("type", "string");
+				properties.put("format", "email");
+				break;
+			case NUMBER:
+				properties.put("type", "number");
+				break;
+			case URL:
+				properties.put("type", "string");
+				properties.put("format", "url");
+				break;
+			case DATE:
+				properties.put("type", "string");
+				properties.put("format", "date");
+				break;
+			default:
+				throw new IllegalArgumentException("Invalid parameter type");
+		}
+		return properties;
+	}
 
 }
