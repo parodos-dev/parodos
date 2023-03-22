@@ -292,4 +292,11 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 		return workDefinitionResponseDTOs.get(0).getWorks();
 	}
 
+	public void cleanAllDefinitions() {
+		workFlowCheckerMappingDefinitionRepository.deleteAll();
+		workFlowWorkRepository.deleteAll();
+		workFlowTaskDefinitionRepository.deleteAll();
+		workFlowDefinitionRepository.deleteAll();
+	}
+
 }
