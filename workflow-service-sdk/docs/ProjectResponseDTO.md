@@ -7,11 +7,11 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **String** |  |  [optional]
-**name** | **String** |  |  [optional]
-**description** | **String** |  |  [optional]
 **createDate** | **Date** |  |  [optional]
+**description** | **String** |  |  [optional]
+**id** | **String** |  |  [optional]
 **modifyDate** | **Date** |  |  [optional]
+**name** | **String** |  |  [optional]
 **username** | **String** |  |  [optional]
 
 

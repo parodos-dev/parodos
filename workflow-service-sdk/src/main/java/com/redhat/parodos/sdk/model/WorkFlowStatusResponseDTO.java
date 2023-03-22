@@ -30,8 +30,12 @@ import java.util.List;
 /**
  * WorkFlowStatusResponseDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2023-03-22T10:29:24.432872+01:00[Europe/Rome]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowStatusResponseDTO {
+  public static final String SERIALIZED_NAME_STATUS = "status";
+  @SerializedName(SERIALIZED_NAME_STATUS)
+  private String status;
+
   public static final String SERIALIZED_NAME_WORK_FLOW_EXECUTION_ID = "workFlowExecutionId";
   @SerializedName(SERIALIZED_NAME_WORK_FLOW_EXECUTION_ID)
   private String workFlowExecutionId;
@@ -46,6 +50,29 @@ public class WorkFlowStatusResponseDTO {
 
   public WorkFlowStatusResponseDTO() { 
   }
+
+  public WorkFlowStatusResponseDTO status(String status) {
+    
+    this.status = status;
+    return this;
+  }
+
+   /**
+   * Get status
+   * @return status
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getStatus() {
+    return status;
+  }
+
+
+  public void setStatus(String status) {
+    this.status = status;
+  }
+
 
   public WorkFlowStatusResponseDTO workFlowExecutionId(String workFlowExecutionId) {
     
@@ -133,20 +160,22 @@ public class WorkFlowStatusResponseDTO {
       return false;
     }
     WorkFlowStatusResponseDTO workFlowStatusResponseDTO = (WorkFlowStatusResponseDTO) o;
-    return Objects.equals(this.workFlowExecutionId, workFlowStatusResponseDTO.workFlowExecutionId) &&
+    return Objects.equals(this.status, workFlowStatusResponseDTO.status) &&
+        Objects.equals(this.workFlowExecutionId, workFlowStatusResponseDTO.workFlowExecutionId) &&
         Objects.equals(this.workFlowName, workFlowStatusResponseDTO.workFlowName) &&
         Objects.equals(this.works, workFlowStatusResponseDTO.works);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(workFlowExecutionId, workFlowName, works);
+    return Objects.hash(status, workFlowExecutionId, workFlowName, works);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class WorkFlowStatusResponseDTO {\n");
+    sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    workFlowExecutionId: ").append(toIndentedString(workFlowExecutionId)).append("\n");
     sb.append("    workFlowName: ").append(toIndentedString(workFlowName)).append("\n");
     sb.append("    works: ").append(toIndentedString(works)).append("\n");

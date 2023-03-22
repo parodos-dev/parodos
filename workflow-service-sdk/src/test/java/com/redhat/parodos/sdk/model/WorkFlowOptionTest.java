@@ -43,22 +43,6 @@ public class WorkFlowOptionTest {
     }
 
     /**
-     * Test the property 'identifier'
-     */
-    @Test
-    public void identifierTest() {
-        // TODO: test identifier
-    }
-
-    /**
-     * Test the property 'displayName'
-     */
-    @Test
-    public void displayNameTest() {
-        // TODO: test displayName
-    }
-
-    /**
      * Test the property 'description'
      */
     @Test
@@ -72,6 +56,22 @@ public class WorkFlowOptionTest {
     @Test
     public void detailsTest() {
         // TODO: test details
+    }
+
+    /**
+     * Test the property 'displayName'
+     */
+    @Test
+    public void displayNameTest() {
+        // TODO: test displayName
+    }
+
+    /**
+     * Test the property 'identifier'
+     */
+    @Test
+    public void identifierTest() {
+        // TODO: test identifier
     }
 
     /**

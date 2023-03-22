@@ -17,6 +17,128 @@ tags:
 - description: Operations about workflow definition
   name: Workflow Definition
 paths:
+  /api/v1/projects:
+    get:
+      operationId: getProjects
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ProjectResponseDTO'
+                type: array
+          description: Succeeded
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+      summary: Returns a list of project
+      tags:
+      - Project
+      x-accepts: application/json
+    post:
+      operationId: createProject
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectRequestDTO'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectResponseDTO'
+          description: Created
+        "401":
+          description: Unauthorized
+      summary: Creates a new project
+      tags:
+      - Project
+      x-contentType: application/json
+      x-accepts: application/json
+  /api/v1/projects/{id}:
+    get:
+      operationId: getProjectById
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectResponseDTO'
+          description: Succeeded
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not found
+      summary: Returns information about a specified project
+      tags:
+      - Project
+      x-accepts: application/json
+  /api/v1/workflowdefinitions:
+    get:
+      operationId: getWorkFlowDefinitions
+      parameters:
+      - explode: true
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/WorkFlowDefinitionResponseDTO'
+                type: array
+          description: Succeeded
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+      summary: Returns a list of workflow definition
+      tags:
+      - Workflow Definition
+      x-accepts: application/json
+  /api/v1/workflowdefinitions/{id}:
+    get:
+      operationId: getWorkFlowDefinitionById
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkFlowDefinitionResponseDTO'
+          description: Succeeded
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not found
+      summary: Returns information about a workflow definition by id
+      tags:
+      - Workflow Definition
+      x-accepts: application/json
   /api/v1/workflows:
     post:
       operationId: execute
@@ -27,8 +149,6 @@ paths:
               $ref: '#/components/schemas/WorkFlowRequestDTO'
         required: true
       responses:
-        "403":
-          description: Forbidden
         "200":
           content:
             application/json:
@@ -37,6 +157,8 @@ paths:
           description: Succeeded
         "401":
           description: Unauthorized
+        "403":
+          description: Forbidden
       summary: Executes a workflow
       tags:
       - Workflow
@@ -67,72 +189,30 @@ paths:
               $ref: '#/components/schemas/WorkFlowCheckerTaskRequestDTO'
         required: true
       responses:
-        "403":
-          description: Forbidden
         "200":
           content:
             application/json:
               schema:
                 type: string
           description: Succeeded
-        "404":
-          description: Not found
         "401":
           description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not found
       summary: Updates a workflow checker task status
       tags:
       - Workflow
       x-contentType: application/json
       x-accepts: application/json
-  /api/v1/projects:
-    get:
-      operationId: getProjects
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                items:
-                  $ref: '#/components/schemas/ProjectResponseDTO'
-                type: array
-          description: Succeeded
-        "403":
-          description: Forbidden
-        "401":
-          description: Unauthorized
-      summary: Returns a list of project
-      tags:
-      - Project
-      x-accepts: application/json
-    post:
-      operationId: createProject
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ProjectRequestDTO'
-        required: true
-      responses:
-        "201":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProjectResponseDTO'
-          description: Created
-        "401":
-          description: Unauthorized
-      summary: Creates a new project
-      tags:
-      - Project
-      x-contentType: application/json
-      x-accepts: application/json
-  /api/v1/workflows/{id}/status:
+  /api/v1/workflows/{workFlowExecutionId}/status:
     get:
       operationId: getStatus
       parameters:
       - explode: false
         in: path
-        name: id
+        name: workFlowExecutionId
         required: true
         schema:
           type: string
@@ -144,93 +224,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/WorkFlowStatusResponseDTO'
           description: Succeeded
-        "403":
-          description: Forbidden
         "401":
           description: Unauthorized
+        "403":
+          description: Forbidden
       summary: Returns a workflow status
       tags:
       - Workflow
-      x-accepts: application/json
-  /api/v1/workflowdefinitions:
-    get:
-      operationId: getWorkFlowDefinitions
-      parameters:
-      - explode: true
-        in: query
-        name: name
-        required: false
-        schema:
-          type: string
-        style: form
-      responses:
-        "403":
-          description: Forbidden
-        "200":
-          content:
-            application/json:
-              schema:
-                items:
-                  $ref: '#/components/schemas/WorkFlowDefinitionResponseDTO'
-                type: array
-          description: Succeeded
-        "401":
-          description: Unauthorized
-      summary: Returns a list of workflow definition
-      tags:
-      - Workflow Definition
-      x-accepts: application/json
-  /api/v1/workflowdefinitions/{id}:
-    get:
-      operationId: getWorkFlowDefinitionById
-      parameters:
-      - explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "404":
-          description: Not found
-        "401":
-          description: Unauthorized
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/WorkFlowDefinitionResponseDTO'
-          description: Succeeded
-      summary: Returns information about a workflow definition by id
-      tags:
-      - Workflow Definition
-      x-accepts: application/json
-  /api/v1/projects/{id}:
-    get:
-      operationId: getProjectById
-      parameters:
-      - explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "404":
-          description: Not found
-        "401":
-          description: Unauthorized
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProjectResponseDTO'
-          description: Succeeded
-      summary: Returns information about a specified project
-      tags:
-      - Project
       x-accepts: application/json
 components:
   schemas:
@@ -244,62 +244,167 @@ components:
         value:
           type: string
       type: object
-    WorkFlowRequestDTO:
+    ProjectRequestDTO:
       example:
-        workFlowName: workFlowName
-        works:
-        - arguments:
-          - value: value
-            key: key
-          - value: value
-            key: key
-          workName: workName
-          type: type
-        - arguments:
-          - value: value
-            key: key
-          - value: value
-            key: key
-          workName: workName
-          type: type
-        arguments:
-        - value: value
-          key: key
-        - value: value
-          key: key
-        projectId: projectId
+        name: name
+        description: description
       properties:
-        projectId:
+        description:
           type: string
-        workFlowName:
+        name:
           type: string
-        arguments:
+      type: object
+    ProjectResponseDTO:
+      example:
+        modifyDate: 2000-01-23T04:56:07.000+00:00
+        name: name
+        description: description
+        id: id
+        createDate: 2000-01-23T04:56:07.000+00:00
+        username: username
+      properties:
+        createDate:
+          format: date-time
+          type: string
+        description:
+          type: string
+        id:
+          type: string
+        modifyDate:
+          format: date-time
+          type: string
+        name:
+          type: string
+        username:
+          type: string
+      type: object
+    WorkDefinitionResponseDTO:
+      example:
+        outputs:
+        - EXCEPTION
+        - EXCEPTION
+        processingType: processingType
+        works:
+        - null
+        - null
+        author: author
+        name: name
+        workType: workType
+        id: id
+        parameters:
+          key:
+            key: parameters
+      properties:
+        author:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        outputs:
           items:
-            $ref: '#/components/schemas/ArgumentRequestDTO'
+            enum:
+            - EXCEPTION
+            - HTTP2XX
+            - NO_EXCEPTION
+            - OTHER
+            type: string
           type: array
+        parameters:
+          additionalProperties:
+            additionalProperties:
+              type: string
+            type: object
+          type: object
+        processingType:
+          type: string
+        workType:
+          type: string
         works:
           items:
-            $ref: '#/components/schemas/WorkRequestDTO'
+            $ref: '#/components/schemas/WorkDefinitionResponseDTO'
           type: array
       type: object
-    WorkRequestDTO:
+    WorkFlowCheckerTaskRequestDTO:
       example:
-        arguments:
-        - value: value
-          key: key
-        - value: value
-          key: key
-        workName: workName
-        type: type
+        status: FAILED
       properties:
-        workName:
+        status:
+          enum:
+          - FAILED
+          - COMPLETED
+          - IN_PROGRESS
           type: string
-        arguments:
-          items:
-            $ref: '#/components/schemas/ArgumentRequestDTO'
-          type: array
+      type: object
+    WorkFlowDefinitionResponseDTO:
+      example:
+        processingType: processingType
+        works:
+        - outputs:
+          - EXCEPTION
+          - EXCEPTION
+          processingType: processingType
+          works:
+          - null
+          - null
+          author: author
+          name: name
+          workType: workType
+          id: id
+          parameters:
+            key:
+              key: parameters
+        - outputs:
+          - EXCEPTION
+          - EXCEPTION
+          processingType: processingType
+          works:
+          - null
+          - null
+          author: author
+          name: name
+          workType: workType
+          id: id
+          parameters:
+            key:
+              key: parameters
+        modifyDate: 2000-01-23T04:56:07.000+00:00
+        author: author
+        name: name
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        type: type
+        parameters:
+          key:
+            key: parameters
+        createDate: 2000-01-23T04:56:07.000+00:00
+      properties:
+        author:
+          type: string
+        createDate:
+          format: date-time
+          type: string
+        id:
+          format: uuid
+          type: string
+        modifyDate:
+          format: date-time
+          type: string
+        name:
+          type: string
+        parameters:
+          additionalProperties:
+            additionalProperties:
+              type: string
+            type: object
+          type: object
+        processingType:
+          type: string
         type:
           type: string
+        works:
+          items:
+            $ref: '#/components/schemas/WorkDefinitionResponseDTO'
+          type: array
       type: object
     WorkFlowOption:
       example:
@@ -311,16 +416,16 @@ components:
         - details
         - details
       properties:
-        identifier:
-          type: string
-        displayName:
-          type: string
         description:
           type: string
         details:
           items:
             type: string
           type: array
+        displayName:
+          type: string
+        identifier:
+          type: string
         workFlowName:
           type: string
       type: object
@@ -386,6 +491,7 @@ components:
           details:
           - details
           - details
+        optionsAvailable: true
         otherOptions:
         - identifier: identifier
           workFlowName: workFlowName
@@ -401,7 +507,6 @@ components:
           details:
           - details
           - details
-        optionsAvailable: true
         currentVersion:
           identifier: identifier
           workFlowName: workFlowName
@@ -411,12 +516,12 @@ components:
           - details
           - details
       properties:
-        currentVersion:
-          $ref: '#/components/schemas/WorkFlowOption'
-        upgradeOptions:
+        continuationOptions:
           items:
             $ref: '#/components/schemas/WorkFlowOption'
           type: array
+        currentVersion:
+          $ref: '#/components/schemas/WorkFlowOption'
         migrationOptions:
           items:
             $ref: '#/components/schemas/WorkFlowOption'
@@ -425,16 +530,54 @@ components:
           items:
             $ref: '#/components/schemas/WorkFlowOption'
           type: array
-        continuationOptions:
-          items:
-            $ref: '#/components/schemas/WorkFlowOption'
-          type: array
+        optionsAvailable:
+          type: boolean
         otherOptions:
           items:
             $ref: '#/components/schemas/WorkFlowOption'
           type: array
-        optionsAvailable:
-          type: boolean
+        upgradeOptions:
+          items:
+            $ref: '#/components/schemas/WorkFlowOption'
+          type: array
+      type: object
+    WorkFlowRequestDTO:
+      example:
+        workFlowName: workFlowName
+        works:
+        - arguments:
+          - value: value
+            key: key
+          - value: value
+            key: key
+          type: type
+          workName: workName
+        - arguments:
+          - value: value
+            key: key
+          - value: value
+            key: key
+          type: type
+          workName: workName
+        arguments:
+        - value: value
+          key: key
+        - value: value
+          key: key
+        projectId: projectId
+      properties:
+        arguments:
+          items:
+            $ref: '#/components/schemas/ArgumentRequestDTO'
+          type: array
+        projectId:
+          type: string
+        workFlowName:
+          type: string
+        works:
+          items:
+            $ref: '#/components/schemas/WorkRequestDTO'
+          type: array
       type: object
     WorkFlowResponseDTO:
       example:
@@ -500,6 +643,7 @@ components:
             details:
             - details
             - details
+          optionsAvailable: true
           otherOptions:
           - identifier: identifier
             workFlowName: workFlowName
@@ -515,7 +659,6 @@ components:
             details:
             - details
             - details
-          optionsAvailable: true
           currentVersion:
             identifier: identifier
             workFlowName: workFlowName
@@ -536,51 +679,6 @@ components:
           - COMPLETED
           type: string
       type: object
-    WorkFlowCheckerTaskRequestDTO:
-      example:
-        status: FAILED
-      properties:
-        status:
-          enum:
-          - FAILED
-          - COMPLETED
-          - IN_PROGRESS
-          type: string
-      type: object
-    ProjectRequestDTO:
-      example:
-        name: name
-        description: description
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-      type: object
-    ProjectResponseDTO:
-      example:
-        modifyDate: 2000-01-23T04:56:07.000+00:00
-        name: name
-        description: description
-        id: id
-        createDate: 2000-01-23T04:56:07.000+00:00
-        username: username
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        description:
-          type: string
-        createDate:
-          format: date-time
-          type: string
-        modifyDate:
-          format: date-time
-          type: string
-        username:
-          type: string
-      type: object
     WorkFlowStatusResponseDTO:
       example:
         workFlowName: workFlowName
@@ -598,7 +696,10 @@ components:
           type: TASK
           status: FAILED
         workFlowExecutionId: workFlowExecutionId
+        status: status
       properties:
+        status:
+          type: string
         workFlowExecutionId:
           type: string
         workFlowName:
@@ -607,6 +708,25 @@ components:
           items:
             $ref: '#/components/schemas/WorkStatusResponseDTO'
           type: array
+      type: object
+    WorkRequestDTO:
+      example:
+        arguments:
+        - value: value
+          key: key
+        - value: value
+          key: key
+        type: type
+        workName: workName
+      properties:
+        arguments:
+          items:
+            $ref: '#/components/schemas/ArgumentRequestDTO'
+          type: array
+        type:
+          type: string
+        workName:
+          type: string
       type: object
     WorkStatusResponseDTO:
       example:
@@ -619,162 +739,20 @@ components:
       properties:
         name:
           type: string
-        type:
-          enum:
-          - TASK
-          - WORKFLOW
-          type: string
         status:
           enum:
           - FAILED
           - COMPLETED
           - PENDING
           type: string
+        type:
+          enum:
+          - TASK
+          - WORKFLOW
+          type: string
         works:
           items:
             $ref: '#/components/schemas/WorkStatusResponseDTO'
           type: array
-      type: object
-    WorkDefinitionResponseDTO:
-      example:
-        outputs:
-        - EXCEPTION
-        - EXCEPTION
-        processingType: processingType
-        works:
-        - null
-        - null
-        author: author
-        name: name
-        workType: workType
-        id: id
-        parameters:
-        - '{}'
-        - '{}'
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        workType:
-          type: string
-        processingType:
-          type: string
-        author:
-          type: string
-        works:
-          items:
-            $ref: '#/components/schemas/WorkDefinitionResponseDTO'
-          type: array
-        parameters:
-          items:
-            type: object
-          type: array
-        outputs:
-          items:
-            enum:
-            - EXCEPTION
-            - HTTP2XX
-            - NO_EXCEPTION
-            - OTHER
-            type: string
-          type: array
-      type: object
-    WorkFlowDefinitionResponseDTO:
-      example:
-        processingType: processingType
-        works:
-        - outputs:
-          - EXCEPTION
-          - EXCEPTION
-          processingType: processingType
-          works:
-          - null
-          - null
-          author: author
-          name: name
-          workType: workType
-          id: id
-          parameters:
-          - '{}'
-          - '{}'
-        - outputs:
-          - EXCEPTION
-          - EXCEPTION
-          processingType: processingType
-          works:
-          - null
-          - null
-          author: author
-          name: name
-          workType: workType
-          id: id
-          parameters:
-          - '{}'
-          - '{}'
-        modifyDate: 2000-01-23T04:56:07.000+00:00
-        author: author
-        name: name
-        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        type: type
-        parameters:
-        - description: description
-          optional: true
-          type: PASSWORD
-          key: key
-        - description: description
-          optional: true
-          type: PASSWORD
-          key: key
-        createDate: 2000-01-23T04:56:07.000+00:00
-      properties:
-        id:
-          format: uuid
-          type: string
-        name:
-          type: string
-        type:
-          type: string
-        processingType:
-          type: string
-        author:
-          type: string
-        createDate:
-          format: date-time
-          type: string
-        modifyDate:
-          format: date-time
-          type: string
-        parameters:
-          items:
-            $ref: '#/components/schemas/WorkFlowTaskParameter'
-          type: array
-        works:
-          items:
-            $ref: '#/components/schemas/WorkDefinitionResponseDTO'
-          type: array
-      type: object
-    WorkFlowTaskParameter:
-      example:
-        description: description
-        optional: true
-        type: PASSWORD
-        key: key
-      properties:
-        key:
-          type: string
-        description:
-          type: string
-        optional:
-          type: boolean
-        type:
-          enum:
-          - PASSWORD
-          - TEXT
-          - EMAIL
-          - DATE
-          - NUMBER
-          - URL
-          type: string
       type: object
 

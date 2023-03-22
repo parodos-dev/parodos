@@ -30,15 +30,15 @@ import java.util.List;
 /**
  * WorkFlowOptions
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2023-03-22T10:29:24.432872+01:00[Europe/Rome]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowOptions {
+  public static final String SERIALIZED_NAME_CONTINUATION_OPTIONS = "continuationOptions";
+  @SerializedName(SERIALIZED_NAME_CONTINUATION_OPTIONS)
+  private List<WorkFlowOption> continuationOptions = null;
+
   public static final String SERIALIZED_NAME_CURRENT_VERSION = "currentVersion";
   @SerializedName(SERIALIZED_NAME_CURRENT_VERSION)
   private WorkFlowOption currentVersion;
-
-  public static final String SERIALIZED_NAME_UPGRADE_OPTIONS = "upgradeOptions";
-  @SerializedName(SERIALIZED_NAME_UPGRADE_OPTIONS)
-  private List<WorkFlowOption> upgradeOptions = null;
 
   public static final String SERIALIZED_NAME_MIGRATION_OPTIONS = "migrationOptions";
   @SerializedName(SERIALIZED_NAME_MIGRATION_OPTIONS)
@@ -48,20 +48,51 @@ public class WorkFlowOptions {
   @SerializedName(SERIALIZED_NAME_NEW_OPTIONS)
   private List<WorkFlowOption> newOptions = null;
 
-  public static final String SERIALIZED_NAME_CONTINUATION_OPTIONS = "continuationOptions";
-  @SerializedName(SERIALIZED_NAME_CONTINUATION_OPTIONS)
-  private List<WorkFlowOption> continuationOptions = null;
+  public static final String SERIALIZED_NAME_OPTIONS_AVAILABLE = "optionsAvailable";
+  @SerializedName(SERIALIZED_NAME_OPTIONS_AVAILABLE)
+  private Boolean optionsAvailable;
 
   public static final String SERIALIZED_NAME_OTHER_OPTIONS = "otherOptions";
   @SerializedName(SERIALIZED_NAME_OTHER_OPTIONS)
   private List<WorkFlowOption> otherOptions = null;
 
-  public static final String SERIALIZED_NAME_OPTIONS_AVAILABLE = "optionsAvailable";
-  @SerializedName(SERIALIZED_NAME_OPTIONS_AVAILABLE)
-  private Boolean optionsAvailable;
+  public static final String SERIALIZED_NAME_UPGRADE_OPTIONS = "upgradeOptions";
+  @SerializedName(SERIALIZED_NAME_UPGRADE_OPTIONS)
+  private List<WorkFlowOption> upgradeOptions = null;
 
   public WorkFlowOptions() { 
   }
+
+  public WorkFlowOptions continuationOptions(List<WorkFlowOption> continuationOptions) {
+    
+    this.continuationOptions = continuationOptions;
+    return this;
+  }
+
+  public WorkFlowOptions addContinuationOptionsItem(WorkFlowOption continuationOptionsItem) {
+    if (this.continuationOptions == null) {
+      this.continuationOptions = new ArrayList<WorkFlowOption>();
+    }
+    this.continuationOptions.add(continuationOptionsItem);
+    return this;
+  }
+
+   /**
+   * Get continuationOptions
+   * @return continuationOptions
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public List<WorkFlowOption> getContinuationOptions() {
+    return continuationOptions;
+  }
+
+
+  public void setContinuationOptions(List<WorkFlowOption> continuationOptions) {
+    this.continuationOptions = continuationOptions;
+  }
+
 
   public WorkFlowOptions currentVersion(WorkFlowOption currentVersion) {
     
@@ -83,37 +114,6 @@ public class WorkFlowOptions {
 
   public void setCurrentVersion(WorkFlowOption currentVersion) {
     this.currentVersion = currentVersion;
-  }
-
-
-  public WorkFlowOptions upgradeOptions(List<WorkFlowOption> upgradeOptions) {
-    
-    this.upgradeOptions = upgradeOptions;
-    return this;
-  }
-
-  public WorkFlowOptions addUpgradeOptionsItem(WorkFlowOption upgradeOptionsItem) {
-    if (this.upgradeOptions == null) {
-      this.upgradeOptions = new ArrayList<WorkFlowOption>();
-    }
-    this.upgradeOptions.add(upgradeOptionsItem);
-    return this;
-  }
-
-   /**
-   * Get upgradeOptions
-   * @return upgradeOptions
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public List<WorkFlowOption> getUpgradeOptions() {
-    return upgradeOptions;
-  }
-
-
-  public void setUpgradeOptions(List<WorkFlowOption> upgradeOptions) {
-    this.upgradeOptions = upgradeOptions;
   }
 
 
@@ -179,34 +179,26 @@ public class WorkFlowOptions {
   }
 
 
-  public WorkFlowOptions continuationOptions(List<WorkFlowOption> continuationOptions) {
+  public WorkFlowOptions optionsAvailable(Boolean optionsAvailable) {
     
-    this.continuationOptions = continuationOptions;
-    return this;
-  }
-
-  public WorkFlowOptions addContinuationOptionsItem(WorkFlowOption continuationOptionsItem) {
-    if (this.continuationOptions == null) {
-      this.continuationOptions = new ArrayList<WorkFlowOption>();
-    }
-    this.continuationOptions.add(continuationOptionsItem);
+    this.optionsAvailable = optionsAvailable;
     return this;
   }
 
    /**
-   * Get continuationOptions
-   * @return continuationOptions
+   * Get optionsAvailable
+   * @return optionsAvailable
   **/
   @javax.annotation.Nullable
   @ApiModelProperty(value = "")
 
-  public List<WorkFlowOption> getContinuationOptions() {
-    return continuationOptions;
+  public Boolean getOptionsAvailable() {
+    return optionsAvailable;
   }
 
 
-  public void setContinuationOptions(List<WorkFlowOption> continuationOptions) {
-    this.continuationOptions = continuationOptions;
+  public void setOptionsAvailable(Boolean optionsAvailable) {
+    this.optionsAvailable = optionsAvailable;
   }
 
 
@@ -241,26 +233,34 @@ public class WorkFlowOptions {
   }
 
 
-  public WorkFlowOptions optionsAvailable(Boolean optionsAvailable) {
+  public WorkFlowOptions upgradeOptions(List<WorkFlowOption> upgradeOptions) {
     
-    this.optionsAvailable = optionsAvailable;
+    this.upgradeOptions = upgradeOptions;
+    return this;
+  }
+
+  public WorkFlowOptions addUpgradeOptionsItem(WorkFlowOption upgradeOptionsItem) {
+    if (this.upgradeOptions == null) {
+      this.upgradeOptions = new ArrayList<WorkFlowOption>();
+    }
+    this.upgradeOptions.add(upgradeOptionsItem);
     return this;
   }
 
    /**
-   * Get optionsAvailable
-   * @return optionsAvailable
+   * Get upgradeOptions
+   * @return upgradeOptions
   **/
   @javax.annotation.Nullable
   @ApiModelProperty(value = "")
 
-  public Boolean getOptionsAvailable() {
-    return optionsAvailable;
+  public List<WorkFlowOption> getUpgradeOptions() {
+    return upgradeOptions;
   }
 
 
-  public void setOptionsAvailable(Boolean optionsAvailable) {
-    this.optionsAvailable = optionsAvailable;
+  public void setUpgradeOptions(List<WorkFlowOption> upgradeOptions) {
+    this.upgradeOptions = upgradeOptions;
   }
 
 
@@ -273,31 +273,31 @@ public class WorkFlowOptions {
       return false;
     }
     WorkFlowOptions workFlowOptions = (WorkFlowOptions) o;
-    return Objects.equals(this.currentVersion, workFlowOptions.currentVersion) &&
-        Objects.equals(this.upgradeOptions, workFlowOptions.upgradeOptions) &&
+    return Objects.equals(this.continuationOptions, workFlowOptions.continuationOptions) &&
+        Objects.equals(this.currentVersion, workFlowOptions.currentVersion) &&
         Objects.equals(this.migrationOptions, workFlowOptions.migrationOptions) &&
         Objects.equals(this.newOptions, workFlowOptions.newOptions) &&
-        Objects.equals(this.continuationOptions, workFlowOptions.continuationOptions) &&
+        Objects.equals(this.optionsAvailable, workFlowOptions.optionsAvailable) &&
         Objects.equals(this.otherOptions, workFlowOptions.otherOptions) &&
-        Objects.equals(this.optionsAvailable, workFlowOptions.optionsAvailable);
+        Objects.equals(this.upgradeOptions, workFlowOptions.upgradeOptions);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(currentVersion, upgradeOptions, migrationOptions, newOptions, continuationOptions, otherOptions, optionsAvailable);
+    return Objects.hash(continuationOptions, currentVersion, migrationOptions, newOptions, optionsAvailable, otherOptions, upgradeOptions);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class WorkFlowOptions {\n");
+    sb.append("    continuationOptions: ").append(toIndentedString(continuationOptions)).append("\n");
     sb.append("    currentVersion: ").append(toIndentedString(currentVersion)).append("\n");
-    sb.append("    upgradeOptions: ").append(toIndentedString(upgradeOptions)).append("\n");
     sb.append("    migrationOptions: ").append(toIndentedString(migrationOptions)).append("\n");
     sb.append("    newOptions: ").append(toIndentedString(newOptions)).append("\n");
-    sb.append("    continuationOptions: ").append(toIndentedString(continuationOptions)).append("\n");
-    sb.append("    otherOptions: ").append(toIndentedString(otherOptions)).append("\n");
     sb.append("    optionsAvailable: ").append(toIndentedString(optionsAvailable)).append("\n");
+    sb.append("    otherOptions: ").append(toIndentedString(otherOptions)).append("\n");
+    sb.append("    upgradeOptions: ").append(toIndentedString(upgradeOptions)).append("\n");
     sb.append("}");
     return sb.toString();
   }

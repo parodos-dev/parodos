@@ -84,9 +84,9 @@ public class WorkflowApi {
      * @http.response.details
      <table summary="Response Details" border="1">
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
         <tr><td> 200 </td><td> Succeeded </td><td>  -  </td></tr>
         <tr><td> 401 </td><td> Unauthorized </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call executeCall(WorkFlowRequestDTO workFlowRequestDTO, final ApiCallback _callback) throws ApiException {
@@ -158,9 +158,9 @@ public class WorkflowApi {
      * @http.response.details
      <table summary="Response Details" border="1">
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
         <tr><td> 200 </td><td> Succeeded </td><td>  -  </td></tr>
         <tr><td> 401 </td><td> Unauthorized </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
      </table>
      */
     public WorkFlowResponseDTO execute(WorkFlowRequestDTO workFlowRequestDTO) throws ApiException {
@@ -177,9 +177,9 @@ public class WorkflowApi {
      * @http.response.details
      <table summary="Response Details" border="1">
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
         <tr><td> 200 </td><td> Succeeded </td><td>  -  </td></tr>
         <tr><td> 401 </td><td> Unauthorized </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
      </table>
      */
     public ApiResponse<WorkFlowResponseDTO> executeWithHttpInfo(WorkFlowRequestDTO workFlowRequestDTO) throws ApiException {
@@ -198,9 +198,9 @@ public class WorkflowApi {
      * @http.response.details
      <table summary="Response Details" border="1">
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
         <tr><td> 200 </td><td> Succeeded </td><td>  -  </td></tr>
         <tr><td> 401 </td><td> Unauthorized </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call executeAsync(WorkFlowRequestDTO workFlowRequestDTO, final ApiCallback<WorkFlowResponseDTO> _callback) throws ApiException {
@@ -212,7 +212,7 @@ public class WorkflowApi {
     }
     /**
      * Build call for getStatus
-     * @param id  (required)
+     * @param workFlowExecutionId  (required)
      * @param _callback Callback for upload/download progress
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -220,11 +220,11 @@ public class WorkflowApi {
      <table summary="Response Details" border="1">
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Succeeded </td><td>  -  </td></tr>
-        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
         <tr><td> 401 </td><td> Unauthorized </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
      </table>
      */
-    public okhttp3.Call getStatusCall(String id, final ApiCallback _callback) throws ApiException {
+    public okhttp3.Call getStatusCall(String workFlowExecutionId, final ApiCallback _callback) throws ApiException {
         String basePath = null;
 
         // Operation Servers
@@ -242,8 +242,8 @@ public class WorkflowApi {
         Object localVarPostBody = null;
 
         // create path and map variables
-        String localVarPath = "/api/v1/workflows/{id}/status"
-            .replaceAll("\\{" + "id" + "\\}", localVarApiClient.escapeString(id.toString()));
+        String localVarPath = "/api/v1/workflows/{workFlowExecutionId}/status"
+            .replaceAll("\\{" + "workFlowExecutionId" + "\\}", localVarApiClient.escapeString(workFlowExecutionId.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -272,15 +272,15 @@ public class WorkflowApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private okhttp3.Call getStatusValidateBeforeCall(String id, final ApiCallback _callback) throws ApiException {
+    private okhttp3.Call getStatusValidateBeforeCall(String workFlowExecutionId, final ApiCallback _callback) throws ApiException {
         
-        // verify the required parameter 'id' is set
-        if (id == null) {
-            throw new ApiException("Missing the required parameter 'id' when calling getStatus(Async)");
+        // verify the required parameter 'workFlowExecutionId' is set
+        if (workFlowExecutionId == null) {
+            throw new ApiException("Missing the required parameter 'workFlowExecutionId' when calling getStatus(Async)");
         }
         
 
-        okhttp3.Call localVarCall = getStatusCall(id, _callback);
+        okhttp3.Call localVarCall = getStatusCall(workFlowExecutionId, _callback);
         return localVarCall;
 
     }
@@ -288,38 +288,38 @@ public class WorkflowApi {
     /**
      * Returns a workflow status
      * 
-     * @param id  (required)
+     * @param workFlowExecutionId  (required)
      * @return WorkFlowStatusResponseDTO
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      * @http.response.details
      <table summary="Response Details" border="1">
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Succeeded </td><td>  -  </td></tr>
-        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
         <tr><td> 401 </td><td> Unauthorized </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
      </table>
      */
-    public WorkFlowStatusResponseDTO getStatus(String id) throws ApiException {
-        ApiResponse<WorkFlowStatusResponseDTO> localVarResp = getStatusWithHttpInfo(id);
+    public WorkFlowStatusResponseDTO getStatus(String workFlowExecutionId) throws ApiException {
+        ApiResponse<WorkFlowStatusResponseDTO> localVarResp = getStatusWithHttpInfo(workFlowExecutionId);
         return localVarResp.getData();
     }
 
     /**
      * Returns a workflow status
      * 
-     * @param id  (required)
+     * @param workFlowExecutionId  (required)
      * @return ApiResponse&lt;WorkFlowStatusResponseDTO&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      * @http.response.details
      <table summary="Response Details" border="1">
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Succeeded </td><td>  -  </td></tr>
-        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
         <tr><td> 401 </td><td> Unauthorized </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
      </table>
      */
-    public ApiResponse<WorkFlowStatusResponseDTO> getStatusWithHttpInfo(String id) throws ApiException {
-        okhttp3.Call localVarCall = getStatusValidateBeforeCall(id, null);
+    public ApiResponse<WorkFlowStatusResponseDTO> getStatusWithHttpInfo(String workFlowExecutionId) throws ApiException {
+        okhttp3.Call localVarCall = getStatusValidateBeforeCall(workFlowExecutionId, null);
         Type localVarReturnType = new TypeToken<WorkFlowStatusResponseDTO>(){}.getType();
         return localVarApiClient.execute(localVarCall, localVarReturnType);
     }
@@ -327,7 +327,7 @@ public class WorkflowApi {
     /**
      * Returns a workflow status (asynchronously)
      * 
-     * @param id  (required)
+     * @param workFlowExecutionId  (required)
      * @param _callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
@@ -335,13 +335,13 @@ public class WorkflowApi {
      <table summary="Response Details" border="1">
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Succeeded </td><td>  -  </td></tr>
-        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
         <tr><td> 401 </td><td> Unauthorized </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
      </table>
      */
-    public okhttp3.Call getStatusAsync(String id, final ApiCallback<WorkFlowStatusResponseDTO> _callback) throws ApiException {
+    public okhttp3.Call getStatusAsync(String workFlowExecutionId, final ApiCallback<WorkFlowStatusResponseDTO> _callback) throws ApiException {
 
-        okhttp3.Call localVarCall = getStatusValidateBeforeCall(id, _callback);
+        okhttp3.Call localVarCall = getStatusValidateBeforeCall(workFlowExecutionId, _callback);
         Type localVarReturnType = new TypeToken<WorkFlowStatusResponseDTO>(){}.getType();
         localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
         return localVarCall;
@@ -357,10 +357,10 @@ public class WorkflowApi {
      * @http.response.details
      <table summary="Response Details" border="1">
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
         <tr><td> 200 </td><td> Succeeded </td><td>  -  </td></tr>
-        <tr><td> 404 </td><td> Not found </td><td>  -  </td></tr>
         <tr><td> 401 </td><td> Unauthorized </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Not found </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call updateWorkFlowCheckerTaskStatusCall(String workFlowExecutionId, String workFlowCheckerTaskName, WorkFlowCheckerTaskRequestDTO workFlowCheckerTaskRequestDTO, final ApiCallback _callback) throws ApiException {
@@ -446,10 +446,10 @@ public class WorkflowApi {
      * @http.response.details
      <table summary="Response Details" border="1">
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
         <tr><td> 200 </td><td> Succeeded </td><td>  -  </td></tr>
-        <tr><td> 404 </td><td> Not found </td><td>  -  </td></tr>
         <tr><td> 401 </td><td> Unauthorized </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Not found </td><td>  -  </td></tr>
      </table>
      */
     public String updateWorkFlowCheckerTaskStatus(String workFlowExecutionId, String workFlowCheckerTaskName, WorkFlowCheckerTaskRequestDTO workFlowCheckerTaskRequestDTO) throws ApiException {
@@ -468,10 +468,10 @@ public class WorkflowApi {
      * @http.response.details
      <table summary="Response Details" border="1">
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
         <tr><td> 200 </td><td> Succeeded </td><td>  -  </td></tr>
-        <tr><td> 404 </td><td> Not found </td><td>  -  </td></tr>
         <tr><td> 401 </td><td> Unauthorized </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Not found </td><td>  -  </td></tr>
      </table>
      */
     public ApiResponse<String> updateWorkFlowCheckerTaskStatusWithHttpInfo(String workFlowExecutionId, String workFlowCheckerTaskName, WorkFlowCheckerTaskRequestDTO workFlowCheckerTaskRequestDTO) throws ApiException {
@@ -492,10 +492,10 @@ public class WorkflowApi {
      * @http.response.details
      <table summary="Response Details" border="1">
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
         <tr><td> 200 </td><td> Succeeded </td><td>  -  </td></tr>
-        <tr><td> 404 </td><td> Not found </td><td>  -  </td></tr>
         <tr><td> 401 </td><td> Unauthorized </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Not found </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call updateWorkFlowCheckerTaskStatusAsync(String workFlowExecutionId, String workFlowCheckerTaskName, WorkFlowCheckerTaskRequestDTO workFlowCheckerTaskRequestDTO, final ApiCallback<String> _callback) throws ApiException {

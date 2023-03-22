@@ -31,8 +31,12 @@ import java.util.List;
 /**
  * WorkFlowRequestDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2023-03-22T10:29:24.432872+01:00[Europe/Rome]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowRequestDTO {
+  public static final String SERIALIZED_NAME_ARGUMENTS = "arguments";
+  @SerializedName(SERIALIZED_NAME_ARGUMENTS)
+  private List<ArgumentRequestDTO> arguments = null;
+
   public static final String SERIALIZED_NAME_PROJECT_ID = "projectId";
   @SerializedName(SERIALIZED_NAME_PROJECT_ID)
   private String projectId;
@@ -41,16 +45,43 @@ public class WorkFlowRequestDTO {
   @SerializedName(SERIALIZED_NAME_WORK_FLOW_NAME)
   private String workFlowName;
 
-  public static final String SERIALIZED_NAME_ARGUMENTS = "arguments";
-  @SerializedName(SERIALIZED_NAME_ARGUMENTS)
-  private List<ArgumentRequestDTO> arguments = null;
-
   public static final String SERIALIZED_NAME_WORKS = "works";
   @SerializedName(SERIALIZED_NAME_WORKS)
   private List<WorkRequestDTO> works = null;
 
   public WorkFlowRequestDTO() { 
   }
+
+  public WorkFlowRequestDTO arguments(List<ArgumentRequestDTO> arguments) {
+    
+    this.arguments = arguments;
+    return this;
+  }
+
+  public WorkFlowRequestDTO addArgumentsItem(ArgumentRequestDTO argumentsItem) {
+    if (this.arguments == null) {
+      this.arguments = new ArrayList<ArgumentRequestDTO>();
+    }
+    this.arguments.add(argumentsItem);
+    return this;
+  }
+
+   /**
+   * Get arguments
+   * @return arguments
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public List<ArgumentRequestDTO> getArguments() {
+    return arguments;
+  }
+
+
+  public void setArguments(List<ArgumentRequestDTO> arguments) {
+    this.arguments = arguments;
+  }
+
 
   public WorkFlowRequestDTO projectId(String projectId) {
     
@@ -98,37 +129,6 @@ public class WorkFlowRequestDTO {
   }
 
 
-  public WorkFlowRequestDTO arguments(List<ArgumentRequestDTO> arguments) {
-    
-    this.arguments = arguments;
-    return this;
-  }
-
-  public WorkFlowRequestDTO addArgumentsItem(ArgumentRequestDTO argumentsItem) {
-    if (this.arguments == null) {
-      this.arguments = new ArrayList<ArgumentRequestDTO>();
-    }
-    this.arguments.add(argumentsItem);
-    return this;
-  }
-
-   /**
-   * Get arguments
-   * @return arguments
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public List<ArgumentRequestDTO> getArguments() {
-    return arguments;
-  }
-
-
-  public void setArguments(List<ArgumentRequestDTO> arguments) {
-    this.arguments = arguments;
-  }
-
-
   public WorkFlowRequestDTO works(List<WorkRequestDTO> works) {
     
     this.works = works;
@@ -169,24 +169,24 @@ public class WorkFlowRequestDTO {
       return false;
     }
     WorkFlowRequestDTO workFlowRequestDTO = (WorkFlowRequestDTO) o;
-    return Objects.equals(this.projectId, workFlowRequestDTO.projectId) &&
+    return Objects.equals(this.arguments, workFlowRequestDTO.arguments) &&
+        Objects.equals(this.projectId, workFlowRequestDTO.projectId) &&
         Objects.equals(this.workFlowName, workFlowRequestDTO.workFlowName) &&
-        Objects.equals(this.arguments, workFlowRequestDTO.arguments) &&
         Objects.equals(this.works, workFlowRequestDTO.works);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(projectId, workFlowName, arguments, works);
+    return Objects.hash(arguments, projectId, workFlowName, works);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class WorkFlowRequestDTO {\n");
+    sb.append("    arguments: ").append(toIndentedString(arguments)).append("\n");
     sb.append("    projectId: ").append(toIndentedString(projectId)).append("\n");
     sb.append("    workFlowName: ").append(toIndentedString(workFlowName)).append("\n");
-    sb.append("    arguments: ").append(toIndentedString(arguments)).append("\n");
     sb.append("    works: ").append(toIndentedString(works)).append("\n");
     sb.append("}");
     return sb.toString();

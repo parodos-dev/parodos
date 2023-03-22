@@ -19,13 +19,14 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.redhat.parodos.sdk.model.WorkDefinitionResponseDTO;
-import com.redhat.parodos.sdk.model.WorkFlowTaskParameter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -47,38 +48,6 @@ public class WorkFlowDefinitionResponseDTOTest {
     }
 
     /**
-     * Test the property 'id'
-     */
-    @Test
-    public void idTest() {
-        // TODO: test id
-    }
-
-    /**
-     * Test the property 'name'
-     */
-    @Test
-    public void nameTest() {
-        // TODO: test name
-    }
-
-    /**
-     * Test the property 'type'
-     */
-    @Test
-    public void typeTest() {
-        // TODO: test type
-    }
-
-    /**
-     * Test the property 'processingType'
-     */
-    @Test
-    public void processingTypeTest() {
-        // TODO: test processingType
-    }
-
-    /**
      * Test the property 'author'
      */
     @Test
@@ -95,6 +64,14 @@ public class WorkFlowDefinitionResponseDTOTest {
     }
 
     /**
+     * Test the property 'id'
+     */
+    @Test
+    public void idTest() {
+        // TODO: test id
+    }
+
+    /**
      * Test the property 'modifyDate'
      */
     @Test
@@ -103,11 +80,35 @@ public class WorkFlowDefinitionResponseDTOTest {
     }
 
     /**
+     * Test the property 'name'
+     */
+    @Test
+    public void nameTest() {
+        // TODO: test name
+    }
+
+    /**
      * Test the property 'parameters'
      */
     @Test
     public void parametersTest() {
         // TODO: test parameters
+    }
+
+    /**
+     * Test the property 'processingType'
+     */
+    @Test
+    public void processingTypeTest() {
+        // TODO: test processingType
+    }
+
+    /**
+     * Test the property 'type'
+     */
+    @Test
+    public void typeTest() {
+        // TODO: test type
     }
 
     /**

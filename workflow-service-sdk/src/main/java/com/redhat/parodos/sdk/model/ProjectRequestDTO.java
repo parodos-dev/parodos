@@ -27,41 +27,18 @@ import java.io.IOException;
 /**
  * ProjectRequestDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2023-03-22T10:29:24.432872+01:00[Europe/Rome]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class ProjectRequestDTO {
-  public static final String SERIALIZED_NAME_NAME = "name";
-  @SerializedName(SERIALIZED_NAME_NAME)
-  private String name;
-
   public static final String SERIALIZED_NAME_DESCRIPTION = "description";
   @SerializedName(SERIALIZED_NAME_DESCRIPTION)
   private String description;
 
+  public static final String SERIALIZED_NAME_NAME = "name";
+  @SerializedName(SERIALIZED_NAME_NAME)
+  private String name;
+
   public ProjectRequestDTO() { 
   }
-
-  public ProjectRequestDTO name(String name) {
-    
-    this.name = name;
-    return this;
-  }
-
-   /**
-   * Get name
-   * @return name
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public String getName() {
-    return name;
-  }
-
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
 
   public ProjectRequestDTO description(String description) {
     
@@ -86,6 +63,29 @@ public class ProjectRequestDTO {
   }
 
 
+  public ProjectRequestDTO name(String name) {
+    
+    this.name = name;
+    return this;
+  }
+
+   /**
+   * Get name
+   * @return name
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getName() {
+    return name;
+  }
+
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -95,21 +95,21 @@ public class ProjectRequestDTO {
       return false;
     }
     ProjectRequestDTO projectRequestDTO = (ProjectRequestDTO) o;
-    return Objects.equals(this.name, projectRequestDTO.name) &&
-        Objects.equals(this.description, projectRequestDTO.description);
+    return Objects.equals(this.description, projectRequestDTO.description) &&
+        Objects.equals(this.name, projectRequestDTO.name);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, description);
+    return Objects.hash(description, name);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ProjectRequestDTO {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -45,6 +45,14 @@ public class WorkFlowRequestDTOTest {
     }
 
     /**
+     * Test the property 'arguments'
+     */
+    @Test
+    public void argumentsTest() {
+        // TODO: test arguments
+    }
+
+    /**
      * Test the property 'projectId'
      */
     @Test
@@ -58,14 +66,6 @@ public class WorkFlowRequestDTOTest {
     @Test
     public void workFlowNameTest() {
         // TODO: test workFlowName
-    }
-
-    /**
-     * Test the property 'arguments'
-     */
-    @Test
-    public void argumentsTest() {
-        // TODO: test arguments
     }
 
     /**

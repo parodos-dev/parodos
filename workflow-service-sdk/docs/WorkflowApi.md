@@ -5,7 +5,7 @@ All URIs are relative to *http://localhost:8080*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**execute**](WorkflowApi.md#execute) | **POST** /api/v1/workflows | Executes a workflow
-[**getStatus**](WorkflowApi.md#getStatus) | **GET** /api/v1/workflows/{id}/status | Returns a workflow status
+[**getStatus**](WorkflowApi.md#getStatus) | **GET** /api/v1/workflows/{workFlowExecutionId}/status | Returns a workflow status
 [**updateWorkFlowCheckerTaskStatus**](WorkflowApi.md#updateWorkFlowCheckerTaskStatus) | **POST** /api/v1/workflows/{workFlowExecutionId}/checkers/{workFlowCheckerTaskName} | Updates a workflow checker task status
 
 
@@ -67,13 +67,13 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**403** | Forbidden |  -  |
 **200** | Succeeded |  -  |
 **401** | Unauthorized |  -  |
+**403** | Forbidden |  -  |
 
 <a name="getStatus"></a>
 # **getStatus**
-> WorkFlowStatusResponseDTO getStatus(id)
+> WorkFlowStatusResponseDTO getStatus(workFlowExecutionId)
 
 Returns a workflow status
 
@@ -92,9 +92,9 @@ public class Example {
     defaultClient.setBasePath("http://localhost:8080");
 
     WorkflowApi apiInstance = new WorkflowApi(defaultClient);
-    String id = "id_example"; // String | 
+    String workFlowExecutionId = "workFlowExecutionId_example"; // String | 
     try {
-      WorkFlowStatusResponseDTO result = apiInstance.getStatus(id);
+      WorkFlowStatusResponseDTO result = apiInstance.getStatus(workFlowExecutionId);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling WorkflowApi#getStatus");
@@ -111,7 +111,7 @@ public class Example {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | **String**|  |
+ **workFlowExecutionId** | **String**|  |
 
 ### Return type
 
@@ -130,8 +130,8 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Succeeded |  -  |
-**403** | Forbidden |  -  |
 **401** | Unauthorized |  -  |
+**403** | Forbidden |  -  |
 
 <a name="updateWorkFlowCheckerTaskStatus"></a>
 # **updateWorkFlowCheckerTaskStatus**
@@ -195,8 +195,8 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**403** | Forbidden |  -  |
 **200** | Succeeded |  -  |
-**404** | Not found |  -  |
 **401** | Unauthorized |  -  |
+**403** | Forbidden |  -  |
+**404** | Not found |  -  |
 

@@ -24,13 +24,19 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * WorkDefinitionResponseDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2023-03-22T10:29:24.432872+01:00[Europe/Rome]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkDefinitionResponseDTO {
+  public static final String SERIALIZED_NAME_AUTHOR = "author";
+  @SerializedName(SERIALIZED_NAME_AUTHOR)
+  private String author;
+
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
   private String id;
@@ -38,26 +44,6 @@ public class WorkDefinitionResponseDTO {
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)
   private String name;
-
-  public static final String SERIALIZED_NAME_WORK_TYPE = "workType";
-  @SerializedName(SERIALIZED_NAME_WORK_TYPE)
-  private String workType;
-
-  public static final String SERIALIZED_NAME_PROCESSING_TYPE = "processingType";
-  @SerializedName(SERIALIZED_NAME_PROCESSING_TYPE)
-  private String processingType;
-
-  public static final String SERIALIZED_NAME_AUTHOR = "author";
-  @SerializedName(SERIALIZED_NAME_AUTHOR)
-  private String author;
-
-  public static final String SERIALIZED_NAME_WORKS = "works";
-  @SerializedName(SERIALIZED_NAME_WORKS)
-  private List<WorkDefinitionResponseDTO> works = null;
-
-  public static final String SERIALIZED_NAME_PARAMETERS = "parameters";
-  @SerializedName(SERIALIZED_NAME_PARAMETERS)
-  private List<Object> parameters = null;
 
   /**
    * Gets or Sets outputs
@@ -114,8 +100,47 @@ public class WorkDefinitionResponseDTO {
   @SerializedName(SERIALIZED_NAME_OUTPUTS)
   private List<OutputsEnum> outputs = null;
 
+  public static final String SERIALIZED_NAME_PARAMETERS = "parameters";
+  @SerializedName(SERIALIZED_NAME_PARAMETERS)
+  private Map<String, Map<String, String>> parameters = null;
+
+  public static final String SERIALIZED_NAME_PROCESSING_TYPE = "processingType";
+  @SerializedName(SERIALIZED_NAME_PROCESSING_TYPE)
+  private String processingType;
+
+  public static final String SERIALIZED_NAME_WORK_TYPE = "workType";
+  @SerializedName(SERIALIZED_NAME_WORK_TYPE)
+  private String workType;
+
+  public static final String SERIALIZED_NAME_WORKS = "works";
+  @SerializedName(SERIALIZED_NAME_WORKS)
+  private List<WorkDefinitionResponseDTO> works = null;
+
   public WorkDefinitionResponseDTO() { 
   }
+
+  public WorkDefinitionResponseDTO author(String author) {
+    
+    this.author = author;
+    return this;
+  }
+
+   /**
+   * Get author
+   * @return author
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getAuthor() {
+    return author;
+  }
+
+
+  public void setAuthor(String author) {
+    this.author = author;
+  }
+
 
   public WorkDefinitionResponseDTO id(String id) {
     
@@ -163,26 +188,65 @@ public class WorkDefinitionResponseDTO {
   }
 
 
-  public WorkDefinitionResponseDTO workType(String workType) {
+  public WorkDefinitionResponseDTO outputs(List<OutputsEnum> outputs) {
     
-    this.workType = workType;
+    this.outputs = outputs;
+    return this;
+  }
+
+  public WorkDefinitionResponseDTO addOutputsItem(OutputsEnum outputsItem) {
+    if (this.outputs == null) {
+      this.outputs = new ArrayList<OutputsEnum>();
+    }
+    this.outputs.add(outputsItem);
     return this;
   }
 
    /**
-   * Get workType
-   * @return workType
+   * Get outputs
+   * @return outputs
   **/
   @javax.annotation.Nullable
   @ApiModelProperty(value = "")
 
-  public String getWorkType() {
-    return workType;
+  public List<OutputsEnum> getOutputs() {
+    return outputs;
   }
 
 
-  public void setWorkType(String workType) {
-    this.workType = workType;
+  public void setOutputs(List<OutputsEnum> outputs) {
+    this.outputs = outputs;
+  }
+
+
+  public WorkDefinitionResponseDTO parameters(Map<String, Map<String, String>> parameters) {
+    
+    this.parameters = parameters;
+    return this;
+  }
+
+  public WorkDefinitionResponseDTO putParametersItem(String key, Map<String, String> parametersItem) {
+    if (this.parameters == null) {
+      this.parameters = new HashMap<String, Map<String, String>>();
+    }
+    this.parameters.put(key, parametersItem);
+    return this;
+  }
+
+   /**
+   * Get parameters
+   * @return parameters
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public Map<String, Map<String, String>> getParameters() {
+    return parameters;
+  }
+
+
+  public void setParameters(Map<String, Map<String, String>> parameters) {
+    this.parameters = parameters;
   }
 
 
@@ -209,26 +273,26 @@ public class WorkDefinitionResponseDTO {
   }
 
 
-  public WorkDefinitionResponseDTO author(String author) {
+  public WorkDefinitionResponseDTO workType(String workType) {
     
-    this.author = author;
+    this.workType = workType;
     return this;
   }
 
    /**
-   * Get author
-   * @return author
+   * Get workType
+   * @return workType
   **/
   @javax.annotation.Nullable
   @ApiModelProperty(value = "")
 
-  public String getAuthor() {
-    return author;
+  public String getWorkType() {
+    return workType;
   }
 
 
-  public void setAuthor(String author) {
-    this.author = author;
+  public void setWorkType(String workType) {
+    this.workType = workType;
   }
 
 
@@ -263,68 +327,6 @@ public class WorkDefinitionResponseDTO {
   }
 
 
-  public WorkDefinitionResponseDTO parameters(List<Object> parameters) {
-    
-    this.parameters = parameters;
-    return this;
-  }
-
-  public WorkDefinitionResponseDTO addParametersItem(Object parametersItem) {
-    if (this.parameters == null) {
-      this.parameters = new ArrayList<Object>();
-    }
-    this.parameters.add(parametersItem);
-    return this;
-  }
-
-   /**
-   * Get parameters
-   * @return parameters
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public List<Object> getParameters() {
-    return parameters;
-  }
-
-
-  public void setParameters(List<Object> parameters) {
-    this.parameters = parameters;
-  }
-
-
-  public WorkDefinitionResponseDTO outputs(List<OutputsEnum> outputs) {
-    
-    this.outputs = outputs;
-    return this;
-  }
-
-  public WorkDefinitionResponseDTO addOutputsItem(OutputsEnum outputsItem) {
-    if (this.outputs == null) {
-      this.outputs = new ArrayList<OutputsEnum>();
-    }
-    this.outputs.add(outputsItem);
-    return this;
-  }
-
-   /**
-   * Get outputs
-   * @return outputs
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public List<OutputsEnum> getOutputs() {
-    return outputs;
-  }
-
-
-  public void setOutputs(List<OutputsEnum> outputs) {
-    this.outputs = outputs;
-  }
-
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -334,33 +336,33 @@ public class WorkDefinitionResponseDTO {
       return false;
     }
     WorkDefinitionResponseDTO workDefinitionResponseDTO = (WorkDefinitionResponseDTO) o;
-    return Objects.equals(this.id, workDefinitionResponseDTO.id) &&
+    return Objects.equals(this.author, workDefinitionResponseDTO.author) &&
+        Objects.equals(this.id, workDefinitionResponseDTO.id) &&
         Objects.equals(this.name, workDefinitionResponseDTO.name) &&
-        Objects.equals(this.workType, workDefinitionResponseDTO.workType) &&
-        Objects.equals(this.processingType, workDefinitionResponseDTO.processingType) &&
-        Objects.equals(this.author, workDefinitionResponseDTO.author) &&
-        Objects.equals(this.works, workDefinitionResponseDTO.works) &&
+        Objects.equals(this.outputs, workDefinitionResponseDTO.outputs) &&
         Objects.equals(this.parameters, workDefinitionResponseDTO.parameters) &&
-        Objects.equals(this.outputs, workDefinitionResponseDTO.outputs);
+        Objects.equals(this.processingType, workDefinitionResponseDTO.processingType) &&
+        Objects.equals(this.workType, workDefinitionResponseDTO.workType) &&
+        Objects.equals(this.works, workDefinitionResponseDTO.works);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, workType, processingType, author, works, parameters, outputs);
+    return Objects.hash(author, id, name, outputs, parameters, processingType, workType, works);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class WorkDefinitionResponseDTO {\n");
+    sb.append("    author: ").append(toIndentedString(author)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    workType: ").append(toIndentedString(workType)).append("\n");
-    sb.append("    processingType: ").append(toIndentedString(processingType)).append("\n");
-    sb.append("    author: ").append(toIndentedString(author)).append("\n");
-    sb.append("    works: ").append(toIndentedString(works)).append("\n");
-    sb.append("    parameters: ").append(toIndentedString(parameters)).append("\n");
     sb.append("    outputs: ").append(toIndentedString(outputs)).append("\n");
+    sb.append("    parameters: ").append(toIndentedString(parameters)).append("\n");
+    sb.append("    processingType: ").append(toIndentedString(processingType)).append("\n");
+    sb.append("    workType: ").append(toIndentedString(workType)).append("\n");
+    sb.append("    works: ").append(toIndentedString(works)).append("\n");
     sb.append("}");
     return sb.toString();
   }

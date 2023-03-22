@@ -22,7 +22,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -43,6 +45,14 @@ public class WorkDefinitionResponseDTOTest {
     }
 
     /**
+     * Test the property 'author'
+     */
+    @Test
+    public void authorTest() {
+        // TODO: test author
+    }
+
+    /**
      * Test the property 'id'
      */
     @Test
@@ -59,35 +69,11 @@ public class WorkDefinitionResponseDTOTest {
     }
 
     /**
-     * Test the property 'workType'
+     * Test the property 'outputs'
      */
     @Test
-    public void workTypeTest() {
-        // TODO: test workType
-    }
-
-    /**
-     * Test the property 'processingType'
-     */
-    @Test
-    public void processingTypeTest() {
-        // TODO: test processingType
-    }
-
-    /**
-     * Test the property 'author'
-     */
-    @Test
-    public void authorTest() {
-        // TODO: test author
-    }
-
-    /**
-     * Test the property 'works'
-     */
-    @Test
-    public void worksTest() {
-        // TODO: test works
+    public void outputsTest() {
+        // TODO: test outputs
     }
 
     /**
@@ -99,11 +85,27 @@ public class WorkDefinitionResponseDTOTest {
     }
 
     /**
-     * Test the property 'outputs'
+     * Test the property 'processingType'
      */
     @Test
-    public void outputsTest() {
-        // TODO: test outputs
+    public void processingTypeTest() {
+        // TODO: test processingType
+    }
+
+    /**
+     * Test the property 'workType'
+     */
+    @Test
+    public void workTypeTest() {
+        // TODO: test workType
+    }
+
+    /**
+     * Test the property 'works'
+     */
+    @Test
+    public void worksTest() {
+        // TODO: test works
     }
 
 }

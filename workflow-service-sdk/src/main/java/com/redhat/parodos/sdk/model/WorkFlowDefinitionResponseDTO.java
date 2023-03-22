@@ -21,36 +21,21 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.redhat.parodos.sdk.model.WorkDefinitionResponseDTO;
-import com.redhat.parodos.sdk.model.WorkFlowTaskParameter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
  * WorkFlowDefinitionResponseDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2023-03-22T10:29:24.432872+01:00[Europe/Rome]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowDefinitionResponseDTO {
-  public static final String SERIALIZED_NAME_ID = "id";
-  @SerializedName(SERIALIZED_NAME_ID)
-  private UUID id;
-
-  public static final String SERIALIZED_NAME_NAME = "name";
-  @SerializedName(SERIALIZED_NAME_NAME)
-  private String name;
-
-  public static final String SERIALIZED_NAME_TYPE = "type";
-  @SerializedName(SERIALIZED_NAME_TYPE)
-  private String type;
-
-  public static final String SERIALIZED_NAME_PROCESSING_TYPE = "processingType";
-  @SerializedName(SERIALIZED_NAME_PROCESSING_TYPE)
-  private String processingType;
-
   public static final String SERIALIZED_NAME_AUTHOR = "author";
   @SerializedName(SERIALIZED_NAME_AUTHOR)
   private String author;
@@ -59,13 +44,29 @@ public class WorkFlowDefinitionResponseDTO {
   @SerializedName(SERIALIZED_NAME_CREATE_DATE)
   private Date createDate;
 
+  public static final String SERIALIZED_NAME_ID = "id";
+  @SerializedName(SERIALIZED_NAME_ID)
+  private UUID id;
+
   public static final String SERIALIZED_NAME_MODIFY_DATE = "modifyDate";
   @SerializedName(SERIALIZED_NAME_MODIFY_DATE)
   private Date modifyDate;
 
+  public static final String SERIALIZED_NAME_NAME = "name";
+  @SerializedName(SERIALIZED_NAME_NAME)
+  private String name;
+
   public static final String SERIALIZED_NAME_PARAMETERS = "parameters";
   @SerializedName(SERIALIZED_NAME_PARAMETERS)
-  private List<WorkFlowTaskParameter> parameters = null;
+  private Map<String, Map<String, String>> parameters = null;
+
+  public static final String SERIALIZED_NAME_PROCESSING_TYPE = "processingType";
+  @SerializedName(SERIALIZED_NAME_PROCESSING_TYPE)
+  private String processingType;
+
+  public static final String SERIALIZED_NAME_TYPE = "type";
+  @SerializedName(SERIALIZED_NAME_TYPE)
+  private String type;
 
   public static final String SERIALIZED_NAME_WORKS = "works";
   @SerializedName(SERIALIZED_NAME_WORKS)
@@ -73,98 +74,6 @@ public class WorkFlowDefinitionResponseDTO {
 
   public WorkFlowDefinitionResponseDTO() { 
   }
-
-  public WorkFlowDefinitionResponseDTO id(UUID id) {
-    
-    this.id = id;
-    return this;
-  }
-
-   /**
-   * Get id
-   * @return id
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public UUID getId() {
-    return id;
-  }
-
-
-  public void setId(UUID id) {
-    this.id = id;
-  }
-
-
-  public WorkFlowDefinitionResponseDTO name(String name) {
-    
-    this.name = name;
-    return this;
-  }
-
-   /**
-   * Get name
-   * @return name
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public String getName() {
-    return name;
-  }
-
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-
-  public WorkFlowDefinitionResponseDTO type(String type) {
-    
-    this.type = type;
-    return this;
-  }
-
-   /**
-   * Get type
-   * @return type
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public String getType() {
-    return type;
-  }
-
-
-  public void setType(String type) {
-    this.type = type;
-  }
-
-
-  public WorkFlowDefinitionResponseDTO processingType(String processingType) {
-    
-    this.processingType = processingType;
-    return this;
-  }
-
-   /**
-   * Get processingType
-   * @return processingType
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public String getProcessingType() {
-    return processingType;
-  }
-
-
-  public void setProcessingType(String processingType) {
-    this.processingType = processingType;
-  }
-
 
   public WorkFlowDefinitionResponseDTO author(String author) {
     
@@ -212,6 +121,29 @@ public class WorkFlowDefinitionResponseDTO {
   }
 
 
+  public WorkFlowDefinitionResponseDTO id(UUID id) {
+    
+    this.id = id;
+    return this;
+  }
+
+   /**
+   * Get id
+   * @return id
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public UUID getId() {
+    return id;
+  }
+
+
+  public void setId(UUID id) {
+    this.id = id;
+  }
+
+
   public WorkFlowDefinitionResponseDTO modifyDate(Date modifyDate) {
     
     this.modifyDate = modifyDate;
@@ -235,17 +167,40 @@ public class WorkFlowDefinitionResponseDTO {
   }
 
 
-  public WorkFlowDefinitionResponseDTO parameters(List<WorkFlowTaskParameter> parameters) {
+  public WorkFlowDefinitionResponseDTO name(String name) {
+    
+    this.name = name;
+    return this;
+  }
+
+   /**
+   * Get name
+   * @return name
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getName() {
+    return name;
+  }
+
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+
+  public WorkFlowDefinitionResponseDTO parameters(Map<String, Map<String, String>> parameters) {
     
     this.parameters = parameters;
     return this;
   }
 
-  public WorkFlowDefinitionResponseDTO addParametersItem(WorkFlowTaskParameter parametersItem) {
+  public WorkFlowDefinitionResponseDTO putParametersItem(String key, Map<String, String> parametersItem) {
     if (this.parameters == null) {
-      this.parameters = new ArrayList<WorkFlowTaskParameter>();
+      this.parameters = new HashMap<String, Map<String, String>>();
     }
-    this.parameters.add(parametersItem);
+    this.parameters.put(key, parametersItem);
     return this;
   }
 
@@ -256,13 +211,59 @@ public class WorkFlowDefinitionResponseDTO {
   @javax.annotation.Nullable
   @ApiModelProperty(value = "")
 
-  public List<WorkFlowTaskParameter> getParameters() {
+  public Map<String, Map<String, String>> getParameters() {
     return parameters;
   }
 
 
-  public void setParameters(List<WorkFlowTaskParameter> parameters) {
+  public void setParameters(Map<String, Map<String, String>> parameters) {
     this.parameters = parameters;
+  }
+
+
+  public WorkFlowDefinitionResponseDTO processingType(String processingType) {
+    
+    this.processingType = processingType;
+    return this;
+  }
+
+   /**
+   * Get processingType
+   * @return processingType
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getProcessingType() {
+    return processingType;
+  }
+
+
+  public void setProcessingType(String processingType) {
+    this.processingType = processingType;
+  }
+
+
+  public WorkFlowDefinitionResponseDTO type(String type) {
+    
+    this.type = type;
+    return this;
+  }
+
+   /**
+   * Get type
+   * @return type
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getType() {
+    return type;
+  }
+
+
+  public void setType(String type) {
+    this.type = type;
   }
 
 
@@ -306,34 +307,34 @@ public class WorkFlowDefinitionResponseDTO {
       return false;
     }
     WorkFlowDefinitionResponseDTO workFlowDefinitionResponseDTO = (WorkFlowDefinitionResponseDTO) o;
-    return Objects.equals(this.id, workFlowDefinitionResponseDTO.id) &&
-        Objects.equals(this.name, workFlowDefinitionResponseDTO.name) &&
-        Objects.equals(this.type, workFlowDefinitionResponseDTO.type) &&
-        Objects.equals(this.processingType, workFlowDefinitionResponseDTO.processingType) &&
-        Objects.equals(this.author, workFlowDefinitionResponseDTO.author) &&
+    return Objects.equals(this.author, workFlowDefinitionResponseDTO.author) &&
         Objects.equals(this.createDate, workFlowDefinitionResponseDTO.createDate) &&
+        Objects.equals(this.id, workFlowDefinitionResponseDTO.id) &&
         Objects.equals(this.modifyDate, workFlowDefinitionResponseDTO.modifyDate) &&
+        Objects.equals(this.name, workFlowDefinitionResponseDTO.name) &&
         Objects.equals(this.parameters, workFlowDefinitionResponseDTO.parameters) &&
+        Objects.equals(this.processingType, workFlowDefinitionResponseDTO.processingType) &&
+        Objects.equals(this.type, workFlowDefinitionResponseDTO.type) &&
         Objects.equals(this.works, workFlowDefinitionResponseDTO.works);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, type, processingType, author, createDate, modifyDate, parameters, works);
+    return Objects.hash(author, createDate, id, modifyDate, name, parameters, processingType, type, works);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class WorkFlowDefinitionResponseDTO {\n");
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    type: ").append(toIndentedString(type)).append("\n");
-    sb.append("    processingType: ").append(toIndentedString(processingType)).append("\n");
     sb.append("    author: ").append(toIndentedString(author)).append("\n");
     sb.append("    createDate: ").append(toIndentedString(createDate)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    modifyDate: ").append(toIndentedString(modifyDate)).append("\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    parameters: ").append(toIndentedString(parameters)).append("\n");
+    sb.append("    processingType: ").append(toIndentedString(processingType)).append("\n");
+    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    works: ").append(toIndentedString(works)).append("\n");
     sb.append("}");
     return sb.toString();

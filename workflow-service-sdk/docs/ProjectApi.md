@@ -128,9 +128,9 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**404** | Not found |  -  |
-**401** | Unauthorized |  -  |
 **200** | Succeeded |  -  |
+**401** | Unauthorized |  -  |
+**404** | Not found |  -  |
 
 <a name="getProjects"></a>
 # **getProjects**
@@ -187,6 +187,6 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Succeeded |  -  |
-**403** | Forbidden |  -  |
 **401** | Unauthorized |  -  |
+**403** | Forbidden |  -  |
 

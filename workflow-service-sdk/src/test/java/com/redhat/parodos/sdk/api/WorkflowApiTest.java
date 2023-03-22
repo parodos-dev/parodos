@@ -60,8 +60,8 @@ public class WorkflowApiTest {
      */
     @Test
     public void getStatusTest() throws ApiException {
-        String id = null;
-                WorkFlowStatusResponseDTO response = api.getStatus(id);
+        String workFlowExecutionId = null;
+                WorkFlowStatusResponseDTO response = api.getStatus(workFlowExecutionId);
         // TODO: test validations
     }
     

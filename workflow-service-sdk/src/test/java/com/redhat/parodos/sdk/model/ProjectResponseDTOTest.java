@@ -42,19 +42,11 @@ public class ProjectResponseDTOTest {
     }
 
     /**
-     * Test the property 'id'
+     * Test the property 'createDate'
      */
     @Test
-    public void idTest() {
-        // TODO: test id
-    }
-
-    /**
-     * Test the property 'name'
-     */
-    @Test
-    public void nameTest() {
-        // TODO: test name
+    public void createDateTest() {
+        // TODO: test createDate
     }
 
     /**
@@ -66,11 +58,11 @@ public class ProjectResponseDTOTest {
     }
 
     /**
-     * Test the property 'createDate'
+     * Test the property 'id'
      */
     @Test
-    public void createDateTest() {
-        // TODO: test createDate
+    public void idTest() {
+        // TODO: test id
     }
 
     /**
@@ -79,6 +71,14 @@ public class ProjectResponseDTOTest {
     @Test
     public void modifyDateTest() {
         // TODO: test modifyDate
+    }
+
+    /**
+     * Test the property 'name'
+     */
+    @Test
+    public void nameTest() {
+        // TODO: test name
     }
 
     /**

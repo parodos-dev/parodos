@@ -28,27 +28,27 @@ import java.util.Date;
 /**
  * ProjectResponseDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2023-03-22T10:29:24.432872+01:00[Europe/Rome]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class ProjectResponseDTO {
-  public static final String SERIALIZED_NAME_ID = "id";
-  @SerializedName(SERIALIZED_NAME_ID)
-  private String id;
-
-  public static final String SERIALIZED_NAME_NAME = "name";
-  @SerializedName(SERIALIZED_NAME_NAME)
-  private String name;
+  public static final String SERIALIZED_NAME_CREATE_DATE = "createDate";
+  @SerializedName(SERIALIZED_NAME_CREATE_DATE)
+  private Date createDate;
 
   public static final String SERIALIZED_NAME_DESCRIPTION = "description";
   @SerializedName(SERIALIZED_NAME_DESCRIPTION)
   private String description;
 
-  public static final String SERIALIZED_NAME_CREATE_DATE = "createDate";
-  @SerializedName(SERIALIZED_NAME_CREATE_DATE)
-  private Date createDate;
+  public static final String SERIALIZED_NAME_ID = "id";
+  @SerializedName(SERIALIZED_NAME_ID)
+  private String id;
 
   public static final String SERIALIZED_NAME_MODIFY_DATE = "modifyDate";
   @SerializedName(SERIALIZED_NAME_MODIFY_DATE)
   private Date modifyDate;
+
+  public static final String SERIALIZED_NAME_NAME = "name";
+  @SerializedName(SERIALIZED_NAME_NAME)
+  private String name;
 
   public static final String SERIALIZED_NAME_USERNAME = "username";
   @SerializedName(SERIALIZED_NAME_USERNAME)
@@ -57,49 +57,26 @@ public class ProjectResponseDTO {
   public ProjectResponseDTO() { 
   }
 
-  public ProjectResponseDTO id(String id) {
+  public ProjectResponseDTO createDate(Date createDate) {
     
-    this.id = id;
+    this.createDate = createDate;
     return this;
   }
 
    /**
-   * Get id
-   * @return id
+   * Get createDate
+   * @return createDate
   **/
   @javax.annotation.Nullable
   @ApiModelProperty(value = "")
 
-  public String getId() {
-    return id;
+  public Date getCreateDate() {
+    return createDate;
   }
 
 
-  public void setId(String id) {
-    this.id = id;
-  }
-
-
-  public ProjectResponseDTO name(String name) {
-    
-    this.name = name;
-    return this;
-  }
-
-   /**
-   * Get name
-   * @return name
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public String getName() {
-    return name;
-  }
-
-
-  public void setName(String name) {
-    this.name = name;
+  public void setCreateDate(Date createDate) {
+    this.createDate = createDate;
   }
 
 
@@ -126,26 +103,26 @@ public class ProjectResponseDTO {
   }
 
 
-  public ProjectResponseDTO createDate(Date createDate) {
+  public ProjectResponseDTO id(String id) {
     
-    this.createDate = createDate;
+    this.id = id;
     return this;
   }
 
    /**
-   * Get createDate
-   * @return createDate
+   * Get id
+   * @return id
   **/
   @javax.annotation.Nullable
   @ApiModelProperty(value = "")
 
-  public Date getCreateDate() {
-    return createDate;
+  public String getId() {
+    return id;
   }
 
 
-  public void setCreateDate(Date createDate) {
-    this.createDate = createDate;
+  public void setId(String id) {
+    this.id = id;
   }
 
 
@@ -169,6 +146,29 @@ public class ProjectResponseDTO {
 
   public void setModifyDate(Date modifyDate) {
     this.modifyDate = modifyDate;
+  }
+
+
+  public ProjectResponseDTO name(String name) {
+    
+    this.name = name;
+    return this;
+  }
+
+   /**
+   * Get name
+   * @return name
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getName() {
+    return name;
+  }
+
+
+  public void setName(String name) {
+    this.name = name;
   }
 
 
@@ -204,28 +204,28 @@ public class ProjectResponseDTO {
       return false;
     }
     ProjectResponseDTO projectResponseDTO = (ProjectResponseDTO) o;
-    return Objects.equals(this.id, projectResponseDTO.id) &&
-        Objects.equals(this.name, projectResponseDTO.name) &&
+    return Objects.equals(this.createDate, projectResponseDTO.createDate) &&
         Objects.equals(this.description, projectResponseDTO.description) &&
-        Objects.equals(this.createDate, projectResponseDTO.createDate) &&
+        Objects.equals(this.id, projectResponseDTO.id) &&
         Objects.equals(this.modifyDate, projectResponseDTO.modifyDate) &&
+        Objects.equals(this.name, projectResponseDTO.name) &&
         Objects.equals(this.username, projectResponseDTO.username);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, description, createDate, modifyDate, username);
+    return Objects.hash(createDate, description, id, modifyDate, name, username);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ProjectResponseDTO {\n");
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    createDate: ").append(toIndentedString(createDate)).append("\n");
+    sb.append("    description: ").append(toIndentedString(description)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    modifyDate: ").append(toIndentedString(modifyDate)).append("\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    username: ").append(toIndentedString(username)).append("\n");
     sb.append("}");
     return sb.toString();

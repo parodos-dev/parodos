@@ -44,19 +44,19 @@ public class WorkFlowOptionsTest {
     }
 
     /**
+     * Test the property 'continuationOptions'
+     */
+    @Test
+    public void continuationOptionsTest() {
+        // TODO: test continuationOptions
+    }
+
+    /**
      * Test the property 'currentVersion'
      */
     @Test
     public void currentVersionTest() {
         // TODO: test currentVersion
-    }
-
-    /**
-     * Test the property 'upgradeOptions'
-     */
-    @Test
-    public void upgradeOptionsTest() {
-        // TODO: test upgradeOptions
     }
 
     /**
@@ -76,11 +76,11 @@ public class WorkFlowOptionsTest {
     }
 
     /**
-     * Test the property 'continuationOptions'
+     * Test the property 'optionsAvailable'
      */
     @Test
-    public void continuationOptionsTest() {
-        // TODO: test continuationOptions
+    public void optionsAvailableTest() {
+        // TODO: test optionsAvailable
     }
 
     /**
@@ -92,11 +92,11 @@ public class WorkFlowOptionsTest {
     }
 
     /**
-     * Test the property 'optionsAvailable'
+     * Test the property 'upgradeOptions'
      */
     @Test
-    public void optionsAvailableTest() {
-        // TODO: test optionsAvailable
+    public void upgradeOptionsTest() {
+        // TODO: test upgradeOptions
     }
 
 }

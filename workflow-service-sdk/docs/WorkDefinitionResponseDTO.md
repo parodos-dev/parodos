@@ -7,14 +7,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**author** | **String** |  |  [optional]
 **id** | **String** |  |  [optional]
 **name** | **String** |  |  [optional]
-**workType** | **String** |  |  [optional]
-**processingType** | **String** |  |  [optional]
-**author** | **String** |  |  [optional]
-**works** | [**List&lt;WorkDefinitionResponseDTO&gt;**](WorkDefinitionResponseDTO.md) |  |  [optional]
-**parameters** | **List&lt;Object&gt;** |  |  [optional]
 **outputs** | [**List&lt;OutputsEnum&gt;**](#List&lt;OutputsEnum&gt;) |  |  [optional]
+**parameters** | **Map&lt;String, Map&lt;String, String&gt;&gt;** |  |  [optional]
+**processingType** | **String** |  |  [optional]
+**workType** | **String** |  |  [optional]
+**works** | [**List&lt;WorkDefinitionResponseDTO&gt;**](WorkDefinitionResponseDTO.md) |  |  [optional]
 
 
 

@@ -29,62 +29,11 @@ import java.util.List;
 /**
  * WorkStatusResponseDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2023-03-22T10:29:24.432872+01:00[Europe/Rome]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkStatusResponseDTO {
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)
   private String name;
-
-  /**
-   * Gets or Sets type
-   */
-  @JsonAdapter(TypeEnum.Adapter.class)
-  public enum TypeEnum {
-    TASK("TASK"),
-    
-    WORKFLOW("WORKFLOW");
-
-    private String value;
-
-    TypeEnum(String value) {
-      this.value = value;
-    }
-
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    public static TypeEnum fromValue(String value) {
-      for (TypeEnum b : TypeEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-
-    public static class Adapter extends TypeAdapter<TypeEnum> {
-      @Override
-      public void write(final JsonWriter jsonWriter, final TypeEnum enumeration) throws IOException {
-        jsonWriter.value(enumeration.getValue());
-      }
-
-      @Override
-      public TypeEnum read(final JsonReader jsonReader) throws IOException {
-        String value =  jsonReader.nextString();
-        return TypeEnum.fromValue(value);
-      }
-    }
-  }
-
-  public static final String SERIALIZED_NAME_TYPE = "type";
-  @SerializedName(SERIALIZED_NAME_TYPE)
-  private TypeEnum type;
 
   /**
    * Gets or Sets status
@@ -139,6 +88,57 @@ public class WorkStatusResponseDTO {
   @SerializedName(SERIALIZED_NAME_STATUS)
   private StatusEnum status;
 
+  /**
+   * Gets or Sets type
+   */
+  @JsonAdapter(TypeEnum.Adapter.class)
+  public enum TypeEnum {
+    TASK("TASK"),
+    
+    WORKFLOW("WORKFLOW");
+
+    private String value;
+
+    TypeEnum(String value) {
+      this.value = value;
+    }
+
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    public static TypeEnum fromValue(String value) {
+      for (TypeEnum b : TypeEnum.values()) {
+        if (b.value.equals(value)) {
+          return b;
+        }
+      }
+      throw new IllegalArgumentException("Unexpected value '" + value + "'");
+    }
+
+    public static class Adapter extends TypeAdapter<TypeEnum> {
+      @Override
+      public void write(final JsonWriter jsonWriter, final TypeEnum enumeration) throws IOException {
+        jsonWriter.value(enumeration.getValue());
+      }
+
+      @Override
+      public TypeEnum read(final JsonReader jsonReader) throws IOException {
+        String value =  jsonReader.nextString();
+        return TypeEnum.fromValue(value);
+      }
+    }
+  }
+
+  public static final String SERIALIZED_NAME_TYPE = "type";
+  @SerializedName(SERIALIZED_NAME_TYPE)
+  private TypeEnum type;
+
   public static final String SERIALIZED_NAME_WORKS = "works";
   @SerializedName(SERIALIZED_NAME_WORKS)
   private List<WorkStatusResponseDTO> works = null;
@@ -169,29 +169,6 @@ public class WorkStatusResponseDTO {
   }
 
 
-  public WorkStatusResponseDTO type(TypeEnum type) {
-    
-    this.type = type;
-    return this;
-  }
-
-   /**
-   * Get type
-   * @return type
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public TypeEnum getType() {
-    return type;
-  }
-
-
-  public void setType(TypeEnum type) {
-    this.type = type;
-  }
-
-
   public WorkStatusResponseDTO status(StatusEnum status) {
     
     this.status = status;
@@ -212,6 +189,29 @@ public class WorkStatusResponseDTO {
 
   public void setStatus(StatusEnum status) {
     this.status = status;
+  }
+
+
+  public WorkStatusResponseDTO type(TypeEnum type) {
+    
+    this.type = type;
+    return this;
+  }
+
+   /**
+   * Get type
+   * @return type
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public TypeEnum getType() {
+    return type;
+  }
+
+
+  public void setType(TypeEnum type) {
+    this.type = type;
   }
 
 
@@ -256,14 +256,14 @@ public class WorkStatusResponseDTO {
     }
     WorkStatusResponseDTO workStatusResponseDTO = (WorkStatusResponseDTO) o;
     return Objects.equals(this.name, workStatusResponseDTO.name) &&
-        Objects.equals(this.type, workStatusResponseDTO.type) &&
         Objects.equals(this.status, workStatusResponseDTO.status) &&
+        Objects.equals(this.type, workStatusResponseDTO.type) &&
         Objects.equals(this.works, workStatusResponseDTO.works);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, type, status, works);
+    return Objects.hash(name, status, type, works);
   }
 
   @Override
@@ -271,8 +271,8 @@ public class WorkStatusResponseDTO {
     StringBuilder sb = new StringBuilder();
     sb.append("class WorkStatusResponseDTO {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
+    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    works: ").append(toIndentedString(works)).append("\n");
     sb.append("}");
     return sb.toString();

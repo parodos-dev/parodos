@@ -44,14 +44,6 @@ public class WorkRequestDTOTest {
     }
 
     /**
-     * Test the property 'workName'
-     */
-    @Test
-    public void workNameTest() {
-        // TODO: test workName
-    }
-
-    /**
      * Test the property 'arguments'
      */
     @Test
@@ -65,6 +57,14 @@ public class WorkRequestDTOTest {
     @Test
     public void typeTest() {
         // TODO: test type
+    }
+
+    /**
+     * Test the property 'workName'
+     */
+    @Test
+    public void workNameTest() {
+        // TODO: test workName
     }
 
 }

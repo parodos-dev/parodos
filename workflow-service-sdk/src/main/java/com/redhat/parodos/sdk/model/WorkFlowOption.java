@@ -29,16 +29,8 @@ import java.util.List;
 /**
  * WorkFlowOption
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2023-03-22T10:29:24.432872+01:00[Europe/Rome]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowOption {
-  public static final String SERIALIZED_NAME_IDENTIFIER = "identifier";
-  @SerializedName(SERIALIZED_NAME_IDENTIFIER)
-  private String identifier;
-
-  public static final String SERIALIZED_NAME_DISPLAY_NAME = "displayName";
-  @SerializedName(SERIALIZED_NAME_DISPLAY_NAME)
-  private String displayName;
-
   public static final String SERIALIZED_NAME_DESCRIPTION = "description";
   @SerializedName(SERIALIZED_NAME_DESCRIPTION)
   private String description;
@@ -47,58 +39,20 @@ public class WorkFlowOption {
   @SerializedName(SERIALIZED_NAME_DETAILS)
   private List<String> details = null;
 
+  public static final String SERIALIZED_NAME_DISPLAY_NAME = "displayName";
+  @SerializedName(SERIALIZED_NAME_DISPLAY_NAME)
+  private String displayName;
+
+  public static final String SERIALIZED_NAME_IDENTIFIER = "identifier";
+  @SerializedName(SERIALIZED_NAME_IDENTIFIER)
+  private String identifier;
+
   public static final String SERIALIZED_NAME_WORK_FLOW_NAME = "workFlowName";
   @SerializedName(SERIALIZED_NAME_WORK_FLOW_NAME)
   private String workFlowName;
 
   public WorkFlowOption() { 
   }
-
-  public WorkFlowOption identifier(String identifier) {
-    
-    this.identifier = identifier;
-    return this;
-  }
-
-   /**
-   * Get identifier
-   * @return identifier
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public String getIdentifier() {
-    return identifier;
-  }
-
-
-  public void setIdentifier(String identifier) {
-    this.identifier = identifier;
-  }
-
-
-  public WorkFlowOption displayName(String displayName) {
-    
-    this.displayName = displayName;
-    return this;
-  }
-
-   /**
-   * Get displayName
-   * @return displayName
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public String getDisplayName() {
-    return displayName;
-  }
-
-
-  public void setDisplayName(String displayName) {
-    this.displayName = displayName;
-  }
-
 
   public WorkFlowOption description(String description) {
     
@@ -154,6 +108,52 @@ public class WorkFlowOption {
   }
 
 
+  public WorkFlowOption displayName(String displayName) {
+    
+    this.displayName = displayName;
+    return this;
+  }
+
+   /**
+   * Get displayName
+   * @return displayName
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getDisplayName() {
+    return displayName;
+  }
+
+
+  public void setDisplayName(String displayName) {
+    this.displayName = displayName;
+  }
+
+
+  public WorkFlowOption identifier(String identifier) {
+    
+    this.identifier = identifier;
+    return this;
+  }
+
+   /**
+   * Get identifier
+   * @return identifier
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getIdentifier() {
+    return identifier;
+  }
+
+
+  public void setIdentifier(String identifier) {
+    this.identifier = identifier;
+  }
+
+
   public WorkFlowOption workFlowName(String workFlowName) {
     
     this.workFlowName = workFlowName;
@@ -186,26 +186,26 @@ public class WorkFlowOption {
       return false;
     }
     WorkFlowOption workFlowOption = (WorkFlowOption) o;
-    return Objects.equals(this.identifier, workFlowOption.identifier) &&
-        Objects.equals(this.displayName, workFlowOption.displayName) &&
-        Objects.equals(this.description, workFlowOption.description) &&
+    return Objects.equals(this.description, workFlowOption.description) &&
         Objects.equals(this.details, workFlowOption.details) &&
+        Objects.equals(this.displayName, workFlowOption.displayName) &&
+        Objects.equals(this.identifier, workFlowOption.identifier) &&
         Objects.equals(this.workFlowName, workFlowOption.workFlowName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identifier, displayName, description, details, workFlowName);
+    return Objects.hash(description, details, displayName, identifier, workFlowName);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class WorkFlowOption {\n");
-    sb.append("    identifier: ").append(toIndentedString(identifier)).append("\n");
-    sb.append("    displayName: ").append(toIndentedString(displayName)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    details: ").append(toIndentedString(details)).append("\n");
+    sb.append("    displayName: ").append(toIndentedString(displayName)).append("\n");
+    sb.append("    identifier: ").append(toIndentedString(identifier)).append("\n");
     sb.append("    workFlowName: ").append(toIndentedString(workFlowName)).append("\n");
     sb.append("}");
     return sb.toString();

@@ -30,12 +30,8 @@ import java.util.List;
 /**
  * WorkRequestDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2023-03-22T10:29:24.432872+01:00[Europe/Rome]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkRequestDTO {
-  public static final String SERIALIZED_NAME_WORK_NAME = "workName";
-  @SerializedName(SERIALIZED_NAME_WORK_NAME)
-  private String workName;
-
   public static final String SERIALIZED_NAME_ARGUMENTS = "arguments";
   @SerializedName(SERIALIZED_NAME_ARGUMENTS)
   private List<ArgumentRequestDTO> arguments = null;
@@ -44,31 +40,12 @@ public class WorkRequestDTO {
   @SerializedName(SERIALIZED_NAME_TYPE)
   private String type;
 
+  public static final String SERIALIZED_NAME_WORK_NAME = "workName";
+  @SerializedName(SERIALIZED_NAME_WORK_NAME)
+  private String workName;
+
   public WorkRequestDTO() { 
   }
-
-  public WorkRequestDTO workName(String workName) {
-    
-    this.workName = workName;
-    return this;
-  }
-
-   /**
-   * Get workName
-   * @return workName
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public String getWorkName() {
-    return workName;
-  }
-
-
-  public void setWorkName(String workName) {
-    this.workName = workName;
-  }
-
 
   public WorkRequestDTO arguments(List<ArgumentRequestDTO> arguments) {
     
@@ -124,6 +101,29 @@ public class WorkRequestDTO {
   }
 
 
+  public WorkRequestDTO workName(String workName) {
+    
+    this.workName = workName;
+    return this;
+  }
+
+   /**
+   * Get workName
+   * @return workName
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getWorkName() {
+    return workName;
+  }
+
+
+  public void setWorkName(String workName) {
+    this.workName = workName;
+  }
+
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -133,23 +133,23 @@ public class WorkRequestDTO {
       return false;
     }
     WorkRequestDTO workRequestDTO = (WorkRequestDTO) o;
-    return Objects.equals(this.workName, workRequestDTO.workName) &&
-        Objects.equals(this.arguments, workRequestDTO.arguments) &&
-        Objects.equals(this.type, workRequestDTO.type);
+    return Objects.equals(this.arguments, workRequestDTO.arguments) &&
+        Objects.equals(this.type, workRequestDTO.type) &&
+        Objects.equals(this.workName, workRequestDTO.workName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(workName, arguments, type);
+    return Objects.hash(arguments, type, workName);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class WorkRequestDTO {\n");
-    sb.append("    workName: ").append(toIndentedString(workName)).append("\n");
     sb.append("    arguments: ").append(toIndentedString(arguments)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    workName: ").append(toIndentedString(workName)).append("\n");
     sb.append("}");
     return sb.toString();
   }

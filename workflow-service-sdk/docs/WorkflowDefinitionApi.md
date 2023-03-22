@@ -66,9 +66,9 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**404** | Not found |  -  |
-**401** | Unauthorized |  -  |
 **200** | Succeeded |  -  |
+**401** | Unauthorized |  -  |
+**404** | Not found |  -  |
 
 <a name="getWorkFlowDefinitions"></a>
 # **getWorkFlowDefinitions**
@@ -128,7 +128,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**403** | Forbidden |  -  |
 **200** | Succeeded |  -  |
 **401** | Unauthorized |  -  |
+**403** | Forbidden |  -  |
 

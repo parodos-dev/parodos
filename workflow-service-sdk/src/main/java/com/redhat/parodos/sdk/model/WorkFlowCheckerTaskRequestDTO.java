@@ -27,7 +27,7 @@ import java.io.IOException;
 /**
  * WorkFlowCheckerTaskRequestDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2023-03-22T10:29:24.432872+01:00[Europe/Rome]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowCheckerTaskRequestDTO {
   /**
    * Gets or Sets status

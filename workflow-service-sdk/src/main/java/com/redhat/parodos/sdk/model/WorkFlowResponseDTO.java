@@ -28,7 +28,7 @@ import java.io.IOException;
 /**
  * WorkFlowResponseDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2023-03-22T10:29:24.432872+01:00[Europe/Rome]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowResponseDTO {
   public static final String SERIALIZED_NAME_WORK_FLOW_EXECUTION_ID = "workFlowExecutionId";
   @SerializedName(SERIALIZED_NAME_WORK_FLOW_EXECUTION_ID)

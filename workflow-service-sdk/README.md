@@ -2,7 +2,6 @@
 
 Parodos Workflow Service API
 - API version: v1.0.0
-  - Build date: 2023-03-21T17:36:58.634820+01:00[Europe/Rome]
 
 This is the API documentation for the Parodos Workflow Service. It provides operations to execute assessments to determine infrastructure options (tooling + environments). Also executes infrastructure task workflows to call downstream systems to stand-up an infrastructure option.
 
@@ -40,7 +39,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>dev.parodos</groupId>
   <artifactId>workflow-service-sdk</artifactId>
-  <version>1.0.3-SNAPSHOT</version>
+  <version>1.0.4-SNAPSHOT</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -56,7 +55,7 @@ Add this dependency to your project's build file:
   }
 
   dependencies {
-     implementation "dev.parodos:workflow-service-sdk:1.0.3-SNAPSHOT"
+     implementation "dev.parodos:workflow-service-sdk:1.0.4-SNAPSHOT"
   }
 ```
 
@@ -70,7 +69,7 @@ mvn clean package
 
 Then manually install the following JARs:
 
-* `target/workflow-service-sdk-1.0.3-SNAPSHOT.jar`
+* `target/workflow-service-sdk-1.0.4-SNAPSHOT.jar`
 * `target/lib/*.jar`
 
 ## Getting Started
@@ -118,7 +117,7 @@ Class | Method | HTTP request | Description
 *ProjectApi* | [**getProjectById**](docs/ProjectApi.md#getProjectById) | **GET** /api/v1/projects/{id} | Returns information about a specified project
 *ProjectApi* | [**getProjects**](docs/ProjectApi.md#getProjects) | **GET** /api/v1/projects | Returns a list of project
 *WorkflowApi* | [**execute**](docs/WorkflowApi.md#execute) | **POST** /api/v1/workflows | Executes a workflow
-*WorkflowApi* | [**getStatus**](docs/WorkflowApi.md#getStatus) | **GET** /api/v1/workflows/{id}/status | Returns a workflow status
+*WorkflowApi* | [**getStatus**](docs/WorkflowApi.md#getStatus) | **GET** /api/v1/workflows/{workFlowExecutionId}/status | Returns a workflow status
 *WorkflowApi* | [**updateWorkFlowCheckerTaskStatus**](docs/WorkflowApi.md#updateWorkFlowCheckerTaskStatus) | **POST** /api/v1/workflows/{workFlowExecutionId}/checkers/{workFlowCheckerTaskName} | Updates a workflow checker task status
 *WorkflowDefinitionApi* | [**getWorkFlowDefinitionById**](docs/WorkflowDefinitionApi.md#getWorkFlowDefinitionById) | **GET** /api/v1/workflowdefinitions/{id} | Returns information about a workflow definition by id
 *WorkflowDefinitionApi* | [**getWorkFlowDefinitions**](docs/WorkflowDefinitionApi.md#getWorkFlowDefinitions) | **GET** /api/v1/workflowdefinitions | Returns a list of workflow definition
@@ -137,7 +136,6 @@ Class | Method | HTTP request | Description
  - [WorkFlowRequestDTO](docs/WorkFlowRequestDTO.md)
  - [WorkFlowResponseDTO](docs/WorkFlowResponseDTO.md)
  - [WorkFlowStatusResponseDTO](docs/WorkFlowStatusResponseDTO.md)
- - [WorkFlowTaskParameter](docs/WorkFlowTaskParameter.md)
  - [WorkRequestDTO](docs/WorkRequestDTO.md)
  - [WorkStatusResponseDTO](docs/WorkStatusResponseDTO.md)
 
