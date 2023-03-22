@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -26,7 +27,7 @@ public class WorkFlowWorkDefinition extends AbstractEntity {
 
 	private UUID workDefinitionId;
 
-	@Enumerated
+	@Enumerated(EnumType.STRING)
 	private WorkType workDefinitionType;
 
 	@ManyToOne(optional = false)
