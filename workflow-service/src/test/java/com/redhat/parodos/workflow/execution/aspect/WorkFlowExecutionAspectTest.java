@@ -152,7 +152,7 @@ class WorkFlowExecutionAspectTest {
 		};
 
 		WorkFlowWorkDefinition workFlowWorkDefinition = WorkFlowWorkDefinition.builder()
-				.workDefinitionId(UUID.randomUUID()).workDefinitionType(WorkType.WORKFLOW.name())
+				.workDefinitionId(UUID.randomUUID()).workDefinitionType(WorkType.WORKFLOW)
 				.workFlowDefinition(WorkFlowDefinition.builder().build()).build();
 		WorkFlowDefinition workFlowDefinition = getSampleWorkFlowDefinition(TEST);
 		WorkFlowExecution workFlowExecution = getSampleWorkFlowExecution();

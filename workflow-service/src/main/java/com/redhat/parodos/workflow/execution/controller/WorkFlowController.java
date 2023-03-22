@@ -73,7 +73,6 @@ public class WorkFlowController {
 		if (workReport == null) {
 			return ResponseEntity.status(500).build();
 		}
-
 		return ResponseEntity.ok(WorkFlowResponseDTO.builder()
 				.workFlowExecutionId(WorkContextDelegate.read(workReport.getWorkContext(),
 						WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ID).toString())
@@ -108,9 +107,9 @@ public class WorkFlowController {
 							schema = @Schema(implementation = WorkFlowStatusResponseDTO.class)) }),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content) })
-	@GetMapping("/{id}/status")
-	public ResponseEntity<WorkFlowStatusResponseDTO> getStatus(@PathVariable String id) {
-		return null;
+	@GetMapping("/{workFlowExecutionId}/status")
+	public ResponseEntity<WorkFlowStatusResponseDTO> getStatus(@PathVariable String workFlowExecutionId) {
+		return ResponseEntity.ok(workFlowService.getWorkFlowStatus(UUID.fromString(workFlowExecutionId)));
 	}
 
 }
