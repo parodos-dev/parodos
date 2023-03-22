@@ -152,14 +152,67 @@
     <build>
         <plugins>
             <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>2.5</version>
+                <executions>
+                    <execution>
+                        <id>clean-openapi-json</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                        <configuration>
+                            <filesets>
+                                <fileset>
+                                    <directory>${basedir}/generated</directory>
+                                    <includes>
+                                        <include>openapi.json</include>
+                                    </includes>
+                                    <followSymlinks>false</followSymlinks>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${springframework.boot.version}</version>
+                <configuration>
+                    <wait>1000</wait>
+                    <maxAttempts>60</maxAttempts>
+                    <profiles>local</profiles>
+                </configuration>
                 <executions>
+                    <execution>
+                        <configuration>
+                            <jvmArguments>-Dspring-boot.run.profiles=local</jvmArguments>
+                            <fork>true</fork>
+                        </configuration>
+                        <id>pre-openapi-json-gen</id>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                        <phase>prepare-package</phase>
+                    </execution>
+                    <execution>
+                        <configuration>
+                            <fork>true</fork>
+                        </configuration>
+                        <id>post-openapi-json-gen</id>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                        <phase>pre-integration-test</phase>
+                    </execution>
                     <execution>
                         <goals>
                             <goal>repackage</goal>
                         </goals>
+                        <configuration>
+                            <layout>ZIP</layout>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -173,6 +226,23 @@
                             <goal>verify</goal>
                         </goals>
                     </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-maven-plugin</artifactId>
+                <version>1.4</version>
+                <configuration>
+                    <outputDir>${basedir}/generated</outputDir>
+                </configuration>
+                <executions>
+                <execution>
+                <id>generate-openapi-json</id>
+                    <goals>
+                        <goal>generate</goal>
+                    </goals>
+                    <phase>package</phase>
+                </execution>
                 </executions>
             </plugin>
         </plugins>
