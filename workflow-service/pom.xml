@@ -218,7 +218,7 @@
                         <configuration>
                             <filesets>
                                 <fileset>
-                                    <directory>${project.basedir}/generated/openapi</directory>
+                                    <directory>${basedir}/generated/openapi</directory>
                                     <includes>
                                         <include>api-docs.json</include>
                                     </includes>
@@ -276,7 +276,7 @@
                 <version>1.1</version>
                 <configuration>
                     <outputFileName>api-docs.json</outputFileName>
-                    <outputDir>${project.basedir}/generated/openapi</outputDir>
+                    <outputDir>${basedir}/generated/openapi</outputDir>
                 </configuration>
                 <executions>
                     <execution>
