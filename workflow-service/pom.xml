@@ -218,7 +218,7 @@
                         <configuration>
                             <filesets>
                                 <fileset>
-                                    <directory>${project.parent.basedir}/openapi</directory>
+                                    <directory>${project.basedir}/generated/openapi</directory>
                                     <includes>
                                         <include>api-docs.json</include>
                                     </includes>
@@ -276,11 +276,11 @@
                 <version>1.1</version>
                 <configuration>
                     <outputFileName>api-docs.json</outputFileName>
-                    <outputDir>${project.parent.basedir}/openapi</outputDir>
+                    <outputDir>${project.basedir}/generated/openapi</outputDir>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>integration-test</id>
+                        <id>generate-openapi-json</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
