@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>workflow-service</artifactId>
@@ -82,10 +82,10 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
         </dependency>
-	    <dependency>
-	        <groupId>org.postgresql</groupId>
-	        <artifactId>postgresql</artifactId>
-	    </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
@@ -236,12 +236,14 @@
                 <configuration>
                     <wait>1000</wait>
                     <maxAttempts>60</maxAttempts>
-                    <profiles>
-                        <profile>local</profile>
-                    </profiles>
+                    <profiles>local</profiles>
                 </configuration>
                 <executions>
                     <execution>
+                        <configuration>
+                            <jvmArguments>-Dspring-boot.run.profiles=local</jvmArguments>
+                            <fork>false</fork>
+                        </configuration>
                         <id>pre-openapi-json-gen</id>
                         <goals>
                             <goal>start</goal>
@@ -249,6 +251,9 @@
                         <phase>prepare-package</phase>
                     </execution>
                     <execution>
+                        <configuration>
+                            <fork>false</fork>
+                        </configuration>
                         <id>post-openapi-json-gen</id>
                         <goals>
                             <goal>stop</goal>
