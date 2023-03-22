@@ -98,9 +98,9 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 			if (work instanceof WorkFlow) { // WorkFlow
 				// A workflow in works should already been stored
 				workId = workFlowDefinitionRepository.findFirstByName(work.getName()).getId();
-				workFlowWorkDefinitions.add(WorkFlowWorkDefinition.builder().workDefinitionId(workId)
-						.workDefinitionType(WorkType.WORKFLOW.name()).workFlowDefinition(workFlowDefinition)
-						.createDate(new Date()).build());
+				workFlowWorkDefinitions.add(
+						WorkFlowWorkDefinition.builder().workDefinitionId(workId).workDefinitionType(WorkType.WORKFLOW)
+								.workFlowDefinition(workFlowDefinition).createDate(new Date()).build());
 			}
 			else { // WorkFlowTask
 				WorkFlowTask workFlowTask = (WorkFlowTask) work;
@@ -117,9 +117,9 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 						.outputs(WorkFlowDTOUtil.writeObjectValueAsString(workFlowTask.getWorkFlowTaskOutputs()))
 						.workFlowDefinition(workFlowDefinition).createDate(new Date()).modifyDate(new Date()).build())
 						.getId();
-				workFlowWorkDefinitions.add(WorkFlowWorkDefinition.builder().workDefinitionId(workId)
-						.workDefinitionType(WorkType.TASK.name()).workFlowDefinition(workFlowDefinition)
-						.createDate(new Date()).build());
+				workFlowWorkDefinitions
+						.add(WorkFlowWorkDefinition.builder().workDefinitionId(workId).workDefinitionType(WorkType.TASK)
+								.workFlowDefinition(workFlowDefinition).createDate(new Date()).build());
 			}
 		});
 		workFlowDefinition.setWorkFlowWorkDefinitions(workFlowWorkDefinitions);
@@ -219,7 +219,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 
 		// add workflowWorkUnits
 		workFlowWorkDefinitions.forEach(workFlowWorkDefinition -> {
-			if (workFlowWorkDefinition.getWorkDefinitionType().equalsIgnoreCase(WorkType.TASK.name())) { // Task
+			if (workFlowWorkDefinition.getWorkDefinitionType().equals(WorkType.TASK)) { // Task
 				WorkFlowTaskDefinition wdt = workFlowTaskDefinitionRepository
 						.findById(workFlowWorkDefinition.getWorkDefinitionId()).get();
 				workDefinitionResponseDTOs.add(WorkDefinitionResponseDTO.builder().id(wdt.getId().toString())
@@ -256,7 +256,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 						.collect(Collectors.toList());
 
 				workFlowWorkUnits1Definition.forEach(wwdt1 -> {
-					if (wwdt1.getWorkDefinitionType().equalsIgnoreCase(WorkType.TASK.name())) { // Task
+					if (wwdt1.getWorkDefinitionType().equals(WorkType.TASK)) { // Task
 						WorkFlowTaskDefinition wdt1 = workFlowTaskDefinitionRepository
 								.findById(wwdt1.getWorkDefinitionId()).get();
 						workDefinitionResponseDTOs.add(WorkDefinitionResponseDTO.builder().id(wdt1.getId().toString())

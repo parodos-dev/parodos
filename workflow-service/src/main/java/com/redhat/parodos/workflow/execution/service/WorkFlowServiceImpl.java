@@ -19,12 +19,16 @@ import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowWorkDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
 import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
+import com.redhat.parodos.workflow.enums.WorkType;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
+import com.redhat.parodos.workflow.execution.dto.WorkFlowStatusResponseDTO;
+import com.redhat.parodos.workflow.execution.dto.WorkStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
@@ -41,10 +45,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static java.util.Objects.isNull;
 
@@ -128,6 +137,140 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	@Override
 	public synchronized WorkFlowExecution updateWorkFlow(WorkFlowExecution workFlowExecution) {
 		return workFlowRepository.save(workFlowExecution);
+	}
+
+	@Override
+	public WorkFlowStatusResponseDTO getWorkFlowStatus(UUID workFlowExecutionId) {
+		WorkFlowExecution masterWorkFlowExecution = workFlowRepository.findById(workFlowExecutionId).orElseThrow(() -> {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					String.format("workflow execution id: %s not found!", workFlowExecutionId));
+		});
+
+		WorkFlowDefinition masterWorkFlowDefinition = workFlowDefinitionRepository
+				.findById(masterWorkFlowExecution.getWorkFlowDefinitionId()).orElseThrow(() -> {
+					throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+							String.format("workflow definition id: %s not found!", workFlowExecutionId));
+				});
+
+		CopyOnWriteArrayList<WorkStatusResponseDTO> workStatusResponseDTOs = new CopyOnWriteArrayList<>();
+		Map<String, Integer> workFlowWorksStartIndex = new HashMap<>();
+
+		workStatusResponseDTOs
+				.add(WorkStatusResponseDTO.builder().workDefinitionId(masterWorkFlowExecution.getWorkFlowDefinitionId())
+						.name(masterWorkFlowDefinition.getName()).type(WorkType.WORKFLOW)
+						.status(WorkFlowStatus.IN_PROGRESS.equals(masterWorkFlowExecution.getStatus())
+								? com.redhat.parodos.workflow.enums.WorkStatus.PENDING
+								: com.redhat.parodos.workflow.enums.WorkStatus
+										.valueOf(masterWorkFlowExecution.getStatus().name()))
+						.numberOfWorks(masterWorkFlowDefinition.getNumberOfWorks()).works(new ArrayList<>()).build());
+		workFlowWorksStartIndex.put(masterWorkFlowDefinition.getName(), 1);
+
+		List<WorkFlowWorkDefinition> masterWorkFlowWorkDefinitions = workFlowWorkRepository
+				.findByWorkFlowDefinitionIdOrderByCreateDateAsc(masterWorkFlowDefinition.getId());
+		masterWorkFlowWorkDefinitions.forEach(workFlowWorkDefinition -> {
+			if (workFlowWorkDefinition.getWorkDefinitionType().equals(WorkType.WORKFLOW)) {
+				WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository
+						.findById(workFlowWorkDefinition.getWorkDefinitionId()).get();
+				WorkFlowExecution workExecution = workFlowRepository
+						.findFirstByMasterWorkFlowExecutionAndWorkFlowDefinitionId(masterWorkFlowExecution,
+								workFlowWorkDefinition.getWorkDefinitionId());
+				com.redhat.parodos.workflow.enums.WorkStatus workStatus = WorkFlowStatus.IN_PROGRESS
+						.equals(workExecution.getStatus()) ? com.redhat.parodos.workflow.enums.WorkStatus.PENDING
+								: com.redhat.parodos.workflow.enums.WorkStatus
+										.valueOf(workExecution.getStatus().name());
+				workStatusResponseDTOs.add(
+						WorkStatusResponseDTO.builder().workDefinitionId(workFlowWorkDefinition.getWorkDefinitionId())
+								.name(workFlowDefinition.getName()).type(WorkType.WORKFLOW).status(workStatus)
+								.numberOfWorks(workFlowDefinition.getNumberOfWorks()).works(new ArrayList<>()).build());
+			}
+			else {
+				WorkFlowTaskDefinition workFlowTaskDefinition = workFlowTaskDefinitionRepository
+						.findById(workFlowWorkDefinition.getWorkDefinitionId()).get();
+				List<WorkFlowTaskExecution> workFlowTaskExecutions = workFlowTaskRepository
+						.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(masterWorkFlowExecution.getId(),
+								workFlowWorkDefinition.getWorkDefinitionId());
+				Optional<WorkFlowTaskExecution> workFlowTaskExecutionOptional = workFlowTaskExecutions.stream()
+						.max(Comparator.comparing(WorkFlowTaskExecution::getStartDate));
+				com.redhat.parodos.workflow.enums.WorkStatus workStatus = null;
+				if (workFlowTaskExecutionOptional.isPresent()) {
+					workStatus = WorkFlowTaskStatus.IN_PROGRESS.equals(workFlowTaskExecutionOptional.get().getStatus())
+							? com.redhat.parodos.workflow.enums.WorkStatus.PENDING
+							: com.redhat.parodos.workflow.enums.WorkStatus
+									.valueOf(workFlowTaskExecutionOptional.get().getStatus().name());
+				}
+				workStatusResponseDTOs.add(
+						WorkStatusResponseDTO.builder().workDefinitionId(workFlowWorkDefinition.getWorkDefinitionId())
+								.name(workFlowTaskDefinition.getName()).type(WorkType.TASK).status(workStatus).build());
+			}
+		});
+
+		for (int i = 1; i < workStatusResponseDTOs.size(); i++) {
+			if (workStatusResponseDTOs.get(i).getType().equals(WorkType.WORKFLOW)) {
+				List<WorkFlowWorkDefinition> tmpWorkFlowWorkDefinitions = workFlowWorkRepository
+						.findByWorkFlowDefinitionIdOrderByCreateDateAsc(
+								workStatusResponseDTOs.get(i).getWorkDefinitionId());
+				workFlowWorksStartIndex.put(workStatusResponseDTOs.get(i).getName(), workStatusResponseDTOs.size());
+
+				tmpWorkFlowWorkDefinitions.forEach(tmpWorkFlowWorkDefinition -> {
+					if (tmpWorkFlowWorkDefinition.getWorkDefinitionType().equals(WorkType.WORKFLOW)) {
+						WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository
+								.findById(tmpWorkFlowWorkDefinition.getWorkDefinitionId()).get();
+						WorkFlowExecution workExecution = workFlowRepository
+								.findFirstByMasterWorkFlowExecutionAndWorkFlowDefinitionId(masterWorkFlowExecution,
+										tmpWorkFlowWorkDefinition.getWorkDefinitionId());
+						workStatusResponseDTOs.add(WorkStatusResponseDTO.builder().name(workFlowDefinition.getName())
+								.workDefinitionId(tmpWorkFlowWorkDefinition.getWorkDefinitionId())
+								.type(WorkType.WORKFLOW)
+								.status(WorkFlowStatus.IN_PROGRESS.equals(workExecution.getStatus())
+										? com.redhat.parodos.workflow.enums.WorkStatus.PENDING
+										: com.redhat.parodos.workflow.enums.WorkStatus
+												.valueOf(workExecution.getStatus().name()))
+								.numberOfWorks(workFlowDefinition.getNumberOfWorks()).works(new ArrayList<>()).build());
+					}
+					else {
+						WorkFlowTaskDefinition workFlowTaskDefinition = workFlowTaskDefinitionRepository
+								.findById(tmpWorkFlowWorkDefinition.getWorkDefinitionId()).get();
+						WorkFlowExecution workFlowExecution = workFlowRepository
+								.findFirstByMasterWorkFlowExecutionAndWorkFlowDefinitionId(masterWorkFlowExecution,
+										tmpWorkFlowWorkDefinition.getWorkFlowDefinition().getId());
+						List<WorkFlowTaskExecution> workFlowTaskExecutions = workFlowTaskRepository
+								.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(workFlowExecution.getId(),
+										tmpWorkFlowWorkDefinition.getWorkDefinitionId());
+						Optional<WorkFlowTaskExecution> workFlowTaskExecutionOptional = workFlowTaskExecutions.stream()
+								.max(Comparator.comparing(WorkFlowTaskExecution::getStartDate));
+						com.redhat.parodos.workflow.enums.WorkStatus workStatus = null;
+						if (workFlowTaskExecutionOptional.isPresent()) {
+							workStatus = WorkFlowTaskStatus.IN_PROGRESS
+									.equals(workFlowTaskExecutionOptional.get().getStatus())
+											? com.redhat.parodos.workflow.enums.WorkStatus.PENDING
+											: com.redhat.parodos.workflow.enums.WorkStatus
+													.valueOf(workFlowTaskExecutionOptional.get().getStatus().name());
+						}
+						workStatusResponseDTOs
+								.add(WorkStatusResponseDTO.builder().name(workFlowTaskDefinition.getName())
+										.workDefinitionId(tmpWorkFlowWorkDefinition.getWorkDefinitionId())
+										.type(WorkType.TASK).status(workStatus).build());
+					}
+				});
+			}
+		}
+
+		for (int j = workStatusResponseDTOs.size() - 1; j >= 0; j--) {
+			if (workStatusResponseDTOs.get(j).getType().equals(WorkType.WORKFLOW)) {
+				List<WorkStatusResponseDTO> tmpList = new ArrayList<>();
+				for (int k = workFlowWorksStartIndex
+						.get(workStatusResponseDTOs.get(j).getName()); k < workFlowWorksStartIndex
+								.get(workStatusResponseDTOs.get(j).getName())
+								+ workStatusResponseDTOs.get(j).getNumberOfWorks(); k++) {
+					tmpList.add(workStatusResponseDTOs.get(k));
+				}
+				workStatusResponseDTOs.get(j).setWorks(tmpList);
+			}
+		}
+
+		return WorkFlowStatusResponseDTO.builder().workFlowExecutionId(masterWorkFlowExecution.getId().toString())
+				.workFlowName(masterWorkFlowDefinition.getName()).status(masterWorkFlowExecution.getStatus().name())
+				.works(workStatusResponseDTOs.get(0).getWorks()).build();
 	}
 
 	@Override
