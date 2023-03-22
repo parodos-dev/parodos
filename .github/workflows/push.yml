@@ -20,15 +20,10 @@ jobs:
       - name: Maven Build
         run: mvn clean package
 
-
-      - name: Build cotainer
-        run: mvn clean package
-
       - name: "Build container images"
         run: |
           make build-images GIT_BRANCH=${GITHUB_REF##*/}
           make tag-images GIT_BRANCH=${GITHUB_REF##*/}
-
 
       - name: Login to quay
         env:
