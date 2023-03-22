@@ -15,3 +15,5 @@ spring:
       passwordAttribute: "userPassword"
       managerDN: null
       managerPassword: null
+springdoc:
+  writer-with-order-by-keys: true
