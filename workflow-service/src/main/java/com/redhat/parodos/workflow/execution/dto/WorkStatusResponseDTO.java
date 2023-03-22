@@ -15,6 +15,7 @@
  */
 package com.redhat.parodos.workflow.execution.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.redhat.parodos.workflow.enums.WorkStatus;
 import com.redhat.parodos.workflow.enums.WorkType;
@@ -24,6 +25,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Workflow response dto
@@ -38,11 +40,17 @@ import java.util.List;
 @NoArgsConstructor
 public class WorkStatusResponseDTO {
 
+	@JsonIgnore
+	private UUID workDefinitionId;
+
 	private String name;
 
 	private WorkType type;
 
 	private WorkStatus status;
+
+	@JsonIgnore
+	private Integer numberOfWorks;
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private List<WorkStatusResponseDTO> works;

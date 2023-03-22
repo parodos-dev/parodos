@@ -12,8 +12,8 @@ services:
 
   workflow-service:
     build:
-      context: ../workflow-service
-      dockerfile: ./Dockerfile
+      context: ../
+      dockerfile: ./workflow-service/Dockerfile
     container_name: workflow-service
     ports:
       - 9000:8080

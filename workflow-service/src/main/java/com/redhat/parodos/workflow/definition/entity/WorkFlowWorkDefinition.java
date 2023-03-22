@@ -1,6 +1,7 @@
 package com.redhat.parodos.workflow.definition.entity;
 
 import com.redhat.parodos.common.AbstractEntity;
+import com.redhat.parodos.workflow.enums.WorkType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.util.Date;
@@ -24,7 +26,8 @@ public class WorkFlowWorkDefinition extends AbstractEntity {
 
 	private UUID workDefinitionId;
 
-	private String workDefinitionType;
+	@Enumerated
+	private WorkType workDefinitionType;
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "workflow_definition_id")

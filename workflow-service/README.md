@@ -22,10 +22,19 @@ test the service. It should be removed once actual Tasks and WorkFlows start get
 To start the application run the following from the root folder of 'workflow-service'.
 
 ```shell
-
-java -Dspring.profiles.active=local -jar target/workflow-service-0.0.1-SNAPSHOT.jar
-
+VERSION=1.0.3-SNAPSHOT
+java -Dspring.profiles.active=local \
+     -Dloader.path=../workflow-examples/target/workflow-examples-${VERSION}-jar-with-dependencies.jar \
+     -jar target/workflow-service-${VERSION}.jar
 ```
+or
+```shell
+VERSION=1.0.3-SNAPSHOT
+export LOADER_PATH=../workflow-examples/target/workflow-examples-${VERSION}-jar-with-dependencies.jar
+export SPRING_PROFILES_ACTIVE=local
+java -jar target/workflow-service-${VERSION}.jar
+```
+Where the LOADER_PATH is the path to the jar containing the WorkFlowTasks and WorkFlows to be loaded into the service.
 
 For convenience there is a shell script at the root of the folder that will run this command as well 
 (`start_workflow_service.sh`).
@@ -130,7 +139,7 @@ future release will include a DSL (domain specific language) for configuring Wor
 
 ### How to configure my postgres database and my workflow configuration class in different package?
 
-before starting this workflow-service application, set the following environment variables for the database: , 
+before starting this workflow-service application, set the following environment variables for the database:
 * DATASOURCE_URL
 * DATASOURCE_DRIVER
 * DATASOURCE_USERNAME
@@ -154,5 +163,5 @@ export CONFIGURATION_PACKAGE=org.test.*
 
 for multiple packages:
 ```
-export CONFIGURATION_PACKAGE=org.test.*, dev.test2.*
+export CONFIGURATION_PACKAGE=org.test.*,dev.test2.*
 ```

@@ -182,7 +182,9 @@ docker-stop: ## Stop notification and workflow services
 
 JAVA_ARGS = -Dspring.profiles.active=local
 run-workflow-service: java-checks ## Run local workflow service
-	java -jar $(JAVA_ARGS) workflow-service/target/workflow-service-$(VERSION).jar
+	java -jar $(JAVA_ARGS) \
+		-Dloader.path=workflow-examples/target/workflow-examples-$(VERSION)-jar-with-dependencies.jar \
+		workflow-service/target/workflow-service-$(VERSION).jar
 
 run-notification-service: java-checks ## Run local notification service
 	java -jar $(JAVA_ARGS) notification-service/target/notification-service-$(VERSION).jar
