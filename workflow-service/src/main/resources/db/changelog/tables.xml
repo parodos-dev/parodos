@@ -4,7 +4,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="1" author="luke" runAlways="true" runOnChange="true">
+    <changeSet id="1" author="luke" runAlways="false" runOnChange="true">
         <!-- User Table -->
         <createTable tableName="user">
             <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
