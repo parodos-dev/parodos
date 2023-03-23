@@ -94,6 +94,7 @@ public class WorkFlowTaskExecutionAspect {
 	public WorkReport executeAroundAdviceTask(ProceedingJoinPoint proceedingJoinPoint, WorkContext workContext) {
 		WorkReport report = null;
 		String workFlowTaskName = ((WorkFlowTask) proceedingJoinPoint.getTarget()).getName();
+
 		log.info("Before invoking execute() on workflow task name: {}", workFlowTaskName);
 		WorkFlowTaskDefinition workFlowTaskDefinition = workFlowTaskDefinitionRepository
 				.findFirstByName(workFlowTaskName);
@@ -105,19 +106,20 @@ public class WorkFlowTaskExecutionAspect {
 
 		WorkFlowExecution masterWorkFlowExecution = workFlowRepository.findById(masterWorkFlowExecutionId).get();
 		// get the workflow if it's executed again from continuation
-		WorkFlowExecution workFlowExecution = handleParentWorkflowUseCase(workContext, workFlowTaskDefinition, masterWorkFlowExecution);
+		WorkFlowExecution workFlowExecution = handleParentWorkflowUseCase(workContext, workFlowTaskDefinition,
+				masterWorkFlowExecution);
 		WorkFlowTaskExecution workFlowTaskExecution = workFlowService.getWorkFlowTask(workFlowExecution.getId(),
 				workFlowTaskDefinition.getId());
 		if (workFlowTaskExecution == null) {
 			workFlowTaskExecution = workFlowService.saveWorkFlowTask(
-					// @formatter:off
+			// @formatter:off
 					WorkFlowDTOUtil.writeObjectValueAsString(WorkContextDelegate.read(
 					workContext,
-					WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION, 
+					WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
 					workFlowTaskName,
 					WorkContextDelegate.Resource.ARGUMENTS)),
-					workFlowTaskDefinition.getId(), 
-					workFlowExecution.getId(), 
+					workFlowTaskDefinition.getId(),
+					workFlowExecution.getId(),
 					WorkFlowTaskStatus.IN_PROGRESS);
 					// @formatter:on
 		}
@@ -138,6 +140,13 @@ public class WorkFlowTaskExecutionAspect {
 		workFlowTaskExecution.setLastUpdateDate(new Date());
 		workFlowService.updateWorkFlowTask(workFlowTaskExecution);
 
+		handleChecker(proceedingJoinPoint, workContext, workFlowTaskDefinition, masterWorkFlowExecution);
+		return report;
+	}
+
+	// Check the WorkFlow for Checkers
+	private void handleChecker(ProceedingJoinPoint proceedingJoinPoint, WorkContext workContext,
+			WorkFlowTaskDefinition workFlowTaskDefinition, WorkFlowExecution masterWorkFlowExecution) {
 		/*
 		 * if this task has checker schedule workflow checker for dynamic run on cron
 		 * expression or stop if done
@@ -157,9 +166,9 @@ public class WorkFlowTaskExecutionAspect {
 						checkerWorkFlows, workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition(), workContext);
 			}
 		}
-		return report;
 	}
 
+	// Deal with any logic related to Parent WorkFlows
 	private WorkFlowExecution handleParentWorkflowUseCase(WorkContext workContext,
 			WorkFlowTaskDefinition workFlowTaskDefinition, WorkFlowExecution masterWorkFlowExecution) {
 		WorkFlowExecution workFlowExecution;
@@ -176,14 +185,17 @@ public class WorkFlowTaskExecutionAspect {
 		return workFlowExecution;
 	}
 
+	// Iterate through the all the Checkers in the workflow and start them based on their
+	// schedules
 	private void startCheckerOnSchedule(String workFlowName, List<WorkFlow> workFlows,
 			WorkFlowCheckerMappingDefinition workFlowCheckerMappingDefinition, WorkContext workContext) {
 		log.info("Schedule workflow checker: {} to run per cron expression: {}", workFlowName,
 				workFlowCheckerMappingDefinition.getCronExpression());
 		for (WorkFlow workFlow : workFlows) {
-			workFlowSchedulerService.schedule(workFlow, workContext, workFlowCheckerMappingDefinition.getCronExpression());
+			workFlowSchedulerService.schedule(workFlow, workContext,
+					workFlowCheckerMappingDefinition.getCronExpression());
 		}
-		
+
 	}
 
 }

@@ -13,6 +13,7 @@ public abstract class BaseAssessmentTaskTest {
 	 */
 	private List<WorkFlowOption> workflowOptions;
 
+	@SuppressWarnings("unused")
 	private BaseAssessmentTask baseAssessmentTask;
 
 	@Before

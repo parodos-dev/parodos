@@ -1,5 +1,19 @@
 package com.redhat.parodos.examples.simple.task;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
+
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.springframework.http.ResponseEntity;
+
 import com.redhat.parodos.examples.base.BaseInfrastructureWorkFlowTaskTest;
 import com.redhat.parodos.examples.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
@@ -10,20 +24,6 @@ import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
 
 /**
  * Rest API WorkFlow Task execution test
@@ -47,10 +47,10 @@ public class RestAPIWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 		this.restAPIWorkflowTask = spy((RestAPIWorkFlowTask) getConcretePersonImplementation());
 
 		try {
-			doReturn(valueUrl).when(this.restAPIWorkflowTask).getParameterValue(Mockito.any(WorkContext.class),
+			doReturn(valueUrl).when(this.restAPIWorkflowTask).getRequiredParameterValue(Mockito.any(WorkContext.class),
 					eq(URL_KEY));
-			doReturn(valuePayload).when(this.restAPIWorkflowTask).getParameterValue(Mockito.any(WorkContext.class),
-					eq(PAYLOAD_KEY));
+			doReturn(valuePayload).when(this.restAPIWorkflowTask)
+					.getRequiredParameterValue(Mockito.any(WorkContext.class), eq(PAYLOAD_KEY));
 
 		}
 		catch (MissingParameterException e) {
@@ -69,7 +69,7 @@ public class RestAPIWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 		WorkContext workContext = Mockito.mock(WorkContext.class);
 		try (MockedStatic<RestUtils> restUtilsMockedStatic = Mockito.mockStatic(RestUtils.class)) {
 			restUtilsMockedStatic.when(() -> RestUtils.executePost(eq(valueUrl), eq(valuePayload)))
-					.thenReturn(new ResponseEntity("body", HttpStatus.OK));
+					.thenReturn(ResponseEntity.ok().build());
 			// when
 			WorkReport workReport = restAPIWorkflowTask.execute(workContext);
 
@@ -85,7 +85,7 @@ public class RestAPIWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 
 		try (MockedStatic<RestUtils> restUtilsMockedStatic = Mockito.mockStatic(RestUtils.class)) {
 			restUtilsMockedStatic.when(() -> RestUtils.executePost(eq(valueUrl), eq(valuePayload)))
-					.thenReturn(new ResponseEntity("body", HttpStatus.BAD_REQUEST));
+					.thenReturn(ResponseEntity.badRequest().build());
 
 			// when
 			WorkReport workReport = restAPIWorkflowTask.execute(workContext);

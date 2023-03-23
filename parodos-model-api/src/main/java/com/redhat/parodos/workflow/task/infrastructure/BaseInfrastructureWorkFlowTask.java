@@ -31,7 +31,6 @@ public abstract class BaseInfrastructureWorkFlowTask extends BaseWorkFlowTask {
 
 	private WorkFlowTaskType type = WorkFlowTaskType.INFRASTRUCTURE;
 
-
 	public WorkFlowTaskType getType() {
 		return type;
 	}

@@ -15,7 +15,11 @@
  */
 package com.redhat.parodos.examples.simple.task;
 
-import com.redhat.parodos.workflow.consts.WorkFlowConstants;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Component;
+
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
@@ -24,11 +28,8 @@ import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * logging task execution
@@ -46,13 +47,10 @@ public class LoggingWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	public WorkReport execute(WorkContext workContext) {
 		log.info("Writing a message to the logs from: {}", getName());
 		try {
-			String userId = getParameterValue(workContext, "user-id");
-			String apiServer = getParameterValue(workContext, "api-server");
+			String userId = getRequiredParameterValue(workContext, "user-id");
+			String apiServer = getRequiredParameterValue(workContext, "api-server");
 			log.info("task parameter 'api-server' value in {} is {}", getName(), apiServer);
 			log.info("workflow parameter 'user-id' value in {} is {}", getName(), userId);
-			if (getWorkFlowChecker() != null) {
-				workContext.put(WorkFlowConstants.WORKFLOW_CHECKER_ID, getWorkFlowChecker().getName());
-			}
 			return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 		}
 		catch (Exception e) {

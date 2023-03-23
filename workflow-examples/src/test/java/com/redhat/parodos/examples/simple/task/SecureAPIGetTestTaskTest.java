@@ -51,12 +51,12 @@ public class SecureAPIGetTestTaskTest extends BaseInfrastructureWorkFlowTaskTest
 	public void setUp() {
 		this.secureAPIGetTestTask = spy((SecureAPIGetTestTask) getConcretePersonImplementation());
 		try {
-			doReturn(testUrl).when(this.secureAPIGetTestTask).getParameterValue(Mockito.any(WorkContext.class),
+			doReturn(testUrl).when(this.secureAPIGetTestTask).getRequiredParameterValue(Mockito.any(WorkContext.class),
 					eq(SECURED_URL));
-			doReturn(testUsername).when(this.secureAPIGetTestTask).getParameterValue(Mockito.any(WorkContext.class),
-					eq(USERNAME));
-			doReturn(testPassword).when(this.secureAPIGetTestTask).getParameterValue(Mockito.any(WorkContext.class),
-					eq(PASSWORD));
+			doReturn(testUsername).when(this.secureAPIGetTestTask)
+					.getRequiredParameterValue(Mockito.any(WorkContext.class), eq(USERNAME));
+			doReturn(testPassword).when(this.secureAPIGetTestTask)
+					.getRequiredParameterValue(Mockito.any(WorkContext.class), eq(PASSWORD));
 		}
 		catch (MissingParameterException e) {
 			throw new RuntimeException(e);
@@ -80,7 +80,7 @@ public class SecureAPIGetTestTaskTest extends BaseInfrastructureWorkFlowTaskTest
 			WorkReport workReport = secureAPIGetTestTask.execute(workContext);
 
 			// then
-			assertNull(secureAPIGetTestTask.getWorkFlowChecker());
+			assertNull(secureAPIGetTestTask.getWorkFlowCheckers());
 			assertEquals(WorkStatus.COMPLETED, workReport.getStatus());
 			Mockito.verifyNoInteractions(workContext);
 		}
@@ -99,7 +99,7 @@ public class SecureAPIGetTestTaskTest extends BaseInfrastructureWorkFlowTaskTest
 			WorkReport workReport = secureAPIGetTestTask.execute(workContext);
 
 			// then
-			assertNull(secureAPIGetTestTask.getWorkFlowChecker());
+			assertNull(secureAPIGetTestTask.getWorkFlowCheckers());
 			assertEquals(WorkStatus.FAILED, workReport.getStatus());
 			Mockito.verifyNoInteractions(workContext);
 		}

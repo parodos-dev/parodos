@@ -14,6 +14,7 @@ public abstract class BaseWorkFlowCheckerTaskTest {
 	 */
 	private List<WorkFlowOption> workflowOptions;
 
+	@SuppressWarnings("unused")
 	private BaseWorkFlowCheckerTask baseWorkFlowCheckerTask;
 
 	@Before
@@ -28,6 +29,14 @@ public abstract class BaseWorkFlowCheckerTaskTest {
 
 	public WorkFlowTaskType getType() {
 		return WorkFlowTaskType.CHECKER;
+	}
+
+	public List<WorkFlowOption> getWorkflowOptions() {
+		return workflowOptions;
+	}
+
+	public void setWorkflowOptions(List<WorkFlowOption> workflowOptions) {
+		this.workflowOptions = workflowOptions;
 	}
 
 }

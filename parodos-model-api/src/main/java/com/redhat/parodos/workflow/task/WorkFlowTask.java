@@ -15,15 +15,15 @@
  */
 package com.redhat.parodos.workflow.task;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import com.redhat.parodos.workflows.work.Work;
+
 import lombok.NonNull;
 
 /**

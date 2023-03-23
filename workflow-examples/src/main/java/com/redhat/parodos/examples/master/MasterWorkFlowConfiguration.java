@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Arrays;
 import java.util.concurrent.Executors;
 
 @Configuration
@@ -105,7 +106,7 @@ public class MasterWorkFlowConfiguration {
 	NamespaceWorkFlowTask namespaceWorkFlowTask(
 			@Qualifier("namespaceApprovalWorkFlowChecker") WorkFlow namespaceApprovalWorkFlowChecker) {
 		NamespaceWorkFlowTask namespaceWorkFlowTask = new NamespaceWorkFlowTask();
-		namespaceWorkFlowTask.setWorkFlowChecker(namespaceApprovalWorkFlowChecker);
+		namespaceWorkFlowTask.setWorkFlowCheckers(Arrays.asList(namespaceApprovalWorkFlowChecker));
 		return namespaceWorkFlowTask;
 	}
 
@@ -140,7 +141,7 @@ public class MasterWorkFlowConfiguration {
 	SslCertificationWorkFlowTask sslCertificationWorkFlowTask(
 			@Qualifier("sslCertificationApprovalWorkFlowChecker") WorkFlow sslCertificationApprovalWorkFlowChecker) {
 		SslCertificationWorkFlowTask sslCertificationWorkFlowTask = new SslCertificationWorkFlowTask();
-		sslCertificationWorkFlowTask.setWorkFlowChecker(sslCertificationApprovalWorkFlowChecker);
+		sslCertificationWorkFlowTask.setWorkFlowCheckers(Arrays.asList(sslCertificationApprovalWorkFlowChecker));
 		return sslCertificationWorkFlowTask;
 	}
 
