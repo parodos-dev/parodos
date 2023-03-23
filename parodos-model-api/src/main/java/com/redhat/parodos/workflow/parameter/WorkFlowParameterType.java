@@ -28,8 +28,8 @@ public enum WorkFlowParameterType {
 
 	PASSWORD, TEXT, EMAIL, DATE, NUMBER, URL;
 
-	public Map<String, String> getAsJsonSchema() {
-		Map<String, String> properties = new HashMap<>();
+	public Map<String, Object> getAsJsonSchema() {
+		Map<String, Object> properties = new HashMap<>();
 		switch (this) {
 			case PASSWORD:
 				properties.put("type", "string");
