@@ -87,7 +87,7 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 
 	@PostConstruct
 	void postInit() {
-		workFlowDefinitionService.cleanAllDefinitions();
+		workFlowDefinitionService.cleanAllDefinitionMappings();
 		workFlows.forEach(this::saveWorkFlow);
 		saveChecker(workFlowTasks);
 		log.info("workflow definitions are loaded in database");
