@@ -16,7 +16,7 @@ public class WorkFlowTaskParameterTypeTest extends TestCase {
 				WorkFlowTaskParameterType.EMAIL, WorkFlowTaskParameterType.NUMBER, WorkFlowTaskParameterType.URL,
 				WorkFlowTaskParameterType.DATE };
 
-		List<Map<String, String>> outputs = new ArrayList<>();
+		List<Map<String, Object>> outputs = new ArrayList<>();
 		for (WorkFlowTaskParameterType inputValue : inputValues) {
 			outputs.add(inputValue.getAsJsonSchema());
 		}

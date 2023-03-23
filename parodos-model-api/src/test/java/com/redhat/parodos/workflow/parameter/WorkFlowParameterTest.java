@@ -16,21 +16,21 @@ public class WorkFlowParameterTest extends TestCase {
 		WorkFlowParameter parameters = WorkFlowParameter.builder().key(key).description(description)
 				.type(WorkFlowParameterType.TEXT).build();
 		// when
-		Map<String, String> result = parameters.getAsJsonSchema();
+		Map<String, Object> result = parameters.getAsJsonSchema();
 		// then
 		assertNotNull(result);
 		assertEquals(result.size(), 4);
 		assertEquals(result.get("type"), "string");
 		assertEquals(result.get("description"), description);
 		assertEquals(result.get("format"), "text");
-		assertEquals(result.get("required"), "true");
+		assertEquals(result.get("required"), true);
 	}
 
 	public void testGetAsJsonSchemaWithoutType() {
 		// given
 		WorkFlowParameter parameters = WorkFlowParameter.builder().key(key).description(description).build();
 		// when
-		Map<String, String> result = parameters.getAsJsonSchema();
+		Map<String, Object> result = parameters.getAsJsonSchema();
 		// then
 		assertNotNull(result);
 		assertEquals(result.size(), 0);
