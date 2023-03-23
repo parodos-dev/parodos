@@ -43,6 +43,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.annotation.PreDestroy;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -242,6 +243,11 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
 		// TODO: validate required parameters from definition
 		return null;
+	}
+
+	@PreDestroy
+	public void gracefulShutdown() {
+		log.info(">> Shutting down the workflow service");
 	}
 
 }

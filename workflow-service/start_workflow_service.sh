@@ -1,3 +1,5 @@
-java -jar -Dspring.profiles.active=local \
-    -Dloader.path=../workflow-examples/target/workflow-examples-1.0.5-SNAPSHOT-jar-with-dependencies.jar \
-    target/workflow-service-1.0.5-SNAPSHOT.jar
+SERVICE_JAR_FILE=$(ls -1 ../workflow-service/target/workflow-service-*.jar)
+WORKFLOWS_EXAMPLE_JAR_FILE=$(ls -1 ../workflow-examples/target/workflow-examples-*-jar-with-dependencies.jar)
+SPRING_PROFILES_ACTIVE="${SPRING_PROFILES_ACTIVE:-local}"
+LOADER_PATH=$WORKFLOWS_EXAMPLE_JAR_FILE
+SERVER_PORT=8080 LOADER_PATH=$LOADER_PATH SPRING_PROFILES_ACTIVE=$SPRING_PROFILES_ACTIVE java -jar $SERVICE_JAR_FILE
