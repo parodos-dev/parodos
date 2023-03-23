@@ -3,6 +3,12 @@ approvers:
 - RichardW98
 - anludke
 - pkliczewski
+- eloycoto
+- gciavarrini
+- nirarg
+- rgolangh
+- masayag
+- ydayagi
 reviewers:
 - lshannon
 - RichardW98
@@ -11,3 +17,6 @@ reviewers:
 - eloycoto
 - gciavarrini
 - nirarg
+- rgolangh
+- masayag
+- ydayagi
