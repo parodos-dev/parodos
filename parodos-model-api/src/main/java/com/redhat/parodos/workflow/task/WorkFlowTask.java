@@ -56,8 +56,8 @@ public interface WorkFlowTask extends Work {
 
 	}
 
-	default HashMap<String, Map<String, String>> getAsJsonSchema() {
-		HashMap<String, Map<String, String>> result = new HashMap<>();
+	default HashMap<String, Map<String, Object>> getAsJsonSchema() {
+		HashMap<String, Map<String, Object>> result = new HashMap<>();
 		for (WorkFlowTaskParameter workFlowTaskParameter : this.getWorkFlowTaskParameters()) {
 			if (workFlowTaskParameter == null) {
 				continue;
@@ -67,8 +67,8 @@ public interface WorkFlowTask extends Work {
 				continue;
 			}
 
-			Map<String, String> properties = workFlowTaskParameter.getType().getAsJsonSchema();
-			properties.put("required", String.valueOf(!workFlowTaskParameter.isOptional()));
+			Map<String, Object> properties = workFlowTaskParameter.getType().getAsJsonSchema();
+			properties.put("required", !workFlowTaskParameter.isOptional());
 			properties.put("description", workFlowTaskParameter.getDescription());
 			if (workFlowTaskParameter.getJsonSchemaOptions() != null) {
 				properties.putAll(workFlowTaskParameter.getJsonSchemaOptions());

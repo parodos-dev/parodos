@@ -43,12 +43,12 @@ public class WorkFlowParameter {
 
 	private boolean optional;
 
-	public Map<String, String> getAsJsonSchema() {
+	public Map<String, Object> getAsJsonSchema() {
 		if (this.getType() == null) {
 			return Map.of();
 		}
-		Map<String, String> properties = this.getType().getAsJsonSchema();
-		properties.put("required", String.valueOf(!this.isOptional()));
+		Map<String, Object> properties = this.getType().getAsJsonSchema();
+		properties.put("required", !this.isOptional());
 		properties.put("description", this.getDescription());
 		return properties;
 	}

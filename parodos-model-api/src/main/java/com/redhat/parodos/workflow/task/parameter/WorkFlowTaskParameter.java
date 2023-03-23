@@ -43,6 +43,6 @@ public class WorkFlowTaskParameter {
 
 	private WorkFlowTaskParameterType type;
 
-	private Map<String, String> JsonSchemaOptions;
+	private Map<String, Object> JsonSchemaOptions;
 
 }

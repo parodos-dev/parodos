@@ -63,7 +63,7 @@ public class WorkDefinitionResponseDTO {
 	private List<WorkDefinitionResponseDTO> works;
 
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
-	private Map<String, Map<String, String>> parameters;
+	private Map<String, Map<String, Object>> parameters;
 
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private List<WorkFlowTaskOutput> outputs;
@@ -78,7 +78,7 @@ public class WorkDefinitionResponseDTO {
 				return this;
 			}
 			this.parameters(WorkFlowDTOUtil.readStringAsObject(parameters,
-					new TypeReference<Map<String, Map<String, String>>>() {
+					new TypeReference<Map<String, Map<String, Object>>>() {
 					}, Map.of()));
 			return this;
 		}

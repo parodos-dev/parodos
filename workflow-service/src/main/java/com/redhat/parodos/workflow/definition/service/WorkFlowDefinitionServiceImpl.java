@@ -82,8 +82,8 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 		this.modelMapper = modelMapper;
 	}
 
-	private HashMap<String, Map<String, String>> convertWorkFlowParameters(List<WorkFlowParameter> workFlowParameters) {
-		HashMap<String, Map<String, String>> result = new HashMap<>();
+	private HashMap<String, Map<String, Object>> convertWorkFlowParameters(List<WorkFlowParameter> workFlowParameters) {
+		HashMap<String, Map<String, Object>> result = new HashMap<>();
 		for (WorkFlowParameter workFlowParameter : workFlowParameters) {
 			if (workFlowParameter == null)
 				continue;
