@@ -27,6 +27,7 @@ import com.redhat.parodos.workflows.workflow.WorkFlow;
  * with the logic required to check the status of this external tasks
  *
  * @author Luke Shannon (Github: lshannon)
+ * @author Richard Wang (Github: richardW98)
  */
 public abstract class BaseInfrastructureWorkFlowTask extends BaseWorkFlowTask {
 

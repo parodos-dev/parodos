@@ -30,6 +30,7 @@ import org.springframework.stereotype.Component;
  *
  * @author Luke Shannon (Github: lshannon)
  * @author Annel Ketcha (Github: anludke)
+ * @author Richard Wang (Github: richardW98)
  */
 
 @Slf4j

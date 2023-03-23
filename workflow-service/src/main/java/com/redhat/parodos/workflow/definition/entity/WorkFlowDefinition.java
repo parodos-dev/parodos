@@ -51,6 +51,7 @@ import java.util.List;
 @Setter
 public class WorkFlowDefinition extends AbstractEntity {
 
+	@Column(nullable = false)
 	private String name;
 
 	@Enumerated(EnumType.STRING)
@@ -63,13 +64,17 @@ public class WorkFlowDefinition extends AbstractEntity {
 
 	private Date modifyDate;
 
+	@Column(nullable = false)
 	private String parameters;
 
+	@Column(nullable = false)
 	private String processingType;
 
+	@Column(nullable = false)
 	private Integer numberOfWorks;
 
-	@OneToMany(mappedBy = "workFlowDefinition", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "workFlowDefinition", fetch = FetchType.EAGER,
+			cascade = { CascadeType.PERSIST, CascadeType.DETACH })
 	@Builder.Default
 	private List<WorkFlowTaskDefinition> workFlowTaskDefinitions = new ArrayList<>();
 

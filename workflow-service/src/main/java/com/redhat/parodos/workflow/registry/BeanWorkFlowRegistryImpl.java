@@ -52,7 +52,7 @@ import com.redhat.parodos.workflow.annotation.Escalation;
  *
  * @author Luke Shannon (Github: lshannon)
  * @author Annel Ketcha (Github: anludke)
- * @author Annel Ketcha (Github: anludke)
+ * @author Richard Wang (Github: richardW98)
  */
 
 @Slf4j
@@ -87,7 +87,7 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 
 	@PostConstruct
 	void postInit() {
-		workFlowDefinitionService.cleanAllDefinitions();
+		workFlowDefinitionService.cleanAllDefinitionMappings();
 		workFlows.forEach(this::saveWorkFlow);
 		saveChecker(workFlowTasks);
 		log.info("workflow definitions are loaded in database");

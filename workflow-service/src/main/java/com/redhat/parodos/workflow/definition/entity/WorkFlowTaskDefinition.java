@@ -46,10 +46,13 @@ import lombok.Setter;
 @Setter
 public class WorkFlowTaskDefinition extends AbstractEntity {
 
+	@Column(nullable = false)
 	private String name;
 
+	@Column(nullable = false)
 	private String parameters;
 
+	@Column(nullable = false)
 	private String outputs;
 
 	@Column(updatable = false)

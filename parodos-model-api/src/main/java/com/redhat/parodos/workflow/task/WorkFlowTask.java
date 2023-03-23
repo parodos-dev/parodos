@@ -30,6 +30,7 @@ import lombok.NonNull;
  * Basic Contract for Work in the Infrastructure Service
  *
  * @author Luke Shannon (Github: lshannon)
+ * @author Richard Wang (Github: richardW98)
  *
  */
 public interface WorkFlowTask extends Work {

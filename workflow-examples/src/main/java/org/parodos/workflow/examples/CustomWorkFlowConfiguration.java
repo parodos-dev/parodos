@@ -15,11 +15,15 @@
  */
 package org.parodos.workflow.examples;
 
+import com.redhat.parodos.examples.master.checker.NamespaceApprovalWorkFlowCheckerTask;
+import com.redhat.parodos.examples.master.task.NamespaceWorkFlowTask;
+import com.redhat.parodos.workflow.annotation.Checker;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import org.parodos.workflow.examples.task.CustomWorkFlowTask;
+import org.parodos.workflow.examples.task.SimpleWorkFlowCheckerTask;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,21 +39,48 @@ public class CustomWorkFlowConfiguration {
 
 	// START Custom Sequential Example (WorkflowTasks and Workflow Definitions)
 	@Bean
-	CustomWorkFlowTask customWorkFlowTask() {
+	CustomWorkFlowTask customWorkFlowTaskOne() {
+		return new CustomWorkFlowTask();
+	}
+
+	@Bean
+	CustomWorkFlowTask customWorkFlowTaskOne(@Qualifier("simpleWorkFlowChecker") WorkFlow simpleWorkFlowChecker) {
+		CustomWorkFlowTask customWorkFlowTaskOne = new CustomWorkFlowTask();
+		customWorkFlowTaskOne.setWorkFlowChecker(simpleWorkFlowChecker);
+		return customWorkFlowTaskOne;
+	}
+
+	@Bean
+	CustomWorkFlowTask customWorkFlowTaskTwo() {
 		return new CustomWorkFlowTask();
 	}
 
 	@Bean(name = "customWorkflow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
 	@Infrastructure
-	WorkFlow customWorkflow(@Qualifier("customWorkFlowTask") CustomWorkFlowTask customWorkFlowTask) {
+	WorkFlow customWorkflow(@Qualifier("customWorkFlowTaskOne") CustomWorkFlowTask customWorkFlowTaskOne,
+			@Qualifier("customWorkFlowTaskTwo") CustomWorkFlowTask customWorkFlowTaskTwo) {
 		// @formatter:off
         return SequentialFlow
                 .Builder.aNewSequentialFlow()
                 .named("customWorkflow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
-                .execute(customWorkFlowTask)
+                .execute(customWorkFlowTaskOne)
+				.then(customWorkFlowTaskTwo)
                 .build();
         // @formatter:on
 	}
 	// END Custom Sequential Example (WorkflowTasks and Workflow Definitions)
+
+	@Bean
+	SimpleWorkFlowCheckerTask simpleCustomCheckerTask() {
+		return new SimpleWorkFlowCheckerTask();
+	}
+
+	@Bean(name = "simpleWorkFlowChecker")
+	@Checker(cronExpression = "*/5 * * * * ?")
+	WorkFlow simpleWorkFlowChecker(
+			@Qualifier("simpleCustomCheckerTask") SimpleWorkFlowCheckerTask simpleCustomCheckerTask) {
+		return SequentialFlow.Builder.aNewSequentialFlow().named("simpleWorkFlowChecker")
+				.execute(simpleCustomCheckerTask).build();
+	}
 
 }

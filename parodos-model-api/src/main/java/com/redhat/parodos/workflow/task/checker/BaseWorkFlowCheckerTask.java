@@ -30,6 +30,7 @@ import com.redhat.parodos.workflows.workflow.WorkFlow;
  * been completed
  *
  * @author Luke Shannon (Github: lshannon)
+ * @author Richard Wang (Github: richardW98)
  */
 public abstract class BaseWorkFlowCheckerTask extends BaseWorkFlowTask {
 

@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2022 Red Hat Developer
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.redhat.parodos.workflow.definition.service;
 
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
@@ -25,6 +40,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -38,6 +55,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * unit test for WorkFlowDefinitionService
+ *
+ * @author Annel Ketcha (Github: anludke)
+ * @author Richard Wang (Github: richardW98)
+ */
 class WorkFlowDefinitionServiceImplTest {
 
 	private static final String _10 = "10 * *";
@@ -107,6 +130,42 @@ class WorkFlowDefinitionServiceImplTest {
 		assertEquals(argument.getValue().getNumberOfWorks(), 1);
 		assertEquals(argument.getValue().getWorkFlowTaskDefinitions().size(), 1);
 		assertEquals(argument.getValue().getWorkFlowTaskDefinitions().stream().findFirst().get().getName(), TEST_TASK);
+	}
+
+	@Test
+	public void simpleSaveTest_skipSave_when_sameWorkflowFoundInDB() {
+		String workFlowName = "test";
+		String workFlowTaskName = "testTask";
+		// given
+		WorkFlowDefinition workFlowDefinition = this.sampleWorkFlowDefinition(workFlowName);
+		workFlowDefinition.setParameters("{}");
+		WorkFlowTask workFlowTask = Mockito.mock(WorkFlowTask.class);
+		WorkFlowTaskParameter workFlowTaskParameter = WorkFlowTaskParameter.builder().key("key").description("the key")
+				.optional(false).type(WorkFlowTaskParameterType.URL).build();
+		Mockito.when(workFlowTask.getName()).thenReturn(workFlowTaskName);
+		Mockito.when(workFlowTask.getWorkFlowTaskParameters()).thenReturn(List.of(workFlowTaskParameter));
+		WorkFlowTaskDefinition workFlowTaskDefinition = this.sampleWorkFlowTaskDefinition(workFlowDefinition,
+				workFlowTaskName, workFlowTaskParameter);
+		workFlowTaskDefinition.setParameters("{}");
+		workFlowTaskDefinition.setOutputs("[]");
+		workFlowDefinition.setWorkFlowTaskDefinitions(List.of(workFlowTaskDefinition));
+		Mockito.when(this.workFlowTaskDefinitionRepository.save(any())).thenReturn(workFlowTaskDefinition);
+		Mockito.when(this.workFlowDefinitionRepository.save(any())).thenReturn(workFlowDefinition);
+		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(anyString())).thenReturn(workFlowDefinition);
+		Mockito.when(this.workFlowTaskDefinitionRepository.findFirstByName(anyString()))
+				.thenReturn(workFlowTaskDefinition);
+		// when
+		WorkFlowDefinitionResponseDTO workFlowDefinitionResponseDTO = this.workFlowDefinitionService.save(workFlowName,
+				WorkFlowType.ASSESSMENT, Collections.emptyList(), List.of(workFlowTask),
+				WorkFlowProcessingType.SEQUENTIAL);
+
+		// then
+		assertNotNull(workFlowDefinitionResponseDTO);
+		assertNotNull(workFlowDefinitionResponseDTO.getId());
+		assertEquals(workFlowDefinitionResponseDTO.getName(), workFlowName);
+
+		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).save(workFlowDefinition);
+		Mockito.verify(this.workFlowTaskDefinitionRepository, Mockito.never()).save(any());
 	}
 
 	@Test

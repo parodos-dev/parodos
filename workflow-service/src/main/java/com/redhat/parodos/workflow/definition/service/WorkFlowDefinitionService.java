@@ -46,6 +46,6 @@ public interface WorkFlowDefinitionService {
 	void saveWorkFlowChecker(String workFlowTaskName, String workFlowCheckerName,
 			WorkFlowCheckerDTO workFlowCheckerDTO);
 
-	void cleanAllDefinitions();
+	void cleanAllDefinitionMappings();
 
 }
