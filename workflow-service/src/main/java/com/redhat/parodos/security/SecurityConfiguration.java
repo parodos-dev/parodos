@@ -15,8 +15,7 @@
  */
 package com.redhat.parodos.security;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
+import com.redhat.parodos.config.properties.LdapConnectionProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,11 +29,11 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.stereotype.Component;
 
-import com.redhat.parodos.config.properties.LdapConnectionProperties;
+import static org.springframework.security.config.Customizer.withDefaults;
 
 /**
  * Security configuration for the application to ensure the main endpoints are locked down
- * and an OAuth2 server is enable. The OAuth2 server details can be found in the
+ * and an OAuth2 server is enabled. The OAuth2 server details can be found in the
  * application.yml file
  *
  * @author Luke Shannon (Github: lshannon)
@@ -59,7 +58,7 @@ public class SecurityConfiguration {
 			.authorizeRequests()
 			.mvcMatchers(HttpMethod.OPTIONS, "/**")
 			.permitAll()
-			.mvcMatchers("/api/**")
+			.mvcMatchers("/api/**", "/actuator/shutdown")
 			.fullyAuthenticated()
 			.and()
 			.httpBasic(withDefaults())

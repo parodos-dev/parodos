@@ -15,6 +15,21 @@ spring:
       passwordAttribute: "userPassword"
       managerDN: null
       managerPassword: null
+  lifecycle:
+    timeout-per-shutdown-phase: "25s"
 springdoc:
   writer-with-order-by-keys: true
   writer-with-default-pretty-printer: true
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      enabled: true
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: "health,shutdown"
+server:
+  shutdown: "graceful"

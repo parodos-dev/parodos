@@ -16,26 +16,19 @@
 package com.redhat.parodos.workflow.registry;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.redhat.parodos.workflow.enums.WorkFlowProcessingType;
-import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.annotation.Assessment;
 import com.redhat.parodos.workflow.annotation.Checker;
+import com.redhat.parodos.workflow.annotation.Escalation;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
 import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
+import com.redhat.parodos.workflow.enums.WorkFlowProcessingType;
+import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.parameter.WorkFlowParameter;
 import com.redhat.parodos.workflow.parameter.WorkFlowParameterType;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
 import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
-import javax.annotation.PostConstruct;
-import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -44,7 +37,16 @@ import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
-import com.redhat.parodos.workflow.annotation.Escalation;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * An implementation of the WorkflowRegistry that loads all Bean definitions of type
@@ -178,6 +180,11 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 				return false;
 			}
 		});
+	}
+
+	@PreDestroy
+	public void gracefulShutdown() {
+		log.info(">> Shutting down the bean workflow registry");
 	}
 
 }
