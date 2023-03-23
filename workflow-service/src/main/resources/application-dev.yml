@@ -15,3 +15,5 @@ spring:
       passwordAttribute: "userPassword"
       managerDN: "cn=admin,dc=parodos,dc=dev"
       managerPassword: "admin"
+springdoc:
+  writer-with-order-by-keys: true

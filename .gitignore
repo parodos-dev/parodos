@@ -61,3 +61,13 @@ local.properties
 
 ## VSCODE ***
 /.vscode/
+
+##############################
+## Workflow Service SDK Generated files
+##############################
+
+workflow-service-sdk/*gradle*
+workflow-service-sdk/.openapi-generator/
+workflow-service-sdk/build.*
+workflow-service-sdk/git_push.sh
+workflow-service-sdk/.travis.yml

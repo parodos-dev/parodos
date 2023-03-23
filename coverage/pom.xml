@@ -58,6 +58,9 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <excludes>${project.parent.basedir}/workflow-service-sdk/*</excludes>
+                </configuration>
             </plugin>
         </plugins>
     </build>
