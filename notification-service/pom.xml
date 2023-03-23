@@ -24,12 +24,12 @@
     </scm>
     <properties>
         <java.version>11</java.version>
-        <spring-cloud.version>2020.0.4</spring-cloud.version>
+        <spring-cloud.version>2020.0.6</spring-cloud.version>
         <springdoc-openapi-ui.version>1.6.4</springdoc-openapi-ui.version>
         <postgres.socket.factory.version>1.2.0</postgres.socket.factory.version>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <springframework.boot.version>2.5.5</springframework.boot.version>
+        <springframework.boot.version>2.5.14</springframework.boot.version>
     </properties>
     <dependencies>
         <!-- START Spring Web Dependencies -->
