@@ -13,7 +13,7 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: ${DATASOURCE_URL:jdbc:h2:mem:workflow_service}
-    driverClassName:  ${DATASOURCE_DRIVER:org.h2.Driver}
+    driverClassName: ${DATASOURCE_DRIVER:org.h2.Driver}
     username: ${DATASOURCE_USERNAME:postgres}
     password: ${DATASOURCE_PASSWORD:postgres}
     hikari:
@@ -35,6 +35,24 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: ${keycloak_url:http://localhost:3434/realms/Parodos/protocol/openid-connect/certs}
+
+  lifecycle:
+    timeout-per-shutdown-phase: "25s"
+
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      enabled: true
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: "health,shutdown"
+
+server:
+  shutdown: "graceful"
 
 springdoc:
   swagger-ui:
