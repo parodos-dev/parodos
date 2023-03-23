@@ -5,3 +5,11 @@ metadata:
   namespace: default
 data:
   SPRING_PROFILES_ACTIVE: "local"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: notification-service-config
+  namespace: default
+data:
+  SPRING_PROFILES_ACTIVE: "local"

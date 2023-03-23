@@ -19,3 +19,10 @@ data:
   DATASOURCE_USERNAME: "parodos"
   DATASOURCE_PASSWORD: "parodos"
   SPRING_PROFILES_ACTIVE: "dev"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: notification-service-config
+data:
+  SPRING_PROFILES_ACTIVE: "local"
