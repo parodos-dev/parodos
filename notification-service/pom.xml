@@ -30,6 +30,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <springframework.boot.version>2.5.14</springframework.boot.version>
+        <openapi.generator.version>5.4.0</openapi.generator.version>
     </properties>
     <dependencies>
         <!-- START Spring Web Dependencies -->
@@ -243,6 +244,74 @@
                     </goals>
                     <phase>package</phase>
                 </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>2.5</version>
+                <executions>
+                    <execution>
+                        <id>auto-clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                        <configuration>
+                            <filesets>
+                                <fileset>
+                                    <directory>${project.parent.basedir}/notification-service-sdk</directory>
+                                    <includes>
+                                        <include>**</include>
+                                    </includes>
+                                    <excludes>
+                                        <exclude>.openapi-generator-ignore</exclude>
+                                        <exclude>pom.xml</exclude>
+                                    </excludes>
+                                    <followSymlinks>false</followSymlinks>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>${openapi.generator.version}</version>
+                <executions>
+                    <execution>
+                        <id>generate-client-api-code</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <phase>pre-integration-test</phase>
+                        <configuration>
+                            <generatorName>java</generatorName>
+
+                            <groupId>dev.parodos</groupId>
+                            <artifactId>notification-service-sdk</artifactId>
+                            <packageName>com.redhat.parodos.notification.sdk</packageName>
+
+                            <inputSpec>${basedir}/generated/openapi.json</inputSpec>
+                            <output>${project.parent.basedir}/notification-service-sdk</output>
+
+                            <invokerPackage>com.redhat.parodos.notification.sdk.api</invokerPackage>
+                            <apiPackage>com.redhat.parodos.notification.sdk.api</apiPackage>
+                            <modelPackage>com.redhat.parodos.notification.sdk.model</modelPackage>
+                            <addCompileSourceRoot>true</addCompileSourceRoot>
+
+                            <configOptions>
+                                <basePackage>com.redhat.parodos.notification.sdk</basePackage>
+                                <configPackage>com.redhat.parodos.notification.sdk.configuration</configPackage>
+                                <parentArtifactId>parodos-parent</parentArtifactId>
+                                <parentGroupId>dev.parodos</parentGroupId>
+                                <parentVersion>${revision}</parentVersion>
+                                <artifactVersion>${revision}</artifactVersion>
+                                <dateLibrary>legacy</dateLibrary>
+                                <hideGenerationTimestamp>true</hideGenerationTimestamp>
+                            </configOptions>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
