@@ -60,6 +60,7 @@
         <module>workflow-service</module>
         <module>workflow-examples</module>
         <module>notification-service</module>
+        <module>notification-service-sdk</module>
         <module>pattern-detection-library</module>
         <module>coverage</module>
         <module>external-dependencies</module>
