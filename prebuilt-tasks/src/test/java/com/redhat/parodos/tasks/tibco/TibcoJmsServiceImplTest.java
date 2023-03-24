@@ -7,7 +7,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import javax.jms.Connection;
-import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MessageProducer;
 import javax.jms.Session;

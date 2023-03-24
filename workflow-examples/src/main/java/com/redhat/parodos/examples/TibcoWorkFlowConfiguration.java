@@ -25,7 +25,7 @@ import com.tibco.tibjms.TibjmsConnectionFactory;
 public class TibcoWorkFlowConfiguration {
 	
 	@Bean
-	TibjmsConnectionFactory connectionFactory(@Value("${url}") String url) {
+	TibjmsConnectionFactory connectionFactory(@Value("${url:ssl://server:7243}") String url) {
 		return new TibjmsConnectionFactory(url);
 	}
 	
@@ -35,7 +35,7 @@ public class TibcoWorkFlowConfiguration {
 	// Add the hostname 'server' to 127.0.0.1 entry in /etc/hosts
 	// Set the admin password in TIBCO to 'admin' or edit the username and password below
 	@Bean
-	TibcoMessageService tibcoMessageService(TibjmsConnectionFactory tibjmsConnectionFactory, @Value("${caFile}") String caFile, @Value("${username}") String username, @Value("${password}") String password) throws JMSException {
+	TibcoMessageService tibcoMessageService(TibjmsConnectionFactory tibjmsConnectionFactory, @Value("${caFile:/opt/tibco/ems/10.2/samples/certs/server_root.cert.pem}") String caFile, @Value("${username:admin}") String username, @Value("${password:admin}") String password) throws JMSException {
 		return new TibcoJmsServiceImpl(tibjmsConnectionFactory, caFile, username, password);
 	}
 
