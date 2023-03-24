@@ -13,27 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.notification.config;
+package com.redhat.parodos.notification.security;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
-/**
- * Local configuration to run the service with no authentication
- *
- * @author Annel Ketcha (Github: anludke)
- */
 @Profile("local")
 @Configuration
-public class LocalSecurityConfiguration {
+public class LocalSecurityConfiguration extends SecurityConfiguration {
 
-	@Bean
-	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.csrf().disable().authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
-		return http.build();
+	@Override
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		HttpSecurity httpSec = this.setHttpSecurity(http);
+		httpSec.cors().disable();
+		httpSec.csrf().disable();
+		return httpSec.build();
 	}
 
 }

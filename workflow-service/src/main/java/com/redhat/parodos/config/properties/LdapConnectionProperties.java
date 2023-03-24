@@ -1,10 +1,9 @@
 package com.redhat.parodos.config.properties;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+
+import lombok.Data;
 
 @ConfigurationProperties(prefix = "spring.ldap.connection")
 @ConfigurationPropertiesScan
@@ -17,9 +16,9 @@ public class LdapConnectionProperties {
 
 	String url;
 
-	String ManagerDN;
+	String managerDN;
 
-	String ManagerPassword;
+	String managerPassword;
 
 	String passwordAttribute;
 

@@ -15,15 +15,8 @@
  */
 package com.redhat.parodos.notification.controller;
 
-import com.redhat.parodos.notification.enums.Operation;
-import com.redhat.parodos.notification.enums.State;
-import com.redhat.parodos.notification.dto.NotificationAssemblerDTO;
-import com.redhat.parodos.notification.util.SecurityUtil;
-import com.redhat.parodos.notification.dto.NotificationRecordResponseDTO;
-import com.redhat.parodos.notification.jpa.entity.NotificationRecord;
-import com.redhat.parodos.notification.service.NotificationRecordService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -39,6 +32,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.redhat.parodos.notification.dto.NotificationAssemblerDTO;
+import com.redhat.parodos.notification.dto.NotificationRecordResponseDTO;
+import com.redhat.parodos.notification.enums.Operation;
+import com.redhat.parodos.notification.enums.State;
+import com.redhat.parodos.notification.jpa.entity.NotificationRecord;
+import com.redhat.parodos.notification.service.NotificationRecordService;
+import com.redhat.parodos.notification.util.SecurityUtil;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * Notification record controller
@@ -77,6 +81,9 @@ public class NotificationRecordController {
 	public PagedModel<NotificationRecordResponseDTO> getNotifications(@PageableDefault(size = 100) Pageable pageable,
 			@RequestParam(value = "state", required = false) State state,
 			@RequestParam(value = "searchTerm", required = false) String searchTerm) {
+		if (securityUtil == null || securityUtil.getUsername() == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No username associated with this request");
+		}
 		Page<NotificationRecord> notificationsRecordPage = this.notificationRecordService
 				.getNotificationRecords(pageable, securityUtil.getUsername(), state, searchTerm);
 		return this.notificationRecordPagedResourcesAssembler.toModel(notificationsRecordPage,

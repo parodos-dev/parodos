@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.security;
+package com.redhat.parodos.notification.security;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -29,8 +29,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.stereotype.Component;
-
-import com.redhat.parodos.config.properties.LdapConnectionProperties;
 
 /**
  * Security configuration for the application to ensure the main endpoints are locked down
