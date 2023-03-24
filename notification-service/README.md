@@ -38,6 +38,18 @@ The service uses JPA to persist. Postgres is the recommended DB. For the 'dev' p
 The UI for this service can be found as a backstage Plugin for a stand-alone Java service (UI + API) in one Jar, check
 out implementation-examples/java-services
 
+## Starting the Service
+
+From the root of the 'notification-service' folder, the follow command will start-up the server locally:
+
+```shell
+
+java -jar -Dspring.profiles.active=local -Dserver.port=8081  target/notification-service-1.0.5-SNAPSHOT.jar
+
+```
+
+The service will run against a local h2 database in when running with way.
+
 ## FAQ
 
 ### We use Slack, is this required?

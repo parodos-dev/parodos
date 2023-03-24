@@ -17,14 +17,21 @@ package com.redhat.parodos.notification;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 /**
  * Main entry point into the application
  *
  * @author Richard Wang (Github: RichardW98)
  * @author Annel Ketcha (Github: anludke)
+ * @author Luke Shannon (Github: lshannon)
  */
 @SpringBootApplication
+@EnableWebSecurity
+@EnableConfigurationProperties
+@ConfigurationPropertiesScan("com.redhat.parodos")
 public class NotificationServiceApplication {
 
 	public static void main(String[] args) {

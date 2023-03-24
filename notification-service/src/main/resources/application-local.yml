@@ -14,6 +14,18 @@ spring:
   jackson:
     serialization:
       indent-output: true
+  ldap:
+    embedded:
+      ldif: classpath:test-server.ldif
+      base-dn: dc=springframework,dc=org
+      port: 8389
+    connection:
+      userDNPatterns: "uid={0},ou=people"
+      groupSearchBase: "ou=groups"
+      url: "ldap://localhost:8389/dc=springframework,dc=org"
+      passwordAttribute: "userPassword"
+      managerDN: null
+      managerPassword: null
   jpa:
     hibernate:
       ddl-auto: none

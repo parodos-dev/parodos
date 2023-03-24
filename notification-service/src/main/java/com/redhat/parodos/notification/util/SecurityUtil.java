@@ -15,10 +15,10 @@
  */
 package com.redhat.parodos.notification.util;
 
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.security.ldap.userdetails.LdapUserDetailsImpl;
 import org.springframework.stereotype.Component;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -35,12 +35,13 @@ public class SecurityUtil {
 	 * @return username.
 	 */
 	public String getUsername() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication instanceof JwtAuthenticationToken) {
-			return ((JwtAuthenticationToken) authentication).getToken().getClaim("preferred_username");
+		LdapUserDetailsImpl ldapDetails = (LdapUserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		if (ldapDetails != null) {
+			return ldapDetails.getUsername();
 		}
-		log.error(
-				"Unable to find the username for the authenticated user - if this is being ran under the 'local' profile this behavior is expected");
+		else
+			log.error("Unable to get the LdapDetails to get the username");
 		return null;
 	}
 
