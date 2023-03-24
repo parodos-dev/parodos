@@ -94,7 +94,7 @@ public class WorkFlowTaskTest {
 
 		BaseWorkFlowTask flowTask = (BaseWorkFlowTask) task;
 		flowTask.setBeanName("Test");
-		assertEquals("test", flowTask.getParameterValue(context, "username"));
+		assertEquals("test", flowTask.getRequiredParameterValue(context, "username"));
 	}
 
 	@Test(expected = MissingParameterException.class)
@@ -106,7 +106,7 @@ public class WorkFlowTaskTest {
 
 		BaseWorkFlowTask flowTask = (BaseWorkFlowTask) task;
 		flowTask.setBeanName("Test");
-		assertEquals("Test", flowTask.getParameterValue(context, "username"));
+		assertEquals("Test", flowTask.getRequiredParameterValue(context, "username"));
 	}
 
 	@Test

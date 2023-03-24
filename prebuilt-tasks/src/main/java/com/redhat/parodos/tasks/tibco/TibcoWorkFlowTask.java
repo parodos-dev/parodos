@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2022 Red Hat Developer
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.redhat.parodos.tasks.tibco;
 
 import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
@@ -17,31 +32,15 @@ import java.util.List;
 @Slf4j
 public class TibcoWorkFlowTask extends BaseWorkFlowTask {
 
-	private final Tibjms service;
+	private final TibcoMessageService service;
 
-	private final String url;
-
-	private final String caFile;
-
-	private final String username;
-
-	private final String password;
-
-	public TibcoWorkFlowTask(String url, String caFile, String username, String password) {
-		this(new TibjmsImpl(), url, username, password, caFile);
-	}
-
-	TibcoWorkFlowTask(Tibjms service, String url, String caFile, String username, String password) {
+	public TibcoWorkFlowTask(TibcoMessageService service) {
 		this.service = service;
-		this.url = url;
-		this.caFile = caFile;
-		this.username = username;
-		this.password = password;
 	}
 
 	@Override
 	public @NonNull List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
-		LinkedList<WorkFlowTaskParameter> params = new LinkedList<WorkFlowTaskParameter>();
+		LinkedList<WorkFlowTaskParameter> params = new LinkedList<>();
 		params.add(WorkFlowTaskParameter.builder().key("topic").type(WorkFlowTaskParameterType.TEXT).optional(false)
 				.description("Topic to send to").build());
 		params.add(WorkFlowTaskParameter.builder().key("message").type(WorkFlowTaskParameterType.TEXT).optional(false)
@@ -57,11 +56,9 @@ public class TibcoWorkFlowTask extends BaseWorkFlowTask {
 	@Override
 	public WorkReport execute(WorkContext workContext) {
 		try {
-			String topic = getParameterValue(workContext, "topic");
-			String message = getParameterValue(workContext, "message");
-
-			service.sendMessage(url, caFile, username, password, topic, message);
-
+			service.sendMessage(getRequiredParameterValue(workContext, "topic"),
+					getRequiredParameterValue(workContext, "message"));
+			service.closeConnection();
 		}
 		catch (Exception e) {
 			log.error("TIBCO task failed", e);

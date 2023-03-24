@@ -1,39 +1,34 @@
 package com.redhat.parodos.tasks.tibco;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
+import java.util.HashMap;
+
+import javax.jms.JMSException;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
-
-import javax.jms.JMSException;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 public class TibcoWorkFlowTaskTest {
-
-	private final static String caFile = "/cafile";
-
-	private final static String url = "ssl://localhost:7222";
-
-	private final static String username = "username";
-
-	private final static String passowrd = "password";
 
 	private final static String topic = "topic";
 
 	private final static String message = "test message";
 
-	private final static Tibjms tibjms = Mockito.mock(Tibjms.class);
+	private final static TibcoMessageService tibjms = Mockito.mock(TibcoMessageService.class);
 
-	private final static TibcoWorkFlowTask task = new TibcoWorkFlowTask(tibjms, url, caFile, username, passowrd);
+	private final static TibcoWorkFlowTask task = new TibcoWorkFlowTask(tibjms);
 
 	@Before
 	public void setUp() {
@@ -51,7 +46,7 @@ public class TibcoWorkFlowTaskTest {
 	@Test
 	public void executeErrorInTibco() throws JMSException {
 		WorkContext ctx = getWorkContext(true);
-		doThrow(JMSException.class).when(tibjms).sendMessage(any(), any(), any(), any(), any(), any());
+		doThrow(JMSException.class).when(tibjms).sendMessage(any(), any());
 		WorkReport result = task.execute(ctx);
 		assertEquals(WorkStatus.FAILED, result.getStatus());
 		assertEquals(JMSException.class, result.getError().getClass());
@@ -62,7 +57,7 @@ public class TibcoWorkFlowTaskTest {
 		WorkContext ctx = getWorkContext(true);
 		WorkReport result = task.execute(ctx);
 		assertEquals(WorkStatus.COMPLETED, result.getStatus());
-		verify(tibjms, times(1)).sendMessage(url, caFile, username, passowrd, topic, message);
+		verify(tibjms, times(1)).sendMessage(topic, message);
 	}
 
 	private WorkContext getWorkContext(boolean withParams) {

@@ -36,35 +36,8 @@ public class WorkFlowConstants {
 	// Id of a workflow that can 'undo' the actions of a previously executed WorkFlow
 	public static final String ROLL_BACK_WORKFLOW_NAME = "ROLL_BACK_WORKFLOW_NAME";
 
-	// The results of the Assessment will be stored in the WorkContext using this label
-	public static final String RESULTING_INFRASTRUCTURE_OPTIONS = "RESULTING_INFRASTRUCTURE_OPTIONS";
-
 	// This should be appended to the name of the Workflow so it can be filtered correctly
 	public static final String ASSESSMENT_WORKFLOW = "_ASSESSMENT_WORKFLOW";
-
-	// An entity generated with all WorkFlow executions
-	public static final String WORKFLOW_EXECUTION_ENTITY_REFERENCES = "WORKFLOW_EXECUTION_ENTITY_REFERENCES";
-
-	// The type of the WorkFlow
-	public static final String WORKFLOW_TYPE = "WORKFLOW_TYPE";
-
-	// This is used when you need to specify an assessment to determine if follow on
-	// workflow can be executed
-	public static final String WORKFLOW_CHECKER_ID = "WORKFLOW_CHECKER_ID";
-
-	// The arguments for the WorkFlow Checker to run. As these might be runtime values
-	// they will be persisted in the WorkFlowTransactionDTO
-	public static final String WORKFLOW_CHECKER_ARGUMENTS = "WORKFLOW_CHECKER_ARGUMENTS";
-
-	public static final String CURRENT_WORKFLOW_ID = "CURRENT_WORKFLOW_ID";
-
-	// This is for an WorkFlowChecker to store the value of the next WorkFlow to run in a
-	// WorkFlowTransactionDTO
-	public static final String NEXT_WORKFLOW_ID = "NEXT_WORKFLOW_ID";
-
-	// These arguments are for passing values from the WorkFlowChecker to the next
-	// WorkFlow to run
-	public static final String NEXT_WORKFLOW_ARGUMENTS = "NEXT_WORKFLOW_ARGUMENTS";
 
 	// Ensures this class is only used to obtain the constants
 	private WorkFlowConstants() {

@@ -1,15 +1,16 @@
 package com.redhat.parodos.examples.escalation;
 
+import java.util.Arrays;
 import java.util.Date;
 
-import com.redhat.parodos.examples.escalation.task.SimpleTaskOne;
-import com.redhat.parodos.examples.escalation.task.SimpleTaskOneEscalator;
-import com.redhat.parodos.examples.escalation.task.SimpleTaskTwo;
-import com.redhat.parodos.examples.escalation.checker.SimpleTaskOneChecker;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.redhat.parodos.examples.escalation.checker.SimpleTaskOneChecker;
+import com.redhat.parodos.examples.escalation.task.SimpleTaskOne;
+import com.redhat.parodos.examples.escalation.task.SimpleTaskOneEscalator;
+import com.redhat.parodos.examples.escalation.task.SimpleTaskTwo;
 import com.redhat.parodos.workflow.annotation.Checker;
 import com.redhat.parodos.workflow.annotation.Escalation;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
@@ -48,7 +49,7 @@ public class EscalationWorkFlowConfiguration {
 	public SimpleTaskOne simpleTaskOne(
 			@Qualifier("simpleTaskOneCheckerWorkflow") WorkFlow simpleTaskOneCheckerWorkflow) {
 		SimpleTaskOne taskOne = new SimpleTaskOne();
-		taskOne.setWorkFlowChecker(simpleTaskOneCheckerWorkflow);
+		taskOne.setWorkFlowCheckers(Arrays.asList(simpleTaskOneCheckerWorkflow));
 		return taskOne;
 	}
 

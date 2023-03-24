@@ -43,13 +43,13 @@ public abstract class BaseWorkFlowCheckerTask extends BaseWorkFlowTask {
 
 	private long expectedCompletionDate;
 
-	public BaseWorkFlowCheckerTask(WorkFlow escalationWorkflow, long expectedSlaBeforeEscalationInSeconds) {
+	protected BaseWorkFlowCheckerTask(WorkFlow escalationWorkflow, long expectedSlaBeforeEscalationInSeconds) {
 		super();
 		this.expectedCompletionDate = expectedSlaBeforeEscalationInSeconds;
 		this.escalationWorkflow = escalationWorkflow;
 	}
 
-	public BaseWorkFlowCheckerTask() {
+	protected BaseWorkFlowCheckerTask() {
 		super();
 	}
 
@@ -71,12 +71,10 @@ public abstract class BaseWorkFlowCheckerTask extends BaseWorkFlowTask {
 		// run the checker
 		WorkReport report = checkWorkFlowStatus(workContext);
 		// determine if there is an escalation path for a failing checker
-		if (!(escalationWorkflow == null) && report.getStatus() == WorkStatus.FAILED) {
+		if (escalationWorkflow != null && report.getStatus() == WorkStatus.FAILED
+				&& new Date().getTime() > expectedCompletionDate) {
 			// run escalation if SLA is exceeded
-			if (new Date().getTime() > expectedCompletionDate) {
-				// execute the escalation workflow
-				WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(escalationWorkflow, workContext);
-			}
+			WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(escalationWorkflow, workContext);
 		}
 		return report;
 	}

@@ -43,6 +43,7 @@ public class LoggingWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 
 	private WorkContext workContext;
 
+	@SuppressWarnings("serial")
 	@Before
 	public void setUp() {
 		loggingWorkFlowTask = getConcretePersonImplementation();
@@ -62,20 +63,20 @@ public class LoggingWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 		WorkReport workReport = loggingWorkFlowTask.execute(workContext);
 
 		// then
-		assertNull(loggingWorkFlowTask.getWorkFlowChecker());
+		assertNull(loggingWorkFlowTask.getWorkFlowCheckers());
 		assertEquals(WorkStatus.COMPLETED, workReport.getStatus());
 	}
 
 	@Test
 	public void executeWithChecker() {
 		// given
-		loggingWorkFlowTask.setWorkFlowChecker(getWorkFlowChecker());
+		loggingWorkFlowTask.setWorkFlowCheckers(getWorkFlowCheckers());
 
 		// when
 		WorkReport execute = loggingWorkFlowTask.execute(workContext);
 
 		// then
-		assertNotNull(loggingWorkFlowTask.getWorkFlowChecker());
+		assertNotNull(loggingWorkFlowTask.getWorkFlowCheckers());
 		assertEquals(WorkStatus.COMPLETED, execute.getStatus());
 	}
 

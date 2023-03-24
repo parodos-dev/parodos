@@ -17,7 +17,6 @@ package com.redhat.parodos.workflow.task.infrastructure;
 
 import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskType;
-import com.redhat.parodos.workflows.workflow.WorkFlow;
 
 /**
  * Base Class for an InfrastrcutureWorkFlowTask.
@@ -31,18 +30,6 @@ import com.redhat.parodos.workflows.workflow.WorkFlow;
 public abstract class BaseInfrastructureWorkFlowTask extends BaseWorkFlowTask {
 
 	private WorkFlowTaskType type = WorkFlowTaskType.INFRASTRUCTURE;
-
-	// WorkFlowChecker check a process that has been initiated by a WorkFlow to see if its
-	// been completed
-	private WorkFlow workFlowChecker;
-
-	public WorkFlow getWorkFlowChecker() {
-		return workFlowChecker;
-	}
-
-	public void setWorkFlowChecker(WorkFlow workFlowChecker) {
-		this.workFlowChecker = workFlowChecker;
-	}
 
 	public WorkFlowTaskType getType() {
 		return type;
