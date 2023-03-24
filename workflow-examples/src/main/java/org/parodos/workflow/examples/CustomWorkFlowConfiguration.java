@@ -28,6 +28,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 /**
  * Very simple workflow configurations in different package from Parodos main class
  *
@@ -46,7 +48,7 @@ public class CustomWorkFlowConfiguration {
 	@Bean
 	CustomWorkFlowTask customWorkFlowTaskOne(@Qualifier("simpleWorkFlowChecker") WorkFlow simpleWorkFlowChecker) {
 		CustomWorkFlowTask customWorkFlowTaskOne = new CustomWorkFlowTask();
-		customWorkFlowTaskOne.setWorkFlowChecker(simpleWorkFlowChecker);
+		customWorkFlowTaskOne.setWorkFlowCheckers(List.of(simpleWorkFlowChecker));
 		return customWorkFlowTaskOne;
 	}
 
