@@ -68,15 +68,28 @@ class WorkFlowDefinitionServiceDataTest {
 				workFlowTaskDefinitionRepository, workFlowCheckerMappingDefinitionRepository, workFlowWorkRepository,
 				new ModelMapper());
 
-		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name("test-workflow").numberOfWorks(1)
-				.type(WorkFlowType.INFRASTRUCTURE).build();
-		WorkFlowTaskDefinition workFlowTaskDefinition = WorkFlowTaskDefinition.builder().name("test-workflow-task")
-				.workFlowDefinition(workFlowDefinition).build();
+		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder()
+			.name("test-workflow")
+			.numberOfWorks(1)
+			.parameters("{}")
+			.processingType(WorkFlowType.INFRASTRUCTURE.name())
+			.type(WorkFlowType.INFRASTRUCTURE)
+			.build();
+		WorkFlowTaskDefinition workFlowTaskDefinition = WorkFlowTaskDefinition.builder()
+			.name("test-workflow-task")
+			.workFlowDefinition(workFlowDefinition)
+			.parameters("{}")
+			.outputs("[]")
+			.build();
 		WorkFlowCheckerMappingDefinition workFlowCheckerMappingDefinition = WorkFlowCheckerMappingDefinition.builder()
-				.tasks(List.of(workFlowTaskDefinition)).checkWorkFlow(workFlowDefinition).cronExpression("*/5 * * * *")
-				.build();
+			.tasks(List.of(workFlowTaskDefinition))
+			.checkWorkFlow(workFlowDefinition)
+			.cronExpression("*/5 * * * *")
+			.build();
 		WorkFlowWorkDefinition workFlowWorkDefinition = WorkFlowWorkDefinition.builder()
-				.workDefinitionId(UUID.randomUUID()).workFlowDefinition(workFlowDefinition).build();
+			.workDefinitionId(UUID.randomUUID())
+			.workFlowDefinition(workFlowDefinition)
+			.build();
 		entityManager.persist(workFlowDefinition);
 		entityManager.persist(workFlowTaskDefinition);
 		entityManager.persist(workFlowCheckerMappingDefinition);
