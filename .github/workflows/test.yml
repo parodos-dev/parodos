@@ -166,7 +166,15 @@ jobs:
       - name: Deploy
         run: |
           kubectl kustomize hack/manifests/testing| kubectl apply -f -
-          kubectl wait --timeout=300s --for=condition=Ready pods --all -n default
+          kubectl wait --timeout=300s --for=condition=Ready pods --all -n default || {
+            echo "Timeout waiting for Parodos services to be ready";
+            kubectl get pods --all-namespaces;
+            echo "************ workflow-service logs ***************";
+            kubectl logs -l app=workflow-service --tail=40;
+            echo "************ notification-service logs ***************";
+            kubectl logs -l app=notification-service --tail=40;
+            exit 1;
+          }
           kubectl get pods --all-namespaces
 
       - name: Run example script
