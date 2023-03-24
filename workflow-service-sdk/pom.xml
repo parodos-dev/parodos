@@ -94,6 +94,8 @@
                                 <parentVersion>${revision}</parentVersion>
                                 <artifactVersion>${revision}</artifactVersion>
                                 <dateLibrary>legacy</dateLibrary>
+                                <licenseName>The Apache Software License, Version 2.0</licenseName>
+                                <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.txt</licenseUrl>
                             </configOptions>
                         </configuration>
                     </execution>
