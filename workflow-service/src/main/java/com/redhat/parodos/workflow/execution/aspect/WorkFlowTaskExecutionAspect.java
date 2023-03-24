@@ -156,6 +156,7 @@ public class WorkFlowTaskExecutionAspect {
 						workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition().getCheckWorkFlow().getName(),
 						checkerWorkFlow, workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition(), workContext);
 			}
+			return new DefaultWorkReport(WorkStatus.FAILED, workContext);
 		}
 		return report;
 	}
