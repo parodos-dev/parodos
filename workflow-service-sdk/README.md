@@ -39,7 +39,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>dev.parodos</groupId>
   <artifactId>workflow-service-sdk</artifactId>
-  <version>1.0.4</version>
+  <version>1.0.5-SNAPSHOT</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -55,7 +55,7 @@ Add this dependency to your project's build file:
   }
 
   dependencies {
-     implementation "dev.parodos:workflow-service-sdk:1.0.4"
+     implementation "dev.parodos:workflow-service-sdk:1.0.5-SNAPSHOT"
   }
 ```
 
@@ -69,7 +69,7 @@ mvn clean package
 
 Then manually install the following JARs:
 
-* `target/workflow-service-sdk-1.0.4.jar`
+* `target/workflow-service-sdk-1.0.5-SNAPSHOT.jar`
 * `target/lib/*.jar`
 
 ## Getting Started
