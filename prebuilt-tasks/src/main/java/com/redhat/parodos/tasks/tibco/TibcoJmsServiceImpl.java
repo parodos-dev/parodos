@@ -17,6 +17,8 @@ package com.redhat.parodos.tasks.tibco;
 
 import com.tibco.tibjms.TibjmsConnectionFactory;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.jms.JMSException;
 import javax.jms.Connection;
 import javax.jms.Destination;
@@ -28,6 +30,7 @@ import javax.jms.TextMessage;
  * Implementation of a TibcoMessageService to send JMS messages
  *
  */
+@Slf4j
 public class TibcoJmsServiceImpl implements TibcoMessageService {
 
 	TibjmsConnectionFactory factory;
@@ -35,36 +38,46 @@ public class TibcoJmsServiceImpl implements TibcoMessageService {
 	Connection connection;
 
 	// Create the connection on construction
-	public TibcoJmsServiceImpl(TibjmsConnectionFactory factory, String caFile, String username, String password)
-			throws JMSException {
+	public TibcoJmsServiceImpl(TibjmsConnectionFactory factory, String caFile, String username, String password) {
 		createConnection(factory, caFile, username, password);
 	}
 
 	@Override
 	public void sendMessage(String topic, String message) throws JMSException {
-		try (Session session = connection.createSession(javax.jms.Session.AUTO_ACKNOWLEDGE)) {
-			Destination destination = session.createTopic(topic);
-			MessageProducer producer = session.createProducer(destination);
-			TextMessage textMessage = session.createTextMessage(message);
-			producer.send(textMessage);
+		if (connection != null) {
+			try (Session session = connection.createSession(javax.jms.Session.AUTO_ACKNOWLEDGE)) {
+				Destination destination = session.createTopic(topic);
+				MessageProducer producer = session.createProducer(destination);
+				TextMessage textMessage = session.createTextMessage(message);
+				producer.send(textMessage);
+			}
+		}
+		else {
+			log.error("The connection to Tibco was not successfully created. A message cannot be sent");
 		}
 
 	}
 
 	@Override
-	public void createConnection(TibjmsConnectionFactory factory, String caFile, String username, String password)
-			throws JMSException {
+	public void createConnection(TibjmsConnectionFactory factory, String caFile, String username, String password) {
 		if (connection == null) {
 			if (caFile != null && !caFile.isEmpty()) {
 				factory.setSSLTrustedCertificate(caFile);
 			}
-			connection = factory.createConnection(username, password);
+			try {
+				connection = factory.createConnection(username, password);
+			}
+			catch (JMSException e) {
+				log.error("Unable to created the Tibco connection. This task will not be successful: ", e.getCause());
+			}
 		}
 	}
 
 	@Override
 	public void closeConnection() throws JMSException {
-		connection.close();
+		if (connection != null) {
+			connection.close();
+		}
 	}
 
 }
