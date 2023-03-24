@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **id** | **String** |  |  [optional]
 **name** | **String** |  |  [optional]
 **outputs** | [**List&lt;OutputsEnum&gt;**](#List&lt;OutputsEnum&gt;) |  |  [optional]
-**parameters** | **Map&lt;String, Map&lt;String, String&gt;&gt;** |  |  [optional]
+**parameters** | **Map&lt;String, Map&lt;String, Object&gt;&gt;** |  |  [optional]
 **processingType** | **String** |  |  [optional]
 **workType** | **String** |  |  [optional]
 **works** | [**List&lt;WorkDefinitionResponseDTO&gt;**](WorkDefinitionResponseDTO.md) |  |  [optional]

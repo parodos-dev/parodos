@@ -102,7 +102,7 @@ public class WorkDefinitionResponseDTO {
 
   public static final String SERIALIZED_NAME_PARAMETERS = "parameters";
   @SerializedName(SERIALIZED_NAME_PARAMETERS)
-  private Map<String, Map<String, String>> parameters = null;
+  private Map<String, Map<String, Object>> parameters = null;
 
   public static final String SERIALIZED_NAME_PROCESSING_TYPE = "processingType";
   @SerializedName(SERIALIZED_NAME_PROCESSING_TYPE)
@@ -219,15 +219,15 @@ public class WorkDefinitionResponseDTO {
   }
 
 
-  public WorkDefinitionResponseDTO parameters(Map<String, Map<String, String>> parameters) {
+  public WorkDefinitionResponseDTO parameters(Map<String, Map<String, Object>> parameters) {
     
     this.parameters = parameters;
     return this;
   }
 
-  public WorkDefinitionResponseDTO putParametersItem(String key, Map<String, String> parametersItem) {
+  public WorkDefinitionResponseDTO putParametersItem(String key, Map<String, Object> parametersItem) {
     if (this.parameters == null) {
-      this.parameters = new HashMap<String, Map<String, String>>();
+      this.parameters = new HashMap<String, Map<String, Object>>();
     }
     this.parameters.put(key, parametersItem);
     return this;
@@ -240,12 +240,12 @@ public class WorkDefinitionResponseDTO {
   @javax.annotation.Nullable
   @ApiModelProperty(value = "")
 
-  public Map<String, Map<String, String>> getParameters() {
+  public Map<String, Map<String, Object>> getParameters() {
     return parameters;
   }
 
 
-  public void setParameters(Map<String, Map<String, String>> parameters) {
+  public void setParameters(Map<String, Map<String, Object>> parameters) {
     this.parameters = parameters;
   }
 

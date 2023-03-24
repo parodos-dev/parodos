@@ -293,7 +293,7 @@ components:
         id: id
         parameters:
           key:
-            key: parameters
+            key: '{}'
       properties:
         author:
           type: string
@@ -313,7 +313,7 @@ components:
         parameters:
           additionalProperties:
             additionalProperties:
-              type: string
+              type: object
             type: object
           type: object
         processingType:
@@ -353,7 +353,7 @@ components:
           id: id
           parameters:
             key:
-              key: parameters
+              key: '{}'
         - outputs:
           - EXCEPTION
           - EXCEPTION
@@ -367,7 +367,7 @@ components:
           id: id
           parameters:
             key:
-              key: parameters
+              key: '{}'
         modifyDate: 2000-01-23T04:56:07.000+00:00
         author: author
         name: name
@@ -375,7 +375,7 @@ components:
         type: type
         parameters:
           key:
-            key: parameters
+            key: '{}'
         createDate: 2000-01-23T04:56:07.000+00:00
       properties:
         author:
@@ -394,7 +394,7 @@ components:
         parameters:
           additionalProperties:
             additionalProperties:
-              type: string
+              type: object
             type: object
           type: object
         processingType:

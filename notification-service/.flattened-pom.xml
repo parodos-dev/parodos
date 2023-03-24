@@ -5,11 +5,11 @@
   <parent>
     <groupId>dev.parodos</groupId>
     <artifactId>parodos-parent</artifactId>
-    <version>1.0.4-SNAPSHOT</version>
+    <version>1.0.4</version>
   </parent>
   <groupId>dev.parodos</groupId>
   <artifactId>notification-service</artifactId>
-  <version>1.0.4-SNAPSHOT</version>
+  <version>1.0.4</version>
   <name>notification-service</name>
   <description>Notification Service to sent out notification messages</description>
   <url>https://github.com/redhat-developer/parodos</url>
