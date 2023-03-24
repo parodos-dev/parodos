@@ -77,7 +77,7 @@
                             <artifactId>workflow-service-sdk</artifactId>
                             <packageName>com.redhat.parodos.sdk</packageName>
 
-                            <inputSpec>${project.parent.basedir}/workflow-service/generated/openapi/api-docs.json
+                            <inputSpec>${project.parent.basedir}/workflow-service/generated/openapi/openapi.json
                             </inputSpec>
                             <output>${basedir}</output>
 

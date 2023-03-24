@@ -220,7 +220,7 @@
                                 <fileset>
                                     <directory>${basedir}/generated/openapi</directory>
                                     <includes>
-                                        <include>api-docs.json</include>
+                                        <include>openapi.json</include>
                                     </includes>
                                     <followSymlinks>false</followSymlinks>
                                 </fileset>
@@ -275,7 +275,6 @@
                 <artifactId>springdoc-openapi-maven-plugin</artifactId>
                 <version>1.1</version>
                 <configuration>
-                    <outputFileName>api-docs.json</outputFileName>
                     <outputDir>${basedir}/generated/openapi</outputDir>
                 </configuration>
                 <executions>
