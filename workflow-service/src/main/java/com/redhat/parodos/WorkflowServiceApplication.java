@@ -27,6 +27,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
  * Main entry point into the application
  *
  * @author Luke Shannon (Github: lshannon)
+ * @author Richard Wang (Github: richardW98)
+ *
  */
 @SpringBootApplication(scanBasePackages = { "com.redhat.parodos", "${scan.packages}" })
 @EnableScheduling

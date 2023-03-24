@@ -40,6 +40,7 @@ import lombok.extern.slf4j.Slf4j;
  * the same ParameterName
  *
  * @author Luke Shannon (Github: lshannon)
+ * @author Richard Wang (Github: richardW98)
  */
 @Slf4j
 public abstract class BaseWorkFlowTask implements WorkFlowTask, BeanNameAware {

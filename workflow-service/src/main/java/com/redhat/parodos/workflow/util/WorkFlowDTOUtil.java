@@ -31,6 +31,7 @@ import java.util.Optional;
  * DTO util class for request and response objects conversion
  *
  * @author Annel Ketcha (Github: anludke)
+ * @author Richard Wang (Github: richardW98)
  */
 
 @Slf4j

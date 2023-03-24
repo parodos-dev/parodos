@@ -47,11 +47,12 @@ import java.util.List;
 @Setter
 public class WorkFlowCheckerMappingDefinition extends AbstractEntity {
 
-	@OneToOne(optional = false, fetch = FetchType.EAGER)
+	@OneToOne(optional = false, fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "workflow_checker_id")
 	private WorkFlowDefinition checkWorkFlow;
 
-	@OneToMany(mappedBy = "workFlowCheckerMappingDefinition", cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "workFlowCheckerMappingDefinition", cascade = { CascadeType.PERSIST, CascadeType.MERGE },
+			fetch = FetchType.EAGER)
 	@Builder.Default
 	private List<WorkFlowTaskDefinition> tasks = new ArrayList<>();
 

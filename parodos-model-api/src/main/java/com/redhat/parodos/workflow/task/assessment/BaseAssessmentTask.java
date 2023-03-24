@@ -25,6 +25,7 @@ import com.redhat.parodos.workflow.task.enums.WorkFlowTaskType;
  * Assessment and return options
  *
  * @author Luke Shannon (Github: lshannon)
+ * @author Richard Wang (Github: richardW98)
  */
 public abstract class BaseAssessmentTask extends BaseWorkFlowTask {
 
