@@ -96,6 +96,9 @@
                                 <dateLibrary>legacy</dateLibrary>
                                 <licenseName>The Apache Software License, Version 2.0</licenseName>
                                 <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.txt</licenseUrl>
+                                <scmConnection>scm:git:git://github.com/redhat-developer/parodos.git</scmConnection>
+                                <scmDeveloperConnection>scm:git:ssh://github.com/redhat-developer/parodos.git</scmDeveloperConnection>
+                                <scmUrl>http://github.com/redhat-developer/parodos/tree/master</scmUrl>
                             </configOptions>
                         </configuration>
                     </execution>
