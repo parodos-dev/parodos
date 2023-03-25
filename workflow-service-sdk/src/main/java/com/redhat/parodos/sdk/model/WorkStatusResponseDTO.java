@@ -23,8 +23,6 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * WorkStatusResponseDTO
@@ -139,10 +137,6 @@ public class WorkStatusResponseDTO {
   @SerializedName(SERIALIZED_NAME_TYPE)
   private TypeEnum type;
 
-  public static final String SERIALIZED_NAME_WORKS = "works";
-  @SerializedName(SERIALIZED_NAME_WORKS)
-  private List<WorkStatusResponseDTO> works = null;
-
   public WorkStatusResponseDTO() { 
   }
 
@@ -215,37 +209,6 @@ public class WorkStatusResponseDTO {
   }
 
 
-  public WorkStatusResponseDTO works(List<WorkStatusResponseDTO> works) {
-    
-    this.works = works;
-    return this;
-  }
-
-  public WorkStatusResponseDTO addWorksItem(WorkStatusResponseDTO worksItem) {
-    if (this.works == null) {
-      this.works = new ArrayList<WorkStatusResponseDTO>();
-    }
-    this.works.add(worksItem);
-    return this;
-  }
-
-   /**
-   * Get works
-   * @return works
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public List<WorkStatusResponseDTO> getWorks() {
-    return works;
-  }
-
-
-  public void setWorks(List<WorkStatusResponseDTO> works) {
-    this.works = works;
-  }
-
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -257,13 +220,12 @@ public class WorkStatusResponseDTO {
     WorkStatusResponseDTO workStatusResponseDTO = (WorkStatusResponseDTO) o;
     return Objects.equals(this.name, workStatusResponseDTO.name) &&
         Objects.equals(this.status, workStatusResponseDTO.status) &&
-        Objects.equals(this.type, workStatusResponseDTO.type) &&
-        Objects.equals(this.works, workStatusResponseDTO.works);
+        Objects.equals(this.type, workStatusResponseDTO.type);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, status, type, works);
+    return Objects.hash(name, status, type);
   }
 
   @Override
@@ -273,7 +235,6 @@ public class WorkStatusResponseDTO {
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
-    sb.append("    works: ").append(toIndentedString(works)).append("\n");
     sb.append("}");
     return sb.toString();
   }
