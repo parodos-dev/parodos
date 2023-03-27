@@ -20,6 +20,11 @@ jobs:
       - name: Maven Build
         run: mvn clean spring-javaformat:validate package
 
+      - name: Check generated files are up to date
+        run: |
+          if [[ $(git ls-files --others --exclude-standard) ]]; then echo "These files are not tracked by git"; git ls-files --others --exclude-standard;  exit 1; fi
+          if [ -n "$(git status --porcelain)" ]; then echo "There are uncommitted changes:"; git status --short; exit 1; fi
+
       - name: "Build container images"
         run: |
           make build-images GIT_BRANCH=${GITHUB_REF##*/}
