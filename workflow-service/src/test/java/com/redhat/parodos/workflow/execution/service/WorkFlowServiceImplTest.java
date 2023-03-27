@@ -261,7 +261,7 @@ class WorkFlowServiceImplTest {
 
 		// when
 		WorkFlowExecution res = this.workFlowService.saveWorkFlow(projectId, workflowDefID, WorkFlowStatus.COMPLETED,
-				masterWorkFlowExecution);
+				masterWorkFlowExecution, "{}");
 
 		// then
 		assertNotNull(res);
@@ -505,13 +505,13 @@ class WorkFlowServiceImplTest {
 				Mockito.eq(workFlowDefinition)))
 				.thenReturn(List.of(
 						WorkStatusResponseDTO.builder().name(SUB_WORKFLOW_1_NAME).type(WorkType.WORKFLOW)
-								.status(com.redhat.parodos.workflow.enums.WorkStatus.PENDING)
+								.status(com.redhat.parodos.workflow.enums.ParodosWorkStatus.PENDING)
 								.works(List.of(WorkStatusResponseDTO.builder().name(SUB_WORKFLOW_1_TASK_1_NAME)
 										.type(WorkType.TASK)
-										.status(com.redhat.parodos.workflow.enums.WorkStatus.PENDING).build()))
+										.status(com.redhat.parodos.workflow.enums.ParodosWorkStatus.PENDING).build()))
 								.workExecution(subWorkFlow1Execution).numberOfWorks(1).build(),
 						WorkStatusResponseDTO.builder().name(WORKFLOW_TASK_1_NAME).type(WorkType.TASK)
-								.status(com.redhat.parodos.workflow.enums.WorkStatus.COMPLETED).build()));
+								.status(com.redhat.parodos.workflow.enums.ParodosWorkStatus.COMPLETED).build()));
 		// then
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = this.workFlowService
 				.getWorkFlowStatus(workFlowExecutionId);
@@ -691,10 +691,10 @@ class WorkFlowServiceImplTest {
 				Mockito.eq(workFlowDefinition)))
 				.thenReturn(List.of(
 						WorkStatusResponseDTO.builder().name(SUB_WORKFLOW_1_NAME).type(WorkType.WORKFLOW)
-								.status(com.redhat.parodos.workflow.enums.WorkStatus.PENDING)
+								.status(com.redhat.parodos.workflow.enums.ParodosWorkStatus.PENDING)
 								.works(Collections.emptyList()).numberOfWorks(1).build(),
 						WorkStatusResponseDTO.builder().name(WORKFLOW_TASK_1_NAME).type(WorkType.TASK)
-								.status(com.redhat.parodos.workflow.enums.WorkStatus.COMPLETED).build()));
+								.status(com.redhat.parodos.workflow.enums.ParodosWorkStatus.COMPLETED).build()));
 
 		// then
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = this.workFlowService
@@ -717,7 +717,7 @@ class WorkFlowServiceImplTest {
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(1).getType(), WorkType.TASK);
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(1).getName(), workFlowTask1Definition.getName());
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(1).getStatus().name(),
-				com.redhat.parodos.workflow.enums.WorkStatus.COMPLETED.name());
+				com.redhat.parodos.workflow.enums.ParodosWorkStatus.COMPLETED.name());
 		assertNull(workFlowStatusResponseDTO.getWorks().get(1).getWorks());
 	}
 

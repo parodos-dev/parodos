@@ -42,7 +42,9 @@ public class WorkStatusResponseDTO {
     
     COMPLETED("COMPLETED"),
     
-    PENDING("PENDING");
+    PENDING("PENDING"),
+    
+    IN_PROGRESS("IN_PROGRESS");
 
     private String value;
 

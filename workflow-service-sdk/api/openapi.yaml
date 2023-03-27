@@ -334,6 +334,7 @@ components:
           - FAILED
           - COMPLETED
           - IN_PROGRESS
+          - PENDING
           type: string
       type: object
     WorkFlowDefinitionResponseDTO:
@@ -735,6 +736,7 @@ components:
           - FAILED
           - COMPLETED
           - PENDING
+          - IN_PROGRESS
           type: string
         type:
           enum:

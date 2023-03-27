@@ -13,17 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow.task.enums;
+package com.redhat.parodos.workflow.exceptions;
 
 /**
- * The outcome of a @see WorkFlowTask after execution
+ * The WorkflowExecutionNotFoundException wraps unchecked standard Java exception and
+ * enriches them with a custom error code. You can use this exception when a Workflow
+ * Execution is not Found.
  *
- * @author Luke Shannon (Github: lshannon)
- * @author Richard Wang (Github: richardw98)
- * @author Annel Ketcha (Github: anludke)
+ * @author Richard Wang (Github: richardW98)
  */
-public enum WorkFlowTaskStatus {
 
-	FAILED, COMPLETED, IN_PROGRESS, PENDING
+public class WorkflowExecutionNotFoundException extends RuntimeException {
+
+	private static final long serialVersionUID = 1L;
+
+	public WorkflowExecutionNotFoundException(String message) {
+		super(message);
+	}
 
 }

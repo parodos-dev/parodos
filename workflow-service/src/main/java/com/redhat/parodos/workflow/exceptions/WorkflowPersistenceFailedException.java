@@ -13,17 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow.task.enums;
+package com.redhat.parodos.workflow.exceptions;
 
 /**
- * The outcome of a @see WorkFlowTask after execution
+ * The WorkflowPersistenceFailedException wraps unchecked standard Java exception and
+ * enriches them with a custom error code. You can use this exception when a Database
+ * Operation is not Failed.
  *
- * @author Luke Shannon (Github: lshannon)
- * @author Richard Wang (Github: richardw98)
- * @author Annel Ketcha (Github: anludke)
+ * @author Richard Wang (Github: richardW98)
  */
-public enum WorkFlowTaskStatus {
 
-	FAILED, COMPLETED, IN_PROGRESS, PENDING
+public class WorkflowPersistenceFailedException extends RuntimeException {
+
+	private static final long serialVersionUID = 1L;
+
+	public WorkflowPersistenceFailedException(String message) {
+		super(message);
+	}
 
 }

@@ -3,8 +3,8 @@ package com.redhat.parodos.workflow.execution.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.ControllerMockClient;
+import com.redhat.parodos.workflow.enums.ParodosWorkStatus;
 import com.redhat.parodos.workflow.enums.WorkFlowStatus;
-import com.redhat.parodos.workflow.enums.WorkStatus;
 import com.redhat.parodos.workflow.enums.WorkType;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowCheckerTaskRequestDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
@@ -123,12 +123,12 @@ class WorkFlowControllerTest extends ControllerMockClient {
 				.workFlowExecutionId(masterWorkFlowExecutionId.toString()).status(WorkFlowStatus.IN_PROGRESS.name())
 				.workFlowName(testMasterWorkFlow)
 				.works(List.of(
-						WorkStatusResponseDTO.builder().name(testSubWorkFlow1).status(WorkStatus.PENDING)
+						WorkStatusResponseDTO.builder().name(testSubWorkFlow1).status(ParodosWorkStatus.PENDING)
 								.type(WorkType.WORKFLOW)
 								.works(List.of(WorkStatusResponseDTO.builder().name(testSubWorkFlowTask1)
-										.status(WorkStatus.PENDING).type(WorkType.TASK).build()))
+										.status(ParodosWorkStatus.PENDING).type(WorkType.TASK).build()))
 								.build(),
-						WorkStatusResponseDTO.builder().name(testWorkFlowTask1).status(WorkStatus.COMPLETED)
+						WorkStatusResponseDTO.builder().name(testWorkFlowTask1).status(ParodosWorkStatus.COMPLETED)
 								.type(WorkType.TASK).build()))
 				.build();
 		Mockito.when(workFlowService.getWorkFlowStatus(masterWorkFlowExecutionId))
@@ -146,17 +146,18 @@ class WorkFlowControllerTest extends ControllerMockClient {
 				.andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(WorkFlowStatus.IN_PROGRESS.name())))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.works[0].name", Matchers.is(testSubWorkFlow1)))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.works[0].type", Matchers.is(WorkType.WORKFLOW.name())))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.works[0].status", Matchers.is(WorkStatus.PENDING.name())))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.works[0].status",
+						Matchers.is(ParodosWorkStatus.PENDING.name())))
 				.andExpect(
 						MockMvcResultMatchers.jsonPath("$.works[0].works[0].name", Matchers.is(testSubWorkFlowTask1)))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.works[0].works[0].status",
-						Matchers.is(WorkStatus.PENDING.name())))
+						Matchers.is(ParodosWorkStatus.PENDING.name())))
 				.andExpect(
 						MockMvcResultMatchers.jsonPath("$.works[0].works[0].type", Matchers.is(WorkType.TASK.name())))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.works[1].name", Matchers.is(testWorkFlowTask1)))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.works[1].type", Matchers.is(WorkType.TASK.name())))
-				.andExpect(
-						MockMvcResultMatchers.jsonPath("$.works[1].status", Matchers.is(WorkStatus.COMPLETED.name())));
+				.andExpect(MockMvcResultMatchers.jsonPath("$.works[1].status",
+						Matchers.is(ParodosWorkStatus.COMPLETED.name())));
 
 		// then
 		Mockito.verify(this.workFlowService, Mockito.times(1)).getWorkFlowStatus(masterWorkFlowExecutionId);

@@ -38,7 +38,9 @@ public class WorkFlowCheckerTaskRequestDTO {
     
     COMPLETED("COMPLETED"),
     
-    IN_PROGRESS("IN_PROGRESS");
+    IN_PROGRESS("IN_PROGRESS"),
+    
+    PENDING("PENDING");
 
     private String value;
 
