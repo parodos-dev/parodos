@@ -10,7 +10,6 @@ Name | Type | Description | Notes
 **name** | **String** |  |  [optional]
 **status** | [**StatusEnum**](#StatusEnum) |  |  [optional]
 **type** | [**TypeEnum**](#TypeEnum) |  |  [optional]
-**works** | [**List&lt;WorkStatusResponseDTO&gt;**](WorkStatusResponseDTO.md) |  |  [optional]
 
 
 

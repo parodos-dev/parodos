@@ -683,16 +683,10 @@ components:
       example:
         workFlowName: workFlowName
         works:
-        - works:
-          - null
-          - null
-          name: name
+        - name: name
           type: TASK
           status: FAILED
-        - works:
-          - null
-          - null
-          name: name
+        - name: name
           type: TASK
           status: FAILED
         workFlowExecutionId: workFlowExecutionId
@@ -730,9 +724,6 @@ components:
       type: object
     WorkStatusResponseDTO:
       example:
-        works:
-        - null
-        - null
         name: name
         type: TASK
         status: FAILED
@@ -750,9 +741,5 @@ components:
           - TASK
           - WORKFLOW
           type: string
-        works:
-          items:
-            $ref: '#/components/schemas/WorkStatusResponseDTO'
-          type: array
       type: object
 

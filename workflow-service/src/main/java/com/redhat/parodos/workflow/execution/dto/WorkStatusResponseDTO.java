@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.redhat.parodos.workflow.enums.WorkStatus;
 import com.redhat.parodos.workflow.enums.WorkType;
+import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -40,19 +41,19 @@ import java.util.UUID;
 @NoArgsConstructor
 public class WorkStatusResponseDTO {
 
-	@JsonIgnore
-	private UUID workDefinitionId;
-
 	private String name;
 
 	private WorkType type;
 
 	private WorkStatus status;
 
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	private List<WorkStatusResponseDTO> works;
+
+	@JsonIgnore
+	private WorkFlowExecution workExecution;
+
 	@JsonIgnore
 	private Integer numberOfWorks;
-
-	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private List<WorkStatusResponseDTO> works;
 
 }
