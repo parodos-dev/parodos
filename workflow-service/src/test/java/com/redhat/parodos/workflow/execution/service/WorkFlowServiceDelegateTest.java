@@ -6,8 +6,8 @@ import com.redhat.parodos.workflow.definition.entity.WorkFlowWorkDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
+import com.redhat.parodos.workflow.enums.ParodosWorkStatus;
 import com.redhat.parodos.workflow.enums.WorkFlowStatus;
-import com.redhat.parodos.workflow.enums.WorkStatus;
 import com.redhat.parodos.workflow.enums.WorkType;
 import com.redhat.parodos.workflow.execution.dto.WorkStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
@@ -175,20 +175,20 @@ public class WorkFlowServiceDelegateTest {
 		// sub workflow 1
 		assertEquals(workStatusResponseDTOs.get(0).getType(), WorkType.WORKFLOW);
 		assertEquals(workStatusResponseDTOs.get(0).getName(), testSubWorkFlowDefinition1.getName());
-		assertEquals(workStatusResponseDTOs.get(0).getStatus(), WorkStatus.PENDING);
+		assertEquals(workStatusResponseDTOs.get(0).getStatus(), ParodosWorkStatus.PENDING);
 		assertEquals(workStatusResponseDTOs.get(0).getWorks().size(), 1);
 
 		// sub workflow 1 task 1
 		assertEquals(workStatusResponseDTOs.get(0).getWorks().get(0).getType(), WorkType.TASK);
 		assertEquals(workStatusResponseDTOs.get(0).getWorks().get(0).getName(),
 				testSubWorkFlowTaskDefinition1.getName());
-		assertEquals(workStatusResponseDTOs.get(0).getWorks().get(0).getStatus(), WorkStatus.PENDING);
+		assertEquals(workStatusResponseDTOs.get(0).getWorks().get(0).getStatus(), ParodosWorkStatus.PENDING);
 		assertNull(workStatusResponseDTOs.get(0).getWorks().get(0).getWorks());
 
 		// workflow task 1
 		assertEquals(workStatusResponseDTOs.get(1).getType(), WorkType.TASK);
 		assertEquals(workStatusResponseDTOs.get(1).getName(), testWorkFlowTaskDefinition1.getName());
-		assertEquals(workStatusResponseDTOs.get(1).getStatus(), WorkStatus.COMPLETED);
+		assertEquals(workStatusResponseDTOs.get(1).getStatus(), ParodosWorkStatus.COMPLETED);
 		assertNull(workStatusResponseDTOs.get(1).getWorks());
 	}
 

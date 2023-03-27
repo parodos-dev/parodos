@@ -398,7 +398,7 @@
         "properties" : {
           "status" : {
             "type" : "string",
-            "enum" : [ "FAILED", "COMPLETED", "IN_PROGRESS" ]
+            "enum" : [ "FAILED", "COMPLETED", "IN_PROGRESS", "PENDING" ]
           }
         }
       },
@@ -593,7 +593,7 @@
           },
           "status" : {
             "type" : "string",
-            "enum" : [ "FAILED", "COMPLETED", "PENDING" ]
+            "enum" : [ "FAILED", "COMPLETED", "PENDING", "IN_PROGRESS" ]
           },
           "type" : {
             "type" : "string",

@@ -136,7 +136,7 @@ class WorkFlowTaskExecutionAspectTest {
 
 		// then
 		assertNotNull(report);
-		assertEquals(report.getStatus(), WorkStatus.COMPLETED);
+		assertEquals(WorkStatus.COMPLETED, report.getStatus());
 		assertEquals(report.getWorkContext().get(WORKFLOW_EXECUTION_ID), workContext.get(WORKFLOW_EXECUTION_ID));
 		assertEquals(report.getWorkContext().get(WORKFLOW_TASK_DEFINITION_TESTTASK_ID),
 				workContext.get(WORKFLOW_TASK_DEFINITION_TESTTASK_ID));
@@ -194,7 +194,7 @@ class WorkFlowTaskExecutionAspectTest {
 		return new WorkFlowTaskExecution() {
 			{
 				setId(UUID.randomUUID());
-				setStatus(WorkFlowTaskStatus.IN_PROGRESS);
+				setStatus(WorkFlowTaskStatus.PENDING);
 				setWorkFlowExecutionId(getSampleWorkFlowExecution().getId());
 				setWorkFlowTaskDefinitionId(getSampleWorkFlowTaskDefinition(TEST_TASK).getId());
 			}

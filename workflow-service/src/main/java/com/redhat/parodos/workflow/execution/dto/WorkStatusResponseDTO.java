@@ -17,7 +17,7 @@ package com.redhat.parodos.workflow.execution.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.redhat.parodos.workflow.enums.WorkStatus;
+import com.redhat.parodos.workflow.enums.ParodosWorkStatus;
 import com.redhat.parodos.workflow.enums.WorkType;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import lombok.AllArgsConstructor;
@@ -45,7 +45,7 @@ public class WorkStatusResponseDTO {
 
 	private WorkType type;
 
-	private WorkStatus status;
+	private ParodosWorkStatus status;
 
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private List<WorkStatusResponseDTO> works;

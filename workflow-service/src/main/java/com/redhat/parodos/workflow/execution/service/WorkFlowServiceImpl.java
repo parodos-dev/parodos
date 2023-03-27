@@ -24,6 +24,7 @@ import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionR
 import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
 import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
+import com.redhat.parodos.workflow.exceptions.WorkflowPersistenceFailedException;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkStatusResponseDTO;
@@ -39,6 +40,7 @@ import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -125,10 +127,17 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
 	@Override
 	public synchronized WorkFlowExecution saveWorkFlow(UUID projectId, UUID workFlowDefinitionId,
-			WorkFlowStatus workFlowStatus, WorkFlowExecution masterWorkFlowExecution) {
-		return workFlowRepository.save(WorkFlowExecution.builder().workFlowDefinitionId(workFlowDefinitionId)
-				.projectId(projectId).status(workFlowStatus).startDate(new Date())
-				.masterWorkFlowExecution(masterWorkFlowExecution).build());
+			WorkFlowStatus workFlowStatus, WorkFlowExecution masterWorkFlowExecution, String arguments) {
+		try {
+			return workFlowRepository.save(WorkFlowExecution.builder().workFlowDefinitionId(workFlowDefinitionId)
+					.projectId(projectId).status(workFlowStatus).startDate(new Date()).arguments(arguments)
+					.masterWorkFlowExecution(masterWorkFlowExecution).build());
+		}
+		catch (DataAccessException | IllegalArgumentException e) {
+			log.error("failing persist workflow execution for: {} in master workflow execution: {}. error Message: {}",
+					workFlowDefinitionId, masterWorkFlowExecution.getId(), e.getMessage());
+			throw new WorkflowPersistenceFailedException(e.getMessage());
+		}
 	}
 
 	@Override
@@ -175,14 +184,28 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	@Override
 	public synchronized WorkFlowTaskExecution saveWorkFlowTask(String arguments, UUID workFlowTaskDefinitionId,
 			UUID workFlowExecutionId, WorkFlowTaskStatus workFlowTaskStatus) {
-		return workFlowTaskRepository.save(WorkFlowTaskExecution.builder().workFlowExecutionId(workFlowExecutionId)
-				.workFlowTaskDefinitionId(workFlowTaskDefinitionId).arguments(arguments).status(workFlowTaskStatus)
-				.startDate(new Date()).build());
+		try {
+			return workFlowTaskRepository.save(WorkFlowTaskExecution.builder().workFlowExecutionId(workFlowExecutionId)
+					.workFlowTaskDefinitionId(workFlowTaskDefinitionId).arguments(arguments).status(workFlowTaskStatus)
+					.startDate(new Date()).build());
+		}
+		catch (DataAccessException | IllegalArgumentException e) {
+			log.error("failing persist task execution for: {} in master workflow execution: {}. error Message: {}",
+					workFlowTaskDefinitionId, workFlowTaskDefinitionId, e.getMessage());
+			throw new WorkflowPersistenceFailedException(e.getMessage());
+		}
 	}
 
 	@Override
 	public WorkFlowTaskExecution updateWorkFlowTask(WorkFlowTaskExecution workFlowTaskExecution) {
-		return workFlowTaskRepository.save(workFlowTaskExecution);
+		try {
+			return workFlowTaskRepository.save(workFlowTaskExecution);
+		}
+		catch (DataAccessException | IllegalArgumentException e) {
+			log.error("failed updating task execution for: {} in execution: {}. error Message: {}",
+					workFlowTaskExecution.getWorkFlowTaskDefinitionId(), workFlowTaskExecution.getId(), e.getMessage());
+			throw new WorkflowPersistenceFailedException(e.getMessage());
+		}
 	}
 
 	@Override
