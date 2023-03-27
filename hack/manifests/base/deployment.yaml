@@ -14,9 +14,9 @@ spec:
       containers:
       - name: notification-service
         image: quay.io/parodos/notification-service:latest
-        env:
-          - name: SPRING_PROFILES_ACTIVE
-            value: "local"
+        envFrom:
+          - configMapRef:
+              name: notification-service-config
         livenessProbe:
           httpGet:
             path: /actuator/health
