@@ -22,8 +22,8 @@ package com.redhat.parodos.workflow.enums;
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
-public enum WorkStatus {
+public enum ParodosWorkStatus {
 
-	FAILED, COMPLETED, PENDING
+	FAILED, COMPLETED, PENDING, IN_PROGRESS
 
 }

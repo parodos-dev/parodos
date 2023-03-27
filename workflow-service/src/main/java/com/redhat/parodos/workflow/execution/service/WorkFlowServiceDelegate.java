@@ -21,6 +21,7 @@ import com.redhat.parodos.workflow.definition.entity.WorkFlowWorkDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
+import com.redhat.parodos.workflow.enums.ParodosWorkStatus;
 import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.enums.WorkType;
 import com.redhat.parodos.workflow.execution.dto.WorkStatusResponseDTO;
@@ -100,9 +101,8 @@ public class WorkFlowServiceDelegate {
 		// build workflow status DTO
 		workStatusResponseDTOList.add(WorkStatusResponseDTO.builder().name(workFlowDefinition.getName())
 				.type(WorkType.WORKFLOW)
-				.status(WorkFlowStatus.IN_PROGRESS.equals(workFlowExecution.getStatus())
-						? com.redhat.parodos.workflow.enums.WorkStatus.PENDING
-						: com.redhat.parodos.workflow.enums.WorkStatus.valueOf(workFlowExecution.getStatus().name()))
+				.status(WorkFlowStatus.IN_PROGRESS.equals(workFlowExecution.getStatus()) ? ParodosWorkStatus.PENDING
+						: ParodosWorkStatus.valueOf(workFlowExecution.getStatus().name()))
 				.workExecution(workFlowExecution).numberOfWorks(workFlowDefinition.getNumberOfWorks())
 				.works(new ArrayList<>()).build());
 
@@ -153,10 +153,9 @@ public class WorkFlowServiceDelegate {
 		/*
 		 * the workflow execution might be null when there is pending checker before it
 		 */
-		com.redhat.parodos.workflow.enums.WorkStatus workStatus = workExecution == null
-				|| WorkFlowStatus.IN_PROGRESS.equals(workExecution.getStatus())
-						? com.redhat.parodos.workflow.enums.WorkStatus.PENDING
-						: com.redhat.parodos.workflow.enums.WorkStatus.valueOf(workExecution.getStatus().name());
+		ParodosWorkStatus workStatus = workExecution == null
+				|| WorkFlowStatus.IN_PROGRESS.equals(workExecution.getStatus()) ? ParodosWorkStatus.PENDING
+						: ParodosWorkStatus.valueOf(workExecution.getStatus().name());
 
 		return WorkStatusResponseDTO.builder().name(workFlowDefinition.getName()).type(WorkType.WORKFLOW)
 				.status(workStatus).works(new ArrayList<>()).workExecution(workExecution)
@@ -175,13 +174,12 @@ public class WorkFlowServiceDelegate {
 		Optional<WorkFlowTaskExecution> workFlowTaskExecutionOptional = workFlowTaskExecutions.stream()
 				.max(Comparator.comparing(WorkFlowTaskExecution::getStartDate));
 
-		com.redhat.parodos.workflow.enums.WorkStatus workStatus = com.redhat.parodos.workflow.enums.WorkStatus.PENDING;
+		ParodosWorkStatus workStatus = ParodosWorkStatus.PENDING;
 
 		if (workFlowTaskExecutionOptional.isPresent()) {
 			workStatus = WorkFlowTaskStatus.IN_PROGRESS.equals(workFlowTaskExecutionOptional.get().getStatus())
-					? com.redhat.parodos.workflow.enums.WorkStatus.PENDING
-					: com.redhat.parodos.workflow.enums.WorkStatus
-							.valueOf(workFlowTaskExecutionOptional.get().getStatus().name());
+					? ParodosWorkStatus.PENDING
+					: ParodosWorkStatus.valueOf(workFlowTaskExecutionOptional.get().getStatus().name());
 		}
 
 		return WorkStatusResponseDTO.builder().name(workFlowTaskDefinition.getName()).type(WorkType.TASK)
