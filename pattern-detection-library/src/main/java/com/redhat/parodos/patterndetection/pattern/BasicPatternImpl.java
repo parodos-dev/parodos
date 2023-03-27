@@ -41,6 +41,7 @@ import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.workflow.ParallelFlow;
+import com.redhat.parodos.workflows.workflow.WorkFlowPropertiesMetadata;
 
 /**
  *
@@ -58,6 +59,16 @@ import com.redhat.parodos.workflows.workflow.ParallelFlow;
  *
  */
 public class BasicPatternImpl implements Pattern {
+
+	private WorkFlowPropertiesMetadata properties;
+
+	public void setProperties(WorkFlowPropertiesMetadata properties) {
+		this.properties = properties;
+	}
+
+	public WorkFlowPropertiesMetadata getProperties() {
+		return this.properties;
+	}
 
 	private final List<Clue> allAreRequiredClues;
 

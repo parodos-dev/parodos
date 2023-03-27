@@ -15,6 +15,7 @@
  */
 package com.redhat.parodos.workflow.definition.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.Date;
@@ -59,6 +60,9 @@ public class WorkFlowDefinitionResponseDTO {
 
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private Map<String, Map<String, Object>> parameters;
+
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	private WorkFlowPropertiesDefinitionDTO properties;
 
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private List<WorkDefinitionResponseDTO> works;

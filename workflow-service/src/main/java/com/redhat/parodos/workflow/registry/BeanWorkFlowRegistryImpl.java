@@ -100,7 +100,7 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 		return workFlows.get(workFlowName);
 	}
 
-	private void saveWorkFlow(String workFlowBeanName, Object workFlowBean) {
+	private void saveWorkFlow(String workFlowBeanName, WorkFlow workFlowBean) {
 		// extract work units
 		List<Work> works = getWorks(workFlowBeanName);
 		// get workflow type and parameters from annotation
@@ -120,8 +120,8 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 							.optional(annotationAttribute.getBoolean("optional")).build())
 					.collect(Collectors.toList());
 		}
-		workFlowDefinitionService.save(workFlowBeanName, workFlowType, workFlowParameters, works,
-				getWorkFlowProcessingType(workFlowBean));
+		workFlowDefinitionService.save(workFlowBeanName, workFlowType, workFlowBean.getProperties(), workFlowParameters,
+				works, getWorkFlowProcessingType(workFlowBean));
 	}
 
 	private List<Work> getWorks(String workFlowName) {

@@ -132,6 +132,7 @@ Class | Method | HTTP request | Description
  - [WorkFlowDefinitionResponseDTO](docs/WorkFlowDefinitionResponseDTO.md)
  - [WorkFlowOption](docs/WorkFlowOption.md)
  - [WorkFlowOptions](docs/WorkFlowOptions.md)
+ - [WorkFlowPropertiesDefinitionDTO](docs/WorkFlowPropertiesDefinitionDTO.md)
  - [WorkFlowRequestDTO](docs/WorkFlowRequestDTO.md)
  - [WorkFlowResponseDTO](docs/WorkFlowResponseDTO.md)
  - [WorkFlowStatusResponseDTO](docs/WorkFlowStatusResponseDTO.md)
