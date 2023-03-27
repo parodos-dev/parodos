@@ -12,6 +12,7 @@ import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.enums.WorkType;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowStatusResponseDTO;
+import com.redhat.parodos.workflow.execution.dto.WorkStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
@@ -29,12 +30,12 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -42,6 +43,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 
 class WorkFlowServiceImplTest {
+
+	private WorkFlowDelegate workFlowDelegate;
+
+	private WorkFlowServiceDelegate workFlowServiceDelegate;
 
 	private WorkFlowDefinitionRepository workFlowDefinitionRepository;
 
@@ -53,22 +58,21 @@ class WorkFlowServiceImplTest {
 
 	private WorkFlowWorkRepository workFlowWorkRepository;
 
-	private WorkFlowDelegate workFlowDelegate;
-
 	private WorkFlowServiceImpl workFlowService;
 
 	@BeforeEach
 	void initEach() {
+		this.workFlowDelegate = Mockito.mock(WorkFlowDelegate.class);
+		this.workFlowServiceDelegate = Mockito.mock(WorkFlowServiceDelegate.class);
 		this.workFlowRepository = Mockito.mock(WorkFlowRepository.class);
 		this.workFlowDefinitionRepository = Mockito.mock(WorkFlowDefinitionRepository.class);
 		this.workFlowTaskDefinitionRepository = Mockito.mock(WorkFlowTaskDefinitionRepository.class);
 		this.workFlowTaskRepository = Mockito.mock(WorkFlowTaskRepository.class);
-		this.workFlowDelegate = Mockito.mock(WorkFlowDelegate.class);
 		this.workFlowWorkRepository = Mockito.mock(WorkFlowWorkRepository.class);
 
-		this.workFlowService = new WorkFlowServiceImpl(this.workFlowDelegate, this.workFlowDefinitionRepository,
-				this.workFlowTaskDefinitionRepository, this.workFlowRepository, this.workFlowTaskRepository,
-				workFlowWorkRepository);
+		this.workFlowService = new WorkFlowServiceImpl(this.workFlowDelegate, this.workFlowServiceDelegate,
+				this.workFlowDefinitionRepository, this.workFlowTaskDefinitionRepository, this.workFlowRepository,
+				this.workFlowTaskRepository, this.workFlowWorkRepository);
 	}
 
 	@Test
@@ -408,147 +412,134 @@ class WorkFlowServiceImplTest {
 
 	@Test
 	void testGetWorkFlowStatusWithValidData() {
+		String WORKFLOW_NAME = "testWorkFlow";
+		UUID workFlowExecutionId = UUID.randomUUID();
+		UUID workFlowDefinitionId = UUID.randomUUID();
+
 		// given
-		// master workflow
-		String masterWorkFlowName = "testMasterWorkFlow";
-		UUID masterWorkFlowExecutionId = UUID.randomUUID();
-		UUID masterWorkFlowDefinitionId = UUID.randomUUID();
-		UUID projectId = UUID.randomUUID();
-		WorkFlowDefinition masterWorkFlowDefinition = WorkFlowDefinition.builder().name(masterWorkFlowName)
-				.numberOfWorks(2).build();
-		masterWorkFlowDefinition.setId(masterWorkFlowDefinitionId);
+		// workflow (master)
+		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(WORKFLOW_NAME).numberOfWorks(2)
+				.build();
+		workFlowDefinition.setId(workFlowDefinitionId);
 
-		WorkFlowExecution masterWorkFlowExecution = WorkFlowExecution.builder()
-				.workFlowDefinitionId(masterWorkFlowDefinitionId).status(WorkFlowStatus.IN_PROGRESS).build();
-		masterWorkFlowExecution.setId(masterWorkFlowExecutionId);
+		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().workFlowDefinitionId(workFlowDefinitionId)
+				.status(WorkFlowStatus.IN_PROGRESS).build();
+		workFlowExecution.setId(workFlowExecutionId);
 
-		// sub workflow 1
-		String TEST_SUB_WORKFLOW_NAME_1 = "testSubWorkFlow1";
-		UUID testSubWorkFlowDefinitionId1 = UUID.randomUUID();
-		UUID testSubWorkFlowExecutionId1 = UUID.randomUUID();
-		// sub workflow definition 1
-		WorkFlowDefinition testSubWorkFlowDefinition1 = WorkFlowDefinition.builder().name(TEST_SUB_WORKFLOW_NAME_1)
+		// subWorkflow1
+		String SUB_WORKFLOW_1_NAME = "testSubWorkFlow1";
+		UUID testSubWorkFlow1DefinitionId = UUID.randomUUID();
+		UUID testSubWorkFlow1ExecutionId = UUID.randomUUID();
+		// subWorkflow1Definition
+		WorkFlowDefinition subWorkFlow1Definition = WorkFlowDefinition.builder().name(SUB_WORKFLOW_1_NAME)
 				.numberOfWorks(1).build();
-		testSubWorkFlowDefinition1.setId(testSubWorkFlowDefinitionId1);
-		// sub workflow execution 1
-		WorkFlowExecution testSubWorkFlowExecution1 = WorkFlowExecution.builder().projectId(projectId)
-				.status(WorkFlowStatus.IN_PROGRESS).workFlowDefinitionId(testSubWorkFlowDefinitionId1)
-				.masterWorkFlowExecution(masterWorkFlowExecution).build();
-		testSubWorkFlowExecution1.setId(testSubWorkFlowExecutionId1);
+		subWorkFlow1Definition.setId(testSubWorkFlow1DefinitionId);
+		// subWorkflow1Execution
+		WorkFlowExecution subWorkFlow1Execution = WorkFlowExecution.builder().projectId(UUID.randomUUID())
+				.status(WorkFlowStatus.IN_PROGRESS).workFlowDefinitionId(testSubWorkFlow1DefinitionId)
+				.masterWorkFlowExecution(workFlowExecution).build();
+		subWorkFlow1Execution.setId(testSubWorkFlow1ExecutionId);
 
-		// sub workflow task 1
-		String TEST_SUB_WORKFLOW_TASK_NAME_1 = "testSubWorkFlowTask1";
-		UUID testSubWorkFlowTaskDefinitionId1 = UUID.randomUUID();
-		UUID testSubWorkFlowTaskExecutionId1 = UUID.randomUUID();
-		// sub workflow task definition 1
-		WorkFlowTaskDefinition testSubWorkFlowTaskDefinition1 = WorkFlowTaskDefinition.builder()
-				.name(TEST_SUB_WORKFLOW_TASK_NAME_1).build();
-		testSubWorkFlowTaskDefinition1.setId(testSubWorkFlowTaskDefinitionId1);
-		// link sub workflow task 1 to sub workflow 1
-		testSubWorkFlowDefinition1.setWorkFlowTaskDefinitions(List.of(testSubWorkFlowTaskDefinition1));
-		// sub workflow task execution 1
-		WorkFlowTaskExecution testSubWorkFlowTaskExecution1 = WorkFlowTaskExecution.builder()
-				.status(WorkFlowTaskStatus.IN_PROGRESS).workFlowExecutionId(testSubWorkFlowExecutionId1)
-				.workFlowTaskDefinitionId(testSubWorkFlowTaskDefinitionId1).build();
-		testSubWorkFlowTaskExecution1.setId(testSubWorkFlowTaskExecutionId1);
+		// subWorkflow1Task1
+		String SUB_WORKFLOW_1_TASK_1_NAME = "testSubWorkFlow1Task1";
+		UUID subWorkFlow1Task1DefinitionId = UUID.randomUUID();
+		UUID subWorkFlow1Task1ExecutionId = UUID.randomUUID();
+		// subWorkflow1Task1Definition
+		WorkFlowTaskDefinition subWorkFlow1Task1Definition = WorkFlowTaskDefinition.builder()
+				.name(SUB_WORKFLOW_1_TASK_1_NAME).build();
+		subWorkFlow1Task1Definition.setId(subWorkFlow1Task1DefinitionId);
+		// link subWorkflow1Task1Definition to subWorkflow1Definition
+		subWorkFlow1Definition.setWorkFlowTaskDefinitions(List.of(subWorkFlow1Task1Definition));
+		// subWorkflow1TaskExecution1
+		WorkFlowTaskExecution subWorkFlow1Task1Execution = WorkFlowTaskExecution.builder()
+				.status(WorkFlowTaskStatus.IN_PROGRESS).workFlowExecutionId(testSubWorkFlow1ExecutionId)
+				.workFlowTaskDefinitionId(subWorkFlow1Task1DefinitionId).build();
+		subWorkFlow1Task1Execution.setId(subWorkFlow1Task1ExecutionId);
 
-		// workflow task 2
-		String TEST_WORKFLOW_TASK_NAME_1 = "testWorkFlowTask1";
-		UUID testWorkFlowTaskDefinitionId1 = UUID.randomUUID();
-		UUID testWorkFlowTaskExecutionId1 = UUID.randomUUID();
-		// workflow task definition 2
-		WorkFlowTaskDefinition testWorkFlowTaskDefinition1 = WorkFlowTaskDefinition.builder()
-				.name(TEST_WORKFLOW_TASK_NAME_1).build();
-		testWorkFlowTaskDefinition1.setId(testWorkFlowTaskDefinitionId1);
-		// workflow task execution 2
-		WorkFlowTaskExecution testWorkFlowTaskExecution1 = WorkFlowTaskExecution.builder()
-				.status(WorkFlowTaskStatus.COMPLETED).workFlowExecutionId(masterWorkFlowExecutionId)
-				.workFlowTaskDefinitionId(testWorkFlowTaskDefinitionId1).build();
-		testWorkFlowTaskExecution1.setId(testWorkFlowTaskExecutionId1);
-		// link workflow task definition 2 to master workFlow
-		masterWorkFlowDefinition.setWorkFlowTaskDefinitions(List.of(testWorkFlowTaskDefinition1));
-		// master workflow works
-		WorkFlowWorkDefinition masterWorkFlowWorkDefinition1 = WorkFlowWorkDefinition.builder()
-				.workDefinitionId(testSubWorkFlowDefinitionId1).workDefinitionType(WorkType.WORKFLOW)
-				.workFlowDefinition(masterWorkFlowDefinition).build();
-		masterWorkFlowWorkDefinition1.setId(UUID.randomUUID());
+		// workflowTask1
+		String WORKFLOW_TASK_1_NAME = "testWorkFlowTask1";
+		UUID workFlowTask1DefinitionId = UUID.randomUUID();
+		UUID workFlowTask1ExecutionId = UUID.randomUUID();
+		// workflowTask1Definition
+		WorkFlowTaskDefinition workFlowTask1Definition = WorkFlowTaskDefinition.builder().name(WORKFLOW_TASK_1_NAME)
+				.build();
+		workFlowTask1Definition.setId(workFlowTask1DefinitionId);
+		// workflowTask1Execution
+		WorkFlowTaskExecution workFlowTask1Execution = WorkFlowTaskExecution.builder()
+				.status(WorkFlowTaskStatus.COMPLETED).workFlowExecutionId(workFlowExecutionId)
+				.workFlowTaskDefinitionId(workFlowTask1DefinitionId).build();
+		workFlowTask1Execution.setId(workFlowTask1ExecutionId);
 
-		WorkFlowWorkDefinition masterWorkFlowWorkDefinition2 = WorkFlowWorkDefinition.builder()
-				.workDefinitionId(testWorkFlowTaskDefinitionId1).workDefinitionType(WorkType.TASK)
-				.workFlowDefinition(masterWorkFlowDefinition).build();
-		masterWorkFlowWorkDefinition2.setId(UUID.randomUUID());
-
-		masterWorkFlowDefinition
-				.setWorkFlowWorkDefinitions(List.of(masterWorkFlowWorkDefinition1, masterWorkFlowWorkDefinition2));
-
-		WorkFlowWorkDefinition subWorkFlowWorkDefinition1 = WorkFlowWorkDefinition.builder()
-				.workDefinitionId(testSubWorkFlowTaskDefinitionId1).workDefinitionType(WorkType.TASK)
-				.workFlowDefinition(testSubWorkFlowDefinition1).build();
-		subWorkFlowWorkDefinition1.setId(UUID.randomUUID());
+		// link workflowTask1Definition to workFlowDefinition
+		workFlowDefinition.setWorkFlowTaskDefinitions(List.of(workFlowTask1Definition));
 
 		// when
-		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.eq(masterWorkFlowDefinitionId)))
-				.thenReturn(Optional.of(masterWorkFlowDefinition));
+		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.eq(workFlowDefinitionId)))
+				.thenReturn(Optional.of(workFlowDefinition));
 
-		Mockito.when(this.workFlowRepository.findById(Mockito.eq(masterWorkFlowExecutionId)))
-				.thenReturn(Optional.of(masterWorkFlowExecution));
+		Mockito.when(this.workFlowRepository.findById(Mockito.eq(workFlowExecutionId)))
+				.thenReturn(Optional.of(workFlowExecution));
 
-		Mockito.when(this.workFlowWorkRepository
-				.findByWorkFlowDefinitionIdOrderByCreateDateAsc(Mockito.eq(masterWorkFlowDefinitionId)))
-				.thenReturn(List.of(masterWorkFlowWorkDefinition1, masterWorkFlowWorkDefinition2));
-
-		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.eq(testSubWorkFlowDefinitionId1)))
-				.thenReturn(Optional.of(testSubWorkFlowDefinition1));
+		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.eq(testSubWorkFlow1DefinitionId)))
+				.thenReturn(Optional.of(subWorkFlow1Definition));
 
 		Mockito.when(this.workFlowRepository.findFirstByMasterWorkFlowExecutionAndWorkFlowDefinitionId(
-				Mockito.eq(masterWorkFlowExecution), Mockito.eq(testSubWorkFlowDefinitionId1)))
-				.thenReturn(testSubWorkFlowExecution1);
+				Mockito.eq(workFlowExecution), Mockito.eq(testSubWorkFlow1DefinitionId)))
+				.thenReturn(subWorkFlow1Execution);
 
-		Mockito.when(this.workFlowTaskDefinitionRepository.findById(Mockito.eq(testSubWorkFlowTaskDefinitionId1)))
-				.thenReturn(Optional.of(testSubWorkFlowTaskDefinition1));
+		Mockito.when(this.workFlowTaskDefinitionRepository.findById(Mockito.eq(subWorkFlow1Task1DefinitionId)))
+				.thenReturn(Optional.of(subWorkFlow1Task1Definition));
 
-		Mockito.when(this.workFlowTaskDefinitionRepository.findById(Mockito.eq(testWorkFlowTaskDefinitionId1)))
-				.thenReturn(Optional.of(testWorkFlowTaskDefinition1));
-
-		Mockito.when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(
-				Mockito.eq(testSubWorkFlowExecutionId1), Mockito.eq(testSubWorkFlowTaskDefinitionId1)))
-				.thenReturn(List.of(testSubWorkFlowTaskExecution1));
+		Mockito.when(this.workFlowTaskDefinitionRepository.findById(Mockito.eq(workFlowTask1DefinitionId)))
+				.thenReturn(Optional.of(workFlowTask1Definition));
 
 		Mockito.when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(
-				Mockito.eq(masterWorkFlowExecutionId), Mockito.eq(testWorkFlowTaskDefinitionId1)))
-				.thenReturn(List.of(testWorkFlowTaskExecution1));
+				Mockito.eq(testSubWorkFlow1ExecutionId), Mockito.eq(subWorkFlow1Task1DefinitionId)))
+				.thenReturn(List.of(subWorkFlow1Task1Execution));
 
-		Mockito.when(this.workFlowWorkRepository
-				.findByWorkFlowDefinitionIdOrderByCreateDateAsc(Mockito.eq(testSubWorkFlowDefinitionId1)))
-				.thenReturn(List.of(subWorkFlowWorkDefinition1));
+		Mockito.when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(
+				Mockito.eq(workFlowExecutionId), Mockito.eq(workFlowTask1DefinitionId)))
+				.thenReturn(List.of(workFlowTask1Execution));
 
+		Mockito.when(this.workFlowServiceDelegate.getWorkFlowAndWorksStatus(Mockito.eq(workFlowExecution),
+				Mockito.eq(workFlowDefinition)))
+				.thenReturn(List.of(
+						WorkStatusResponseDTO.builder().name(SUB_WORKFLOW_1_NAME).type(WorkType.WORKFLOW)
+								.status(com.redhat.parodos.workflow.enums.WorkStatus.PENDING)
+								.works(List.of(WorkStatusResponseDTO.builder().name(SUB_WORKFLOW_1_TASK_1_NAME)
+										.type(WorkType.TASK)
+										.status(com.redhat.parodos.workflow.enums.WorkStatus.PENDING).build()))
+								.workExecution(subWorkFlow1Execution).numberOfWorks(1).build(),
+						WorkStatusResponseDTO.builder().name(WORKFLOW_TASK_1_NAME).type(WorkType.TASK)
+								.status(com.redhat.parodos.workflow.enums.WorkStatus.COMPLETED).build()));
 		// then
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = this.workFlowService
-				.getWorkFlowStatus(masterWorkFlowExecutionId);
-		// master workflow
+				.getWorkFlowStatus(workFlowExecutionId);
+
+		// workflow (master)
 		assertNotNull(workFlowStatusResponseDTO);
-		assertEquals(workFlowStatusResponseDTO.getWorkFlowExecutionId(), masterWorkFlowExecution.getId().toString());
-		assertEquals(workFlowStatusResponseDTO.getWorkFlowName(), masterWorkFlowDefinition.getName());
+		assertEquals(workFlowStatusResponseDTO.getWorkFlowExecutionId(), workFlowExecution.getId().toString());
+		assertEquals(workFlowStatusResponseDTO.getWorkFlowName(), workFlowDefinition.getName());
 		assertEquals(workFlowStatusResponseDTO.getStatus(), WorkFlowStatus.IN_PROGRESS.name());
 		assertEquals(workFlowStatusResponseDTO.getWorks().size(), 2);
 
-		// sub workflow 1
+		// subWorkflow1
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getType(), WorkType.WORKFLOW);
-		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getName(), testSubWorkFlowDefinition1.getName());
+		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getName(), subWorkFlow1Definition.getName());
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getStatus().name(), WorkFlowStatus.PENDING.name());
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getWorks().size(), 1);
 
-		// sub workflow task 1
+		// subWorkflow1Task1
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getWorks().get(0).getType(), WorkType.TASK);
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getWorks().get(0).getName(),
-				testSubWorkFlowTaskDefinition1.getName());
+				subWorkFlow1Task1Definition.getName());
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getWorks().get(0).getStatus().name(),
 				WorkFlowStatus.PENDING.name());
 		assertNull(workFlowStatusResponseDTO.getWorks().get(0).getWorks().get(0).getWorks());
 
-		// workflow task 1
+		// workflowTask1
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(1).getType(), WorkType.TASK);
-		assertEquals(workFlowStatusResponseDTO.getWorks().get(1).getName(), testWorkFlowTaskDefinition1.getName());
+		assertEquals(workFlowStatusResponseDTO.getWorks().get(1).getName(), workFlowTask1Definition.getName());
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(1).getStatus().name(),
 				WorkFlowTaskStatus.COMPLETED.name());
 		assertNull(workFlowStatusResponseDTO.getWorks().get(1).getWorks());
@@ -556,38 +547,178 @@ class WorkFlowServiceImplTest {
 
 	@Test
 	void testGetWorkFlowStatusWithInvalidExecutionData() {
-		// master workflow execution
-		UUID masterWorkFlowExecutionId = UUID.randomUUID();
+		// workflow (master)
+		UUID workFlowExecutionId = UUID.randomUUID();
 
 		// when
-		Mockito.when(this.workFlowRepository.findById(Mockito.eq(masterWorkFlowExecutionId)))
-				.thenReturn(Optional.empty());
+		Mockito.when(this.workFlowRepository.findById(Mockito.eq(workFlowExecutionId))).thenReturn(Optional.empty());
 
 		assertThrows(ResponseStatusException.class, () -> {
-			this.workFlowService.getWorkFlowStatus(masterWorkFlowExecutionId);
+			this.workFlowService.getWorkFlowStatus(workFlowExecutionId);
 		});
 
-		Mockito.verify(this.workFlowTaskRepository, Mockito.never()).save(any());
+		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findById(any());
+		Mockito.verify(this.workFlowWorkRepository, Mockito.never())
+				.findByWorkFlowDefinitionIdOrderByCreateDateAsc(any());
 	}
 
 	@Test
 	void testGetWorkFlowStatusWithInvalidDefinitionData() {
-		// master workflow execution
-		UUID masterWorkFlowExecutionId = UUID.randomUUID();
-		UUID masterWorkFlowDefinitionId = UUID.randomUUID();
+		// workflow (master)
+		UUID workFlowExecutionId = UUID.randomUUID();
+		UUID workFlowDefinitionId = UUID.randomUUID();
+		WorkFlowExecution workFlowExecution = Mockito.mock(WorkFlowExecution.class);
 
 		// when
-		Mockito.when(this.workFlowRepository.findById(Mockito.eq(masterWorkFlowExecutionId)))
-				.thenReturn(Optional.of(WorkFlowExecution.builder().workFlowDefinitionId(UUID.randomUUID())
-						.status(WorkFlowStatus.IN_PROGRESS).build()));
-		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.eq(masterWorkFlowDefinitionId)))
+		Mockito.when(this.workFlowRepository.findById(Mockito.eq(workFlowExecutionId)))
+				.thenReturn(Optional.of(workFlowExecution));
+
+		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.eq(workFlowDefinitionId)))
 				.thenReturn(Optional.empty());
 
 		assertThrows(ResponseStatusException.class, () -> {
-			this.workFlowService.getWorkFlowStatus(masterWorkFlowExecutionId);
+			this.workFlowService.getWorkFlowStatus(workFlowExecutionId);
 		});
 
-		Mockito.verify(this.workFlowTaskRepository, Mockito.never()).save(any());
+		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findById(any());
+		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).findById(any());
+		Mockito.verify(this.workFlowServiceDelegate, Mockito.never())
+				.getWorkFlowAndWorksStatus(Mockito.eq(workFlowExecution), Mockito.any());
+	}
+
+	@Test
+	void testGetWorkFlowStatusWithNonMasterWorkFlowData() {
+		// workflow
+		UUID workFlowExecutionId = UUID.randomUUID();
+		UUID workFlowDefinitionId = UUID.randomUUID();
+		WorkFlowExecution workFlowExecution = Mockito.mock(WorkFlowExecution.class);
+		WorkFlowDefinition workFlowDefinition = Mockito.mock(WorkFlowDefinition.class);
+
+		// when
+		Mockito.when(this.workFlowRepository.findById(Mockito.eq(workFlowExecutionId)))
+				.thenReturn(Optional.of(workFlowExecution));
+
+		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.eq(workFlowDefinitionId)))
+				.thenReturn(Optional.of(workFlowDefinition));
+
+		Mockito.when(workFlowExecution.getMasterWorkFlowExecution()).thenReturn(null);
+
+		assertThrows(ResponseStatusException.class, () -> {
+			this.workFlowService.getWorkFlowStatus(workFlowExecutionId);
+		});
+
+		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findById(any());
+		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).findById(any());
+		Mockito.verify(this.workFlowServiceDelegate, Mockito.never())
+				.getWorkFlowAndWorksStatus(Mockito.eq(workFlowExecution), Mockito.eq(workFlowDefinition));
+	}
+
+	@Test
+	void testGetWorkFlowStatusWhenSubWorkflowNotExecutedWithValidData() {
+		String workFlowName = "testWorkFlow";
+		UUID workFlowExecutionId = UUID.randomUUID();
+		UUID workFlowDefinitionId = UUID.randomUUID();
+
+		// workflow (master)
+		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(workFlowName).numberOfWorks(2)
+				.build();
+		workFlowDefinition.setId(workFlowDefinitionId);
+
+		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().workFlowDefinitionId(workFlowDefinitionId)
+				.status(WorkFlowStatus.IN_PROGRESS).build();
+		workFlowExecution.setId(workFlowExecutionId);
+
+		// subWorkflow1
+		String SUB_WORKFLOW_1_NAME = "testSubWorkFlow1";
+		UUID subWorkFlow1DefinitionId = UUID.randomUUID();
+		UUID subWorkFlow1ExecutionId = UUID.randomUUID();
+		// subWorkflow1Definition
+		WorkFlowDefinition subWorkFlow1Definition = WorkFlowDefinition.builder().name(SUB_WORKFLOW_1_NAME)
+				.numberOfWorks(1).build();
+		subWorkFlow1Definition.setId(subWorkFlow1DefinitionId);
+		// subWorkflow1Task1
+		String SUB_WORKFLOW_1_TASK_1_NAME = "testSubWorkFlow1Task1";
+		UUID subWorkFlow1Task1DefinitionId = UUID.randomUUID();
+		// subWorkflow1Task1Definition
+		WorkFlowTaskDefinition subWorkFlow1Task1Definition = WorkFlowTaskDefinition.builder()
+				.name(SUB_WORKFLOW_1_TASK_1_NAME).build();
+		subWorkFlow1Task1Definition.setId(subWorkFlow1Task1DefinitionId);
+		// link subWorkflow1Task1 to subWorkflow1
+		subWorkFlow1Definition.setWorkFlowTaskDefinitions(List.of(subWorkFlow1Task1Definition));
+
+		// workflowTask1
+		String WORKFLOW_TASK_1_NAME = "testWorkFlowTask1";
+		UUID workFlowTask1DefinitionId = UUID.randomUUID();
+		UUID workFlowTask1ExecutionId = UUID.randomUUID();
+		// workflowTask1Definition
+		WorkFlowTaskDefinition workFlowTask1Definition = WorkFlowTaskDefinition.builder().name(WORKFLOW_TASK_1_NAME)
+				.build();
+		workFlowTask1Definition.setId(workFlowTask1DefinitionId);
+		// workflowTask1Execution
+		WorkFlowTaskExecution workFlowTask1Execution = WorkFlowTaskExecution.builder()
+				.status(WorkFlowTaskStatus.COMPLETED).workFlowExecutionId(workFlowExecutionId)
+				.workFlowTaskDefinitionId(workFlowTask1DefinitionId).build();
+		workFlowTask1Execution.setId(workFlowTask1ExecutionId);
+		// link workflow task definition 2 to master workFlow
+		workFlowDefinition.setWorkFlowTaskDefinitions(List.of(workFlowTask1Definition));
+
+		// when
+		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.eq(workFlowDefinitionId)))
+				.thenReturn(Optional.of(workFlowDefinition));
+
+		Mockito.when(this.workFlowRepository.findById(Mockito.eq(workFlowExecutionId)))
+				.thenReturn(Optional.of(workFlowExecution));
+
+		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.eq(subWorkFlow1DefinitionId)))
+				.thenReturn(Optional.of(subWorkFlow1Definition));
+
+		Mockito.when(this.workFlowRepository.findFirstByMasterWorkFlowExecutionAndWorkFlowDefinitionId(
+				Mockito.eq(workFlowExecution), Mockito.eq(subWorkFlow1DefinitionId))).thenReturn(null);
+
+		Mockito.when(this.workFlowTaskDefinitionRepository.findById(Mockito.eq(subWorkFlow1Task1DefinitionId)))
+				.thenReturn(Optional.of(subWorkFlow1Task1Definition));
+
+		Mockito.when(this.workFlowTaskDefinitionRepository.findById(Mockito.eq(workFlowTask1DefinitionId)))
+				.thenReturn(Optional.of(workFlowTask1Definition));
+
+		Mockito.when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(
+				Mockito.eq(subWorkFlow1ExecutionId), Mockito.eq(subWorkFlow1Task1DefinitionId))).thenReturn(List.of());
+
+		Mockito.when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(
+				Mockito.eq(workFlowExecutionId), Mockito.eq(workFlowTask1DefinitionId))).thenReturn(List.of());
+
+		Mockito.when(this.workFlowServiceDelegate.getWorkFlowAndWorksStatus(Mockito.eq(workFlowExecution),
+				Mockito.eq(workFlowDefinition)))
+				.thenReturn(List.of(
+						WorkStatusResponseDTO.builder().name(SUB_WORKFLOW_1_NAME).type(WorkType.WORKFLOW)
+								.status(com.redhat.parodos.workflow.enums.WorkStatus.PENDING)
+								.works(Collections.emptyList()).numberOfWorks(1).build(),
+						WorkStatusResponseDTO.builder().name(WORKFLOW_TASK_1_NAME).type(WorkType.TASK)
+								.status(com.redhat.parodos.workflow.enums.WorkStatus.COMPLETED).build()));
+
+		// then
+		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = this.workFlowService
+				.getWorkFlowStatus(workFlowExecutionId);
+
+		// master workflow
+		assertNotNull(workFlowStatusResponseDTO);
+		assertEquals(workFlowStatusResponseDTO.getWorkFlowExecutionId(), workFlowExecution.getId().toString());
+		assertEquals(workFlowStatusResponseDTO.getWorkFlowName(), workFlowDefinition.getName());
+		assertEquals(workFlowStatusResponseDTO.getStatus(), WorkFlowStatus.IN_PROGRESS.name());
+		assertEquals(workFlowStatusResponseDTO.getWorks().size(), 2);
+
+		// sub workflow 1
+		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getType(), WorkType.WORKFLOW);
+		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getName(), subWorkFlow1Definition.getName());
+		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getStatus().name(), WorkFlowStatus.PENDING.name());
+		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getWorks().size(), 0);
+
+		// workflow task 1
+		assertEquals(workFlowStatusResponseDTO.getWorks().get(1).getType(), WorkType.TASK);
+		assertEquals(workFlowStatusResponseDTO.getWorks().get(1).getName(), workFlowTask1Definition.getName());
+		assertEquals(workFlowStatusResponseDTO.getWorks().get(1).getStatus().name(),
+				com.redhat.parodos.workflow.enums.WorkStatus.COMPLETED.name());
+		assertNull(workFlowStatusResponseDTO.getWorks().get(1).getWorks());
 	}
 
 	@Test
@@ -693,153 +824,6 @@ class WorkFlowServiceImplTest {
 		WorkFlowDefinition wf = WorkFlowDefinition.builder().name(name).build();
 		wf.setId(UUID.randomUUID());
 		return wf;
-	}
-
-	@Test
-	void testGetWorkFlowStatusWhenSubWorkflowNotExecutedWithValidData() {
-		// given
-		// master workflow
-		String masterWorkFlowName = "testMasterWorkFlow";
-		UUID masterWorkFlowExecutionId = UUID.randomUUID();
-		UUID masterWorkFlowDefinitionId = UUID.randomUUID();
-		UUID projectId = UUID.randomUUID();
-		WorkFlowDefinition masterWorkFlowDefinition = WorkFlowDefinition.builder().name(masterWorkFlowName)
-				.numberOfWorks(2).build();
-		masterWorkFlowDefinition.setId(masterWorkFlowDefinitionId);
-
-		WorkFlowExecution masterWorkFlowExecution = WorkFlowExecution.builder()
-				.workFlowDefinitionId(masterWorkFlowDefinitionId).status(WorkFlowStatus.IN_PROGRESS).build();
-		masterWorkFlowExecution.setId(masterWorkFlowExecutionId);
-
-		// sub workflow 1
-		String TEST_SUB_WORKFLOW_NAME_1 = "testSubWorkFlow1";
-		UUID testSubWorkFlowDefinitionId1 = UUID.randomUUID();
-		UUID testSubWorkFlowExecutionId1 = UUID.randomUUID();
-		// sub workflow definition 1
-		WorkFlowDefinition testSubWorkFlowDefinition1 = WorkFlowDefinition.builder().name(TEST_SUB_WORKFLOW_NAME_1)
-				.numberOfWorks(1).build();
-		testSubWorkFlowDefinition1.setId(testSubWorkFlowDefinitionId1);
-		// sub workflow execution 1
-		WorkFlowExecution testSubWorkFlowExecution1 = WorkFlowExecution.builder().projectId(projectId)
-				.status(WorkFlowStatus.IN_PROGRESS).workFlowDefinitionId(testSubWorkFlowDefinitionId1)
-				.masterWorkFlowExecution(masterWorkFlowExecution).build();
-		testSubWorkFlowExecution1.setId(testSubWorkFlowExecutionId1);
-
-		// sub workflow task 1
-		String TEST_SUB_WORKFLOW_TASK_NAME_1 = "testSubWorkFlowTask1";
-		UUID testSubWorkFlowTaskDefinitionId1 = UUID.randomUUID();
-		UUID testSubWorkFlowTaskExecutionId1 = UUID.randomUUID();
-		// sub workflow task definition 1
-		WorkFlowTaskDefinition testSubWorkFlowTaskDefinition1 = WorkFlowTaskDefinition.builder()
-				.name(TEST_SUB_WORKFLOW_TASK_NAME_1).build();
-		testSubWorkFlowTaskDefinition1.setId(testSubWorkFlowTaskDefinitionId1);
-		// link sub workflow task 1 to sub workflow 1
-		testSubWorkFlowDefinition1.setWorkFlowTaskDefinitions(List.of(testSubWorkFlowTaskDefinition1));
-		// sub workflow task execution 1
-		WorkFlowTaskExecution testSubWorkFlowTaskExecution1 = WorkFlowTaskExecution.builder()
-				.status(WorkFlowTaskStatus.IN_PROGRESS).workFlowExecutionId(testSubWorkFlowExecutionId1)
-				.workFlowTaskDefinitionId(testSubWorkFlowTaskDefinitionId1).build();
-		testSubWorkFlowTaskExecution1.setId(testSubWorkFlowTaskExecutionId1);
-
-		// workflow task 2
-		String TEST_WORKFLOW_TASK_NAME_1 = "testWorkFlowTask1";
-		UUID testWorkFlowTaskDefinitionId1 = UUID.randomUUID();
-		UUID testWorkFlowTaskExecutionId1 = UUID.randomUUID();
-		// workflow task definition 2
-		WorkFlowTaskDefinition testWorkFlowTaskDefinition1 = WorkFlowTaskDefinition.builder()
-				.name(TEST_WORKFLOW_TASK_NAME_1).build();
-		testWorkFlowTaskDefinition1.setId(testWorkFlowTaskDefinitionId1);
-		// workflow task execution 2
-		WorkFlowTaskExecution testWorkFlowTaskExecution1 = WorkFlowTaskExecution.builder()
-				.status(WorkFlowTaskStatus.COMPLETED).workFlowExecutionId(masterWorkFlowExecutionId)
-				.workFlowTaskDefinitionId(testWorkFlowTaskDefinitionId1).build();
-		testWorkFlowTaskExecution1.setId(testWorkFlowTaskExecutionId1);
-		// link workflow task definition 2 to master workFlow
-		masterWorkFlowDefinition.setWorkFlowTaskDefinitions(List.of(testWorkFlowTaskDefinition1));
-		// master workflow works
-		WorkFlowWorkDefinition masterWorkFlowWorkDefinition1 = WorkFlowWorkDefinition.builder()
-				.workDefinitionId(testSubWorkFlowDefinitionId1).workDefinitionType(WorkType.WORKFLOW)
-				.workFlowDefinition(masterWorkFlowDefinition).build();
-		masterWorkFlowWorkDefinition1.setId(UUID.randomUUID());
-
-		WorkFlowWorkDefinition masterWorkFlowWorkDefinition2 = WorkFlowWorkDefinition.builder()
-				.workDefinitionId(testWorkFlowTaskDefinitionId1).workDefinitionType(WorkType.TASK)
-				.workFlowDefinition(masterWorkFlowDefinition).build();
-		masterWorkFlowWorkDefinition2.setId(UUID.randomUUID());
-
-		masterWorkFlowDefinition
-				.setWorkFlowWorkDefinitions(List.of(masterWorkFlowWorkDefinition1, masterWorkFlowWorkDefinition2));
-
-		WorkFlowWorkDefinition subWorkFlowWorkDefinition1 = WorkFlowWorkDefinition.builder()
-				.workDefinitionId(testSubWorkFlowTaskDefinitionId1).workDefinitionType(WorkType.TASK)
-				.workFlowDefinition(testSubWorkFlowDefinition1).build();
-		subWorkFlowWorkDefinition1.setId(UUID.randomUUID());
-
-		// when
-		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.eq(masterWorkFlowDefinitionId)))
-				.thenReturn(Optional.of(masterWorkFlowDefinition));
-
-		Mockito.when(this.workFlowRepository.findById(Mockito.eq(masterWorkFlowExecutionId)))
-				.thenReturn(Optional.of(masterWorkFlowExecution));
-
-		Mockito.when(this.workFlowWorkRepository
-				.findByWorkFlowDefinitionIdOrderByCreateDateAsc(Mockito.eq(masterWorkFlowDefinitionId)))
-				.thenReturn(List.of(masterWorkFlowWorkDefinition1, masterWorkFlowWorkDefinition2));
-
-		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.eq(testSubWorkFlowDefinitionId1)))
-				.thenReturn(Optional.of(testSubWorkFlowDefinition1));
-
-		Mockito.when(this.workFlowRepository.findFirstByMasterWorkFlowExecutionAndWorkFlowDefinitionId(
-				Mockito.eq(masterWorkFlowExecution), Mockito.eq(testSubWorkFlowDefinitionId1))).thenReturn(null);
-
-		Mockito.when(this.workFlowTaskDefinitionRepository.findById(Mockito.eq(testSubWorkFlowTaskDefinitionId1)))
-				.thenReturn(Optional.of(testSubWorkFlowTaskDefinition1));
-
-		Mockito.when(this.workFlowTaskDefinitionRepository.findById(Mockito.eq(testWorkFlowTaskDefinitionId1)))
-				.thenReturn(Optional.of(testWorkFlowTaskDefinition1));
-
-		Mockito.when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(
-				Mockito.eq(testSubWorkFlowExecutionId1), Mockito.eq(testSubWorkFlowTaskDefinitionId1)))
-				.thenReturn(List.of());
-
-		Mockito.when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(
-				Mockito.eq(masterWorkFlowExecutionId), Mockito.eq(testWorkFlowTaskDefinitionId1)))
-				.thenReturn(List.of());
-
-		Mockito.when(this.workFlowWorkRepository
-				.findByWorkFlowDefinitionIdOrderByCreateDateAsc(Mockito.eq(testSubWorkFlowDefinitionId1)))
-				.thenReturn(List.of(subWorkFlowWorkDefinition1));
-
-		// then
-		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = this.workFlowService
-				.getWorkFlowStatus(masterWorkFlowExecutionId);
-		// master workflow
-		assertNotNull(workFlowStatusResponseDTO);
-		assertEquals(workFlowStatusResponseDTO.getWorkFlowExecutionId(), masterWorkFlowExecution.getId().toString());
-		assertEquals(workFlowStatusResponseDTO.getWorkFlowName(), masterWorkFlowDefinition.getName());
-		assertEquals(workFlowStatusResponseDTO.getStatus(), WorkFlowStatus.IN_PROGRESS.name());
-		assertEquals(workFlowStatusResponseDTO.getWorks().size(), 2);
-
-		// sub workflow 1
-		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getType(), WorkType.WORKFLOW);
-		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getName(), testSubWorkFlowDefinition1.getName());
-		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getStatus().name(), WorkFlowStatus.PENDING.name());
-		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getWorks().size(), 1);
-
-		// sub workflow task 1
-		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getWorks().get(0).getType(), WorkType.TASK);
-		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getWorks().get(0).getName(),
-				testSubWorkFlowTaskDefinition1.getName());
-		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getWorks().get(0).getStatus().name(),
-				WorkFlowStatus.PENDING.name());
-		assertNull(workFlowStatusResponseDTO.getWorks().get(0).getWorks().get(0).getWorks());
-
-		// workflow task 1
-		assertEquals(workFlowStatusResponseDTO.getWorks().get(1).getType(), WorkType.TASK);
-		assertEquals(workFlowStatusResponseDTO.getWorks().get(1).getName(), testWorkFlowTaskDefinition1.getName());
-		assertEquals(workFlowStatusResponseDTO.getWorks().get(1).getStatus().name(),
-				com.redhat.parodos.workflow.enums.WorkStatus.PENDING.name());
-		assertNull(workFlowStatusResponseDTO.getWorks().get(1).getWorks());
 	}
 
 }
