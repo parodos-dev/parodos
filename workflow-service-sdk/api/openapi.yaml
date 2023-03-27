@@ -391,6 +391,8 @@ components:
         parameters:
           key:
             key: '{}'
+        properties:
+          version: version
         createDate: 2000-01-23T04:56:07.000+00:00
       properties:
         author:
@@ -414,6 +416,8 @@ components:
           type: object
         processingType:
           type: string
+        properties:
+          $ref: '#/components/schemas/WorkFlowPropertiesDefinitionDTO'
         type:
           type: string
         works:
@@ -555,6 +559,13 @@ components:
           items:
             $ref: '#/components/schemas/WorkFlowOption'
           type: array
+      type: object
+    WorkFlowPropertiesDefinitionDTO:
+      example:
+        version: version
+      properties:
+        version:
+          type: string
       type: object
     WorkFlowRequestDTO:
       example:

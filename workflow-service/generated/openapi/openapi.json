@@ -453,6 +453,9 @@
           "processingType" : {
             "type" : "string"
           },
+          "properties" : {
+            "$ref" : "#/components/schemas/WorkFlowPropertiesDefinitionDTO"
+          },
           "type" : {
             "type" : "string"
           },
@@ -525,6 +528,14 @@
             "items" : {
               "$ref" : "#/components/schemas/WorkFlowOption"
             }
+          }
+        }
+      },
+      "WorkFlowPropertiesDefinitionDTO" : {
+        "type" : "object",
+        "properties" : {
+          "version" : {
+            "type" : "string"
           }
         }
       },

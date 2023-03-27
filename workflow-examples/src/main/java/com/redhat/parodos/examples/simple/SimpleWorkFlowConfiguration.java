@@ -18,14 +18,19 @@ package com.redhat.parodos.examples.simple;
 import com.redhat.parodos.examples.simple.task.LoggingWorkFlowTask;
 import com.redhat.parodos.examples.simple.task.RestAPIWorkFlowTask;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
+import com.redhat.parodos.workflow.annotation.WorkFlowProperties;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import com.redhat.parodos.workflows.workflow.ParallelFlow;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
+
 import java.util.concurrent.Executors;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 /**
  * Very simple workflow configurations
@@ -34,6 +39,8 @@ import org.springframework.context.annotation.Configuration;
  */
 
 @Configuration
+@Slf4j
+@PropertySource("classpath:git.properties")
 public class SimpleWorkFlowConfiguration {
 
 	// START Sequential Example (WorkflowTasks and Workflow Definitions)
@@ -49,6 +56,7 @@ public class SimpleWorkFlowConfiguration {
 
 	@Bean(name = "simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
 	@Infrastructure
+	@WorkFlowProperties(version = "${git.commit.id}")
 	WorkFlow simpleSequentialWorkFlowTask(@Qualifier("restCallTask") RestAPIWorkFlowTask restCallTask,
 			@Qualifier("loggingTask") LoggingWorkFlowTask loggingTask) {
 		// @formatter:off
@@ -60,6 +68,7 @@ public class SimpleWorkFlowConfiguration {
 				.build();
 		// @formatter:on
 	}
+
 	// END Sequential Example (WorkflowTasks and Workflow Definitions)
 
 	// START Parallel Example (WorkflowTasks and Workflow Definitions)

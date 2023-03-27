@@ -19,6 +19,7 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.redhat.parodos.sdk.model.WorkDefinitionResponseDTO;
+import com.redhat.parodos.sdk.model.WorkFlowPropertiesDefinitionDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
@@ -101,6 +102,14 @@ public class WorkFlowDefinitionResponseDTOTest {
     @Test
     public void processingTypeTest() {
         // TODO: test processingType
+    }
+
+    /**
+     * Test the property 'properties'
+     */
+    @Test
+    public void propertiesTest() {
+        // TODO: test properties
     }
 
     /**

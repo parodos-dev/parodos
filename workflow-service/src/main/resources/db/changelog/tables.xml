@@ -53,6 +53,7 @@
             <column name="processing_type" type="varchar(255)"/>
             <column name="number_of_works" type="int"/>
             <column name="commit_id" type="varchar(255)"/>
+            <column name="properties" type="jsonb"/>
             <column name="object_version" type="bigint"/>
         </createTable>
 

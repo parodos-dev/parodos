@@ -33,6 +33,11 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class WorkFlowVersionServiceImpl implements WorkFlowVersionService {
 
+	public static String GetVersionHashForObject(Object workflowObject) throws IOException {
+		WorkFlowVersionServiceImpl versionService = new WorkFlowVersionServiceImpl();
+		return versionService.getHash(workflowObject);
+	}
+
 	@Override
 	public String getHash(Object workFlowRef) throws IOException {
 		String md5 = "";

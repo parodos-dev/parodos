@@ -17,11 +17,14 @@ package com.redhat.parodos.workflow.definition.entity;
 
 import com.redhat.parodos.common.AbstractEntity;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -49,6 +52,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@TypeDef(name = "json", typeClass = JsonType.class)
 public class WorkFlowDefinition extends AbstractEntity {
 
 	@Column(nullable = false)
@@ -72,6 +76,10 @@ public class WorkFlowDefinition extends AbstractEntity {
 
 	@Column(nullable = false)
 	private Integer numberOfWorks;
+
+	@Column(columnDefinition = "jsonb")
+	@Type(type = "json")
+	private WorkFlowPropertiesDefinition properties;
 
 	@OneToMany(mappedBy = "workFlowDefinition", fetch = FetchType.EAGER,
 			cascade = { CascadeType.PERSIST, CascadeType.DETACH })

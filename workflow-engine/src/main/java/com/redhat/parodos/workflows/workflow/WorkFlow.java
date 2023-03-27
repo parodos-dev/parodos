@@ -33,4 +33,8 @@ import com.redhat.parodos.workflows.work.Work;
  */
 public interface WorkFlow extends Work {
 
+	WorkFlowPropertiesMetadata getProperties();
+
+	void setProperties(WorkFlowPropertiesMetadata properties);
+
 }
