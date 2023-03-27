@@ -21,6 +21,7 @@ import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.workflow.parameter.WorkFlowParameter;
 import com.redhat.parodos.workflows.work.Work;
+import com.redhat.parodos.workflows.workflow.WorkFlowPropertiesMetadata;
 
 import java.util.List;
 import java.util.UUID;
@@ -34,8 +35,9 @@ import java.util.UUID;
 public interface WorkFlowDefinitionService {
 
 	WorkFlowDefinitionResponseDTO save(String workFlowName, WorkFlowType workFlowType,
-			List<WorkFlowParameter> workFlowParameters, List<Work> works,
-			WorkFlowProcessingType workFlowProcessingType);
+			WorkFlowPropertiesMetadata workFlowPropertiesMetadata, List<WorkFlowParameter> workFlowParameters,
+
+			List<Work> works, WorkFlowProcessingType workFlowProcessingType);
 
 	WorkFlowDefinitionResponseDTO getWorkFlowDefinitionByName(String name);
 

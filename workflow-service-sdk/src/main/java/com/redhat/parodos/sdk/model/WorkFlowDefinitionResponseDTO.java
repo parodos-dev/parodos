@@ -21,6 +21,7 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.redhat.parodos.sdk.model.WorkDefinitionResponseDTO;
+import com.redhat.parodos.sdk.model.WorkFlowPropertiesDefinitionDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
@@ -64,6 +65,10 @@ public class WorkFlowDefinitionResponseDTO {
   public static final String SERIALIZED_NAME_PROCESSING_TYPE = "processingType";
   @SerializedName(SERIALIZED_NAME_PROCESSING_TYPE)
   private String processingType;
+
+  public static final String SERIALIZED_NAME_PROPERTIES = "properties";
+  @SerializedName(SERIALIZED_NAME_PROPERTIES)
+  private WorkFlowPropertiesDefinitionDTO properties;
 
   public static final String SERIALIZED_NAME_TYPE = "type";
   @SerializedName(SERIALIZED_NAME_TYPE)
@@ -245,6 +250,29 @@ public class WorkFlowDefinitionResponseDTO {
   }
 
 
+  public WorkFlowDefinitionResponseDTO properties(WorkFlowPropertiesDefinitionDTO properties) {
+    
+    this.properties = properties;
+    return this;
+  }
+
+   /**
+   * Get properties
+   * @return properties
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public WorkFlowPropertiesDefinitionDTO getProperties() {
+    return properties;
+  }
+
+
+  public void setProperties(WorkFlowPropertiesDefinitionDTO properties) {
+    this.properties = properties;
+  }
+
+
   public WorkFlowDefinitionResponseDTO type(String type) {
     
     this.type = type;
@@ -315,13 +343,14 @@ public class WorkFlowDefinitionResponseDTO {
         Objects.equals(this.name, workFlowDefinitionResponseDTO.name) &&
         Objects.equals(this.parameters, workFlowDefinitionResponseDTO.parameters) &&
         Objects.equals(this.processingType, workFlowDefinitionResponseDTO.processingType) &&
+        Objects.equals(this.properties, workFlowDefinitionResponseDTO.properties) &&
         Objects.equals(this.type, workFlowDefinitionResponseDTO.type) &&
         Objects.equals(this.works, workFlowDefinitionResponseDTO.works);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(author, createDate, id, modifyDate, name, parameters, processingType, type, works);
+    return Objects.hash(author, createDate, id, modifyDate, name, parameters, processingType, properties, type, works);
   }
 
   @Override
@@ -335,6 +364,7 @@ public class WorkFlowDefinitionResponseDTO {
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    parameters: ").append(toIndentedString(parameters)).append("\n");
     sb.append("    processingType: ").append(toIndentedString(processingType)).append("\n");
+    sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    works: ").append(toIndentedString(works)).append("\n");
     sb.append("}");

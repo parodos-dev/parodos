@@ -20,7 +20,7 @@ spring:
 
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: ${DATASOURCE_URL:jdbc:h2:mem:workflow_service}
+    url: ${DATASOURCE_URL:jdbc:h2:mem:workflow_service;INIT=CREATE TYPE IF NOT EXISTS "JSONB" as json;}
     driverClassName: ${DATASOURCE_DRIVER:org.h2.Driver}
     username: ${DATASOURCE_USERNAME:postgres}
     password: ${DATASOURCE_PASSWORD:postgres}
