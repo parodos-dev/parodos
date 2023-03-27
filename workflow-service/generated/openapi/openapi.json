@@ -1,1 +1,612 @@
-{"openapi":"3.0.1","info":{"title":"Parodos Workflow Service API","description":"This is the API documentation for the Parodos Workflow Service. It provides operations to execute assessments to determine infrastructure options (tooling + environments). Also executes infrastructure task workflows to call downstream systems to stand-up an infrastructure option.","version":"v1.0.0"},"servers":[{"url":"http://localhost:8080","description":"Generated server url"}],"tags":[{"description":"Operations about workflow","name":"Workflow"},{"description":"Operations about project","name":"Project"},{"description":"Operations about workflow definition","name":"Workflow Definition"}],"paths":{"/api/v1/projects":{"get":{"operationId":"getProjects","responses":{"200":{"content":{"application/json":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/ProjectResponseDTO"}}}},"description":"Succeeded"},"401":{"description":"Unauthorized"},"403":{"description":"Forbidden"}},"summary":"Returns a list of project","tags":["Project"]},"post":{"operationId":"createProject","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/ProjectRequestDTO"}}},"required":true},"responses":{"201":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/ProjectResponseDTO"}}},"description":"Created"},"401":{"description":"Unauthorized"}},"summary":"Creates a new project","tags":["Project"]}},"/api/v1/projects/{id}":{"get":{"operationId":"getProjectById","parameters":[{"in":"path","name":"id","required":true,"schema":{"type":"string"}}],"responses":{"200":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/ProjectResponseDTO"}}},"description":"Succeeded"},"401":{"description":"Unauthorized"},"404":{"description":"Not found"}},"summary":"Returns information about a specified project","tags":["Project"]}},"/api/v1/workflowdefinitions":{"get":{"operationId":"getWorkFlowDefinitions","parameters":[{"in":"query","name":"name","required":false,"schema":{"type":"string"}}],"responses":{"200":{"content":{"application/json":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/WorkFlowDefinitionResponseDTO"}}}},"description":"Succeeded"},"401":{"description":"Unauthorized"},"403":{"description":"Forbidden"}},"summary":"Returns a list of workflow definition","tags":["Workflow Definition"]}},"/api/v1/workflowdefinitions/{id}":{"get":{"operationId":"getWorkFlowDefinitionById","parameters":[{"in":"path","name":"id","required":true,"schema":{"type":"string"}}],"responses":{"200":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/WorkFlowDefinitionResponseDTO"}}},"description":"Succeeded"},"401":{"description":"Unauthorized"},"404":{"description":"Not found"}},"summary":"Returns information about a workflow definition by id","tags":["Workflow Definition"]}},"/api/v1/workflows":{"post":{"operationId":"execute","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/WorkFlowRequestDTO"}}},"required":true},"responses":{"200":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/WorkFlowResponseDTO"}}},"description":"Succeeded"},"401":{"description":"Unauthorized"},"403":{"description":"Forbidden"}},"summary":"Executes a workflow","tags":["Workflow"]}},"/api/v1/workflows/{workFlowExecutionId}/checkers/{workFlowCheckerTaskName}":{"post":{"operationId":"updateWorkFlowCheckerTaskStatus","parameters":[{"in":"path","name":"workFlowExecutionId","required":true,"schema":{"type":"string"}},{"in":"path","name":"workFlowCheckerTaskName","required":true,"schema":{"type":"string"}}],"requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/WorkFlowCheckerTaskRequestDTO"}}},"required":true},"responses":{"200":{"content":{"application/json":{"schema":{"type":"string"}}},"description":"Succeeded"},"401":{"description":"Unauthorized"},"403":{"description":"Forbidden"},"404":{"description":"Not found"}},"summary":"Updates a workflow checker task status","tags":["Workflow"]}},"/api/v1/workflows/{workFlowExecutionId}/status":{"get":{"operationId":"getStatus","parameters":[{"in":"path","name":"workFlowExecutionId","required":true,"schema":{"type":"string"}}],"responses":{"200":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/WorkFlowStatusResponseDTO"}}},"description":"Succeeded"},"401":{"description":"Unauthorized"},"403":{"description":"Forbidden"}},"summary":"Returns a workflow status","tags":["Workflow"]}}},"components":{"schemas":{"ArgumentRequestDTO":{"type":"object","properties":{"key":{"type":"string"},"value":{"type":"string"}}},"ProjectRequestDTO":{"type":"object","properties":{"description":{"type":"string"},"name":{"type":"string"}}},"ProjectResponseDTO":{"type":"object","properties":{"createDate":{"type":"string","format":"date-time"},"description":{"type":"string"},"id":{"type":"string"},"modifyDate":{"type":"string","format":"date-time"},"name":{"type":"string"},"username":{"type":"string"}}},"WorkDefinitionResponseDTO":{"type":"object","properties":{"author":{"type":"string"},"id":{"type":"string"},"name":{"type":"string"},"outputs":{"type":"array","items":{"type":"string","enum":["EXCEPTION","HTTP2XX","NO_EXCEPTION","OTHER"]}},"parameters":{"type":"object","additionalProperties":{"type":"object","additionalProperties":{"type":"object"}}},"processingType":{"type":"string"},"workType":{"type":"string"},"works":{"type":"array","items":{"$ref":"#/components/schemas/WorkDefinitionResponseDTO"}}}},"WorkFlowCheckerTaskRequestDTO":{"type":"object","properties":{"status":{"type":"string","enum":["FAILED","COMPLETED","IN_PROGRESS"]}}},"WorkFlowDefinitionResponseDTO":{"type":"object","properties":{"author":{"type":"string"},"createDate":{"type":"string","format":"date-time"},"id":{"type":"string","format":"uuid"},"modifyDate":{"type":"string","format":"date-time"},"name":{"type":"string"},"parameters":{"type":"object","additionalProperties":{"type":"object","additionalProperties":{"type":"object"}}},"processingType":{"type":"string"},"type":{"type":"string"},"works":{"type":"array","items":{"$ref":"#/components/schemas/WorkDefinitionResponseDTO"}}}},"WorkFlowOption":{"type":"object","properties":{"description":{"type":"string"},"details":{"type":"array","items":{"type":"string"}},"displayName":{"type":"string"},"identifier":{"type":"string"},"workFlowName":{"type":"string"}}},"WorkFlowOptions":{"type":"object","properties":{"continuationOptions":{"type":"array","items":{"$ref":"#/components/schemas/WorkFlowOption"}},"currentVersion":{"$ref":"#/components/schemas/WorkFlowOption"},"migrationOptions":{"type":"array","items":{"$ref":"#/components/schemas/WorkFlowOption"}},"newOptions":{"type":"array","items":{"$ref":"#/components/schemas/WorkFlowOption"}},"optionsAvailable":{"type":"boolean"},"otherOptions":{"type":"array","items":{"$ref":"#/components/schemas/WorkFlowOption"}},"upgradeOptions":{"type":"array","items":{"$ref":"#/components/schemas/WorkFlowOption"}}}},"WorkFlowRequestDTO":{"type":"object","properties":{"arguments":{"type":"array","items":{"$ref":"#/components/schemas/ArgumentRequestDTO"}},"projectId":{"type":"string"},"workFlowName":{"type":"string"},"works":{"type":"array","items":{"$ref":"#/components/schemas/WorkRequestDTO"}}}},"WorkFlowResponseDTO":{"type":"object","properties":{"workFlowExecutionId":{"type":"string"},"workFlowOptions":{"$ref":"#/components/schemas/WorkFlowOptions"},"workStatus":{"type":"string","enum":["FAILED","COMPLETED"]}}},"WorkFlowStatusResponseDTO":{"type":"object","properties":{"status":{"type":"string"},"workFlowExecutionId":{"type":"string"},"workFlowName":{"type":"string"},"works":{"type":"array","items":{"$ref":"#/components/schemas/WorkStatusResponseDTO"}}}},"WorkRequestDTO":{"type":"object","properties":{"arguments":{"type":"array","items":{"$ref":"#/components/schemas/ArgumentRequestDTO"}},"type":{"type":"string"},"workName":{"type":"string"}}},"WorkStatusResponseDTO":{"type":"object","properties":{"name":{"type":"string"},"status":{"type":"string","enum":["FAILED","COMPLETED","PENDING"]},"type":{"type":"string","enum":["TASK","WORKFLOW"]},"works":{"type":"array","items":{"$ref":"#/components/schemas/WorkStatusResponseDTO"}}}}}}}
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "Parodos Workflow Service API",
+    "description" : "This is the API documentation for the Parodos Workflow Service. It provides operations to execute assessments to determine infrastructure options (tooling + environments). Also executes infrastructure task workflows to call downstream systems to stand-up an infrastructure option.",
+    "version" : "v1.0.0"
+  },
+  "servers" : [ {
+    "url" : "http://localhost:8080",
+    "description" : "Generated server url"
+  } ],
+  "tags" : [ {
+    "description" : "Operations about workflow",
+    "name" : "Workflow"
+  }, {
+    "description" : "Operations about project",
+    "name" : "Project"
+  }, {
+    "description" : "Operations about workflow definition",
+    "name" : "Workflow Definition"
+  } ],
+  "paths" : {
+    "/api/v1/projects" : {
+      "get" : {
+        "operationId" : "getProjects",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/ProjectResponseDTO"
+                  }
+                }
+              }
+            },
+            "description" : "Succeeded"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          }
+        },
+        "summary" : "Returns a list of project",
+        "tags" : [ "Project" ]
+      },
+      "post" : {
+        "operationId" : "createProject",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ProjectRequestDTO"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProjectResponseDTO"
+                }
+              }
+            },
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          }
+        },
+        "summary" : "Creates a new project",
+        "tags" : [ "Project" ]
+      }
+    },
+    "/api/v1/projects/{id}" : {
+      "get" : {
+        "operationId" : "getProjectById",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProjectResponseDTO"
+                }
+              }
+            },
+            "description" : "Succeeded"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not found"
+          }
+        },
+        "summary" : "Returns information about a specified project",
+        "tags" : [ "Project" ]
+      }
+    },
+    "/api/v1/workflowdefinitions" : {
+      "get" : {
+        "operationId" : "getWorkFlowDefinitions",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "name",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/WorkFlowDefinitionResponseDTO"
+                  }
+                }
+              }
+            },
+            "description" : "Succeeded"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          }
+        },
+        "summary" : "Returns a list of workflow definition",
+        "tags" : [ "Workflow Definition" ]
+      }
+    },
+    "/api/v1/workflowdefinitions/{id}" : {
+      "get" : {
+        "operationId" : "getWorkFlowDefinitionById",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/WorkFlowDefinitionResponseDTO"
+                }
+              }
+            },
+            "description" : "Succeeded"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not found"
+          }
+        },
+        "summary" : "Returns information about a workflow definition by id",
+        "tags" : [ "Workflow Definition" ]
+      }
+    },
+    "/api/v1/workflows" : {
+      "post" : {
+        "operationId" : "execute",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/WorkFlowRequestDTO"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/WorkFlowResponseDTO"
+                }
+              }
+            },
+            "description" : "Succeeded"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          }
+        },
+        "summary" : "Executes a workflow",
+        "tags" : [ "Workflow" ]
+      }
+    },
+    "/api/v1/workflows/{workFlowExecutionId}/checkers/{workFlowCheckerTaskName}" : {
+      "post" : {
+        "operationId" : "updateWorkFlowCheckerTaskStatus",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "workFlowExecutionId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "workFlowCheckerTaskName",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/WorkFlowCheckerTaskRequestDTO"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "Succeeded"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not found"
+          }
+        },
+        "summary" : "Updates a workflow checker task status",
+        "tags" : [ "Workflow" ]
+      }
+    },
+    "/api/v1/workflows/{workFlowExecutionId}/status" : {
+      "get" : {
+        "operationId" : "getStatus",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "workFlowExecutionId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/WorkFlowStatusResponseDTO"
+                }
+              }
+            },
+            "description" : "Succeeded"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          }
+        },
+        "summary" : "Returns a workflow status",
+        "tags" : [ "Workflow" ]
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "ArgumentRequestDTO" : {
+        "type" : "object",
+        "properties" : {
+          "key" : {
+            "type" : "string"
+          },
+          "value" : {
+            "type" : "string"
+          }
+        }
+      },
+      "ProjectRequestDTO" : {
+        "type" : "object",
+        "properties" : {
+          "description" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          }
+        }
+      },
+      "ProjectResponseDTO" : {
+        "type" : "object",
+        "properties" : {
+          "createDate" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "modifyDate" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "username" : {
+            "type" : "string"
+          }
+        }
+      },
+      "WorkDefinitionResponseDTO" : {
+        "type" : "object",
+        "properties" : {
+          "author" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "outputs" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "enum" : [ "EXCEPTION", "HTTP2XX", "NO_EXCEPTION", "OTHER" ]
+            }
+          },
+          "parameters" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "object"
+              }
+            }
+          },
+          "processingType" : {
+            "type" : "string"
+          },
+          "workType" : {
+            "type" : "string"
+          },
+          "works" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/WorkDefinitionResponseDTO"
+            }
+          }
+        }
+      },
+      "WorkFlowCheckerTaskRequestDTO" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "enum" : [ "FAILED", "COMPLETED", "IN_PROGRESS" ]
+          }
+        }
+      },
+      "WorkFlowDefinitionResponseDTO" : {
+        "type" : "object",
+        "properties" : {
+          "author" : {
+            "type" : "string"
+          },
+          "createDate" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "modifyDate" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "parameters" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "object"
+              }
+            }
+          },
+          "processingType" : {
+            "type" : "string"
+          },
+          "type" : {
+            "type" : "string"
+          },
+          "works" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/WorkDefinitionResponseDTO"
+            }
+          }
+        }
+      },
+      "WorkFlowOption" : {
+        "type" : "object",
+        "properties" : {
+          "description" : {
+            "type" : "string"
+          },
+          "details" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "displayName" : {
+            "type" : "string"
+          },
+          "identifier" : {
+            "type" : "string"
+          },
+          "workFlowName" : {
+            "type" : "string"
+          }
+        }
+      },
+      "WorkFlowOptions" : {
+        "type" : "object",
+        "properties" : {
+          "continuationOptions" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/WorkFlowOption"
+            }
+          },
+          "currentVersion" : {
+            "$ref" : "#/components/schemas/WorkFlowOption"
+          },
+          "migrationOptions" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/WorkFlowOption"
+            }
+          },
+          "newOptions" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/WorkFlowOption"
+            }
+          },
+          "optionsAvailable" : {
+            "type" : "boolean"
+          },
+          "otherOptions" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/WorkFlowOption"
+            }
+          },
+          "upgradeOptions" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/WorkFlowOption"
+            }
+          }
+        }
+      },
+      "WorkFlowRequestDTO" : {
+        "type" : "object",
+        "properties" : {
+          "arguments" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/ArgumentRequestDTO"
+            }
+          },
+          "projectId" : {
+            "type" : "string"
+          },
+          "workFlowName" : {
+            "type" : "string"
+          },
+          "works" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/WorkRequestDTO"
+            }
+          }
+        }
+      },
+      "WorkFlowResponseDTO" : {
+        "type" : "object",
+        "properties" : {
+          "workFlowExecutionId" : {
+            "type" : "string"
+          },
+          "workFlowOptions" : {
+            "$ref" : "#/components/schemas/WorkFlowOptions"
+          },
+          "workStatus" : {
+            "type" : "string",
+            "enum" : [ "FAILED", "COMPLETED" ]
+          }
+        }
+      },
+      "WorkFlowStatusResponseDTO" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string"
+          },
+          "workFlowExecutionId" : {
+            "type" : "string"
+          },
+          "workFlowName" : {
+            "type" : "string"
+          },
+          "works" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/WorkStatusResponseDTO"
+            }
+          }
+        }
+      },
+      "WorkRequestDTO" : {
+        "type" : "object",
+        "properties" : {
+          "arguments" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/ArgumentRequestDTO"
+            }
+          },
+          "type" : {
+            "type" : "string"
+          },
+          "workName" : {
+            "type" : "string"
+          }
+        }
+      },
+      "WorkStatusResponseDTO" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string",
+            "enum" : [ "FAILED", "COMPLETED", "PENDING" ]
+          },
+          "type" : {
+            "type" : "string",
+            "enum" : [ "TASK", "WORKFLOW" ]
+          },
+          "works" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/WorkStatusResponseDTO"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -40,6 +40,7 @@ springdoc:
   swagger-ui:
     tagsSorter: alpha
   writer-with-order-by-keys: true
+  writer-with-default-pretty-printer: true
 
 scan:
   packages: ${CONFIGURATION_PACKAGE:-}

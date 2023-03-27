@@ -17,3 +17,4 @@ spring:
       managerPassword: null
 springdoc:
   writer-with-order-by-keys: true
+  writer-with-default-pretty-printer: true
