@@ -17,6 +17,7 @@
         <spring.javaformat.version>0.0.34</spring.javaformat.version>
         <openapi.generator.version>5.4.0</openapi.generator.version>
         <lombok.version>1.18.26</lombok.version>
+        <skip.sdk.generation>false</skip.sdk.generation>
     </properties>
 
     <build>
@@ -40,7 +41,7 @@
                 <executions>
                     <execution>
                         <id>skip-if-no-modifications</id>
-                        <phase>pre-clean</phase>
+                        <phase>generate-test-sources</phase>
                         <goals>
                             <goal>run</goal>
                         </goals>
@@ -51,13 +52,20 @@
                                     <arg value="--porcelain"/>
                                     <arg value="../workflow-service/generated/openapi/openapi.json"/>
                                 </exec>
-                                <condition property="skip.sdk.generation">
-                                    <not>
-                                        <contains string="${git.status}" substring=" M "/>
-                                    </not>
+                                <condition property="openapi.unchanged" else="false">
+                                    <or>
+                                        <equals arg1="${skip.sdk.generation}" arg2="true"/>
+                                        <not>
+                                            <or>
+                                                <contains string="${git.status}" substring="M "/>
+                                                <contains string="${git.status}" substring="D "/>
+                                            </or>
+                                        </not>
+                                    </or>
                                 </condition>
-                                <echo message="Is openapi.json file unchanged? ${skip.sdk.generation}"/>
-                                <echo message="${skip.sdk.generation}"/>
+
+                                <echo message="Is openapi.json file unchanged? ${openapi.unchanged}"/>
+                                <echo message="Force skip SDK generation? ${skip.sdk.generation}"/>
                             </target>
                             <exportAntProperties>true</exportAntProperties>
                         </configuration>
@@ -74,12 +82,12 @@
                     </execution>
                     <execution>
                         <id>auto-clean</id>
-                        <phase>clean</phase>
+                        <phase>process-test-sources</phase>
                         <goals>
                             <goal>clean</goal>
                         </goals>
                         <configuration>
-                            <skip>${skip.sdk.generation}</skip>
+                            <skip>${openapi.unchanged}</skip>
                             <filesets>
                                 <fileset>
                                     <directory>${basedir}</directory>
@@ -89,7 +97,10 @@
                                     <excludes>
                                         <exclude>.openapi-generator-ignore</exclude>
                                         <exclude>pom.xml</exclude>
+                                        <exclude>.flattened-pom.xml</exclude>
                                         <exclude>README.md</exclude>
+                                        <exclude>README.md</exclude>
+                                        <exclude>.openapi-generator</exclude>
                                     </excludes>
                                     <followSymlinks>false</followSymlinks>
                                 </fileset>
@@ -111,7 +122,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <skip>${skip.sdk.generation}</skip>
+                            <skip>${openapi.unchanged}</skip>
                             <generatorName>java</generatorName>
 
                             <groupId>dev.parodos</groupId>
@@ -126,6 +137,7 @@
                             <apiPackage>com.redhat.parodos.sdk.api</apiPackage>
                             <modelPackage>com.redhat.parodos.sdk.model</modelPackage>
                             <addCompileSourceRoot>true</addCompileSourceRoot>
+                            <enablePostProcessFile>true</enablePostProcessFile>
                             <configOptions>
                                 <hideGenerationTimestamp>true</hideGenerationTimestamp>
                                 <basePackage>com.redhat.parodos.sdk</basePackage>
@@ -138,9 +150,12 @@
                                 <licenseName>The Apache Software License, Version 2.0</licenseName>
                                 <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.txt</licenseUrl>
                                 <scmConnection>scm:git:git://github.com/parodos-dev/parodos.git</scmConnection>
-                                <scmDeveloperConnection>scm:git:ssh://github.com/parodos-dev/parodos.git</scmDeveloperConnection>
+                                <scmDeveloperConnection>scm:git:ssh://github.com/parodos-dev/parodos.git
+                                </scmDeveloperConnection>
                                 <scmUrl>http://github.com/parodos-dev/parodos/tree/master</scmUrl>
-                                <additionalModelTypeAnnotations>@lombok.Data @lombok.AllArgsConstructor @lombok.Builder</additionalModelTypeAnnotations>
+                                <additionalModelTypeAnnotations>@lombok.Data @lombok.AllArgsConstructor
+                                    @lombok.Builder
+                                </additionalModelTypeAnnotations>
                             </configOptions>
                         </configuration>
                     </execution>
