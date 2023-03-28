@@ -76,6 +76,8 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
 	private final WorkFlowWorkRepository workFlowWorkRepository;
 
+	private volatile boolean gracefulShutdown;
+
 	public WorkFlowServiceImpl(WorkFlowDelegate workFlowDelegate, WorkFlowServiceDelegate workFlowServiceDelegate,
 			WorkFlowDefinitionRepository workFlowDefinitionRepository,
 			WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository, WorkFlowRepository workFlowRepository,
@@ -221,6 +223,16 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		// update workflow checker task status
 		workFlowTaskExecution.setStatus(workFlowTaskStatus);
 		workFlowTaskRepository.save(workFlowTaskExecution);
+	}
+
+	@Override
+	public void enableGracefulShutdown() {
+		gracefulShutdown = true;
+	}
+
+	@Override
+	public boolean isGracefulShutdownEnabled() {
+		return gracefulShutdown;
 	}
 
 	private String validateWorkflow(String workflowName, WorkFlow workFlow) {

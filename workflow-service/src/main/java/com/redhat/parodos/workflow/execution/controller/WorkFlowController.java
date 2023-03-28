@@ -69,6 +69,9 @@ public class WorkFlowController {
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content) })
 	@PostMapping
 	public ResponseEntity<WorkFlowResponseDTO> execute(@RequestBody @Valid WorkFlowRequestDTO workFlowRequestDTO) {
+		if (workFlowService.isGracefulShutdownEnabled()) {
+			return ResponseEntity.status(503).build();
+		}
 		WorkReport workReport = workFlowService.execute(workFlowRequestDTO);
 		if (workReport == null) {
 			return ResponseEntity.status(500).build();

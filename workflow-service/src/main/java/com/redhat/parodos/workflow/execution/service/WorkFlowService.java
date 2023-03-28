@@ -53,4 +53,8 @@ public interface WorkFlowService {
 	void updateWorkFlowCheckerTaskStatus(UUID workFlowExecutionId, String workFlowTaskName,
 			WorkFlowTaskStatus workFlowTaskStatus);
 
+	void enableGracefulShutdown();
+
+	boolean isGracefulShutdownEnabled();
+
 }
