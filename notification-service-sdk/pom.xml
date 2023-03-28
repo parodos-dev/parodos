@@ -5,7 +5,7 @@
     <artifactId>notification-service-sdk</artifactId>
     <packaging>jar</packaging>
     <name>notification-service-sdk</name>
-    <version>1.0.5-SNAPSHOT</version>
+    <version>${revision}</version>
     <url>https://github.com/openapitools/openapi-generator</url>
     <description>OpenAPI Java</description>
     <scm>
@@ -16,7 +16,7 @@
     <parent>
         <groupId>dev.parodos</groupId>
         <artifactId>parodos-parent</artifactId>
-        <version>1.0.5-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
     <licenses>
