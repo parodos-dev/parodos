@@ -57,6 +57,7 @@
                                     </not>
                                 </condition>
                                 <echo message="Is openapi.json file unchanged? ${skip.sdk.generation}"/>
+                                <echo message="${skip.sdk.generation}"/>
                             </target>
                             <exportAntProperties>true</exportAntProperties>
                         </configuration>
@@ -67,6 +68,10 @@
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>2.5</version>
                 <executions>
+                    <execution>
+                        <id>default-clean</id>
+                        <phase>none</phase>
+                    </execution>
                     <execution>
                         <id>auto-clean</id>
                         <phase>clean</phase>
