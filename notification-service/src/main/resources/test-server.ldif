@@ -54,6 +54,16 @@ sn: test
 uid: test
 userpassword: $2a$10$SeVolYcPl3zJJbq.ox9U0ug7fo624hpT49O7FjvCNH2Us5HQRuvBe
 
+dn: uid=dev,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: dev
+sn: dev
+uid: dev
+userpassword: $2a$10$OOcZpimM5CSJhwMSp3UoueafajpPW6r2NZNZIEFD4hUPotH2TuXoe
+
 dn: uid=bob,ou=people,dc=springframework,dc=org
 objectclass: top
 objectclass: person
