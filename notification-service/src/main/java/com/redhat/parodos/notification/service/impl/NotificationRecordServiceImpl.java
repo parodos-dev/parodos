@@ -137,6 +137,7 @@ public class NotificationRecordServiceImpl implements NotificationRecordService 
 	private NotificationUser getNotificationUser(String username) {
 		Optional<NotificationUser> notificationsUser = this.notificationUserRepository.findByUsername(username);
 		if (notificationsUser.isEmpty()) {
+			log.error("Unable to find the username:{}", username);
 			throw new ResponseStatusException(HttpStatus.SC_NOT_FOUND, "Username not found: " + username, null);
 		}
 		return notificationsUser.get();
