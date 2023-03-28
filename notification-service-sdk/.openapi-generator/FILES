@@ -9,7 +9,6 @@ docs/NotificationRecordResponseDTO.md
 docs/PageMetadata.md
 docs/Pageable.md
 docs/PagedModelNotificationRecordResponseDTO.md
-pom.xml
 src/main/AndroidManifest.xml
 src/main/java/com/redhat/parodos/notification/sdk/api/ApiCallback.java
 src/main/java/com/redhat/parodos/notification/sdk/api/ApiClient.java
