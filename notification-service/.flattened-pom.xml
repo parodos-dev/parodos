@@ -168,7 +168,7 @@
         <executions>
           <execution>
             <id>pre-openapi-json-gen</id>
-            <phase>prepare-package</phase>
+            <phase>process-classes</phase>
             <goals>
               <goal>start</goal>
             </goals>
@@ -179,7 +179,7 @@
           </execution>
           <execution>
             <id>post-openapi-json-gen</id>
-            <phase>pre-integration-test</phase>
+            <phase>process-test-sources</phase>
             <goals>
               <goal>stop</goal>
             </goals>
@@ -220,7 +220,7 @@
         <executions>
           <execution>
             <id>generate-openapi-json</id>
-            <phase>package</phase>
+            <phase>generate-test-sources</phase>
             <goals>
               <goal>generate</goal>
             </goals>
@@ -265,7 +265,7 @@
         <executions>
           <execution>
             <id>generate-client-api-code</id>
-            <phase>pre-integration-test</phase>
+            <phase>package</phase>
             <goals>
               <goal>generate</goal>
             </goals>
