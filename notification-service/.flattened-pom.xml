@@ -12,7 +12,7 @@
   <version>1.0.5-SNAPSHOT</version>
   <name>notification-service</name>
   <description>Notification Service to sent out notification messages</description>
-  <url>https://github.com/redhat-developer/parodos</url>
+  <url>https://github.com/parodos-dev/parodos</url>
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
@@ -20,9 +20,9 @@
     </license>
   </licenses>
   <scm>
-    <connection>scm:git:git://github.com/redhat-developer/parodos.git</connection>
-    <developerConnection>scm:git:ssh://github.com/redhat-developer/parodos.git</developerConnection>
-    <url>http://github.com/redhat-developer/parodos/tree/master</url>
+    <connection>scm:git:git://github.com/parodos-dev/parodos.git</connection>
+    <developerConnection>scm:git:ssh://github.com/parodos-dev/parodos.git</developerConnection>
+    <url>http://github.com/parodos-dev/parodos/tree/main</url>
   </scm>
   <properties>
     <springdoc-openapi-ui.version>1.6.4</springdoc-openapi-ui.version>

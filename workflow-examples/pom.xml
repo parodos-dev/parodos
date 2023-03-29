@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>workflow-examples</artifactId>
     <name>workflow-examples</name>
-    <url>https://github.com/redhat-developer/parodos</url>
+    <url>https://github.com/parodos-dev/parodos</url>
     <parent>
         <groupId>dev.parodos</groupId>
         <artifactId>parodos-parent</artifactId>
@@ -15,9 +15,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:git:git://github.com/redhat-developer/parodos.git</connection>
-        <developerConnection>scm:git:ssh://github.com/redhat-developer/parodos.git</developerConnection>
-        <url>http://github.com/redhat-developer/parodos/tree/master</url>
+        <connection>scm:git:git://github.com/parodos-dev/parodos.git</connection>
+        <developerConnection>scm:git:ssh://github.com/parodos-dev/parodos.git</developerConnection>
+        <url>http://github.com/parodos-dev/parodos/tree/master</url>
     </scm>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
