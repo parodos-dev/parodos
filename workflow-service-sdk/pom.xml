@@ -12,7 +12,7 @@
     <artifactId>workflow-service-sdk</artifactId>
     <name>workflow-service-sdk</name>
     <description>Workflow Service SDK for Parodos</description>
-    <url>https://github.com/redhat-developer/parodos</url>
+    <url>https://github.com/parodos-dev/parodos</url>
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
@@ -96,9 +96,9 @@
                                 <dateLibrary>legacy</dateLibrary>
                                 <licenseName>The Apache Software License, Version 2.0</licenseName>
                                 <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.txt</licenseUrl>
-                                <scmConnection>scm:git:git://github.com/redhat-developer/parodos.git</scmConnection>
-                                <scmDeveloperConnection>scm:git:ssh://github.com/redhat-developer/parodos.git</scmDeveloperConnection>
-                                <scmUrl>http://github.com/redhat-developer/parodos/tree/master</scmUrl>
+                                <scmConnection>scm:git:git://github.com/parodos-dev/parodos.git</scmConnection>
+                                <scmDeveloperConnection>scm:git:ssh://github.com/parodos-dev/parodos.git</scmDeveloperConnection>
+                                <scmUrl>http://github.com/parodos-dev/parodos/tree/master</scmUrl>
                             </configOptions>
                         </configuration>
                     </execution>

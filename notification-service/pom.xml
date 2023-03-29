@@ -5,7 +5,7 @@
     <artifactId>notification-service</artifactId>
     <name>notification-service</name>
     <description>Notification Service to sent out notification messages</description>
-    <url>https://github.com/redhat-developer/parodos</url>
+    <url>https://github.com/parodos-dev/parodos</url>
     <parent>
         <groupId>dev.parodos</groupId>
         <artifactId>parodos-parent</artifactId>
@@ -18,9 +18,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:git:git://github.com/redhat-developer/parodos.git</connection>
-        <developerConnection>scm:git:ssh://github.com/redhat-developer/parodos.git</developerConnection>
-        <url>http://github.com/redhat-developer/parodos/tree/master</url>
+        <connection>scm:git:git://github.com/parodos-dev/parodos.git</connection>
+        <developerConnection>scm:git:ssh://github.com/parodos-dev/parodos.git</developerConnection>
+        <url>http://github.com/parodos-dev/parodos/tree/main</url>
     </scm>
     <properties>
         <java.version>11</java.version>

@@ -5,7 +5,7 @@
     <artifactId>parodos-model-api</artifactId>
     <name>parodos-model-api</name>
     <description>Parodos Model Api</description>
-    <url>https://github.com/redhat-developer/parodos</url>
+    <url>https://github.com/parodos-dev/parodos</url>
 
     <parent>
         <groupId>dev.parodos</groupId>
@@ -21,9 +21,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git://github.com/redhat-developer/parodos.git</connection>
-        <developerConnection>scm:git:ssh://github.com/redhat-developer/parodos.git</developerConnection>
-        <url>http://github.com/redhat-developer/parodos/tree/master</url>
+        <connection>scm:git:git://github.com/parodos-dev/parodos.git</connection>
+        <developerConnection>scm:git:ssh://github.com/parodos-dev/parodos.git</developerConnection>
+        <url>http://github.com/parodos-dev/parodos/tree/master</url>
     </scm>
 
     <properties>
