@@ -258,7 +258,7 @@ public class WorkFlowExecutionAspect {
 						|| !WorkFlowStatus.COMPLETED.equals(checkerExecution.getStatus()))) {
 			log.info("fail workflow: {} because it has pending/running checker(s)", workFlowDefinition.getName());
 			workFlowExecution.setStatus(WorkFlowStatus.PENDING);
-			report = new DefaultWorkReport(WorkStatus.FAILED, workContext);
+			report = new DefaultWorkReport(WorkStatus.IN_PROGRESS, workContext);
 		}
 
 		workFlowService.updateWorkFlow(workFlowExecution);

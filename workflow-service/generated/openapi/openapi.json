@@ -562,7 +562,7 @@
           },
           "workStatus" : {
             "type" : "string",
-            "enum" : [ "FAILED", "COMPLETED" ]
+            "enum" : [ "FAILED", "COMPLETED", "IN_PROGRESS" ]
           }
         }
       },
