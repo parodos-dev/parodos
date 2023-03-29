@@ -35,3 +35,11 @@ src/main/java/com/redhat/parodos/notification/sdk/model/NotificationRecordRespon
 src/main/java/com/redhat/parodos/notification/sdk/model/PageMetadata.java
 src/main/java/com/redhat/parodos/notification/sdk/model/Pageable.java
 src/main/java/com/redhat/parodos/notification/sdk/model/PagedModelNotificationRecordResponseDTO.java
+src/test/java/com/redhat/parodos/notification/sdk/api/NotificationMessageApiTest.java
+src/test/java/com/redhat/parodos/notification/sdk/api/NotificationRecordApiTest.java
+src/test/java/com/redhat/parodos/notification/sdk/model/LinkTest.java
+src/test/java/com/redhat/parodos/notification/sdk/model/NotificationMessageCreateRequestDTOTest.java
+src/test/java/com/redhat/parodos/notification/sdk/model/NotificationRecordResponseDTOTest.java
+src/test/java/com/redhat/parodos/notification/sdk/model/PageMetadataTest.java
+src/test/java/com/redhat/parodos/notification/sdk/model/PageableTest.java
+src/test/java/com/redhat/parodos/notification/sdk/model/PagedModelNotificationRecordResponseDTOTest.java
