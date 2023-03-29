@@ -9,7 +9,7 @@ export DOCKER_COMPOSE_FILE_PATH="docker-compose"
 function header {
    echo "------------------------------------------------------------------------";
    echo " Parodos Running Locally                                                ";
-   echo " https://github.com/redhat-developer/parodos/                           ";
+   echo " https://github.com/parodos-dev/parodos                                 ";
    echo "------------------------------------------------------------------------";
 }
 
