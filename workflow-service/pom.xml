@@ -247,7 +247,7 @@
                         <goals>
                             <goal>start</goal>
                         </goals>
-                        <phase>prepare-package</phase>
+                        <phase>process-classes</phase>
                     </execution>
                     <execution>
                         <configuration>
@@ -257,7 +257,7 @@
                         <goals>
                             <goal>stop</goal>
                         </goals>
-                        <phase>pre-integration-test</phase>
+                        <phase>process-test-sources</phase>
                     </execution>
                     <execution>
                         <goals>
@@ -282,7 +282,7 @@
                         <goals>
                             <goal>generate</goal>
                         </goals>
-                        <phase>package</phase>
+                        <phase>generate-test-sources</phase>
                     </execution>
                 </executions>
             </plugin>
