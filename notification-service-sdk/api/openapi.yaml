@@ -1,0 +1,399 @@
+openapi: 3.0.1
+info:
+  description: This is the API documentation for the Parodos Notification Service.
+    It provides operations to send out and check notification. The endpoints are secured
+    with oAuth2/OpenID and cannot be accessed without a valid token.
+  title: Parodos Notification Service API
+  version: v1.0.0
+servers:
+- description: Generated server url
+  url: http://localhost:8080
+tags:
+- description: Operations about notification message in the system
+  name: Notification Message
+- description: Operations about notification record in the system
+  name: Notification Record
+paths:
+  /api/v1/messages:
+    post:
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationMessageCreateRequestDTO'
+        required: true
+      responses:
+        "201":
+          description: Created
+      tags:
+      - Notification Message
+      x-contentType: application/json
+      x-accepts: application/json
+  /api/v1/notifications:
+    get:
+      operationId: getNotifications
+      parameters:
+      - explode: true
+        in: query
+        name: pageable
+        required: true
+        schema:
+          $ref: '#/components/schemas/Pageable'
+        style: form
+      - explode: true
+        in: query
+        name: state
+        required: false
+        schema:
+          enum:
+          - ARCHIVED
+          - UNREAD
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: searchTerm
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PagedModelNotificationRecordResponseDTO'
+          description: OK
+      tags:
+      - Notification Record
+      x-accepts: '*/*'
+  /api/v1/notifications/count:
+    get:
+      operationId: countUnreadNotifications
+      parameters:
+      - explode: true
+        in: query
+        name: state
+        required: true
+        schema:
+          enum:
+          - ARCHIVED
+          - UNREAD
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                format: int32
+                type: integer
+          description: OK
+      tags:
+      - Notification Record
+      x-accepts: '*/*'
+  /api/v1/notifications/{id}:
+    delete:
+      operationId: deleteNotification
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: No Content
+      tags:
+      - Notification Record
+      x-accepts: application/json
+    put:
+      operationId: updateNotificationStatusById
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - explode: true
+        in: query
+        name: operation
+        required: true
+        schema:
+          enum:
+          - ARCHIVE
+          - READ
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/NotificationRecordResponseDTO'
+          description: OK
+      tags:
+      - Notification Record
+      x-accepts: '*/*'
+components:
+  schemas:
+    Link:
+      example:
+        hreflang: hreflang
+        profile: profile
+        name: name
+        rel: rel
+        href: href
+        media: media
+        deprecation: deprecation
+        title: title
+        type: type
+      properties:
+        deprecation:
+          type: string
+        href:
+          type: string
+        hreflang:
+          type: string
+        media:
+          type: string
+        name:
+          type: string
+        profile:
+          type: string
+        rel:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+      type: object
+    NotificationMessageCreateRequestDTO:
+      example:
+        messageType: messageType
+        groupnames:
+        - groupnames
+        - groupnames
+        subject: subject
+        usernames:
+        - usernames
+        - usernames
+        body: body
+      properties:
+        body:
+          type: string
+        groupnames:
+          items:
+            type: string
+          type: array
+        messageType:
+          type: string
+        subject:
+          type: string
+        usernames:
+          items:
+            type: string
+          type: array
+      type: object
+    NotificationRecordResponseDTO:
+      example:
+        folder: folder
+        read: true
+        messageType: messageType
+        subject: subject
+        fromuser: fromuser
+        links:
+        - hreflang: hreflang
+          profile: profile
+          name: name
+          rel: rel
+          href: href
+          media: media
+          deprecation: deprecation
+          title: title
+          type: type
+        - hreflang: hreflang
+          profile: profile
+          name: name
+          rel: rel
+          href: href
+          media: media
+          deprecation: deprecation
+          title: title
+          type: type
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        body: body
+        createdOn: 2000-01-23T04:56:07.000+00:00
+        tags:
+        - tags
+        - tags
+      properties:
+        body:
+          type: string
+        createdOn:
+          format: date-time
+          type: string
+        folder:
+          type: string
+        fromuser:
+          type: string
+        id:
+          format: uuid
+          type: string
+        links:
+          items:
+            $ref: '#/components/schemas/Link'
+          type: array
+        messageType:
+          type: string
+        read:
+          type: boolean
+        subject:
+          type: string
+        tags:
+          items:
+            type: string
+          type: array
+      type: object
+    PageMetadata:
+      example:
+        number: 0
+        size: 6
+        totalPages: 5
+        totalElements: 1
+      properties:
+        number:
+          format: int64
+          type: integer
+        size:
+          format: int64
+          type: integer
+        totalElements:
+          format: int64
+          type: integer
+        totalPages:
+          format: int64
+          type: integer
+      type: object
+    Pageable:
+      properties:
+        page:
+          format: int32
+          minimum: 0
+          type: integer
+        size:
+          format: int32
+          minimum: 1
+          type: integer
+        sort:
+          items:
+            type: string
+          type: array
+      type: object
+    PagedModelNotificationRecordResponseDTO:
+      example:
+        links:
+        - hreflang: hreflang
+          profile: profile
+          name: name
+          rel: rel
+          href: href
+          media: media
+          deprecation: deprecation
+          title: title
+          type: type
+        - hreflang: hreflang
+          profile: profile
+          name: name
+          rel: rel
+          href: href
+          media: media
+          deprecation: deprecation
+          title: title
+          type: type
+        page:
+          number: 0
+          size: 6
+          totalPages: 5
+          totalElements: 1
+        content:
+        - folder: folder
+          read: true
+          messageType: messageType
+          subject: subject
+          fromuser: fromuser
+          links:
+          - hreflang: hreflang
+            profile: profile
+            name: name
+            rel: rel
+            href: href
+            media: media
+            deprecation: deprecation
+            title: title
+            type: type
+          - hreflang: hreflang
+            profile: profile
+            name: name
+            rel: rel
+            href: href
+            media: media
+            deprecation: deprecation
+            title: title
+            type: type
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          body: body
+          createdOn: 2000-01-23T04:56:07.000+00:00
+          tags:
+          - tags
+          - tags
+        - folder: folder
+          read: true
+          messageType: messageType
+          subject: subject
+          fromuser: fromuser
+          links:
+          - hreflang: hreflang
+            profile: profile
+            name: name
+            rel: rel
+            href: href
+            media: media
+            deprecation: deprecation
+            title: title
+            type: type
+          - hreflang: hreflang
+            profile: profile
+            name: name
+            rel: rel
+            href: href
+            media: media
+            deprecation: deprecation
+            title: title
+            type: type
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          body: body
+          createdOn: 2000-01-23T04:56:07.000+00:00
+          tags:
+          - tags
+          - tags
+      properties:
+        content:
+          items:
+            $ref: '#/components/schemas/NotificationRecordResponseDTO'
+          type: array
+        links:
+          items:
+            $ref: '#/components/schemas/Link'
+          type: array
+        page:
+          $ref: '#/components/schemas/PageMetadata'
+      type: object
+

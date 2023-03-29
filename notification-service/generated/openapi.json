@@ -1,0 +1,331 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "Parodos Notification Service API",
+    "description" : "This is the API documentation for the Parodos Notification Service. It provides operations to send out and check notification. The endpoints are secured with oAuth2/OpenID and cannot be accessed without a valid token.",
+    "version" : "v1.0.0"
+  },
+  "servers" : [ {
+    "url" : "http://localhost:8080",
+    "description" : "Generated server url"
+  } ],
+  "tags" : [ {
+    "description" : "Operations about notification message in the system",
+    "name" : "Notification Message"
+  }, {
+    "description" : "Operations about notification record in the system",
+    "name" : "Notification Record"
+  } ],
+  "paths" : {
+    "/api/v1/messages" : {
+      "post" : {
+        "operationId" : "create",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/NotificationMessageCreateRequestDTO"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "Notification Message" ]
+      }
+    },
+    "/api/v1/notifications" : {
+      "get" : {
+        "operationId" : "getNotifications",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "pageable",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/Pageable"
+          }
+        }, {
+          "in" : "query",
+          "name" : "state",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "ARCHIVED", "UNREAD" ]
+          }
+        }, {
+          "in" : "query",
+          "name" : "searchTerm",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PagedModelNotificationRecordResponseDTO"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "Notification Record" ]
+      }
+    },
+    "/api/v1/notifications/count" : {
+      "get" : {
+        "operationId" : "countUnreadNotifications",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "state",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "ARCHIVED", "UNREAD" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "integer",
+                  "format" : "int32"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "Notification Record" ]
+      }
+    },
+    "/api/v1/notifications/{id}" : {
+      "delete" : {
+        "operationId" : "deleteNotification",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "No Content"
+          }
+        },
+        "tags" : [ "Notification Record" ]
+      },
+      "put" : {
+        "operationId" : "updateNotificationStatusById",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        }, {
+          "in" : "query",
+          "name" : "operation",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "ARCHIVE", "READ" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/NotificationRecordResponseDTO"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "Notification Record" ]
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Link" : {
+        "type" : "object",
+        "properties" : {
+          "deprecation" : {
+            "type" : "string"
+          },
+          "href" : {
+            "type" : "string"
+          },
+          "hreflang" : {
+            "type" : "string"
+          },
+          "media" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "profile" : {
+            "type" : "string"
+          },
+          "rel" : {
+            "type" : "string"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "type" : {
+            "type" : "string"
+          }
+        }
+      },
+      "NotificationMessageCreateRequestDTO" : {
+        "type" : "object",
+        "properties" : {
+          "body" : {
+            "type" : "string"
+          },
+          "groupnames" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "messageType" : {
+            "type" : "string"
+          },
+          "subject" : {
+            "type" : "string"
+          },
+          "usernames" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "NotificationRecordResponseDTO" : {
+        "type" : "object",
+        "properties" : {
+          "body" : {
+            "type" : "string"
+          },
+          "createdOn" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "folder" : {
+            "type" : "string"
+          },
+          "fromuser" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "links" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Link"
+            }
+          },
+          "messageType" : {
+            "type" : "string"
+          },
+          "read" : {
+            "type" : "boolean"
+          },
+          "subject" : {
+            "type" : "string"
+          },
+          "tags" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "PageMetadata" : {
+        "type" : "object",
+        "properties" : {
+          "number" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "size" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "totalElements" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "totalPages" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      },
+      "Pageable" : {
+        "type" : "object",
+        "properties" : {
+          "page" : {
+            "minimum" : 0,
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "size" : {
+            "minimum" : 1,
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "sort" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "PagedModelNotificationRecordResponseDTO" : {
+        "type" : "object",
+        "properties" : {
+          "content" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/NotificationRecordResponseDTO"
+            }
+          },
+          "links" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Link"
+            }
+          },
+          "page" : {
+            "$ref" : "#/components/schemas/PageMetadata"
+          }
+        }
+      }
+    }
+  }
+}

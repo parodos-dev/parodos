@@ -30,6 +30,7 @@
     <java.version>11</java.version>
     <maven.compiler.source>11</maven.compiler.source>
     <springframework.boot.version>2.5.14</springframework.boot.version>
+    <openapi.generator.version>5.4.0</openapi.generator.version>
     <spring-cloud.version>2020.0.6</spring-cloud.version>
     <postgres.socket.factory.version>1.2.0</postgres.socket.factory.version>
   </properties>
@@ -137,16 +138,69 @@
   <build>
     <plugins>
       <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>2.5</version>
+        <executions>
+          <execution>
+            <id>clean-openapi-json</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+            <configuration>
+              <filesets>
+                <fileset>
+                  <directory>${basedir}/generated</directory>
+                  <includes>
+                    <include>openapi.json</include>
+                  </includes>
+                  <followSymlinks>false</followSymlinks>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <version>${springframework.boot.version}</version>
         <executions>
           <execution>
+            <id>pre-openapi-json-gen</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>start</goal>
+            </goals>
+            <configuration>
+              <jvmArguments>-Dspring-boot.run.profiles=local</jvmArguments>
+              <fork>true</fork>
+            </configuration>
+          </execution>
+          <execution>
+            <id>post-openapi-json-gen</id>
+            <phase>process-test-sources</phase>
+            <goals>
+              <goal>stop</goal>
+            </goals>
+            <configuration>
+              <fork>true</fork>
+            </configuration>
+          </execution>
+          <execution>
             <goals>
               <goal>repackage</goal>
             </goals>
+            <configuration>
+              <layout>ZIP</layout>
+            </configuration>
           </execution>
         </executions>
+        <configuration>
+          <wait>1000</wait>
+          <maxAttempts>60</maxAttempts>
+          <profiles>local</profiles>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-failsafe-plugin</artifactId>
@@ -156,6 +210,87 @@
               <goal>integration-test</goal>
               <goal>verify</goal>
             </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.springdoc</groupId>
+        <artifactId>springdoc-openapi-maven-plugin</artifactId>
+        <version>1.4</version>
+        <executions>
+          <execution>
+            <id>generate-openapi-json</id>
+            <phase>generate-test-sources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <outputDir>${basedir}/generated</outputDir>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>2.5</version>
+        <executions>
+          <execution>
+            <id>auto-clean</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+            <configuration>
+              <filesets>
+                <fileset>
+                  <directory>${project.parent.basedir}/notification-service-sdk</directory>
+                  <includes>
+                    <include>**</include>
+                  </includes>
+                  <excludes>
+                    <exclude>.openapi-generator-ignore</exclude>
+                    <exclude>pom.xml</exclude>
+                  </excludes>
+                  <followSymlinks>false</followSymlinks>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.openapitools</groupId>
+        <artifactId>openapi-generator-maven-plugin</artifactId>
+        <version>${openapi.generator.version}</version>
+        <executions>
+          <execution>
+            <id>generate-client-api-code</id>
+            <phase>package</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <generatorName>java</generatorName>
+              <groupId>dev.parodos</groupId>
+              <artifactId>notification-service-sdk</artifactId>
+              <packageName>com.redhat.parodos.notification.sdk</packageName>
+              <inputSpec>${basedir}/generated/openapi.json</inputSpec>
+              <output>${project.parent.basedir}/notification-service-sdk</output>
+              <invokerPackage>com.redhat.parodos.notification.sdk.api</invokerPackage>
+              <apiPackage>com.redhat.parodos.notification.sdk.api</apiPackage>
+              <modelPackage>com.redhat.parodos.notification.sdk.model</modelPackage>
+              <addCompileSourceRoot>true</addCompileSourceRoot>
+              <configOptions>
+                <basePackage>com.redhat.parodos.notification.sdk</basePackage>
+                <configPackage>com.redhat.parodos.notification.sdk.configuration</configPackage>
+                <parentArtifactId>parodos-parent</parentArtifactId>
+                <parentGroupId>dev.parodos</parentGroupId>
+                <parentVersion>${revision}</parentVersion>
+                <artifactVersion>${revision}</artifactVersion>
+                <dateLibrary>legacy</dateLibrary>
+                <hideGenerationTimestamp>true</hideGenerationTimestamp>
+              </configOptions>
+            </configuration>
           </execution>
         </executions>
       </plugin>
