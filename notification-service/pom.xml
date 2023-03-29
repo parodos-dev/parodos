@@ -157,6 +157,28 @@
                 <version>2.5</version>
                 <executions>
                     <execution>
+                        <id>auto-clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                        <configuration>
+                            <filesets>
+                                <fileset>
+                                    <directory>${project.parent.basedir}/notification-service-sdk</directory>
+                                    <includes>
+                                        <include>**</include>
+                                    </includes>
+                                    <excludes>
+                                        <exclude>.openapi-generator-ignore</exclude>
+                                        <exclude>pom.xml</exclude>
+                                    </excludes>
+                                    <followSymlinks>false</followSymlinks>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>clean-openapi-json</id>
                         <phase>clean</phase>
                         <goals>
@@ -244,34 +266,6 @@
                     </goals>
                     <phase>generate-test-sources</phase>
                 </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>2.5</version>
-                <executions>
-                    <execution>
-                        <id>auto-clean</id>
-                        <phase>clean</phase>
-                        <goals>
-                            <goal>clean</goal>
-                        </goals>
-                        <configuration>
-                            <filesets>
-                                <fileset>
-                                    <directory>${project.parent.basedir}/notification-service-sdk</directory>
-                                    <includes>
-                                        <include>**</include>
-                                    </includes>
-                                    <excludes>
-                                        <exclude>.openapi-generator-ignore</exclude>
-                                        <exclude>pom.xml</exclude>
-                                    </excludes>
-                                    <followSymlinks>false</followSymlinks>
-                                </fileset>
-                            </filesets>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
             <plugin>
