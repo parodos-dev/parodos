@@ -678,6 +678,7 @@ components:
           enum:
           - FAILED
           - COMPLETED
+          - IN_PROGRESS
           type: string
       type: object
     WorkFlowStatusResponseDTO:
