@@ -45,7 +45,9 @@ public class WorkFlowResponseDTO {
   public enum WorkStatusEnum {
     FAILED("FAILED"),
     
-    COMPLETED("COMPLETED");
+    COMPLETED("COMPLETED"),
+    
+    REJECTED("REJECTED");
 
     private String value;
 

@@ -146,7 +146,7 @@ public class WorkFlowExecutionAspect {
 			if (workFlowExecution.getStatus().equals(WorkFlowStatus.COMPLETED)) {
 				// skip the workflow if it is already successful
 				if (workFlowDefinition.getType().equals(WorkFlowType.CHECKER)) {
-					workFlowSchedulerService.stop((WorkFlow) proceedingJoinPoint.getTarget());
+					workFlowSchedulerService.stop(projectId.toString(), (WorkFlow) proceedingJoinPoint.getTarget());
 				}
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 			}
@@ -169,30 +169,6 @@ public class WorkFlowExecutionAspect {
 				report.getStatus(), workContext, workFlowExecution, masterWorkFlowExecution);
 
 		return workReport == null ? report : workReport;
-	}
-
-	private void startOrStopWorkFlowCheckerOnSchedule(WorkFlow workFlow,
-			WorkFlowCheckerMappingDefinition workFlowCheckerMappingDefinition, WorkStatus workStatus,
-			WorkContext workContext, String projectId, WorkFlowExecution masterWorkFlowExecution) {
-		if (workStatus != WorkStatus.COMPLETED) {
-			log.info("Schedule workflow checker: {} to run per cron expression: {}", workFlow.getName(),
-					workFlowCheckerMappingDefinition.getCronExpression());
-			workFlowSchedulerService.schedule(workFlow, workContext,
-					workFlowCheckerMappingDefinition.getCronExpression());
-			return;
-		}
-
-		log.info("Stop workflow checker: {} schedule", workFlow.getName());
-		workFlowSchedulerService.stop(workFlow);
-
-		String masterWorkFlowName = WorkContextDelegate.read(workContext,
-				WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION, WorkContextDelegate.Resource.NAME).toString();
-		/*
-		 * if this workflow is checker and it's successful, call continuation service to
-		 * restart master workflow execution with same execution Id
-		 */
-		workFlowContinuationServiceImpl.continueWorkFlow(projectId, masterWorkFlowName, workContext,
-				masterWorkFlowExecution.getId());
 	}
 
 	private WorkFlowExecution handleFirstTimeMainWorkFlowExecution(UUID projectId,
@@ -225,6 +201,7 @@ public class WorkFlowExecutionAspect {
 						masterWorkFlowExecution);
 				break;
 			default:
+				workFlowService.updateWorkFlow(workFlowExecution);
 				break;
 		}
 		return workReport;
@@ -268,14 +245,55 @@ public class WorkFlowExecutionAspect {
 	public void handlePostCheckerExecution(WorkFlowDefinition workFlowDefinition, WorkFlow workFlow,
 			WorkFlowExecution workFlowExecution, WorkStatus workStatus, WorkContext workContext,
 			WorkFlowExecution masterWorkFlowExecution) {
-
-		workFlowService.updateWorkFlow(workFlowExecution);
 		/*
 		 * if this workflow is a checker, schedule workflow checker for dynamic run on
 		 * cron expression or stop if done
 		 */
-		startOrStopWorkFlowCheckerOnSchedule(workFlow, workFlowDefinition.getCheckerWorkFlowDefinition(), workStatus,
-				workContext, workFlowExecution.getProjectId().toString(), masterWorkFlowExecution);
+		String projectId = workFlowExecution.getProjectId().toString();
+		WorkFlowCheckerMappingDefinition workFlowCheckerMappingDefinition = workFlowDefinition
+				.getCheckerWorkFlowDefinition();
+
+		if (workStatus != WorkStatus.COMPLETED) {
+			/*
+			 * decide if checker-workflow is rejected by filtering rejected checker-task
+			 */
+			boolean isRejected = workFlowDefinition
+					.getWorkFlowTaskDefinitions().stream().map(
+							workFlowTaskDefinition -> WorkContextDelegate
+									.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
+											workFlowTaskDefinition.getName(), WorkContextDelegate.Resource.STATUS)
+									.toString())
+					.filter(Objects::nonNull).anyMatch(status -> status.equals(WorkStatus.REJECTED.name()));
+
+			if (!isRejected) {
+				workFlowService.updateWorkFlow(workFlowExecution);
+				log.info("Schedule workflow checker: {} to run per cron expression: {}", workFlow.getName(),
+						workFlowCheckerMappingDefinition.getCronExpression());
+				workFlowSchedulerService.schedule(projectId, workFlow, workContext,
+						workFlowCheckerMappingDefinition.getCronExpression());
+			}
+			else {
+				log.info("Stop rejected workflow checker: {} schedule", workFlow.getName());
+				workFlowSchedulerService.stop(projectId, workFlow);
+				workFlowExecution.setStatus(WorkFlowStatus.REJECTED);
+				workFlowService.updateWorkFlow(workFlowExecution);
+			}
+			return;
+		}
+
+		log.info("Stop workflow checker: {} schedule", workFlow.getName());
+		workFlowSchedulerService.stop(projectId, workFlow);
+
+		String masterWorkFlowName = WorkContextDelegate.read(workContext,
+				WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION, WorkContextDelegate.Resource.NAME).toString();
+
+		workFlowService.updateWorkFlow(workFlowExecution);
+		/*
+		 * if this workflow is checker and it's successful, call continuation service to
+		 * restart master workflow execution with same execution Id
+		 */
+		workFlowContinuationServiceImpl.continueWorkFlow(projectId, masterWorkFlowName, workContext,
+				masterWorkFlowExecution.getId());
 	}
 
 }
