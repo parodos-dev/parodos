@@ -27,6 +27,7 @@ import java.io.IOException;
 /**
  * WorkStatusResponseDTO
  */
+@lombok.Data @lombok.AllArgsConstructor @lombok.Builder
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkStatusResponseDTO {
   public static final String SERIALIZED_NAME_NAME = "name";

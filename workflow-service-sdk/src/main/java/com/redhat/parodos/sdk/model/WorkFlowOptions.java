@@ -30,6 +30,7 @@ import java.util.List;
 /**
  * WorkFlowOptions
  */
+@lombok.Data @lombok.AllArgsConstructor @lombok.Builder
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowOptions {
   public static final String SERIALIZED_NAME_CONTINUATION_OPTIONS = "continuationOptions";

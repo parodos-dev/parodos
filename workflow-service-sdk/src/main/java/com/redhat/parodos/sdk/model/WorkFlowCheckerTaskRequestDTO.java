@@ -27,6 +27,7 @@ import java.io.IOException;
 /**
  * WorkFlowCheckerTaskRequestDTO
  */
+@lombok.Data @lombok.AllArgsConstructor @lombok.Builder
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowCheckerTaskRequestDTO {
   /**
