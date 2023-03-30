@@ -10,6 +10,9 @@
     "description" : "Generated server url"
   } ],
   "tags" : [ {
+    "description" : "Login endpoint",
+    "name" : "Login"
+  }, {
     "description" : "Operations about workflow",
     "name" : "Workflow"
   }, {
@@ -20,6 +23,21 @@
     "name" : "Workflow Definition"
   } ],
   "paths" : {
+    "/api/v1/login" : {
+      "get" : {
+        "operationId" : "login",
+        "responses" : {
+          "200" : {
+            "description" : "Succeeded"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          }
+        },
+        "summary" : "Login",
+        "tags" : [ "Login" ]
+      }
+    },
     "/api/v1/projects" : {
       "get" : {
         "operationId" : "getProjects",

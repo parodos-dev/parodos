@@ -10,6 +10,8 @@ servers:
 - description: Generated server url
   url: http://localhost:8080
 tags:
+- description: Login endpoint
+  name: Login
 - description: Operations about workflow
   name: Workflow
 - description: Operations about project
@@ -17,6 +19,18 @@ tags:
 - description: Operations about workflow definition
   name: Workflow Definition
 paths:
+  /api/v1/login:
+    get:
+      operationId: login
+      responses:
+        "200":
+          description: Succeeded
+        "401":
+          description: Unauthorized
+      summary: Login
+      tags:
+      - Login
+      x-accepts: application/json
   /api/v1/projects:
     get:
       operationId: getProjects
