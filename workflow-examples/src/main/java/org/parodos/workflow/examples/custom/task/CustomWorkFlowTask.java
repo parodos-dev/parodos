@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.parodos.workflow.examples.task;
+package org.parodos.workflow.examples.custom.task;
 
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
