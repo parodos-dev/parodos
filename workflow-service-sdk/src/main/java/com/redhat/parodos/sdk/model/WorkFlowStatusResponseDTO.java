@@ -30,6 +30,7 @@ import java.util.List;
 /**
  * WorkFlowStatusResponseDTO
  */
+@lombok.Data @lombok.AllArgsConstructor @lombok.Builder
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowStatusResponseDTO {
   public static final String SERIALIZED_NAME_STATUS = "status";

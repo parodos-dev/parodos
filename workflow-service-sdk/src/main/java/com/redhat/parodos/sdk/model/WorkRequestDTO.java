@@ -30,6 +30,7 @@ import java.util.List;
 /**
  * WorkRequestDTO
  */
+@lombok.Data @lombok.AllArgsConstructor @lombok.Builder
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkRequestDTO {
   public static final String SERIALIZED_NAME_ARGUMENTS = "arguments";

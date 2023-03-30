@@ -34,6 +34,7 @@ import java.util.UUID;
 /**
  * WorkFlowDefinitionResponseDTO
  */
+@lombok.Data @lombok.AllArgsConstructor @lombok.Builder
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowDefinitionResponseDTO {
   public static final String SERIALIZED_NAME_AUTHOR = "author";
