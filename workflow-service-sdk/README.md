@@ -83,20 +83,18 @@ import com.redhat.parodos.sdk.api.ApiClient;
 import com.redhat.parodos.sdk.api.ApiException;
 import com.redhat.parodos.sdk.api.Configuration;
 import com.redhat.parodos.sdk.api.models.*;
-import com.redhat.parodos.sdk.api.ProjectApi;
+import com.redhat.parodos.sdk.api.LoginApi;
 
 public class Example {
   public static void main(String[] args) {
     ApiClient defaultClient = Configuration.getDefaultApiClient();
     defaultClient.setBasePath("http://localhost:8080");
 
-    ProjectApi apiInstance = new ProjectApi(defaultClient);
-    ProjectRequestDTO projectRequestDTO = new ProjectRequestDTO(); // ProjectRequestDTO | 
+    LoginApi apiInstance = new LoginApi(defaultClient);
     try {
-      ProjectResponseDTO result = apiInstance.createProject(projectRequestDTO);
-      System.out.println(result);
+      apiInstance.login();
     } catch (ApiException e) {
-      System.err.println("Exception when calling ProjectApi#createProject");
+      System.err.println("Exception when calling LoginApi#login");
       System.err.println("Status code: " + e.getCode());
       System.err.println("Reason: " + e.getResponseBody());
       System.err.println("Response headers: " + e.getResponseHeaders());
@@ -113,6 +111,7 @@ All URIs are relative to *http://localhost:8080*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*LoginApi* | [**login**](docs/LoginApi.md#login) | **GET** /api/v1/login | Login
 *ProjectApi* | [**createProject**](docs/ProjectApi.md#createProject) | **POST** /api/v1/projects | Creates a new project
 *ProjectApi* | [**getProjectById**](docs/ProjectApi.md#getProjectById) | **GET** /api/v1/projects/{id} | Returns information about a specified project
 *ProjectApi* | [**getProjects**](docs/ProjectApi.md#getProjects) | **GET** /api/v1/projects | Returns a list of project
