@@ -31,6 +31,7 @@ import java.util.Map;
 /**
  * WorkDefinitionResponseDTO
  */
+@lombok.Data @lombok.AllArgsConstructor @lombok.Builder
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkDefinitionResponseDTO {
   public static final String SERIALIZED_NAME_AUTHOR = "author";

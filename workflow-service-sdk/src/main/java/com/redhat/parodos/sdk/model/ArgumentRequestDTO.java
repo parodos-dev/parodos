@@ -27,6 +27,7 @@ import java.io.IOException;
 /**
  * ArgumentRequestDTO
  */
+@lombok.Data @lombok.AllArgsConstructor @lombok.Builder
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class ArgumentRequestDTO {
   public static final String SERIALIZED_NAME_KEY = "key";
