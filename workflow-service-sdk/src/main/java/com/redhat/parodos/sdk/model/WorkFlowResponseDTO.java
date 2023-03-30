@@ -48,7 +48,11 @@ public class WorkFlowResponseDTO {
     
     COMPLETED("COMPLETED"),
     
+<<<<<<< HEAD
     IN_PROGRESS("IN_PROGRESS");
+=======
+    REJECTED("REJECTED");
+>>>>>>> 94fb702 (create jira ticket)
 
     private String value;
 
