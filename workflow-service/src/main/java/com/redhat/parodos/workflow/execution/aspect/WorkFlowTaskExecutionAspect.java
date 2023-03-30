@@ -113,15 +113,15 @@ public class WorkFlowTaskExecutionAspect {
 		if (workFlowTaskExecution == null) {
 			workFlowTaskExecution = workFlowService.saveWorkFlowTask(
 			// @formatter:off
-				WorkFlowDTOUtil.writeObjectValueAsString(WorkContextDelegate.read(
-				workContext,
-				WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
-				workFlowTaskName,
-				WorkContextDelegate.Resource.ARGUMENTS)),
-				workFlowTaskDefinition.getId(),
-				workFlowExecution.getId(),
-				WorkFlowTaskStatus.IN_PROGRESS);
-				// @formatter:on
+                    WorkFlowDTOUtil.writeObjectValueAsString(WorkContextDelegate.read(
+                            workContext,
+                            WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
+                            workFlowTaskName,
+                            WorkContextDelegate.Resource.ARGUMENTS)),
+                    workFlowTaskDefinition.getId(),
+                    workFlowExecution.getId(),
+                    WorkFlowTaskStatus.IN_PROGRESS);
+            // @formatter:on
 		}
 		else if (WorkFlowTaskStatus.IN_PROGRESS.equals(workFlowTaskExecution.getStatus()))
 			// fail the task if it's processed by other thread
@@ -147,6 +147,11 @@ public class WorkFlowTaskExecutionAspect {
 		workFlowTaskExecution.setLastUpdateDate(new Date());
 		workFlowService.updateWorkFlowTask(workFlowTaskExecution);
 
+		// return Failed if the checker task status is rejected. REJECT status is for the
+		// use of checker only
+		if (WorkStatus.REJECTED.equals(report.getStatus()))
+			return new DefaultWorkReport(WorkStatus.FAILED, workContext);
+
 		/*
 		 * if this task is successful, and it has checker; then schedule workflow checker
 		 * for dynamic run on cron expression
@@ -171,7 +176,7 @@ public class WorkFlowTaskExecutionAspect {
 			// schedule workflow checker for dynamic run on cron expression
 			List<WorkFlow> checkerWorkFlows = ((BaseWorkFlowTask) proceedingJoinPoint.getTarget())
 					.getWorkFlowCheckers();
-			startCheckerOnSchedule(
+			startCheckerOnSchedule(masterWorkFlowExecution.getProjectId().toString(),
 					workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition().getCheckWorkFlow().getName(),
 					checkerWorkFlows, workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition(), workContext);
 		}
@@ -191,12 +196,12 @@ public class WorkFlowTaskExecutionAspect {
 
 	// Iterate through the all the Checkers in the workflow and start them based on their
 	// schedules
-	private void startCheckerOnSchedule(String workFlowName, List<WorkFlow> workFlows,
+	private void startCheckerOnSchedule(String projectId, String workFlowName, List<WorkFlow> workFlows,
 			WorkFlowCheckerMappingDefinition workFlowCheckerMappingDefinition, WorkContext workContext) {
 		log.info("Schedule workflow checker: {} to run per cron expression: {}", workFlowName,
 				workFlowCheckerMappingDefinition.getCronExpression());
 		for (WorkFlow workFlow : workFlows) {
-			workFlowSchedulerService.schedule(workFlow, workContext,
+			workFlowSchedulerService.schedule(projectId, workFlow, workContext,
 					workFlowCheckerMappingDefinition.getCronExpression());
 		}
 

@@ -349,6 +349,7 @@ components:
           - COMPLETED
           - IN_PROGRESS
           - PENDING
+          - REJECTED
           type: string
       type: object
     WorkFlowDefinitionResponseDTO:
@@ -703,7 +704,11 @@ components:
           enum:
           - FAILED
           - COMPLETED
+<<<<<<< HEAD
           - IN_PROGRESS
+=======
+          - REJECTED
+>>>>>>> 94fb702 (create jira ticket)
           type: string
       type: object
     WorkFlowStatusResponseDTO:

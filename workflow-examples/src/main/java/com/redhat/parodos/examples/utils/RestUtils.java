@@ -3,11 +3,13 @@ package com.redhat.parodos.examples.utils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.util.Base64;
+import java.util.Collections;
 
 /**
  * RestUtils is a utility class. All its methods must be declared as static so they can't
@@ -35,6 +37,14 @@ public final class RestUtils {
 		return restTemplate.postForEntity(urlString, payload, String.class);
 	}
 
+	public static <T, E> ResponseEntity<E> executePost(String urlString, T requestDto, String username, String password,
+			Class<E> responseType) {
+		HttpEntity<T> request = getRequestWithHeaders(requestDto, username, password);
+
+		RestTemplate restTemplate = new RestTemplate();
+		return restTemplate.postForEntity(urlString, request, responseType);
+	}
+
 	/**
 	 * Execute the GET HTTP method to the given URL, writing the given request entity to
 	 * the request, and returns the response as ResponseEntity.
@@ -52,6 +62,13 @@ public final class RestUtils {
 				String.class);
 	}
 
+	public static <E> ResponseEntity<E> restExchange(String urlString, String username, String password,
+			Class<E> responseType) {
+		RestTemplate restTemplate = new RestTemplate();
+		return restTemplate.exchange(urlString, HttpMethod.GET, getRequestWithHeaders(username, password),
+				responseType);
+	}
+
 	/**
 	 * Creates a new HttpHeader and set the Authorization object according to @see
 	 * getBase64Creds
@@ -64,6 +81,20 @@ public final class RestUtils {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Authorization", "Basic " + base64Creds);
 		return new HttpEntity<>(headers);
+	}
+
+	/**
+	 * Creates a new HttpHeader with request and set the Authorization object according
+	 * to @see getBase64Creds
+	 * @param username the username
+	 * @param password the password
+	 * @return the @see org.springframework.http.HttpEntity
+	 */
+	public static <T> HttpEntity<T> getRequestWithHeaders(T reqeust, String username, String password) {
+		String base64Creds = getBase64Creds(username, password);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "Basic " + base64Creds);
+		return new HttpEntity<>(reqeust, headers);
 	}
 
 	/**

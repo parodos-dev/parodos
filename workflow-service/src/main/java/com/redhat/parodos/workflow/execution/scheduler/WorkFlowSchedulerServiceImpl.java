@@ -20,6 +20,7 @@ import com.redhat.parodos.workflows.workflow.WorkFlow;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.TaskScheduler;
@@ -39,36 +40,40 @@ public class WorkFlowSchedulerServiceImpl implements WorkFlowSchedulerService {
 
 	private final TaskScheduler taskScheduler;
 
-	private final Map<String, ScheduledFuture<?>> hm = new HashMap<>();
+	private final Map<String, Map<String, ScheduledFuture<?>>> hm = new ConcurrentHashMap<>();
 
 	public WorkFlowSchedulerServiceImpl(TaskScheduler taskScheduler) {
 		this.taskScheduler = taskScheduler;
 	}
 
 	@Override
-	public void schedule(WorkFlow workFlow, WorkContext workContext, String cronExpression) {
-		if (!hm.containsKey(workFlow.getName())) {
-			log.info("Scheduling workflow: {} to be executed following cron expression: {}", workFlow.getName(),
-					cronExpression);
+	public void schedule(String projectId, WorkFlow workFlow, WorkContext workContext, String cronExpression) {
+		hm.computeIfAbsent(projectId, key -> new HashMap<>());
+		if (!hm.get(projectId).containsKey(workFlow.getName())) {
+			log.info("Scheduling workflow: {} for project: {} to be executed following cron expression: {}",
+					workFlow.getName(), projectId, cronExpression);
 			ScheduledFuture<?> scheduledTask = taskScheduler.schedule(() -> workFlow.execute(workContext),
 					new CronTrigger(cronExpression, TimeZone.getTimeZone(TimeZone.getDefault().getID())));
-			hm.put(workFlow.getName(), scheduledTask);
+			hm.get(projectId).put(workFlow.getName(), scheduledTask);
 		}
 		else {
-			log.info("Workflow: {} is already scheduled!", hm.get(workFlow.getName()));
+			log.info("Workflow: {} is already scheduled for project: {}!", workFlow.getName(), projectId);
 		}
 	}
 
 	@Override
-	public boolean stop(WorkFlow workFlow) {
-		if (hm.containsKey(workFlow.getName())) {
-			log.info("Stopping workflow: {}", workFlow.getName());
-			boolean stopped = hm.get(workFlow.getName()).cancel(false);
-			if (stopped)
-				hm.remove(workFlow.getName());
+	public boolean stop(String projectId, WorkFlow workFlow) {
+		if (hm.containsKey(projectId) && hm.get(projectId).containsKey(workFlow.getName())) {
+			log.info("Stopping workflow: {} for project: {}", workFlow.getName(), projectId);
+			boolean stopped = hm.get(projectId).get(workFlow.getName()).cancel(false);
+			if (stopped) {
+				hm.get(projectId).remove(workFlow.getName());
+				if (hm.get(projectId).isEmpty())
+					hm.remove(projectId);
+			}
 			return stopped;
 		}
-		log.info("Workflow: {} has not been scheduled!", hm.get(workFlow.getName()));
+		log.info("Workflow: {} has not been scheduled for project: {}!", workFlow.getName(), projectId);
 		return false;
 	}
 
