@@ -19,6 +19,7 @@ Name | Value
 ---- | -----
 FAILED | &quot;FAILED&quot;
 COMPLETED | &quot;COMPLETED&quot;
+REJECTED | &quot;REJECTED&quot;
 
 
 
