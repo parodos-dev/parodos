@@ -4,14 +4,26 @@ import com.redhat.parodos.sdk.api.ApiClient;
 import com.redhat.parodos.sdk.api.ApiException;
 import com.redhat.parodos.sdk.api.Configuration;
 import com.redhat.parodos.sdk.api.ProjectApi;
+import com.redhat.parodos.sdk.api.WorkflowApi;
+import com.redhat.parodos.sdk.api.WorkflowDefinitionApi;
+import com.redhat.parodos.sdk.model.ArgumentRequestDTO;
 import com.redhat.parodos.sdk.model.ProjectRequestDTO;
 import com.redhat.parodos.sdk.model.ProjectResponseDTO;
+import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
+import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
+import com.redhat.parodos.sdk.model.WorkFlowResponseDTO;
+import com.redhat.parodos.sdk.model.WorkRequestDTO;
+import com.redhat.parodos.workflow.consts.WorkFlowConstants;
+import com.redhat.parodos.workflow.enums.WorkFlowProcessingType;
+import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.utils.CredUtils;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 
+import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -19,7 +31,7 @@ import static org.junit.Assert.fail;
 /**
  * UseSDKExample is a dummy class to demonstrate very basic usage of @see
  * workflow-service-sdk.
- *
+ * 
  * Future PRs will update or delete this class.
  *
  * @author Gloria Ciavarrini (Github: gciavarrini)
@@ -31,35 +43,91 @@ public class UseSDKExample {
 	private final String testPrjDescription = "Test Project Description";
 
 	@Test
-	public void simpleSDKUsage() {
+	public void runSimpleFlow() {
 		ApiClient defaultClient = Configuration.getDefaultApiClient();
 
 		defaultClient.addDefaultHeader(HttpHeaders.AUTHORIZATION, "Basic " + CredUtils.getBase64Creds("test", "test"));
 
 		ProjectApi apiInstance = new ProjectApi(defaultClient);
-		ProjectRequestDTO projectRequestDTO = new ProjectRequestDTO();
-		projectRequestDTO.setName(testPrjName);
-		projectRequestDTO.setDescription(testPrjDescription);
+
+		ProjectResponseDTO testProject = null;
+
 		try {
-			apiInstance.createProject(projectRequestDTO);
+			// RETRIEVE ALL PROJECTS AVAILABLE
+			List<ProjectResponseDTO> projects = apiInstance.getProjects();
+
+			// CHECK IF testProject ALREADY EXISTS
+			testProject = projects.stream()
+					.filter(prj -> testPrjName.equals(prj.getName()) && testPrjDescription.equals(prj.getDescription()))
+					.findAny().orElse(null);
+
+			// CREATE PROJECT "Test Project Name" IF NOT EXISTS
+			if (testProject == null) {
+				// DEFINE A TEST PROJECT REQUEST
+				ProjectRequestDTO projectRequestDTO = new ProjectRequestDTO();
+				projectRequestDTO.setName(testPrjName);
+				projectRequestDTO.setDescription(testPrjDescription);
+
+				ProjectResponseDTO projectResponseDTO = apiInstance.createProject(projectRequestDTO);
+				assertNotNull(projectResponseDTO);
+				assertEquals(testPrjName, projectResponseDTO.getName());
+
+			}
+
+			// ASSERT PROJECT "testProject" IS PRESENT
+			projects = apiInstance.getProjects();
+
+			assertTrue(projects.size() > 0);
+			assertNotNull(projects.stream()
+					.filter(prj -> testPrjName.equals(prj.getName()) && testPrjDescription.equals(prj.getDescription()))
+					.findAny().orElse(null));
+
+			// GET simpleSequentialWorkFlow DEFINITIONS
+			WorkflowDefinitionApi workflowDefinitionApi = new WorkflowDefinitionApi();
+			List<WorkFlowDefinitionResponseDTO> simpleSequentialWorkFlowDefinitions = workflowDefinitionApi
+					.getWorkFlowDefinitions("simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW);
+			assertEquals(1, simpleSequentialWorkFlowDefinitions.size());
+
+			// GET WORKFLOW DEFINITION BY Id
+			WorkFlowDefinitionResponseDTO simpleSequentialWorkFlowDefinition = workflowDefinitionApi
+					.getWorkFlowDefinitionById(simpleSequentialWorkFlowDefinitions.get(0).getId().toString());
+
+			assertEquals("simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW,
+					simpleSequentialWorkFlowDefinition.getName());
+			assertEquals(WorkFlowProcessingType.SEQUENTIAL.toString(),
+					simpleSequentialWorkFlowDefinition.getProcessingType());
+			assertEquals(WorkFlowType.INFRASTRUCTURE.toString(), simpleSequentialWorkFlowDefinition.getType());
+
+			// EXECUTE SIMPLE WORKFLOW
+			WorkflowApi workflowApi = new WorkflowApi();
+
+			// 1 - Define WorkRequests
+			WorkRequestDTO work1 = new WorkRequestDTO();
+			work1.setWorkName("restCallTask");
+			work1.setArguments(Arrays.asList(new ArgumentRequestDTO().key("url").value("https://httpbin.org/post"),
+					new ArgumentRequestDTO().key("payload").value("'Hello!'")));
+
+			WorkRequestDTO work2 = new WorkRequestDTO();
+			work2.setWorkName("loggingTask");
+			work2.setArguments(Arrays.asList(new ArgumentRequestDTO().key("user-id").value("test-user-id"),
+					new ArgumentRequestDTO().key("api-server").value("test-api-server")));
+
+			// 2 - Define WorkFlowRequest
+			WorkFlowRequestDTO workFlowRequestDTO = new WorkFlowRequestDTO();
+			workFlowRequestDTO.setProjectId(testProject.getId());
+			workFlowRequestDTO.setWorkFlowName("simpleSequentialWorkFlow_INFRASTRUCTURE_WORKFLOW");
+			workFlowRequestDTO.setWorks(Arrays.asList(work1, work2));
+
+			// 3 - Execute Workflow
+			WorkFlowResponseDTO execute = workflowApi.execute(workFlowRequestDTO);
+
+			// 4 - Check execution details
+			assertNotNull(execute.getWorkFlowExecutionId());
 		}
 		catch (ApiException e) {
-			fail(String.format(
-					"Exception when calling ProjectApi#createProject.\nStatus code: %d\n Reason: %s\n Response headers: %s",
-					e.getCode(), e.getResponseBody(), e.getResponseHeaders().toString()));
+			fail(String.format("Exception when calling API.\nStatus code: %d\n Reason: %s\n Response headers: %s",
+					e.getCode(), e.getResponseBody(), e.getResponseHeaders()));
 		}
-
-		List<ProjectResponseDTO> projects = null;
-		try {
-			projects = apiInstance.getProjects();
-		}
-		catch (ApiException ex) {
-			fail("Exception when calling ProjectApi#getProjects");
-		}
-		assertTrue(projects.size() > 0);
-		assertNotNull(projects.stream()
-				.filter(prj -> testPrjName.equals(prj.getName()) && testPrjDescription.equals(prj.getDescription()))
-				.findAny().orElse(null));
 	}
 
 }
