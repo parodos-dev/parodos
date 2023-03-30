@@ -416,7 +416,7 @@
         "properties" : {
           "status" : {
             "type" : "string",
-            "enum" : [ "FAILED", "COMPLETED", "IN_PROGRESS", "PENDING" ]
+            "enum" : [ "FAILED", "COMPLETED", "IN_PROGRESS", "PENDING", "REJECTED" ]
           }
         }
       },
@@ -573,7 +573,11 @@
           },
           "workStatus" : {
             "type" : "string",
+<<<<<<< HEAD
             "enum" : [ "FAILED", "COMPLETED", "IN_PROGRESS" ]
+=======
+            "enum" : [ "FAILED", "COMPLETED", "REJECTED" ]
+>>>>>>> 94fb702 (create jira ticket)
           }
         }
       },

@@ -19,7 +19,11 @@ Name | Value
 ---- | -----
 FAILED | &quot;FAILED&quot;
 COMPLETED | &quot;COMPLETED&quot;
+<<<<<<< HEAD
 IN_PROGRESS | &quot;IN_PROGRESS&quot;
+=======
+REJECTED | &quot;REJECTED&quot;
+>>>>>>> 94fb702 (create jira ticket)
 
 
 

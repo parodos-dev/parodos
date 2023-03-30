@@ -130,7 +130,7 @@ class WorkFlowExecutionAspectTest {
 		assertEquals(workReport.getStatus().toString(), COMPLETED);
 		assertEquals(workReport.getWorkContext().get(WORKFLOW_DEFINITION_NAME), TEST_WORK_FLOW);
 		assertEquals(workReport.getWorkContext().get(PROJECT_ID), projectID);
-		Mockito.verify(this.workFlowSchedulerService, Mockito.times(1)).stop(Mockito.any());
+		Mockito.verify(this.workFlowSchedulerService, Mockito.times(1)).stop(Mockito.any(), Mockito.any());
 		Mockito.verify(this.workFlowService, Mockito.times(1))
 				.updateWorkFlow(Mockito.argThat(w -> w.getStatus().toString().equals(COMPLETED)));
 	}
@@ -179,7 +179,7 @@ class WorkFlowExecutionAspectTest {
 		assertNull(workReport.getWorkContext().get(WORKFLOW_DEFINITION_ID));
 		assertEquals(workReport.getWorkContext().get(PROJECT_ID), projectID);
 		Mockito.verify(this.workFlowSchedulerService, Mockito.times(1)).schedule(Mockito.any(), Mockito.any(),
-				Mockito.any());
+				Mockito.any(), Mockito.any());
 		Mockito.verify(this.workFlowService, Mockito.times(1))
 				.updateWorkFlow(Mockito.argThat(w -> w.getStatus().toString().equals(FAILED)));
 	}
