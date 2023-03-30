@@ -38,6 +38,19 @@ public class WorkFlowResponseDTO {
 	@SerializedName(SERIALIZED_NAME_WORK_FLOW_EXECUTION_ID)
 	private String workFlowExecutionId;
 
+  /**
+   * Gets or Sets workStatus
+   */
+  @JsonAdapter(WorkStatusEnum.Adapter.class)
+  public enum WorkStatusEnum {
+    FAILED("FAILED"),
+    
+    COMPLETED("COMPLETED"),
+
+    IN_PROGRESS("IN_PROGRESS");
+
+    REJECTED("REJECTED");
+
 	public static final String SERIALIZED_NAME_WORK_FLOW_OPTIONS = "workFlowOptions";
 
 	@SerializedName(SERIALIZED_NAME_WORK_FLOW_OPTIONS)

@@ -23,6 +23,10 @@
         <slf4j.version>1.7.30</slf4j.version>
         <lombok.version>1.18.26</lombok.version>
         <spring.framework.version>5.3.26</spring.framework.version>
+        <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+        <fabric8.version>6.5.1</fabric8.version>
     </properties>
     <dependencies>
         <dependency>
@@ -77,6 +81,16 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-inline</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.fabric8</groupId>
+            <artifactId>kubernetes-client</artifactId>
+            <version>${fabric8.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.fabric8</groupId>
+            <artifactId>openshift-client</artifactId>
+            <version>${fabric8.version}</version>
         </dependency>
         <dependency>
             <groupId>dev.parodos</groupId>

@@ -12,8 +12,10 @@ import com.redhat.parodos.workflow.parameter.WorkFlowParameterType;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import java.util.List;
 
 @Configuration
@@ -24,8 +26,9 @@ public class OcpOnboardingWorkFlowConfiguration {
 	// - JiraTicketEmailNotificationWorkFlowTask
 
 	@Bean
-	JiraTicketApprovalWorkFlowCheckerTask jiraTicketApprovalWorkFlowCheckerTask() {
-		return new JiraTicketApprovalWorkFlowCheckerTask();
+	JiraTicketApprovalWorkFlowCheckerTask jiraTicketApprovalWorkFlowCheckerTask(@Value("${JIRA_URL:test}") String url,
+			@Value("${JIRA_USER:user}") String username, @Value("${JIRA_TOKEN:token}") String password) {
+		return new JiraTicketApprovalWorkFlowCheckerTask(url, username, password);
 	}
 
 	@Bean(name = "jiraTicketApprovalWorkFlowChecker")
@@ -38,8 +41,11 @@ public class OcpOnboardingWorkFlowConfiguration {
 
 	@Bean
 	JiraTicketCreationWorkFlowTask jiraTicketCreationWorkFlowTask(
-			@Qualifier("jiraTicketApprovalWorkFlowChecker") WorkFlow jiraTicketApprovalWorkFlowChecker) {
-		JiraTicketCreationWorkFlowTask jiraTicketCreationWorkFlowTask = new JiraTicketCreationWorkFlowTask();
+			@Qualifier("jiraTicketApprovalWorkFlowChecker") WorkFlow jiraTicketApprovalWorkFlowChecker,
+			@Value("${JIRA_URL:test}") String url, @Value("${JIRA_USER:user}") String username,
+			@Value("${JIRA_TOKEN:token}") String password, @Value("${JIRA_APPROVER:approver}") String approverId) {
+		JiraTicketCreationWorkFlowTask jiraTicketCreationWorkFlowTask = new JiraTicketCreationWorkFlowTask(url,
+				username, password, approverId);
 		jiraTicketCreationWorkFlowTask.setWorkFlowCheckers(List.of(jiraTicketApprovalWorkFlowChecker));
 		return jiraTicketCreationWorkFlowTask;
 	}
@@ -62,8 +68,9 @@ public class OcpOnboardingWorkFlowConfiguration {
 	// - OcpAppDeploymentWorkFlowTask
 	// - JiraTicketEmailNotificationWorkFlowTask
 	@Bean
-	OcpAppDeploymentWorkFlowTask ocpAppDeploymentWorkFlowTask() {
-		return new OcpAppDeploymentWorkFlowTask();
+	OcpAppDeploymentWorkFlowTask ocpAppDeploymentWorkFlowTask(
+			@Value("${CLUSTER_API_URL:cluster}") String clusterApiUrl) {
+		return new OcpAppDeploymentWorkFlowTask(clusterApiUrl);
 	}
 
 	@Bean
