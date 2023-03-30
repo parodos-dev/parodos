@@ -19,6 +19,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <springframework.boot.version>2.5.14</springframework.boot.version>
         <openapi.generator.version>5.4.0</openapi.generator.version>
+        <lombok.version>1.18.26</lombok.version>
     </properties>
 
     <build>
@@ -99,6 +100,7 @@
                                 <scmConnection>scm:git:git://github.com/parodos-dev/parodos.git</scmConnection>
                                 <scmDeveloperConnection>scm:git:ssh://github.com/parodos-dev/parodos.git</scmDeveloperConnection>
                                 <scmUrl>http://github.com/parodos-dev/parodos/tree/master</scmUrl>
+                                <additionalModelTypeAnnotations>@lombok.Data @lombok.AllArgsConstructor @lombok.Builder</additionalModelTypeAnnotations>
                             </configOptions>
                         </configuration>
                     </execution>
@@ -173,7 +175,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>
