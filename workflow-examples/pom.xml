@@ -19,6 +19,10 @@
         <developerConnection>scm:git:ssh://github.com/parodos-dev/parodos.git</developerConnection>
         <url>http://github.com/parodos-dev/parodos/tree/master</url>
     </scm>
+    <properties>
+        <freemarker.version>2.3.30</freemarker.version>
+        <fabric8.version>6.5.1</fabric8.version>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -31,8 +35,13 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-expression</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-expression</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>${freemarker.version}</version>
         </dependency>
         <dependency>
             <groupId>dev.parodos</groupId>
@@ -67,6 +76,16 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-inline</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.fabric8</groupId>
+            <artifactId>kubernetes-client</artifactId>
+            <version>${fabric8.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.fabric8</groupId>
+            <artifactId>openshift-client</artifactId>
+            <version>${fabric8.version}</version>
         </dependency>
         <dependency>
             <groupId>dev.parodos</groupId>

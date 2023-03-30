@@ -1,4 +1,4 @@
-package org.parodos.workflow.examples.task;
+package org.parodos.workflow.examples.custom.task;
 
 import com.redhat.parodos.workflow.task.checker.BaseWorkFlowCheckerTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
