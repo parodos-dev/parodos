@@ -1,4 +1,4 @@
-package com.redhat.parodos.examples.demo.checker;
+package com.redhat.parodos.examples.ocponboarding.checker;
 
 import com.redhat.parodos.workflow.task.checker.BaseWorkFlowCheckerTask;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;

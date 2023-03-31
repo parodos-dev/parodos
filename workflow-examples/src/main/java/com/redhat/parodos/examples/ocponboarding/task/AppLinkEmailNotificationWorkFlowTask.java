@@ -1,4 +1,4 @@
-package com.redhat.parodos.examples.demo.task;
+package com.redhat.parodos.examples.ocponboarding.task;
 
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflows.work.WorkContext;
@@ -6,7 +6,7 @@ import com.redhat.parodos.workflows.work.WorkReport;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class OcpAppDeploymentWorkFlowTask extends BaseInfrastructureWorkFlowTask {
+public class AppLinkEmailNotificationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
 	@Override
 	public WorkReport execute(WorkContext workContext) {

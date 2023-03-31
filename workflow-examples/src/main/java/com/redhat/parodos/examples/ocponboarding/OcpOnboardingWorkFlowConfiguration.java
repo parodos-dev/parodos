@@ -1,10 +1,10 @@
-package com.redhat.parodos.examples.demo;
+package com.redhat.parodos.examples.ocponboarding;
 
-import com.redhat.parodos.examples.demo.checker.JiraTicketApprovalWorkFlowCheckerTask;
-import com.redhat.parodos.examples.demo.task.AppLinkEmailNotificationWorkFlowTask;
-import com.redhat.parodos.examples.demo.task.JiraTicketCreationWorkFlowTask;
-import com.redhat.parodos.examples.demo.task.JiraTicketEmailNotificationWorkFlowTask;
-import com.redhat.parodos.examples.demo.task.OcpAppDeploymentWorkFlowTask;
+import com.redhat.parodos.examples.ocponboarding.checker.JiraTicketApprovalWorkFlowCheckerTask;
+import com.redhat.parodos.examples.ocponboarding.task.AppLinkEmailNotificationWorkFlowTask;
+import com.redhat.parodos.examples.ocponboarding.task.JiraTicketCreationWorkFlowTask;
+import com.redhat.parodos.examples.ocponboarding.task.JiraTicketEmailNotificationWorkFlowTask;
+import com.redhat.parodos.examples.ocponboarding.task.OcpAppDeploymentWorkFlowTask;
 import com.redhat.parodos.workflow.annotation.Checker;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
 import com.redhat.parodos.workflow.annotation.Parameter;
@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 @Configuration
-public class DemoWorkFlowConfiguration {
+public class OcpOnboardingWorkFlowConfiguration {
 
 	// WORKFLOW A - Sequential Flow:
 	// - JiraTicketCreationWorkFlowTask -> JiraTicketApprovalWorkFlowCheckerTask
@@ -80,16 +80,17 @@ public class DemoWorkFlowConfiguration {
 				.then(appLinkEmailNotificationWorkFlowTask).build();
 	}
 
-	// DEMO WORKFLOW - Sequential Flow:
+	// OCP ONBOARDING WORKFLOW - Sequential Flow:
 	// - workFlowA
 	// - workFlowB
 
-	@Bean(name = "demoWorkFlow")
-	@Infrastructure(parameters = { @Parameter(key = "namespace", description = "The namespace",
+	@Bean(name = "ocpOnboardingWorkFlow")
+	@Infrastructure(parameters = { @Parameter(key = "namespace", description = "The namespace in the ocp cluster",
 			type = WorkFlowParameterType.TEXT, optional = false) })
-	WorkFlow demoWorkFlow(@Qualifier("workFlowA") WorkFlow workFlowA, @Qualifier("workFlowB") WorkFlow workFlowB) {
-		return SequentialFlow.Builder.aNewSequentialFlow().named("demoWorkFlow").execute(workFlowA).then(workFlowB)
-				.build();
+	WorkFlow ocpOnboardingWorkFlow(@Qualifier("workFlowA") WorkFlow workFlowA,
+			@Qualifier("workFlowB") WorkFlow workFlowB) {
+		return SequentialFlow.Builder.aNewSequentialFlow().named("ocpOnboardingWorkFlow").execute(workFlowA)
+				.then(workFlowB).build();
 	}
 
 }
