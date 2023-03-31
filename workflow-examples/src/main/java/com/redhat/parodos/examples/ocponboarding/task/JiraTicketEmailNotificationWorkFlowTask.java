@@ -22,15 +22,15 @@ public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureW
 
 	final String MAIL_SERVER_URL = "https://mail-handler-svc-ihtetft2da-uc.a.run.app/submit";
 
+	final String MAIL_SITE_NAME = "parodos";
+
 	final String MAIL_SENDER_NAME = "John Doe";
 
 	final String MAIL_SENDER_EMAIL = "jdoe@parodos.dev";
 
-	final String MAIL_SITE_NAME = "parodos.dev";
-
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		log.info("Start SendEmailWorkFlowTask...");
+		log.info("Start JiraTicketEmailNotificationWorkFlowTask...");
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> responseEntity = null;
 
@@ -50,10 +50,10 @@ public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureW
 
 		if (!isNull(responseEntity) && responseEntity.getStatusCode().is2xxSuccessful()
 				&& !isNull(responseEntity.getBody()) && responseEntity.getBody().contains("Mail Sent")) {
-			log.info("SendEmailWorkFlowTask completed!");
+			log.info("JiraTicketEmailNotificationWorkFlowTask completed!");
 			return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 		}
-		log.info("SendEmailWorkFlowTask failed!");
+		log.info("JiraTicketEmailNotificationWorkFlowTask failed!");
 		return new DefaultWorkReport(WorkStatus.FAILED, workContext);
 	}
 
