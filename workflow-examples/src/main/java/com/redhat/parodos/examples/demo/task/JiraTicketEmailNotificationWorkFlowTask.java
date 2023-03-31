@@ -1,6 +1,6 @@
 package com.redhat.parodos.examples.demo.task;
 
-import com.redhat.parodos.examples.demo.task.dto.MessageRequestDTO;
+import com.redhat.parodos.examples.demo.task.dto.email.MessageRequestDTO;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
@@ -18,7 +18,7 @@ import java.util.List;
 import static java.util.Objects.isNull;
 
 @Slf4j
-public class SendEmailWorkFlowTask extends BaseInfrastructureWorkFlowTask {
+public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
 	final String MAIL_SERVER_URL = "https://mail-handler-svc-ihtetft2da-uc.a.run.app/submit";
 
