@@ -1,6 +1,6 @@
-package com.redhat.parodos.examples.demo.task;
+package com.redhat.parodos.examples.ocponboarding.task;
 
-import com.redhat.parodos.examples.demo.task.dto.email.MessageRequestDTO;
+import com.redhat.parodos.examples.ocponboarding.task.dto.email.MessageRequestDTO;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
@@ -31,17 +31,16 @@ public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureW
 	@Override
 	public WorkReport execute(WorkContext workContext) {
 		log.info("Start SendEmailWorkFlowTask...");
+		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> responseEntity = null;
 
+		// jira ticket url to extract from workContext
+		String jiraTicketUrl = "";
+
 		// message request payload
-		MessageRequestDTO messageRequestDTO = new MessageRequestDTO();
-		messageRequestDTO.setName(MAIL_SENDER_NAME);
-		messageRequestDTO.setEmail(MAIL_SENDER_EMAIL);
-		messageRequestDTO.setSiteName(MAIL_SITE_NAME);
-		messageRequestDTO.setMessage(getMessage());
+		MessageRequestDTO messageRequestDTO = getMessageRequestDTO(getMessage(jiraTicketUrl));
 
 		try {
-			RestTemplate restTemplate = new RestTemplate();
 			HttpEntity<MessageRequestDTO> request = new HttpEntity<>(messageRequestDTO);
 			responseEntity = restTemplate.exchange(MAIL_SERVER_URL, HttpMethod.POST, request, String.class);
 		}
@@ -68,8 +67,19 @@ public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureW
 		return List.of(WorkFlowTaskOutput.OTHER, WorkFlowTaskOutput.EXCEPTION);
 	}
 
-	private String getMessage() {
-		return "Message from Parodos sendEmailWorkFlowTask!";
+	private MessageRequestDTO getMessageRequestDTO(String message) {
+		MessageRequestDTO messageRequestDTO = new MessageRequestDTO();
+		messageRequestDTO.setName(MAIL_SENDER_NAME);
+		messageRequestDTO.setEmail(MAIL_SENDER_EMAIL);
+		messageRequestDTO.setSiteName(MAIL_SITE_NAME);
+		messageRequestDTO.setMessage(message);
+		return messageRequestDTO;
+	}
+
+	private String getMessage(String jiraTicketUrl) {
+		return "Hi there," + "\n" + "Please review the jira ticket below and approve." + "\n"
+				+ "Jira ticket url: <a href=\"" + jiraTicketUrl + "\">" + jiraTicketUrl + "</a>" + "\n" + "Thank you,"
+				+ "\n" + "The Parodos Team";
 	}
 
 }
