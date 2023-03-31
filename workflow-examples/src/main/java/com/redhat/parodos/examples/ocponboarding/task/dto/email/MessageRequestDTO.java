@@ -1,4 +1,4 @@
-package com.redhat.parodos.examples.demo.task.dto.email;
+package com.redhat.parodos.examples.ocponboarding.task.dto.email;
 
 public class MessageRequestDTO {
 
