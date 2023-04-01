@@ -24,7 +24,7 @@ public class JiraTicketApprovalEscalationWorkFlowTask extends BaseInfrastructure
 
 	final String MAIL_SERVER_URL = "https://mail-handler-svc-ihtetft2da-uc.a.run.app/submit";
 
-	final String SITE_NAME = "parodos-escaltion";
+	final String SITE_NAME = "parodos-escalation";
 
 	@Override
 	public WorkReport execute(WorkContext workContext) {
@@ -83,9 +83,7 @@ public class JiraTicketApprovalEscalationWorkFlowTask extends BaseInfrastructure
 	}
 
 	private String getMessage(String jiraTicketUrl) {
-		return "Hi there," + "\n" + "Please review the jira ticket below and approve." + "\n"
-				+ "Jira ticket url: <a href=\"" + jiraTicketUrl + "\">" + jiraTicketUrl + "</a>" + "\n" + "Thank you,"
-				+ "\n" + "The Parodos Team";
+		return "Escalation message. " + jiraTicketUrl;
 	}
 
 }
