@@ -1,4 +1,4 @@
-package com.redhat.parodos.examples.ocponboarding.task;
+package com.redhat.parodos.examples.ocponboarding.escalation;
 
 import com.redhat.parodos.examples.ocponboarding.task.dto.email.MessageRequestDTO;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
@@ -13,20 +13,22 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+
 import java.util.Collections;
 import java.util.List;
+
 import static java.util.Objects.isNull;
 
 @Slf4j
-public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
+public class JiraTicketApprovalEscalationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
 	final String MAIL_SERVER_URL = "https://mail-handler-svc-ihtetft2da-uc.a.run.app/submit";
 
-	final String MAIL_SITE_NAME = "parodos-jira";
+	final String SITE_NAME = "parodos-escaltion";
 
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		log.info("Start JiraTicketEmailNotificationWorkFlowTask...");
+		log.info("Start JiraTicketApprovalEscalationWorkFlowTask...");
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> responseEntity = null;
 
@@ -40,7 +42,7 @@ public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureW
 		String jiraTicketUrl = "https://parodos.atlassian.net/abc-xyz";
 
 		// message request payload
-		MessageRequestDTO messageRequestDTO = getMessageRequestDTO(requesterName, requesterEmail, MAIL_SITE_NAME,
+		MessageRequestDTO messageRequestDTO = getMessageRequestDTO(requesterName, requesterEmail, SITE_NAME,
 				getMessage(jiraTicketUrl));
 
 		try {
@@ -53,10 +55,10 @@ public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureW
 
 		if (!isNull(responseEntity) && responseEntity.getStatusCode().is2xxSuccessful()
 				&& !isNull(responseEntity.getBody()) && responseEntity.getBody().contains("Mail Sent")) {
-			log.info("JiraTicketEmailNotificationWorkFlowTask completed!");
+			log.info("JiraTicketApprovalEscalationWorkFlowTask completed!");
 			return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 		}
-		log.info("JiraTicketEmailNotificationWorkFlowTask failed!");
+		log.info("JiraTicketApprovalEscalationWorkFlowTask failed!");
 		return new DefaultWorkReport(WorkStatus.FAILED, workContext);
 	}
 
@@ -81,8 +83,9 @@ public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureW
 	}
 
 	private String getMessage(String jiraTicketUrl) {
-		return "Hi there," + "\n" + "Please review the jira ticket below and approve." + "\n" + "Jira ticket url: "
-				+ jiraTicketUrl + "\n" + "Thank you," + "\n" + "The Parodos Team";
+		return "Hi there," + "\n" + "Please review the jira ticket below and approve." + "\n"
+				+ "Jira ticket url: <a href=\"" + jiraTicketUrl + "\">" + jiraTicketUrl + "</a>" + "\n" + "Thank you,"
+				+ "\n" + "The Parodos Team";
 	}
 
 }
