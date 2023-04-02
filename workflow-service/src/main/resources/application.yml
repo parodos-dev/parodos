@@ -1,6 +1,8 @@
 spring:
   application:
     name: parodos-workflow-service
+    title: Parodos Workflow Service
+    version: 1.0.6-SNAPSHOT
 
   jackson:
     serialization:
