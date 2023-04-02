@@ -86,12 +86,16 @@ public class ParallelFlowReport implements WorkReport {
 	 */
 	@Override
 	public WorkStatus getStatus() {
+		WorkStatus workStatus = WorkStatus.COMPLETED;
 		for (WorkReport report : reports) {
 			if (report.getStatus().equals(WorkStatus.FAILED)) {
 				return WorkStatus.FAILED;
 			}
+			if (!report.getStatus().equals(WorkStatus.COMPLETED)) {
+				workStatus = report.getStatus();
+			}
 		}
-		return WorkStatus.COMPLETED;
+		return workStatus;
 	}
 
 	/**

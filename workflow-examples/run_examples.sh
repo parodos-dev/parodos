@@ -291,7 +291,7 @@ run_complex_flow() {
           }
       ]
   }'
-  response=$(execute_workflow "$params" "COMPLETED")
+  response=$(execute_workflow "$params" "IN_PROGRESS")
   EXECUTION_ID="$(echo "$response" | jq -r '.workFlowExecutionId')"
   echo "                                               "
   echo "                                               "
