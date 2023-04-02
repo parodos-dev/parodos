@@ -35,30 +35,50 @@ public class ParallelFlowReportTest {
 
 	private Exception exception;
 
-	private ParallelFlowReport parallelFlowReport;
+	private ParallelFlowReport completedParallelFlowReport;
+
+	private ParallelFlowReport failedParallelFlowReport;
+
+	private ParallelFlowReport progressParallelFlowReport;
 
 	@Before
 	public void setUp() {
 		exception = new Exception("test exception");
 		WorkContext workContext = new WorkContext();
-		parallelFlowReport = new ParallelFlowReport();
-		parallelFlowReport.add(new DefaultWorkReport(WorkStatus.FAILED, workContext, exception));
-		parallelFlowReport.add(new DefaultWorkReport(WorkStatus.COMPLETED, workContext));
+
+		completedParallelFlowReport = new ParallelFlowReport();
+		completedParallelFlowReport.add(new DefaultWorkReport(WorkStatus.COMPLETED, workContext));
+		completedParallelFlowReport.add(new DefaultWorkReport(WorkStatus.COMPLETED, workContext));
+
+		failedParallelFlowReport = new ParallelFlowReport();
+		failedParallelFlowReport.add(new DefaultWorkReport(WorkStatus.FAILED, workContext, exception));
+		failedParallelFlowReport.add(new DefaultWorkReport(WorkStatus.COMPLETED, workContext));
+		failedParallelFlowReport.add(new DefaultWorkReport(WorkStatus.IN_PROGRESS, workContext));
+
+		progressParallelFlowReport = new ParallelFlowReport();
+		progressParallelFlowReport.add(new DefaultWorkReport(WorkStatus.COMPLETED, workContext));
+		progressParallelFlowReport.add(new DefaultWorkReport(WorkStatus.COMPLETED, workContext));
+		progressParallelFlowReport.add(new DefaultWorkReport(WorkStatus.IN_PROGRESS, workContext));
+		progressParallelFlowReport.add(new DefaultWorkReport(WorkStatus.COMPLETED, workContext));
 	}
 
 	@Test
 	public void testGetStatus() {
-		Assertions.assertThat(parallelFlowReport.getStatus()).isEqualTo(WorkStatus.FAILED);
+		Assertions.assertThat(completedParallelFlowReport.getStatus()).isEqualTo(WorkStatus.COMPLETED);
+		Assertions.assertThat(failedParallelFlowReport.getStatus()).isEqualTo(WorkStatus.FAILED);
+		Assertions.assertThat(progressParallelFlowReport.getStatus()).isEqualTo(WorkStatus.IN_PROGRESS);
 	}
 
 	@Test
 	public void testGetError() {
-		Assertions.assertThat(parallelFlowReport.getError()).isEqualTo(exception);
+		Assertions.assertThat(failedParallelFlowReport.getError()).isEqualTo(exception);
 	}
 
 	@Test
 	public void testGetReports() {
-		Assertions.assertThat(parallelFlowReport.getReports()).hasSize(2);
+		Assertions.assertThat(completedParallelFlowReport.getReports()).hasSize(2);
+		Assertions.assertThat(failedParallelFlowReport.getReports()).hasSize(3);
+		Assertions.assertThat(progressParallelFlowReport.getReports()).hasSize(4);
 	}
 
 }
