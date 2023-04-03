@@ -22,7 +22,6 @@ import com.redhat.parodos.workflow.registry.BeanWorkFlowRegistryImpl;
 import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
@@ -33,7 +32,6 @@ import org.springframework.stereotype.Component;
  * @author Richard Wang (Github: richardW98)
  */
 
-@Slf4j
 @Component
 public class WorkFlowDelegate {
 

@@ -1,6 +1,5 @@
 package com.redhat.parodos.workflow.parameter;
 
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
 import junit.framework.TestCase;
 import org.junit.Test;
 
