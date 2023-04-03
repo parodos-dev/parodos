@@ -180,6 +180,11 @@
             <artifactId>commons-codec</artifactId>
         </dependency>
         <!-- END CheckSum Utils Dependencies -->
+        <dependency>
+            <groupId>dev.parodos</groupId>
+            <artifactId>prebuilt-tasks</artifactId>
+            <version>${revision}</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
