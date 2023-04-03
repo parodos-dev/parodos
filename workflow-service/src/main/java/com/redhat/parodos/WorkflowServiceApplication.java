@@ -20,6 +20,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
@@ -31,6 +32,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
  *
  */
 @SpringBootApplication(scanBasePackages = { "com.redhat.parodos", "${scan.packages}" })
+@EnableAsync(proxyTargetClass = true)
 @EnableScheduling
 @EnableWebSecurity
 @EnableAspectJAutoProxy

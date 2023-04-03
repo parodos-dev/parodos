@@ -10,7 +10,6 @@ import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionContext;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
-import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
 import com.redhat.parodos.workflows.work.WorkContext;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,9 +38,9 @@ class WorkFlowContinuationServiceImplTest {
 
 	private WorkFlowTaskRepository workFlowTaskRepository;
 
-	private WorkFlowServiceImpl workFlowService;
-
 	private WorkFlowContinuationServiceImpl service;
+
+	private AsyncWorkFlowContinuerImpl asyncWorkFlowContinuer;
 
 	@BeforeEach
 	void initEach() {
@@ -49,9 +48,9 @@ class WorkFlowContinuationServiceImplTest {
 		this.workFlowTaskDefinitionRepository = Mockito.mock(WorkFlowTaskDefinitionRepository.class);
 		this.workFlowRepository = Mockito.mock(WorkFlowRepository.class);
 		this.workFlowTaskRepository = Mockito.mock(WorkFlowTaskRepository.class);
-		this.workFlowService = Mockito.mock(WorkFlowServiceImpl.class);
+		this.asyncWorkFlowContinuer = Mockito.mock(AsyncWorkFlowContinuerImpl.class);
 		this.service = new WorkFlowContinuationServiceImpl(this.workFlowDefinitionRepository, this.workFlowRepository,
-				this.workFlowService);
+				this.asyncWorkFlowContinuer);
 	}
 
 	@Test
@@ -70,8 +69,8 @@ class WorkFlowContinuationServiceImplTest {
 
 		// then
 		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findAll();
-		Mockito.verify(this.workFlowService, Mockito.times(0)).execute(Mockito.any(), Mockito.any(), Mockito.any(),
-				Mockito.any());
+		Mockito.verify(this.asyncWorkFlowContinuer, Mockito.times(0)).executeAsync(Mockito.any(), Mockito.any(),
+				Mockito.any(), Mockito.any());
 	}
 
 	@Test
@@ -86,7 +85,7 @@ class WorkFlowContinuationServiceImplTest {
 
 		// then
 		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findAll();
-		Mockito.verify(this.workFlowService, Mockito.times(1)).execute(
+		Mockito.verify(this.asyncWorkFlowContinuer, Mockito.times(1)).executeAsync(
 				Mockito.eq(workFlowExecution.getProjectId().toString()), Mockito.eq(TEST_WORKFLOW), Mockito.any(),
 				Mockito.any());
 	}
@@ -115,7 +114,7 @@ class WorkFlowContinuationServiceImplTest {
 
 		// then
 		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findAll();
-		Mockito.verify(this.workFlowService, Mockito.times(1)).execute(
+		Mockito.verify(this.asyncWorkFlowContinuer, Mockito.times(1)).executeAsync(
 				Mockito.eq(workFlowExecution.getProjectId().toString()), Mockito.eq(TEST_WORKFLOW), Mockito.any(),
 				Mockito.any());
 	}
@@ -136,8 +135,9 @@ class WorkFlowContinuationServiceImplTest {
 
 		Mockito.when(this.workFlowTaskRepository.findByWorkFlowExecutionId(wfExecution.getId()))
 				.thenReturn(List.of(workFlowTaskExecution));
-		Mockito.when(workFlowService.execute(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
-				.thenThrow(new RuntimeException("JsonParseException"));
+		Mockito.doThrow(new RuntimeException("JsonParseException")).when(asyncWorkFlowContinuer)
+				.executeAsync(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
+
 		// when
 		Exception exception = assertThrows(RuntimeException.class, () -> {
 			this.service.workFlowRunAfterStartup();
@@ -148,8 +148,8 @@ class WorkFlowContinuationServiceImplTest {
 		assertTrue(exception.getMessage().contains("JsonParseException"));
 
 		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findAll();
-		Mockito.verify(this.workFlowService, Mockito.times(1)).execute(Mockito.any(), Mockito.any(), Mockito.any(),
-				Mockito.any());
+		Mockito.verify(this.asyncWorkFlowContinuer, Mockito.times(1)).executeAsync(Mockito.any(), Mockito.any(),
+				Mockito.any(), Mockito.any());
 	}
 
 	private WorkFlowExecution sampleWorkFlowExecution() {
