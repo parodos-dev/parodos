@@ -57,15 +57,15 @@
     <modules>
         <module>workflow-engine</module>
         <module>parodos-model-api</module>
-        <module>workflow-service</module>
-        <module>workflow-examples</module>
+        <module>external-dependencies</module>
         <module>notification-service</module>
         <module>notification-service-sdk</module>
+        <module>prebuilt-tasks</module>
+        <module>workflow-service</module>
+        <module>workflow-service-sdk</module>
+        <module>workflow-examples</module>
         <module>pattern-detection-library</module>
         <module>coverage</module>
-        <module>external-dependencies</module>
-        <module>workflow-service-sdk</module>
-        <module>prebuilt-tasks</module>
     </modules>
     <dependencies>
         <dependency>
