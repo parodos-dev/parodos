@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

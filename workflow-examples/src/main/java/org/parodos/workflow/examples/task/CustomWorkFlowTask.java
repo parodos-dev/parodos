@@ -20,7 +20,6 @@ import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
@@ -29,7 +28,6 @@ import org.springframework.stereotype.Component;
  * @author Richard Wang (Github: richardw98)
  */
 
-@Slf4j
 @Component
 public class CustomWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 

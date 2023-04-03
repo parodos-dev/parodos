@@ -15,8 +15,6 @@
  */
 package org.parodos.workflow.examples;
 
-import com.redhat.parodos.examples.master.checker.NamespaceApprovalWorkFlowCheckerTask;
-import com.redhat.parodos.examples.master.task.NamespaceWorkFlowTask;
 import com.redhat.parodos.workflow.annotation.Checker;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
