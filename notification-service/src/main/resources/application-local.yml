@@ -11,6 +11,10 @@ logging:
     com.redhat.parodos.notification: DEBUG
 
 spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2
   jackson:
     serialization:
       indent-output: true
