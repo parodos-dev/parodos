@@ -7,6 +7,8 @@ import com.redhat.parodos.sdk.invoker.ApiClient;
 import com.redhat.parodos.sdk.invoker.ApiException;
 import com.redhat.parodos.sdk.model.ProjectRequestDTO;
 import com.redhat.parodos.sdk.model.ProjectResponseDTO;
+import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
+import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Strings;
@@ -32,7 +34,7 @@ import static org.junit.Assert.assertTrue;
 public final class ExamplesUtils {
 
 	public static void waitProjectStart(ProjectApi projectApi) throws ApiException, InterruptedException {
-		AsyncResult asyncResult = new AsyncResult();
+		AsyncWaitProjectResult asyncResult = new AsyncWaitProjectResult();
 		Lock lock = new ReentrantLock();
 		Condition response = lock.newCondition();
 		ApiCallback<List<ProjectResponseDTO>> apiCallback = new ApiCallback<>() {
@@ -94,6 +96,89 @@ public final class ExamplesUtils {
 		}
 	}
 
+	public static WorkFlowStatusResponseDTO waitAsyncStatusResponse(WorkflowApi workflowApi, String workFlowExecutionId)
+			throws ApiException, InterruptedException {
+		AsyncStatusResult asyncResult = new AsyncStatusResult();
+		Lock lock = new ReentrantLock();
+		Condition response = lock.newCondition();
+		ApiCallback<WorkFlowStatusResponseDTO> apiCallback = new ApiCallback<>() {
+			AtomicInteger attemptCounter = new AtomicInteger(0);
+
+			@Override
+			public void onFailure(ApiException e, int statusCode, Map<String, List<String>> responseHeaders) {
+				int i = attemptCounter.incrementAndGet();
+				if (i >= 100) {
+					asyncResult.setError(e.getMessage());
+					signal();
+				}
+				else {
+					try {
+						workflowApi.getStatusAsync(workFlowExecutionId, this);
+					}
+					catch (ApiException apie) {
+						asyncResult.setError(apie.getMessage());
+						signal();
+					}
+				}
+			}
+
+			@Override
+			public void onSuccess(WorkFlowStatusResponseDTO result, int statusCode,
+					Map<String, List<String>> responseHeaders) {
+				int i = attemptCounter.incrementAndGet();
+				if (i >= 100) {
+					asyncResult.setError("Workflow status isn't COMPLETE");
+					signal();
+				}
+				else if (!result.getStatus().equals(WorkStatus.COMPLETED.toString())) {
+					try {
+						workflowApi.getStatusAsync(workFlowExecutionId, this);
+					}
+					catch (ApiException apie) {
+						asyncResult.setError(apie.getMessage());
+						signal();
+					}
+				}
+				else {
+					asyncResult.setStatusCode(statusCode);
+					asyncResult.setResult(result);
+				}
+
+			}
+
+			@Override
+			public void onUploadProgress(long bytesWritten, long contentLength, boolean done) {
+			}
+
+			@Override
+			public void onDownloadProgress(long bytesRead, long contentLength, boolean done) {
+			}
+
+			private void signal() {
+				lock.lock();
+				try {
+					response.signal();
+				}
+				finally {
+					lock.unlock();
+				}
+			}
+		};
+		workflowApi.getStatusAsync(workFlowExecutionId, apiCallback);
+		lock.lock();
+		try {
+			// should be more than enough
+			response.await(60, TimeUnit.SECONDS);
+			if (asyncResult.getError() != null) {
+				fail("An error occurred while executing getProjectsAsync: " + asyncResult.getError());
+			}
+		}
+		finally {
+			lock.unlock();
+		}
+		return asyncResult.getResult();
+	}
+
 	@Nullable
 	public static ProjectResponseDTO getProjectByNameAndDescription(List<ProjectResponseDTO> projects,
 			String projectName, String projectDescription) {
@@ -104,7 +189,18 @@ public final class ExamplesUtils {
 	}
 
 	@Data
-	private static class AsyncResult {
+	private static class AsyncWaitProjectResult {
+
+		private String error;
+
+	}
+
+	@Data
+	private static class AsyncStatusResult {
+
+		WorkFlowStatusResponseDTO result;
+
+		int statusCode;
 
 		private String error;
 
