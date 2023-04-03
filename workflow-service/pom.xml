@@ -246,9 +246,6 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <configuration>
-                            <jvmArguments>-Dspring-boot.run.profiles=local</jvmArguments>
-                        </configuration>
                         <id>pre-openapi-json-gen</id>
                         <goals>
                             <goal>start</goal>
