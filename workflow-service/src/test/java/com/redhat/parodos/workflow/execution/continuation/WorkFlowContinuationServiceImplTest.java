@@ -1,6 +1,5 @@
 package com.redhat.parodos.workflow.execution.continuation;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
@@ -16,7 +15,6 @@ import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
 import com.redhat.parodos.workflows.work.WorkContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.List;

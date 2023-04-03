@@ -30,7 +30,6 @@ import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -47,7 +46,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author Annel Ketcha (Github: anludke)
  */
 
-@Slf4j
 @Service
 public class WorkFlowServiceDelegate {
 

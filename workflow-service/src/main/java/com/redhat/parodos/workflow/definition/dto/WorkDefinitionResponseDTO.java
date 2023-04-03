@@ -19,11 +19,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.redhat.parodos.workflow.parameter.WorkFlowParameter;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

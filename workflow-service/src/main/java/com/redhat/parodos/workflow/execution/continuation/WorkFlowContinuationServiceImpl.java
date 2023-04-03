@@ -15,15 +15,11 @@
  */
 package com.redhat.parodos.workflow.execution.continuation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
-import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
-import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 import com.redhat.parodos.workflows.work.WorkContext;
 import lombok.extern.slf4j.Slf4j;

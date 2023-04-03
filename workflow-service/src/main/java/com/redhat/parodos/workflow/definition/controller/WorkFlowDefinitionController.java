@@ -15,7 +15,6 @@
  */
 package com.redhat.parodos.workflow.definition.controller;
 
-import com.redhat.parodos.project.dto.ProjectResponseDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
 import java.util.List;
