@@ -13,6 +13,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import static java.util.Objects.isNull;
@@ -45,9 +48,12 @@ public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureW
 
 		try {
 			HttpEntity<MessageRequestDTO> request = new HttpEntity<>(messageRequestDTO);
+			LocalDateTime startDateTime = LocalDateTime.now();
 			responseEntity = restTemplate.exchange(MAIL_SERVER_URL, HttpMethod.POST, request, String.class);
+			log.info("Request duration: {} ms", ChronoUnit.MILLIS.between(startDateTime, LocalDateTime.now()));
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			log.error("Error occurred when submitting message: {}", e.getMessage());
 		}
 

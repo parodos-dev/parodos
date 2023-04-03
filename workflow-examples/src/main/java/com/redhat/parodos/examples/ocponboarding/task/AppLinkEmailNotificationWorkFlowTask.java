@@ -20,6 +20,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -57,15 +59,17 @@ public class AppLinkEmailNotificationWorkFlowTask extends BaseInfrastructureWork
 		Map<String, Object> messageData = new HashMap<>();
 		messageData.put("appLink", "https://ocp.xyz");
 
-		// message request payload
 		try {
+			// message template
 			String message = getMessage(TEMPLATE_NAME, messageData);
-			log.info("getMessage(): {}", message);
 			if (!message.isEmpty()) {
+				// message request payload
 				MessageRequestDTO messageRequestDTO = getMessageRequestDTO(requesterName, requesterEmail,
 						MAIL_SITE_NAME, message);
 				HttpEntity<MessageRequestDTO> request = new HttpEntity<>(messageRequestDTO);
+				LocalDateTime startDateTime = LocalDateTime.now();
 				responseEntity = restTemplate.exchange(MAIL_SERVER_URL, HttpMethod.POST, request, String.class);
+				log.info("Request duration: {} ms", ChronoUnit.MILLIS.between(startDateTime, LocalDateTime.now()));
 			}
 		}
 		catch (Exception e) {
