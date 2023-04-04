@@ -67,8 +67,7 @@ public class OcpAppDeploymentWorkFlowTask extends BaseInfrastructureWorkFlowTask
 	public WorkReport execute(WorkContext workContext) {
 		log.info("Start ocpAppDeploymentWorkFlowTask...");
 		try {
-			// String namespace = getRequiredParameterValue(workContext, NAMESPACE);
-			String namespace = getOptionalParameterValue(workContext, NAMESPACE, "demo");
+			String namespace = getRequiredParameterValue(workContext, NAMESPACE);
 			String clusterToken = getRequiredParameterValue(workContext, CLUSTER_TOKEN);
 			Config config = new ConfigBuilder().withMasterUrl(clusterApiUrl).withOauthToken(clusterToken).build();
 			try (KubernetesClient kclient = new KubernetesClientBuilder().withConfig(config).build()) {
@@ -77,24 +76,23 @@ public class OcpAppDeploymentWorkFlowTask extends BaseInfrastructureWorkFlowTask
 
 				Deployment deployment = new DeploymentBuilder().withNewMetadata().withName(NGINX).endMetadata()
 						.withNewSpec().withReplicas(1).withNewTemplate().withNewMetadata().addToLabels("app", NGINX)
-						.endMetadata().withNewSpec().addNewContainer().withName(NGINX)
-						.withImage(OPENSHIFT_NGINX).addNewPort().withContainerPort(CONTAINER_PORT).endPort()
-						.endContainer().endSpec().endTemplate().withNewSelector().addToMatchLabels("app", NGINX)
-						.endSelector().endSpec().build();
+						.endMetadata().withNewSpec().addNewContainer().withName(NGINX).withImage(OPENSHIFT_NGINX)
+						.addNewPort().withContainerPort(CONTAINER_PORT).endPort().endContainer().endSpec().endTemplate()
+						.withNewSelector().addToMatchLabels("app", NGINX).endSelector().endSpec().build();
 
 				deployment = client.apps().deployments().inNamespace(namespace).resource(deployment).create();
 
 				Service service = new ServiceBuilder().withNewMetadata().withName(NGINX).endMetadata().withNewSpec()
 						.withSelector(Collections.singletonMap("app", NGINX)).addNewPort().withName(DEMO_PORT)
-						.withProtocol("TCP").withPort(CONTAINER_PORT).withTargetPort(new IntOrString(CONTAINER_PORT)).endPort().endSpec()
-						.build();
+						.withProtocol("TCP").withPort(CONTAINER_PORT).withTargetPort(new IntOrString(CONTAINER_PORT))
+						.endPort().endSpec().build();
 
 				service = client.services().inNamespace(namespace).resource(service).create();
 
 				Route route = new RouteBuilder().withNewMetadata().withName(NGINX).endMetadata().withNewSpec()
 						.withTo(new RouteTargetReferenceBuilder().withKind("Service").withName(NGINX).build())
-						.withPort(new RoutePortBuilder().withTargetPort(new IntOrString(CONTAINER_PORT)).build()).endSpec()
-						.build();
+						.withPort(new RoutePortBuilder().withTargetPort(new IntOrString(CONTAINER_PORT)).build())
+						.endSpec().build();
 
 				route = client.routes().inNamespace(namespace).resource(route).create();
 				addParameter(workContext, APP_LINK, route.getSpec().getHost());
