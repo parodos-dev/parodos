@@ -24,9 +24,13 @@ import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.search.MeterNotFoundException;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -40,9 +44,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 
 class WorkFlowServiceImplTest {
+
+	@Mock
+	private MeterRegistry meterRegistry;
 
 	private WorkFlowDelegate workFlowDelegate;
 
@@ -60,6 +68,8 @@ class WorkFlowServiceImplTest {
 
 	private WorkFlowServiceImpl workFlowService;
 
+	private MeterRegistry metricRegistry;
+
 	@BeforeEach
 	void initEach() {
 		this.workFlowDelegate = Mockito.mock(WorkFlowDelegate.class);
@@ -69,10 +79,11 @@ class WorkFlowServiceImplTest {
 		this.workFlowTaskDefinitionRepository = Mockito.mock(WorkFlowTaskDefinitionRepository.class);
 		this.workFlowTaskRepository = Mockito.mock(WorkFlowTaskRepository.class);
 		this.workFlowWorkRepository = Mockito.mock(WorkFlowWorkRepository.class);
-
+		this.metricRegistry = new SimpleMeterRegistry();
 		this.workFlowService = new WorkFlowServiceImpl(this.workFlowDelegate, this.workFlowServiceDelegate,
 				this.workFlowDefinitionRepository, this.workFlowTaskDefinitionRepository, this.workFlowRepository,
-				this.workFlowTaskRepository, this.workFlowWorkRepository);
+				this.workFlowTaskRepository, this.workFlowWorkRepository, this.metricRegistry);
+
 	}
 
 	@Test
@@ -295,6 +306,14 @@ class WorkFlowServiceImplTest {
 		assertEquals(argument.getValue().getStatus().toString(), "COMPLETED");
 		assertEquals(argument.getValue().getProjectId().toString(), projectId.toString());
 		assertEquals(argument.getValue().getWorkFlowDefinitionId().toString(), workflowDefID.toString());
+
+		assertEquals(this.metricRegistry.get("workflow.executions").tag("status", "COMPLETED").counter().count(), 1);
+		// No other tags are created under workflow.executions metrics
+		assertEquals(this.metricRegistry.get("workflow.executions").counter().count(), 1);
+		// check that IN_PROGESS tag was not addded
+		assertThrows(MeterNotFoundException.class, () -> {
+			this.metricRegistry.get("workflow.executions").tag("status", "IN_PROGRESS").counter();
+		});
 	}
 
 	@Test

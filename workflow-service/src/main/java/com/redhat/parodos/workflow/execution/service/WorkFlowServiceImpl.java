@@ -16,6 +16,8 @@
 package com.redhat.parodos.workflow.execution.service;
 
 import com.redhat.parodos.workflow.WorkFlowDelegate;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
@@ -78,10 +80,13 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
 	private final WorkFlowWorkRepository workFlowWorkRepository;
 
+	private final MeterRegistry metricRegistry;
+
 	public WorkFlowServiceImpl(WorkFlowDelegate workFlowDelegate, WorkFlowServiceDelegate workFlowServiceDelegate,
 			WorkFlowDefinitionRepository workFlowDefinitionRepository,
 			WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository, WorkFlowRepository workFlowRepository,
-			WorkFlowTaskRepository workFlowTaskRepository, WorkFlowWorkRepository workFlowWorkRepository) {
+			WorkFlowTaskRepository workFlowTaskRepository, WorkFlowWorkRepository workFlowWorkRepository,
+			MeterRegistry metricRegistry) {
 		this.workFlowDelegate = workFlowDelegate;
 		this.workFlowServiceDelegate = workFlowServiceDelegate;
 		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
@@ -89,6 +94,16 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		this.workFlowRepository = workFlowRepository;
 		this.workFlowTaskRepository = workFlowTaskRepository;
 		this.workFlowWorkRepository = workFlowWorkRepository;
+		this.metricRegistry = metricRegistry;
+	}
+
+	private void statusCounterWithStatus(WorkFlowStatus status) {
+		if (status == null) {
+			return;
+		}
+
+		Counter.builder("workflow.executions").tag("status", status.toString())
+				.description("Workflow executions phases by status update").register(this.metricRegistry).increment();
 	}
 
 	@Override
@@ -129,6 +144,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	public synchronized WorkFlowExecution saveWorkFlow(UUID projectId, UUID workFlowDefinitionId,
 			WorkFlowStatus workFlowStatus, WorkFlowExecution masterWorkFlowExecution, String arguments) {
 		try {
+			this.statusCounterWithStatus(workFlowStatus);
 			return workFlowRepository.save(WorkFlowExecution.builder().workFlowDefinitionId(workFlowDefinitionId)
 					.projectId(projectId).status(workFlowStatus).startDate(new Date()).arguments(arguments)
 					.masterWorkFlowExecution(masterWorkFlowExecution).build());
@@ -142,6 +158,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
 	@Override
 	public synchronized WorkFlowExecution updateWorkFlow(WorkFlowExecution workFlowExecution) {
+		this.statusCounterWithStatus(workFlowExecution.getStatus());
 		return workFlowRepository.save(workFlowExecution);
 	}
 
