@@ -60,11 +60,10 @@ public class WorkFlowContinuationServiceImpl implements WorkFlowContinuationServ
 	@EventListener(ApplicationReadyEvent.class)
 	public void workFlowRunAfterStartup() {
 		log.info("Looking up all IN PROGRESS workflows for ");
-		List<WorkFlowExecution> workFlowExecutions = workFlowRepository.findAll();
-		log.info("Number of IN PROGRESS workflows for : {}", workFlowExecutions.size());
-		workFlowExecutions.stream()
-				.filter(workFlowExecution -> WorkFlowStatus.IN_PROGRESS == workFlowExecution.getStatus()
-						&& workFlowExecution.getMasterWorkFlowExecution() == null)
+		List<WorkFlowExecution> workFlowExecutions = workFlowRepository
+				.findByStatusIn(List.of(WorkFlowStatus.IN_PROGRESS, WorkFlowStatus.PENDING));
+		log.info("Number of IN PROGRESS or PENDING workflows for : {}", workFlowExecutions.size());
+		workFlowExecutions.stream().filter(workFlowExecution -> workFlowExecution.getMasterWorkFlowExecution() == null)
 				.forEach(workFlowExecution -> {
 					WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository
 							.findById(workFlowExecution.getWorkFlowDefinitionId()).get();
