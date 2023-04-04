@@ -49,4 +49,5 @@ public enum WorkStatus {
 	 * The unit of work has rejected.
 	 */
 	REJECTED
+
 }

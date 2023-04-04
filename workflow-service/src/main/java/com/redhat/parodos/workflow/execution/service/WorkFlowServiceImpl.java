@@ -24,6 +24,7 @@ import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
+import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionService;
 import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.exceptions.WorkflowPersistenceFailedException;
@@ -80,13 +81,15 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
 	private final WorkFlowWorkRepository workFlowWorkRepository;
 
+	private final WorkFlowDefinitionService workFlowDefinitionService;
+
 	private final MeterRegistry metricRegistry;
 
 	public WorkFlowServiceImpl(WorkFlowDelegate workFlowDelegate, WorkFlowServiceDelegate workFlowServiceDelegate,
 			WorkFlowDefinitionRepository workFlowDefinitionRepository,
 			WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository, WorkFlowRepository workFlowRepository,
 			WorkFlowTaskRepository workFlowTaskRepository, WorkFlowWorkRepository workFlowWorkRepository,
-			MeterRegistry metricRegistry) {
+							   WorkFlowDefinitionService workFlowDefinitionService, MeterRegistry metricRegistry) {
 		this.workFlowDelegate = workFlowDelegate;
 		this.workFlowServiceDelegate = workFlowServiceDelegate;
 		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
@@ -94,6 +97,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		this.workFlowRepository = workFlowRepository;
 		this.workFlowTaskRepository = workFlowTaskRepository;
 		this.workFlowWorkRepository = workFlowWorkRepository;
+		this.workFlowDefinitionService = workFlowDefinitionService;
 		this.metricRegistry = metricRegistry;
 	}
 
@@ -101,7 +105,6 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		if (status == null) {
 			return;
 		}
-
 		Counter.builder("workflow.executions").tag("status", status.toString())
 				.description("Workflow executions phases by status update").register(this.metricRegistry).increment();
 	}
@@ -116,7 +119,8 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 			return new DefaultWorkReport(WorkStatus.FAILED, new WorkContext(), new Throwable(validationFailedMsg));
 		}
 
-		WorkContext workContext = workFlowDelegate.initWorkFlowContext(workFlowRequestDTO);
+		WorkContext workContext = workFlowDelegate.initWorkFlowContext(workFlowRequestDTO,
+				workFlowDefinitionService.getWorkFlowDefinitionByName(workflowName));
 
 		String projectId = workFlowRequestDTO.getProjectId();
 		return execute(projectId, workflowName, workContext, null);
