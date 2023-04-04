@@ -19,6 +19,16 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha != '' &&  github.event.pull_request.head.sha ||  github.sha }}
 
+      - name: Fetch target branch and rebase it
+        if: github.event_name == 'pull_request_target'
+        run: |
+          set -x
+          git config user.email "CI@action.git"
+          git config user.name "CI"
+          git remote add upstream https://github.com/${{ github.repository }}.git
+          git fetch upstream ${{ github.event.pull_request.base.ref }}
+          git rebase upstream/${{ github.event.pull_request.base.ref }}
+
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
