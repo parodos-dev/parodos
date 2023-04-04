@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,6 +30,8 @@ class WorkFlowContinuationServiceImplTest {
 	private static final String TEST_WORKFLOW = "testWorkFlow";
 
 	private static final String TEST_WORKFLOW_TASK = "testWorkFlowTask";
+
+	private List<WorkFlowStatus> workFlowStatuses = List.of(WorkFlowStatus.IN_PROGRESS, WorkFlowStatus.PENDING);
 
 	private WorkFlowDefinitionRepository workFlowDefinitionRepository;
 
@@ -56,19 +59,13 @@ class WorkFlowContinuationServiceImplTest {
 	@Test
 	void workFlowSkipCompletedJobs() {
 		// given
-		WorkFlowExecution workFlowExecution = this.sampleWorkFlowExecution();
-		workFlowExecution.setStatus(WorkFlowStatus.COMPLETED);
-
-		WorkFlowExecution wfFailed = this.sampleWorkFlowExecution();
-		wfFailed.setStatus(WorkFlowStatus.FAILED);
-
-		Mockito.when(this.workFlowRepository.findAll()).thenReturn(List.of(workFlowExecution, wfFailed));
+		Mockito.when(this.workFlowRepository.findByStatusIn(workFlowStatuses)).thenReturn(Arrays.asList());
 
 		// when
 		this.service.workFlowRunAfterStartup();
 
 		// then
-		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findAll();
+		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findByStatusIn(workFlowStatuses);
 		Mockito.verify(this.asyncWorkFlowContinuer, Mockito.times(0)).executeAsync(Mockito.any(), Mockito.any(),
 				Mockito.any(), Mockito.any());
 	}
@@ -76,15 +73,32 @@ class WorkFlowContinuationServiceImplTest {
 	@Test
 	void workFlowCompleteInProgress() {
 		// given
-		WorkFlowExecution workFlowExecution = this.sampleWorkFlowExecution();
-		Mockito.when(this.workFlowRepository.findAll()).thenReturn(List.of(workFlowExecution));
+		WorkFlowExecution workFlowExecution = this.sampleWorkFlowExecution(WorkFlowStatus.IN_PROGRESS);
+		Mockito.when(this.workFlowRepository.findByStatusIn(workFlowStatuses)).thenReturn(List.of(workFlowExecution));
 		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.any()))
 				.thenReturn(Optional.of(sampleWorkFlowDefinition()));
 		// when
 		this.service.workFlowRunAfterStartup();
 
 		// then
-		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findAll();
+		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findByStatusIn(workFlowStatuses);
+		Mockito.verify(this.asyncWorkFlowContinuer, Mockito.times(1)).executeAsync(
+				Mockito.eq(workFlowExecution.getProjectId().toString()), Mockito.eq(TEST_WORKFLOW), Mockito.any(),
+				Mockito.any());
+	}
+
+	@Test
+	void workFlowCompletePending() {
+		// given
+		WorkFlowExecution workFlowExecution = this.sampleWorkFlowExecution(WorkFlowStatus.PENDING);
+		Mockito.when(this.workFlowRepository.findByStatusIn(workFlowStatuses)).thenReturn(List.of(workFlowExecution));
+		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.any()))
+				.thenReturn(Optional.of(sampleWorkFlowDefinition()));
+		// when
+		this.service.workFlowRunAfterStartup();
+
+		// then
+		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findByStatusIn(workFlowStatuses);
 		Mockito.verify(this.asyncWorkFlowContinuer, Mockito.times(1)).executeAsync(
 				Mockito.eq(workFlowExecution.getProjectId().toString()), Mockito.eq(TEST_WORKFLOW), Mockito.any(),
 				Mockito.any());
@@ -93,8 +107,8 @@ class WorkFlowContinuationServiceImplTest {
 	@Test
 	void workFlowCompleteWithTaskExecutions() {
 		// given
-		WorkFlowExecution workFlowExecution = this.sampleWorkFlowExecution();
-		Mockito.when(this.workFlowRepository.findAll()).thenReturn(List.of(workFlowExecution));
+		WorkFlowExecution workFlowExecution = this.sampleWorkFlowExecution(WorkFlowStatus.IN_PROGRESS);
+		Mockito.when(this.workFlowRepository.findByStatusIn(workFlowStatuses)).thenReturn(List.of(workFlowExecution));
 		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.any()))
 				.thenReturn(Optional.of(sampleWorkFlowDefinition()));
 		WorkFlowTaskDefinition workFlowTaskDefinition = sampleWorkFlowTaskDefinition();
@@ -113,7 +127,7 @@ class WorkFlowContinuationServiceImplTest {
 		this.service.workFlowRunAfterStartup();
 
 		// then
-		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findAll();
+		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findByStatusIn(workFlowStatuses);
 		Mockito.verify(this.asyncWorkFlowContinuer, Mockito.times(1)).executeAsync(
 				Mockito.eq(workFlowExecution.getProjectId().toString()), Mockito.eq(TEST_WORKFLOW), Mockito.any(),
 				Mockito.any());
@@ -122,8 +136,8 @@ class WorkFlowContinuationServiceImplTest {
 	@Test
 	void workFlowCompleteWithInvalidJson() {
 		// given
-		WorkFlowExecution wfExecution = this.sampleWorkFlowExecution();
-		Mockito.when(this.workFlowRepository.findAll()).thenReturn(List.of(wfExecution));
+		WorkFlowExecution wfExecution = this.sampleWorkFlowExecution(WorkFlowStatus.IN_PROGRESS);
+		Mockito.when(this.workFlowRepository.findByStatusIn(workFlowStatuses)).thenReturn(List.of(wfExecution));
 		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.any()))
 				.thenReturn(Optional.of(sampleWorkFlowDefinition()));
 		WorkFlowTaskDefinition wfTaskDef = sampleWorkFlowTaskDefinition();
@@ -147,14 +161,14 @@ class WorkFlowContinuationServiceImplTest {
 		assertNotNull(exception);
 		assertTrue(exception.getMessage().contains("JsonParseException"));
 
-		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findAll();
+		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findByStatusIn(workFlowStatuses);
 		Mockito.verify(this.asyncWorkFlowContinuer, Mockito.times(1)).executeAsync(Mockito.any(), Mockito.any(),
 				Mockito.any(), Mockito.any());
 	}
 
-	private WorkFlowExecution sampleWorkFlowExecution() {
+	private WorkFlowExecution sampleWorkFlowExecution(WorkFlowStatus workFlowStatus) {
 		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().projectId(UUID.randomUUID())
-				.status(WorkFlowStatus.IN_PROGRESS).build();
+				.status(workFlowStatus).build();
 		workFlowExecution.setId(UUID.randomUUID());
 		workFlowExecution.setArguments("{\"test\": \"test\"}");
 		workFlowExecution.setWorkFlowExecutionContext(WorkFlowExecutionContext.builder()
