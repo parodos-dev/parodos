@@ -16,6 +16,7 @@
 package com.redhat.parodos.workflow.definition.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.redhat.parodos.common.AbstractEntity;
 import com.redhat.parodos.workflow.definition.dto.WorkDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
@@ -130,7 +131,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 		List<WorkFlowWorkDefinition> workFlowWorkDefinitions = new ArrayList<>();
 		WorkFlowDefinition finalWorkFlowDefinition = workFlowDefinition;
 		works.forEach(work -> {
-			UUID workId;
+			UUID workId = null;
 			if (work instanceof WorkFlow) { // WorkFlow
 				// A workflow in works should already been stored
 				workId = workFlowDefinitionRepository.findFirstByName(work.getName()).getId();
@@ -163,10 +164,11 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 									.workFlowDefinition(finalWorkFlowDefinition).createDate(new Date())
 									.modifyDate(new Date()).build()))
 							.getId();
-					workFlowWorkDefinitions.add(
-							WorkFlowWorkDefinition.builder().workDefinitionId(workId).workDefinitionType(WorkType.TASK)
-									.workFlowDefinition(finalWorkFlowDefinition).createDate(new Date()).build());
 				}
+				workFlowWorkDefinitions.add(WorkFlowWorkDefinition.builder()
+						.workDefinitionId(workFlowTaskDefinitionOptional.map(AbstractEntity::getId).orElse(workId))
+						.workDefinitionType(WorkType.TASK).workFlowDefinition(finalWorkFlowDefinition)
+						.createDate(new Date()).build());
 			}
 		});
 
