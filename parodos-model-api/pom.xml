@@ -27,16 +27,9 @@
     </scm>
 
     <properties>
-        <java.version>11</java.version>
         <lombok.version>1.18.26</lombok.version>
-        <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
-        <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.framework.version>5.3.26</spring.framework.version>
         <jackson-databind.version>2.14.2</jackson-databind.version>
-        <junit.version>4.13.1</junit.version>
     </properties>
 
     <dependencies>
@@ -72,14 +65,10 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>3.19.0</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
