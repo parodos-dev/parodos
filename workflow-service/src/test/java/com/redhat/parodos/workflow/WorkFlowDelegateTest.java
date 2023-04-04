@@ -18,18 +18,15 @@ package com.redhat.parodos.workflow;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
+import com.redhat.parodos.workflow.definition.dto.WorkDefinitionResponseDTO;
+import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.workflow.enums.WorkType;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.registry.BeanWorkFlowRegistryImpl;
-import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import com.redhat.parodos.workflows.work.WorkContext;
-import com.redhat.parodos.workflows.workflow.WorkFlow;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.springframework.stereotype.Component;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.HashMap;
@@ -89,7 +86,10 @@ class WorkFlowDelegateTest {
 
 	@Test
 	void initWorkFlowContext_when_workflowParameterIsFound_thenReturn_success() {
-		WorkContext workContext = workFlowDelegate.initWorkFlowContext(workFlowRequestDTO);
+		WorkFlowDefinitionResponseDTO workFlowDefinitionResponseDTO = sampleWorkflowDefinitionResponse();
+
+		WorkContext workContext = workFlowDelegate.initWorkFlowContext(workFlowRequestDTO,
+				workFlowDefinitionResponseDTO);
 
 		assertThat(new ObjectMapper().convertValue(
 				WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
@@ -108,6 +108,16 @@ class WorkFlowDelegateTest {
 						TEST_TASK_NAME, WorkContextDelegate.Resource.ARGUMENTS),
 				new TypeReference<HashMap<String, String>>() {
 				})).containsEntry(TEST_TASK_ARG_KEY, TEST_TASK_ARG_VALUE);
+	}
+
+	private WorkFlowDefinitionResponseDTO sampleWorkflowDefinitionResponse() {
+		return WorkFlowDefinitionResponseDTO.builder().name(TEST_WORKFLOW_NAME)
+				.works(List
+						.of(WorkDefinitionResponseDTO.builder().name(TEST_SUB_WORKFLOW_NAME)
+								.workType(WorkType.WORKFLOW.name()).works(List.of(WorkDefinitionResponseDTO.builder()
+										.name(TEST_TASK_NAME).workType(WorkType.TASK.name()).build()))
+								.build()))
+				.build();
 	}
 
 }
