@@ -26,7 +26,7 @@
                 <artifactId>spring-javaformat-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>verify</phase>
+                        <phase>process-resources</phase>
                         <goals>
                             <goal>apply</goal>
                         </goals>
@@ -69,6 +69,7 @@
                 <executions>
                     <execution>
                         <id>generate-client-api-code</id>
+                        <phase>generate-sources</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>
