@@ -16,6 +16,8 @@
 package com.redhat.parodos.workflow;
 
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
+import com.redhat.parodos.workflow.definition.dto.WorkDefinitionResponseDTO;
+import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.workflow.enums.WorkType;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.registry.BeanWorkFlowRegistryImpl;
@@ -23,6 +25,9 @@ import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Provides functionality that is common to any WorkFlow composition in Parodos
@@ -41,7 +46,8 @@ public class WorkFlowDelegate {
 		this.beanWorkFlowRegistry = beanWorkFlowRegistry;
 	}
 
-	public WorkContext initWorkFlowContext(WorkFlowRequestDTO workFlowRequestDTO) {
+	public WorkContext initWorkFlowContext(WorkFlowRequestDTO workFlowRequestDTO,
+			WorkFlowDefinitionResponseDTO masterWorkFlowDefinitionDto) {
 		WorkContext workContext = new WorkContext();
 
 		if (workFlowRequestDTO.getArguments() != null && !workFlowRequestDTO.getArguments().isEmpty()) {
@@ -49,26 +55,44 @@ public class WorkFlowDelegate {
 					workFlowRequestDTO.getWorkFlowName(), WorkContextDelegate.Resource.ARGUMENTS,
 					WorkFlowDTOUtil.convertArgumentListToMap(workFlowRequestDTO.getArguments()));
 		}
-		if (workFlowRequestDTO.getWorks() != null)
-			workFlowRequestDTO.getWorks()
-					.forEach(work -> initWorkContext(workContext, work, workFlowRequestDTO.getWorkFlowName()));
+		if (masterWorkFlowDefinitionDto.getWorks() != null && !masterWorkFlowDefinitionDto.getWorks().isEmpty())
+			masterWorkFlowDefinitionDto.getWorks()
+					.forEach(work -> initWorkContext(workContext,
+							findWorkFromRequest(workFlowRequestDTO, work.getName()), work,
+							masterWorkFlowDefinitionDto.getName()));
 		return workContext;
 	}
 
 	private void initWorkContext(WorkContext workContext, WorkFlowRequestDTO.WorkRequestDTO workRequestDTO,
-			String parentWorkflowName) {
+			WorkDefinitionResponseDTO workDefinitionResponseDTO, String parentWorkflowName) {
 		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-				workRequestDTO.getWorkName(), WorkContextDelegate.Resource.PARENT_WORKFLOW, parentWorkflowName);
-		if (workRequestDTO.getArguments() != null && !workRequestDTO.getArguments().isEmpty()) {
+				workDefinitionResponseDTO.getName(), WorkContextDelegate.Resource.PARENT_WORKFLOW, parentWorkflowName);
+
+		if (workRequestDTO != null && workRequestDTO.getArguments() != null
+				&& !workRequestDTO.getArguments().isEmpty()) {
 			WorkContextDelegate.write(workContext,
-					WorkType.WORKFLOW.name().equals(workRequestDTO.getType())
+					WorkType.WORKFLOW.name().equalsIgnoreCase(workRequestDTO.getType())
 							? WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION
 							: WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
 					workRequestDTO.getWorkName(), WorkContextDelegate.Resource.ARGUMENTS,
 					WorkFlowDTOUtil.convertArgumentListToMap(workRequestDTO.getArguments()));
 		}
-		if (workRequestDTO.getWorks() != null)
-			workRequestDTO.getWorks().forEach(work -> initWorkContext(workContext, work, workRequestDTO.getWorkName()));
+		if (workDefinitionResponseDTO.getWorks() != null)
+			workDefinitionResponseDTO.getWorks().forEach(work -> initWorkContext(workContext,
+					findSubWorkFromRequest(workRequestDTO, work.getName()), work, workDefinitionResponseDTO.getName()));
+	}
+
+	private WorkFlowRequestDTO.WorkRequestDTO findWorkFromRequest(WorkFlowRequestDTO workFlowRequestDTO, String name) {
+		return Optional.ofNullable(workFlowRequestDTO)
+				.flatMap(dto -> dto.getWorks().stream().filter(work -> name.equals(work.getWorkName())).findFirst())
+				.orElse(null);
+	}
+
+	private WorkFlowRequestDTO.WorkRequestDTO findSubWorkFromRequest(WorkFlowRequestDTO.WorkRequestDTO workRequestDTO,
+			String name) {
+		return Optional.ofNullable(workRequestDTO)
+				.flatMap(dto -> dto.getWorks().stream().filter(work -> name.equals(work.getWorkName())).findFirst())
+				.orElse(null);
 	}
 
 	public WorkFlow getWorkFlowExecutionByName(String workFlowName) {
