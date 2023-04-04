@@ -15,11 +15,14 @@
  */
 package com.redhat.parodos.workflow.execution.repository;
 
-import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.List;
 import java.util.UUID;
+
+import com.redhat.parodos.workflow.enums.WorkFlowStatus;
+import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 /**
  * workflow execution repository
@@ -37,5 +40,8 @@ public interface WorkFlowRepository extends JpaRepository<WorkFlowExecution, UUI
 
 	WorkFlowExecution findFirstByMasterWorkFlowExecutionAndWorkFlowDefinitionId(
 			WorkFlowExecution masterWorkFlowExecution, UUID workFlowDefinitionId);
+
+	@Query("SELECT w FROM workflow_execution w WHERE w.status IN :statuses")
+	List<WorkFlowExecution> findByStatusIn(@Param("statuses") List<WorkFlowStatus> statuses);
 
 }
