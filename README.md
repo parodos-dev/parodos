@@ -1,5 +1,7 @@
 # What Is Parodos?
 
+
+
 Parodos is a Java toolkit to help enterprise's with a legacy footprint build internal developer platforms (IDP) that
 enable their developers to get access to the tools and environments required to start coding with less time, friction
 and frustration.
