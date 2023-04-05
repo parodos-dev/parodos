@@ -46,8 +46,8 @@ public class WorkFlowResponseDTO {
     FAILED("FAILED"),
     
     COMPLETED("COMPLETED"),
-
-    IN_PROGRESS("IN_PROGRESS");
+    
+    IN_PROGRESS("IN_PROGRESS"),
 
     REJECTED("REJECTED");
 
