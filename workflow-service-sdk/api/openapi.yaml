@@ -706,6 +706,7 @@ components:
           - COMPLETED
           - IN_PROGRESS
           - REJECTED
+          - PENDING
           type: string
       type: object
     WorkFlowStatusResponseDTO:

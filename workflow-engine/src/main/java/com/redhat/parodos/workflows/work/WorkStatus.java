@@ -48,6 +48,11 @@ public enum WorkStatus {
 	/**
 	 * The unit of work has rejected.
 	 */
-	REJECTED
+	REJECTED,
+
+	/**
+	 * The unit of work is pending checker.
+	 */
+	PENDING
 
 }
