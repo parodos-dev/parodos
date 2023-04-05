@@ -1,6 +1,7 @@
 package com.redhat.parodos.examples.ocponboarding.task;
 
 import com.redhat.parodos.examples.ocponboarding.task.dto.email.MessageRequestDTO;
+import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
@@ -43,6 +44,8 @@ public class AppLinkEmailNotificationWorkFlowTask extends BaseInfrastructureWork
 
 	private final static String TEMPLATE_NAME = "appLinkEmailNotification.ftlh";
 
+	private static final String APP_LINK = "APP_LINK";
+
 	@Override
 	public WorkReport execute(WorkContext workContext) {
 		log.info("Start AppLinkEmailNotificationWorkFlowTask...");
@@ -57,7 +60,16 @@ public class AppLinkEmailNotificationWorkFlowTask extends BaseInfrastructureWork
 
 		// fill in message data to extract from workContext
 		Map<String, Object> messageData = new HashMap<>();
-		messageData.put("appLink", "https://ocp.xyz");
+		String appLink;
+		try {
+			appLink = getRequiredParameterValue(workContext, APP_LINK);
+			messageData.put("appLink", appLink);
+			log.info("App link is: {}", appLink);
+		}
+		catch (MissingParameterException e) {
+			log.error("AppLinkEmailNotificationWorkFlowTask failed! Message: {}", e.getMessage());
+			return new DefaultWorkReport(WorkStatus.FAILED, workContext);
+		}
 
 		try {
 			// message template
