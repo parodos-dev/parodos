@@ -24,6 +24,6 @@ package com.redhat.parodos.workflow.enums;
  */
 public enum WorkFlowStatus {
 
-	FAILED, IN_PROGRESS, COMPLETED, PENDING, REJECTED,
+	FAILED, IN_PROGRESS, COMPLETED, PENDING, REJECTED
 
 }
