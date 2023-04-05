@@ -21,6 +21,7 @@ FAILED | &quot;FAILED&quot;
 COMPLETED | &quot;COMPLETED&quot;
 IN_PROGRESS | &quot;IN_PROGRESS&quot;
 REJECTED | &quot;REJECTED&quot;
+PENDING | &quot;PENDING&quot;
 
 
 
