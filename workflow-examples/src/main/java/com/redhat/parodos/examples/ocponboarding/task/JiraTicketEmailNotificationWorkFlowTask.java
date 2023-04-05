@@ -1,6 +1,7 @@
 package com.redhat.parodos.examples.ocponboarding.task;
 
 import com.redhat.parodos.examples.ocponboarding.task.dto.email.MessageRequestDTO;
+import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
@@ -23,9 +24,11 @@ import static java.util.Objects.isNull;
 @Slf4j
 public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
-	final String MAIL_SERVER_URL = "https://mail-handler-svc-ihtetft2da-uc.a.run.app/submit";
+	private static final String MAIL_SERVER_URL = "https://mail-handler-svc-ihtetft2da-uc.a.run.app/submit";
 
-	final String MAIL_SITE_NAME = "parodos-jira";
+	private static final String MAIL_SITE_NAME = "parodos-jira";
+
+	private static final String ISSUE_LINK = "ISSUE_LINK";
 
 	@Override
 	public WorkReport execute(WorkContext workContext) {
@@ -40,7 +43,15 @@ public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureW
 		String requesterEmail = "jdoe@mail.com";
 
 		// jira ticket url to extract from workContext
-		String jiraTicketUrl = "https://parodos.atlassian.net/abc-xyz";
+		String jiraTicketUrl;
+		try {
+			jiraTicketUrl = getRequiredParameterValue(workContext, ISSUE_LINK);
+			log.info("Jira ticket url is: {}", jiraTicketUrl);
+		}
+		catch (MissingParameterException e) {
+			log.error("JiraTicketEmailNotificationWorkFlowTask failed! Message: {}", e.getMessage());
+			return new DefaultWorkReport(WorkStatus.FAILED, workContext);
+		}
 
 		// message request payload
 		MessageRequestDTO messageRequestDTO = getMessageRequestDTO(requesterName, requesterEmail, MAIL_SITE_NAME,

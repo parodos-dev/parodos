@@ -179,13 +179,6 @@
             <artifactId>commons-codec</artifactId>
         </dependency>
         <!-- END CheckSum Utils Dependencies -->
-        <!-- START Freemarker Dependencies -->
-        <dependency>
-            <groupId>org.freemarker</groupId>
-            <artifactId>freemarker</artifactId>
-            <version>${freemarker.version}</version>
-        </dependency>
-        <!-- END Freemarker Dependencies -->
     </dependencies>
 
     <dependencyManagement>
