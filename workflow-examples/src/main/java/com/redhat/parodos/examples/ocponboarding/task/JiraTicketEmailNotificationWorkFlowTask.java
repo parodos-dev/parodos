@@ -48,7 +48,7 @@ public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureW
 
 	private static final String ISSUE_LINK = "ISSUE_LINK";
 
-	private final String mailServiceUrl;
+	private String mailServiceUrl;
 
 	public JiraTicketEmailNotificationWorkFlowTask(String mailServiceUrl) {
 		super();
