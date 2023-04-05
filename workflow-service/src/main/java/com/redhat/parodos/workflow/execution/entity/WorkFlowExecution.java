@@ -70,10 +70,11 @@ public class WorkFlowExecution extends AbstractEntity {
 	@JoinColumn(name = "master_workflow_execution_id")
 	private WorkFlowExecution masterWorkFlowExecution;
 
-	@OneToMany(mappedBy = "masterWorkFlowExecution", cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "masterWorkFlowExecution", cascade = { CascadeType.PERSIST, CascadeType.MERGE },
+			fetch = FetchType.LAZY)
 	private List<WorkFlowExecution> subWorkFlowExecution = new ArrayList<>();
 
-	@OneToOne(mappedBy = "masterWorkFlowExecution", cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "masterWorkFlowExecution", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private WorkFlowExecutionContext workFlowExecutionContext;
 
 }

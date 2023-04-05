@@ -48,8 +48,10 @@ public class WorkFlowResponseDTO {
     COMPLETED("COMPLETED"),
     
     IN_PROGRESS("IN_PROGRESS"),
-
-    REJECTED("REJECTED");
+    
+    REJECTED("REJECTED"),
+    
+    PENDING("PENDING");
 
 	public static final String SERIALIZED_NAME_WORK_FLOW_OPTIONS = "workFlowOptions";
 

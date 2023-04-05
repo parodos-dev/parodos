@@ -83,9 +83,8 @@ class WorkFlowExecutionAspectTest {
 				workFlowRepository, workFlowSchedulerService, workFlowContinuationService);
 		WorkFlow workflow = Mockito.mock(WorkFlow.class);
 		WorkFlowDelegate workFlowDelegate = Mockito.mock(WorkFlowDelegate.class);
-		// TODO: fix to align with main
-		this.workFlowExecutionAspect = new WorkFlowExecutionAspect(this.workFlowService, this.workFlowSchedulerService,
-				this.workFlowDefinitionRepository, this.workFlowRepository, this.workFlowContinuationService);
+		this.workFlowExecutionAspect = new WorkFlowExecutionAspect(this.workFlowSchedulerService,
+				this.workFlowDefinitionRepository, workFlowExecutionFactory);
 		Mockito.when(workFlowDelegate.getWorkFlowExecutionByName(Mockito.any()))
 				.thenReturn(Mockito.mock(WorkFlow.class));
 		Mockito.when(workflow.getName()).thenReturn(TEST);
