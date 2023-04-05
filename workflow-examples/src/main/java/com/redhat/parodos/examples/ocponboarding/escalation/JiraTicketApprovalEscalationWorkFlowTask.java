@@ -1,6 +1,26 @@
+
+/*
+ * Copyright (c) 2022 Red Hat Developer
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.redhat.parodos.examples.ocponboarding.escalation;
 
+import static java.util.Objects.isNull;
+
 import com.redhat.parodos.examples.ocponboarding.task.dto.email.MessageRequestDTO;
+import com.redhat.parodos.examples.utils.RestUtils;
+import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
@@ -8,29 +28,31 @@ import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
-
-import static java.util.Objects.isNull;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 
 @Slf4j
 public class JiraTicketApprovalEscalationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
-	final String MAIL_SERVER_URL = "https://mail-handler-svc-ihtetft2da-uc.a.run.app/submit";
+	private static final String MAIL_RECIPIENT_SITE_NAME = "parodos-escalation";
 
-	final String SITE_NAME = "parodos-escalation";
+	private static final String ISSUE_LINK = "ISSUE_LINK";
+
+	private final String mailServiceUrl;
+
+	public JiraTicketApprovalEscalationWorkFlowTask(String mailServiceUrl) {
+		super();
+		this.mailServiceUrl = mailServiceUrl;
+	}
 
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		log.info("Start JiraTicketApprovalEscalationWorkFlowTask...");
-		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<String> responseEntity = null;
+		log.info("Start jiraTicketApprovalEscalationWorkFlowTask...");
 
 		// requester name to extract securityContext or from workContext
 		String requesterName = "John Doe";
@@ -39,15 +61,27 @@ public class JiraTicketApprovalEscalationWorkFlowTask extends BaseInfrastructure
 		String requesterEmail = "jdoe@mail.com";
 
 		// jira ticket url to extract from workContext
-		String jiraTicketUrl = "https://parodos.atlassian.net/abc-xyz";
+		String jiraTicketUrl;
+		try {
+			jiraTicketUrl = getRequiredParameterValue(workContext, ISSUE_LINK);
+			log.info("Jira ticket url is: {}", jiraTicketUrl);
+		}
+		catch (MissingParameterException e) {
+			log.error("JiraTicketApprovalEscalationWorkFlowTask failed! Message: {}", e.getMessage());
+			return new DefaultWorkReport(WorkStatus.FAILED, workContext);
+		}
 
 		// message request payload
-		MessageRequestDTO messageRequestDTO = getMessageRequestDTO(requesterName, requesterEmail, SITE_NAME,
-				getMessage(jiraTicketUrl));
+		MessageRequestDTO messageRequestDTO = new MessageRequestDTO(requesterName, requesterEmail,
+				MAIL_RECIPIENT_SITE_NAME, getMessage(jiraTicketUrl));
 
+		ResponseEntity<String> responseEntity = null;
 		try {
-			HttpEntity<MessageRequestDTO> request = new HttpEntity<>(messageRequestDTO);
-			responseEntity = restTemplate.exchange(MAIL_SERVER_URL, HttpMethod.POST, request, String.class);
+			HttpEntity<MessageRequestDTO> requestEntity = new HttpEntity<>(messageRequestDTO);
+			LocalDateTime startDateTime = LocalDateTime.now();
+			responseEntity = RestUtils.executePost(mailServiceUrl, requestEntity);
+			log.info("Request duration: {} ms", ChronoUnit.MILLIS.between(startDateTime, LocalDateTime.now()));
+
 		}
 		catch (Exception e) {
 			log.error("Error occurred when submitting message: {}", e.getMessage());
@@ -70,16 +104,6 @@ public class JiraTicketApprovalEscalationWorkFlowTask extends BaseInfrastructure
 	@Override
 	public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
 		return List.of(WorkFlowTaskOutput.OTHER, WorkFlowTaskOutput.EXCEPTION);
-	}
-
-	private MessageRequestDTO getMessageRequestDTO(String requesterName, String requesterEmail, String siteName,
-			String message) {
-		MessageRequestDTO messageRequestDTO = new MessageRequestDTO();
-		messageRequestDTO.setName(requesterName);
-		messageRequestDTO.setEmail(requesterEmail);
-		messageRequestDTO.setSiteName(siteName);
-		messageRequestDTO.setMessage(message);
-		return messageRequestDTO;
 	}
 
 	private String getMessage(String jiraTicketUrl) {
