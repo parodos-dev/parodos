@@ -37,7 +37,8 @@ public class AbstractEntity {
 	@Column(columnDefinition = "uuid")
 	private UUID id;
 
-	@Version
+	// TODO: disabled temporarily as optimistic locking issue
+	// @Version
 	@JsonIgnore
 	private Long objectVersion;
 

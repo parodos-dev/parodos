@@ -51,6 +51,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 
@@ -132,8 +133,8 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	}
 
 	@Override
-	public synchronized WorkFlowExecution saveWorkFlow(UUID projectId, UUID workFlowDefinitionId,
-			WorkFlowStatus workFlowStatus, WorkFlowExecution masterWorkFlowExecution, String arguments) {
+	public WorkFlowExecution saveWorkFlow(UUID projectId, UUID workFlowDefinitionId, WorkFlowStatus workFlowStatus,
+			WorkFlowExecution masterWorkFlowExecution, String arguments) {
 		try {
 			return workFlowRepository.save(WorkFlowExecution.builder().workFlowDefinitionId(workFlowDefinitionId)
 					.projectId(projectId).status(workFlowStatus).startDate(new Date()).arguments(arguments)
@@ -147,7 +148,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	}
 
 	@Override
-	public synchronized WorkFlowExecution updateWorkFlow(WorkFlowExecution workFlowExecution) {
+	public WorkFlowExecution updateWorkFlow(WorkFlowExecution workFlowExecution) {
 		return workFlowRepository.save(workFlowExecution);
 	}
 
@@ -188,7 +189,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	}
 
 	@Override
-	public synchronized WorkFlowTaskExecution saveWorkFlowTask(String arguments, UUID workFlowTaskDefinitionId,
+	public WorkFlowTaskExecution saveWorkFlowTask(String arguments, UUID workFlowTaskDefinitionId,
 			UUID workFlowExecutionId, WorkFlowTaskStatus workFlowTaskStatus) {
 		try {
 			return workFlowTaskRepository.save(WorkFlowTaskExecution.builder().workFlowExecutionId(workFlowExecutionId)
@@ -250,6 +251,11 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		// update workflow checker task status
 		workFlowTaskExecution.setStatus(workFlowTaskStatus);
 		workFlowTaskRepository.save(workFlowTaskExecution);
+	}
+
+	public List<WorkFlowExecution> findRunningChecker(WorkFlowExecution masterWorkflow) {
+		return workFlowRepository.findCheckers(masterWorkflow.getId()).stream()
+				.filter(checker -> checker.getStatus().equals(WorkFlowStatus.FAILED)).collect(Collectors.toList());
 	}
 
 	private String validateWorkflow(String workflowName, WorkFlow workFlow) {

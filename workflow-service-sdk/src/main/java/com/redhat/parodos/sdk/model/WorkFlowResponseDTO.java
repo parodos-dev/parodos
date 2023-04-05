@@ -50,7 +50,9 @@ public class WorkFlowResponseDTO {
     
     IN_PROGRESS("IN_PROGRESS"),
     
-    REJECTED("REJECTED");
+    REJECTED("REJECTED"),
+    
+    PENDING("PENDING");
 
     private String value;
 
