@@ -13,6 +13,8 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.UUID;
+
 @Slf4j
 public class CheckerWorkFlowPostInterceptor implements WorkFlowPostInterceptor {
 
@@ -67,13 +69,15 @@ public class CheckerWorkFlowPostInterceptor implements WorkFlowPostInterceptor {
 		if (workStatus != WorkStatus.COMPLETED) {
 			log.info("Schedule workflow checker: {} to run per cron expression: {}", workFlow.getName(),
 					workFlowCheckerMappingDefinition.getCronExpression());
-			workFlowSchedulerService.schedule(workFlow, workContext,
+			// TODO: fix correct projectId
+			workFlowSchedulerService.schedule(UUID.randomUUID().toString(), workFlow, workContext,
 					workFlowCheckerMappingDefinition.getCronExpression());
 			return;
 		}
 
 		log.info("Stop workflow checker: {} schedule", workFlow.getName());
-		workFlowSchedulerService.stop(workFlow);
+		// TODO: fix correct projectId
+		workFlowSchedulerService.stop(UUID.randomUUID().toString(), workFlow);
 
 		String masterWorkFlowName = WorkContextDelegate.read(workContext,
 				WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION, WorkContextDelegate.Resource.NAME).toString();

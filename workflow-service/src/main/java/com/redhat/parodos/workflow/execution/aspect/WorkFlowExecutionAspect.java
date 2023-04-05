@@ -73,9 +73,9 @@ public class WorkFlowExecutionAspect {
 	private final WorkFlowContinuationServiceImpl workFlowContinuationServiceImpl;
 
 	public WorkFlowExecutionAspect(WorkFlowServiceImpl workFlowService,
-								   WorkFlowSchedulerServiceImpl workFlowSchedulerService,
-								   WorkFlowDefinitionRepository workFlowDefinitionRepository, WorkFlowRepository workFlowRepository,
-								   WorkFlowContinuationServiceImpl workFlowContinuationServiceImpl) {
+			WorkFlowSchedulerServiceImpl workFlowSchedulerService,
+			WorkFlowDefinitionRepository workFlowDefinitionRepository, WorkFlowRepository workFlowRepository,
+			WorkFlowContinuationServiceImpl workFlowContinuationServiceImpl) {
 		this.workFlowService = workFlowService;
 		this.workFlowSchedulerService = workFlowSchedulerService;
 		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
@@ -122,7 +122,7 @@ public class WorkFlowExecutionAspect {
 		// get master WorkFlowExecution, this is the first time execution for master
 		// workflow if return null
 		UUID masterWorkFlowExecutionId = Optional.ofNullable(WorkContextDelegate.read(workContext,
-						WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ID))
+				WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ID))
 				.map(id -> UUID.fromString(id.toString())).orElse(null);
 
 		if (masterWorkFlowExecutionId == null) {
@@ -138,10 +138,10 @@ public class WorkFlowExecutionAspect {
 			WorkFlowExecution finalMasterWorkFlowExecution = masterWorkFlowExecution;
 			workFlowExecution = isMaster ? masterWorkFlowExecution
 					: Optional
-					.ofNullable(workFlowRepository.findFirstByWorkFlowDefinitionIdAndMasterWorkFlowExecution(
-							workFlowDefinition.getId(), masterWorkFlowExecution))
-					.orElseGet(() -> this.workFlowService.saveWorkFlow(projectId, workFlowDefinition.getId(),
-							WorkFlowStatus.IN_PROGRESS, finalMasterWorkFlowExecution, arguments));
+							.ofNullable(workFlowRepository.findFirstByWorkFlowDefinitionIdAndMasterWorkFlowExecution(
+									workFlowDefinition.getId(), masterWorkFlowExecution))
+							.orElseGet(() -> this.workFlowService.saveWorkFlow(projectId, workFlowDefinition.getId(),
+									WorkFlowStatus.IN_PROGRESS, finalMasterWorkFlowExecution, arguments));
 
 			if (workFlowExecution.getStatus().equals(WorkFlowStatus.COMPLETED)) {
 				// skip the workflow if it is already successful
@@ -172,7 +172,7 @@ public class WorkFlowExecutionAspect {
 	}
 
 	private WorkFlowExecution handleFirstTimeMainWorkFlowExecution(UUID projectId,
-																   WorkFlowDefinition workFlowDefinition, String arguments, WorkContext workContext) {
+			WorkFlowDefinition workFlowDefinition, String arguments, WorkContext workContext) {
 
 		/*
 		 * if this is the first time execution for master workflow, persist it and write
@@ -186,8 +186,8 @@ public class WorkFlowExecutionAspect {
 	}
 
 	private WorkReport postExecution(boolean isMaster, WorkFlowDefinition workFlowDefinition, WorkFlow workFlow,
-									 WorkStatus workStatus, WorkContext workContext, WorkFlowExecution workFlowExecution,
-									 WorkFlowExecution masterWorkFlowExecution) {
+			WorkStatus workStatus, WorkContext workContext, WorkFlowExecution workFlowExecution,
+			WorkFlowExecution masterWorkFlowExecution) {
 		WorkReport workReport = null;
 		switch (workFlowDefinition.getType()) {
 			case INFRASTRUCTURE:
@@ -208,7 +208,7 @@ public class WorkFlowExecutionAspect {
 	}
 
 	private WorkReport handlePostWorkflowExecution(boolean isMaster, WorkFlowExecution workFlowExecution,
-												   WorkContext workContext, WorkFlowDefinition workFlowDefinition, WorkFlowExecution masterWorkFlowExecution) {
+			WorkContext workContext, WorkFlowDefinition workFlowDefinition, WorkFlowExecution masterWorkFlowExecution) {
 		WorkReport report = null;
 		if (isMaster) {
 			workFlowExecution.setWorkFlowExecutionContext(Optional
@@ -243,8 +243,8 @@ public class WorkFlowExecutionAspect {
 	}
 
 	public void handlePostCheckerExecution(WorkFlowDefinition workFlowDefinition, WorkFlow workFlow,
-										   WorkFlowExecution workFlowExecution, WorkStatus workStatus, WorkContext workContext,
-										   WorkFlowExecution masterWorkFlowExecution) {
+			WorkFlowExecution workFlowExecution, WorkStatus workStatus, WorkContext workContext,
+			WorkFlowExecution masterWorkFlowExecution) {
 		/*
 		 * if this workflow is a checker, schedule workflow checker for dynamic run on
 		 * cron expression or stop if done
