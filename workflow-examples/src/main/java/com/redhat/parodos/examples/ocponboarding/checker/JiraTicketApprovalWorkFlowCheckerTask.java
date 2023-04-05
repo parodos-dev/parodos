@@ -23,13 +23,12 @@ import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import lombok.extern.slf4j.Slf4j;
-import com.redhat.parodos.examples.ocponboarding.dto.GetJiraTicketResponseDto;
-import com.redhat.parodos.examples.ocponboarding.dto.GetJiraTicketResponseValue;
-import com.redhat.parodos.examples.ocponboarding.dto.JiraApprovalStatus;
-import org.springframework.http.ResponseEntity;
-
+import com.redhat.parodos.examples.ocponboarding.task.dto.jira.GetJiraTicketResponseDto;
+import com.redhat.parodos.examples.ocponboarding.task.dto.jira.GetJiraTicketResponseValue;
+import com.redhat.parodos.examples.ocponboarding.task.dto.jira.JiraApprovalStatus;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 
 /**
  * An example of a task that calls a Jira Endpoint with a BasicAuth Header
@@ -64,7 +63,7 @@ public class JiraTicketApprovalWorkFlowCheckerTask extends BaseWorkFlowCheckerTa
 	 */
 	@Override
 	public WorkReport checkWorkFlowStatus(WorkContext workContext) {
-		log.info("JiraTicketApprovalWorkFlowCheckerTask");
+		log.info("Start jiraTicketApprovalWorkFlowCheckerTask...");
 		try {
 			String urlString = url + "/rest/servicedeskapi/request/";
 			String issueKey = getRequiredParameterValue(workContext, ISSUE_KEY);

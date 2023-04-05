@@ -3,13 +3,10 @@ package com.redhat.parodos.examples.utils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-
 import java.net.URI;
 import java.util.Base64;
-import java.util.Collections;
 
 /**
  * RestUtils is a utility class. All its methods must be declared as static so they can't
@@ -37,10 +34,22 @@ public final class RestUtils {
 		return restTemplate.postForEntity(urlString, payload, String.class);
 	}
 
+	/**
+	 * Create a new resource by POSTing the given requestEntity to the URL, and returns
+	 * the response as String.
+	 * @see org.springframework.web.client.RestTemplate#postForEntity(URI, Object, Class)
+	 * @param urlString the URL
+	 * @param requestEntity object to post
+	 * @return the response as string
+	 */
+	public static ResponseEntity<String> executePost(String urlString, HttpEntity<?> requestEntity) {
+		RestTemplate restTemplate = new RestTemplate();
+		return restTemplate.exchange(urlString, HttpMethod.POST, requestEntity, String.class);
+	}
+
 	public static <T, E> ResponseEntity<E> executePost(String urlString, T requestDto, String username, String password,
 			Class<E> responseType) {
 		HttpEntity<T> request = getRequestWithHeaders(requestDto, username, password);
-
 		RestTemplate restTemplate = new RestTemplate();
 		return restTemplate.postForEntity(urlString, request, responseType);
 	}
