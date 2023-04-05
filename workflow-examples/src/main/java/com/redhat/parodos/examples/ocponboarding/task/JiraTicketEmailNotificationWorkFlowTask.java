@@ -1,6 +1,24 @@
+/*
+ * Copyright (c) 2022 Red Hat Developer
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.redhat.parodos.examples.ocponboarding.task;
 
+import static java.util.Objects.isNull;
+
 import com.redhat.parodos.examples.ocponboarding.task.dto.email.MessageRequestDTO;
+import com.redhat.parodos.examples.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
@@ -9,32 +27,37 @@ import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
-import static java.util.Objects.isNull;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
+
+/**
+ * An example of a task that send a Jira ticket email notification
+ *
+ * @author Annel Ketch (Github: anludke)
+ */
 
 @Slf4j
 public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
-	private static final String MAIL_SERVER_URL = "https://mail-handler-svc-ihtetft2da-uc.a.run.app/submit";
-
-	private static final String MAIL_SITE_NAME = "parodos-jira";
+	private static final String MAIL_RECIPIENT_SITE_NAME = "parodos-jira";
 
 	private static final String ISSUE_LINK = "ISSUE_LINK";
 
+	private final String mailServiceUrl;
+
+	public JiraTicketEmailNotificationWorkFlowTask(String mailServiceUrl) {
+		super();
+		this.mailServiceUrl = mailServiceUrl;
+	}
+
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		log.info("Start JiraTicketEmailNotificationWorkFlowTask...");
-		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<String> responseEntity = null;
+		log.info("Start jiraTicketEmailNotificationWorkFlowTask...");
 
 		// requester name to extract securityContext or from workContext
 		String requesterName = "John Doe";
@@ -54,13 +77,14 @@ public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureW
 		}
 
 		// message request payload
-		MessageRequestDTO messageRequestDTO = getMessageRequestDTO(requesterName, requesterEmail, MAIL_SITE_NAME,
-				getMessage(jiraTicketUrl));
+		MessageRequestDTO messageRequestDTO = new MessageRequestDTO(requesterName, requesterEmail,
+				MAIL_RECIPIENT_SITE_NAME, getMessage(jiraTicketUrl));
 
+		ResponseEntity<String> responseEntity = null;
 		try {
-			HttpEntity<MessageRequestDTO> request = new HttpEntity<>(messageRequestDTO);
+			HttpEntity<MessageRequestDTO> requestEntity = new HttpEntity<>(messageRequestDTO);
 			LocalDateTime startDateTime = LocalDateTime.now();
-			responseEntity = restTemplate.exchange(MAIL_SERVER_URL, HttpMethod.POST, request, String.class);
+			responseEntity = RestUtils.executePost(mailServiceUrl, requestEntity);
 			log.info("Request duration: {} ms", ChronoUnit.MILLIS.between(startDateTime, LocalDateTime.now()));
 		}
 		catch (Exception e) {
@@ -73,7 +97,9 @@ public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureW
 			log.info("JiraTicketEmailNotificationWorkFlowTask completed!");
 			return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 		}
+
 		log.info("JiraTicketEmailNotificationWorkFlowTask failed!");
+		;
 		return new DefaultWorkReport(WorkStatus.FAILED, workContext);
 	}
 
@@ -84,17 +110,7 @@ public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureW
 
 	@Override
 	public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
-		return List.of(WorkFlowTaskOutput.OTHER, WorkFlowTaskOutput.EXCEPTION);
-	}
-
-	private MessageRequestDTO getMessageRequestDTO(String requesterName, String requesterEmail, String siteName,
-			String message) {
-		MessageRequestDTO messageRequestDTO = new MessageRequestDTO();
-		messageRequestDTO.setName(requesterName);
-		messageRequestDTO.setEmail(requesterEmail);
-		messageRequestDTO.setSiteName(siteName);
-		messageRequestDTO.setMessage(message);
-		return messageRequestDTO;
+		return List.of(WorkFlowTaskOutput.EXCEPTION, WorkFlowTaskOutput.OTHER);
 	}
 
 	private String getMessage(String jiraTicketUrl) {
