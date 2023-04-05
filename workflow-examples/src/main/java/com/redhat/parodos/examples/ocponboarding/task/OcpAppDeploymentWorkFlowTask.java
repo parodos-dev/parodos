@@ -29,12 +29,18 @@ import java.util.Collections;
 @Slf4j
 public class OcpAppDeploymentWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
-	public static final String OPENSHIFT_NGINX = "twalter/openshift-nginx";
-	public static final int CONTAINER_PORT = 8081;
-	public static final String DEMO_PORT = "demo-port";
-	public static final String APP_LINK = "APP_LINK";
-	public static final String NGINX = "nginx";
+	private static final String OPENSHIFT_NGINX = "twalter/openshift-nginx";
+
+	private static final int CONTAINER_PORT = 8081;
+
+	private static final String DEMO_PORT = "demo-port";
+
+	private static final String APP_LINK = "APP_LINK";
+
+	private static final String NGINX = "nginx";
+
 	private static final String NAMESPACE = "NAMESPACE";
+
 	private static final String CLUSTER_TOKEN = "CLUSTER_TOKEN";
 
 	private final String clusterApiUrl;
@@ -46,7 +52,8 @@ public class OcpAppDeploymentWorkFlowTask extends BaseInfrastructureWorkFlowTask
 	@Override
 	public WorkReport execute(WorkContext workContext) {
 		try {
-			String namespace = getRequiredParameterValue(workContext, NAMESPACE);
+			// String namespace = getRequiredParameterValue(workContext, NAMESPACE);
+			String namespace = getOptionalParameterValue(workContext, NAMESPACE, "demo");
 			String clusterToken = getRequiredParameterValue(workContext, CLUSTER_TOKEN);
 			Config config = new ConfigBuilder().withMasterUrl(clusterApiUrl).withOauthToken(clusterToken).build();
 			try (KubernetesClient kclient = new KubernetesClientBuilder().withConfig(config).build()) {

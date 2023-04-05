@@ -34,7 +34,7 @@ public class OcpOnboardingWorkFlowConfiguration {
 	@Checker(cronExpression = "*/5 * * * * ?")
 	WorkFlow jiraTicketApprovalWorkFlowChecker(
 			@Qualifier("jiraTicketApprovalWorkFlowCheckerTask") JiraTicketApprovalWorkFlowCheckerTask jiraTicketApprovalWorkFlowCheckerTask) {
-		return SequentialFlow.Builder.aNewSequentialFlow().named("jiraTicketApprovalWorkFlowCheckerTask")
+		return SequentialFlow.Builder.aNewSequentialFlow().named("jiraTicketApprovalWorkFlowChecker")
 				.execute(jiraTicketApprovalWorkFlowCheckerTask).build();
 	}
 
