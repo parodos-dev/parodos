@@ -167,7 +167,7 @@ class WorkFlowDefinitionServiceImplTest {
 		assertNotNull(workFlowDefinitionResponseDTO.getId());
 		assertEquals(workFlowDefinitionResponseDTO.getName(), workFlowName);
 
-		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).save(workFlowDefinition);
+		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(2)).save(workFlowDefinition);
 		Mockito.verify(this.workFlowTaskDefinitionRepository, Mockito.never()).save(any());
 	}
 
