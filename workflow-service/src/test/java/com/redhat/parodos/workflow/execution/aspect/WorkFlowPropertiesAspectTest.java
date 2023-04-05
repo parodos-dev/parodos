@@ -52,7 +52,6 @@ class WorkFlowPropertiesAspectTest {
 		WorkFlowPropertiesAspect aspect = new WorkFlowPropertiesAspect();
 		aspect.env = env;
 
-
 		assertDoesNotThrow(() -> {
 			Object result = aspect.setProperitesForWorkflow(workflow, properties);
 			assertNotNull(result);
@@ -64,7 +63,6 @@ class WorkFlowPropertiesAspectTest {
 		assertEquals(argument.getValue().getVersion(), "1.0.0");
 		Mockito.verify(env, Mockito.times(1)).resolvePlaceholders("${git.commit.id}");
 	}
-
 
 	@Test
 	public void testWorkFlowPropertiesAspectWithNoValidData() {
