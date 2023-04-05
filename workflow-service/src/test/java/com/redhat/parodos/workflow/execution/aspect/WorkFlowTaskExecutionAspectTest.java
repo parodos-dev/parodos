@@ -194,7 +194,7 @@ class WorkFlowTaskExecutionAspectTest {
 		return new WorkFlowTaskExecution() {
 			{
 				setId(UUID.randomUUID());
-				setStatus(WorkFlowTaskStatus.PENDING);
+				setStatus(WorkFlowTaskStatus.FAILED);
 				setWorkFlowExecutionId(getSampleWorkFlowExecution().getId());
 				setWorkFlowTaskDefinitionId(getSampleWorkFlowTaskDefinition(TEST_TASK).getId());
 			}
