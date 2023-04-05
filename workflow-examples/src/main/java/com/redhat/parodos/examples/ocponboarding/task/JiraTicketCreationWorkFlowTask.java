@@ -44,6 +44,10 @@ public class JiraTicketCreationWorkFlowTask extends BaseInfrastructureWorkFlowTa
 
 	private static final String ISSUE_KEY = "ISSUE_KEY";
 
+	private static final String ISSUE_LINK = "ISSUE_LINK";
+
+	private static final String WEB_LINK = "web";
+
 	private final String url;
 
 	private final String username;
@@ -86,6 +90,8 @@ public class JiraTicketCreationWorkFlowTask extends BaseInfrastructureWorkFlowTa
 			if (response.getStatusCode().is2xxSuccessful()) {
 				log.info("Rest call completed: {}", Objects.requireNonNull(response.getBody()).getIssueId());
 				addParameter(workContext, ISSUE_KEY, Objects.requireNonNull(response.getBody()).getIssueKey());
+				addParameter(workContext, ISSUE_LINK,
+						Objects.requireNonNull(response.getBody()).getLinks().get(WEB_LINK));
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 			}
 			log.error("Call to the API was not successful. Response: {}", response.getStatusCode());
