@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -79,6 +80,16 @@ public class WorkFlowDefinitionResponseDTO {
 			return this;
 		}
 
+	}
+
+	public static WorkFlowDefinitionResponseDTO fromEntity(WorkFlowDefinition workFlowDefinition,
+			List<WorkDefinitionResponseDTO> works) {
+		return WorkFlowDefinitionResponseDTO.builder().id(workFlowDefinition.getId()).name(workFlowDefinition.getName())
+				.properties(WorkFlowPropertiesDefinitionDTO.fromEntity(workFlowDefinition.getProperties()))
+				.parameterFromString(workFlowDefinition.getParameters()).author(workFlowDefinition.getAuthor())
+				.createDate(workFlowDefinition.getCreateDate()).modifyDate(workFlowDefinition.getModifyDate())
+				.type(workFlowDefinition.getType().toString()).processingType(workFlowDefinition.getProcessingType())
+				.works(works).build();
 	}
 
 }
