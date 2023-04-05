@@ -25,11 +25,11 @@ public class MessageRequestDTO {
 
 	private String siteName;
 
-	public MessageRequestDTO(String name, String email, String message, String siteName) {
+	public MessageRequestDTO(String name, String email, String siteName, String message) {
 		this.name = name;
 		this.email = email;
-		this.message = message;
 		this.siteName = siteName;
+		this.message = message;
 	}
 
 	public String getName() {
@@ -48,20 +48,20 @@ public class MessageRequestDTO {
 		this.email = email;
 	}
 
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
 	public String getSiteName() {
 		return siteName;
 	}
 
 	public void setSiteName(String siteName) {
 		this.siteName = siteName;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
 }

@@ -55,10 +55,10 @@ public class JiraTicketApprovalEscalationWorkFlowTask extends BaseInfrastructure
 		log.info("Start jiraTicketApprovalEscalationWorkFlowTask...");
 
 		// requester name to extract securityContext or from workContext
-		String requesterName = "John Doe";
+		String requesterName = "Test Test";
 
 		// requester email to extract securityContext or from workContext
-		String requesterEmail = "jdoe@mail.com";
+		String requesterEmail = "ttest@test.com";
 
 		// jira ticket url to extract from workContext
 		String jiraTicketUrl;

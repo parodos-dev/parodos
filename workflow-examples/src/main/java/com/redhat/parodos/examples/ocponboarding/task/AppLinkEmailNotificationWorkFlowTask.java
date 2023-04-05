@@ -73,10 +73,10 @@ public class AppLinkEmailNotificationWorkFlowTask extends BaseInfrastructureWork
 		log.info("Start appLinkEmailNotificationWorkFlowTask...");
 
 		// requester name to extract securityContext or from workContext
-		String requesterName = "John Doe";
+		String requesterName = "Test Test";
 
 		// requester email to extract securityContext or from workContext
-		String requesterEmail = "jdoe@mail.com";
+		String requesterEmail = "ttest@test.com";
 
 		// fill in message data to extract from workContext
 		Map<String, Object> messageData = new HashMap<>();
