@@ -13,23 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.examples.ocponboarding.task.dto.email;
+package com.redhat.parodos.examples.ocponboarding.task.dto.jira;
 
-public class MessageRequestDTO {
+import lombok.Builder;
+import lombok.Data;
 
-	private String name;
+@Builder
+@Data
+public class CreateJiraTicketRequestDto {
 
-	private String email;
+	private String serviceDeskId;
 
-	private String message;
+	private String requestTypeId;
 
-	private String siteName;
-
-	public MessageRequestDTO(String name, String email, String message, String siteName) {
-		this.name = name;
-		this.email = email;
-		this.message = message;
-		this.siteName = siteName;
-	}
+	private RequestFieldValues requestFieldValues;
 
 }

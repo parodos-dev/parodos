@@ -13,23 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.examples.ocponboarding.task.dto.email;
+package com.redhat.parodos.examples.ocponboarding.task.dto.jira;
 
-public class MessageRequestDTO {
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-	private String name;
+import java.util.List;
+import java.util.Map;
 
-	private String email;
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class GetJiraTicketResponseDto {
 
-	private String message;
+	private String issueId;
 
-	private String siteName;
+	private String issueKey;
 
-	public MessageRequestDTO(String name, String email, String message, String siteName) {
-		this.name = name;
-		this.email = email;
-		this.message = message;
-		this.siteName = siteName;
-	}
+	private List<GetJiraTicketResponseValue> requestFieldValues;
+
+	private JiraStatus currentStatus;
+
+	@JsonProperty("_links")
+	private Map<String, String> links;
 
 }

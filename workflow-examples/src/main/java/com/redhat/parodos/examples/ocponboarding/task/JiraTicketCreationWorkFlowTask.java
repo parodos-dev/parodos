@@ -22,14 +22,13 @@ import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import lombok.extern.slf4j.Slf4j;
-import com.redhat.parodos.examples.ocponboarding.dto.CreateJiraTicketRequestDto;
-import com.redhat.parodos.examples.ocponboarding.dto.RequestFieldValues;
-import com.redhat.parodos.examples.ocponboarding.dto.CreateJiraTicketResponseDto;
-import org.springframework.http.ResponseEntity;
-
+import com.redhat.parodos.examples.ocponboarding.task.dto.jira.CreateJiraTicketRequestDto;
+import com.redhat.parodos.examples.ocponboarding.task.dto.jira.RequestFieldValues;
+import com.redhat.parodos.examples.ocponboarding.task.dto.jira.CreateJiraTicketResponseDto;
 import java.util.List;
 import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 
 /**
  * An example of a task that calls a Jira Endpoint with a BasicAuth Header
@@ -68,6 +67,7 @@ public class JiraTicketCreationWorkFlowTask extends BaseInfrastructureWorkFlowTa
 	 * Executed by the InfrastructureTask engine as part of the Workflow
 	 */
 	public WorkReport execute(WorkContext workContext) {
+		log.info("Start jiraTicketCreationWorkFlowTask...");
 		try {
 			String urlString = url + "/rest/servicedeskapi/request";
 			String serviceDeskId = "1";
