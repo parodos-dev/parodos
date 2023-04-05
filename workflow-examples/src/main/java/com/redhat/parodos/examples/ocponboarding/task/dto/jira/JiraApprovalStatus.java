@@ -13,23 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.examples.ocponboarding.task.dto.email;
+package com.redhat.parodos.examples.ocponboarding.task.dto.jira;
 
-public class MessageRequestDTO {
+public enum JiraApprovalStatus {
 
-	private String name;
-
-	private String email;
-
-	private String message;
-
-	private String siteName;
-
-	public MessageRequestDTO(String name, String email, String message, String siteName) {
-		this.name = name;
-		this.email = email;
-		this.message = message;
-		this.siteName = siteName;
-	}
+	DONE, DECLINED
 
 }
