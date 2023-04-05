@@ -60,10 +60,10 @@ public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureW
 		log.info("Start jiraTicketEmailNotificationWorkFlowTask...");
 
 		// requester name to extract securityContext or from workContext
-		String requesterName = "John Doe";
+		String requesterName = "Test Test";
 
 		// requester email to extract securityContext or from workContext
-		String requesterEmail = "jdoe@mail.com";
+		String requesterEmail = "ttest@test.com";
 
 		// jira ticket url to extract from workContext
 		String jiraTicketUrl;
@@ -99,7 +99,6 @@ public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureW
 		}
 
 		log.info("JiraTicketEmailNotificationWorkFlowTask failed!");
-		;
 		return new DefaultWorkReport(WorkStatus.FAILED, workContext);
 	}
 
