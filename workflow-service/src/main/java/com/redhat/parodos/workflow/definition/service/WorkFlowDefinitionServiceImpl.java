@@ -106,30 +106,26 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 				.writeObjectValueAsString(convertWorkFlowParameters(workFlowParameters));
 
 		// set and save workflow definition
-		WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository.findFirstByName(workFlowName);
 		WorkFlowPropertiesDefinition propertiesDefinition = WorkFlowPropertiesDefinition.builder().build();
 		if (properties != null) {
 			propertiesDefinition.setVersion(properties.getVersion());
 		}
 
-		if (workFlowDefinition == null || !(Objects.equals(works.size(), workFlowDefinition.getNumberOfWorks())
-				&& Objects.equals(workFlowType, workFlowDefinition.getType())
-				&& Objects.equals(stringifyParameters, workFlowDefinition.getParameters())
-				&& Objects.equals(workFlowProcessingType.name(), workFlowDefinition.getProcessingType()))) {
-			// update the workflow if its properties changed
-			workFlowDefinition = workFlowDefinitionRepository
-					.save(Optional.ofNullable(workFlowDefinition).map(foundWorkflowDefinition -> {
-						foundWorkflowDefinition.setType(workFlowType);
-						foundWorkflowDefinition.setParameters(stringifyParameters);
-						foundWorkflowDefinition.setModifyDate(new Date());
-						foundWorkflowDefinition.setProperties(propertiesDefinition);
-						foundWorkflowDefinition.setProcessingType(workFlowProcessingType.name());
-						foundWorkflowDefinition.setNumberOfWorks(works.size());
-						return foundWorkflowDefinition;
-					}).orElse(WorkFlowDefinition.builder().name(workFlowName).type(workFlowType).createDate(new Date())
-							.parameters(stringifyParameters).modifyDate(new Date()).properties(propertiesDefinition)
-							.numberOfWorks(works.size()).processingType(workFlowProcessingType.name()).build()));
+		WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository.findFirstByName(workFlowName);
+		if (workFlowDefinition == null) {
+			// It's not created, so we created the minimal entity to update it
+			workFlowDefinition = WorkFlowDefinition.builder().name(workFlowName).createDate(new Date()).build();
 		}
+
+		workFlowDefinition.setType(workFlowType);
+		workFlowDefinition.setParameters(stringifyParameters);
+		workFlowDefinition.setModifyDate(new Date());
+		workFlowDefinition.setProperties(propertiesDefinition);
+		workFlowDefinition.setProcessingType(workFlowProcessingType.name());
+		workFlowDefinition.setNumberOfWorks(works.size());
+
+		workFlowDefinition = workFlowDefinitionRepository.save(workFlowDefinition);
+
 		// save workflow tasks and set works
 		List<WorkFlowWorkDefinition> workFlowWorkDefinitions = new ArrayList<>();
 		WorkFlowDefinition finalWorkFlowDefinition = workFlowDefinition;
@@ -173,8 +169,9 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 				}
 			}
 		});
-		finalWorkFlowDefinition.setWorkFlowWorkDefinitions(workFlowWorkDefinitions);
-		return modelMapper.map(workFlowDefinitionRepository.save(finalWorkFlowDefinition),
+
+		workFlowDefinition.setWorkFlowWorkDefinitions(workFlowWorkDefinitions);
+		return modelMapper.map(workFlowDefinitionRepository.save(workFlowDefinition),
 				WorkFlowDefinitionResponseDTO.class);
 	}
 
