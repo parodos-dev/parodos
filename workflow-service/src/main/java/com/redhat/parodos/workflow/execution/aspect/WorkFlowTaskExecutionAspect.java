@@ -91,7 +91,7 @@ public class WorkFlowTaskExecutionAspect {
 	 */
 	@Around("pointcutScopeTask() && args(workContext)")
 	public WorkReport executeAroundAdviceTask(ProceedingJoinPoint proceedingJoinPoint, WorkContext workContext) {
-		WorkReport report = null;
+		WorkReport report;
 		String workFlowTaskName = ((WorkFlowTask) proceedingJoinPoint.getTarget()).getName();
 
 		log.info("Before invoking execute() on workflow task name: {}", workFlowTaskName);
@@ -123,13 +123,12 @@ public class WorkFlowTaskExecutionAspect {
                     WorkFlowTaskStatus.IN_PROGRESS);
             // @formatter:on
 		}
-		else if (WorkFlowTaskStatus.IN_PROGRESS.equals(workFlowTaskExecution.getStatus()))
+		else if (!WorkFlowTaskStatus.FAILED.equals(workFlowTaskExecution.getStatus())) {
 			// fail the task if it's processed by other thread
-			return new DefaultWorkReport(WorkStatus.FAILED, workContext);
-		else if (WorkFlowTaskStatus.COMPLETED.equals(workFlowTaskExecution.getStatus()))
-			// skip the task if it's already successful
-			return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
-
+			// skip the task if it's already successful/rejected
+			log.info("skipping task: {} with status {}", workFlowTaskName, workFlowTaskExecution.getStatus().name());
+			return new DefaultWorkReport(WorkStatus.valueOf(workFlowTaskExecution.getStatus().name()), workContext);
+		}
 		try {
 			report = (WorkReport) proceedingJoinPoint.proceed();
 			if (report == null || report.getStatus() == null)
@@ -147,11 +146,6 @@ public class WorkFlowTaskExecutionAspect {
 		workFlowTaskExecution.setLastUpdateDate(new Date());
 		workFlowService.updateWorkFlowTask(workFlowTaskExecution);
 
-		// return Failed if the checker task status is rejected. REJECT status is for the
-		// use of checker only
-		if (WorkStatus.REJECTED.equals(report.getStatus()))
-			return new DefaultWorkReport(WorkStatus.FAILED, workContext);
-
 		/*
 		 * if this task is successful, and it has checker; then schedule workflow checker
 		 * for dynamic run on cron expression
@@ -159,7 +153,7 @@ public class WorkFlowTaskExecutionAspect {
 		if (WorkStatus.COMPLETED.equals(report.getStatus())
 				&& workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition() != null) {
 			handleChecker(proceedingJoinPoint, workContext, workFlowTaskDefinition, masterWorkFlowExecution);
-			return new DefaultWorkReport(WorkStatus.FAILED, workContext);
+			return new DefaultWorkReport(WorkStatus.PENDING, workContext);
 		}
 		return report;
 	}

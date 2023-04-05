@@ -1,8 +1,5 @@
 package com.redhat.parodos.workflow.execution.aspect;
 
-import java.util.Date;
-import java.util.UUID;
-
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.enums.WorkFlowStatus;
@@ -16,6 +13,9 @@ import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
+
+import java.util.Date;
+import java.util.UUID;
 
 public abstract class WorkFlowExecutionInterceptor implements WorkFlowInterceptor {
 
@@ -91,6 +91,7 @@ public abstract class WorkFlowExecutionInterceptor implements WorkFlowIntercepto
 						workFlowSchedulerService, workFlowContinuationServiceImpl, workFlowExecution,
 						getMasterWorkFlowExecution(), workFlow, workStatus);
 			default:
+				workFlowService.updateWorkFlow(workFlowExecution);
 				break;
 		}
 		return null;
