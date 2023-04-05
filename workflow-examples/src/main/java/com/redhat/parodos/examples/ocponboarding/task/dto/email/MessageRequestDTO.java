@@ -63,4 +63,5 @@ public class MessageRequestDTO {
 	public void setSiteName(String siteName) {
 		this.siteName = siteName;
 	}
+
 }
