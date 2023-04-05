@@ -27,6 +27,7 @@ import java.io.IOException;
 /**
  * WorkFlowPropertiesDefinitionDTO
  */
+@lombok.Data @lombok.AllArgsConstructor @lombok.Builder
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowPropertiesDefinitionDTO {
   public static final String SERIALIZED_NAME_VERSION = "version";

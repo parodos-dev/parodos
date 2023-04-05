@@ -82,7 +82,6 @@ public class ProjectController {
 					@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
 					@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content) })
 	@GetMapping
-
 	public ResponseEntity<List<ProjectResponseDTO>> getProjects() {
 		return ResponseEntity.ok(projectService.getProjects());
 	}
