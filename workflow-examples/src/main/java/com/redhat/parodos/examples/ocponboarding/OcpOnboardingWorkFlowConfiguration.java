@@ -161,7 +161,7 @@ public class OcpOnboardingWorkFlowConfiguration {
 	// - workFlowB
 
 	@Bean(name = "ocpOnboardingWorkFlow")
-	@Infrastructure(parameters = { @Parameter(key = "namespace", description = "The namespace in the ocp cluster",
+	@Infrastructure(parameters = { @Parameter(key = "NAMESPACE", description = "The namespace in the ocp cluster",
 			type = WorkFlowParameterType.TEXT, optional = false) })
 	WorkFlow ocpOnboardingWorkFlow(@Qualifier("workFlowA") WorkFlow workFlowA,
 			@Qualifier("workFlowB") WorkFlow workFlowB) {
