@@ -121,11 +121,6 @@ public class AppLinkEmailNotificationWorkFlowTask extends BaseInfrastructureWork
 	}
 
 	@Override
-	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
-		return Collections.emptyList();
-	}
-
-	@Override
 	public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
 		return List.of(WorkFlowTaskOutput.OTHER, WorkFlowTaskOutput.EXCEPTION);
 	}

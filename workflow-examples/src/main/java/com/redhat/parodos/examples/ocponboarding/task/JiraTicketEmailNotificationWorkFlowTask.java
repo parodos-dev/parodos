@@ -103,11 +103,6 @@ public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureW
 	}
 
 	@Override
-	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
-		return Collections.emptyList();
-	}
-
-	@Override
 	public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
 		return List.of(WorkFlowTaskOutput.EXCEPTION, WorkFlowTaskOutput.OTHER);
 	}
