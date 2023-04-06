@@ -46,7 +46,7 @@ public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureW
 
 	private static final String MAIL_RECIPIENT_SITE_NAME = "parodos-jira";
 
-	private static final String ISSUE_LINK = "ISSUE_LINK";
+	private static final String ISSUE_LINK_PARAMETER_NAME = "ISSUE_LINK";
 
 	private String mailServiceUrl;
 
@@ -68,7 +68,7 @@ public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureW
 		// jira ticket url to extract from workContext
 		String jiraTicketUrl;
 		try {
-			jiraTicketUrl = getRequiredParameterValue(workContext, ISSUE_LINK);
+			jiraTicketUrl = getRequiredParameterValue(workContext, ISSUE_LINK_PARAMETER_NAME);
 			log.info("Jira ticket url is: {}", jiraTicketUrl);
 		}
 		catch (MissingParameterException e) {

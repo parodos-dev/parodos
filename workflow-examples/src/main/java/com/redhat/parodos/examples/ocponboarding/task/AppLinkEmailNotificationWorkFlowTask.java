@@ -59,7 +59,7 @@ public class AppLinkEmailNotificationWorkFlowTask extends BaseInfrastructureWork
 
 	private final static String TEMPLATE_NAME = "appLinkEmailNotification.ftlh";
 
-	private static final String APP_LINK = "APP_LINK";
+	private static final String APP_LINK_PARAMETER_NAME = "APP_LINK";
 
 	private final String mailServiceUrl;
 
@@ -82,7 +82,7 @@ public class AppLinkEmailNotificationWorkFlowTask extends BaseInfrastructureWork
 		Map<String, Object> messageData = new HashMap<>();
 		String appLink;
 		try {
-			appLink = getRequiredParameterValue(workContext, APP_LINK);
+			appLink = getRequiredParameterValue(workContext, APP_LINK_PARAMETER_NAME);
 			messageData.put("appLink", appLink);
 			log.info("App link is: {}", appLink);
 		}
@@ -127,7 +127,7 @@ public class AppLinkEmailNotificationWorkFlowTask extends BaseInfrastructureWork
 
 	@Override
 	public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
-		return List.of(WorkFlowTaskOutput.OTHER, WorkFlowTaskOutput.EXCEPTION);
+		return List.of(WorkFlowTaskOutput.EXCEPTION, WorkFlowTaskOutput.OTHER);
 	}
 
 	private String getMessage(String templateName, Map<String, Object> templateData)
