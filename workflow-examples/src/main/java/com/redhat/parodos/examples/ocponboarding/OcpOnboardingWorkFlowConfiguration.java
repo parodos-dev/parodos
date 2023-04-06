@@ -124,7 +124,8 @@ public class OcpOnboardingWorkFlowConfiguration {
 	}
 
 	@Bean
-	NotificationWorkFlowTask notificationWorkFlowTask(@Value("${NOTIFICATION_SERVER_URL:test}") String notificationServiceUrl) {
+	NotificationWorkFlowTask notificationWorkFlowTask(
+			@Value("${NOTIFICATION_SERVER_URL:test}") String notificationServiceUrl) {
 		return new NotificationWorkFlowTask(notificationServiceUrl);
 	}
 
