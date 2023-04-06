@@ -39,21 +39,21 @@ public class MasterWorkFlowConfiguration {
 
 	// An AssessmentTask returns one or more WorkFlowOption wrapped in a WorkflowOptions
 	@Bean
-	OnboardingAssessmentTask onboardingAssessmentTask(
+	OnboardingAssessmentTask onboardingMasterAssessmentTask(
 			@Qualifier("onboardingOption") WorkFlowOption awesomeToolsOption) {
 		return new OnboardingAssessmentTask(awesomeToolsOption);
 	}
 
 	// A Workflow designed to execute and return WorkflowOption(s) that can be executed
 	// next. In this case there is only one.
-	@Bean(name = "onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
+	@Bean(name = "onboardingMasterAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
 	@Assessment
 	WorkFlow assessmentWorkFlow(
-			@Qualifier("onboardingAssessmentTask") OnboardingAssessmentTask onboardingAssessmentTask) {
+			@Qualifier("onboardingMasterAssessmentTask") OnboardingAssessmentTask onboardingMasterAssessmentTask) {
 		// @formatter:off
         return SequentialFlow.Builder.aNewSequentialFlow()
-                .named("onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
-                .execute(onboardingAssessmentTask)
+                .named("onboardingMasterAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
+                .execute(onboardingMasterAssessmentTask)
                 .build();
         // @formatter:on
 	}
