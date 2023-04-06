@@ -24,7 +24,7 @@ import static org.junit.Assert.assertNull;
  *
  * @author Gloria Ciavarrini (GitHub: gciavarrini)
  */
-public class OnboardingOcpAssessmentTaskTest extends BaseAssessmentTaskTest {
+public class OnboardingAssessmentTaskTest extends BaseAssessmentTaskTest {
 
 	private OnboardingAssessmentTask onboardingAssessmentTask;
 
