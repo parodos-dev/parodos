@@ -50,7 +50,9 @@ public class JiraTicketCreationWorkFlowTask extends BaseInfrastructureWorkFlowTa
 	private static final String ISSUE_LINK = "ISSUE_LINK";
 
 	private static final String WEB_LINK = "web";
+
 	private static final String JIRA_TICKET_CREATED = "jira ticket created - ";
+
 	private static final String JIRA_TICKET_LINK = "jira ticket link: ";
 
 	private final String url;
