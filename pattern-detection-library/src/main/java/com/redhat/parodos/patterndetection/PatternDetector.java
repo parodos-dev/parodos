@@ -40,6 +40,7 @@ public class PatternDetector {
 	}
 
 	/**
+	 * -
 	 *
 	 * Takes a @see WorkContext and a List of @Pattern reference, performs a Scan on
 	 * code/configuration to determine if the @see Clue references are present to detect
@@ -57,16 +58,28 @@ public class PatternDetector {
 			Date startTime = new Date();
 			// put all the Patterns into a ParallelFlow - they will all execute at the
 			// same time
-			WorkFlow workflow = ParallelFlow.Builder.aNewParallelFlow().execute(desiredPatterns)
-					.with(ScanningThreadPool.getThreadPoolExecutor()).build();
+			// @formatter:off
+			WorkFlow workflow = ParallelFlow
+						.Builder
+						.aNewParallelFlow()
+						.execute(desiredPatterns)
+						.with(ScanningThreadPool.getThreadPoolExecutor())
+						.build();
+			// @formatter:on
 			// get the end report
 			WorkReport report = workflow.execute(context);
 			// process the results to make more user friendly results
 			contextDelegate.processResultsAfterScan(report.getWorkContext());
 			// return the user friendly results
-			return DetectionResults.builder().detectedClues(contextDelegate.getDetectedClue(report))
-					.detectedPatterns(contextDelegate.getDetectedPatterns(report)).startTime(startTime)
-					.endTime(new Date()).build();
+			// @formatter:off
+			return DetectionResults
+					.builder()
+					.detectedClues(contextDelegate.getDetectedClue(report))
+					.detectedPatterns(contextDelegate.getDetectedPatterns(report))
+					.startTime(startTime)
+					.endTime(new Date())
+					.build();
+			// @formatter:on
 		}
 		else {
 			throw new PatternDetectionConfigurationException(

@@ -57,7 +57,7 @@ public class NameClueImpl extends AbstractClue {
 						? targetFileNameRegexPattern.matcher(thisFile.getName()).matches()
 						: nameMatchingDelegate.doesNameMatch(thisFile.getName());
 				if (matched) {
-					workContextDelegate.markClueAsDetected(this, thisFile, workContext);
+					workContextDelegate.markClueAsDetected(this, thisFile.getAbsolutePath(), workContext);
 				}
 			}
 		}

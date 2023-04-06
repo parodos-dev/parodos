@@ -17,6 +17,8 @@ package com.redhat.parodos.patterndetection.clue.delegate;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,6 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.apache.commons.io.IOUtils;
+
+import com.redhat.parodos.patterndetection.exceptions.PatternDetectionRuntimeException;
 
 /**
  * Helper methods for working with Files and their contents.
@@ -70,6 +76,22 @@ public class FileContentsDelegate {
 		List<String> paths = new ArrayList<>();
 		getPaths(f, basePath, paths);
 		return paths;
+	}
+
+	/**
+	 * Converts an InputStream to a list of strings. This is useful when the contents of a
+	 * file has been converted into a list of strings (ie: getting the contents of a file
+	 * from github)
+	 * @param content
+	 * @return
+	 */
+	public List<String> getContentFromInputStream(InputStream content) {
+		try {
+			return IOUtils.readLines(content, StandardCharsets.UTF_8);
+		}
+		catch (IOException e) {
+			throw new PatternDetectionRuntimeException("Unable to convert input stream to content list: ", e);
+		}
 	}
 
 	/**

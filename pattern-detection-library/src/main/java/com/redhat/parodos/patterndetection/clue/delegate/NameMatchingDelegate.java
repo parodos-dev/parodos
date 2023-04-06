@@ -63,12 +63,12 @@ public class NameMatchingDelegate {
 	 * @return true if the file extension is a match, false if not. Regex is applied if
 	 * 'targetFileExtensionPatternString' was specified
 	 */
-	public boolean isThisATargetFileExtension(File file) {
-		if (getExtensionByStringHandling(file.getName()).isPresent() && targetFileExtensionPattern != null) {
-			return targetFileExtensionPattern.matcher(getExtensionByStringHandling(file.getName()).get()).matches();
+	public boolean isThisATargetFileExtension(String fileName) {
+		if (getExtensionByStringHandling(fileName).isPresent() && targetFileExtensionPattern != null) {
+			return targetFileExtensionPattern.matcher(getExtensionByStringHandling(fileName).get()).matches();
 		}
 		log.warn("Trying to check for a file extension with a file the extension could not be obtained for: {}",
-				file.getName());
+				fileName);
 		return true;
 	}
 
@@ -103,8 +103,13 @@ public class NameMatchingDelegate {
 	}
 
 	Optional<String> getExtensionByStringHandling(String filename) {
-		return Optional.ofNullable(filename).filter(f -> f.contains("."))
+	// @formatter:off
+		return Optional
+				.ofNullable(filename)
+				.filter(f -> f.contains("."))
 				.map(f -> f.substring(filename.lastIndexOf('.')));
+	// @formatter:on
+
 	}
 
 	public static class Builder {

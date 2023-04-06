@@ -15,6 +15,8 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.framework.version>5.3.26</spring.framework.version>
+        <spring.boot.autoconfig.version>1.5.7.RELEASE</spring.boot.autoconfig.version>
     </properties>
     <dependencies>
         <dependency>
@@ -49,6 +51,23 @@
             <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
+		<dependency>
+		    <groupId>org.kohsuke</groupId>
+		    <artifactId>github-api</artifactId>
+		    <version>1.314</version>
+		</dependency>
+		  <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.framework.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-autoconfigure</artifactId>
+			<version>${spring.boot.autoconfig.version}</version>
+			<scope>provided</scope>
+		</dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>

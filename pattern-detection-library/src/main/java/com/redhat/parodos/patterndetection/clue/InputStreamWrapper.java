@@ -13,24 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.patterndetection.exceptions;
+package com.redhat.parodos.patterndetection.clue;
+
+import java.io.InputStream;
+import lombok.Builder;
+import lombok.Getter;
 
 /**
- * A catch all thrown when when issues occur during the execution of scans in the WorkFlow
+ * A simple object to contain an InputStream and it's associated File Name. This is for
+ * use when creating a File reference on the file system is not optimal or ideal
  *
  * @author Luke Shannon (Github: lshannon)
  *
  */
-public class PatternDetectionRuntimeException extends RuntimeException {
+@Builder
+@Getter
+public class InputStreamWrapper {
 
-	private static final long serialVersionUID = 1L;
+	private InputStream inputStream;
 
-	public PatternDetectionRuntimeException(String message) {
-		super(message);
-	}
-
-	public PatternDetectionRuntimeException(String message, Exception exception) {
-		super(message, exception);
-	}
+	private String fileName;
 
 }

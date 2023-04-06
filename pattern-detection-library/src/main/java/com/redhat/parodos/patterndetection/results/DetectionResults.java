@@ -15,12 +15,13 @@
  */
 package com.redhat.parodos.patterndetection.results;
 
-import java.io.File;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
 import com.redhat.parodos.patterndetection.clue.Clue;
 import com.redhat.parodos.patterndetection.pattern.Pattern;
+
 import lombok.Builder;
 import lombok.Data;
 
@@ -40,7 +41,7 @@ import lombok.Data;
 @Builder
 public class DetectionResults {
 
-	private Map<Clue, List<File>> detectedClues;
+	private Map<Clue, List<String>> detectedClues;
 
 	private List<Pattern> detectedPatterns;
 

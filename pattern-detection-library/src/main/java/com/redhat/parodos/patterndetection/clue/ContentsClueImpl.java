@@ -20,12 +20,15 @@ import java.io.IOException;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+
 import com.redhat.parodos.patterndetection.clue.delegate.FileContentsDelegate;
+import com.redhat.parodos.patterndetection.clue.delegate.InputStreamDelegate;
 import com.redhat.parodos.patterndetection.exceptions.PatternDetectionConfigurationException;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -50,9 +53,19 @@ public class ContentsClueImpl extends AbstractClue {
 	@Override
 	public WorkReport execute(WorkContext workContext) {
 		if (continueToRunIfDetected || !workContextDelegate.isThisClueDetected(this, workContext)) {
+			for (InputStreamWrapper inputStreamWrapper : workContextDelegate.getInputStreamWrappers(workContext)) {
+				try {
+					extractInputStreamContent(workContext, inputStreamWrapper);
+				}
+				catch (IOException e) {
+					log.error("Unable to execute Scan of {} clue on InputStream: {}", this.name,
+							inputStreamWrapper.getFileName(), e);
+					return new DefaultWorkReport(WorkStatus.FAILED, workContext);
+				}
+			}
 			for (File thisFile : workContextDelegate.getFilesToScan(workContext)) {
 				try {
-					processFileForContentMatches(workContext, thisFile);
+					extractFileContent(workContext, thisFile);
 				}
 				catch (IOException e) {
 					log.error("Unable to execute Scan of {} clue on File: {}", this.name, thisFile.getAbsolutePath(),
@@ -64,22 +77,38 @@ public class ContentsClueImpl extends AbstractClue {
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
-	private void processFileForContentMatches(WorkContext workContext, File thisFile) throws IOException {
+	private void extractInputStreamContent(WorkContext workContext, InputStreamWrapper inputStreamWrapper)
+			throws IOException {
 		List<String> fileContent;
-		if (nameMatchingDelegate.isThisATargetFileExtension(thisFile)) {
+		if (nameMatchingDelegate.isThisATargetFileExtension(inputStreamWrapper.getFileName())) {
+			fileContent = InputStreamDelegate.convertFileBytesToArrayOfStrings(inputStreamWrapper.getInputStream());
+			processContentsForMatch(workContext, inputStreamWrapper.getFileName(), fileContent);
+		}
+
+	}
+
+	private void extractFileContent(WorkContext workContext, File thisFile) throws IOException {
+		List<String> fileContent;
+		if (nameMatchingDelegate.isThisATargetFileExtension(thisFile.getAbsolutePath())) {
 			fileContent = fileContentsDelegate.fileContentsToList(thisFile);
-			processFileContentsForContentMatch(workContext, thisFile, fileContent);
+			processContentsForMatch(workContext, thisFile.getAbsolutePath(), fileContent);
 		}
 	}
 
-	private void processFileContentsForContentMatch(WorkContext workContext, File thisFile, List<String> fileContent) {
+	private void processContentsForMatch(WorkContext workContext, String fileName, List<String> fileContent) {
 		for (String line : fileContent) {
 			if (!line.isEmpty() && targetContentPattern.matcher(line.trim()).matches()) {
-				workContextDelegate.markClueAsDetected(this, thisFile, workContext);
+				workContextDelegate.markClueAsDetected(this, fileName, workContext);
 			}
 		}
 	}
 
+	/**
+	 * Provides a Builder for creating a ContentsClue and its associated members
+	 *
+	 * @author Luke Shannon (Github: lshannon)
+	 *
+	 */
 	public static class Builder extends AbstractClue.Builder<ContentsClueImpl.Builder> {
 
 		String targetContentPatternString;
