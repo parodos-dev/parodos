@@ -24,28 +24,27 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 
 /**
- * Jira Ticket Email Notification Task execution test
+ * App Link Email Notification Task execution test
  *
  * @author Annel Ketcha (GitHub: anludke)
  */
-public class JiraTicketEmailNotificationWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest {
+public class AppLinkEmailNotificationWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest {
 
 	private static final String MAIL_SERVICE_URL_TEST = "mail-service-url-test";
 
-	private static final String ISSUE_LINK_PARAMETER_NAME = "ISSUE_LINK";
+	private static final String APP_LINK_PARAMETER_NAME = "APP_LINK";
 
-	public static final String JIRA_TICKET_URL_TEST = "jira-ticket-url-test";
+	public static final String APP_LINK_TEST = "app-link-test";
 
-	private JiraTicketEmailNotificationWorkFlowTask jiraTicketEmailNotificationWorkFlowTask;
+	private AppLinkEmailNotificationWorkFlowTask appLinkEmailNotificationWorkFlowTask;
 
 	@Before
 	public void setUp() {
-		this.jiraTicketEmailNotificationWorkFlowTask = spy(
-				(JiraTicketEmailNotificationWorkFlowTask) getConcretePersonImplementation());
-
+		this.appLinkEmailNotificationWorkFlowTask = spy(
+				(AppLinkEmailNotificationWorkFlowTask) getConcretePersonImplementation());
 		try {
-			doReturn(JIRA_TICKET_URL_TEST).when(this.jiraTicketEmailNotificationWorkFlowTask)
-					.getRequiredParameterValue(Mockito.any(WorkContext.class), eq(ISSUE_LINK_PARAMETER_NAME));
+			doReturn(APP_LINK_TEST).when(this.appLinkEmailNotificationWorkFlowTask)
+					.getRequiredParameterValue(Mockito.any(WorkContext.class), eq(APP_LINK_PARAMETER_NAME));
 		}
 		catch (MissingParameterException e) {
 			throw new RuntimeException(e);
@@ -54,7 +53,7 @@ public class JiraTicketEmailNotificationWorkFlowTaskTest extends BaseInfrastruct
 
 	@Override
 	protected BaseInfrastructureWorkFlowTask getConcretePersonImplementation() {
-		return new JiraTicketEmailNotificationWorkFlowTask(MAIL_SERVICE_URL_TEST);
+		return new AppLinkEmailNotificationWorkFlowTask(MAIL_SERVICE_URL_TEST);
 	}
 
 	@Test
@@ -67,7 +66,7 @@ public class JiraTicketEmailNotificationWorkFlowTaskTest extends BaseInfrastruct
 					.thenReturn(ResponseEntity.ok("Mail Sent"));
 
 			// when
-			WorkReport workReport = jiraTicketEmailNotificationWorkFlowTask.execute(workContext);
+			WorkReport workReport = appLinkEmailNotificationWorkFlowTask.execute(workContext);
 
 			// then
 			assertEquals(WorkStatus.COMPLETED, workReport.getStatus());
@@ -84,7 +83,7 @@ public class JiraTicketEmailNotificationWorkFlowTaskTest extends BaseInfrastruct
 					.thenReturn(ResponseEntity.internalServerError().build());
 
 			// when
-			WorkReport workReport = jiraTicketEmailNotificationWorkFlowTask.execute(workContext);
+			WorkReport workReport = appLinkEmailNotificationWorkFlowTask.execute(workContext);
 
 			// then
 			assertEquals(WorkStatus.FAILED, workReport.getStatus());
@@ -94,7 +93,7 @@ public class JiraTicketEmailNotificationWorkFlowTaskTest extends BaseInfrastruct
 	@Test
 	public void testGetWorkFlowTaskParameters() {
 		// when
-		List<WorkFlowTaskParameter> workFlowTaskParameters = jiraTicketEmailNotificationWorkFlowTask
+		List<WorkFlowTaskParameter> workFlowTaskParameters = appLinkEmailNotificationWorkFlowTask
 				.getWorkFlowTaskParameters();
 
 		// then
@@ -105,7 +104,7 @@ public class JiraTicketEmailNotificationWorkFlowTaskTest extends BaseInfrastruct
 	@Test
 	public void testGetWorkFlowTaskOutputs() {
 		// when
-		List<WorkFlowTaskOutput> workFlowTaskOutputs = jiraTicketEmailNotificationWorkFlowTask.getWorkFlowTaskOutputs();
+		List<WorkFlowTaskOutput> workFlowTaskOutputs = appLinkEmailNotificationWorkFlowTask.getWorkFlowTaskOutputs();
 
 		// then
 		assertNotNull(workFlowTaskOutputs);
