@@ -99,11 +99,11 @@ public final class RestUtils {
 	 * @param password the password
 	 * @return the @see org.springframework.http.HttpEntity
 	 */
-	public static <T> HttpEntity<T> getRequestWithHeaders(T reqeust, String username, String password) {
+	public static <T> HttpEntity<T> getRequestWithHeaders(T request, String username, String password) {
 		String base64Creds = getBase64Creds(username, password);
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Authorization", "Basic " + base64Creds);
-		return new HttpEntity<>(reqeust, headers);
+		return new HttpEntity<>(request, headers);
 	}
 
 	/**
