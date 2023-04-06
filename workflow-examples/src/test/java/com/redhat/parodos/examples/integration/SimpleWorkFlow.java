@@ -21,17 +21,15 @@ import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.enums.WorkType;
 import com.redhat.parodos.workflow.utils.CredUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.util.Strings;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.redhat.parodos.examples.integration.utils.ExamplesUtils.getProjectByNameAndDescription;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -76,10 +74,7 @@ public class SimpleWorkFlow {
 			List<ProjectResponseDTO> projects = projectApi.getProjects();
 
 			// CHECK IF testProject ALREADY EXISTS
-			testProject = projects.stream()
-					.filter(prj -> projectName.equals(prj.getName()) && projectDescription.equals(prj.getDescription())
-							&& prj.getUsername() == null && !Strings.isNullOrEmpty(prj.getId()))
-					.findAny().orElse(null);
+			testProject = getProjectByNameAndDescription(projects, projectName, projectDescription);
 
 			// CREATE PROJECT "Test Project Name" IF NOT EXISTS
 			if (testProject == null) {
@@ -100,10 +95,7 @@ public class SimpleWorkFlow {
 			projects = projectApi.getProjects();
 			log.debug("PROJECTS: {}", projects);
 			assertTrue(projects.size() > 0);
-			testProject = projects.stream()
-					.filter(prj -> projectName.equals(prj.getName()) && projectDescription.equals(prj.getDescription())
-							&& prj.getUsername() == null && !Strings.isNullOrEmpty(prj.getId()))
-					.findAny().orElse(null);
+			testProject = getProjectByNameAndDescription(projects, projectName, projectDescription);
 			assertNotNull(testProject);
 
 			// GET simpleSequentialWorkFlow DEFINITIONS
@@ -170,6 +162,4 @@ public class SimpleWorkFlow {
 		catch (ApiException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
 }
