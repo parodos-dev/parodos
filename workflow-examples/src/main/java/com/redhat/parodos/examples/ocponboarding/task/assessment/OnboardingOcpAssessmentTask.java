@@ -41,7 +41,7 @@ import java.util.List;
 @Slf4j
 public class OnboardingOcpAssessmentTask extends BaseAssessmentTask {
 
-	private static final String INPUT = "INPUT";
+	private static final String GIT_REPO_URL = "GIT_REPO_URL";
 
 	public OnboardingOcpAssessmentTask(List<WorkFlowOption> workflowOptions) {
 		super(workflowOptions);
@@ -49,25 +49,26 @@ public class OnboardingOcpAssessmentTask extends BaseAssessmentTask {
 
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-//		try {
-//			log.info("parameter {} value: {}", INPUT, getRequiredParameterValue(workContext, INPUT));
-//		} catch (MissingParameterException e) {
-//			log.error("can't get parameter {} value", INPUT);
-//			return new DefaultWorkReport(WorkStatus.FAILED, workContext);
-//		}
+		try {
+			log.info("parameter {} value: {}", GIT_REPO_URL, getRequiredParameterValue(workContext, GIT_REPO_URL));
+		}
+		catch (MissingParameterException e) {
+			log.error("can't get parameter {} value", GIT_REPO_URL);
+			return new DefaultWorkReport(WorkStatus.FAILED, workContext);
+		}
+		WorkFlowOptions workFlowOptions = new WorkFlowOptions.Builder().build();
+		workFlowOptions.setNewOptions(getWorkFlowOptions());
 
 		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
 				WorkContextDelegate.Resource.WORKFLOW_OPTIONS,
 				// @formatter:off
-				new WorkFlowOptions.Builder()
-				.addNewOption(getWorkFlowOptions().get(0))
-				.build());
+				workFlowOptions);
 				// @formatter:on
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
 	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
-		return List.of(WorkFlowTaskParameter.builder().key(INPUT)
+		return List.of(WorkFlowTaskParameter.builder().key(GIT_REPO_URL)
 				.description("Enter some information to use for the Assessment to determine if they can onboard")
 				.optional(false).type(WorkFlowTaskParameterType.TEXT).build());
 	}
