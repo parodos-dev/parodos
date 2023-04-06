@@ -225,7 +225,7 @@ run_complex_flow() {
 
   params='{
       "projectId": "'$PROJECT_ID'",
-      "workFlowName": "onboardingAssessment_ASSESSMENT_WORKFLOW",
+      "workFlowName": "onboardingMasterAssessment_ASSESSMENT_WORKFLOW",
       "works": []
   }'
   response=$(execute_workflow "$params" "COMPLETED")
