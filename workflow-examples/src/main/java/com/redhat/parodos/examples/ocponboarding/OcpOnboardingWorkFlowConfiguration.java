@@ -15,11 +15,11 @@
  */
 package com.redhat.parodos.examples.ocponboarding;
 
-import com.redhat.parodos.examples.master.task.OnboardingAssessmentTask;
 import com.redhat.parodos.examples.ocponboarding.checker.JiraTicketApprovalWorkFlowCheckerTask;
 import com.redhat.parodos.examples.ocponboarding.task.AppLinkEmailNotificationWorkFlowTask;
 import com.redhat.parodos.examples.ocponboarding.task.JiraTicketCreationWorkFlowTask;
 import com.redhat.parodos.examples.ocponboarding.task.JiraTicketEmailNotificationWorkFlowTask;
+import com.redhat.parodos.examples.ocponboarding.task.NotificationWorkFlowTask;
 import com.redhat.parodos.examples.ocponboarding.task.OcpAppDeploymentWorkFlowTask;
 import com.redhat.parodos.examples.ocponboarding.task.assessment.OnboardingOcpAssessmentTask;
 import com.redhat.parodos.workflow.annotation.Assessment;
@@ -123,13 +123,19 @@ public class OcpOnboardingWorkFlowConfiguration {
 		return new JiraTicketEmailNotificationWorkFlowTask(mailServerUrl);
 	}
 
+	@Bean
+	NotificationWorkFlowTask notificationWorkFlowTask(@Value("${NOTIFICATION_SERVER_URL:test}") String notificationServiceUrl) {
+		return new NotificationWorkFlowTask(notificationServiceUrl);
+	}
+
 	@Bean(name = "workFlowA")
 	@Infrastructure
 	WorkFlow workFlowA(
 			@Qualifier("jiraTicketCreationWorkFlowTask") JiraTicketCreationWorkFlowTask jiraTicketCreationWorkFlowTask,
-			@Qualifier("jiraTicketEmailNotificationWorkFlowTask") JiraTicketEmailNotificationWorkFlowTask jiraTicketEmailNotificationWorkFlowTask) {
+			@Qualifier("jiraTicketEmailNotificationWorkFlowTask") JiraTicketEmailNotificationWorkFlowTask jiraTicketEmailNotificationWorkFlowTask,
+			@Qualifier("notificationWorkFlowTask") NotificationWorkFlowTask notificationWorkFlowTask) {
 		return SequentialFlow.Builder.aNewSequentialFlow().named("workFlowA").execute(jiraTicketCreationWorkFlowTask)
-				.then(jiraTicketEmailNotificationWorkFlowTask).build();
+				.then(notificationWorkFlowTask).then(jiraTicketEmailNotificationWorkFlowTask).build();
 	}
 
 	// WORKFLOW B - Sequential Flow:
