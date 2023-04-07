@@ -27,6 +27,8 @@ import com.redhat.parodos.examples.ocponboarding.task.dto.jira.GetJiraTicketResp
 import com.redhat.parodos.examples.ocponboarding.task.dto.jira.GetJiraTicketResponseValue;
 import com.redhat.parodos.examples.ocponboarding.task.dto.jira.JiraApprovalStatus;
 import java.util.List;
+
+import com.redhat.parodos.workflows.workflow.WorkFlow;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 
@@ -45,17 +47,18 @@ public class JiraTicketApprovalWorkFlowCheckerTask extends BaseWorkFlowCheckerTa
 
 	private static final String CLUSTER_TOKEN_CUSTOM_FIELD_ID = "customfield_10064";
 
-	private final String url;
+	private final String jiraServiceBaseUrl;
 
-	private final String username;
+	private final String jiraUsername;
 
-	private final String password;
+	private final String jiraPassword;
 
-	public JiraTicketApprovalWorkFlowCheckerTask(String url, String username, String password) {
-		super();
-		this.url = url;
-		this.username = username;
-		this.password = password;
+	public JiraTicketApprovalWorkFlowCheckerTask(WorkFlow jiraTicketApprovalEscalationWorkFlow, long sla,
+			String jiraServiceBaseUrl, String jiraUsername, String jiraPassword) {
+		super(jiraTicketApprovalEscalationWorkFlow, sla);
+		this.jiraServiceBaseUrl = jiraServiceBaseUrl;
+		this.jiraUsername = jiraUsername;
+		this.jiraPassword = jiraPassword;
 	}
 
 	/**
@@ -65,12 +68,12 @@ public class JiraTicketApprovalWorkFlowCheckerTask extends BaseWorkFlowCheckerTa
 	public WorkReport checkWorkFlowStatus(WorkContext workContext) {
 		log.info("Start jiraTicketApprovalWorkFlowCheckerTask...");
 		try {
-			String urlString = url + "/rest/servicedeskapi/request/";
+			String urlString = jiraServiceBaseUrl + "/rest/servicedeskapi/request/";
 			String issueKey = getRequiredParameterValue(workContext, ISSUE_KEY);
-			log.info("Calling: urlString: {} username: {}", urlString, username);
+			log.info("Calling: urlString: {} username: {}", urlString, jiraUsername);
 
-			ResponseEntity<GetJiraTicketResponseDto> result = RestUtils.restExchange(urlString + issueKey, username,
-					password, GetJiraTicketResponseDto.class);
+			ResponseEntity<GetJiraTicketResponseDto> result = RestUtils.restExchange(urlString + issueKey, jiraUsername,
+					jiraPassword, GetJiraTicketResponseDto.class);
 			if (result.getStatusCode().is2xxSuccessful() && result.getBody() != null) {
 				GetJiraTicketResponseDto responseDto = result.getBody();
 				log.info("Rest call completed: {}", responseDto.getIssueKey());
@@ -99,7 +102,6 @@ public class JiraTicketApprovalWorkFlowCheckerTask extends BaseWorkFlowCheckerTa
 		}
 		catch (Exception e) {
 			log.error("There was an issue with the REST call: {}", e.getMessage());
-
 		}
 		return new DefaultWorkReport(WorkStatus.FAILED, workContext);
 	}
