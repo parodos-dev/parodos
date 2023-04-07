@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2022 Red Hat Developer
  *
@@ -23,18 +22,23 @@ import com.redhat.parodos.examples.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+
+/**
+ * An example of a task that send an escalation email notification for a pending Jira
+ * ticket review and approval
+ *
+ * @author Annel Ketch (Github: anludke)
+ */
 
 @Slf4j
 public class JiraTicketApprovalEscalationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
@@ -81,7 +85,6 @@ public class JiraTicketApprovalEscalationWorkFlowTask extends BaseInfrastructure
 			LocalDateTime startDateTime = LocalDateTime.now();
 			responseEntity = RestUtils.executePost(mailServiceUrl, requestEntity);
 			log.info("Request duration: {} ms", ChronoUnit.MILLIS.between(startDateTime, LocalDateTime.now()));
-
 		}
 		catch (Exception e) {
 			log.error("Error occurred when submitting message: {}", e.getMessage());
@@ -97,17 +100,13 @@ public class JiraTicketApprovalEscalationWorkFlowTask extends BaseInfrastructure
 	}
 
 	@Override
-	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
-		return Collections.emptyList();
-	}
-
-	@Override
 	public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
-		return List.of(WorkFlowTaskOutput.OTHER, WorkFlowTaskOutput.EXCEPTION);
+		return List.of(WorkFlowTaskOutput.EXCEPTION, WorkFlowTaskOutput.OTHER);
 	}
 
 	private String getMessage(String jiraTicketUrl) {
-		return "Escalation message. " + jiraTicketUrl;
+		return "Hi there," + "\n" + "The jira ticket below has been escalated due to pending review and approval."
+				+ "\n" + "Jira ticket url: " + jiraTicketUrl + "\n" + "Thank you," + "\n" + "The Parodos Team";
 	}
 
 }
