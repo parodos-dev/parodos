@@ -16,16 +16,14 @@
 package com.redhat.parodos.examples.ocponboarding;
 
 import com.redhat.parodos.examples.ocponboarding.checker.JiraTicketApprovalWorkFlowCheckerTask;
+import com.redhat.parodos.examples.ocponboarding.escalation.JiraTicketApprovalEscalationWorkFlowTask;
 import com.redhat.parodos.examples.ocponboarding.task.AppLinkEmailNotificationWorkFlowTask;
 import com.redhat.parodos.examples.ocponboarding.task.JiraTicketCreationWorkFlowTask;
 import com.redhat.parodos.examples.ocponboarding.task.JiraTicketEmailNotificationWorkFlowTask;
 import com.redhat.parodos.examples.ocponboarding.task.NotificationWorkFlowTask;
 import com.redhat.parodos.examples.ocponboarding.task.OcpAppDeploymentWorkFlowTask;
 import com.redhat.parodos.examples.ocponboarding.task.assessment.OnboardingOcpAssessmentTask;
-import com.redhat.parodos.workflow.annotation.Assessment;
-import com.redhat.parodos.workflow.annotation.Checker;
-import com.redhat.parodos.workflow.annotation.Infrastructure;
-import com.redhat.parodos.workflow.annotation.Parameter;
+import com.redhat.parodos.workflow.annotation.*;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflow.parameter.WorkFlowParameterType;
@@ -36,6 +34,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Date;
 import java.util.List;
 
 @Configuration
@@ -89,13 +88,32 @@ public class OcpOnboardingWorkFlowConfiguration {
 	}
 
 	// WORKFLOW A - Sequential Flow:
-	// - JiraTicketCreationWorkFlowTask -> JiraTicketApprovalWorkFlowCheckerTask
+	// @formatter:off
+	// - JiraTicketCreationWorkFlowTask -> JiraTicketApprovalWorkFlowCheckerTask -> JiraTicketApprovalEscalationWorkFlowTask
 	// - JiraTicketEmailNotificationWorkFlowTask
+	// @formatter:on
 
 	@Bean
-	JiraTicketApprovalWorkFlowCheckerTask jiraTicketApprovalWorkFlowCheckerTask(@Value("${JIRA_URL:test}") String url,
-			@Value("${JIRA_USER:user}") String username, @Value("${JIRA_TOKEN:token}") String password) {
-		return new JiraTicketApprovalWorkFlowCheckerTask(url, username, password);
+	JiraTicketApprovalEscalationWorkFlowTask jiraTicketApprovalEscalationWorkFlowTask(
+			@Value("${MAIL_SERVER_URL:test}") String mailServerUrl) {
+		return new JiraTicketApprovalEscalationWorkFlowTask(mailServerUrl);
+	}
+
+	@Bean(name = "jiraTicketApprovalEscalationWorkFlow")
+	@Escalation
+	WorkFlow jiraTicketApprovalEscalationWorkFlow(
+			@Qualifier("jiraTicketApprovalEscalationWorkFlowTask") JiraTicketApprovalEscalationWorkFlowTask jiraTicketApprovalEscalationWorkFlowTask) {
+		return SequentialFlow.Builder.aNewSequentialFlow().named("jiraTicketApprovalEscalationWorkFlow")
+				.execute(jiraTicketApprovalEscalationWorkFlowTask).build();
+	}
+
+	@Bean
+	JiraTicketApprovalWorkFlowCheckerTask jiraTicketApprovalWorkFlowCheckerTask(
+			@Qualifier("jiraTicketApprovalEscalationWorkFlow") WorkFlow jiraTicketApprovalEscalationWorkFlow,
+			@Value("${JIRA_URL:test}") String url, @Value("${JIRA_USER:user}") String username,
+			@Value("${JIRA_TOKEN:token}") String password) {
+		return new JiraTicketApprovalWorkFlowCheckerTask(jiraTicketApprovalEscalationWorkFlow,
+				new Date().getTime() / 1000 + 30, url, username, password);
 	}
 
 	@Bean(name = "jiraTicketApprovalWorkFlowChecker")

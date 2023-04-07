@@ -55,19 +55,20 @@ public class JiraTicketCreationWorkFlowTask extends BaseInfrastructureWorkFlowTa
 
 	private static final String JIRA_TICKET_LINK = "jira ticket link: ";
 
-	private final String url;
+	private final String jiraServiceBaseUrl;
 
-	private final String username;
+	private final String jiraUsername;
 
-	private final String password;
+	private final String jiraPassword;
 
 	private final String approverId;
 
-	public JiraTicketCreationWorkFlowTask(String url, String username, String password, String approverId) {
+	public JiraTicketCreationWorkFlowTask(String jiraServiceBaseUrl, String jiraUsername, String jiraPassword,
+			String approverId) {
 		super();
-		this.url = url;
-		this.username = username;
-		this.password = password;
+		this.jiraServiceBaseUrl = jiraServiceBaseUrl;
+		this.jiraUsername = jiraUsername;
+		this.jiraPassword = jiraPassword;
 		this.approverId = approverId;
 	}
 
@@ -77,12 +78,12 @@ public class JiraTicketCreationWorkFlowTask extends BaseInfrastructureWorkFlowTa
 	public WorkReport execute(WorkContext workContext) {
 		log.info("Start jiraTicketCreationWorkFlowTask...");
 		try {
-			String urlString = url + "/rest/servicedeskapi/request";
+			String urlString = jiraServiceBaseUrl + "/rest/servicedeskapi/request";
 			String serviceDeskId = "1";
 			String requestTypeId = "35";
 			String projectId = getProjectId(workContext);
 			String namespace = getOptionalParameterValue(workContext, NAMESPACE, "demo");
-			log.info("Calling: urlString: {} username: {}", urlString, username);
+			log.info("Calling: urlString: {} username: {}", urlString, jiraUsername);
 
 			CreateJiraTicketRequestDto request = CreateJiraTicketRequestDto.builder().serviceDeskId(serviceDeskId)
 					.requestTypeId(requestTypeId)
@@ -92,8 +93,8 @@ public class JiraTicketCreationWorkFlowTask extends BaseInfrastructureWorkFlowTa
 							.projectName(projectId).namespace(namespace).build())
 					.build();
 
-			ResponseEntity<CreateJiraTicketResponseDto> response = RestUtils.executePost(urlString, request, username,
-					password, CreateJiraTicketResponseDto.class);
+			ResponseEntity<CreateJiraTicketResponseDto> response = RestUtils.executePost(urlString, request,
+					jiraUsername, jiraPassword, CreateJiraTicketResponseDto.class);
 
 			if (response.getStatusCode().is2xxSuccessful()) {
 				log.info("Rest call completed: {}", Objects.requireNonNull(response.getBody()).getIssueId());
@@ -111,7 +112,6 @@ public class JiraTicketCreationWorkFlowTask extends BaseInfrastructureWorkFlowTa
 		}
 		catch (Exception e) {
 			log.error("There was an issue with the REST call: {}", e.getMessage());
-
 		}
 		return new DefaultWorkReport(WorkStatus.FAILED, workContext);
 	}
