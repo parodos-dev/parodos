@@ -59,6 +59,7 @@
         <junit.version>4.13.1</junit.version>
         <mockito.version>3.5.13</mockito.version>
         <assertj.version>3.17.2</assertj.version>
+        <okhttp-version>4.9.2</okhttp-version>
     </properties>
     <modules>
         <module>workflow-engine</module>
@@ -107,6 +108,17 @@
                 <artifactId>assertj-core</artifactId>
                 <version>${assertj.version}</version>
                 <scope>test</scope>
+            </dependency>
+            <!--  Needed to avoid conflict with OkHttp being used in auth0-java and okhttp3 being used by spring -->
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>logging-interceptor</artifactId>
+                <version>${okhttp-version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
