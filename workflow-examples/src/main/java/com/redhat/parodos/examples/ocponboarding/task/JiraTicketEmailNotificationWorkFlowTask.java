@@ -29,7 +29,6 @@ import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -48,7 +47,7 @@ public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureW
 
 	private static final String ISSUE_LINK_PARAMETER_NAME = "ISSUE_LINK";
 
-	private String mailServiceUrl;
+	private final String mailServiceUrl;
 
 	public JiraTicketEmailNotificationWorkFlowTask(String mailServiceUrl) {
 		super();
