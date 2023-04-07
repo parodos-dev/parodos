@@ -45,17 +45,18 @@ public class SimpleWorkFlow {
     private static final String projectName = "project-1";
 
     private static final String projectDescription = "an example project";
+    private ApiClient apiClient;
 
     @Before
     public void setUp() throws IOException {
+        apiClient = Configuration.getDefaultApiClient();
+        apiClient.addDefaultHeader(HttpHeaders.AUTHORIZATION, "Basic " + CredUtils.getBase64Creds("test", "test"));
 
     }
 
     @Test
     public void runSimpleWorkFlow() throws ApiException {
         log.info("Running simple flow");
-        ApiClient apiClient = Configuration.getDefaultApiClient();
-        apiClient.addDefaultHeader(HttpHeaders.AUTHORIZATION, "Basic " + CredUtils.getBase64Creds("test", "test"));
 
         ProjectApi projectApi = new ProjectApi(apiClient);
 
