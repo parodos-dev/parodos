@@ -19,7 +19,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.redhat.parodos.workflow.definition.dto.WorkDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
-import com.redhat.parodos.workflow.definition.dto.WorkFlowPropertiesDefinitionDTO;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
@@ -48,7 +47,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -250,20 +248,16 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 			if (workFlowWorkDefinition.getWorkDefinitionType().equals(WorkType.TASK)) { // Task
 				WorkFlowTaskDefinition wdt = workFlowTaskDefinitionRepository
 						.findById(workFlowWorkDefinition.getWorkDefinitionId()).get();
-				workDefinitionResponseDTOs.add(WorkDefinitionResponseDTO.builder().id(wdt.getId().toString())
-						.workType(WorkType.TASK.name()).name(wdt.getName()).parameterFromString(wdt.getParameters())
-						.outputs(WorkFlowDTOUtil.readStringAsObject(wdt.getOutputs(), new TypeReference<>() {
-						}, List.of())).build());
+				workDefinitionResponseDTOs.add(WorkDefinitionResponseDTO.fromWorkFlowTaskDefinition(wdt));
 			}
 			else { // WorkFlow
 				WorkFlowDefinition wd = workFlowDefinitionRepository
 						.findById(workFlowWorkDefinition.getWorkDefinitionId()).get();
 				List<WorkFlowWorkDefinition> wdWorkFlowWorkDependencies = workFlowWorkRepository
 						.findByWorkFlowDefinitionIdOrderByCreateDateAsc(wd.getId());
-				workDefinitionResponseDTOs.add(WorkDefinitionResponseDTO.builder().id(wd.getId().toString())
-						.workType(WorkType.WORKFLOW.name()).name(wd.getName()).parameterFromString(wd.getParameters())
-						.processingType(wd.getProcessingType()).works(new ArrayList<>())
-						.numberOfWorkUnits(wdWorkFlowWorkDependencies.size()).build());
+
+				workDefinitionResponseDTOs
+						.add(WorkDefinitionResponseDTO.fromWorkFlowDefinitionEntity(wd, wdWorkFlowWorkDependencies));
 			}
 		});
 
@@ -284,11 +278,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 					if (wwdt1.getWorkDefinitionType().equals(WorkType.TASK)) { // Task
 						WorkFlowTaskDefinition wdt1 = workFlowTaskDefinitionRepository
 								.findById(wwdt1.getWorkDefinitionId()).get();
-						workDefinitionResponseDTOs.add(WorkDefinitionResponseDTO.builder().id(wdt1.getId().toString())
-								.workType(WorkType.TASK.name()).name(wdt1.getName())
-								.parameterFromString(wdt1.getParameters())
-								.outputs(WorkFlowDTOUtil.readStringAsObject(wdt1.getOutputs(), new TypeReference<>() {
-								}, List.of())).build());
+						workDefinitionResponseDTOs.add(WorkDefinitionResponseDTO.fromWorkFlowTaskDefinition(wdt1));
 					}
 					else { // WorkFlow
 						WorkFlowDefinition wd1 = workFlowDefinitionRepository.findById(wwdt1.getWorkDefinitionId())
@@ -297,10 +287,8 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 								.findByWorkFlowDefinitionIdOrderByCreateDateAsc(wd1.getId()).stream()
 								.sorted(Comparator.comparing(WorkFlowWorkDefinition::getCreateDate))
 								.collect(Collectors.toList());
-						workDefinitionResponseDTOs.add(WorkDefinitionResponseDTO.builder().id(wd1.getId().toString())
-								.workType(WorkType.WORKFLOW.name()).name(wd1.getName()).works(new ArrayList<>())
-								.processingType(wd1.getProcessingType())
-								.numberOfWorkUnits(wd1WorkFlowWorkDefinitions.size()).build());
+						workDefinitionResponseDTOs.add(WorkDefinitionResponseDTO.fromWorkFlowDefinitionEntity(wd1,
+								wd1WorkFlowWorkDefinitions));
 					}
 				});
 			}
