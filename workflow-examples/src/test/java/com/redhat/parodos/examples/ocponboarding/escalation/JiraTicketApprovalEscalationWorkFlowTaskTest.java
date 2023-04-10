@@ -1,4 +1,4 @@
-package com.redhat.parodos.examples.ocponboarding.task;
+package com.redhat.parodos.examples.ocponboarding.escalation;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -24,27 +24,28 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 
 /**
- * App Link Email Notification Workflow Task execution test
+ * Jira Ticket Email Notification Workflow Task execution test
  *
  * @author Annel Ketcha (GitHub: anludke)
  */
-public class AppLinkEmailNotificationWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest {
+public class JiraTicketApprovalEscalationWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest {
 
 	private static final String MAIL_SERVICE_URL_TEST = "mail-service-url-test";
 
-	private static final String APP_LINK_PARAMETER_NAME = "APP_LINK";
+	private static final String ISSUE_LINK_PARAMETER_NAME = "ISSUE_LINK";
 
-	public static final String APP_LINK_TEST = "app-link-test";
+	public static final String JIRA_TICKET_URL_TEST = "jira-ticket-url-test";
 
-	private AppLinkEmailNotificationWorkFlowTask appLinkEmailNotificationWorkFlowTask;
+	private JiraTicketApprovalEscalationWorkFlowTask jiraTicketApprovalEscalationWorkFlowTask;
 
 	@Before
 	public void setUp() {
-		this.appLinkEmailNotificationWorkFlowTask = spy(
-				(AppLinkEmailNotificationWorkFlowTask) getConcretePersonImplementation());
+		this.jiraTicketApprovalEscalationWorkFlowTask = spy(
+				(JiraTicketApprovalEscalationWorkFlowTask) getConcretePersonImplementation());
+
 		try {
-			doReturn(APP_LINK_TEST).when(this.appLinkEmailNotificationWorkFlowTask)
-					.getRequiredParameterValue(Mockito.any(WorkContext.class), eq(APP_LINK_PARAMETER_NAME));
+			doReturn(JIRA_TICKET_URL_TEST).when(this.jiraTicketApprovalEscalationWorkFlowTask)
+					.getRequiredParameterValue(Mockito.any(WorkContext.class), eq(ISSUE_LINK_PARAMETER_NAME));
 		}
 		catch (MissingParameterException e) {
 			throw new RuntimeException(e);
@@ -53,7 +54,7 @@ public class AppLinkEmailNotificationWorkFlowTaskTest extends BaseInfrastructure
 
 	@Override
 	protected BaseInfrastructureWorkFlowTask getConcretePersonImplementation() {
-		return new AppLinkEmailNotificationWorkFlowTask(MAIL_SERVICE_URL_TEST);
+		return new JiraTicketApprovalEscalationWorkFlowTask(MAIL_SERVICE_URL_TEST);
 	}
 
 	@Test
@@ -66,7 +67,7 @@ public class AppLinkEmailNotificationWorkFlowTaskTest extends BaseInfrastructure
 					.thenReturn(ResponseEntity.ok("Mail Sent"));
 
 			// when
-			WorkReport workReport = appLinkEmailNotificationWorkFlowTask.execute(workContext);
+			WorkReport workReport = jiraTicketApprovalEscalationWorkFlowTask.execute(workContext);
 
 			// then
 			assertEquals(WorkStatus.COMPLETED, workReport.getStatus());
@@ -83,7 +84,7 @@ public class AppLinkEmailNotificationWorkFlowTaskTest extends BaseInfrastructure
 					.thenReturn(ResponseEntity.internalServerError().build());
 
 			// when
-			WorkReport workReport = appLinkEmailNotificationWorkFlowTask.execute(workContext);
+			WorkReport workReport = jiraTicketApprovalEscalationWorkFlowTask.execute(workContext);
 
 			// then
 			assertEquals(WorkStatus.FAILED, workReport.getStatus());
@@ -93,7 +94,7 @@ public class AppLinkEmailNotificationWorkFlowTaskTest extends BaseInfrastructure
 	@Test
 	public void testGetWorkFlowTaskParameters() {
 		// when
-		List<WorkFlowTaskParameter> workFlowTaskParameters = appLinkEmailNotificationWorkFlowTask
+		List<WorkFlowTaskParameter> workFlowTaskParameters = jiraTicketApprovalEscalationWorkFlowTask
 				.getWorkFlowTaskParameters();
 
 		// then
@@ -104,7 +105,8 @@ public class AppLinkEmailNotificationWorkFlowTaskTest extends BaseInfrastructure
 	@Test
 	public void testGetWorkFlowTaskOutputs() {
 		// when
-		List<WorkFlowTaskOutput> workFlowTaskOutputs = appLinkEmailNotificationWorkFlowTask.getWorkFlowTaskOutputs();
+		List<WorkFlowTaskOutput> workFlowTaskOutputs = jiraTicketApprovalEscalationWorkFlowTask
+				.getWorkFlowTaskOutputs();
 
 		// then
 		assertNotNull(workFlowTaskOutputs);
