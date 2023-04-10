@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Jira Ticket Creation Task execution test
+ * Jira Ticket Creation Workflow Task execution test
  *
  * @author Annel Ketcha (GitHub: anludke)
  */

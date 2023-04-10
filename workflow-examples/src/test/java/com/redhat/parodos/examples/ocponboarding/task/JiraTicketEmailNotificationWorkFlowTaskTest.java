@@ -24,7 +24,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 
 /**
- * Jira Ticket Email Notification Task execution test
+ * Jira Ticket Email Notification Workflow Task execution test
  *
  * @author Annel Ketcha (GitHub: anludke)
  */
