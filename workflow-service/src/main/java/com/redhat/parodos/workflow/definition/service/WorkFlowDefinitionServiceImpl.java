@@ -230,6 +230,41 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 		}
 	}
 
+	private void getWorksFromWorkDefinition(List<WorkFlowWorkDefinition> workFlowWorkDefinitions,
+			CopyOnWriteArrayList<WorkDefinitionResponseDTO> responseDTOs) {
+		workFlowWorkDefinitions.forEach(workFlowWorkDefinition -> {
+			WorkType workType = workFlowWorkDefinition.getWorkDefinitionType();
+			if (workType == null) {
+				return;
+			}
+			switch (workType) {
+				case TASK:
+					Optional<WorkFlowTaskDefinition> wdt = workFlowTaskDefinitionRepository
+							.findById(workFlowWorkDefinition.getWorkDefinitionId());
+					if (wdt.isEmpty()) {
+						log.error("Cannot find the task definition with id " + workFlowWorkDefinition.getWorkDefinitionId());
+						return;
+					}
+					responseDTOs.add(WorkDefinitionResponseDTO.fromWorkFlowTaskDefinition(wdt.get()));
+				case WORKFLOW:
+					Optional<WorkFlowDefinition> wd = workFlowDefinitionRepository
+							.findById(workFlowWorkDefinition.getWorkDefinitionId());
+					if (wd.isEmpty()) {
+						log.error("Cannot find work flow definition with id {}", workFlowWorkDefinition.getWorkDefinitionId());
+						return;
+					}
+					List<WorkFlowWorkDefinition> wdWorkFlowWorkDependencies = workFlowWorkRepository
+							.findByWorkFlowDefinitionIdOrderByCreateDateAsc(wd.get().getId());
+
+					responseDTOs.add(
+							WorkDefinitionResponseDTO.fromWorkFlowDefinitionEntity(wd.get(), wdWorkFlowWorkDependencies));
+				default:
+					return;
+			}
+		});
+
+	}
+
 	private List<WorkDefinitionResponseDTO> buildWorkFlowWorksDTOs(WorkFlowDefinition workFlowDefinition,
 			List<WorkFlowWorkDefinition> workFlowWorkDefinitions) {
 		CopyOnWriteArrayList<WorkDefinitionResponseDTO> workDefinitionResponseDTOs = new CopyOnWriteArrayList<>();
@@ -244,22 +279,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 		workFlowWorksStartIndex.put(workFlowDefinition.getName(), 1);
 
 		// add workflowWorkUnits
-		workFlowWorkDefinitions.forEach(workFlowWorkDefinition -> {
-			if (workFlowWorkDefinition.getWorkDefinitionType().equals(WorkType.TASK)) { // Task
-				WorkFlowTaskDefinition wdt = workFlowTaskDefinitionRepository
-						.findById(workFlowWorkDefinition.getWorkDefinitionId()).get();
-				workDefinitionResponseDTOs.add(WorkDefinitionResponseDTO.fromWorkFlowTaskDefinition(wdt));
-			}
-			else { // WorkFlow
-				WorkFlowDefinition wd = workFlowDefinitionRepository
-						.findById(workFlowWorkDefinition.getWorkDefinitionId()).get();
-				List<WorkFlowWorkDefinition> wdWorkFlowWorkDependencies = workFlowWorkRepository
-						.findByWorkFlowDefinitionIdOrderByCreateDateAsc(wd.getId());
-
-				workDefinitionResponseDTOs
-						.add(WorkDefinitionResponseDTO.fromWorkFlowDefinitionEntity(wd, wdWorkFlowWorkDependencies));
-			}
-		});
+		this.getWorksFromWorkDefinition(workFlowWorkDefinitions, workDefinitionResponseDTOs);
 
 		// fill in subsequent workUnits
 		for (int i = 1; i < workDefinitionResponseDTOs.size(); i++) {
@@ -274,23 +294,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 						.stream().sorted(Comparator.comparing(WorkFlowWorkDefinition::getCreateDate))
 						.collect(Collectors.toList());
 
-				workFlowWorkUnits1Definition.forEach(wwdt1 -> {
-					if (wwdt1.getWorkDefinitionType().equals(WorkType.TASK)) { // Task
-						WorkFlowTaskDefinition wdt1 = workFlowTaskDefinitionRepository
-								.findById(wwdt1.getWorkDefinitionId()).get();
-						workDefinitionResponseDTOs.add(WorkDefinitionResponseDTO.fromWorkFlowTaskDefinition(wdt1));
-					}
-					else { // WorkFlow
-						WorkFlowDefinition wd1 = workFlowDefinitionRepository.findById(wwdt1.getWorkDefinitionId())
-								.get();
-						List<WorkFlowWorkDefinition> wd1WorkFlowWorkDefinitions = workFlowWorkRepository
-								.findByWorkFlowDefinitionIdOrderByCreateDateAsc(wd1.getId()).stream()
-								.sorted(Comparator.comparing(WorkFlowWorkDefinition::getCreateDate))
-								.collect(Collectors.toList());
-						workDefinitionResponseDTOs.add(WorkDefinitionResponseDTO.fromWorkFlowDefinitionEntity(wd1,
-								wd1WorkFlowWorkDefinitions));
-					}
-				});
+				this.getWorksFromWorkDefinition(workFlowWorkUnits1Definition, workDefinitionResponseDTOs);
 			}
 		}
 
