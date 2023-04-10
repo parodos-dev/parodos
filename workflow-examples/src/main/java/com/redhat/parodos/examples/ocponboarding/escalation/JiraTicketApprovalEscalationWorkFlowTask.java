@@ -37,7 +37,7 @@ import org.springframework.http.ResponseEntity;
  * An example of a task that send an escalation email notification for a pending Jira
  * ticket review and approval
  *
- * @author Annel Ketch (Github: anludke)
+ * @author Annel Ketcha (Github: anludke)
  */
 
 @Slf4j
