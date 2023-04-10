@@ -151,8 +151,8 @@ public class OcpOnboardingWorkFlowConfiguration {
 	@Infrastructure
 	WorkFlow workFlowA(
 			@Qualifier("jiraTicketCreationWorkFlowTask") JiraTicketCreationWorkFlowTask jiraTicketCreationWorkFlowTask,
-			@Qualifier("jiraTicketEmailNotificationWorkFlowTask") JiraTicketEmailNotificationWorkFlowTask jiraTicketEmailNotificationWorkFlowTask,
-			@Qualifier("notificationWorkFlowTask") NotificationWorkFlowTask notificationWorkFlowTask) {
+			@Qualifier("notificationWorkFlowTask") NotificationWorkFlowTask notificationWorkFlowTask,
+			@Qualifier("jiraTicketEmailNotificationWorkFlowTask") JiraTicketEmailNotificationWorkFlowTask jiraTicketEmailNotificationWorkFlowTask) {
 		return SequentialFlow.Builder.aNewSequentialFlow().named("workFlowA").execute(jiraTicketCreationWorkFlowTask)
 				.then(notificationWorkFlowTask).then(jiraTicketEmailNotificationWorkFlowTask).build();
 	}
