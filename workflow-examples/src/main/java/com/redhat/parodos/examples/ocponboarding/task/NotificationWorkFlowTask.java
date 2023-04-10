@@ -57,12 +57,16 @@ public class NotificationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 		try {
 			String subject = getRequiredParameterValue(workContext, NOTIFICATION_SUBJECT);
 			String message = getRequiredParameterValue(workContext, NOTIFICATION_MESSAGE);
+
 			NotificationRequest request = NotificationRequest.builder().usernames(List.of("test")).subject(subject)
 					.body(message).build();
 
-			HttpEntity<NotificationRequest> header = RestUtils.getRequestWithHeaders(request, "test", "test");
+			HttpEntity<NotificationRequest> notificationRequestHttpEntity = RestUtils.getRequestWithHeaders(request,
+					"test", "test");
+
 			ResponseEntity<String> response = RestUtils.executePost(notificationServiceUrl + "/api/v1/messages",
-					header);
+					notificationRequestHttpEntity);
+
 			if (response.getStatusCode().is2xxSuccessful()) {
 				log.info("Rest call completed: {}", response.getBody());
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);

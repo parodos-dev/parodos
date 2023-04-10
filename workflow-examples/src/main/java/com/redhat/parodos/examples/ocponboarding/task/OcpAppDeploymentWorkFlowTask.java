@@ -69,32 +69,37 @@ public class OcpAppDeploymentWorkFlowTask extends BaseInfrastructureWorkFlowTask
 		try {
 			String namespace = getRequiredParameterValue(workContext, NAMESPACE);
 			String clusterToken = getRequiredParameterValue(workContext, CLUSTER_TOKEN);
+
 			Config config = new ConfigBuilder().withMasterUrl(clusterApiUrl).withOauthToken(clusterToken).build();
+
 			try (KubernetesClient kclient = new KubernetesClientBuilder().withConfig(config).build()) {
 				OpenShiftClient client = kclient.adapt(OpenShiftClient.class);
+
+				// Project
 				createProject(client, namespace);
 
+				// Deployment
 				Deployment deployment = new DeploymentBuilder().withNewMetadata().withName(NGINX).endMetadata()
 						.withNewSpec().withReplicas(1).withNewTemplate().withNewMetadata().addToLabels("app", NGINX)
 						.endMetadata().withNewSpec().addNewContainer().withName(NGINX).withImage(OPENSHIFT_NGINX)
 						.addNewPort().withContainerPort(CONTAINER_PORT).endPort().endContainer().endSpec().endTemplate()
 						.withNewSelector().addToMatchLabels("app", NGINX).endSelector().endSpec().build();
+				client.apps().deployments().inNamespace(namespace).resource(deployment).create();
 
-				deployment = client.apps().deployments().inNamespace(namespace).resource(deployment).create();
-
+				// Service
 				Service service = new ServiceBuilder().withNewMetadata().withName(NGINX).endMetadata().withNewSpec()
 						.withSelector(Collections.singletonMap("app", NGINX)).addNewPort().withName(DEMO_PORT)
 						.withProtocol("TCP").withPort(CONTAINER_PORT).withTargetPort(new IntOrString(CONTAINER_PORT))
 						.endPort().endSpec().build();
+				client.services().inNamespace(namespace).resource(service).create();
 
-				service = client.services().inNamespace(namespace).resource(service).create();
-
+				// Route
 				Route route = new RouteBuilder().withNewMetadata().withName(NGINX).endMetadata().withNewSpec()
 						.withTo(new RouteTargetReferenceBuilder().withKind("Service").withName(NGINX).build())
 						.withPort(new RoutePortBuilder().withTargetPort(new IntOrString(CONTAINER_PORT)).build())
 						.endSpec().build();
-
 				route = client.routes().inNamespace(namespace).resource(route).create();
+
 				addParameter(workContext, APP_LINK, route.getSpec().getHost());
 				log.info("deployment is successful");
 			}
