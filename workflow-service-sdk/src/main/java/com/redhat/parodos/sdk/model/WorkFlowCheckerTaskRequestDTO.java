@@ -31,20 +31,6 @@ import java.io.IOException;
 @lombok.Builder
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowCheckerTaskRequestDTO {
-  /**
-   * Gets or Sets status
-   */
-  @JsonAdapter(StatusEnum.Adapter.class)
-  public enum StatusEnum {
-    FAILED("FAILED"),
-    
-    COMPLETED("COMPLETED"),
-    
-    IN_PROGRESS("IN_PROGRESS"),
-    
-    PENDING("PENDING"),
-    
-    REJECTED("REJECTED");
 
 	/**
 	 * Gets or Sets status
@@ -58,7 +44,9 @@ public class WorkFlowCheckerTaskRequestDTO {
 
 		IN_PROGRESS("IN_PROGRESS"),
 
-		PENDING("PENDING");
+		PENDING("PENDING"),
+
+		REJECTED("REJECTED");
 
 		private String value;
 
