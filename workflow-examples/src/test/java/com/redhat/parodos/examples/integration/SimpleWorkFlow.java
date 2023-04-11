@@ -42,116 +42,118 @@ import static org.junit.Assert.fail;
 @Slf4j
 public class SimpleWorkFlow {
 
-    private static final String projectName = "project-1";
+	private static final String projectName = "project-1";
 
-    private static final String projectDescription = "an example project";
-    private ApiClient apiClient;
+	private static final String projectDescription = "an example project";
 
-    @Before
-    public void setUp() throws IOException {
-        apiClient = Configuration.getDefaultApiClient();
-        apiClient.addDefaultHeader(HttpHeaders.AUTHORIZATION, "Basic " + CredUtils.getBase64Creds("test", "test"));
+	private ApiClient apiClient;
 
-    }
+	@Before
+	public void setUp() throws IOException {
+		apiClient = Configuration.getDefaultApiClient();
+		apiClient.addDefaultHeader(HttpHeaders.AUTHORIZATION, "Basic " + CredUtils.getBase64Creds("test", "test"));
 
-    @Test
-    public void runSimpleWorkFlow() throws ApiException {
-        log.info("Running simple flow");
+	}
 
-        ProjectApi projectApi = new ProjectApi(apiClient);
+	@Test
+	public void runSimpleWorkFlow() throws ApiException {
+		log.info("Running simple flow");
 
-        ExamplesUtils.waitProjectStart(projectApi);
-        log.info("Project is ✔️ on {}", apiClient.getBasePath());
+		ProjectApi projectApi = new ProjectApi(apiClient);
 
-        ProjectResponseDTO testProject;
+		ExamplesUtils.waitProjectStart(projectApi);
+		log.info("Project is ✔️ on {}", apiClient.getBasePath());
 
-        // RETRIEVE ALL PROJECTS AVAILABLE
-        log.info("Get all available projects");
-        List<ProjectResponseDTO> projects = projectApi.getProjects();
+		ProjectResponseDTO testProject;
 
-        // CHECK IF testProject ALREADY EXISTS
-        testProject = getProjectByNameAndDescription(projects, projectName, projectDescription);
+		// RETRIEVE ALL PROJECTS AVAILABLE
+		log.info("Get all available projects");
+		List<ProjectResponseDTO> projects = projectApi.getProjects();
 
-        // CREATE PROJECT "Test Project Name" IF NOT EXISTS
-        if (testProject == null) {
-            log.info("There are no projects. Creating project {}", projectName);
-            // DEFINE A TEST PROJECT REQUEST
-            ProjectRequestDTO projectRequestDTO = new ProjectRequestDTO();
-            projectRequestDTO.setName(projectName);
-            projectRequestDTO.setDescription(projectDescription);
+		// CHECK IF testProject ALREADY EXISTS
+		testProject = getProjectByNameAndDescription(projects, projectName, projectDescription);
 
-            ProjectResponseDTO projectResponseDTO = projectApi.createProject(projectRequestDTO);
-            assertNotNull(projectResponseDTO);
-            assertEquals(projectName, projectResponseDTO.getName());
-            assertEquals(projectDescription, projectResponseDTO.getDescription());
-            log.info("Project {} successfully created", projectName);
-        }
+		// CREATE PROJECT "Test Project Name" IF NOT EXISTS
+		if (testProject == null) {
+			log.info("There are no projects. Creating project {}", projectName);
+			// DEFINE A TEST PROJECT REQUEST
+			ProjectRequestDTO projectRequestDTO = new ProjectRequestDTO();
+			projectRequestDTO.setName(projectName);
+			projectRequestDTO.setDescription(projectDescription);
 
-        // ASSERT PROJECT "testProject" IS PRESENT
-        projects = projectApi.getProjects();
-        log.debug("PROJECTS: {}", projects);
-        assertTrue(projects.size() > 0);
-        testProject = getProjectByNameAndDescription(projects, projectName, projectDescription);
-        assertNotNull(testProject);
+			ProjectResponseDTO projectResponseDTO = projectApi.createProject(projectRequestDTO);
+			assertNotNull(projectResponseDTO);
+			assertEquals(projectName, projectResponseDTO.getName());
+			assertEquals(projectDescription, projectResponseDTO.getDescription());
+			log.info("Project {} successfully created", projectName);
+		}
 
-        // GET simpleSequentialWorkFlow DEFINITIONS
-        WorkflowDefinitionApi workflowDefinitionApi = new WorkflowDefinitionApi();
-        List<WorkFlowDefinitionResponseDTO> simpleSequentialWorkFlowDefinitions = workflowDefinitionApi
-                .getWorkFlowDefinitions("simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW);
-        assertEquals(1, simpleSequentialWorkFlowDefinitions.size());
+		// ASSERT PROJECT "testProject" IS PRESENT
+		projects = projectApi.getProjects();
+		log.debug("PROJECTS: {}", projects);
+		assertTrue(projects.size() > 0);
+		testProject = getProjectByNameAndDescription(projects, projectName, projectDescription);
+		assertNotNull(testProject);
 
-        // GET WORKFLOW DEFINITION BY Id
-        WorkFlowDefinitionResponseDTO simpleSequentialWorkFlowDefinition = workflowDefinitionApi
-                .getWorkFlowDefinitionById(simpleSequentialWorkFlowDefinitions.get(0).getId().toString());
+		// GET simpleSequentialWorkFlow DEFINITIONS
+		WorkflowDefinitionApi workflowDefinitionApi = new WorkflowDefinitionApi();
+		List<WorkFlowDefinitionResponseDTO> simpleSequentialWorkFlowDefinitions = workflowDefinitionApi
+				.getWorkFlowDefinitions("simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW);
+		assertEquals(1, simpleSequentialWorkFlowDefinitions.size());
 
-        assertNotNull(simpleSequentialWorkFlowDefinition.getId());
-        assertEquals("simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW,
-                simpleSequentialWorkFlowDefinition.getName());
-        assertEquals(WorkFlowProcessingType.SEQUENTIAL.toString(),
-                simpleSequentialWorkFlowDefinition.getProcessingType());
-        assertEquals(WorkFlowType.INFRASTRUCTURE.toString(), simpleSequentialWorkFlowDefinition.getType());
+		// GET WORKFLOW DEFINITION BY Id
+		WorkFlowDefinitionResponseDTO simpleSequentialWorkFlowDefinition = workflowDefinitionApi
+				.getWorkFlowDefinitionById(simpleSequentialWorkFlowDefinitions.get(0).getId().toString());
 
-        assertNotNull(simpleSequentialWorkFlowDefinition.getWorks());
-        assertTrue(simpleSequentialWorkFlowDefinition.getWorks().size() == 2);
-        assertEquals("restCallTask", simpleSequentialWorkFlowDefinition.getWorks().get(0).getName());
-        assertEquals(WorkType.TASK.toString(), simpleSequentialWorkFlowDefinition.getWorks().get(0).getWorkType());
-        assertNull(simpleSequentialWorkFlowDefinition.getWorks().get(0).getWorks());
-        assertNull(simpleSequentialWorkFlowDefinition.getWorks().get(0).getProcessingType());
-        assertNotNull(simpleSequentialWorkFlowDefinition.getWorks().get(0).getParameters());
+		assertNotNull(simpleSequentialWorkFlowDefinition.getId());
+		assertEquals("simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW,
+				simpleSequentialWorkFlowDefinition.getName());
+		assertEquals(WorkFlowProcessingType.SEQUENTIAL.toString(),
+				simpleSequentialWorkFlowDefinition.getProcessingType());
+		assertEquals(WorkFlowType.INFRASTRUCTURE.toString(), simpleSequentialWorkFlowDefinition.getType());
 
-        assertEquals("loggingTask", simpleSequentialWorkFlowDefinition.getWorks().get(1).getName());
-        assertEquals(WorkType.TASK.toString(), simpleSequentialWorkFlowDefinition.getWorks().get(1).getWorkType());
-        assertNull(simpleSequentialWorkFlowDefinition.getWorks().get(1).getWorks());
-        assertNull(simpleSequentialWorkFlowDefinition.getWorks().get(1).getProcessingType());
-        assertNotNull(simpleSequentialWorkFlowDefinition.getWorks().get(1).getParameters());
+		assertNotNull(simpleSequentialWorkFlowDefinition.getWorks());
+		assertTrue(simpleSequentialWorkFlowDefinition.getWorks().size() == 2);
+		assertEquals("restCallTask", simpleSequentialWorkFlowDefinition.getWorks().get(0).getName());
+		assertEquals(WorkType.TASK.toString(), simpleSequentialWorkFlowDefinition.getWorks().get(0).getWorkType());
+		assertNull(simpleSequentialWorkFlowDefinition.getWorks().get(0).getWorks());
+		assertNull(simpleSequentialWorkFlowDefinition.getWorks().get(0).getProcessingType());
+		assertNotNull(simpleSequentialWorkFlowDefinition.getWorks().get(0).getParameters());
 
-        // Define WorkRequests
-        WorkRequestDTO work1 = new WorkRequestDTO();
-        work1.setWorkName("restCallTask");
-        work1.setArguments(Arrays.asList(new ArgumentRequestDTO().key("url").value("https://httpbin.org/post"),
-                new ArgumentRequestDTO().key("payload").value("'Hello!'")));
+		assertEquals("loggingTask", simpleSequentialWorkFlowDefinition.getWorks().get(1).getName());
+		assertEquals(WorkType.TASK.toString(), simpleSequentialWorkFlowDefinition.getWorks().get(1).getWorkType());
+		assertNull(simpleSequentialWorkFlowDefinition.getWorks().get(1).getWorks());
+		assertNull(simpleSequentialWorkFlowDefinition.getWorks().get(1).getProcessingType());
+		assertNotNull(simpleSequentialWorkFlowDefinition.getWorks().get(1).getParameters());
 
-        WorkRequestDTO work2 = new WorkRequestDTO();
-        work2.setWorkName("loggingTask");
-        work2.setArguments(Arrays.asList(new ArgumentRequestDTO().key("user-id").value("test-user-id"),
-                new ArgumentRequestDTO().key("api-server").value("test-api-server")));
+		// Define WorkRequests
+		WorkRequestDTO work1 = new WorkRequestDTO();
+		work1.setWorkName("restCallTask");
+		work1.setArguments(Arrays.asList(new ArgumentRequestDTO().key("url").value("https://httpbin.org/post"),
+				new ArgumentRequestDTO().key("payload").value("'Hello!'")));
 
-        // Define WorkFlowRequest
-        WorkFlowRequestDTO workFlowRequestDTO = new WorkFlowRequestDTO();
-        workFlowRequestDTO.setProjectId(testProject.getId());
-        workFlowRequestDTO.setWorkFlowName("simpleSequentialWorkFlow_INFRASTRUCTURE_WORKFLOW");
-        workFlowRequestDTO.setWorks(Arrays.asList(work1, work2));
+		WorkRequestDTO work2 = new WorkRequestDTO();
+		work2.setWorkName("loggingTask");
+		work2.setArguments(Arrays.asList(new ArgumentRequestDTO().key("user-id").value("test-user-id"),
+				new ArgumentRequestDTO().key("api-server").value("test-api-server")));
 
-        WorkflowApi workflowApi = new WorkflowApi();
-        log.info("******** Running The Simple Sequence Flow ********");
-        WorkFlowResponseDTO workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
+		// Define WorkFlowRequest
+		WorkFlowRequestDTO workFlowRequestDTO = new WorkFlowRequestDTO();
+		workFlowRequestDTO.setProjectId(testProject.getId());
+		workFlowRequestDTO.setWorkFlowName("simpleSequentialWorkFlow_INFRASTRUCTURE_WORKFLOW");
+		workFlowRequestDTO.setWorks(Arrays.asList(work1, work2));
 
-        assertNotNull(workFlowResponseDTO.getWorkFlowExecutionId());
-        assertNull(workFlowResponseDTO.getWorkFlowOptions());
-        assertNotNull(workFlowResponseDTO.getWorkStatus());
-        assertEquals(WorkStatusEnum.COMPLETED, workFlowResponseDTO.getWorkStatus());
+		WorkflowApi workflowApi = new WorkflowApi();
+		log.info("******** Running The Simple Sequence Flow ********");
+		WorkFlowResponseDTO workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
 
-        log.info("workflow finished successfully with response: {}", workFlowResponseDTO);
-        log.info("******** Simple Sequence Flow Completed ********");
-    }
+		assertNotNull(workFlowResponseDTO.getWorkFlowExecutionId());
+		assertNull(workFlowResponseDTO.getWorkFlowOptions());
+		assertNotNull(workFlowResponseDTO.getWorkStatus());
+		assertEquals(WorkStatusEnum.COMPLETED, workFlowResponseDTO.getWorkStatus());
+
+		log.info("workflow finished successfully with response: {}", workFlowResponseDTO);
+		log.info("******** Simple Sequence Flow Completed ********");
+	}
+
 }
