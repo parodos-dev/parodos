@@ -32,6 +32,8 @@ public class AppLinkEmailNotificationWorkFlowTaskTest extends BaseInfrastructure
 
 	private static final String MAIL_SERVICE_URL_TEST = "mail-service-url-test";
 
+	private static final String MAIL_SERVICE_SITE_NAME_TEST = "mail-service-site-name-test";
+
 	private static final String APP_LINK_PARAMETER_NAME = "APP_LINK";
 
 	public static final String APP_LINK_TEST = "app-link-test";
@@ -53,7 +55,7 @@ public class AppLinkEmailNotificationWorkFlowTaskTest extends BaseInfrastructure
 
 	@Override
 	protected BaseInfrastructureWorkFlowTask getConcretePersonImplementation() {
-		return new AppLinkEmailNotificationWorkFlowTask(MAIL_SERVICE_URL_TEST);
+		return new AppLinkEmailNotificationWorkFlowTask(MAIL_SERVICE_URL_TEST, MAIL_SERVICE_SITE_NAME_TEST);
 	}
 
 	@Test
