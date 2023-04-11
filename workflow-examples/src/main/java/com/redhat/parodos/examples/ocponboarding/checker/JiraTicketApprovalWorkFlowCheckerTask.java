@@ -25,7 +25,6 @@ import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import com.redhat.parodos.examples.ocponboarding.task.dto.jira.GetJiraTicketResponseDto;
 import com.redhat.parodos.examples.ocponboarding.task.dto.jira.GetJiraTicketResponseValue;
-import com.redhat.parodos.examples.ocponboarding.task.dto.jira.JiraApprovalStatus;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +45,9 @@ public class JiraTicketApprovalWorkFlowCheckerTask extends BaseWorkFlowCheckerTa
 	private static final String CLUSTER_TOKEN = "CLUSTER_TOKEN";
 
 	private static final String CLUSTER_TOKEN_CUSTOM_FIELD_ID = "customfield_10064";
+
 	private static final String DONE = "DONE";
+
 	private static final String DECLINED = "DECLINED";
 
 	private final String jiraServiceBaseUrl;
