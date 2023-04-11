@@ -90,7 +90,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 			WorkFlowDefinitionRepository workFlowDefinitionRepository,
 			WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository, WorkFlowRepository workFlowRepository,
 			WorkFlowTaskRepository workFlowTaskRepository, WorkFlowWorkRepository workFlowWorkRepository,
-							   WorkFlowDefinitionService workFlowDefinitionService, MeterRegistry metricRegistry) {
+			WorkFlowDefinitionService workFlowDefinitionService, MeterRegistry metricRegistry) {
 		this.workFlowDelegate = workFlowDelegate;
 		this.workFlowServiceDelegate = workFlowServiceDelegate;
 		this.workFlowDefinitionRepository = workFlowDefinitionRepository;

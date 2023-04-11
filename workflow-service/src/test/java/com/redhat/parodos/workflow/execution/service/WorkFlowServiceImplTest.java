@@ -86,7 +86,8 @@ class WorkFlowServiceImplTest {
 
 		this.workFlowService = new WorkFlowServiceImpl(this.workFlowDelegate, this.workFlowServiceDelegate,
 				this.workFlowDefinitionRepository, this.workFlowTaskDefinitionRepository, this.workFlowRepository,
-				this.workFlowTaskRepository, this.workFlowWorkRepository, this.workFlowDefinitionService, this.metricRegistry);
+				this.workFlowTaskRepository, this.workFlowWorkRepository, this.workFlowDefinitionService,
+				this.metricRegistry);
 	}
 
 	@Test
