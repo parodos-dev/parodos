@@ -269,8 +269,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	}
 
 	public List<WorkFlowExecution> findRunningChecker(WorkFlowExecution masterWorkflow) {
-		return workFlowRepository.findCheckers(masterWorkflow.getId()).stream()
-				.filter(checker -> checker.getStatus().equals(WorkFlowStatus.FAILED)).collect(Collectors.toList());
+		return workFlowRepository.findRunningCheckersById(masterWorkflow.getId());
 	}
 
 	private String validateWorkflow(String workflowName, WorkFlow workFlow) {
