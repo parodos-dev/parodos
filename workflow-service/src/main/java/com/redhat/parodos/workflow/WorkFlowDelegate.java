@@ -40,51 +40,51 @@ import java.util.Optional;
 @Component
 public class WorkFlowDelegate {
 
-    private final BeanWorkFlowRegistryImpl beanWorkFlowRegistry;
+	private final BeanWorkFlowRegistryImpl beanWorkFlowRegistry;
 
-    public WorkFlowDelegate(BeanWorkFlowRegistryImpl beanWorkFlowRegistry) {
-        this.beanWorkFlowRegistry = beanWorkFlowRegistry;
-    }
+	public WorkFlowDelegate(BeanWorkFlowRegistryImpl beanWorkFlowRegistry) {
+		this.beanWorkFlowRegistry = beanWorkFlowRegistry;
+	}
 
-    public WorkContext initWorkFlowContext(WorkFlowRequestDTO workFlowRequestDTO,
-                                           WorkFlowDefinitionResponseDTO masterWorkFlowDefinitionDto) {
-        WorkContext workContext = new WorkContext();
+	public WorkContext initWorkFlowContext(WorkFlowRequestDTO workFlowRequestDTO,
+			WorkFlowDefinitionResponseDTO masterWorkFlowDefinitionDto) {
+		WorkContext workContext = new WorkContext();
 
-        if (workFlowRequestDTO.getArguments() != null && !workFlowRequestDTO.getArguments().isEmpty()) {
-            WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-                    workFlowRequestDTO.getWorkFlowName(), WorkContextDelegate.Resource.ARGUMENTS,
-                    WorkFlowDTOUtil.convertArgumentListToMap(workFlowRequestDTO.getArguments()));
-        }
-        if (masterWorkFlowDefinitionDto.getWorks() != null && !masterWorkFlowDefinitionDto.getWorks().isEmpty())
-            masterWorkFlowDefinitionDto.getWorks().forEach(
-                    work -> initWorkContext(workContext, workFlowRequestDTO.findFirstWorkByName(work.getName()), work,
-                            masterWorkFlowDefinitionDto.getName()));
-        return workContext;
-    }
+		if (workFlowRequestDTO.getArguments() != null && !workFlowRequestDTO.getArguments().isEmpty()) {
+			WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+					workFlowRequestDTO.getWorkFlowName(), WorkContextDelegate.Resource.ARGUMENTS,
+					WorkFlowDTOUtil.convertArgumentListToMap(workFlowRequestDTO.getArguments()));
+		}
+		if (masterWorkFlowDefinitionDto.getWorks() != null && !masterWorkFlowDefinitionDto.getWorks().isEmpty())
+			masterWorkFlowDefinitionDto.getWorks().forEach(
+					work -> initWorkContext(workContext, workFlowRequestDTO.findFirstWorkByName(work.getName()), work,
+							masterWorkFlowDefinitionDto.getName()));
+		return workContext;
+	}
 
-    private void initWorkContext(WorkContext workContext, WorkFlowRequestDTO.WorkRequestDTO workRequestDTO,
-                                 WorkDefinitionResponseDTO workDefinitionResponseDTO, String parentWorkflowName) {
-        WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-                workDefinitionResponseDTO.getName(), WorkContextDelegate.Resource.PARENT_WORKFLOW, parentWorkflowName);
+	private void initWorkContext(WorkContext workContext, WorkFlowRequestDTO.WorkRequestDTO workRequestDTO,
+			WorkDefinitionResponseDTO workDefinitionResponseDTO, String parentWorkflowName) {
+		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				workDefinitionResponseDTO.getName(), WorkContextDelegate.Resource.PARENT_WORKFLOW, parentWorkflowName);
 
-        Optional.ofNullable(workRequestDTO).filter(dto -> !CollectionUtils.isEmpty(dto.getArguments()))
-                .ifPresent(dto -> WorkContextDelegate.write(workContext,
-                        WorkType.WORKFLOW.name().equalsIgnoreCase(dto.getType())
-                                ? WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION
-                                : WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
-                        workRequestDTO.getWorkName(), WorkContextDelegate.Resource.ARGUMENTS,
-                        WorkFlowDTOUtil.convertArgumentListToMap(workRequestDTO.getArguments())));
+		Optional.ofNullable(workRequestDTO).filter(dto -> !CollectionUtils.isEmpty(dto.getArguments()))
+				.ifPresent(dto -> WorkContextDelegate.write(workContext,
+						WorkType.WORKFLOW.name().equalsIgnoreCase(dto.getType())
+								? WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION
+								: WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
+						workRequestDTO.getWorkName(), WorkContextDelegate.Resource.ARGUMENTS,
+						WorkFlowDTOUtil.convertArgumentListToMap(workRequestDTO.getArguments())));
 
-        if (workDefinitionResponseDTO.getWorks() != null)
-            workDefinitionResponseDTO.getWorks()
-                    .forEach(work -> initWorkContext(
-                            workContext, Optional.ofNullable(workRequestDTO)
-                                    .map(dto -> dto.findFirstWorkByName(work.getName())).orElse(null),
-                            work, workDefinitionResponseDTO.getName()));
-    }
+		if (workDefinitionResponseDTO.getWorks() != null)
+			workDefinitionResponseDTO.getWorks()
+					.forEach(work -> initWorkContext(
+							workContext, Optional.ofNullable(workRequestDTO)
+									.map(dto -> dto.findFirstWorkByName(work.getName())).orElse(null),
+							work, workDefinitionResponseDTO.getName()));
+	}
 
-    public WorkFlow getWorkFlowExecutionByName(String workFlowName) {
-        return beanWorkFlowRegistry.getWorkFlowByName(workFlowName);
-    }
+	public WorkFlow getWorkFlowExecutionByName(String workFlowName) {
+		return beanWorkFlowRegistry.getWorkFlowByName(workFlowName);
+	}
 
 }
