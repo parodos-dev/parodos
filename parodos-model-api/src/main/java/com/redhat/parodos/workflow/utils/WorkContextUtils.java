@@ -35,17 +35,33 @@ public class WorkContextUtils {
 	private WorkContextUtils() {
 	}
 
+	/**
+	 * method to get project id from workContext
+	 * @param workContext
+	 * @return project id
+	 */
 	public static String getProjectId(WorkContext workContext) {
 		return WorkContextDelegate
 				.read(workContext, WorkContextDelegate.ProcessType.PROJECT, WorkContextDelegate.Resource.ID).toString();
 	}
 
+	/**
+	 * get master workflow execution id from workContext
+	 * @param workContext
+	 * @return master workflow execution id
+	 */
 	public static String getMainExecutionId(WorkContext workContext) {
 		return WorkContextDelegate
 				.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ID)
 				.toString();
 	}
 
+	/**
+	 * add a new common parameter to workContext
+	 * @param workContext
+	 * @param key parameter name
+	 * @param value parameter value
+	 */
 	public static void addParameter(WorkContext workContext, String key, String value) {
 		Map<String, String> parameterMap = Optional
 				.ofNullable(new ObjectMapper().convertValue(WorkContextDelegate.read(workContext,
@@ -58,6 +74,12 @@ public class WorkContextUtils {
 				WorkContextDelegate.Resource.ARGUMENTS, parameterMap);
 	}
 
+	/**
+	 * get all available parameters for a task
+	 * @param workContext
+	 * @param name task name
+	 * @return Map of parameters
+	 */
 	public static Map<String, String> getAllParameters(WorkContext workContext, String name) {
 		Map<String, String> parameters = Optional
 				.ofNullable(new ObjectMapper().convertValue(
@@ -74,12 +96,6 @@ public class WorkContextUtils {
 		return parameters;
 	}
 
-	/**
-	 * Get Parameters that are set at the WorkFlow level
-	 * @param workContext
-	 * @param workName
-	 * @return
-	 */
 	private static Map<String, String> getParentParameters(WorkContext workContext, String workName) {
 		String parentWorkflowName = (String) WorkContextDelegate.read(workContext,
 				WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, workName,

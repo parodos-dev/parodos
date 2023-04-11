@@ -30,6 +30,7 @@ import com.redhat.parodos.workflows.workflow.WorkFlow;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestClientException;
 
 /**
  * An example of a task that calls a Jira Endpoint with a BasicAuth Header
@@ -45,6 +46,8 @@ public class JiraTicketApprovalWorkFlowCheckerTask extends BaseWorkFlowCheckerTa
 	private static final String CLUSTER_TOKEN = "CLUSTER_TOKEN";
 
 	private static final String CLUSTER_TOKEN_CUSTOM_FIELD_ID = "customfield_10064";
+	private static final String DONE = "DONE";
+	private static final String DECLINED = "DECLINED";
 
 	private final String jiraServiceBaseUrl;
 
@@ -73,34 +76,39 @@ public class JiraTicketApprovalWorkFlowCheckerTask extends BaseWorkFlowCheckerTa
 
 			ResponseEntity<GetJiraTicketResponseDto> result = RestUtils.restExchange(urlString + issueKey, jiraUsername,
 					jiraPassword, GetJiraTicketResponseDto.class);
-			if (result.getStatusCode().is2xxSuccessful() && result.getBody() != null) {
-				GetJiraTicketResponseDto responseDto = result.getBody();
-				log.info("Rest call completed: {}", responseDto.getIssueKey());
-				if (JiraApprovalStatus.DONE.name().equals(responseDto.getCurrentStatus().getStatus().toUpperCase())) {
-					log.info("request {} is approved", responseDto.getIssueKey());
-					String clusterToken = responseDto.getRequestFieldValues().stream()
-							.filter(requestFieldValue -> requestFieldValue.getFieldId()
-									.equals(CLUSTER_TOKEN_CUSTOM_FIELD_ID))
-							.findFirst().map(GetJiraTicketResponseValue::getValue)
-							.orElseThrow(
-									() -> new MissingParameterException("cluster token is not provided by approver!"))
-							.toString();
-					addParameter(workContext, CLUSTER_TOKEN, clusterToken);
-					return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
-				}
-				else if (JiraApprovalStatus.DECLINED.name()
-						.equals(responseDto.getCurrentStatus().getStatus().toUpperCase())) {
-					log.info("request {} is rejected", responseDto.getIssueKey());
-					return new DefaultWorkReport(WorkStatus.REJECTED, workContext);
-				}
-				else
-					log.info("request {} is waiting for approval", responseDto.getIssueKey());
-			}
-			else
+			GetJiraTicketResponseDto responseDto = result.getBody();
+
+			if (!result.getStatusCode().is2xxSuccessful() || responseDto == null) {
 				log.error("Call to the API was not successful. Response: {}", result.getStatusCode());
+			}
+			else {
+				log.info("Rest call completed: {}", responseDto.getIssueKey());
+				switch (responseDto.getCurrentStatus().getStatus().toUpperCase()) {
+					case DONE:
+						log.info("request {} is approved", responseDto.getIssueKey());
+						String clusterToken = responseDto.getRequestFieldValues().stream()
+								.filter(requestFieldValue -> requestFieldValue.getFieldId()
+										.equals(CLUSTER_TOKEN_CUSTOM_FIELD_ID))
+								.findFirst().map(GetJiraTicketResponseValue::getValue)
+								.orElseThrow(() -> new MissingParameterException(
+										"cluster token is not provided by approver!"))
+								.toString();
+						addParameter(workContext, CLUSTER_TOKEN, clusterToken);
+						return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
+					case DECLINED:
+						log.info("request {} is rejected", responseDto.getIssueKey());
+						return new DefaultWorkReport(WorkStatus.REJECTED, workContext);
+					default:
+						log.info("request {} is waiting for approval", responseDto.getIssueKey());
+						break;
+				}
+			}
 		}
-		catch (Exception e) {
+		catch (RestClientException e) {
 			log.error("There was an issue with the REST call: {}", e.getMessage());
+		}
+		catch (MissingParameterException e) {
+			log.error("There was an error getting parameter(s): {}", e.getMessage());
 		}
 		return new DefaultWorkReport(WorkStatus.FAILED, workContext);
 	}

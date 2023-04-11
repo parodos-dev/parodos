@@ -17,6 +17,6 @@ package com.redhat.parodos.examples.ocponboarding.task.dto.jira;
 
 public enum JiraApprovalStatus {
 
-	DONE, DECLINED
+    DONE, DECLINED, WAITING_FOR_APPROVAL
 
 }
