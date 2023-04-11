@@ -22,13 +22,10 @@ import com.redhat.parodos.examples.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -43,15 +40,16 @@ import org.springframework.http.ResponseEntity;
 @Slf4j
 public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
-	private static final String MAIL_RECIPIENT_SITE_NAME = "parodos-jira";
-
 	private static final String ISSUE_LINK_PARAMETER_NAME = "ISSUE_LINK";
 
 	private final String mailServiceUrl;
 
-	public JiraTicketEmailNotificationWorkFlowTask(String mailServiceUrl) {
+	private final String mailServiceSiteName;
+
+	public JiraTicketEmailNotificationWorkFlowTask(String mailServiceUrl, String mailServiceSiteName) {
 		super();
 		this.mailServiceUrl = mailServiceUrl;
+		this.mailServiceSiteName = mailServiceSiteName;
 	}
 
 	@Override
@@ -76,18 +74,15 @@ public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureW
 		}
 
 		// message request payload
-		MessageRequestDTO messageRequestDTO = new MessageRequestDTO(requesterName, requesterEmail,
-				MAIL_RECIPIENT_SITE_NAME, getMessage(jiraTicketUrl));
+		MessageRequestDTO messageRequestDTO = new MessageRequestDTO(requesterName, requesterEmail, mailServiceSiteName,
+				getMessage(jiraTicketUrl));
 
 		ResponseEntity<String> responseEntity = null;
 		try {
 			HttpEntity<MessageRequestDTO> requestEntity = new HttpEntity<>(messageRequestDTO);
-			LocalDateTime startDateTime = LocalDateTime.now();
 			responseEntity = RestUtils.executePost(mailServiceUrl, requestEntity);
-			log.info("Request duration: {} ms", ChronoUnit.MILLIS.between(startDateTime, LocalDateTime.now()));
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			log.error("Error occurred when submitting message: {}", e.getMessage());
 		}
 

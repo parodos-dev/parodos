@@ -43,15 +43,16 @@ import org.springframework.http.ResponseEntity;
 @Slf4j
 public class JiraTicketApprovalEscalationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
-	private static final String MAIL_RECIPIENT_SITE_NAME = "parodos-escalation";
-
 	private static final String ISSUE_LINK = "ISSUE_LINK";
 
 	private final String mailServiceUrl;
 
-	public JiraTicketApprovalEscalationWorkFlowTask(String mailServiceUrl) {
+	private final String mailServiceSiteName;
+
+	public JiraTicketApprovalEscalationWorkFlowTask(String mailServiceUrl, String mailServiceSiteName) {
 		super();
 		this.mailServiceUrl = mailServiceUrl;
+		this.mailServiceSiteName = mailServiceSiteName;
 	}
 
 	@Override
@@ -76,8 +77,8 @@ public class JiraTicketApprovalEscalationWorkFlowTask extends BaseInfrastructure
 		}
 
 		// message request payload
-		MessageRequestDTO messageRequestDTO = new MessageRequestDTO(requesterName, requesterEmail,
-				MAIL_RECIPIENT_SITE_NAME, getMessage(jiraTicketUrl));
+		MessageRequestDTO messageRequestDTO = new MessageRequestDTO(requesterName, requesterEmail, mailServiceSiteName,
+				getMessage(jiraTicketUrl));
 
 		ResponseEntity<String> responseEntity = null;
 		try {

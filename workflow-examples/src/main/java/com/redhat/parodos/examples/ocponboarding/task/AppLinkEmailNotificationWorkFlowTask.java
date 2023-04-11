@@ -22,16 +22,12 @@ import com.redhat.parodos.examples.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,8 +47,6 @@ import org.springframework.http.ResponseEntity;
 @Slf4j
 public class AppLinkEmailNotificationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
-	private final static String MAIL_RECIPIENT_SITE_NAME = "parodos-ocp";
-
 	private final static String TEMPLATE_DEFAULT_ENCODING = "UTF-8";
 
 	private final static String TEMPLATE_BASE_PACKAGE_PATH = "templates";
@@ -63,9 +57,12 @@ public class AppLinkEmailNotificationWorkFlowTask extends BaseInfrastructureWork
 
 	private final String mailServiceUrl;
 
-	public AppLinkEmailNotificationWorkFlowTask(String mailServiceUrl) {
+	private final String mailServiceSiteName;
+
+	public AppLinkEmailNotificationWorkFlowTask(String mailServiceUrl, String mailServiceSiteName) {
 		super();
 		this.mailServiceUrl = mailServiceUrl;
+		this.mailServiceSiteName = mailServiceSiteName;
 	}
 
 	@Override
@@ -95,18 +92,17 @@ public class AppLinkEmailNotificationWorkFlowTask extends BaseInfrastructureWork
 		try {
 			// message template
 			String message = getMessage(TEMPLATE_NAME, messageData);
-			if (!message.isEmpty()) {
-				// message request payload
-				MessageRequestDTO messageRequestDTO = new MessageRequestDTO(requesterName, requesterEmail,
-						MAIL_RECIPIENT_SITE_NAME, message);
-				HttpEntity<MessageRequestDTO> requestEntity = new HttpEntity<>(messageRequestDTO);
-				LocalDateTime startDateTime = LocalDateTime.now();
-				responseEntity = RestUtils.executePost(mailServiceUrl, requestEntity);
-				log.info("Request duration: {} ms", ChronoUnit.MILLIS.between(startDateTime, LocalDateTime.now()));
+			if (message.isEmpty()) {
+				log.info("AppLinkEmailNotificationWorkFlowTask failed due to empty message template!");
+				return new DefaultWorkReport(WorkStatus.FAILED, workContext);
 			}
+			// message request payload
+			MessageRequestDTO messageRequestDTO = new MessageRequestDTO(requesterName, requesterEmail,
+					mailServiceSiteName, message);
+			HttpEntity<MessageRequestDTO> requestEntity = new HttpEntity<>(messageRequestDTO);
+			responseEntity = RestUtils.executePost(mailServiceUrl, requestEntity);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			log.error("Error occurred when preparing or submitting the message: {}", e.getMessage());
 		}
 
@@ -128,7 +124,7 @@ public class AppLinkEmailNotificationWorkFlowTask extends BaseInfrastructureWork
 	private String getMessage(String templateName, Map<String, Object> templateData)
 			throws IOException, TemplateException {
 		String message = "";
-		Configuration cfg = new Configuration(freemarker.template.Configuration.VERSION_2_3_30);
+		Configuration cfg = new Configuration(Configuration.VERSION_2_3_30);
 		cfg.setClassLoaderForTemplateLoading(getClass().getClassLoader(), TEMPLATE_BASE_PACKAGE_PATH);
 		cfg.setDefaultEncoding(TEMPLATE_DEFAULT_ENCODING);
 		Template template = cfg.getTemplate(templateName);

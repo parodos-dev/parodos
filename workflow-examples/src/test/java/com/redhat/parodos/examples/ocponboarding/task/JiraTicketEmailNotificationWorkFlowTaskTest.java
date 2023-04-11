@@ -32,6 +32,8 @@ public class JiraTicketEmailNotificationWorkFlowTaskTest extends BaseInfrastruct
 
 	private static final String MAIL_SERVICE_URL_TEST = "mail-service-url-test";
 
+	private static final String MAIL_SERVICE_SITE_NAME_TEST = "mail-service-site-name-test";
+
 	private static final String ISSUE_LINK_PARAMETER_NAME = "ISSUE_LINK";
 
 	public static final String JIRA_TICKET_URL_TEST = "jira-ticket-url-test";
@@ -54,7 +56,7 @@ public class JiraTicketEmailNotificationWorkFlowTaskTest extends BaseInfrastruct
 
 	@Override
 	protected BaseInfrastructureWorkFlowTask getConcretePersonImplementation() {
-		return new JiraTicketEmailNotificationWorkFlowTask(MAIL_SERVICE_URL_TEST);
+		return new JiraTicketEmailNotificationWorkFlowTask(MAIL_SERVICE_URL_TEST, MAIL_SERVICE_SITE_NAME_TEST);
 	}
 
 	@Test
