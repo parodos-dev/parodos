@@ -244,7 +244,8 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 					Optional<WorkFlowTaskDefinition> wdt = workFlowTaskDefinitionRepository
 							.findById(workFlowWorkDefinition.getWorkDefinitionId());
 					if (wdt.isEmpty()) {
-						log.error("Cannot find the task definition with id " + workFlowWorkDefinition.getWorkDefinitionId());
+						log.error("Cannot find the task definition with id "
+								+ workFlowWorkDefinition.getWorkDefinitionId());
 						return;
 					}
 					responseDTOs.add(WorkDefinitionResponseDTO.fromWorkFlowTaskDefinition(wdt.get()));
@@ -252,14 +253,15 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 					Optional<WorkFlowDefinition> wd = workFlowDefinitionRepository
 							.findById(workFlowWorkDefinition.getWorkDefinitionId());
 					if (wd.isEmpty()) {
-						log.error("Cannot find work flow definition with id {}", workFlowWorkDefinition.getWorkDefinitionId());
+						log.error("Cannot find work flow definition with id {}",
+								workFlowWorkDefinition.getWorkDefinitionId());
 						return;
 					}
 					List<WorkFlowWorkDefinition> wdWorkFlowWorkDependencies = workFlowWorkRepository
 							.findByWorkFlowDefinitionIdOrderByCreateDateAsc(wd.get().getId());
 
-					responseDTOs.add(
-							WorkDefinitionResponseDTO.fromWorkFlowDefinitionEntity(wd.get(), wdWorkFlowWorkDependencies));
+					responseDTOs.add(WorkDefinitionResponseDTO.fromWorkFlowDefinitionEntity(wd.get(),
+							wdWorkFlowWorkDependencies));
 				default:
 					return;
 			}

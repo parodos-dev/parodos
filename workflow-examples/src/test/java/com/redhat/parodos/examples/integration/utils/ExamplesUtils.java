@@ -62,4 +62,5 @@ public final class ExamplesUtils {
 						&& prj.getUsername() == null && !Strings.isNullOrEmpty(prj.getId()))
 				.findAny().orElse(null);
 	}
+
 }
