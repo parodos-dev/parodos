@@ -61,18 +61,18 @@ public class WorkFlowContinuationServiceImpl implements WorkFlowContinuationServ
 	public void workFlowRunAfterStartup() {
 		log.info("Looking up all IN PROGRESS workflows for ");
 		List<WorkFlowExecution> workFlowExecutions = workFlowRepository
-				.findByStatusIn(List.of(WorkFlowStatus.IN_PROGRESS, WorkFlowStatus.PENDING));
-		log.info("Number of IN PROGRESS or PENDING workflows for : {}", workFlowExecutions.size());
-		workFlowExecutions.stream().filter(workFlowExecution -> workFlowExecution.getMasterWorkFlowExecution() == null)
-				.forEach(workFlowExecution -> {
-					WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository
-							.findById(workFlowExecution.getWorkFlowDefinitionId()).get();
+				.findByStatusInAndIsMaster(List.of(WorkFlowStatus.IN_PROGRESS, WorkFlowStatus.PENDING));
+		log.info("Number of IN PROGRESS or PENDING master workflows is : {}", workFlowExecutions.size());
+		workFlowExecutions.forEach(workFlowExecution -> {
+			WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository
+					.findById(workFlowExecution.getWorkFlowDefinitionId()).get();
 
-					// continue with the same execution id
-					continueWorkFlow(workFlowExecution.getProjectId().toString(), workFlowDefinition.getName(),
-							workFlowExecution.getWorkFlowExecutionContext().getWorkContext(),
-							workFlowExecution.getId());
-				});
+			// continue with the same execution id
+			continueWorkFlow(workFlowExecution.getProjectId().toString(), workFlowDefinition.getName(),
+					workFlowExecution.getWorkFlowExecutionContext().getWorkContext(), workFlowExecution.getId());
+
+			// TODO: continue 'FAILED' Checkers in this master workflow execution
+		});
 	}
 
 	public void continueWorkFlow(String projectId, String workflowName, WorkContext workContext, UUID executionId) {

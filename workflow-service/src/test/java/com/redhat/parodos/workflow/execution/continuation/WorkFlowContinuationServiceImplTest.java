@@ -59,13 +59,13 @@ class WorkFlowContinuationServiceImplTest {
 	@Test
 	void workFlowSkipCompletedJobs() {
 		// given
-		Mockito.when(this.workFlowRepository.findByStatusIn(workFlowStatuses)).thenReturn(Arrays.asList());
+		Mockito.when(this.workFlowRepository.findByStatusInAndIsMaster(workFlowStatuses)).thenReturn(Arrays.asList());
 
 		// when
 		this.service.workFlowRunAfterStartup();
 
 		// then
-		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findByStatusIn(workFlowStatuses);
+		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findByStatusInAndIsMaster(workFlowStatuses);
 		Mockito.verify(this.asyncWorkFlowContinuer, Mockito.times(0)).executeAsync(Mockito.any(), Mockito.any(),
 				Mockito.any(), Mockito.any());
 	}
@@ -74,14 +74,15 @@ class WorkFlowContinuationServiceImplTest {
 	void workFlowCompleteInProgress() {
 		// given
 		WorkFlowExecution workFlowExecution = this.sampleWorkFlowExecution(WorkFlowStatus.IN_PROGRESS);
-		Mockito.when(this.workFlowRepository.findByStatusIn(workFlowStatuses)).thenReturn(List.of(workFlowExecution));
+		Mockito.when(this.workFlowRepository.findByStatusInAndIsMaster(workFlowStatuses))
+				.thenReturn(List.of(workFlowExecution));
 		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.any()))
 				.thenReturn(Optional.of(sampleWorkFlowDefinition()));
 		// when
 		this.service.workFlowRunAfterStartup();
 
 		// then
-		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findByStatusIn(workFlowStatuses);
+		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findByStatusInAndIsMaster(workFlowStatuses);
 		Mockito.verify(this.asyncWorkFlowContinuer, Mockito.times(1)).executeAsync(
 				Mockito.eq(workFlowExecution.getProjectId().toString()), Mockito.eq(TEST_WORKFLOW), Mockito.any(),
 				Mockito.any());
@@ -91,14 +92,15 @@ class WorkFlowContinuationServiceImplTest {
 	void workFlowCompletePending() {
 		// given
 		WorkFlowExecution workFlowExecution = this.sampleWorkFlowExecution(WorkFlowStatus.PENDING);
-		Mockito.when(this.workFlowRepository.findByStatusIn(workFlowStatuses)).thenReturn(List.of(workFlowExecution));
+		Mockito.when(this.workFlowRepository.findByStatusInAndIsMaster(workFlowStatuses))
+				.thenReturn(List.of(workFlowExecution));
 		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.any()))
 				.thenReturn(Optional.of(sampleWorkFlowDefinition()));
 		// when
 		this.service.workFlowRunAfterStartup();
 
 		// then
-		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findByStatusIn(workFlowStatuses);
+		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findByStatusInAndIsMaster(workFlowStatuses);
 		Mockito.verify(this.asyncWorkFlowContinuer, Mockito.times(1)).executeAsync(
 				Mockito.eq(workFlowExecution.getProjectId().toString()), Mockito.eq(TEST_WORKFLOW), Mockito.any(),
 				Mockito.any());
@@ -108,7 +110,8 @@ class WorkFlowContinuationServiceImplTest {
 	void workFlowCompleteWithTaskExecutions() {
 		// given
 		WorkFlowExecution workFlowExecution = this.sampleWorkFlowExecution(WorkFlowStatus.IN_PROGRESS);
-		Mockito.when(this.workFlowRepository.findByStatusIn(workFlowStatuses)).thenReturn(List.of(workFlowExecution));
+		Mockito.when(this.workFlowRepository.findByStatusInAndIsMaster(workFlowStatuses))
+				.thenReturn(List.of(workFlowExecution));
 		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.any()))
 				.thenReturn(Optional.of(sampleWorkFlowDefinition()));
 		WorkFlowTaskDefinition workFlowTaskDefinition = sampleWorkFlowTaskDefinition();
@@ -127,7 +130,7 @@ class WorkFlowContinuationServiceImplTest {
 		this.service.workFlowRunAfterStartup();
 
 		// then
-		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findByStatusIn(workFlowStatuses);
+		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findByStatusInAndIsMaster(workFlowStatuses);
 		Mockito.verify(this.asyncWorkFlowContinuer, Mockito.times(1)).executeAsync(
 				Mockito.eq(workFlowExecution.getProjectId().toString()), Mockito.eq(TEST_WORKFLOW), Mockito.any(),
 				Mockito.any());
@@ -137,7 +140,8 @@ class WorkFlowContinuationServiceImplTest {
 	void workFlowCompleteWithInvalidJson() {
 		// given
 		WorkFlowExecution wfExecution = this.sampleWorkFlowExecution(WorkFlowStatus.IN_PROGRESS);
-		Mockito.when(this.workFlowRepository.findByStatusIn(workFlowStatuses)).thenReturn(List.of(wfExecution));
+		Mockito.when(this.workFlowRepository.findByStatusInAndIsMaster(workFlowStatuses))
+				.thenReturn(List.of(wfExecution));
 		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.any()))
 				.thenReturn(Optional.of(sampleWorkFlowDefinition()));
 		WorkFlowTaskDefinition wfTaskDef = sampleWorkFlowTaskDefinition();
@@ -161,7 +165,7 @@ class WorkFlowContinuationServiceImplTest {
 		assertNotNull(exception);
 		assertTrue(exception.getMessage().contains("JsonParseException"));
 
-		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findByStatusIn(workFlowStatuses);
+		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findByStatusInAndIsMaster(workFlowStatuses);
 		Mockito.verify(this.asyncWorkFlowContinuer, Mockito.times(1)).executeAsync(Mockito.any(), Mockito.any(),
 				Mockito.any(), Mockito.any());
 	}

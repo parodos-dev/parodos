@@ -16,6 +16,8 @@
 package com.redhat.parodos.workflow.execution.dto;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,6 +45,10 @@ public class WorkFlowRequestDTO {
 
 	private List<WorkRequestDTO> works;
 
+	public WorkFlowRequestDTO.WorkRequestDTO findFirstWorkByName(String name) {
+		return findWorks(works, name).stream().findFirst().orElse(null);
+	}
+
 	@Data
 	@Builder
 	@AllArgsConstructor
@@ -58,6 +64,10 @@ public class WorkFlowRequestDTO {
 		// recursive works
 		List<WorkRequestDTO> works;
 
+		public WorkFlowRequestDTO.WorkRequestDTO findFirstWorkByName(String name) {
+			return findWorks(works, name).stream().findFirst().orElse(null);
+		}
+
 		@Data
 		@Builder
 		@AllArgsConstructor
@@ -70,6 +80,12 @@ public class WorkFlowRequestDTO {
 
 		}
 
+	}
+
+	private static List<WorkRequestDTO> findWorks(List<WorkRequestDTO> works, String name) {
+		return Optional.ofNullable(works)
+				.map(ws -> ws.stream().filter(work -> name.equals(work.getWorkName())).collect(Collectors.toList()))
+				.orElse(List.of());
 	}
 
 }
