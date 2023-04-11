@@ -26,9 +26,8 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import com.redhat.parodos.examples.ocponboarding.task.dto.jira.GetJiraTicketResponseDto;
 import com.redhat.parodos.examples.ocponboarding.task.dto.jira.GetJiraTicketResponseValue;
 import com.redhat.parodos.examples.ocponboarding.task.dto.jira.JiraApprovalStatus;
-import java.util.List;
-
 import com.redhat.parodos.workflows.workflow.WorkFlow;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 

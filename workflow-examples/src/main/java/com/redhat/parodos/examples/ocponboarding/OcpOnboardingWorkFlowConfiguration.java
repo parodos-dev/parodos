@@ -23,19 +23,22 @@ import com.redhat.parodos.examples.ocponboarding.task.JiraTicketEmailNotificatio
 import com.redhat.parodos.examples.ocponboarding.task.NotificationWorkFlowTask;
 import com.redhat.parodos.examples.ocponboarding.task.OcpAppDeploymentWorkFlowTask;
 import com.redhat.parodos.examples.ocponboarding.task.assessment.OnboardingOcpAssessmentTask;
-import com.redhat.parodos.workflow.annotation.*;
+import com.redhat.parodos.workflow.annotation.Assessment;
+import com.redhat.parodos.workflow.annotation.Checker;
+import com.redhat.parodos.workflow.annotation.Escalation;
+import com.redhat.parodos.workflow.annotation.Infrastructure;
+import com.redhat.parodos.workflow.annotation.Parameter;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflow.parameter.WorkFlowParameterType;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
+import java.util.Date;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.Date;
-import java.util.List;
 
 @Configuration
 public class OcpOnboardingWorkFlowConfiguration {
@@ -95,8 +98,9 @@ public class OcpOnboardingWorkFlowConfiguration {
 
 	@Bean
 	JiraTicketApprovalEscalationWorkFlowTask jiraTicketApprovalEscalationWorkFlowTask(
-			@Value("${MAIL_SERVER_URL:test}") String mailServerUrl) {
-		return new JiraTicketApprovalEscalationWorkFlowTask(mailServerUrl);
+			@Value("${MAIL_SERVICE_URL:service}") String mailServiceUrl,
+			@Value("${MAIL_SERVICE_SITE_NAME_ESCALATION:site}") String mailServiceSiteName) {
+		return new JiraTicketApprovalEscalationWorkFlowTask(mailServiceUrl, mailServiceSiteName);
 	}
 
 	@Bean(name = "jiraTicketApprovalEscalationWorkFlow")
@@ -137,8 +141,9 @@ public class OcpOnboardingWorkFlowConfiguration {
 
 	@Bean
 	JiraTicketEmailNotificationWorkFlowTask jiraTicketEmailNotificationWorkFlowTask(
-			@Value("${MAIL_SERVER_URL:test}") String mailServerUrl) {
-		return new JiraTicketEmailNotificationWorkFlowTask(mailServerUrl);
+			@Value("${MAIL_SERVICE_URL:service}") String mailServiceUrl,
+			@Value("${MAIL_SERVICE_SITE_NAME_JIRA:site}") String mailServiceSiteName) {
+		return new JiraTicketEmailNotificationWorkFlowTask(mailServiceUrl, mailServiceSiteName);
 	}
 
 	@Bean
@@ -168,8 +173,9 @@ public class OcpOnboardingWorkFlowConfiguration {
 
 	@Bean
 	AppLinkEmailNotificationWorkFlowTask appLinkEmailNotificationWorkFlowTask(
-			@Value("${MAIL_SERVER_URL:test}") String mailServerUrl) {
-		return new AppLinkEmailNotificationWorkFlowTask(mailServerUrl);
+			@Value("${MAIL_SERVICE_URL:service}") String mailServiceUrl,
+			@Value("${MAIL_SERVICE_SITE_NAME_APP:site}") String mailServiceSiteName) {
+		return new AppLinkEmailNotificationWorkFlowTask(mailServiceUrl, mailServiceSiteName);
 	}
 
 	@Bean(name = "workFlowB")
