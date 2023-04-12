@@ -95,7 +95,7 @@ public class PatternDetectionAssessmentTask extends GithubPatternDetectionTask {
 				         WorkContextDelegate.Resource.WORKFLOW_OPTIONS,
 				         // @formatter:off
 				         new WorkFlowOptions.Builder()
-				         .addNewOption(workFlowOptions.stream().filter(option -> option.getDisplayName().contains("OCP Onboarding")).findFirst().get())
+				         .addNewOption(workFlowOptions.stream().filter(option -> option.getDisplayName().contains("Onboarding")).findFirst().get())
 				         .build());
 				         // @formatter:on
 			}
