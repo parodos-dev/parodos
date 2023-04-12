@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 import org.kohsuke.github.GitHub;
 
@@ -125,7 +124,7 @@ public class PatternDetectionAssessmentTask extends GithubPatternDetectionTask {
 			.Builder
 			.aNewPattern()
 			.addThisToAllAreRequiredClues(NameClueImpl.Builder.builder().name("maven").targetFileNamePatternString("pom.xml").build())
-			.addThisToAllAreRequiredClues(ContentsClueImpl.Builder.builder().name("threadEvidence").targetFileExtensionPatternString(".java").targetContentPatternString("import java.util.concurrent.ExecutorService").build())
+			.addThisToAllAreRequiredClues(ContentsClueImpl.Builder.builder().name("tomcatConfig").targetFileExtensionPatternString(".txt").targetContentPatternString(".*TomcatServletWebServerFactory.*").build())
 			.build();
 			// @formatter:on
 	}

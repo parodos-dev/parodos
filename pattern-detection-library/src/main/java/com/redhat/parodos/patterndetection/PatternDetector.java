@@ -68,8 +68,9 @@ public class PatternDetector {
 			// @formatter:off
 			return DetectionResults
 					.builder()
-					.detectedClues(contextDelegate.getDetectedClue(report))
-					.detectedPatterns(contextDelegate.getDetectedPatterns(report))
+					.detectedClues(contextDelegate.getDetectedClue(context))
+					.detectedPatterns(contextDelegate.getDetectedPatterns(context))
+					.allPatternsWhereDetected(contextDelegate.areAllPatternsDetected(report))
 					.startTime(startTime)
 					.endTime(new Date())
 					.build();
