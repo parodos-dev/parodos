@@ -1,3 +1,4 @@
+
 package com.redhat.parodos.examples.integration.utils;
 
 import com.redhat.parodos.sdk.api.ApiCallback;
@@ -5,28 +6,28 @@ import com.redhat.parodos.sdk.api.ApiException;
 import com.redhat.parodos.sdk.api.ProjectApi;
 import com.redhat.parodos.sdk.model.ProjectResponseDTO;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Strings;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static org.junit.Assert.fail;
 
 /**
  * @author Gloria Ciavarrini (Github: gciavarrini)
  */
-@Slf4j
 public final class ExamplesUtils {
 
-	static final int maxTry = 100;
-
 	public static void waitProjectStart(ProjectApi projectApi) throws ApiException, InterruptedException {
-
-		AtomicInteger tryCount = new AtomicInteger(0);
-		AsyncResult<List<ProjectResponseDTO>> asyncResult = new AsyncResult<>();
+		AsyncResult asyncResult = new AsyncResult();
+		Lock lock = new ReentrantLock();
+		Condition response = lock.newCondition();
 		ApiCallback<List<ProjectResponseDTO>> apiCallback = new ApiCallback<>() {
 			AtomicInteger failureCounter = new AtomicInteger(0);
 
@@ -35,15 +36,23 @@ public final class ExamplesUtils {
 				int i = failureCounter.incrementAndGet();
 				if (i >= 100) {
 					asyncResult.setError(e.getMessage());
-					asyncResult.setStatus(statusCode);
+					signal();
+				}
+				else {
+					try {
+						projectApi.getProjectsAsync(this);
+					}
+					catch (ApiException apie) {
+						asyncResult.setError(apie.getMessage());
+						signal();
+					}
 				}
 			}
 
 			@Override
 			public void onSuccess(List<ProjectResponseDTO> result, int statusCode,
 					Map<String, List<String>> responseHeaders) {
-				asyncResult.setResponse(result);
-				asyncResult.setStatus(statusCode);
+				signal();
 			}
 
 			@Override
@@ -53,29 +62,29 @@ public final class ExamplesUtils {
 			@Override
 			public void onDownloadProgress(long bytesRead, long contentLength, boolean done) {
 			}
-		};
 
-		do {
-			if (tryCount.get() >= maxTry) {
-				fail("Can get results from getProjectsAsync, timeout reached.");
+			private void signal() {
+				lock.lock();
+				try {
+					response.signal();
+				}
+				finally {
+					lock.unlock();
+				}
 			}
-			Thread.sleep(1000);
-			tryCount.incrementAndGet();
-
-			if (asyncResult.responseReceived()) {
-				if (asyncResult.getError() != null) {
-					fail("An error occurred while executing getProjectsAsync: " + asyncResult.getError()
-							+ ". Status code: " + asyncResult.getStatus());
-				}
-				if (asyncResult.getResponse() != null) {
-					break;
-				}
-				// retry async call
-				projectApi.getProjectsAsync(apiCallback);
+		};
+		projectApi.getProjectsAsync(apiCallback);
+		lock.lock();
+		try {
+			// should be more than enough
+			response.await(60, TimeUnit.SECONDS);
+			if (asyncResult.getError() != null) {
+				fail("An error occurred while executing getProjectsAsync: " + asyncResult.getError());
 			}
 		}
-		while (!asyncResult.responseReceived());
-
+		finally {
+			lock.unlock();
+		}
 	}
 
 	@Nullable
@@ -88,27 +97,9 @@ public final class ExamplesUtils {
 	}
 
 	@Data
-	private static class AsyncResult<T> {
+	private static class AsyncResult {
 
 		private String error;
-
-		private Integer status;
-
-		private T response;
-
-		private AsyncResult() {
-			clear();
-		}
-
-		private boolean responseReceived() {
-			return error != null && status != null && response != null;
-		}
-
-		private void clear() {
-			error = null;
-			status = null;
-			response = null;
-		}
 
 	}
 
