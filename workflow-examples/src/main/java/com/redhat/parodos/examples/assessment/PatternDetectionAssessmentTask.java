@@ -124,7 +124,7 @@ public class PatternDetectionAssessmentTask extends GithubPatternDetectionTask {
 			.Builder
 			.aNewPattern()
 			.addThisToAllAreRequiredClues(NameClueImpl.Builder.builder().name("maven").targetFileNamePatternString("pom.xml").build())
-			.addThisToAllAreRequiredClues(ContentsClueImpl.Builder.builder().name("tomcatConfig").targetFileExtensionPatternString(".txt").targetContentPatternString(".*TomcatServletWebServerFactory.*").build())
+			.addThisToAllAreRequiredClues(ContentsClueImpl.Builder.builder().name("tomcatConfig").targetFileExtensionPatternString(".java").targetContentPatternString(".*TomcatServletWebServerFactory.*").build())
 			.build();
 			// @formatter:on
 	}
