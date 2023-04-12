@@ -21,6 +21,7 @@ import com.redhat.parodos.tasks.github.GithubPatternDetectionTask;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
+import com.redhat.parodos.workflow.option.WorkFlowOptions;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
@@ -91,14 +92,22 @@ public class PatternDetectionAssessmentTask extends GithubPatternDetectionTask {
 			DetectionResults results = PatternDetector.detect(context);
 			if (results.isAllPatternsWhereDetected()) {
 				// put workflow option for ocp onboarding in the context
-				WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
-						WorkContextDelegate.Resource.WORKFLOW_OPTIONS, workFlowOptions.stream()
-								.filter(option -> option.getDisplayName().contains("OCP Onboarding")).collect(Collectors.toList()));
+				WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				         WorkContextDelegate.Resource.WORKFLOW_OPTIONS,
+				         // @formatter:off
+				         new WorkFlowOptions.Builder()
+				         .addNewOption(workFlowOptions.stream().filter(option -> option.getDisplayName().contains("OCP Onboarding")).findFirst().get())
+				         .build());
+				         // @formatter:on
 			}
 			else {
-				WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
-						WorkContextDelegate.Resource.WORKFLOW_OPTIONS, workFlowOptions.stream()
-								.filter(option -> option.getDisplayName().contains("Not Supported Application")).collect(Collectors.toList()));
+				WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				         WorkContextDelegate.Resource.WORKFLOW_OPTIONS,
+				         // @formatter:off
+				         new WorkFlowOptions.Builder()
+				         .addNewOption(workFlowOptions.stream().filter(option -> option.getDisplayName().contains("Not Supported Application")).findFirst().get())
+				         .build());
+				         // @formatter:on
 			}
 
 			return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
