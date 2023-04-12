@@ -13,9 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class GitFileInputStreamClient implements ContentInputStreamClient {
 
-	private static final String REPO = "repo";
+	private static final String REPO = "REPO";
 
-	private static final String BRANCH = "branch";
+	private static final String BRANCH = "BRANCH";
 
 	private GitHub github;
 

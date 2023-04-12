@@ -81,17 +81,19 @@ public class ContentsClueImpl extends AbstractClue {
 				}
 			});
 			// process content from Local File System
-			filesToScan.stream().forEach(thisFile -> {
-				try {
-					extractFileContent(workContext, thisFile);
-				}
-				catch (IOException e) {
-					log.error("Unable to execute Scan of {} clue on File: {}", this.name, thisFile.getAbsolutePath(),
-							e);
-					throw new PatternDetectionRuntimeException("Error getting content from files on local File system",
-							e);
-				}
-			});
+			if (filesToScan != null) {
+				filesToScan.stream().forEach(thisFile -> {
+					try {
+						extractFileContent(workContext, thisFile);
+					}
+					catch (IOException e) {
+						log.error("Unable to execute Scan of {} clue on File: {}", this.name, thisFile.getAbsolutePath(),
+								e);
+						throw new PatternDetectionRuntimeException("Error getting content from files on local File system",
+								e);
+					}
+				});
+			}
 		}
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}

@@ -58,39 +58,55 @@ public class PatternDetectionAssessmentTask extends GithubPatternDetectionTask {
 		// Get the Params from the UI
 		Map<String, Object> myMap;
 		try {
-			myMap = Map.of(REPO, WorkContextDelegate.getRequiredValueFromRequestParams(workContext, REPO), ORG,
-					WorkContextDelegate.getRequiredValueFromRequestParams(workContext, ORG), BRANCH,
-					WorkContextDelegate.getRequiredValueFromRequestParams(workContext, BRANCH));
+			// @formatter:off
+			myMap = Map.of(
+					REPO, getRequiredParameterValue(workContext, REPO), 
+					ORG, getRequiredParameterValue(workContext, ORG), 
+					BRANCH,getRequiredParameterValue(workContext, BRANCH)
+				);
+			// @formatter:on
 			// Get all the file names
-			var data = super.getDirectoriesAndFiles(ORG, REPO, BRANCH);
+			var data = super.getDirectoriesAndFiles(getRequiredParameterValue(workContext, ORG), getRequiredParameterValue(workContext, REPO));
 			List<String> fileNames = new ArrayList<>();
 			for (Entry<String, List<String>> directory : data.entrySet()) {
 				fileNames.addAll(directory.getValue());
 			}
-			// Configure the client
-			ContentInputStreamClientConfiguration.builder().contentClient(client).name("githubPatternDetection")
-					.parametersForClient(myMap).build();
+			
+			// Clues to use during test cases
+			BasicPatternImpl ocpTargetApp = configureCluesAndPatterns();
+			WorkContext context =
+					// @formatter:off
+					PatternDetectionWorkContextDelegate
+					.WorkContextBuilder.builder()
+					.addThisToDesiredPatterns(ocpTargetApp)
+					.addContentInputStreamClientAndPaths(
+							ContentInputStreamClientConfiguration.builder()
+							.contentClient(client)
+							.name("githubPatternDetection")
+							.pathsToProcessForContent(fileNames)
+							.parametersForClient(myMap)
+							.build())
+					.build();
+					// @formatter:on
+			DetectionResults results = PatternDetector.detect(context);
+			if (results.isAllPatternsWhereDetected()) {
+				// put workflow option for ocp onboarding in the context
+				WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
+						WorkContextDelegate.Resource.WORKFLOW_OPTIONS, workFlowOptions.stream()
+								.filter(option -> option.getDisplayName().contains("OCP Onboarding")).collect(Collectors.toList()));
+			}
+			else {
+				WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
+						WorkContextDelegate.Resource.WORKFLOW_OPTIONS, workFlowOptions.stream()
+								.filter(option -> option.getDisplayName().contains("Not Supported Application")).collect(Collectors.toList()));
+			}
+
+			return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 		}
 		catch (MissingParameterException | IOException e) {
 			log.error("Issues performing this assessment: ", e);
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext);
 		}
-		// Clues to use during test cases
-		BasicPatternImpl ocpTargetApp = configureCluesAndPatterns();
-		WorkContext context = PatternDetectionWorkContextDelegate.WorkContextBuilder.builder()
-				.addThisToDesiredPatterns(ocpTargetApp).build();
-		DetectionResults results = PatternDetector.detect(context);
-		if (results.isAllPatternsWhereDetected()) {
-			// put workflow option for ocp onboarding in the context
-			WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
-					WorkContextDelegate.Resource.WORKFLOW_OPTIONS, workFlowOptions.stream()
-							.filter(option -> option.getDisplayName().contains("ocp")).collect(Collectors.toList()));
-		}
-		else {
-			// put the workflow option for 'not supported' in the context
-		}
-
-		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
 	private BasicPatternImpl configureCluesAndPatterns() {
@@ -100,7 +116,7 @@ public class PatternDetectionAssessmentTask extends GithubPatternDetectionTask {
 			.Builder
 			.aNewPattern()
 			.addThisToAllAreRequiredClues(NameClueImpl.Builder.builder().name("maven").targetFileNamePatternString("pom.xml").build())
-			.addThisToAllAreRequiredClues(ContentsClueImpl.Builder.builder().name("restcontroller").targetFileExtensionPatternString(".java").targetContentPatternString("@RestController").build())
+			.addThisToAllAreRequiredClues(ContentsClueImpl.Builder.builder().name("threadEvidence").targetFileExtensionPatternString(".java").targetContentPatternString("import java.util.concurrent.ExecutorService").build())
 			.build();
 			// @formatter:on
 	}

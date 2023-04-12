@@ -1,11 +1,12 @@
 package com.redhat.parodos.examples.assessment;
 
 import java.util.List;
+
 import org.kohsuke.github.GitHub;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.redhat.parodos.examples.master.task.OnboardingAssessmentTask;
+
 import com.redhat.parodos.workflow.annotation.Assessment;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
@@ -40,7 +41,7 @@ public class AssessmentDemoConfig {
 		// @formatter:off
 		return new WorkFlowOption.Builder("notSupportedOption", "masterWorkFlow")
 				.addToDetails("We do not support this option yet")
-				.displayName("Review Parodos Road Map for onboarding")
+				.displayName("Not Supported Application")
 				.setDescription("Review what patterns Parodos will be supporting and when")
 				.build();
 		// @formatter:on

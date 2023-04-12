@@ -50,6 +50,7 @@ public class NameClueImpl extends AbstractClue {
 	public WorkReport execute(WorkContext workContext) {
 		if (continueToRunIfDetected || !workContextDelegate.isThisClueDetected(this, workContext)) {
 			List<File> filesToScan = collectFileAndFolderNames(workContext);
+			if (filesToScan != null) {
 			for (File thisFile : filesToScan) {
 				boolean matched = targetFileNameRegexPattern != null
 						? targetFileNameRegexPattern.matcher(thisFile.getName()).matches()
@@ -57,6 +58,7 @@ public class NameClueImpl extends AbstractClue {
 				if (matched) {
 					workContextDelegate.markClueAsDetected(this, thisFile.getAbsolutePath(), workContext);
 				}
+			}
 			}
 		}
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
@@ -70,7 +72,9 @@ public class NameClueImpl extends AbstractClue {
 		}
 		else {
 			// get any lists of files supplied
-			filesToScan.addAll(workContextDelegate.getFilesToScan(workContext));
+			if (workContextDelegate.getFilesToScan(workContext) != null) {
+				filesToScan.addAll(workContextDelegate.getFilesToScan(workContext));
+			}
 			// get the files names from the ContentInputStreams
 			for (ContentInputStreamClientConfiguration clientConfig : workContextDelegate
 					.getContentClientsAndPaths(workContext)) {

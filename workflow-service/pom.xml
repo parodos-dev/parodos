@@ -125,6 +125,11 @@
             <artifactId>workflow-engine</artifactId>
             <version>${revision}</version>
         </dependency>
+        <dependency>
+            <groupId>dev.parodos</groupId>
+            <artifactId>workflow-examples</artifactId>
+            <version>${revision}</version>
+        </dependency>
         <!-- END Parodos Library Dependencies -->
         <!-- START Developer Productivity Dependencies -->
         <dependency>

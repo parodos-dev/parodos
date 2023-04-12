@@ -41,6 +41,7 @@ public abstract class GithubPatternDetectionTask extends BaseAssessmentTask {
 
 	private static final String DIVIDER = "/";
 
+	Map<String, List<String>> directoriesAndFilesPath = new HashMap<>();
 	/*
 	 * This needs to be supplied in the Workflow config, or is 'githubPersonalToken' is
 	 * set as an environment variable, one will be created using the personal access token
@@ -58,18 +59,18 @@ public abstract class GithubPatternDetectionTask extends BaseAssessmentTask {
 	 * @param path
 	 * @return
 	 */
-	public InputStream getFileData(String repo, String branch, String filePath) {
+	public InputStream getFileData(String org, String branch, String filePath) {
 		if (github == null) {
 			log.error(
 					"The connection to Github was not successfully established. Check the logs for more details. No read attempted forrepo: {} branch: {} file: {}",
-					repo, branch, filePath);
+					org, branch, filePath);
 			return null;
 		}
 		try {
-			return github.getRepository(repo).getFileContent(filePath, branch).read();
+			return github.getRepository(org).getFileContent(filePath, branch).read();
 		}
 		catch (IOException e) {
-			log.error("Unable to read the content for repo: {} branch: {} file: {}", repo, branch, filePath);
+			log.error("Unable to read the content for repo: {} branch: {} file: {}", org, branch, filePath);
 			return null;
 		}
 	}
@@ -82,23 +83,23 @@ public abstract class GithubPatternDetectionTask extends BaseAssessmentTask {
 	 * @return
 	 * @throws IOException
 	 */
-	public Map<String, List<String>> getDirectoriesAndFiles(String org, String repo, String branch) throws IOException {
-		Map<String, List<String>> directoriesAndFilesPath = new HashMap<>();
+	public Map<String, List<String>> getDirectoriesAndFiles(String org, String repo) throws IOException {
 		directoriesAndFilesPath.put(DIVIDER, new ArrayList<>());
-		search(org, directoriesAndFilesPath, github.getRepository(repo).getDirectoryContent(branch));
+		search(org, github.getRepository(repo).getDirectoryContent("/"));
 		return directoriesAndFilesPath;
 	}
+	
 
 	/*
 	 * Recursively processes the repo to build up the collection
 	 *
 	 */
-	private void search(String org, Map<String, List<String>> directoriesAndFilesPath, List<GHContent> gitHubContent)
+	private void search(String org, List<GHContent> gitHubContent)
 			throws IOException {
 		for (GHContent content : gitHubContent) {
 			if (content.isDirectory()) {
 				directoriesAndFilesPath.computeIfAbsent(content.getPath(), k -> new ArrayList<>());
-				search(org, directoriesAndFilesPath, github.getRepository(org).getDirectoryContent(content.getPath()));
+				search(org, github.getRepository(org).getDirectoryContent(content.getPath()));
 			}
 			else {
 				if (content.getPath().indexOf(DIVIDER) == -1) {

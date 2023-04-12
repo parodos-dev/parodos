@@ -226,18 +226,20 @@ public class PatternDetectionWorkContextDelegate {
 	 * Used when a root path is given
 	 */
 	private void getFilesAndDirectoriesFromRoot(WorkContext context) {
-		List<File> fileList = new ArrayList<>();
-		List<File> directoryList = new ArrayList<>();
-		try {
-			Files.walkFileTree(Paths.get(((String) context.get(PatternDetectionConstants.START_DIRECTORY.toString()))),
-					new CollectFiles(fileList, directoryList));
-		}
-		catch (IOException e) {
-			log.error("Unable to get the folders and files to process. Start Directory: {}",
-					(String) context.get(PatternDetectionConstants.START_DIRECTORY.toString()), e);
-		}
-		context.put(PatternDetectionConstants.FILES_TO_SCAN.toString(), fileList);
-		context.put(PatternDetectionConstants.FOLDERS_TO_SCAN.toString(), directoryList);
+		if (context.get(PatternDetectionConstants.START_DIRECTORY.toString()) != null) {
+			List<File> fileList = new ArrayList<>();
+			List<File> directoryList = new ArrayList<>();
+			try {
+				Files.walkFileTree(Paths.get(((String) context.get(PatternDetectionConstants.START_DIRECTORY.toString()))),
+						new CollectFiles(fileList, directoryList));
+			}
+			catch (IOException e) {
+				log.error("Unable to get the folders and files to process. Start Directory: {}",
+						(String) context.get(PatternDetectionConstants.START_DIRECTORY.toString()), e);
+			}
+			context.put(PatternDetectionConstants.FILES_TO_SCAN.toString(), fileList);
+			context.put(PatternDetectionConstants.FOLDERS_TO_SCAN.toString(), directoryList);
+			}
 	}
 
 	private void initializeContext(WorkContext context) {
@@ -370,7 +372,9 @@ public class PatternDetectionWorkContextDelegate {
 
 		public WorkContext build() {
 			WorkContext context = new WorkContext();
-			context.put(PatternDetectionConstants.START_DIRECTORY.toString(), startDirectory);
+			if (startDirectory != null) {
+				context.put(PatternDetectionConstants.START_DIRECTORY.toString(), startDirectory);
+			}
 			context.put(PatternDetectionConstants.DESIRED_PATTERNS.toString(), desiredPatterns);
 			context.put(PatternDetectionConstants.INPUT_STREAMS_WRAPPERS.toString(), inputStreams);
 			context.put(PatternDetectionConstants.DIRECTORY_FILE_PATHS.toString(), directoriesAndFiles);
