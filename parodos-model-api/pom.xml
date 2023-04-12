@@ -26,12 +26,6 @@
         <url>http://github.com/parodos-dev/parodos/tree/master</url>
     </scm>
 
-    <properties>
-        <lombok.version>1.18.26</lombok.version>
-        <spring.framework.version>5.3.26</spring.framework.version>
-        <jackson-databind.version>2.14.2</jackson-databind.version>
-    </properties>
-
     <dependencies>
         <!-- START Parodos Workflow Dependencies -->
         <dependency>
@@ -44,23 +38,19 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
         </dependency>
         <!-- END Developer Productivity Dependencies -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
-            <version>${spring.framework.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-expression</artifactId>
-            <version>${spring.framework.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson-databind.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
