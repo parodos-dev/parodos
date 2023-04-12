@@ -78,22 +78,23 @@ public class NameMatchingDelegate {
 	 * @param currentFile file to be processed
 	 * @return true if it should be processed, false if it should be ignored
 	 */
-	public boolean shouldProcessFile(File currentFile) {
+	public boolean shouldProcessPath(String path) {
+		File potentialFile = new File(path);
 		// Check if this is a file name pattern we should ignore
 		if (isIgnoreFileNameDefined()) {
-			return !ignoreFileNamePattern.matcher(currentFile.getName()).matches();
+			return !ignoreFileNamePattern.matcher(potentialFile.getName()).matches();
 		}
 		// check if this is an extension we are interested in
 		if (targetFileExtensionPattern != null) {
 			// don't need optional - String or Null
-			Optional<String> extension = getExtensionByStringHandling(currentFile.getAbsolutePath());
+			Optional<String> extension = getExtensionByStringHandling(path);
 			return extension.isPresent() && !targetFileExtensionPattern.matcher(extension.get()).matches();
 		}
 		// if we got to here, this is a file/folder we are interested in. Apply the name
 		// match
 		if (targetFileNameRegexPattern != null) {
 			// the file name is not the one specified - skip reading this file
-			return targetFileNameRegexPattern.matcher(currentFile.getName()).matches();
+			return targetFileNameRegexPattern.matcher(potentialFile.getName()).matches();
 		}
 		return true;
 	}
@@ -109,7 +110,6 @@ public class NameMatchingDelegate {
 				.filter(f -> f.contains("."))
 				.map(f -> f.substring(filename.lastIndexOf('.')));
 	// @formatter:on
-
 	}
 
 	public static class Builder {

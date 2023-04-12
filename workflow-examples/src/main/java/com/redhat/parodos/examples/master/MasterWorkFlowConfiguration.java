@@ -51,7 +51,9 @@ public class MasterWorkFlowConfiguration {
 	WorkFlow assessmentWorkFlow(
 			@Qualifier("onboardingAssessmentTask") OnboardingAssessmentTask onboardingAssessmentTask) {
 		// @formatter:off
-        return SequentialFlow.Builder.aNewSequentialFlow()
+        return SequentialFlow
+        		.Builder
+        		.aNewSequentialFlow()
                 .named("onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
                 .execute(onboardingAssessmentTask)
                 .build();

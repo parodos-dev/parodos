@@ -74,8 +74,15 @@ public class BasicPatternImpl implements Pattern {
 	 */
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		return ParallelFlow.Builder.aNewParallelFlow().execute(combineAllClues())
-				.with(ScanningThreadPool.getThreadPoolExecutor()).build().execute(workContext);
+		// @formatter:off
+		return ParallelFlow
+				.Builder
+				.aNewParallelFlow()
+				.execute(combineAllClues())
+				.with(ScanningThreadPool.getThreadPoolExecutor())
+				.build()
+				.execute(workContext);
+		// @formatter:on
 	}
 
 	/*
@@ -98,6 +105,11 @@ public class BasicPatternImpl implements Pattern {
 		return onlyOneIsRequiredClues;
 	}
 
+	/**
+	 * 
+	 * Builder to create a Pattern. Will suffice for most cases
+	 *
+	 */
 	public static class Builder {
 
 		private Builder() {

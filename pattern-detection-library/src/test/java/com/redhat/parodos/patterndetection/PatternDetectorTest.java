@@ -20,14 +20,15 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
 import com.redhat.parodos.patterndetection.clue.ContentsClueImpl;
 import com.redhat.parodos.patterndetection.clue.NameClueImpl;
-import com.redhat.parodos.patterndetection.context.WorkContextDelegate;
+import com.redhat.parodos.patterndetection.context.PatternDetectionWorkContextDelegate;
 import com.redhat.parodos.patterndetection.exceptions.PatternDetectionConfigurationException;
 import com.redhat.parodos.patterndetection.pattern.BasicPatternImpl;
-import com.redhat.parodos.patterndetection.pattern.Pattern;
 import com.redhat.parodos.patterndetection.results.DetectionResults;
 import com.redhat.parodos.workflows.work.WorkContext;
 
@@ -68,7 +69,7 @@ class PatternDetectorTest {
 	void testDetect_failNoConfig_missingConfigurationError() {
 		WorkContext context = new WorkContext();
 		Assertions.assertThrows(PatternDetectionConfigurationException.class, () -> {
-			PatternDetector.detect(context, null);
+			PatternDetector.detect(context);
 		});
 	}
 
@@ -79,7 +80,7 @@ class PatternDetectorTest {
 	@Test
 	void testDetect_failNull_missingConfigurationError() {
 		Assertions.assertThrows(PatternDetectionConfigurationException.class, () -> {
-			PatternDetector.detect(null, null);
+			PatternDetector.detect(null);
 		});
 	}
 
@@ -90,10 +91,10 @@ class PatternDetectorTest {
 	void testDetect_success_contextContainResults() {
 		BasicPatternImpl javaMavenPattern = BasicPatternImpl.Builder.aNewPattern()
 				.addThisToAllAreRequiredClues(mavenConfig).build();
-		WorkContext context = WorkContextDelegate.WorkContextBuilder.builder()
+		WorkContext context = PatternDetectionWorkContextDelegate.WorkContextBuilder.builder()
 				.startDirectory(new File(SRC_TEST_RESOURCES_MAVEN_CLUE).getAbsolutePath())
 				.addThisToDesiredPatterns(javaMavenPattern).build();
-		DetectionResults report = PatternDetector.detect(context, new Pattern[] { javaMavenPattern });
+		DetectionResults report = PatternDetector.detect(context);
 		assertTrue(report.getDetectedPatterns().contains(javaMavenPattern));
 	}
 
@@ -105,10 +106,10 @@ class PatternDetectorTest {
 	void testDetect_success_contextDoesNotContainResults() {
 		BasicPatternImpl javaMavenPattern = BasicPatternImpl.Builder.aNewPattern()
 				.addThisToAllAreRequiredClues(reactConfig).build();
-		WorkContext context = WorkContextDelegate.WorkContextBuilder.builder()
+		WorkContext context = PatternDetectionWorkContextDelegate.WorkContextBuilder.builder()
 				.startDirectory(new File(SRC_TEST_RESOURCES_MAVEN_CLUE).getAbsolutePath())
 				.addThisToDesiredPatterns(javaMavenPattern).build();
-		DetectionResults results = PatternDetector.detect(context, new Pattern[] { javaMavenPattern });
+		DetectionResults results = PatternDetector.detect(context);
 		assertFalse(results.getDetectedPatterns().contains(javaMavenPattern));
 	}
 
@@ -119,10 +120,10 @@ class PatternDetectorTest {
 	void testDetect_allClueSuccess_contextContainsResults() {
 		BasicPatternImpl controllerMavenPattern = BasicPatternImpl.Builder.aNewPattern()
 				.addThisToAllAreRequiredClues(mavenConfig).addThisToAllAreRequiredClues(reactConfig).build();
-		WorkContext context = WorkContextDelegate.WorkContextBuilder.builder()
+		WorkContext context = PatternDetectionWorkContextDelegate.WorkContextBuilder.builder()
 				.startDirectory(new File(SRC_TEST_RESOURCES_JAVA_WEB_CONTROLLER_CLUE).getAbsolutePath())
 				.addThisToDesiredPatterns(controllerMavenPattern).build();
-		DetectionResults results = PatternDetector.detect(context, new Pattern[] { controllerMavenPattern });
+		DetectionResults results = PatternDetector.detect(context);
 		assertFalse(results.getDetectedPatterns().contains(controllerMavenPattern));
 		assertTrue(results.getDetectedClues().containsKey(mavenConfig));
 		assertFalse(results.getDetectedClues().containsKey(reactConfig));
@@ -138,10 +139,10 @@ class PatternDetectorTest {
 
 		BasicPatternImpl controllerMavenPattern = BasicPatternImpl.Builder.aNewPattern()
 				.addThiToOneIsRequiredClues(mavenConfig).addThiToOneIsRequiredClues(reactConfig).build();
-		WorkContext context = WorkContextDelegate.WorkContextBuilder.builder()
+		WorkContext context = PatternDetectionWorkContextDelegate.WorkContextBuilder.builder()
 				.startDirectory(new File(SRC_TEST_RESOURCES_JAVA_WEB_CONTROLLER_CLUE).getAbsolutePath())
 				.addThisToDesiredPatterns(controllerMavenPattern).build();
-		DetectionResults results = PatternDetector.detect(context, new Pattern[] { controllerMavenPattern });
+		DetectionResults results = PatternDetector.detect(context);
 		assertTrue(results.getDetectedPatterns().contains(controllerMavenPattern));
 		assertTrue(results.getDetectedClues().containsKey(mavenConfig));
 		assertFalse(results.getDetectedClues().containsKey(reactConfig));
@@ -158,10 +159,10 @@ class PatternDetectorTest {
 		BasicPatternImpl controllerMavenPattern = BasicPatternImpl.Builder.aNewPattern()
 				.addThisToAllAreRequiredClues(mavenConfig).addThisToAllAreRequiredClues(restControllerStopWhenDetected)
 				.build();
-		WorkContext context = WorkContextDelegate.WorkContextBuilder.builder()
+		WorkContext context = PatternDetectionWorkContextDelegate.WorkContextBuilder.builder()
 				.startDirectory(new File(SRC_TEST_RESOURCES_MAVEN_CLUE).getAbsolutePath())
 				.addThisToDesiredPatterns(controllerMavenPattern).build();
-		DetectionResults results = PatternDetector.detect(context, new Pattern[] { controllerMavenPattern });
+		DetectionResults results = PatternDetector.detect(context);
 		assertFalse(results.getDetectedPatterns().contains(controllerMavenPattern));
 		assertTrue(results.getDetectedClues().containsKey(mavenConfig));
 		assertFalse(results.getDetectedClues().containsKey(reactConfig));
@@ -177,7 +178,7 @@ class PatternDetectorTest {
 		BasicPatternImpl multipleRestControllers = BasicPatternImpl.Builder.aNewPattern()
 				.addThisToAllAreRequiredClues(restControllerMultiple).build();
 		WorkContext context = createContextForContinuedMatchTests(multipleRestControllers);
-		DetectionResults results = PatternDetector.detect(context, new Pattern[] { multipleRestControllers });
+		DetectionResults results = PatternDetector.detect(context);
 		assertTrue(results.getDetectedPatterns().contains(multipleRestControllers));
 		assertTrue(results.getDetectedClues().containsKey(restControllerMultiple));
 		assertEquals(4, results.getDetectedClues().get(restControllerMultiple).size());
@@ -192,14 +193,14 @@ class PatternDetectorTest {
 		BasicPatternImpl multipleRestControllers = BasicPatternImpl.Builder.aNewPattern()
 				.addThisToAllAreRequiredClues(restControllerContinueRunning).build();
 		WorkContext context = createContextForContinuedMatchTests(multipleRestControllers);
-		DetectionResults results = PatternDetector.detect(context, new Pattern[] { multipleRestControllers });
+		DetectionResults results = PatternDetector.detect(context);
 		assertTrue(results.getDetectedPatterns().contains(multipleRestControllers));
 		assertTrue(results.getDetectedClues().containsKey(restControllerContinueRunning));
 		assertEquals(5, results.getDetectedClues().get(restControllerContinueRunning).size());
 	}
 
 	private WorkContext createContextForContinuedMatchTests(BasicPatternImpl multipleRestControllers) {
-		WorkContext context = WorkContextDelegate.WorkContextBuilder.builder()
+		WorkContext context = PatternDetectionWorkContextDelegate.WorkContextBuilder.builder()
 				.startDirectory(new File(SRC_TEST_RESOURCES_JAVA_WEB_CONTROLLER_MULTIPLE_CLUE).getAbsolutePath())
 				.addThisToDesiredPatterns(multipleRestControllers).build();
 		return context;

@@ -17,7 +17,7 @@ package com.redhat.parodos.patterndetection.clue;
 
 import java.util.UUID;
 import com.redhat.parodos.patterndetection.clue.delegate.NameMatchingDelegate;
-import com.redhat.parodos.patterndetection.context.WorkContextDelegate;
+import com.redhat.parodos.patterndetection.context.PatternDetectionWorkContextDelegate;
 import lombok.Data;
 
 /**
@@ -38,7 +38,7 @@ import lombok.Data;
 @Data
 public abstract class AbstractClue implements Clue {
 
-	WorkContextDelegate workContextDelegate = new WorkContextDelegate();
+	PatternDetectionWorkContextDelegate workContextDelegate = new PatternDetectionWorkContextDelegate();
 
 	NameMatchingDelegate nameMatchingDelegate;
 
@@ -53,6 +53,12 @@ public abstract class AbstractClue implements Clue {
 		this.name = name;
 	}
 
+	/**
+	 * Extensions of AbstractClue can create their own builders
+	 *
+	 * @author Luke Shannon (Github: lshannon)
+	 * @param <T>
+	 */
 	public static class Builder<T extends Builder<T>> {
 
 		String name;

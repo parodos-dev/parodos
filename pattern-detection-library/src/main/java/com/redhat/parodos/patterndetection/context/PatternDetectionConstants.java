@@ -38,9 +38,9 @@ package com.redhat.parodos.patterndetection.context;
  * @author Luke Shannon (Github: lshannon)
  *
  */
-public enum WorkFlowConstants {
+public enum PatternDetectionConstants {
 
 	DESIRED_PATTERNS, DETECTED_PATTERNS, DETECTED_CLUES, INPUT_STREAMS_WRAPPERS, START_DIRECTORY, START_FILE,
-	FILES_TO_SCAN, FOLDERS_TO_SCAN, DIRECTORY_FILE_PATHS
+	FILES_TO_SCAN, FOLDERS_TO_SCAN, DIRECTORY_FILE_PATHS, INPUT_STREAM_CLIENTS;
 
 }

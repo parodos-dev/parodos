@@ -21,9 +21,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.kohsuke.github.GHContent;
 import org.kohsuke.github.GitHub;
-import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
+
+import com.redhat.parodos.workflow.option.WorkFlowOption;
+import com.redhat.parodos.workflow.task.assessment.BaseAssessmentTask;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -33,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  */
 @Slf4j
-public abstract class GithubAwareTask extends BaseWorkFlowTask {
+public abstract class GithubPatternDetectionTask extends BaseAssessmentTask {
 
 	private static final String DIVIDER = "/";
 
@@ -44,16 +48,17 @@ public abstract class GithubAwareTask extends BaseWorkFlowTask {
 	 */
 	private GitHub github;
 
-	protected GithubAwareTask(GitHub github) {
+	protected GithubPatternDetectionTask(GitHub github, List<WorkFlowOption> workflowOptions) {
+		super(workflowOptions);
 		this.github = github;
 	}
 
 	/**
-	 * Returns the Inputstream for a file in Github
+	 * Returns the InputStream for a file in GitHub
 	 * @param path
 	 * @return
 	 */
-	public InputStream getFileData(String org, String repo, String branch, String filePath) {
+	public InputStream getFileData(String repo, String branch, String filePath) {
 		if (github == null) {
 			log.error(
 					"The connection to Github was not successfully established. Check the logs for more details. No read attempted forrepo: {} branch: {} file: {}",
@@ -77,8 +82,7 @@ public abstract class GithubAwareTask extends BaseWorkFlowTask {
 	 * @return
 	 * @throws IOException
 	 */
-	public Map<String, List<String>> getAllFilePathsInRepoByDirectory(String org, String repo, String branch)
-			throws IOException {
+	public Map<String, List<String>> getDirectoriesAndFiles(String org, String repo, String branch) throws IOException {
 		Map<String, List<String>> directoriesAndFilesPath = new HashMap<>();
 		directoriesAndFilesPath.put(DIVIDER, new ArrayList<>());
 		search(org, directoriesAndFilesPath, github.getRepository(repo).getDirectoryContent(branch));
@@ -88,7 +92,6 @@ public abstract class GithubAwareTask extends BaseWorkFlowTask {
 	/*
 	 * Recursively processes the repo to build up the collection
 	 *
-	 * TODO - should put a time out on this to terminate after a certain point
 	 */
 	private void search(String org, Map<String, List<String>> directoriesAndFilesPath, List<GHContent> gitHubContent)
 			throws IOException {

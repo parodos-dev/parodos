@@ -25,15 +25,16 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
 import com.redhat.parodos.patterndetection.clue.Clue;
 import com.redhat.parodos.patterndetection.clue.InputStreamWrapper;
+import com.redhat.parodos.patterndetection.clue.client.ContentInputStreamClientConfiguration;
 import com.redhat.parodos.patterndetection.pattern.Pattern;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -43,7 +44,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  */
 @Slf4j
-public class WorkContextDelegate {
+public class PatternDetectionWorkContextDelegate {
 
 	/**
 	 * Checks if the WorkContext has everything to perform the Detection: -
@@ -57,14 +58,14 @@ public class WorkContextDelegate {
 			log.error("Context was null. Please define a WorkContext reference");
 			return false;
 		}
-		if (context.get(WorkFlowConstants.START_DIRECTORY.toString()) == null
-				&& context.get(WorkFlowConstants.START_FILE.toString()) == null
-				&& context.get(WorkFlowConstants.INPUT_STREAMS_WRAPPERS.toString()) == null
-				&& context.get(WorkFlowConstants.DIRECTORY_FILE_PATHS.toString()) == null
-				&& context.get(WorkFlowConstants.FILES_TO_SCAN.toString()) == null
-				&& context.get(WorkFlowConstants.FOLDERS_TO_SCAN.toString()) == null) {
-			log.error(
-					"No target destination to scan defined. Ensure the WorkContext contains an a valid scanning target");
+		if (context.get(PatternDetectionConstants.START_DIRECTORY.toString()) == null
+				&& context.get(PatternDetectionConstants.START_FILE.toString()) == null
+				&& context.get(PatternDetectionConstants.INPUT_STREAMS_WRAPPERS.toString()) == null
+				&& context.get(PatternDetectionConstants.INPUT_STREAM_CLIENTS.toString()) == null
+				&& context.get(PatternDetectionConstants.DIRECTORY_FILE_PATHS.toString()) == null
+				&& context.get(PatternDetectionConstants.FILES_TO_SCAN.toString()) == null
+				&& context.get(PatternDetectionConstants.FOLDERS_TO_SCAN.toString()) == null) {
+			log.error("No target content defined. Ensure the WorkContext contains an a valid scanning target");
 			return false;
 		}
 		for (Pattern pattern : getDesiredPatterns(context)) {
@@ -88,26 +89,32 @@ public class WorkContextDelegate {
 	public boolean areAllPatternsDetected(WorkReport report) {
 		@SuppressWarnings("unchecked")
 		int numberOfTargetStatesRequired = ((List<Pattern>) report.getWorkContext()
-				.get(WorkFlowConstants.DESIRED_PATTERNS.toString())).size();
+				.get(PatternDetectionConstants.DESIRED_PATTERNS.toString())).size();
 		@SuppressWarnings("unchecked")
 		int numberOfTargetStatesFound = ((List<Pattern>) report.getWorkContext()
-				.get(WorkFlowConstants.DETECTED_PATTERNS.toString())).size();
+				.get(PatternDetectionConstants.DETECTED_PATTERNS.toString())).size();
 		return numberOfTargetStatesRequired == numberOfTargetStatesFound;
 	}
 
 	@SuppressWarnings("unchecked")
+	public List<ContentInputStreamClientConfiguration> getContentClientsAndPaths(WorkContext context) {
+		return (List<ContentInputStreamClientConfiguration>) context
+				.get(PatternDetectionConstants.INPUT_STREAM_CLIENTS.toString());
+	}
+
+	@SuppressWarnings("unchecked")
 	public List<InputStreamWrapper> getInputStreamWrappers(WorkContext context) {
-		return (List<InputStreamWrapper>) context.get(WorkFlowConstants.INPUT_STREAMS_WRAPPERS.toString());
+		return (List<InputStreamWrapper>) context.get(PatternDetectionConstants.INPUT_STREAMS_WRAPPERS.toString());
 	}
 
 	@SuppressWarnings("unchecked")
 	public Map<String, ArrayList<String>> getDirectoriesAndFiles(WorkContext context) {
-		return (Map<String, ArrayList<String>>) context.get(WorkFlowConstants.DIRECTORY_FILE_PATHS.toString());
+		return (Map<String, ArrayList<String>>) context.get(PatternDetectionConstants.DIRECTORY_FILE_PATHS.toString());
 	}
 
 	@SuppressWarnings("unchecked")
-	public Set<File> getFilesToScan(WorkContext context) {
-		return (Set<File>) context.get(WorkFlowConstants.FILES_TO_SCAN.toString());
+	public List<File> getFilesToScan(WorkContext context) {
+		return (List<File>) context.get(PatternDetectionConstants.FILES_TO_SCAN.toString());
 	}
 
 	public Map<Clue, List<String>> getDetectedClue(WorkReport report) {
@@ -116,12 +123,16 @@ public class WorkContextDelegate {
 
 	@SuppressWarnings("unchecked")
 	public Map<Clue, List<String>> getDetectedClue(WorkContext context) {
-		return (Map<Clue, List<String>>) context.get(WorkFlowConstants.DETECTED_CLUES.toString());
+		return (Map<Clue, List<String>>) context.get(PatternDetectionConstants.DETECTED_CLUES.toString());
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<Pattern> getDesiredPatterns(WorkContext context) {
-		return (List<Pattern>) context.get(WorkFlowConstants.DESIRED_PATTERNS.toString());
+		return (List<Pattern>) context.get(PatternDetectionConstants.DESIRED_PATTERNS.toString());
+	}
+
+	public Pattern[] getDesiredPatternsArray(WorkContext context) {
+		return getDesiredPatterns(context).toArray(new Pattern[0]);
 	}
 
 	public List<Pattern> getDetectedPatterns(WorkReport report) {
@@ -130,18 +141,18 @@ public class WorkContextDelegate {
 
 	@SuppressWarnings("unchecked")
 	public List<Pattern> getDetectedPatterns(WorkContext context) {
-		return (List<Pattern>) context.get(WorkFlowConstants.DETECTED_PATTERNS.toString());
+		return (List<Pattern>) context.get(PatternDetectionConstants.DETECTED_PATTERNS.toString());
 	}
 
 	@SuppressWarnings("unchecked")
-	public Set<File> getFoldersToScan(WorkContext context) {
-		return (Set<File>) context.get(WorkFlowConstants.FOLDERS_TO_SCAN.toString());
+	public List<File> getFoldersToScan(WorkContext context) {
+		return (List<File>) context.get(PatternDetectionConstants.FOLDERS_TO_SCAN.toString());
 	}
 
 	@SuppressWarnings("unchecked")
 	public boolean isThisPatternDetected(Pattern pattern, WorkReport report) {
 		for (Pattern thisPattern : (List<Pattern>) report.getWorkContext()
-				.get(WorkFlowConstants.DETECTED_PATTERNS.toString())) {
+				.get(PatternDetectionConstants.DETECTED_PATTERNS.toString())) {
 			if (thisPattern.getName().equals(pattern.getName())) {
 				return true;
 			}
@@ -211,24 +222,27 @@ public class WorkContextDelegate {
 		}
 	}
 
+	/*
+	 * Used when a root path is given
+	 */
 	private void getFilesAndDirectoriesFromRoot(WorkContext context) {
-		Set<File> fileList = new HashSet<>();
-		Set<File> directoryList = new HashSet<>();
+		List<File> fileList = new ArrayList<>();
+		List<File> directoryList = new ArrayList<>();
 		try {
-			Files.walkFileTree(Paths.get(((String) context.get(WorkFlowConstants.START_DIRECTORY.toString()))),
+			Files.walkFileTree(Paths.get(((String) context.get(PatternDetectionConstants.START_DIRECTORY.toString()))),
 					new CollectFiles(fileList, directoryList));
 		}
 		catch (IOException e) {
 			log.error("Unable to get the folders and files to process. Start Directory: {}",
-					(String) context.get(WorkFlowConstants.START_DIRECTORY.toString()), e);
+					(String) context.get(PatternDetectionConstants.START_DIRECTORY.toString()), e);
 		}
-		context.put(WorkFlowConstants.FILES_TO_SCAN.toString(), fileList);
-		context.put(WorkFlowConstants.FOLDERS_TO_SCAN.toString(), directoryList);
+		context.put(PatternDetectionConstants.FILES_TO_SCAN.toString(), fileList);
+		context.put(PatternDetectionConstants.FOLDERS_TO_SCAN.toString(), directoryList);
 	}
 
 	private void initializeContext(WorkContext context) {
-		context.put(WorkFlowConstants.DETECTED_CLUES.toString(), new HashMap<Clue, List<File>>());
-		context.put(WorkFlowConstants.DETECTED_PATTERNS.toString(), new ArrayList<Pattern>());
+		context.put(PatternDetectionConstants.DETECTED_CLUES.toString(), new HashMap<Clue, List<File>>());
+		context.put(PatternDetectionConstants.DETECTED_PATTERNS.toString(), new ArrayList<Pattern>());
 	}
 
 	/*
@@ -236,14 +250,14 @@ public class WorkContextDelegate {
 	 */
 	class CollectFiles extends SimpleFileVisitor<Path> {
 
-		Set<File> fileList;
+		List<File> fileList;
 
-		Set<File> directoryList;
+		List<File> directoryList;
 
-		public CollectFiles(Set<File> fileList, Set<File> directoryList) {
+		public CollectFiles(List<File> fileList2, List<File> directoryList2) {
 			super();
-			this.fileList = fileList;
-			this.directoryList = directoryList;
+			this.fileList = fileList2;
+			this.directoryList = directoryList2;
 		}
 
 		@Override
@@ -296,6 +310,8 @@ public class WorkContextDelegate {
 
 		private String startDirectory;
 
+		private List<ContentInputStreamClientConfiguration> contentClients;
+
 		private Map<String, ArrayList<String>> directoriesAndFiles;
 
 		private List<InputStreamWrapper> inputStreams;
@@ -308,10 +324,22 @@ public class WorkContextDelegate {
 			desiredPatterns = new ArrayList<>();
 			directoriesAndFiles = new HashMap<>();
 			inputStreams = new ArrayList<>();
+			contentClients = new ArrayList<>();
 		}
 
 		public WorkContextBuilder setDirectoriesAndFiles(Map<String, ArrayList<String>> directoriesAndFiles) {
 			this.directoriesAndFiles = directoriesAndFiles;
+			return this;
+		}
+
+		public WorkContextBuilder addContentInputStreamClientAndPaths(ContentInputStreamClientConfiguration client) {
+			this.contentClients.add(client);
+			return this;
+		}
+
+		public WorkContextBuilder addAllToContentInputStreamClientAndPaths(
+				List<ContentInputStreamClientConfiguration> clients) {
+			this.contentClients.addAll(clients);
 			return this;
 		}
 
@@ -342,11 +370,11 @@ public class WorkContextDelegate {
 
 		public WorkContext build() {
 			WorkContext context = new WorkContext();
-			context.put(WorkFlowConstants.START_DIRECTORY.toString(), startDirectory);
-			context.put(WorkFlowConstants.DESIRED_PATTERNS.toString(), desiredPatterns);
-			context.put(WorkFlowConstants.INPUT_STREAMS_WRAPPERS.toString(), inputStreams);
-			context.put(WorkFlowConstants.INPUT_STREAMS_WRAPPERS.toString(), inputStreams);
-			context.put(WorkFlowConstants.DIRECTORY_FILE_PATHS.toString(), directoriesAndFiles);
+			context.put(PatternDetectionConstants.START_DIRECTORY.toString(), startDirectory);
+			context.put(PatternDetectionConstants.DESIRED_PATTERNS.toString(), desiredPatterns);
+			context.put(PatternDetectionConstants.INPUT_STREAMS_WRAPPERS.toString(), inputStreams);
+			context.put(PatternDetectionConstants.DIRECTORY_FILE_PATHS.toString(), directoriesAndFiles);
+			context.put(PatternDetectionConstants.INPUT_STREAM_CLIENTS.toString(), contentClients);
 			return context;
 		}
 

@@ -17,13 +17,15 @@ package com.redhat.parodos.patterndetection.clue;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import com.redhat.parodos.patterndetection.clue.delegate.FileContentsDelegate;
-import com.redhat.parodos.patterndetection.clue.delegate.InputStreamDelegate;
+import com.redhat.parodos.patterndetection.clue.client.ContentInputStreamClientConfiguration;
+import com.redhat.parodos.patterndetection.clue.delegate.ContentsDelegate;
 import com.redhat.parodos.patterndetection.exceptions.PatternDetectionConfigurationException;
+import com.redhat.parodos.patterndetection.exceptions.PatternDetectionRuntimeException;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -35,8 +37,8 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  *
- * Implementation of a Clue that scans the contents of a file for specific strings.
- * Supports regular expressions
+ * Implementation of a Clue that scans the contents of a file/inputstream for specific
+ * string values. Supports regular expressions
  *
  * @author Luke Shannon (Github: lshannon)
  *
@@ -48,53 +50,99 @@ public class ContentsClueImpl extends AbstractClue {
 
 	private Pattern targetContentPattern = null;
 
-	private FileContentsDelegate fileContentsDelegate = new FileContentsDelegate();
-
 	@Override
 	public WorkReport execute(WorkContext workContext) {
 		if (continueToRunIfDetected || !workContextDelegate.isThisClueDetected(this, workContext)) {
-			for (InputStreamWrapper inputStreamWrapper : workContextDelegate.getInputStreamWrappers(workContext)) {
+			// get all the possible sources of content
+			List<ContentInputStreamClientConfiguration> contentClientsAndPaths = workContextDelegate
+					.getContentClientsAndPaths(workContext);
+			List<InputStreamWrapper> inputStreamWrappers = workContextDelegate.getInputStreamWrappers(workContext);
+			List<File> filesToScan = workContextDelegate.getFilesToScan(workContext);
+			// process content using clients
+			contentClientsAndPaths.stream().forEach(inputStreamClient -> {
+				try {
+					processInputsForStreamContentWithClient(workContext, inputStreamClient);
+				}
+				catch (IOException e) {
+					log.error("Unable to execute Detection using ContentStreamClient {} ", inputStreamClient.getName(),
+							e);
+					throw new PatternDetectionRuntimeException("Error getting content using a ContentStreamClient", e);
+				}
+			});
+			// process content from InputStreamWrappers
+			inputStreamWrappers.stream().forEach(inputStreamWrapper -> {
 				try {
 					extractInputStreamContent(workContext, inputStreamWrapper);
 				}
 				catch (IOException e) {
-					log.error("Unable to execute Scan of {} clue on InputStream: {}", this.name,
-							inputStreamWrapper.getFileName(), e);
-					return new DefaultWorkReport(WorkStatus.FAILED, workContext);
+					log.error("Unable to execute Detection of {} clue on File: {}", inputStreamWrapper.getFileName(),
+							e);
+					throw new PatternDetectionRuntimeException("Error getting content using a InputStreamWrapper", e);
 				}
-			}
-			for (File thisFile : workContextDelegate.getFilesToScan(workContext)) {
+			});
+			// process content from Local File System
+			filesToScan.stream().forEach(thisFile -> {
 				try {
 					extractFileContent(workContext, thisFile);
 				}
 				catch (IOException e) {
 					log.error("Unable to execute Scan of {} clue on File: {}", this.name, thisFile.getAbsolutePath(),
 							e);
-					return new DefaultWorkReport(WorkStatus.FAILED, workContext);
+					throw new PatternDetectionRuntimeException("Error getting content from files on local File system",
+							e);
 				}
-			}
+			});
 		}
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
+	/*
+	 * Process a list of files using the supplied ContentInputStreamClient
+	 */
+	private void processInputsForStreamContentWithClient(WorkContext workContext,
+			ContentInputStreamClientConfiguration inputStreamClientConfig) throws IOException {
+		for (String path : inputStreamClientConfig.getPathsToProcessForContent()) {
+			File file = new File(path);
+			if (nameMatchingDelegate.isThisATargetFileExtension(file.getName())) {
+				List<String> fileContent;
+				InputStream stream = inputStreamClientConfig.getContentClient().getContentIfRequired(path,
+						inputStreamClientConfig.getParametersForClient());
+				if (stream != null) {
+					fileContent = ContentsDelegate.inputStreamToList(stream);
+					processContentsForMatch(workContext, file.getName(), fileContent);
+				}
+			}
+		}
+
+	}
+
+	/*
+	 * Process an InputStreamWrapper for content
+	 */
 	private void extractInputStreamContent(WorkContext workContext, InputStreamWrapper inputStreamWrapper)
 			throws IOException {
 		List<String> fileContent;
 		if (nameMatchingDelegate.isThisATargetFileExtension(inputStreamWrapper.getFileName())) {
-			fileContent = InputStreamDelegate.convertFileBytesToArrayOfStrings(inputStreamWrapper.getInputStream());
+			fileContent = ContentsDelegate.inputStreamToList(inputStreamWrapper.getInputStream());
 			processContentsForMatch(workContext, inputStreamWrapper.getFileName(), fileContent);
 		}
 
 	}
 
+	/*
+	 * Process a file reference on the file system for content
+	 */
 	private void extractFileContent(WorkContext workContext, File thisFile) throws IOException {
 		List<String> fileContent;
 		if (nameMatchingDelegate.isThisATargetFileExtension(thisFile.getAbsolutePath())) {
-			fileContent = fileContentsDelegate.fileContentsToList(thisFile);
+			fileContent = ContentsDelegate.fileContentsToList(thisFile);
 			processContentsForMatch(workContext, thisFile.getAbsolutePath(), fileContent);
 		}
 	}
 
+	/*
+	 * Process the List of strings obtained from a file source for the target pattern
+	 */
 	private void processContentsForMatch(WorkContext workContext, String fileName, List<String> fileContent) {
 		for (String line : fileContent) {
 			if (!line.isEmpty() && targetContentPattern.matcher(line.trim()).matches()) {

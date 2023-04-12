@@ -16,9 +16,8 @@
 package com.redhat.parodos.patterndetection;
 
 import java.util.Date;
-import com.redhat.parodos.patterndetection.context.WorkContextDelegate;
+import com.redhat.parodos.patterndetection.context.PatternDetectionWorkContextDelegate;
 import com.redhat.parodos.patterndetection.exceptions.PatternDetectionConfigurationException;
-import com.redhat.parodos.patterndetection.pattern.Pattern;
 import com.redhat.parodos.patterndetection.results.DetectionResults;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -34,7 +33,7 @@ import com.redhat.parodos.workflows.workflow.WorkFlow;
  */
 public class PatternDetector {
 
-	private static final WorkContextDelegate contextDelegate = new WorkContextDelegate();
+	private static final PatternDetectionWorkContextDelegate contextDelegate = new PatternDetectionWorkContextDelegate();
 
 	private PatternDetector() {
 	}
@@ -53,24 +52,19 @@ public class PatternDetector {
 	 * @author Luke Shannon (Github: lshannon)
 	 *
 	 */
-	public static DetectionResults detect(WorkContext context, Pattern[] desiredPatterns) {
+	public static DetectionResults detect(WorkContext context) {
 		if (contextDelegate.validateAndIntializeContext(context)) {
 			Date startTime = new Date();
-			// put all the Patterns into a ParallelFlow - they will all execute at the
-			// same time
 			// @formatter:off
 			WorkFlow workflow = ParallelFlow
 						.Builder
 						.aNewParallelFlow()
-						.execute(desiredPatterns)
+						.execute(contextDelegate.getDesiredPatternsArray(context))
 						.with(ScanningThreadPool.getThreadPoolExecutor())
 						.build();
 			// @formatter:on
-			// get the end report
 			WorkReport report = workflow.execute(context);
-			// process the results to make more user friendly results
 			contextDelegate.processResultsAfterScan(report.getWorkContext());
-			// return the user friendly results
 			// @formatter:off
 			return DetectionResults
 					.builder()

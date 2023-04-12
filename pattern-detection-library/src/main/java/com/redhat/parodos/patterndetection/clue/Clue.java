@@ -21,8 +21,8 @@ import com.redhat.parodos.workflows.work.WorkReport;
 
 /**
  *
- * A Clue is a aspect of a file/folder that can be detected. Clue(s) are grouped together
- * to establish a @see Pattern.
+ * A Clue is a aspect of a file/folder/inputstream that can be detected. Clue(s) are
+ * grouped together to establish a @see Pattern.
  *
  * Clue is based on the @see Work, which comes from on j-easy
  * (https://github.com/j-easy/easy-flows) Work class. This provides a contract for a @see
