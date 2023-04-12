@@ -59,13 +59,13 @@ public class AssessmentDemoConfig {
 	@Bean(name = "ocpOnboarding" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
 	@Assessment
 	WorkFlow assessmentWorkFlow(
-			@Qualifier("patternDetectionAssessment") OnboardingAssessmentTask onboardingAssessmentTask) {
+			@Qualifier("patternDetectionAssessment") PatternDetectionAssessmentTask patternDetectionAssessmentTask) {
 		// @formatter:off
         return SequentialFlow.
         		Builder
         		.aNewSequentialFlow()
-                .named("onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
-                .execute(onboardingAssessmentTask)
+                .named("ocpOnboarding" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
+                .execute(patternDetectionAssessmentTask)
                 .build();
 	    // @formatter:on
 	}

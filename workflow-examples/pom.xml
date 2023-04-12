@@ -90,8 +90,7 @@
         <dependency>
             <groupId>dev.parodos</groupId>
             <artifactId>prebuilt-tasks</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
+            <version>${revision}</version>                 
         </dependency>
         <dependency>
             <groupId>dev.parodos</groupId>
