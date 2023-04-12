@@ -15,11 +15,11 @@
  */
 package com.redhat.parodos.examples.ocponboarding.task.dto.email;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
+@Builder
 @Data
-@AllArgsConstructor
 public class MessageRequestDTO {
 
 	private String name;

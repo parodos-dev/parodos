@@ -97,8 +97,8 @@ public class AppLinkEmailNotificationWorkFlowTask extends BaseInfrastructureWork
 				return new DefaultWorkReport(WorkStatus.FAILED, workContext);
 			}
 			// message request payload
-			MessageRequestDTO messageRequestDTO = new MessageRequestDTO(requesterName, requesterEmail,
-					mailServiceSiteName, message);
+			MessageRequestDTO messageRequestDTO = MessageRequestDTO.builder().name(requesterName).email(requesterEmail)
+					.siteName(mailServiceSiteName).message(message).build();
 			HttpEntity<MessageRequestDTO> requestEntity = new HttpEntity<>(messageRequestDTO);
 			responseEntity = RestUtils.executePost(mailServiceUrl, requestEntity);
 		}

@@ -74,8 +74,8 @@ public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureW
 		}
 
 		// message request payload
-		MessageRequestDTO messageRequestDTO = new MessageRequestDTO(requesterName, requesterEmail, mailServiceSiteName,
-				getMessage(jiraTicketUrl));
+		MessageRequestDTO messageRequestDTO = MessageRequestDTO.builder().name(requesterName).email(requesterEmail)
+				.siteName(mailServiceSiteName).message(getMessage(jiraTicketUrl)).build();
 
 		ResponseEntity<String> responseEntity = null;
 		try {
