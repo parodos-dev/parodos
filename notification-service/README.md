@@ -44,7 +44,7 @@ From the root of the 'notification-service' folder, the follow command will star
 
 ```shell
 
-java -jar -Dspring.profiles.active=local -Dserver.port=8081  target/notification-service-1.0.7-SNAPSHOT.jar
+java -jar -Dspring.profiles.active=local -Dserver.port=8081  target/notification-service-1.0.7.jar
 
 ```
 

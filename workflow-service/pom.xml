@@ -190,6 +190,11 @@
             <artifactId>prebuilt-tasks</artifactId>
             <version>${revision}</version>
         </dependency>
+        <dependency>
+            <groupId>dev.parodos</groupId>
+            <artifactId>workflow-service-sdk</artifactId>
+            <version>${revision}</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
