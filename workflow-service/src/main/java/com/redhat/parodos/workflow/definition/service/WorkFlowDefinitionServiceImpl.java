@@ -118,7 +118,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 		workFlowDefinition.setParameters(stringifyParameters);
 		workFlowDefinition.setModifyDate(new Date());
 		workFlowDefinition.setProperties(propertiesDefinition);
-		workFlowDefinition.setProcessingType(workFlowProcessingType.name());
+		workFlowDefinition.setProcessingType(workFlowProcessingType);
 		workFlowDefinition.setNumberOfWorks(works.size());
 
 		workFlowDefinition = workFlowDefinitionRepository.save(workFlowDefinition);

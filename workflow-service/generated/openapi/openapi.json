@@ -398,7 +398,8 @@
             }
           },
           "processingType" : {
-            "type" : "string"
+            "type" : "string",
+            "enum" : [ "SEQUENTIAL", "PARALLEL", "OTHER" ]
           },
           "workType" : {
             "type" : "string"
@@ -451,7 +452,8 @@
             }
           },
           "processingType" : {
-            "type" : "string"
+            "type" : "string",
+            "enum" : [ "SEQUENTIAL", "PARALLEL", "OTHER" ]
           },
           "properties" : {
             "$ref" : "#/components/schemas/WorkFlowPropertiesDefinitionDTO"

@@ -16,6 +16,7 @@
 package com.redhat.parodos.workflow.definition.entity;
 
 import com.redhat.parodos.common.AbstractEntity;
+import com.redhat.parodos.workflow.enums.WorkFlowProcessingType;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import lombok.AllArgsConstructor;
@@ -71,8 +72,8 @@ public class WorkFlowDefinition extends AbstractEntity {
 	@Column(nullable = false)
 	private String parameters;
 
-	@Column(nullable = false)
-	private String processingType;
+	@Enumerated(EnumType.STRING)
+	private WorkFlowProcessingType processingType;
 
 	@Column(nullable = false)
 	private Integer numberOfWorks;

@@ -127,7 +127,7 @@ class WorkFlowDefinitionServiceImplTest {
 		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(2)).save(argument.capture());
 		assertEquals(argument.getValue().getName(), workFlowName);
 		assertEquals(argument.getValue().getType(), WorkFlowType.ASSESSMENT);
-		assertEquals(argument.getValue().getProcessingType(), WorkFlowProcessingType.SEQUENTIAL.toString());
+		assertEquals(argument.getValue().getProcessingType(), WorkFlowProcessingType.SEQUENTIAL);
 		assertEquals(argument.getValue().getNumberOfWorks(), 1);
 		assertEquals(argument.getValue().getWorkFlowTaskDefinitions().size(), 1);
 		assertEquals(argument.getValue().getWorkFlowTaskDefinitions().stream().findFirst().get().getName(), TEST_TASK);
@@ -328,7 +328,7 @@ class WorkFlowDefinitionServiceImplTest {
 
 		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(name).type(WorkFlowType.ASSESSMENT)
 				.properties(WorkFlowPropertiesDefinition.builder().version("1.0.0").build())
-				.processingType(WorkFlowProcessingType.SEQUENTIAL.name())
+				.processingType(WorkFlowProcessingType.SEQUENTIAL)
 				.parameters(WorkFlowDTOUtil
 						.writeObjectValueAsString(Map.of(workParameter.getKey(), workParameter.getAsJsonSchema())))
 				.numberOfWorks(1).build();
