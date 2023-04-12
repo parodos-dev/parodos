@@ -3,6 +3,7 @@ package com.redhat.parodos.workflow.definition.dto;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowWorkDefinition;
+import com.redhat.parodos.workflow.enums.WorkFlowProcessingType;
 import com.redhat.parodos.workflow.enums.WorkType;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
@@ -52,7 +53,7 @@ class WorkDefinitionResponseDTOTest {
 		wd.setId(id);
 		wd.setName("foo");
 		wd.setParameters(getWorkFlowParameter());
-		wd.setProcessingType("BATCH");
+		wd.setProcessingType(WorkFlowProcessingType.OTHER);
 
 		List<WorkFlowWorkDefinition> dependencies = List.of(new WorkFlowWorkDefinition());
 		// when
@@ -68,7 +69,7 @@ class WorkDefinitionResponseDTOTest {
 		assertEquals(result.getParameters().get("key").get("type"), "string");
 		assertEquals(result.getParameters().get("key").get("required"), true);
 		assertEquals(result.getNumberOfWorkUnits(), dependencies.size());
-		assertEquals(result.getProcessingType(), "BATCH");
+		assertEquals(result.getProcessingType(), WorkFlowProcessingType.OTHER);
 		assertEquals(result.getWorks().size(), 0);
 	}
 

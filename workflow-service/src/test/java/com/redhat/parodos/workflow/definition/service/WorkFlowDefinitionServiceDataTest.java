@@ -23,6 +23,7 @@ import com.redhat.parodos.workflow.definition.repository.WorkFlowCheckerMappingD
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
+import com.redhat.parodos.workflow.enums.WorkFlowProcessingType;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -73,7 +74,7 @@ class WorkFlowDefinitionServiceDataTest {
 				new ModelMapper());
 
 		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name("test-workflow").numberOfWorks(1)
-				.parameters("{}").processingType(WorkFlowType.INFRASTRUCTURE.name()).type(WorkFlowType.INFRASTRUCTURE)
+				.parameters("{}").processingType(WorkFlowProcessingType.SEQUENTIAL).type(WorkFlowType.INFRASTRUCTURE)
 				.build();
 		WorkFlowTaskDefinition workFlowTaskDefinition = WorkFlowTaskDefinition.builder().name("test-workflow-task")
 				.workFlowDefinition(workFlowDefinition).parameters("{}").outputs("[]").build();

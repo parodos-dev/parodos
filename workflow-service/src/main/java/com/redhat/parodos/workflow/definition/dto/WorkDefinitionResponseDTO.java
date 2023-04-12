@@ -22,6 +22,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowWorkDefinition;
+import com.redhat.parodos.workflow.enums.WorkFlowProcessingType;
 import com.redhat.parodos.workflow.enums.WorkType;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 
@@ -57,7 +58,7 @@ public class WorkDefinitionResponseDTO {
 	private String workType;
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private String processingType;
+	private WorkFlowProcessingType processingType;
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private String author;

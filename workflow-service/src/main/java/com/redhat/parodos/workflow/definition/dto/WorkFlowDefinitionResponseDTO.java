@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
+import com.redhat.parodos.workflow.enums.WorkFlowProcessingType;
 import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -51,7 +52,7 @@ public class WorkFlowDefinitionResponseDTO {
 
 	private String type;
 
-	private String processingType;
+	private WorkFlowProcessingType processingType;
 
 	private String author;
 
