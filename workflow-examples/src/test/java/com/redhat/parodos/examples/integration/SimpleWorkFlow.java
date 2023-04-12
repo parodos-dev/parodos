@@ -55,7 +55,7 @@ public class SimpleWorkFlow {
 	}
 
 	@Test
-	public void runSimpleWorkFlow() throws ApiException {
+	public void runSimpleWorkFlow() throws ApiException, InterruptedException {
 		log.info("Running simple flow");
 
 		ProjectApi projectApi = new ProjectApi(apiClient);
