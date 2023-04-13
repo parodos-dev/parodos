@@ -81,17 +81,27 @@ public class ParallelFlowReport implements WorkReport {
 	 * successfully completed</li>
 	 * <li>{@link org.jeasy.flows.work.WorkStatus#FAILED}: If one of the work units has
 	 * failed</li>
+	 * <li>{@link org.jeasy.flows.work.WorkStatus#IN_PROGRESS}: If one of the work units
+	 * is in progress</li>
+	 * <li>{@link org.jeasy.flows.work.WorkStatus#REJECTED}: If one of the work units has
+	 * rejected</li>
+	 * <li>{@link org.jeasy.flows.work.WorkStatus#PENDING}: If one of the work units is
+	 * pending</li>
 	 * </ul>
 	 * @return workflow status
 	 */
 	@Override
 	public WorkStatus getStatus() {
+		WorkStatus workStatus = WorkStatus.COMPLETED;
 		for (WorkReport report : reports) {
-			if (report.getStatus().equals(WorkStatus.FAILED)) {
-				return WorkStatus.FAILED;
+			if (List.of(WorkStatus.FAILED, WorkStatus.REJECTED).contains(report.getStatus())) {
+				return report.getStatus();
+			}
+			if (!report.getStatus().equals(WorkStatus.COMPLETED)) {
+				workStatus = report.getStatus();
 			}
 		}
-		return WorkStatus.COMPLETED;
+		return workStatus;
 	}
 
 	/**

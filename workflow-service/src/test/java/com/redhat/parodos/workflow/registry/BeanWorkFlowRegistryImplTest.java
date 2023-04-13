@@ -48,7 +48,7 @@ class BeanWorkFlowRegistryImplTest {
 		// then
 		Mockito.verify(this.beanFactory, Mockito.times(0)).getDependenciesForBean(Mockito.any());
 		Mockito.verify(this.workFlowDefinitionService, Mockito.times(0)).save(Mockito.any(), Mockito.any(),
-				Mockito.any(), Mockito.any(), Mockito.any());
+				Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
 	}
 
 	@Test
@@ -77,7 +77,7 @@ class BeanWorkFlowRegistryImplTest {
 		Mockito.verify(this.beanFactory, Mockito.times(1)).getDependenciesForBean(Mockito.any());
 
 		Mockito.verify(this.workFlowDefinitionService, Mockito.times(1)).save(Mockito.eq(TEST),
-				Mockito.eq(WorkFlowType.ASSESSMENT), Mockito.anyList(), Mockito.anyList(),
+				Mockito.eq(WorkFlowType.ASSESSMENT), Mockito.any(), Mockito.anyList(), Mockito.anyList(),
 				Mockito.eq(WorkFlowProcessingType.SEQUENTIAL));
 
 		assertEquals(registry.getWorkFlowByName(TEST), workFlow);
@@ -110,7 +110,7 @@ class BeanWorkFlowRegistryImplTest {
 		// then
 		Mockito.verify(this.beanFactory, Mockito.times(1)).getDependenciesForBean(Mockito.any());
 		Mockito.verify(this.workFlowDefinitionService, Mockito.times(1)).save(Mockito.eq("test"),
-				Mockito.eq(WorkFlowType.ASSESSMENT), Mockito.anyList(), Mockito.anyList(),
+				Mockito.eq(WorkFlowType.ASSESSMENT), Mockito.any(), Mockito.anyList(), Mockito.anyList(),
 				Mockito.eq(WorkFlowProcessingType.SEQUENTIAL));
 
 		Mockito.verify(this.workFlowDefinitionService, Mockito.times(0)).saveWorkFlowChecker(Mockito.eq(TEST_TASK),
@@ -144,7 +144,7 @@ class BeanWorkFlowRegistryImplTest {
 
 		Mockito.verify(this.beanFactory, Mockito.times(1)).getDependenciesForBean(Mockito.any());
 		Mockito.verify(this.workFlowDefinitionService, Mockito.times(0)).save(Mockito.any(), Mockito.any(),
-				Mockito.any(), Mockito.any(), Mockito.any());
+				Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
 		assertEquals(registry.getWorkFlowByName(TEST), workFlow);
 	}
 

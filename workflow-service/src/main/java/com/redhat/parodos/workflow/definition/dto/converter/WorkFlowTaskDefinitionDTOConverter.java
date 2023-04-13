@@ -23,11 +23,8 @@ import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.redhat.parodos.workflow.exceptions.WorkflowDefinitionException;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
-
-import java.util.ArrayList;
 
 /**
  * Workflow task definition converter

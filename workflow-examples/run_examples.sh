@@ -111,7 +111,7 @@ wait_project_start() {
 
 function execute_workflow() {
   params="$1"
-  exitOnFailure="$2"
+  expectedWorkStatus="$2"
   response=$(curl -X 'POST' -s \
     "${TARGET_URL}/api/v1/workflows" \
     -H 'accept: */*' \
@@ -121,13 +121,10 @@ function execute_workflow() {
     -H 'Content-Type: application/json' \
     -d "$params")
 
-    status=$(echo "$response" | jq -r '.workStatus')
-    if [[ "$status" == "FAILED" ]]; then
-      if "$exitOnFailure"; then
-        @fail "Error: HTTP request failed" >&2
-      else
-        echo "Info: HTTP request failed" >&2
-      fi
+    workStatus=$(echo "$response" | jq -r '.workStatus')
+    echo "Info: HTTP request finished with workStatus=${workStatus}" >&2
+    if [[ "$workStatus" != "$expectedWorkStatus" ]]; then
+      @fail "Error: HTTP request response with unexpected workStatus: expected=${expectedWorkStatus}, actual=${workStatus}" >&2
     fi
 
     # infrastructureOption=$(echo "$response" | jq -r '.workFlowOptions.newOptions[0].workFlowName')
@@ -193,7 +190,7 @@ run_simple_flow() {
           }
       ]
     }'
-  response=$(execute_workflow "$params" true)
+  response=$(execute_workflow "$params" "COMPLETED")
   echo "workflow finished successfully with response: $response"
   echo "                                                "
   echo_blue "******** Simple Sequence Flow Completed ********"
@@ -228,10 +225,10 @@ run_complex_flow() {
 
   params='{
       "projectId": "'$PROJECT_ID'",
-      "workFlowName": "onboardingAssessment_ASSESSMENT_WORKFLOW",
+      "workFlowName": "onboardingMasterAssessment_ASSESSMENT_WORKFLOW",
       "works": []
   }'
-  response=$(execute_workflow "$params" true)
+  response=$(execute_workflow "$params" "COMPLETED")
   echo "workflow finished successfully with response: $response"
   echo "                                               "
   INFRASTRUCTURE_OPTION=$(echo "$response" | jq -r '.workFlowOptions.newOptions[0].workFlowName')
@@ -294,7 +291,7 @@ run_complex_flow() {
           }
       ]
   }'
-  response=$(execute_workflow "$params" false)
+  response=$(execute_workflow "$params" "IN_PROGRESS")
   EXECUTION_ID="$(echo "$response" | jq -r '.workFlowExecutionId')"
   echo "                                               "
   echo "                                               "
@@ -330,7 +327,7 @@ run_escalation_flow() {
       "workFlowName": "workflowStartingCheckingAndEscalation",
       "works": []
   }'
-  response=$(execute_workflow "$params" false)
+  response=$(execute_workflow "$params" "IN_PROGRESS")
   EXECUTION_ID="$(echo "$response" | jq -r '.workFlowExecutionId')"
 
   echo "                                                "

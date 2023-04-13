@@ -42,6 +42,7 @@ public abstract class GithubPatternDetectionTask extends BaseAssessmentTask {
 	private static final String DIVIDER = "/";
 
 	Map<String, List<String>> directoriesAndFilesPath = new HashMap<>();
+
 	/*
 	 * This needs to be supplied in the Workflow config, or is 'githubPersonalToken' is
 	 * set as an environment variable, one will be created using the personal access token
@@ -88,14 +89,12 @@ public abstract class GithubPatternDetectionTask extends BaseAssessmentTask {
 		search(org, github.getRepository(repo).getDirectoryContent("/"));
 		return directoriesAndFilesPath;
 	}
-	
 
 	/*
 	 * Recursively processes the repo to build up the collection
 	 *
 	 */
-	private void search(String org, List<GHContent> gitHubContent)
-			throws IOException {
+	private void search(String org, List<GHContent> gitHubContent) throws IOException {
 		for (GHContent content : gitHubContent) {
 			if (content.isDirectory()) {
 				directoriesAndFilesPath.computeIfAbsent(content.getPath(), k -> new ArrayList<>());

@@ -15,24 +15,19 @@
  */
 package com.redhat.parodos.workflow.execution.continuation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.redhat.parodos.workflow.WorkFlowDelegate;
-import com.redhat.parodos.workflow.enums.WorkFlowStatus;
+import java.util.List;
+import java.util.UUID;
+
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
-import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
+import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
-import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
-import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 import com.redhat.parodos.workflows.work.WorkContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.UUID;
 
 /**
  * When the application starts up it will run any workflows in Progress @see
@@ -49,13 +44,13 @@ public class WorkFlowContinuationServiceImpl implements WorkFlowContinuationServ
 
 	private final WorkFlowRepository workFlowRepository;
 
-	private final WorkFlowServiceImpl workFlowService;
+	private final AsyncWorkFlowContinuerImpl asyncWorkFlowContinuerImpl;
 
 	public WorkFlowContinuationServiceImpl(WorkFlowDefinitionRepository workFlowDefinitionRepository,
-			WorkFlowRepository workFlowRepository, WorkFlowServiceImpl workFlowService) {
+			WorkFlowRepository workFlowRepository, AsyncWorkFlowContinuerImpl asyncWorkFlowContinuerImpl) {
 		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
 		this.workFlowRepository = workFlowRepository;
-		this.workFlowService = workFlowService;
+		this.asyncWorkFlowContinuerImpl = asyncWorkFlowContinuerImpl;
 	}
 
 	/**
@@ -65,24 +60,23 @@ public class WorkFlowContinuationServiceImpl implements WorkFlowContinuationServ
 	@EventListener(ApplicationReadyEvent.class)
 	public void workFlowRunAfterStartup() {
 		log.info("Looking up all IN PROGRESS workflows for ");
-		List<WorkFlowExecution> workFlowExecutions = workFlowRepository.findAll();
-		log.info("Number of IN PROGRESS workflows for : {}", workFlowExecutions.size());
-		workFlowExecutions.stream()
-				.filter(workFlowExecution -> WorkFlowStatus.IN_PROGRESS == workFlowExecution.getStatus()
-						&& workFlowExecution.getMasterWorkFlowExecution() == null)
-				.forEach(workFlowExecution -> {
-					WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository
-							.findById(workFlowExecution.getWorkFlowDefinitionId()).get();
+		List<WorkFlowExecution> workFlowExecutions = workFlowRepository
+				.findByStatusInAndIsMaster(List.of(WorkFlowStatus.IN_PROGRESS, WorkFlowStatus.PENDING));
+		log.info("Number of IN PROGRESS or PENDING master workflows is : {}", workFlowExecutions.size());
+		workFlowExecutions.forEach(workFlowExecution -> {
+			WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository
+					.findById(workFlowExecution.getWorkFlowDefinitionId()).get();
 
-					// continue with the same execution id
-					continueWorkFlow(workFlowExecution.getProjectId().toString(), workFlowDefinition.getName(),
-							workFlowExecution.getWorkFlowExecutionContext().getWorkContext(),
-							workFlowExecution.getId());
-				});
+			// continue with the same execution id
+			continueWorkFlow(workFlowExecution.getProjectId().toString(), workFlowDefinition.getName(),
+					workFlowExecution.getWorkFlowExecutionContext().getWorkContext(), workFlowExecution.getId());
+
+			// TODO: continue 'FAILED' Checkers in this master workflow execution
+		});
 	}
 
 	public void continueWorkFlow(String projectId, String workflowName, WorkContext workContext, UUID executionId) {
-		workFlowService.execute(projectId, workflowName, workContext, executionId);
+		asyncWorkFlowContinuerImpl.executeAsync(projectId, workflowName, workContext, executionId);
 	}
 
 }

@@ -1,6 +1,8 @@
 spring:
   application:
     name: parodos-workflow-service
+    title: Parodos Workflow Service
+    version: 1.0.7-SNAPSHOT
 
   jackson:
     serialization:
@@ -9,10 +11,16 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+    properties:
+      hibernate:
+        enable_lazy_load_no_trans: true
+        event:
+          merge:
+            entity_copy_observer: allow
 
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: ${DATASOURCE_URL:jdbc:h2:mem:workflow_service}
+    url: ${DATASOURCE_URL:jdbc:h2:mem:workflow_service;INIT=CREATE TYPE IF NOT EXISTS "JSONB" as json;}
     driverClassName: ${DATASOURCE_DRIVER:org.h2.Driver}
     username: ${DATASOURCE_USERNAME:postgres}
     password: ${DATASOURCE_PASSWORD:postgres}
@@ -40,16 +48,24 @@ spring:
     timeout-per-shutdown-phase: "25s"
 
 management:
+  metrics:
+    export:
+      prometheus:
+        enabled: true
   endpoint:
     shutdown:
       enabled: true
     health:
       enabled: true
+    prometheus:
+      enabled: true
+    metrics:
+      enabled: true
   endpoints:
     enabled-by-default: false
     web:
       exposure:
-        include: "health,shutdown"
+        include: "health,shutdown,prometheus"
 
 server:
   shutdown: "graceful"

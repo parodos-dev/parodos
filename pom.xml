@@ -42,9 +42,10 @@
         </developer>
     </developers>
     <properties>
-        <revision>1.0.6-SNAPSHOT</revision>
+        <revision>1.0.7-SNAPSHOT</revision>
         <flatten.version>1.3.0</flatten.version>
         <java.version>11</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.plugins.compiler.version>3.8.1</maven.plugins.compiler.version>
         <maven.plugins.release.version>2.5.3</maven.plugins.release.version>
         <maven.plugins.surefire.version>2.22.2</maven.plugins.surefire.version>
@@ -53,27 +54,74 @@
         <maven.plugins.jacoco.version>0.8.8</maven.plugins.jacoco.version>
         <maven.plugins.gpg.version>1.5</maven.plugins.gpg.version>
         <maven.plugin.source>3.2.1</maven.plugin.source>
+        <springframework.boot.version>2.5.14</springframework.boot.version>
+        <spring.javaformat.version>0.0.34</spring.javaformat.version>
+        <junit.version>4.13.1</junit.version>
+        <mockito.version>3.5.13</mockito.version>
+        <assertj.version>3.17.2</assertj.version>
+        <okhttp-version>4.9.2</okhttp-version>
     </properties>
     <modules>
         <module>workflow-engine</module>
         <module>parodos-model-api</module>
-        <module>workflow-service</module>
-        <module>workflow-examples</module>
+        <module>external-dependencies</module>
         <module>notification-service</module>
         <module>notification-service-sdk</module>
+        <module>prebuilt-tasks</module>
+        <module>workflow-service</module>
+        <module>workflow-service-sdk</module>
+        <module>workflow-examples</module>
         <module>pattern-detection-library</module>
         <module>coverage</module>
-        <module>external-dependencies</module>
-        <module>workflow-service-sdk</module>
-        <module>prebuilt-tasks</module>
     </modules>
-    <dependencies>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>3.24.2</version>
-        </dependency>
-    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <!-- Import dependency management from Spring Boot -->
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${springframework.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-inline</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>${assertj.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <!--  Needed to avoid conflict with OkHttp being used in auth0-java and okhttp3 being used by spring -->
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>logging-interceptor</artifactId>
+                <version>${okhttp-version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <build>
         <pluginManagement>
             <plugins>
@@ -133,22 +181,26 @@
                         </execution>
                     </executions>
                 </plugin>
+                <plugin>
+                    <groupId>io.spring.javaformat</groupId>
+                    <artifactId>spring-javaformat-maven-plugin</artifactId>
+                    <version>${spring.javaformat.version}</version>
+                    <executions>
+                        <execution>
+                            <phase>validate</phase>
+                            <inherited>true</inherited>
+                            <goals>
+                                <goal>apply</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>io.spring.javaformat</groupId>
                 <artifactId>spring-javaformat-maven-plugin</artifactId>
-                <version>0.0.34</version>
-                <executions>
-                    <execution>
-                        <phase>validate</phase>
-                        <inherited>true</inherited>
-                        <goals>
-                            <goal>apply</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

@@ -60,8 +60,8 @@ public class PatternDetectionAssessmentTask extends GithubPatternDetectionTask {
 		try {
 			// @formatter:off
 			myMap = Map.of(
-					REPO, getRequiredParameterValue(workContext, REPO), 
-					ORG, getRequiredParameterValue(workContext, ORG), 
+					REPO, getRequiredParameterValue(workContext, REPO),
+					ORG, getRequiredParameterValue(workContext, ORG),
 					BRANCH,getRequiredParameterValue(workContext, BRANCH)
 				);
 			// @formatter:on
@@ -71,7 +71,7 @@ public class PatternDetectionAssessmentTask extends GithubPatternDetectionTask {
 			for (Entry<String, List<String>> directory : data.entrySet()) {
 				fileNames.addAll(directory.getValue());
 			}
-			
+
 			// Clues to use during test cases
 			BasicPatternImpl ocpTargetApp = configureCluesAndPatterns();
 			WorkContext context =

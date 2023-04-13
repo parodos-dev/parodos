@@ -123,7 +123,6 @@ public class ProjectControllerTest extends ControllerMockClient {
 
 	@Test
 	public void testGetProjectbyIdWithInValidID() throws Exception {
-		ProjectResponseDTO project1DTO = createSampleProject(PROJECT_NAME_1);
 		Mockito.when(projectService.getProjectById(Mockito.any())).thenReturn(null);
 
 		// When

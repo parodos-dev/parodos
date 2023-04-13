@@ -10,6 +10,8 @@ servers:
 - description: Generated server url
   url: http://localhost:8080
 tags:
+- description: Login endpoint
+  name: Login
 - description: Operations about workflow
   name: Workflow
 - description: Operations about project
@@ -17,6 +19,18 @@ tags:
 - description: Operations about workflow definition
   name: Workflow Definition
 paths:
+  /api/v1/login:
+    get:
+      operationId: login
+      responses:
+        "200":
+          description: Succeeded
+        "401":
+          description: Unauthorized
+      summary: Login
+      tags:
+      - Login
+      x-accepts: application/json
   /api/v1/projects:
     get:
       operationId: getProjects
@@ -335,6 +349,7 @@ components:
           - COMPLETED
           - IN_PROGRESS
           - PENDING
+          - REJECTED
           type: string
       type: object
     WorkFlowDefinitionResponseDTO:
@@ -377,6 +392,8 @@ components:
         parameters:
           key:
             key: '{}'
+        properties:
+          version: version
         createDate: 2000-01-23T04:56:07.000+00:00
       properties:
         author:
@@ -400,6 +417,8 @@ components:
           type: object
         processingType:
           type: string
+        properties:
+          $ref: '#/components/schemas/WorkFlowPropertiesDefinitionDTO'
         type:
           type: string
         works:
@@ -542,6 +561,13 @@ components:
             $ref: '#/components/schemas/WorkFlowOption'
           type: array
       type: object
+    WorkFlowPropertiesDefinitionDTO:
+      example:
+        version: version
+      properties:
+        version:
+          type: string
+      type: object
     WorkFlowRequestDTO:
       example:
         workFlowName: workFlowName
@@ -678,6 +704,9 @@ components:
           enum:
           - FAILED
           - COMPLETED
+          - IN_PROGRESS
+          - REJECTED
+          - PENDING
           type: string
       type: object
     WorkFlowStatusResponseDTO:

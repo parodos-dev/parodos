@@ -230,7 +230,8 @@ public class PatternDetectionWorkContextDelegate {
 			List<File> fileList = new ArrayList<>();
 			List<File> directoryList = new ArrayList<>();
 			try {
-				Files.walkFileTree(Paths.get(((String) context.get(PatternDetectionConstants.START_DIRECTORY.toString()))),
+				Files.walkFileTree(
+						Paths.get(((String) context.get(PatternDetectionConstants.START_DIRECTORY.toString()))),
 						new CollectFiles(fileList, directoryList));
 			}
 			catch (IOException e) {
@@ -239,7 +240,7 @@ public class PatternDetectionWorkContextDelegate {
 			}
 			context.put(PatternDetectionConstants.FILES_TO_SCAN.toString(), fileList);
 			context.put(PatternDetectionConstants.FOLDERS_TO_SCAN.toString(), directoryList);
-			}
+		}
 	}
 
 	private void initializeContext(WorkContext context) {

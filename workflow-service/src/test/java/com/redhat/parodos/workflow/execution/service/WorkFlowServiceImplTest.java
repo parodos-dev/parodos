@@ -7,6 +7,7 @@ import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
+import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
 import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 
 import com.redhat.parodos.workflow.enums.WorkType;
@@ -24,9 +25,13 @@ import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.search.MeterNotFoundException;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -44,6 +49,9 @@ import static org.mockito.ArgumentMatchers.any;
 
 class WorkFlowServiceImplTest {
 
+	@Mock
+	private MeterRegistry meterRegistry;
+
 	private WorkFlowDelegate workFlowDelegate;
 
 	private WorkFlowServiceDelegate workFlowServiceDelegate;
@@ -60,6 +68,10 @@ class WorkFlowServiceImplTest {
 
 	private WorkFlowServiceImpl workFlowService;
 
+	private WorkFlowDefinitionServiceImpl workFlowDefinitionService;
+
+	private MeterRegistry metricRegistry;
+
 	@BeforeEach
 	void initEach() {
 		this.workFlowDelegate = Mockito.mock(WorkFlowDelegate.class);
@@ -69,10 +81,13 @@ class WorkFlowServiceImplTest {
 		this.workFlowTaskDefinitionRepository = Mockito.mock(WorkFlowTaskDefinitionRepository.class);
 		this.workFlowTaskRepository = Mockito.mock(WorkFlowTaskRepository.class);
 		this.workFlowWorkRepository = Mockito.mock(WorkFlowWorkRepository.class);
+		this.workFlowDefinitionService = Mockito.mock(WorkFlowDefinitionServiceImpl.class);
+		this.metricRegistry = new SimpleMeterRegistry();
 
 		this.workFlowService = new WorkFlowServiceImpl(this.workFlowDelegate, this.workFlowServiceDelegate,
 				this.workFlowDefinitionRepository, this.workFlowTaskDefinitionRepository, this.workFlowRepository,
-				this.workFlowTaskRepository, this.workFlowWorkRepository);
+				this.workFlowTaskRepository, this.workFlowWorkRepository, this.workFlowDefinitionService,
+				this.metricRegistry);
 	}
 
 	@Test
@@ -88,7 +103,8 @@ class WorkFlowServiceImplTest {
 					}
 				}));
 		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
-		Mockito.when(this.workFlowDelegate.initWorkFlowContext(Mockito.any())).thenReturn(new WorkContext());
+		Mockito.when(this.workFlowDelegate.initWorkFlowContext(Mockito.any(), Mockito.any()))
+				.thenReturn(new WorkContext());
 		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(Mockito.any()))
 				.thenReturn(this.sampleWorkflowDefinition("test"));
 
@@ -124,7 +140,7 @@ class WorkFlowServiceImplTest {
 		assertNotNull(report.getWorkContext());
 
 		Mockito.verify(this.workFlowDelegate, Mockito.times(1)).getWorkFlowExecutionByName(Mockito.any());
-		Mockito.verify(this.workFlowDelegate, Mockito.times(0)).initWorkFlowContext(Mockito.any());
+		Mockito.verify(this.workFlowDelegate, Mockito.times(0)).initWorkFlowContext(Mockito.any(), Mockito.any());
 		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(0)).findFirstByName(Mockito.any());
 	}
 
@@ -142,7 +158,8 @@ class WorkFlowServiceImplTest {
 		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(Mockito.any()))
 				.thenReturn(this.sampleWorkflowDefinition("test"));
 		Mockito.when(this.workFlowWorkRepository.findByWorkDefinitionId(Mockito.any())).thenReturn(List.of());
-		Mockito.when(this.workFlowDelegate.initWorkFlowContext(Mockito.any())).thenReturn(new WorkContext());
+		Mockito.when(this.workFlowDelegate.initWorkFlowContext(Mockito.any(), Mockito.any()))
+				.thenReturn(new WorkContext());
 		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
 
 		// when
@@ -156,7 +173,7 @@ class WorkFlowServiceImplTest {
 		assertNotNull(report.getWorkContext());
 
 		Mockito.verify(this.workFlowDelegate, Mockito.times(2)).getWorkFlowExecutionByName(Mockito.any());
-		Mockito.verify(this.workFlowDelegate, Mockito.times(1)).initWorkFlowContext(Mockito.any());
+		Mockito.verify(this.workFlowDelegate, Mockito.times(1)).initWorkFlowContext(Mockito.any(), Mockito.any());
 		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).findFirstByName(Mockito.any());
 	}
 
@@ -183,7 +200,7 @@ class WorkFlowServiceImplTest {
 		assertNotNull(report.getWorkContext());
 
 		Mockito.verify(this.workFlowDelegate, Mockito.times(1)).getWorkFlowExecutionByName(Mockito.any());
-		Mockito.verify(this.workFlowDelegate, Mockito.times(0)).initWorkFlowContext(Mockito.any());
+		Mockito.verify(this.workFlowDelegate, Mockito.times(0)).initWorkFlowContext(Mockito.any(), Mockito.any());
 		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).findFirstByName(Mockito.any());
 	}
 
@@ -206,7 +223,7 @@ class WorkFlowServiceImplTest {
 		assertNotNull(report.getWorkContext());
 
 		Mockito.verify(this.workFlowDelegate, Mockito.times(1)).getWorkFlowExecutionByName(Mockito.any());
-		Mockito.verify(this.workFlowDelegate, Mockito.never()).initWorkFlowContext(Mockito.any());
+		Mockito.verify(this.workFlowDelegate, Mockito.never()).initWorkFlowContext(Mockito.any(), Mockito.any());
 		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).findFirstByName(Mockito.any());
 		Mockito.verify(this.workFlowWorkRepository, Mockito.never()).findByWorkDefinitionId(Mockito.any());
 	}
@@ -295,6 +312,14 @@ class WorkFlowServiceImplTest {
 		assertEquals(argument.getValue().getStatus().toString(), "COMPLETED");
 		assertEquals(argument.getValue().getProjectId().toString(), projectId.toString());
 		assertEquals(argument.getValue().getWorkFlowDefinitionId().toString(), workflowDefID.toString());
+
+		assertEquals(this.metricRegistry.get("workflow.executions").tag("status", "COMPLETED").counter().count(), 1);
+		// No other tags are created under workflow.executions metrics
+		assertEquals(this.metricRegistry.get("workflow.executions").counter().count(), 1);
+		// check that IN_PROGESS tag was not addded
+		assertThrows(MeterNotFoundException.class, () -> {
+			this.metricRegistry.get("workflow.executions").tag("status", "IN_PROGRESS").counter();
+		});
 	}
 
 	@Test

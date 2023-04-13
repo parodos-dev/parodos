@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.parodos.workflow.examples;
+package org.parodos.workflow.examples.custom;
 
-import com.redhat.parodos.examples.master.checker.NamespaceApprovalWorkFlowCheckerTask;
-import com.redhat.parodos.examples.master.task.NamespaceWorkFlowTask;
 import com.redhat.parodos.workflow.annotation.Checker;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
+import com.redhat.parodos.workflow.annotation.Parameter;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
+import com.redhat.parodos.workflow.parameter.WorkFlowParameterType;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
-import org.parodos.workflow.examples.task.CustomWorkFlowTask;
-import org.parodos.workflow.examples.task.SimpleWorkFlowCheckerTask;
+import org.parodos.workflow.examples.custom.task.CustomWorkFlowTask;
+import org.parodos.workflow.examples.custom.task.SimpleWorkFlowCheckerTask;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,11 +41,6 @@ public class CustomWorkFlowConfiguration {
 
 	// START Custom Sequential Example (WorkflowTasks and Workflow Definitions)
 	@Bean
-	CustomWorkFlowTask customWorkFlowTaskOne() {
-		return new CustomWorkFlowTask();
-	}
-
-	@Bean
 	CustomWorkFlowTask customWorkFlowTaskOne(@Qualifier("simpleWorkFlowChecker") WorkFlow simpleWorkFlowChecker) {
 		CustomWorkFlowTask customWorkFlowTaskOne = new CustomWorkFlowTask();
 		customWorkFlowTaskOne.setWorkFlowCheckers(List.of(simpleWorkFlowChecker));
@@ -58,7 +53,11 @@ public class CustomWorkFlowConfiguration {
 	}
 
 	@Bean(name = "customWorkflow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
-	@Infrastructure
+	@Infrastructure(parameters = {
+			@Parameter(key = "workloadId", description = "The workload id", type = WorkFlowParameterType.TEXT,
+					optional = false),
+			@Parameter(key = "projectUrl", description = "The project url", type = WorkFlowParameterType.URL,
+					optional = true) })
 	WorkFlow customWorkflow(@Qualifier("customWorkFlowTaskOne") CustomWorkFlowTask customWorkFlowTaskOne,
 			@Qualifier("customWorkFlowTaskTwo") CustomWorkFlowTask customWorkFlowTaskTwo) {
 		// @formatter:off
@@ -66,7 +65,7 @@ public class CustomWorkFlowConfiguration {
                 .Builder.aNewSequentialFlow()
                 .named("customWorkflow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
                 .execute(customWorkFlowTaskOne)
-				.then(customWorkFlowTaskTwo)
+                .then(customWorkFlowTaskTwo)
                 .build();
         // @formatter:on
 	}

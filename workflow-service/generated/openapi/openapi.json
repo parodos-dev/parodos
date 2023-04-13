@@ -10,6 +10,9 @@
     "description" : "Generated server url"
   } ],
   "tags" : [ {
+    "description" : "Login endpoint",
+    "name" : "Login"
+  }, {
     "description" : "Operations about workflow",
     "name" : "Workflow"
   }, {
@@ -20,6 +23,21 @@
     "name" : "Workflow Definition"
   } ],
   "paths" : {
+    "/api/v1/login" : {
+      "get" : {
+        "operationId" : "login",
+        "responses" : {
+          "200" : {
+            "description" : "Succeeded"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          }
+        },
+        "summary" : "Login",
+        "tags" : [ "Login" ]
+      }
+    },
     "/api/v1/projects" : {
       "get" : {
         "operationId" : "getProjects",
@@ -398,7 +416,7 @@
         "properties" : {
           "status" : {
             "type" : "string",
-            "enum" : [ "FAILED", "COMPLETED", "IN_PROGRESS", "PENDING" ]
+            "enum" : [ "FAILED", "COMPLETED", "IN_PROGRESS", "PENDING", "REJECTED" ]
           }
         }
       },
@@ -434,6 +452,9 @@
           },
           "processingType" : {
             "type" : "string"
+          },
+          "properties" : {
+            "$ref" : "#/components/schemas/WorkFlowPropertiesDefinitionDTO"
           },
           "type" : {
             "type" : "string"
@@ -510,6 +531,14 @@
           }
         }
       },
+      "WorkFlowPropertiesDefinitionDTO" : {
+        "type" : "object",
+        "properties" : {
+          "version" : {
+            "type" : "string"
+          }
+        }
+      },
       "WorkFlowRequestDTO" : {
         "type" : "object",
         "properties" : {
@@ -544,7 +573,7 @@
           },
           "workStatus" : {
             "type" : "string",
-            "enum" : [ "FAILED", "COMPLETED" ]
+            "enum" : [ "FAILED", "COMPLETED", "IN_PROGRESS", "REJECTED", "PENDING" ]
           }
         }
       },

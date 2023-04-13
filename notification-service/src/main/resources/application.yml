@@ -10,3 +10,21 @@ spring:
 springdoc:
   writer-with-order-by-keys: true
   writer-with-default-pretty-printer: true
+
+management:
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoint:
+    health:
+      enabled: true
+    prometheus:
+      enabled: true
+    metrics:
+      enabled: true
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: "health,prometheus"

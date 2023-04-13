@@ -16,6 +16,7 @@
 package com.redhat.parodos.workflow.definition.service;
 
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowPropertiesDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowCheckerMappingDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
 import com.redhat.parodos.workflow.enums.WorkFlowProcessingType;
@@ -31,6 +32,7 @@ import com.redhat.parodos.workflow.parameter.WorkFlowParameterType;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
 import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
 import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
+import com.redhat.parodos.workflows.workflow.WorkFlowPropertiesMetadata;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -41,7 +43,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -111,16 +112,18 @@ class WorkFlowDefinitionServiceImplTest {
 		workFlowDefinition.setWorkFlowTaskDefinitions(List.of(workFlowTaskDefinition));
 		Mockito.when(this.workFlowTaskDefinitionRepository.save(any())).thenReturn(workFlowTaskDefinition);
 		Mockito.when(this.workFlowDefinitionRepository.save(any())).thenReturn(workFlowDefinition);
+		WorkFlowPropertiesMetadata properties = WorkFlowPropertiesMetadata.builder().version("1.0.0").build();
 
 		// when
 		WorkFlowDefinitionResponseDTO workFlowDefinitionResponseDTO = this.workFlowDefinitionService.save(workFlowName,
-				WorkFlowType.ASSESSMENT, Collections.emptyList(), List.of(workFlowTask),
+				WorkFlowType.ASSESSMENT, properties, Collections.emptyList(), List.of(workFlowTask),
 				WorkFlowProcessingType.SEQUENTIAL);
 
 		// then
 		assertNotNull(workFlowDefinitionResponseDTO);
 		assertNotNull(workFlowDefinitionResponseDTO.getId());
 		assertEquals(workFlowDefinitionResponseDTO.getName(), workFlowName);
+		assertEquals(workFlowDefinitionResponseDTO.getProperties().getVersion(), "1.0.0");
 
 		ArgumentCaptor<WorkFlowDefinition> argument = ArgumentCaptor.forClass(WorkFlowDefinition.class);
 		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(2)).save(argument.capture());
@@ -156,7 +159,7 @@ class WorkFlowDefinitionServiceImplTest {
 				.thenReturn(workFlowTaskDefinition);
 		// when
 		WorkFlowDefinitionResponseDTO workFlowDefinitionResponseDTO = this.workFlowDefinitionService.save(workFlowName,
-				WorkFlowType.ASSESSMENT, Collections.emptyList(), List.of(workFlowTask),
+				WorkFlowType.ASSESSMENT, null, Collections.emptyList(), List.of(workFlowTask),
 				WorkFlowProcessingType.SEQUENTIAL);
 
 		// then
@@ -164,7 +167,7 @@ class WorkFlowDefinitionServiceImplTest {
 		assertNotNull(workFlowDefinitionResponseDTO.getId());
 		assertEquals(workFlowDefinitionResponseDTO.getName(), workFlowName);
 
-		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).save(workFlowDefinition);
+		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(2)).save(workFlowDefinition);
 		Mockito.verify(this.workFlowTaskDefinitionRepository, Mockito.never()).save(any());
 	}
 
@@ -235,6 +238,7 @@ class WorkFlowDefinitionServiceImplTest {
 
 	@Test
 	public void getWorkFlowDefinitionWithoutData() {
+
 		// given
 		Mockito.when(this.workFlowDefinitionRepository.findByTypeIsNot(any())).thenReturn(new ArrayList<>());
 
@@ -261,6 +265,8 @@ class WorkFlowDefinitionServiceImplTest {
 		// then
 		assertNotNull(workFlowDefinitionResponseDTOs);
 		assertEquals(workFlowDefinitionResponseDTOs.size(), 2);
+		assertEquals(workFlowDefinitionResponseDTOs.get(0).getName(), "workFLowOne");
+		assertEquals(workFlowDefinitionResponseDTOs.get(0).getProperties().getVersion(), "1.0.0");
 		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).findByTypeIsNot(WorkFlowType.CHECKER);
 	}
 
@@ -322,6 +328,7 @@ class WorkFlowDefinitionServiceImplTest {
 				.optional(false).type(WorkFlowParameterType.TEXT).build();
 
 		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(name).type(WorkFlowType.ASSESSMENT)
+				.properties(WorkFlowPropertiesDefinition.builder().version("1.0.0").build())
 				.processingType(WorkFlowProcessingType.SEQUENTIAL.name())
 				.parameters(WorkFlowDTOUtil.writeObjectValueAsString(
 						Map.of(workFlowParameter.getKey(), workFlowParameter.getAsJsonSchema())))

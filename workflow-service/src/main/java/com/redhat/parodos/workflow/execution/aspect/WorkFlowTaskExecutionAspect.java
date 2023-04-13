@@ -41,7 +41,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -92,7 +91,7 @@ public class WorkFlowTaskExecutionAspect {
 	 */
 	@Around("pointcutScopeTask() && args(workContext)")
 	public WorkReport executeAroundAdviceTask(ProceedingJoinPoint proceedingJoinPoint, WorkContext workContext) {
-		WorkReport report = null;
+		WorkReport report;
 		String workFlowTaskName = ((WorkFlowTask) proceedingJoinPoint.getTarget()).getName();
 
 		log.info("Before invoking execute() on workflow task name: {}", workFlowTaskName);
@@ -114,23 +113,22 @@ public class WorkFlowTaskExecutionAspect {
 		if (workFlowTaskExecution == null) {
 			workFlowTaskExecution = workFlowService.saveWorkFlowTask(
 			// @formatter:off
-				WorkFlowDTOUtil.writeObjectValueAsString(WorkContextDelegate.read(
-				workContext,
-				WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
-				workFlowTaskName,
-				WorkContextDelegate.Resource.ARGUMENTS)),
-				workFlowTaskDefinition.getId(),
-				workFlowExecution.getId(),
-				WorkFlowTaskStatus.IN_PROGRESS);
-				// @formatter:on
+                    WorkFlowDTOUtil.writeObjectValueAsString(WorkContextDelegate.read(
+                            workContext,
+                            WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
+                            workFlowTaskName,
+                            WorkContextDelegate.Resource.ARGUMENTS)),
+                    workFlowTaskDefinition.getId(),
+                    workFlowExecution.getId(),
+                    WorkFlowTaskStatus.IN_PROGRESS);
+            // @formatter:on
 		}
-		else if (WorkFlowTaskStatus.IN_PROGRESS.equals(workFlowTaskExecution.getStatus()))
+		else if (!WorkFlowTaskStatus.FAILED.equals(workFlowTaskExecution.getStatus())) {
 			// fail the task if it's processed by other thread
-			return new DefaultWorkReport(WorkStatus.FAILED, workContext);
-		else if (WorkFlowTaskStatus.COMPLETED.equals(workFlowTaskExecution.getStatus()))
-			// skip the task if it's already successful
-			return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
-
+			// skip the task if it's already successful/rejected
+			log.info("skipping task: {} with status {}", workFlowTaskName, workFlowTaskExecution.getStatus().name());
+			return new DefaultWorkReport(WorkStatus.valueOf(workFlowTaskExecution.getStatus().name()), workContext);
+		}
 		try {
 			report = (WorkReport) proceedingJoinPoint.proceed();
 			if (report == null || report.getStatus() == null)
@@ -155,7 +153,7 @@ public class WorkFlowTaskExecutionAspect {
 		if (WorkStatus.COMPLETED.equals(report.getStatus())
 				&& workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition() != null) {
 			handleChecker(proceedingJoinPoint, workContext, workFlowTaskDefinition, masterWorkFlowExecution);
-			return new DefaultWorkReport(WorkStatus.FAILED, workContext);
+			return new DefaultWorkReport(WorkStatus.PENDING, workContext);
 		}
 		return report;
 	}
@@ -172,7 +170,7 @@ public class WorkFlowTaskExecutionAspect {
 			// schedule workflow checker for dynamic run on cron expression
 			List<WorkFlow> checkerWorkFlows = ((BaseWorkFlowTask) proceedingJoinPoint.getTarget())
 					.getWorkFlowCheckers();
-			startCheckerOnSchedule(
+			startCheckerOnSchedule(masterWorkFlowExecution.getProjectId().toString(),
 					workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition().getCheckWorkFlow().getName(),
 					checkerWorkFlows, workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition(), workContext);
 		}
@@ -192,12 +190,12 @@ public class WorkFlowTaskExecutionAspect {
 
 	// Iterate through the all the Checkers in the workflow and start them based on their
 	// schedules
-	private void startCheckerOnSchedule(String workFlowName, List<WorkFlow> workFlows,
+	private void startCheckerOnSchedule(String projectId, String workFlowName, List<WorkFlow> workFlows,
 			WorkFlowCheckerMappingDefinition workFlowCheckerMappingDefinition, WorkContext workContext) {
 		log.info("Schedule workflow checker: {} to run per cron expression: {}", workFlowName,
 				workFlowCheckerMappingDefinition.getCronExpression());
 		for (WorkFlow workFlow : workFlows) {
-			workFlowSchedulerService.schedule(workFlow, workContext,
+			workFlowSchedulerService.schedule(projectId, workFlow, workContext,
 					workFlowCheckerMappingDefinition.getCronExpression());
 		}
 

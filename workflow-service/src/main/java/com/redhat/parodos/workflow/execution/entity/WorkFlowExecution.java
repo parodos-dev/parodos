@@ -17,12 +17,6 @@ package com.redhat.parodos.workflow.execution.entity;
 
 import com.redhat.parodos.common.AbstractEntity;
 import com.redhat.parodos.workflow.enums.WorkFlowStatus;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,6 +29,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * Workflow execution entity
@@ -73,7 +72,7 @@ public class WorkFlowExecution extends AbstractEntity {
 	@OneToMany(mappedBy = "masterWorkFlowExecution", cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	private List<WorkFlowExecution> subWorkFlowExecution = new ArrayList<>();
 
-	@OneToOne(mappedBy = "masterWorkFlowExecution", cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "masterWorkFlowExecution", cascade = { CascadeType.ALL }, orphanRemoval = true)
 	private WorkFlowExecutionContext workFlowExecutionContext;
 
 }

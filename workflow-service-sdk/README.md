@@ -39,7 +39,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>dev.parodos</groupId>
   <artifactId>workflow-service-sdk</artifactId>
-  <version>1.0.6-SNAPSHOT</version>
+  <version>1.0.7-SNAPSHOT</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -55,7 +55,7 @@ Add this dependency to your project's build file:
   }
 
   dependencies {
-     implementation "dev.parodos:workflow-service-sdk:1.0.6-SNAPSHOT"
+     implementation "dev.parodos:workflow-service-sdk:1.0.7-SNAPSHOT"
   }
 ```
 
@@ -69,7 +69,7 @@ mvn clean package
 
 Then manually install the following JARs:
 
-* `target/workflow-service-sdk-1.0.6-SNAPSHOT.jar`
+* `target/workflow-service-sdk-1.0.7-SNAPSHOT.jar`
 * `target/lib/*.jar`
 
 ## Getting Started
@@ -83,20 +83,18 @@ import com.redhat.parodos.sdk.api.ApiClient;
 import com.redhat.parodos.sdk.api.ApiException;
 import com.redhat.parodos.sdk.api.Configuration;
 import com.redhat.parodos.sdk.api.models.*;
-import com.redhat.parodos.sdk.api.ProjectApi;
+import com.redhat.parodos.sdk.api.LoginApi;
 
 public class Example {
   public static void main(String[] args) {
     ApiClient defaultClient = Configuration.getDefaultApiClient();
     defaultClient.setBasePath("http://localhost:8080");
 
-    ProjectApi apiInstance = new ProjectApi(defaultClient);
-    ProjectRequestDTO projectRequestDTO = new ProjectRequestDTO(); // ProjectRequestDTO | 
+    LoginApi apiInstance = new LoginApi(defaultClient);
     try {
-      ProjectResponseDTO result = apiInstance.createProject(projectRequestDTO);
-      System.out.println(result);
+      apiInstance.login();
     } catch (ApiException e) {
-      System.err.println("Exception when calling ProjectApi#createProject");
+      System.err.println("Exception when calling LoginApi#login");
       System.err.println("Status code: " + e.getCode());
       System.err.println("Reason: " + e.getResponseBody());
       System.err.println("Response headers: " + e.getResponseHeaders());
@@ -113,6 +111,7 @@ All URIs are relative to *http://localhost:8080*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*LoginApi* | [**login**](docs/LoginApi.md#login) | **GET** /api/v1/login | Login
 *ProjectApi* | [**createProject**](docs/ProjectApi.md#createProject) | **POST** /api/v1/projects | Creates a new project
 *ProjectApi* | [**getProjectById**](docs/ProjectApi.md#getProjectById) | **GET** /api/v1/projects/{id} | Returns information about a specified project
 *ProjectApi* | [**getProjects**](docs/ProjectApi.md#getProjects) | **GET** /api/v1/projects | Returns a list of project
@@ -133,6 +132,7 @@ Class | Method | HTTP request | Description
  - [WorkFlowDefinitionResponseDTO](docs/WorkFlowDefinitionResponseDTO.md)
  - [WorkFlowOption](docs/WorkFlowOption.md)
  - [WorkFlowOptions](docs/WorkFlowOptions.md)
+ - [WorkFlowPropertiesDefinitionDTO](docs/WorkFlowPropertiesDefinitionDTO.md)
  - [WorkFlowRequestDTO](docs/WorkFlowRequestDTO.md)
  - [WorkFlowResponseDTO](docs/WorkFlowResponseDTO.md)
  - [WorkFlowStatusResponseDTO](docs/WorkFlowStatusResponseDTO.md)

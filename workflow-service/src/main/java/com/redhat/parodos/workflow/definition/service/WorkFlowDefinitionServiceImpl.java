@@ -16,6 +16,7 @@
 package com.redhat.parodos.workflow.definition.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.redhat.parodos.common.AbstractEntity;
 import com.redhat.parodos.workflow.definition.dto.WorkDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
@@ -35,9 +36,11 @@ import com.redhat.parodos.workflow.task.WorkFlowTask;
 import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
+import com.redhat.parodos.workflows.workflow.WorkFlowPropertiesMetadata;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowPropertiesDefinition;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -45,7 +48,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -96,36 +98,38 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 
 	@Override
 	public WorkFlowDefinitionResponseDTO save(String workFlowName, WorkFlowType workFlowType,
-			List<WorkFlowParameter> workFlowParameters, List<Work> works,
+			WorkFlowPropertiesMetadata properties, List<WorkFlowParameter> workFlowParameters, List<Work> works,
 			WorkFlowProcessingType workFlowProcessingType) {
 
 		String stringifyParameters = WorkFlowDTOUtil
 				.writeObjectValueAsString(convertWorkFlowParameters(workFlowParameters));
-		// set and save workflow definition
-		WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository.findFirstByName(workFlowName);
 
-		if (workFlowDefinition == null || !(Objects.equals(works.size(), workFlowDefinition.getNumberOfWorks())
-				&& Objects.equals(workFlowType, workFlowDefinition.getType())
-				&& Objects.equals(stringifyParameters, workFlowDefinition.getParameters())
-				&& Objects.equals(workFlowProcessingType.name(), workFlowDefinition.getProcessingType()))) {
-			// update the workflow if its properties changed
-			workFlowDefinition = workFlowDefinitionRepository
-					.save(Optional.ofNullable(workFlowDefinition).map(foundWorkflowDefinition -> {
-						foundWorkflowDefinition.setType(workFlowType);
-						foundWorkflowDefinition.setParameters(stringifyParameters);
-						foundWorkflowDefinition.setModifyDate(new Date());
-						foundWorkflowDefinition.setProcessingType(workFlowProcessingType.name());
-						foundWorkflowDefinition.setNumberOfWorks(works.size());
-						return foundWorkflowDefinition;
-					}).orElse(WorkFlowDefinition.builder().name(workFlowName).type(workFlowType).createDate(new Date())
-							.parameters(stringifyParameters).modifyDate(new Date()).numberOfWorks(works.size())
-							.processingType(workFlowProcessingType.name()).build()));
+		// set and save workflow definition
+		WorkFlowPropertiesDefinition propertiesDefinition = WorkFlowPropertiesDefinition.builder().build();
+		if (properties != null) {
+			propertiesDefinition.setVersion(properties.getVersion());
 		}
+
+		WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository.findFirstByName(workFlowName);
+		if (workFlowDefinition == null) {
+			// It's not created, so we created the minimal entity to update it
+			workFlowDefinition = WorkFlowDefinition.builder().name(workFlowName).createDate(new Date()).build();
+		}
+
+		workFlowDefinition.setType(workFlowType);
+		workFlowDefinition.setParameters(stringifyParameters);
+		workFlowDefinition.setModifyDate(new Date());
+		workFlowDefinition.setProperties(propertiesDefinition);
+		workFlowDefinition.setProcessingType(workFlowProcessingType.name());
+		workFlowDefinition.setNumberOfWorks(works.size());
+
+		workFlowDefinition = workFlowDefinitionRepository.save(workFlowDefinition);
+
 		// save workflow tasks and set works
 		List<WorkFlowWorkDefinition> workFlowWorkDefinitions = new ArrayList<>();
 		WorkFlowDefinition finalWorkFlowDefinition = workFlowDefinition;
 		works.forEach(work -> {
-			UUID workId;
+			UUID workId = null;
 			if (work instanceof WorkFlow) { // WorkFlow
 				// A workflow in works should already been stored
 				workId = workFlowDefinitionRepository.findFirstByName(work.getName()).getId();
@@ -158,32 +162,27 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 									.workFlowDefinition(finalWorkFlowDefinition).createDate(new Date())
 									.modifyDate(new Date()).build()))
 							.getId();
-					workFlowWorkDefinitions.add(
-							WorkFlowWorkDefinition.builder().workDefinitionId(workId).workDefinitionType(WorkType.TASK)
-									.workFlowDefinition(finalWorkFlowDefinition).createDate(new Date()).build());
 				}
+				workFlowWorkDefinitions.add(WorkFlowWorkDefinition.builder()
+						.workDefinitionId(workFlowTaskDefinitionOptional.map(AbstractEntity::getId).orElse(workId))
+						.workDefinitionType(WorkType.TASK).workFlowDefinition(finalWorkFlowDefinition)
+						.createDate(new Date()).build());
 			}
 		});
-		finalWorkFlowDefinition.setWorkFlowWorkDefinitions(workFlowWorkDefinitions);
-		return modelMapper.map(workFlowDefinitionRepository.save(finalWorkFlowDefinition),
+
+		workFlowDefinition.setWorkFlowWorkDefinitions(workFlowWorkDefinitions);
+		return modelMapper.map(workFlowDefinitionRepository.save(workFlowDefinition),
 				WorkFlowDefinitionResponseDTO.class);
 	}
 
 	@Override
 	public List<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitions() {
 		List<WorkFlowDefinitionResponseDTO> workFlowDefinitionResponseDTOs = new ArrayList<>();
-		workFlowDefinitionRepository.findByTypeIsNot(WorkFlowType.CHECKER)
-				.forEach(
-						workFlowDefinition -> workFlowDefinitionResponseDTOs.add(WorkFlowDefinitionResponseDTO.builder()
-								.id(workFlowDefinition.getId()).name(workFlowDefinition.getName())
-								.parameterFromString(workFlowDefinition.getParameters())
-								.author(workFlowDefinition.getAuthor()).createDate(workFlowDefinition.getCreateDate())
-								.modifyDate(workFlowDefinition.getModifyDate())
-								.type(workFlowDefinition.getType().name())
-								.processingType(workFlowDefinition.getProcessingType())
-								.works(buildWorkFlowWorksDTOs(workFlowDefinition, workFlowWorkRepository
-										.findByWorkFlowDefinitionIdOrderByCreateDateAsc(workFlowDefinition.getId())))
-								.build()));
+		workFlowDefinitionRepository.findByTypeIsNot(WorkFlowType.CHECKER).forEach(workFlowDefinition -> {
+			workFlowDefinitionResponseDTOs.add(WorkFlowDefinitionResponseDTO.fromEntity(workFlowDefinition,
+					buildWorkFlowWorksDTOs(workFlowDefinition, workFlowWorkRepository
+							.findByWorkFlowDefinitionIdOrderByCreateDateAsc(workFlowDefinition.getId()))));
+		});
 		return workFlowDefinitionResponseDTOs;
 	}
 
@@ -194,11 +193,8 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 		List<WorkFlowWorkDefinition> workFlowWorkDependencies = workFlowWorkRepository
 				.findByWorkFlowDefinitionIdOrderByCreateDateAsc(workFlowDefinition.getId()).stream()
 				.sorted(Comparator.comparing(WorkFlowWorkDefinition::getCreateDate)).collect(Collectors.toList());
-		return WorkFlowDefinitionResponseDTO.builder().id(workFlowDefinition.getId()).name(workFlowDefinition.getName())
-				.parameterFromString(workFlowDefinition.getParameters()).author(workFlowDefinition.getAuthor())
-				.createDate(workFlowDefinition.getCreateDate()).modifyDate(workFlowDefinition.getModifyDate())
-				.type(workFlowDefinition.getType().toString()).processingType(workFlowDefinition.getProcessingType())
-				.works(buildWorkFlowWorksDTOs(workFlowDefinition, workFlowWorkDependencies)).build();
+		return WorkFlowDefinitionResponseDTO.fromEntity(workFlowDefinition,
+				buildWorkFlowWorksDTOs(workFlowDefinition, workFlowWorkDependencies));
 	}
 
 	@Override
@@ -210,11 +206,9 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 		List<WorkFlowWorkDefinition> workFlowWorkDependencies = workFlowWorkRepository
 				.findByWorkFlowDefinitionIdOrderByCreateDateAsc(workFlowDefinition.getId()).stream()
 				.sorted(Comparator.comparing(WorkFlowWorkDefinition::getCreateDate)).collect(Collectors.toList());
-		return WorkFlowDefinitionResponseDTO.builder().id(workFlowDefinition.getId()).name(workFlowDefinition.getName())
-				.parameterFromString(workFlowDefinition.getParameters()).author(workFlowDefinition.getAuthor())
-				.createDate(workFlowDefinition.getCreateDate()).modifyDate(workFlowDefinition.getModifyDate())
-				.type(workFlowDefinition.getType().name()).processingType(workFlowDefinition.getProcessingType())
-				.works(buildWorkFlowWorksDTOs(workFlowDefinition, workFlowWorkDependencies)).build();
+
+		return WorkFlowDefinitionResponseDTO.fromEntity(workFlowDefinition,
+				buildWorkFlowWorksDTOs(workFlowDefinition, workFlowWorkDependencies));
 	}
 
 	@Override
@@ -236,6 +230,42 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 		catch (Exception e) {
 			log.error(e.getMessage());
 		}
+	}
+
+	private void getWorksFromWorkDefinition(List<WorkFlowWorkDefinition> workFlowWorkDefinitions,
+			CopyOnWriteArrayList<WorkDefinitionResponseDTO> responseDTOs) {
+		workFlowWorkDefinitions.forEach(workFlowWorkDefinition -> {
+			WorkType workType = workFlowWorkDefinition.getWorkDefinitionType();
+			if (workType == null) {
+				return;
+			}
+			switch (workType) {
+				case TASK:
+					Optional<WorkFlowTaskDefinition> wdt = workFlowTaskDefinitionRepository
+							.findById(workFlowWorkDefinition.getWorkDefinitionId());
+					if (wdt.isEmpty()) {
+						log.error("Cannot find the task definition with id "
+								+ workFlowWorkDefinition.getWorkDefinitionId());
+						return;
+					}
+					responseDTOs.add(WorkDefinitionResponseDTO.fromWorkFlowTaskDefinition(wdt.get()));
+				case WORKFLOW:
+					Optional<WorkFlowDefinition> wd = workFlowDefinitionRepository
+							.findById(workFlowWorkDefinition.getWorkDefinitionId());
+					if (wd.isEmpty()) {
+						log.error("Cannot find work flow definition with id {}",
+								workFlowWorkDefinition.getWorkDefinitionId());
+						return;
+					}
+					List<WorkFlowWorkDefinition> wdWorkFlowWorkDependencies = workFlowWorkRepository
+							.findByWorkFlowDefinitionIdOrderByCreateDateAsc(wd.get().getId());
+
+					responseDTOs.add(WorkDefinitionResponseDTO.fromWorkFlowDefinitionEntity(wd.get(),
+							wdWorkFlowWorkDependencies));
+				default:
+					return;
+			}
+		});
 
 	}
 
@@ -253,26 +283,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 		workFlowWorksStartIndex.put(workFlowDefinition.getName(), 1);
 
 		// add workflowWorkUnits
-		workFlowWorkDefinitions.forEach(workFlowWorkDefinition -> {
-			if (workFlowWorkDefinition.getWorkDefinitionType().equals(WorkType.TASK)) { // Task
-				WorkFlowTaskDefinition wdt = workFlowTaskDefinitionRepository
-						.findById(workFlowWorkDefinition.getWorkDefinitionId()).get();
-				workDefinitionResponseDTOs.add(WorkDefinitionResponseDTO.builder().id(wdt.getId().toString())
-						.workType(WorkType.TASK.name()).name(wdt.getName()).parameterFromString(wdt.getParameters())
-						.outputs(WorkFlowDTOUtil.readStringAsObject(wdt.getOutputs(), new TypeReference<>() {
-						}, List.of())).build());
-			}
-			else { // WorkFlow
-				WorkFlowDefinition wd = workFlowDefinitionRepository
-						.findById(workFlowWorkDefinition.getWorkDefinitionId()).get();
-				List<WorkFlowWorkDefinition> wdWorkFlowWorkDependencies = workFlowWorkRepository
-						.findByWorkFlowDefinitionIdOrderByCreateDateAsc(wd.getId());
-				workDefinitionResponseDTOs.add(WorkDefinitionResponseDTO.builder().id(wd.getId().toString())
-						.workType(WorkType.WORKFLOW.name()).name(wd.getName()).parameterFromString(wd.getParameters())
-						.processingType(wd.getProcessingType()).works(new ArrayList<>())
-						.numberOfWorkUnits(wdWorkFlowWorkDependencies.size()).build());
-			}
-		});
+		this.getWorksFromWorkDefinition(workFlowWorkDefinitions, workDefinitionResponseDTOs);
 
 		// fill in subsequent workUnits
 		for (int i = 1; i < workDefinitionResponseDTOs.size(); i++) {
@@ -287,29 +298,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 						.stream().sorted(Comparator.comparing(WorkFlowWorkDefinition::getCreateDate))
 						.collect(Collectors.toList());
 
-				workFlowWorkUnits1Definition.forEach(wwdt1 -> {
-					if (wwdt1.getWorkDefinitionType().equals(WorkType.TASK)) { // Task
-						WorkFlowTaskDefinition wdt1 = workFlowTaskDefinitionRepository
-								.findById(wwdt1.getWorkDefinitionId()).get();
-						workDefinitionResponseDTOs.add(WorkDefinitionResponseDTO.builder().id(wdt1.getId().toString())
-								.workType(WorkType.TASK.name()).name(wdt1.getName())
-								.parameterFromString(wdt1.getParameters())
-								.outputs(WorkFlowDTOUtil.readStringAsObject(wdt1.getOutputs(), new TypeReference<>() {
-								}, List.of())).build());
-					}
-					else { // WorkFlow
-						WorkFlowDefinition wd1 = workFlowDefinitionRepository.findById(wwdt1.getWorkDefinitionId())
-								.get();
-						List<WorkFlowWorkDefinition> wd1WorkFlowWorkDefinitions = workFlowWorkRepository
-								.findByWorkFlowDefinitionIdOrderByCreateDateAsc(wd1.getId()).stream()
-								.sorted(Comparator.comparing(WorkFlowWorkDefinition::getCreateDate))
-								.collect(Collectors.toList());
-						workDefinitionResponseDTOs.add(WorkDefinitionResponseDTO.builder().id(wd1.getId().toString())
-								.workType(WorkType.WORKFLOW.name()).name(wd1.getName()).works(new ArrayList<>())
-								.processingType(wd1.getProcessingType())
-								.numberOfWorkUnits(wd1WorkFlowWorkDefinitions.size()).build());
-					}
-				});
+				this.getWorksFromWorkDefinition(workFlowWorkUnits1Definition, workDefinitionResponseDTOs);
 			}
 		}
 

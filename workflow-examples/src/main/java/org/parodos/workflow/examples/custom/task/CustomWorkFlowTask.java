@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.parodos.workflow.examples.task;
+package org.parodos.workflow.examples.custom.task;
 
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
@@ -29,7 +28,6 @@ import org.springframework.stereotype.Component;
  * @author Richard Wang (Github: richardw98)
  */
 
-@Slf4j
 @Component
 public class CustomWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 

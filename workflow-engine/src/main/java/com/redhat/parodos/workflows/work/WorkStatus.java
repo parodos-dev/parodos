@@ -36,8 +36,23 @@ public enum WorkStatus {
 	FAILED,
 
 	/**
-	 * The unit of work has completed successfully
+	 * The unit of work has completed successfully.
 	 */
-	COMPLETED
+	COMPLETED,
+
+	/**
+	 * The unit of work still in progress (not completed).
+	 */
+	IN_PROGRESS,
+
+	/**
+	 * The unit of work has rejected.
+	 */
+	REJECTED,
+
+	/**
+	 * The unit of work is pending checker.
+	 */
+	PENDING
 
 }

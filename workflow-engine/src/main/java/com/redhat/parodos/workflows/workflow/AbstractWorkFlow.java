@@ -27,12 +27,22 @@ abstract class AbstractWorkFlow implements WorkFlow {
 
 	private final String name;
 
+	private WorkFlowPropertiesMetadata properties;
+
 	AbstractWorkFlow(String name) {
 		this.name = name;
 	}
 
 	public String getName() {
 		return name;
+	}
+
+	public WorkFlowPropertiesMetadata getProperties() {
+		return properties;
+	}
+
+	public void setProperties(WorkFlowPropertiesMetadata properties) {
+		this.properties = properties;
 	}
 
 }

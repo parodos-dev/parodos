@@ -15,6 +15,7 @@
  */
 package com.redhat.parodos.workflow.definition.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.Date;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -62,6 +63,9 @@ public class WorkFlowDefinitionResponseDTO {
 	private Map<String, Map<String, Object>> parameters;
 
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	private WorkFlowPropertiesDefinitionDTO properties;
+
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private List<WorkDefinitionResponseDTO> works;
 
 	public static class WorkFlowDefinitionResponseDTOBuilder {
@@ -76,6 +80,16 @@ public class WorkFlowDefinitionResponseDTO {
 			return this;
 		}
 
+	}
+
+	public static WorkFlowDefinitionResponseDTO fromEntity(WorkFlowDefinition workFlowDefinition,
+			List<WorkDefinitionResponseDTO> works) {
+		return WorkFlowDefinitionResponseDTO.builder().id(workFlowDefinition.getId()).name(workFlowDefinition.getName())
+				.properties(WorkFlowPropertiesDefinitionDTO.fromEntity(workFlowDefinition.getProperties()))
+				.parameterFromString(workFlowDefinition.getParameters()).author(workFlowDefinition.getAuthor())
+				.createDate(workFlowDefinition.getCreateDate()).modifyDate(workFlowDefinition.getModifyDate())
+				.type(workFlowDefinition.getType().toString()).processingType(workFlowDefinition.getProcessingType())
+				.works(works).build();
 	}
 
 }
