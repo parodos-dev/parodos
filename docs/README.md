@@ -11,7 +11,7 @@ The following are the requirements to run the Parodos services.
 | nvm | For installing different tools | Please refer to the implemenation-examples/backstage folder | https://backstage.io/docs/getting-started/configuration |
 | yarn | For starting Backstage |  Please refer to the implemenation-examples/backstage folder | |
 | Keycloak | All Parodos services integrate with it, it in turn can be integrated with different OAuth providers | 17.0+ |
-| JDK | Required running the Parodos API | JDK/JVM 11 | At present JVM 11 seems to be the highest version of Java the clients running Parodos are approved to use. This can be updated on demand |
+| JDK | Required running the Parodos API | JDK/JVM 17 | At present JVM 17 seems to be the highest version of Java the clients running Parodos are approved to use. This can be updated on demand |
 | Spring Boot | All of Parodos serivces (API, Standalone) are built with Spring Boot | 2.5.5 | This is only relevant for those looking change the Parodos code |
 | React | All of the Parodos services are written in React | 17.02 | The applications makes use of the Context for State and is styled with Material UI 4.12.4  |
 | Database (API layer)     | Persistence API layer | Postgres 11.18+ | APIs use JPA and Liquid base to generate schemas. In theory they should work with most popular Database by changing the driver and recompiling the code. When starting any Parodos API in the 'local' profile, an H2 database is configured for evaluations |

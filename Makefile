@@ -8,10 +8,9 @@ TESTDBUSER := parodos
 TESTDBPORT := 5432
 
 # maven
-MAVEN ?= mvn
+MAVEN ?= /usr/bin/mvn
 
 # set quiet mode by default
-Q=@
 
 ORG=quay.io/parodos/
 WORKFLOW_SERVICE_IMAGE=workflow-service
@@ -23,36 +22,32 @@ VERSION = $(shell sed -n "s/<revision>\(.*\)<\/revision>/\1/p" $(PWD)/pom.xml | 
 GIT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD | sed s,^main$$,latest,g)
 GIT_HASH := $(shell git rev-parse HEAD)
 
-JAVA_VERSION_MAX_SUPPORTED=11
-JAVA_VERSION_MIN_SUPPORTED=11
+MVN_JAVA_VERSION := $(shell $(MAVEN) --version | awk 'NR==3 { split($$3, ver, "."); print ver[1] }')
+JAVA_VERSION := $(shell java --version | awk 'NR==1 { split($$2, ver, "."); print ver[1] }')
+JAVA_VERSION_MAX_SUPPORTED=17
+JAVA_VERSION_MIN_SUPPORTED=17
+
 # Setting SHELL to bash allows bash commands to be executed by recipes.
 # This is a requirement for 'setup-envtest.sh' in the test target.
 # Options are set to exit when a recipe line exits non-zero or a piped command fails.
 SHELL = /usr/bin/env bash -o pipefail
 .SHELLFLAGS = -ec
+
 mvn-checks:
-  # check if maven is installed
-  ifeq (,$(shell which $(MAVEN)))
-    $(error "No maven found in $(PATH). Please install maven")
-  else
-    MVN_JAVA_VERSION=$(shell mvn --version | sed -rn "s/.*Java version: ([[:digit:]]+)\.[[:digit:]]+\.[[:digit:]]+.*/\1/p")
-    MVN_VERSION_IS_SUPPORTED=$(shell [ $(MVN_JAVA_VERSION) -le $(JAVA_VERSION_MAX_SUPPORTED)  ] && [ $(MVN_JAVA_VERSION) -ge $(JAVA_VERSION_MIN_SUPPORTED)  ] && echo true)
-    ifeq ($(MVN_VERSION_IS_SUPPORTED), )
-      $(error "Maven Java $(MVN_JAVA_VERSION) version should be [$(JAVA_VERSION_MIN_SUPPORTED) ; $(JAVA_VERSION_MAX_SUPPORTED)]. Please use Java within these bounds with mvn")
-    endif
-  endif
+	# check if maven is installed
+	@if [ -z $(MVN_JAVA_VERSION) ]; then echo "No maven found in $(PATH). Please install maven"; exit 1; fi
+	@if [ $(MVN_JAVA_VERSION) -lt $(JAVA_VERSION_MIN_SUPPORTED)  ] || [ $(MVN_JAVA_VERSION) -gt $(JAVA_VERSION_MIN_SUPPORTED) ]; then \
+		echo "Maven Java $(MVN_JAVA_VERSION) version should be [$(JAVA_VERSION_MIN_SUPPORTED) ; $(JAVA_VERSION_MAX_SUPPORTED)]. Please use Java within these bounds with mvn"; \
+		exit 1; \
+	fi
 
 java-checks:
-  # check java version
-  ifeq (,$(shell java --version))
-    $(error "No java found in $(PATH). Please install java >= 11")
-  else
-    JAVA_VERSION=$(shell java --version | head -n 1 | sed -rn "s/.*\s([[:digit:]]+)\.[[:digit:]]+\.[[:digit:]]+\s.*/\1/p")
-    JAVA_VERSION_IS_SUPPORTED=$(shell [ $(JAVA_VERSION) -le $(JAVA_VERSION_MAX_SUPPORTED)  ] && [ $(JAVA_VERSION) -ge $(JAVA_VERSION_MIN_SUPPORTED)  ] && echo true)
-    ifeq ($(JAVA_VERSION_IS_SUPPORTED), )
-      $(error "Java version $(JAVA_VERSION) should be [$(JAVA_VERSION_MIN_SUPPORTED) ; $(JAVA_VERSION_MAX_SUPPORTED)]. Please install Java within those bounds")
-    endif
-  endif
+	# check if Java is installed
+	@if [ -z $(JAVA_VERSION) ]; then echo "No java found in $(PATH). Please install java >= $(JAVA_VERSION_MIN_SUPPORTED)"; exit 1; fi
+	@if [ $(JAVA_VERSION) -lt $(JAVA_VERSION_MIN_SUPPORTED) ] || [ $(JAVA_VERSION) -gt $(JAVA_VERSION_MAX_SUPPORTED) ]; then \
+		echo "Java version $(JAVA_VERSION) should be [$(JAVA_VERSION_MIN_SUPPORTED) ; $(JAVA_VERSION_MAX_SUPPORTED)]. Please install Java within those bounds"; \
+		exit 1; \
+	fi
 
 ##@ General
 
@@ -203,3 +198,4 @@ run-postgres: # Run a sample postgres instance
 
 stop-postgres:
 	$(DOCKER) rm -f parodos-postgres
+
