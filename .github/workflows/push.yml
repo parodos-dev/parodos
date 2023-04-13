@@ -18,7 +18,7 @@ jobs:
           java-version: '11'
 
       - name: Maven Verify 
-        run: mvn verify 
+        run: mvn clean verify 
 
       - name: Check generated files are up to date
         run: |
