@@ -1,4 +1,4 @@
-package com.redhat.parodos.sdk.api;
+package com.redhat.parodos.sdk.invoker;
 
 import java.util.Map;
 

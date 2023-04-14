@@ -12,14 +12,14 @@
 
 package com.redhat.parodos.sdk.api;
 
-import com.redhat.parodos.sdk.api.ApiCallback;
-import com.redhat.parodos.sdk.api.ApiClient;
-import com.redhat.parodos.sdk.api.ApiException;
-import com.redhat.parodos.sdk.api.ApiResponse;
-import com.redhat.parodos.sdk.api.Configuration;
-import com.redhat.parodos.sdk.api.Pair;
-import com.redhat.parodos.sdk.api.ProgressRequestBody;
-import com.redhat.parodos.sdk.api.ProgressResponseBody;
+import com.redhat.parodos.sdk.invoker.ApiCallback;
+import com.redhat.parodos.sdk.invoker.ApiClient;
+import com.redhat.parodos.sdk.invoker.ApiException;
+import com.redhat.parodos.sdk.invoker.ApiResponse;
+import com.redhat.parodos.sdk.invoker.Configuration;
+import com.redhat.parodos.sdk.invoker.Pair;
+import com.redhat.parodos.sdk.invoker.ProgressRequestBody;
+import com.redhat.parodos.sdk.invoker.ProgressResponseBody;
 
 import com.google.gson.reflect.TypeToken;
 

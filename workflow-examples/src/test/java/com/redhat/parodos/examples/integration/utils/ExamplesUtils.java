@@ -1,9 +1,10 @@
 
 package com.redhat.parodos.examples.integration.utils;
 
-import com.redhat.parodos.sdk.api.ApiCallback;
-import com.redhat.parodos.sdk.api.ApiException;
 import com.redhat.parodos.sdk.api.ProjectApi;
+import com.redhat.parodos.sdk.api.WorkflowApi;
+import com.redhat.parodos.sdk.invoker.ApiCallback;
+import com.redhat.parodos.sdk.invoker.ApiException;
 import com.redhat.parodos.sdk.model.ProjectResponseDTO;
 import lombok.Data;
 import org.assertj.core.util.Strings;
