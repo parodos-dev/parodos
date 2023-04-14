@@ -17,10 +17,10 @@ Returns information about a workflow definition by id
 ### Example
 ```java
 // Import classes:
-import com.redhat.parodos.sdk.api.ApiClient;
-import com.redhat.parodos.sdk.api.ApiException;
-import com.redhat.parodos.sdk.api.Configuration;
-import com.redhat.parodos.sdk.api.models.*;
+import com.redhat.parodos.sdk.invoker.ApiClient;
+import com.redhat.parodos.sdk.invoker.ApiException;
+import com.redhat.parodos.sdk.invoker.Configuration;
+import com.redhat.parodos.sdk.invoker.models.*;
 import com.redhat.parodos.sdk.api.WorkflowDefinitionApi;
 
 public class Example {
@@ -79,10 +79,10 @@ Returns a list of workflow definition
 ### Example
 ```java
 // Import classes:
-import com.redhat.parodos.sdk.api.ApiClient;
-import com.redhat.parodos.sdk.api.ApiException;
-import com.redhat.parodos.sdk.api.Configuration;
-import com.redhat.parodos.sdk.api.models.*;
+import com.redhat.parodos.sdk.invoker.ApiClient;
+import com.redhat.parodos.sdk.invoker.ApiException;
+import com.redhat.parodos.sdk.invoker.Configuration;
+import com.redhat.parodos.sdk.invoker.models.*;
 import com.redhat.parodos.sdk.api.WorkflowDefinitionApi;
 
 public class Example {

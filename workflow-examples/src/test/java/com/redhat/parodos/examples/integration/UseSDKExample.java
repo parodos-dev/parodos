@@ -1,11 +1,11 @@
 package com.redhat.parodos.examples.integration;
 
-import com.redhat.parodos.sdk.api.ApiClient;
-import com.redhat.parodos.sdk.api.ApiException;
-import com.redhat.parodos.sdk.api.Configuration;
 import com.redhat.parodos.sdk.api.ProjectApi;
 import com.redhat.parodos.sdk.api.WorkflowApi;
 import com.redhat.parodos.sdk.api.WorkflowDefinitionApi;
+import com.redhat.parodos.sdk.invoker.ApiClient;
+import com.redhat.parodos.sdk.invoker.ApiException;
+import com.redhat.parodos.sdk.invoker.Configuration;
 import com.redhat.parodos.sdk.model.ArgumentRequestDTO;
 import com.redhat.parodos.sdk.model.ProjectRequestDTO;
 import com.redhat.parodos.sdk.model.ProjectResponseDTO;
@@ -43,7 +43,7 @@ public class UseSDKExample {
 	private final String testPrjDescription = "Test Project Description";
 
 	@Test
-	public void runSimpleFlow() {
+	public void runSimpleFlow() throws ApiException {
 		ApiClient defaultClient = Configuration.getDefaultApiClient();
 
 		defaultClient.addDefaultHeader(HttpHeaders.AUTHORIZATION, "Basic " + CredUtils.getBase64Creds("test", "test"));
