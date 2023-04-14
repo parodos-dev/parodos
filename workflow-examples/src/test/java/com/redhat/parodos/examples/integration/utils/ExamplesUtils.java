@@ -17,7 +17,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -38,23 +37,14 @@ public final class ExamplesUtils {
 		Lock lock = new ReentrantLock();
 		Condition response = lock.newCondition();
 		ApiCallback<List<ProjectResponseDTO>> apiCallback = new ApiCallback<>() {
-			AtomicInteger failureCounter = new AtomicInteger(0);
-
 			@Override
 			public void onFailure(ApiException e, int statusCode, Map<String, List<String>> responseHeaders) {
-				int i = failureCounter.incrementAndGet();
-				if (i >= 100) {
-					asyncResult.setError(e.getMessage());
-					signal();
+				try {
+					projectApi.getProjectsAsync(this);
 				}
-				else {
-					try {
-						projectApi.getProjectsAsync(this);
-					}
-					catch (ApiException apie) {
-						asyncResult.setError(apie.getMessage());
-						signal();
-					}
+				catch (ApiException apie) {
+					asyncResult.setError(apie.getMessage());
+					signal();
 				}
 			}
 
@@ -88,7 +78,7 @@ public final class ExamplesUtils {
 			// should be more than enough
 			response.await(60, TimeUnit.SECONDS);
 			if (asyncResult.getError() != null) {
-				fail("An error occurred while executing getProjectsAsync: " + asyncResult.getError());
+				fail("An error occurred while executing getProjectAsync: " + asyncResult.getError());
 			}
 		}
 		finally {
@@ -102,35 +92,23 @@ public final class ExamplesUtils {
 		Lock lock = new ReentrantLock();
 		Condition response = lock.newCondition();
 		ApiCallback<WorkFlowStatusResponseDTO> apiCallback = new ApiCallback<>() {
-			AtomicInteger attemptCounter = new AtomicInteger(0);
 
 			@Override
 			public void onFailure(ApiException e, int statusCode, Map<String, List<String>> responseHeaders) {
-				int i = attemptCounter.incrementAndGet();
-				if (i >= 100) {
-					asyncResult.setError(e.getMessage());
-					signal();
+				System.out.println("onFAILURE");
+				try {
+					workflowApi.getStatusAsync(workFlowExecutionId, this);
 				}
-				else {
-					try {
-						workflowApi.getStatusAsync(workFlowExecutionId, this);
-					}
-					catch (ApiException apie) {
-						asyncResult.setError(apie.getMessage());
-						signal();
-					}
+				catch (ApiException apie) {
+					asyncResult.setError(apie.getMessage());
+					signal();
 				}
 			}
 
 			@Override
 			public void onSuccess(WorkFlowStatusResponseDTO result, int statusCode,
 					Map<String, List<String>> responseHeaders) {
-				int i = attemptCounter.incrementAndGet();
-				if (i >= 100) {
-					asyncResult.setError("Workflow status isn't COMPLETE");
-					signal();
-				}
-				else if (!result.getStatus().equals(WorkStatus.COMPLETED.toString())) {
+				if (!result.getStatus().equals(WorkStatus.COMPLETED.toString())) {
 					try {
 						workflowApi.getStatusAsync(workFlowExecutionId, this);
 					}
@@ -142,6 +120,8 @@ public final class ExamplesUtils {
 				else {
 					asyncResult.setStatusCode(statusCode);
 					asyncResult.setResult(result);
+					asyncResult.setError(null);
+					signal();
 				}
 
 			}
@@ -169,8 +149,9 @@ public final class ExamplesUtils {
 		try {
 			// should be more than enough
 			response.await(60, TimeUnit.SECONDS);
+
 			if (asyncResult.getError() != null) {
-				fail("An error occurred while executing getProjectsAsync: " + asyncResult.getError());
+				fail("An error occurred while executing waitAsyncStatusResponse: " + asyncResult.getError());
 			}
 		}
 		finally {
