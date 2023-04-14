@@ -18,10 +18,10 @@ Creates a new project
 ### Example
 ```java
 // Import classes:
-import com.redhat.parodos.sdk.api.ApiClient;
-import com.redhat.parodos.sdk.api.ApiException;
-import com.redhat.parodos.sdk.api.Configuration;
-import com.redhat.parodos.sdk.api.models.*;
+import com.redhat.parodos.sdk.invoker.ApiClient;
+import com.redhat.parodos.sdk.invoker.ApiException;
+import com.redhat.parodos.sdk.invoker.Configuration;
+import com.redhat.parodos.sdk.invoker.models.*;
 import com.redhat.parodos.sdk.api.ProjectApi;
 
 public class Example {
@@ -79,10 +79,10 @@ Returns information about a specified project
 ### Example
 ```java
 // Import classes:
-import com.redhat.parodos.sdk.api.ApiClient;
-import com.redhat.parodos.sdk.api.ApiException;
-import com.redhat.parodos.sdk.api.Configuration;
-import com.redhat.parodos.sdk.api.models.*;
+import com.redhat.parodos.sdk.invoker.ApiClient;
+import com.redhat.parodos.sdk.invoker.ApiException;
+import com.redhat.parodos.sdk.invoker.Configuration;
+import com.redhat.parodos.sdk.invoker.models.*;
 import com.redhat.parodos.sdk.api.ProjectApi;
 
 public class Example {
@@ -141,10 +141,10 @@ Returns a list of project
 ### Example
 ```java
 // Import classes:
-import com.redhat.parodos.sdk.api.ApiClient;
-import com.redhat.parodos.sdk.api.ApiException;
-import com.redhat.parodos.sdk.api.Configuration;
-import com.redhat.parodos.sdk.api.models.*;
+import com.redhat.parodos.sdk.invoker.ApiClient;
+import com.redhat.parodos.sdk.invoker.ApiException;
+import com.redhat.parodos.sdk.invoker.Configuration;
+import com.redhat.parodos.sdk.invoker.models.*;
 import com.redhat.parodos.sdk.api.ProjectApi;
 
 public class Example {

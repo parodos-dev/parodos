@@ -10,10 +10,10 @@
  * Do not edit the class manually.
  */
 
-package com.redhat.parodos.sdk.api.auth;
+package com.redhat.parodos.sdk.invoker.auth;
 
-import com.redhat.parodos.sdk.api.Pair;
-import com.redhat.parodos.sdk.api.ApiException;
+import com.redhat.parodos.sdk.invoker.Pair;
+import com.redhat.parodos.sdk.invoker.ApiException;
 
 import java.net.URI;
 import java.util.Map;

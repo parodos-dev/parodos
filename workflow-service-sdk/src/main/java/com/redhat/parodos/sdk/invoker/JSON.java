@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-package com.redhat.parodos.sdk.api;
+package com.redhat.parodos.sdk.invoker;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

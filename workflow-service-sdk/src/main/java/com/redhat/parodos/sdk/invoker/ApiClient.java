@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-package com.redhat.parodos.sdk.api;
+package com.redhat.parodos.sdk.invoker;
 
 import okhttp3.*;
 import okhttp3.internal.http.HttpMethod;
@@ -46,10 +46,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.redhat.parodos.sdk.api.auth.Authentication;
-import com.redhat.parodos.sdk.api.auth.HttpBasicAuth;
-import com.redhat.parodos.sdk.api.auth.HttpBearerAuth;
-import com.redhat.parodos.sdk.api.auth.ApiKeyAuth;
+import com.redhat.parodos.sdk.invoker.auth.Authentication;
+import com.redhat.parodos.sdk.invoker.auth.HttpBasicAuth;
+import com.redhat.parodos.sdk.invoker.auth.HttpBearerAuth;
+import com.redhat.parodos.sdk.invoker.auth.ApiKeyAuth;
 
 /**
  * <p>

@@ -12,7 +12,7 @@
 
 package com.redhat.parodos.sdk.api;
 
-import com.redhat.parodos.sdk.api.ApiException;
+import com.redhat.parodos.sdk.invoker.ApiException;
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
 import org.junit.Test;
 import org.junit.Ignore;

@@ -84,7 +84,7 @@
                             </inputSpec>
                             <output>${basedir}</output>
 
-                            <invokerPackage>com.redhat.parodos.sdk.api</invokerPackage>
+                            <invokerPackage>com.redhat.parodos.sdk.invoker</invokerPackage>
                             <apiPackage>com.redhat.parodos.sdk.api</apiPackage>
                             <modelPackage>com.redhat.parodos.sdk.model</modelPackage>
                             <addCompileSourceRoot>true</addCompileSourceRoot>
