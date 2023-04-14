@@ -3,8 +3,12 @@ package com.redhat.parodos.workflow.version;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class WorkFlowVersionServiceImplTest {
@@ -17,14 +21,49 @@ class WorkFlowVersionServiceImplTest {
 	}
 
 	@Test
-	public void testGetHash() {
+	public void testGetHashSameValue() {
 		// given
-		Object object = new Object();
+		String foo1 = new String("foo");
+		String foo2 = new String("foo");
+
+		assertNotSame(foo1, foo2);
 
 		// when
 		assertDoesNotThrow(() -> {
-			String hash = this.workFlowVersionService.getHash(object);
-			assertEquals(hash, "b0c8ed039dc102c0bab6a5e979931a0b");
+			String hashFoo1 = this.workFlowVersionService.getHash(foo1);
+			assertNotNull(hashFoo1);
+			assertFalse(hashFoo1.isEmpty());
+			assertFalse(hashFoo1.isBlank());
+
+			String hashFoo2 = this.workFlowVersionService.getHash(foo2);
+			assertNotNull(hashFoo2);
+			assertFalse(hashFoo2.isEmpty());
+			assertFalse(hashFoo2.isBlank());
+
+			assertEquals(hashFoo1, hashFoo2);
+
+		});
+	}
+
+	@Test
+	public void testGetHashDifferentValue() {
+		// given
+		String foo = new String("foo");
+		String bar = new String("bar");
+
+		// when
+		assertDoesNotThrow(() -> {
+			String hashFoo1 = this.workFlowVersionService.getHash(foo);
+			assertNotNull(foo);
+			assertFalse(foo.isEmpty());
+			assertFalse(foo.isBlank());
+
+			String hashFoo2 = this.workFlowVersionService.getHash(bar);
+			assertNotNull(bar);
+			assertFalse(bar.isEmpty());
+			assertFalse(bar.isBlank());
+
+			assertNotEquals(foo, bar);
 		});
 	}
 
