@@ -2,11 +2,13 @@
 package com.redhat.parodos.examples.integration.utils;
 
 import com.redhat.parodos.sdk.api.ProjectApi;
-import com.redhat.parodos.sdk.api.WorkflowApi;
 import com.redhat.parodos.sdk.invoker.ApiCallback;
+import com.redhat.parodos.sdk.invoker.ApiClient;
 import com.redhat.parodos.sdk.invoker.ApiException;
+import com.redhat.parodos.sdk.model.ProjectRequestDTO;
 import com.redhat.parodos.sdk.model.ProjectResponseDTO;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Strings;
 
 import javax.annotation.Nullable;
@@ -19,10 +21,14 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Gloria Ciavarrini (Github: gciavarrini)
  */
+@Slf4j
 public final class ExamplesUtils {
 
 	public static void waitProjectStart(ProjectApi projectApi) throws ApiException, InterruptedException {
@@ -102,6 +108,46 @@ public final class ExamplesUtils {
 
 		private String error;
 
+	}
+
+	public static ProjectResponseDTO commonProjectAPI(ApiClient apiClient, String projectName,
+			String projectDescription) throws InterruptedException, ApiException {
+		ProjectApi projectApi = new ProjectApi(apiClient);
+
+		waitProjectStart(projectApi);
+		log.info("Project is ✔️ on {}", apiClient.getBasePath());
+
+		ProjectResponseDTO testProject;
+
+		// RETRIEVE ALL PROJECTS AVAILABLE
+		log.info("Get all available projects");
+		List<ProjectResponseDTO> projects = projectApi.getProjects();
+		// CHECK IF testProject ALREADY EXISTS
+		testProject = getProjectByNameAndDescription(projects, projectName, projectDescription);
+
+		// CREATE PROJECT "Test Project Name" IF NOT EXISTS
+		if (testProject == null) {
+			log.info("There are no projects. Creating project {}", projectName);
+			// DEFINE A TEST PROJECT REQUEST
+			ProjectRequestDTO projectRequestDTO = new ProjectRequestDTO();
+			projectRequestDTO.setName(projectName);
+			projectRequestDTO.setDescription(projectDescription);
+
+			ProjectResponseDTO projectResponseDTO = projectApi.createProject(projectRequestDTO);
+			assertNotNull(projectResponseDTO);
+			assertEquals(projectName, projectResponseDTO.getName());
+			assertEquals(projectDescription, projectResponseDTO.getDescription());
+			log.info("Project {} successfully created", projectName);
+		}
+
+		// ASSERT PROJECT "testProject" IS PRESENT
+		projects = projectApi.getProjects();
+		log.debug("PROJECTS: {}", projects);
+		assertTrue(projects.size() > 0);
+		testProject = getProjectByNameAndDescription(projects, projectName, projectDescription);
+		assertNotNull(testProject);
+
+		return testProject;
 	}
 
 }
