@@ -117,7 +117,7 @@ class WorkFlowExecutionAspectTest {
 			Mockito.when(proceedingJoinPoint.proceed())
 					.thenReturn(new DefaultWorkReport(WorkStatus.COMPLETED, workContext));
 		});
-		Mockito.when(workFlowRepository.findFirstByWorkFlowDefinitionIdAndMasterWorkFlowExecution(Mockito.any(),
+		Mockito.when(workFlowRepository.findFirstByWorkFlowDefinitionIdAndMainWorkFlowExecution(Mockito.any(),
 				Mockito.any())).thenReturn(workFlowExecution);
 		Mockito.when(workFlowRepository.findById(Mockito.any())).thenReturn(Optional.of(workFlowExecution));
 		Mockito.doNothing().when(workFlowContinuationService).continueWorkFlow(Mockito.any(), Mockito.any(),
@@ -165,7 +165,7 @@ class WorkFlowExecutionAspectTest {
 			Mockito.when(proceedingJoinPoint.proceed())
 					.thenReturn(new DefaultWorkReport(WorkStatus.FAILED, workContext));
 		});
-		Mockito.when(workFlowRepository.findFirstByWorkFlowDefinitionIdAndMasterWorkFlowExecution(Mockito.any(),
+		Mockito.when(workFlowRepository.findFirstByWorkFlowDefinitionIdAndMainWorkFlowExecution(Mockito.any(),
 				Mockito.any())).thenReturn(workFlowExecution);
 		Mockito.when(workFlowRepository.findById(Mockito.any())).thenReturn(Optional.of(workFlowExecution));
 

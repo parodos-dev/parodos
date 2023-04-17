@@ -45,7 +45,7 @@ class WorkFlowExecutionFactoryTest {
 	}
 
 	@Test
-	void testCreateMasterWorkFlowExecutionInterceptor() {
+	void testCreateMainWorkFlowExecutionInterceptor() {
 		// given
 		WorkFlowDefinition workflow = mock(WorkFlowDefinition.class);
 		when(workflow.getName()).thenReturn("TestWorkflow");
@@ -62,11 +62,11 @@ class WorkFlowExecutionFactoryTest {
 		// then
 		// verify that the correct interceptor is created
 		assertNotNull(executionHandler);
-		assertTrue(executionHandler instanceof MasterWorkFlowExecutionInterceptor);
+		assertTrue(executionHandler instanceof MainWorkFlowExecutionInterceptor);
 	}
 
 	@Test
-	void testCreateInitialMasterWorkFlowExecutionInterceptor() {
+	void testCreateInitialMainWorkFlowExecutionInterceptor() {
 		// given
 		WorkFlowDefinition workflow = mock(WorkFlowDefinition.class);
 		when(workflow.getName()).thenReturn("TestWorkflow");
@@ -81,7 +81,7 @@ class WorkFlowExecutionFactoryTest {
 		// then
 		// verify that the correct interceptor is created
 		assertNotNull(executionHandler);
-		assertTrue(executionHandler instanceof InitialMasterWorkflowInterceptor);
+		assertTrue(executionHandler instanceof InitialMainWorkflowInterceptor);
 	}
 
 	@Test
@@ -106,7 +106,7 @@ class WorkFlowExecutionFactoryTest {
 	}
 
 	@Test
-	void testIsMasterWorkFlow() {
+	void testIsMainWorkFlow() {
 		// when
 		WorkFlowDefinition workflow = mock(WorkFlowDefinition.class);
 		when(workflow.getName()).thenReturn("TestWorkflow");
@@ -116,14 +116,14 @@ class WorkFlowExecutionFactoryTest {
 				WorkContextDelegate.Resource.NAME)).thenReturn("TestWorkflow");
 
 		// given
-		boolean isMaster = WorkFlowExecutionFactory.isMasterWorkFlow(workflow, workContext);
+		boolean isMain = WorkFlowExecutionFactory.isMainWorkFlow(workflow, workContext);
 
 		// then
-		assertTrue(isMaster);
+		assertTrue(isMain);
 	}
 
 	@Test
-	void testGetMasterWorkFlowExecutionId() {
+	void testGetMainWorkFlowExecutionId() {
 		// when
 		WorkContext workContext = mock(WorkContext.class);
 		String expectedExecutionId = UUID.randomUUID().toString();
@@ -131,11 +131,11 @@ class WorkFlowExecutionFactoryTest {
 				WorkContextDelegate.Resource.ID)).thenReturn(expectedExecutionId);
 
 		// given
-		UUID masterId = WorkFlowExecutionFactory.getMasterWorkFlowExecutionId(workContext);
+		UUID mainId = WorkFlowExecutionFactory.getMainWorkFlowExecutionId(workContext);
 
 		// then
-		assertNotNull(masterId);
-		assertEquals(expectedExecutionId, masterId.toString());
+		assertNotNull(mainId);
+		assertEquals(expectedExecutionId, mainId.toString());
 	}
 
 }

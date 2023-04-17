@@ -2,7 +2,7 @@ package com.redhat.parodos.workflow.execution.aspect;
 
 import java.util.Optional;
 
-import static com.redhat.parodos.workflow.execution.aspect.WorkFlowExecutionFactory.getMasterWorkFlowExecutionId;
+import static com.redhat.parodos.workflow.execution.aspect.WorkFlowExecutionFactory.getMainWorkFlowExecutionId;
 
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.exceptions.WorkflowExecutionNotFoundException;
@@ -15,7 +15,7 @@ import com.redhat.parodos.workflows.work.WorkContext;
 
 public class ContinuedWorkFlowExecutionInterceptor extends WorkFlowExecutionInterceptor {
 
-	private WorkFlowExecution masterWorkFlowExecution;
+	private WorkFlowExecution mainWorkFlowExecution;
 
 	public ContinuedWorkFlowExecutionInterceptor(WorkFlowDefinition workFlowDefinition, WorkContext workContext,
 			WorkFlowServiceImpl workFlowService, WorkFlowRepository workFlowRepository,
@@ -27,19 +27,19 @@ public class ContinuedWorkFlowExecutionInterceptor extends WorkFlowExecutionInte
 
 	@Override
 	protected WorkFlowExecution doPreWorkFlowExecution() {
-		this.masterWorkFlowExecution = workFlowRepository.findById(getMasterWorkFlowExecutionId(workContext))
+		this.mainWorkFlowExecution = workFlowRepository.findById(getMainWorkFlowExecutionId(workContext))
 				.orElseThrow(() -> new WorkflowExecutionNotFoundException(
-						"masterWorkFlow not found for sub-workflow: " + workFlowDefinition.getName()));
+						"mainWorkFlow not found for sub-workflow: " + workFlowDefinition.getName()));
 
 		// get the workflow execution if this is triggered by continuation service
 		return Optional
-				.ofNullable(workFlowRepository.findFirstByWorkFlowDefinitionIdAndMasterWorkFlowExecution(
-						workFlowDefinition.getId(), masterWorkFlowExecution))
-				.orElseGet(() -> this.saveWorkFlow(masterWorkFlowExecution));
+				.ofNullable(workFlowRepository.findFirstByWorkFlowDefinitionIdAndMainWorkFlowExecution(
+						workFlowDefinition.getId(), mainWorkFlowExecution))
+				.orElseGet(() -> this.saveWorkFlow(mainWorkFlowExecution));
 	}
 
-	protected WorkFlowExecution getMasterWorkFlowExecution() {
-		return masterWorkFlowExecution;
+	protected WorkFlowExecution getMainWorkFlowExecution() {
+		return mainWorkFlowExecution;
 	}
 
 }

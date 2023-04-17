@@ -37,9 +37,9 @@ class WorkFlowRequestDTOTest {
 
 	private static final String TEST_WORKFLOW_EXECUTION_REQUEST = "test-workflow-execution-request";
 
-	private static final String MASTER_WORKFLOW_PARAM_1_KEY = "master-workflow-param-1-key";
+	private static final String MAIN_WORKFLOW_PARAM_1_KEY = "main-workflow-param-1-key";
 
-	private static final String MASTER_WORKFLOW_PARAM_1_VALUE = "master-workflow-param-1-value";
+	private static final String MAIN_WORKFLOW_PARAM_1_VALUE = "main-workflow-param-1-value";
 
 	private static final String TEST_WORKFLOW = "test-workflow";
 
@@ -71,7 +71,7 @@ class WorkFlowRequestDTOTest {
 	private WorkFlowRequestDTO getSimpleWorkFlowRequestDTO() {
 		return WorkFlowRequestDTO.builder().workFlowName(TEST_WORKFLOW_EXECUTION_REQUEST)
 				.arguments(List.of(WorkFlowRequestDTO.WorkRequestDTO.ArgumentRequestDTO.builder()
-						.key(MASTER_WORKFLOW_PARAM_1_KEY).value(MASTER_WORKFLOW_PARAM_1_VALUE).build()))
+						.key(MAIN_WORKFLOW_PARAM_1_KEY).value(MAIN_WORKFLOW_PARAM_1_VALUE).build()))
 				.works(List
 						.of(getSimpleWorkRequestDTO(TEST_WORKFLOW, WorkType.WORKFLOW.name(), List.of(),
 								getSimpleWorkRequestDTO(TEST_WORK_TASK, WorkType.TASK.name(),

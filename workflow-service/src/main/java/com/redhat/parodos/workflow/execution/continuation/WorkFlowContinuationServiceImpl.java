@@ -61,8 +61,8 @@ public class WorkFlowContinuationServiceImpl implements WorkFlowContinuationServ
 	public void workFlowRunAfterStartup() {
 		log.info("Looking up all IN PROGRESS workflows for ");
 		List<WorkFlowExecution> workFlowExecutions = workFlowRepository
-				.findByStatusInAndIsMaster(List.of(WorkFlowStatus.IN_PROGRESS, WorkFlowStatus.PENDING));
-		log.info("Number of IN PROGRESS or PENDING master workflows is : {}", workFlowExecutions.size());
+				.findByStatusInAndIsMain(List.of(WorkFlowStatus.IN_PROGRESS, WorkFlowStatus.PENDING));
+		log.info("Number of IN PROGRESS or PENDING main workflows is : {}", workFlowExecutions.size());
 		workFlowExecutions.forEach(workFlowExecution -> {
 			WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository
 					.findById(workFlowExecution.getWorkFlowDefinitionId()).get();
@@ -71,7 +71,7 @@ public class WorkFlowContinuationServiceImpl implements WorkFlowContinuationServ
 			continueWorkFlow(workFlowExecution.getProjectId().toString(), workFlowDefinition.getName(),
 					workFlowExecution.getWorkFlowExecutionContext().getWorkContext(), workFlowExecution.getId());
 
-			// TODO: continue 'FAILED' Checkers in this master workflow execution
+			// TODO: continue 'FAILED' Checkers in this main workflow execution
 		});
 	}
 

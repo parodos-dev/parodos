@@ -1,4 +1,4 @@
-package com.redhat.parodos.examples.master.task;
+package com.redhat.parodos.examples.complex.task;
 
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
@@ -13,26 +13,26 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
 @Slf4j
-public class LoadBalancerWorkFlowTask extends BaseInfrastructureWorkFlowTask {
+public class SplunkMonitoringWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		log.info("LoadBalancerWorkFlowTask");
+		log.info("SplunkMonitoringWorkFlowTask");
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
 	@Override
 	public List<WorkParameter> getWorkFlowTaskParameters() {
 		return List.of(
-				WorkParameter.builder().key("hostname").description("The hostname").type(WorkParameterType.URL)
+				WorkParameter.builder().key("clusterName").description("The cluster name").type(WorkParameterType.TEXT)
 						.optional(false).build(),
-				WorkParameter.builder().key("appId").description("The app id").type(WorkParameterType.TEXT)
+				WorkParameter.builder().key("hostname").description("The hostname").type(WorkParameterType.TEXT)
 						.optional(false).build());
 	}
 
 	@Override
 	public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
-		return List.of(WorkFlowTaskOutput.HTTP2XX);
+		return List.of(WorkFlowTaskOutput.OTHER);
 	}
 
 }
