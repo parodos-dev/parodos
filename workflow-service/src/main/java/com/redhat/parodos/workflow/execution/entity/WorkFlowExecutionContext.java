@@ -47,7 +47,7 @@ public class WorkFlowExecutionContext extends AbstractEntity {
 
 	@OneToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "workflow_execution_id")
-	private WorkFlowExecution masterWorkFlowExecution;
+	private WorkFlowExecution mainWorkFlowExecution;
 
 	@Convert(converter = WorkContextConverter.class)
 	private WorkContext workContext;

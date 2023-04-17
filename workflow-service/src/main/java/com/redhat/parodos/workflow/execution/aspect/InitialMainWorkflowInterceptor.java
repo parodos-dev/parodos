@@ -9,9 +9,9 @@ import com.redhat.parodos.workflow.execution.scheduler.WorkFlowSchedulerServiceI
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 import com.redhat.parodos.workflows.work.WorkContext;
 
-public class InitialMasterWorkflowInterceptor extends WorkFlowExecutionInterceptor {
+public class InitialMainWorkflowInterceptor extends WorkFlowExecutionInterceptor {
 
-	public InitialMasterWorkflowInterceptor(WorkFlowDefinition workFlowDefinition, WorkContext workContext,
+	public InitialMainWorkflowInterceptor(WorkFlowDefinition workFlowDefinition, WorkContext workContext,
 			WorkFlowServiceImpl workFlowService, WorkFlowRepository workFlowRepository,
 			WorkFlowSchedulerServiceImpl workFlowSchedulerService,
 			WorkFlowContinuationServiceImpl workFlowContinuationServiceImpl) {
@@ -22,8 +22,8 @@ public class InitialMasterWorkflowInterceptor extends WorkFlowExecutionIntercept
 	@Override
 	protected WorkFlowExecution doPreWorkFlowExecution() {
 		/*
-		 * if this is the first time execution for master workflow, persist it and write
-		 * its execution id to workContext
+		 * if this is the first time execution for main workflow, persist it and write its
+		 * execution id to workContext
 		 */
 		WorkFlowExecution workFlowExecution = saveWorkFlow(null);
 		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,

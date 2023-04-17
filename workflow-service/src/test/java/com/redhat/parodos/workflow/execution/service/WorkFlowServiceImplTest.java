@@ -178,7 +178,7 @@ class WorkFlowServiceImplTest {
 	}
 
 	@Test
-	void executeWithDTOWithNoMasterWorkFlow() {
+	void executeWithDTOWithNoMainWorkFlow() {
 		// given
 		Work work = Mockito.mock(Work.class);
 		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow().named("test").execute(work).build();
@@ -270,15 +270,14 @@ class WorkFlowServiceImplTest {
 		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().status(WorkFlowStatus.COMPLETED).build();
 		workFlowExecution.setId(UUID.randomUUID());
 
-		WorkFlowExecution masterWorkFlowExecution = WorkFlowExecution.builder().status(WorkFlowStatus.COMPLETED)
-				.build();
-		masterWorkFlowExecution.setId(UUID.randomUUID());
+		WorkFlowExecution mainWorkFlowExecution = WorkFlowExecution.builder().status(WorkFlowStatus.COMPLETED).build();
+		mainWorkFlowExecution.setId(UUID.randomUUID());
 
 		Mockito.when(this.workFlowRepository.save(Mockito.any())).thenReturn(workFlowExecution);
 
 		// when
 		WorkFlowExecution res = this.workFlowService.saveWorkFlow(projectId, workflowDefID, WorkFlowStatus.COMPLETED,
-				masterWorkFlowExecution, "{}");
+				mainWorkFlowExecution, "{}");
 
 		// then
 		assertNotNull(res);
@@ -442,7 +441,7 @@ class WorkFlowServiceImplTest {
 		UUID workFlowDefinitionId = UUID.randomUUID();
 
 		// given
-		// workflow (master)
+		// workflow (main)
 		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(WORKFLOW_NAME).numberOfWorks(2)
 				.build();
 		workFlowDefinition.setId(workFlowDefinitionId);
@@ -462,7 +461,7 @@ class WorkFlowServiceImplTest {
 		// subWorkflow1Execution
 		WorkFlowExecution subWorkFlow1Execution = WorkFlowExecution.builder().projectId(UUID.randomUUID())
 				.status(WorkFlowStatus.IN_PROGRESS).workFlowDefinitionId(testSubWorkFlow1DefinitionId)
-				.masterWorkFlowExecution(workFlowExecution).build();
+				.mainWorkFlowExecution(workFlowExecution).build();
 		subWorkFlow1Execution.setId(testSubWorkFlow1ExecutionId);
 
 		// subWorkflow1Task1
@@ -508,7 +507,7 @@ class WorkFlowServiceImplTest {
 		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.eq(testSubWorkFlow1DefinitionId)))
 				.thenReturn(Optional.of(subWorkFlow1Definition));
 
-		Mockito.when(this.workFlowRepository.findFirstByMasterWorkFlowExecutionAndWorkFlowDefinitionId(
+		Mockito.when(this.workFlowRepository.findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(
 				Mockito.eq(workFlowExecution), Mockito.eq(testSubWorkFlow1DefinitionId)))
 				.thenReturn(subWorkFlow1Execution);
 
@@ -541,7 +540,7 @@ class WorkFlowServiceImplTest {
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = this.workFlowService
 				.getWorkFlowStatus(workFlowExecutionId);
 
-		// workflow (master)
+		// workflow (main)
 		assertNotNull(workFlowStatusResponseDTO);
 		assertEquals(workFlowStatusResponseDTO.getWorkFlowExecutionId(), workFlowExecution.getId().toString());
 		assertEquals(workFlowStatusResponseDTO.getWorkFlowName(), workFlowDefinition.getName());
@@ -572,7 +571,7 @@ class WorkFlowServiceImplTest {
 
 	@Test
 	void testGetWorkFlowStatusWithInvalidExecutionData() {
-		// workflow (master)
+		// workflow (main)
 		UUID workFlowExecutionId = UUID.randomUUID();
 
 		// when
@@ -589,7 +588,7 @@ class WorkFlowServiceImplTest {
 
 	@Test
 	void testGetWorkFlowStatusWithInvalidDefinitionData() {
-		// workflow (master)
+		// workflow (main)
 		UUID workFlowExecutionId = UUID.randomUUID();
 		UUID workFlowDefinitionId = UUID.randomUUID();
 		WorkFlowExecution workFlowExecution = Mockito.mock(WorkFlowExecution.class);
@@ -612,7 +611,7 @@ class WorkFlowServiceImplTest {
 	}
 
 	@Test
-	void testGetWorkFlowStatusWithNonMasterWorkFlowData() {
+	void testGetWorkFlowStatusWithNonmainWorkFlowData() {
 		// workflow
 		UUID workFlowExecutionId = UUID.randomUUID();
 		UUID workFlowDefinitionId = UUID.randomUUID();
@@ -626,7 +625,7 @@ class WorkFlowServiceImplTest {
 		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.eq(workFlowDefinitionId)))
 				.thenReturn(Optional.of(workFlowDefinition));
 
-		Mockito.when(workFlowExecution.getMasterWorkFlowExecution()).thenReturn(null);
+		Mockito.when(workFlowExecution.getMainWorkFlowExecution()).thenReturn(null);
 
 		assertThrows(ResponseStatusException.class, () -> {
 			this.workFlowService.getWorkFlowStatus(workFlowExecutionId);
@@ -644,7 +643,7 @@ class WorkFlowServiceImplTest {
 		UUID workFlowExecutionId = UUID.randomUUID();
 		UUID workFlowDefinitionId = UUID.randomUUID();
 
-		// workflow (master)
+		// workflow (main)
 		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(workFlowName).numberOfWorks(2)
 				.build();
 		workFlowDefinition.setId(workFlowDefinitionId);
@@ -684,7 +683,7 @@ class WorkFlowServiceImplTest {
 				.status(WorkFlowTaskStatus.COMPLETED).workFlowExecutionId(workFlowExecutionId)
 				.workFlowTaskDefinitionId(workFlowTask1DefinitionId).build();
 		workFlowTask1Execution.setId(workFlowTask1ExecutionId);
-		// link workflow task definition 2 to master workFlow
+		// link workflow task definition 2 to main workFlow
 		workFlowDefinition.setWorkFlowTaskDefinitions(List.of(workFlowTask1Definition));
 
 		// when
@@ -697,7 +696,7 @@ class WorkFlowServiceImplTest {
 		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.eq(subWorkFlow1DefinitionId)))
 				.thenReturn(Optional.of(subWorkFlow1Definition));
 
-		Mockito.when(this.workFlowRepository.findFirstByMasterWorkFlowExecutionAndWorkFlowDefinitionId(
+		Mockito.when(this.workFlowRepository.findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(
 				Mockito.eq(workFlowExecution), Mockito.eq(subWorkFlow1DefinitionId))).thenReturn(null);
 
 		Mockito.when(this.workFlowTaskDefinitionRepository.findById(Mockito.eq(subWorkFlow1Task1DefinitionId)))
@@ -725,7 +724,7 @@ class WorkFlowServiceImplTest {
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = this.workFlowService
 				.getWorkFlowStatus(workFlowExecutionId);
 
-		// master workflow
+		// main workflow
 		assertNotNull(workFlowStatusResponseDTO);
 		assertEquals(workFlowStatusResponseDTO.getWorkFlowExecutionId(), workFlowExecution.getId().toString());
 		assertEquals(workFlowStatusResponseDTO.getWorkFlowName(), workFlowDefinition.getName());
@@ -749,7 +748,7 @@ class WorkFlowServiceImplTest {
 	@Test
 	void testUpdateWorkFlowCheckerTaskStatusWithValidData() {
 		// given
-		// master workflow execution
+		// main workflow execution
 		UUID workFlowExecutionId = UUID.randomUUID();
 		// workflow checker task
 		String workFlowCheckerTaskName = "testWorkFlowTask";
@@ -758,12 +757,12 @@ class WorkFlowServiceImplTest {
 		UUID projectId = UUID.randomUUID();
 
 		// when
-		// master workflow execution
-		WorkFlowExecution masterWorkFlowExecution = WorkFlowExecution.builder().status(WorkFlowStatus.FAILED)
+		// main workflow execution
+		WorkFlowExecution mainWorkFlowExecution = WorkFlowExecution.builder().status(WorkFlowStatus.FAILED)
 				.projectId(projectId).workFlowDefinitionId(UUID.randomUUID()).build();
-		masterWorkFlowExecution.setId(workFlowExecutionId);
+		mainWorkFlowExecution.setId(workFlowExecutionId);
 		Mockito.when(this.workFlowRepository.findById(Mockito.eq(workFlowExecutionId)))
-				.thenReturn(Optional.of(masterWorkFlowExecution));
+				.thenReturn(Optional.of(mainWorkFlowExecution));
 
 		// workflow checker definition
 		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(workFlowCheckerName).build();
@@ -779,7 +778,7 @@ class WorkFlowServiceImplTest {
 		WorkFlowExecution workFlowCheckerExecution = WorkFlowExecution.builder().status(WorkFlowStatus.IN_PROGRESS)
 				.projectId(projectId).workFlowDefinitionId(workFlowCheckerDefinitionId).build();
 		workFlowCheckerExecution.setId(UUID.randomUUID());
-		Mockito.when(this.workFlowRepository.findByMasterWorkFlowExecution(Mockito.any()))
+		Mockito.when(this.workFlowRepository.findByMainWorkFlowExecution(Mockito.any()))
 				.thenReturn(List.of(workFlowCheckerExecution));
 
 		WorkFlowTaskExecution workFlowTaskExecution = WorkFlowTaskExecution.builder().arguments("test").results("res")
@@ -803,7 +802,7 @@ class WorkFlowServiceImplTest {
 	@Test
 	void testUpdateWorkFlowCheckerTaskStatusWithInvalidExecutionData() {
 		// given
-		// master workflow execution
+		// main workflow execution
 		UUID workFlowExecutionId = UUID.randomUUID();
 		// workflow checker task
 		String workFlowCheckerTaskName = "testWorkFlowTask";
@@ -822,7 +821,7 @@ class WorkFlowServiceImplTest {
 	@Test
 	void testUpdateWorkFlowCheckerTaskStatusWithInvalidTaskData() {
 		// given
-		// master workflow execution
+		// main workflow execution
 		UUID workFlowExecutionId = UUID.randomUUID();
 		// workflow checker task
 		String workFlowCheckerTaskName = "testWorkFlowTask";

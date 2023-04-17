@@ -23,7 +23,7 @@ public class CheckerWorkFlowPostInterceptor implements WorkFlowPostInterceptor {
 
 	private final WorkFlowExecution workFlowExecution;
 
-	private final WorkFlowExecution masterWorkFlowExecution;
+	private final WorkFlowExecution mainWorkFlowExecution;
 
 	private final WorkFlowServiceImpl workFlowService;
 
@@ -38,12 +38,12 @@ public class CheckerWorkFlowPostInterceptor implements WorkFlowPostInterceptor {
 	public CheckerWorkFlowPostInterceptor(WorkFlowDefinition workFlowDefinition, WorkContext workContext,
 			WorkFlowServiceImpl workFlowService, WorkFlowSchedulerServiceImpl workFlowSchedulerService,
 			WorkFlowContinuationServiceImpl workFlowContinuationServiceImpl, WorkFlowExecution workFlowExecution,
-			WorkFlowExecution masterWorkFlowExecution, WorkFlow workFlow, WorkStatus workStatus) {
+			WorkFlowExecution mainWorkFlowExecution, WorkFlow workFlow, WorkStatus workStatus) {
 		this.workFlowDefinition = workFlowDefinition;
 		this.workContext = workContext;
 		this.workFlowService = workFlowService;
 		this.workFlowExecution = workFlowExecution;
-		this.masterWorkFlowExecution = masterWorkFlowExecution;
+		this.mainWorkFlowExecution = mainWorkFlowExecution;
 		this.workFlowSchedulerService = workFlowSchedulerService;
 		this.workFlowContinuationServiceImpl = workFlowContinuationServiceImpl;
 		this.workFlow = workFlow;
@@ -58,13 +58,13 @@ public class CheckerWorkFlowPostInterceptor implements WorkFlowPostInterceptor {
 		 * cron expression or stop if done
 		 */
 		startOrStopWorkFlowCheckerOnSchedule(workFlow, workFlowDefinition.getCheckerWorkFlowDefinition(), workStatus,
-				workContext, workFlowExecution.getProjectId().toString(), masterWorkFlowExecution);
+				workContext, workFlowExecution.getProjectId().toString(), mainWorkFlowExecution);
 		return null;
 	}
 
 	private void startOrStopWorkFlowCheckerOnSchedule(WorkFlow workFlow,
 			WorkFlowCheckerMappingDefinition workFlowCheckerMappingDefinition, WorkStatus workStatus,
-			WorkContext workContext, String projectId, WorkFlowExecution masterWorkFlowExecution) {
+			WorkContext workContext, String projectId, WorkFlowExecution mainWorkFlowExecution) {
 		/*
 		 * if this workflow is a checker, schedule workflow checker for dynamic run on
 		 * cron expression or stop if done
@@ -84,8 +84,8 @@ public class CheckerWorkFlowPostInterceptor implements WorkFlowPostInterceptor {
 				log.info("Stop rejected workflow checker: {} schedule", workFlow.getName());
 				workFlowSchedulerService.stop(projectId, workFlow);
 
-				masterWorkFlowExecution.setStatus(WorkFlowStatus.FAILED);
-				workFlowService.updateWorkFlow(masterWorkFlowExecution);
+				mainWorkFlowExecution.setStatus(WorkFlowStatus.FAILED);
+				workFlowService.updateWorkFlow(mainWorkFlowExecution);
 			}
 			return;
 		}
@@ -93,17 +93,17 @@ public class CheckerWorkFlowPostInterceptor implements WorkFlowPostInterceptor {
 		log.info("Stop workflow checker: {} schedule", workFlow.getName());
 		workFlowSchedulerService.stop(projectId, workFlow);
 
-		String masterWorkFlowName = WorkContextDelegate.read(workContext,
+		String mainWorkFlowName = WorkContextDelegate.read(workContext,
 				WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION, WorkContextDelegate.Resource.NAME).toString();
 
 		/*
 		 * if this workflow is checker and it's successful, call continuation service to
-		 * restart master workflow execution with same execution Id when there is no other
+		 * restart main workflow execution with same execution Id when there is no other
 		 * active checkers
 		 */
-		if (workFlowService.findRunningChecker(masterWorkFlowExecution).isEmpty())
-			workFlowContinuationServiceImpl.continueWorkFlow(projectId, masterWorkFlowName, workContext,
-					masterWorkFlowExecution.getId());
+		if (workFlowService.findRunningChecker(mainWorkFlowExecution).isEmpty())
+			workFlowContinuationServiceImpl.continueWorkFlow(projectId, mainWorkFlowName, workContext,
+					mainWorkFlowExecution.getId());
 	}
 
 }

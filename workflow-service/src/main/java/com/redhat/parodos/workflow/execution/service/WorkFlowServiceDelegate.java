@@ -74,7 +74,7 @@ public class WorkFlowServiceDelegate {
 		CopyOnWriteArrayList<WorkStatusResponseDTO> workStatusResponseDTOs = new CopyOnWriteArrayList<>();
 		Map<String, Integer> workFlowWorkStartIndexMap = new HashMap<>();
 
-		// this is the master workflow so build its status dto and
+		// this is the main workflow so build its status dto and
 		// its immediate works status dto then add into a common list
 		buildWorkFlowStatusDTO(workFlowExecution, workFlowDefinition, workStatusResponseDTOs,
 				workFlowWorkStartIndexMap);
@@ -89,7 +89,7 @@ public class WorkFlowServiceDelegate {
 			}
 		}
 
-		// nest works status dto into the (master) workflow status dto
+		// nest works status dto into the (main) workflow status dto
 		return nestWorkFlowWorksStatusDTO(workStatusResponseDTOs, workFlowWorkStartIndexMap);
 	}
 
@@ -121,7 +121,7 @@ public class WorkFlowServiceDelegate {
 	}
 
 	private void buildWorkFlowWorksStatusDTO(String workFlowName, WorkFlowExecution workFlowExecution,
-			WorkFlowExecution masterWorkFlowExecution,
+			WorkFlowExecution mainWorkFlowExecution,
 			CopyOnWriteArrayList<WorkStatusResponseDTO> workStatusResponseDTOList,
 			Map<String, Integer> workFlowWorkStartIndexMap) {
 		// save the start index of the workflow's works
@@ -134,7 +134,7 @@ public class WorkFlowServiceDelegate {
 		workFlowWorksDefinitions.forEach(workFlowWorkDefinition -> {
 			if (workFlowWorkDefinition.getWorkDefinitionType().equals(WorkType.WORKFLOW))
 				workStatusResponseDTOList
-						.add(getWorkStatusResponseDTOFromWorkFlow(workFlowWorkDefinition, masterWorkFlowExecution));
+						.add(getWorkStatusResponseDTOFromWorkFlow(workFlowWorkDefinition, mainWorkFlowExecution));
 			else
 				workStatusResponseDTOList
 						.add(getWorkStatusResponseDTOFromWorkFlowTask(workFlowWorkDefinition, workFlowExecution));
@@ -146,7 +146,7 @@ public class WorkFlowServiceDelegate {
 		WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository
 				.findById(workFlowWorkDefinition.getWorkDefinitionId()).get();
 
-		WorkFlowExecution workExecution = workFlowRepository.findFirstByMasterWorkFlowExecutionAndWorkFlowDefinitionId(
+		WorkFlowExecution workExecution = workFlowRepository.findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(
 				workFlowExecution, workFlowWorkDefinition.getWorkDefinitionId());
 		/*
 		 * the workflow execution might be null when there is pending checker before it

@@ -53,7 +53,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 
@@ -147,16 +146,16 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
 	@Override
 	public WorkFlowExecution saveWorkFlow(UUID projectId, UUID workFlowDefinitionId, WorkFlowStatus workFlowStatus,
-			WorkFlowExecution masterWorkFlowExecution, String arguments) {
+			WorkFlowExecution mainWorkFlowExecution, String arguments) {
 		try {
 			this.statusCounterWithStatus(workFlowStatus);
 			return workFlowRepository.save(WorkFlowExecution.builder().workFlowDefinitionId(workFlowDefinitionId)
 					.projectId(projectId).status(workFlowStatus).startDate(new Date()).arguments(arguments)
-					.masterWorkFlowExecution(masterWorkFlowExecution).build());
+					.mainWorkFlowExecution(mainWorkFlowExecution).build());
 		}
 		catch (DataAccessException | IllegalArgumentException e) {
-			log.error("failing persist workflow execution for: {} in master workflow execution: {}. error Message: {}",
-					workFlowDefinitionId, masterWorkFlowExecution.getId(), e.getMessage());
+			log.error("failing persist workflow execution for: {} in main workflow execution: {}. error Message: {}",
+					workFlowDefinitionId, mainWorkFlowExecution.getId(), e.getMessage());
 			throw new WorkflowPersistenceFailedException(e.getMessage());
 		}
 	}
@@ -181,7 +180,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 				});
 
 		// check if it is not an inner workflow
-		if (workFlowExecution.getMasterWorkFlowExecution() != null) {
+		if (workFlowExecution.getMainWorkFlowExecution() != null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					String.format("workflow id: %s from workflow name: %s is an inner workflow!",
 							workFlowExecution.getId(), workFlowDefinition.getName()));
@@ -212,7 +211,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 					.startDate(new Date()).build());
 		}
 		catch (DataAccessException | IllegalArgumentException e) {
-			log.error("failing persist task execution for: {} in master workflow execution: {}. error Message: {}",
+			log.error("failing persist task execution for: {} in main workflow execution: {}. error Message: {}",
 					workFlowTaskDefinitionId, workFlowTaskDefinitionId, e.getMessage());
 			throw new WorkflowPersistenceFailedException(e.getMessage());
 		}
@@ -233,8 +232,8 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	@Override
 	public void updateWorkFlowCheckerTaskStatus(UUID workFlowExecutionId, String workFlowTaskName,
 			WorkFlowTaskStatus workFlowTaskStatus) {
-		// get master workflow associated to the execution id
-		WorkFlowExecution masterWorkFlowExecution = workFlowRepository.findById(workFlowExecutionId).orElseThrow(() -> {
+		// get main workflow associated to the execution id
+		WorkFlowExecution mainWorkFlowExecution = workFlowRepository.findById(workFlowExecutionId).orElseThrow(() -> {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
 					String.format("workflow execution id: %s not found!", workFlowExecutionId));
 		});
@@ -247,7 +246,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		}
 		// find workflow checker execution associated to the checker task
 		List<WorkFlowExecution> workFlowExecutions = workFlowRepository
-				.findByMasterWorkFlowExecution(masterWorkFlowExecution);
+				.findByMainWorkFlowExecution(mainWorkFlowExecution);
 		WorkFlowExecution workFlowCheckerExecution = workFlowExecutions.stream()
 				.filter(workFlowExecution -> workFlowExecution.getWorkFlowDefinitionId()
 						.equals(workFlowTaskDefinition.getWorkFlowDefinition().getId()))
@@ -268,8 +267,8 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		workFlowTaskRepository.save(workFlowTaskExecution);
 	}
 
-	public List<WorkFlowExecution> findRunningChecker(WorkFlowExecution masterWorkflow) {
-		return workFlowRepository.findRunningCheckersById(masterWorkflow.getId());
+	public List<WorkFlowExecution> findRunningChecker(WorkFlowExecution mainWorkFlow) {
+		return workFlowRepository.findRunningCheckersById(mainWorkFlow.getId());
 	}
 
 	private String validateWorkflow(String workflowName, WorkFlow workFlow) {
@@ -279,15 +278,15 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 			return String.format("workflow '%s' cannot be found!", workflowName);
 		}
 
-		// validate if workflow is master
+		// validate if workflow is main
 		WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository.findFirstByName(workflowName);
 		if (workFlowDefinition == null) {
 			return String.format("workflow '%s' is not registered!", workflowName);
 		}
 
 		if (!workFlowWorkRepository.findByWorkDefinitionId(workFlowDefinition.getId()).isEmpty()) {
-			log.error("workflow '{}' is not master workflow!", workflowName);
-			return String.format("workflow '%s' is not master workflow!", workflowName);
+			log.error("workflow '{}' is not main workflow!", workflowName);
+			return String.format("workflow '%s' is not main workflow!", workflowName);
 		}
 
 		// TODO: validate required parameters from definition

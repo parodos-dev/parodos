@@ -1,4 +1,4 @@
-package com.redhat.parodos.examples.master.task;
+package com.redhat.parodos.examples.complex.task;
 
 import com.redhat.parodos.examples.base.BaseAssessmentTaskTest;
 import com.redhat.parodos.workflow.option.WorkFlowOption;

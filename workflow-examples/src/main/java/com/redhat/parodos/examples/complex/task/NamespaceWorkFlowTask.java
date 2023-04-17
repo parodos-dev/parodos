@@ -1,4 +1,4 @@
-package com.redhat.parodos.examples.master.task;
+package com.redhat.parodos.examples.complex.task;
 
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
@@ -13,21 +13,18 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
 @Slf4j
-public class SslCertificationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
+public class NamespaceWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		log.info("SslCertificationWorkFlowTask");
+		log.info("NamespaceWorkFlowTask");
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
 	@Override
 	public List<WorkParameter> getWorkFlowTaskParameters() {
-		return List.of(
-				WorkParameter.builder().key("domainName").description("The domain name").type(WorkParameterType.URL)
-						.optional(false).build(),
-				WorkParameter.builder().key("ipAddress").description("The api address").type(WorkParameterType.TEXT)
-						.optional(false).build());
+		return List.of(WorkParameter.builder().key("projectId").description("The project id")
+				.type(WorkParameterType.NUMBER).optional(false).build());
 	}
 
 	@Override

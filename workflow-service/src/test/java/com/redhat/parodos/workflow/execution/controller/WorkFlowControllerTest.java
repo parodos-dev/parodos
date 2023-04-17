@@ -113,15 +113,15 @@ class WorkFlowControllerTest extends ControllerMockClient {
 	@Test
 	public void testGetStatus() throws Exception {
 		// given
-		UUID masterWorkFlowExecutionId = UUID.randomUUID();
-		String testMasterWorkFlow = "testMasterWorkFlow";
+		UUID mainWorkFlowExecutionId = UUID.randomUUID();
+		String testMainWorkFlow = "testMainWorkFlow";
 		String testSubWorkFlow1 = "testSubWorkFlow1";
 		String testSubWorkFlowTask1 = "testSubWorkFlowTask1";
 		String testWorkFlowTask1 = "testWorkFlowTask1";
 
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = WorkFlowStatusResponseDTO.builder()
-				.workFlowExecutionId(masterWorkFlowExecutionId.toString()).status(WorkFlowStatus.IN_PROGRESS.name())
-				.workFlowName(testMasterWorkFlow)
+				.workFlowExecutionId(mainWorkFlowExecutionId.toString()).status(WorkFlowStatus.IN_PROGRESS.name())
+				.workFlowName(testMainWorkFlow)
 				.works(List.of(
 						WorkStatusResponseDTO.builder().name(testSubWorkFlow1).status(ParodosWorkStatus.PENDING)
 								.type(WorkType.WORKFLOW)
@@ -131,18 +131,17 @@ class WorkFlowControllerTest extends ControllerMockClient {
 						WorkStatusResponseDTO.builder().name(testWorkFlowTask1).status(ParodosWorkStatus.COMPLETED)
 								.type(WorkType.TASK).build()))
 				.build();
-		Mockito.when(workFlowService.getWorkFlowStatus(masterWorkFlowExecutionId))
-				.thenReturn(workFlowStatusResponseDTO);
+		Mockito.when(workFlowService.getWorkFlowStatus(mainWorkFlowExecutionId)).thenReturn(workFlowStatusResponseDTO);
 
 		// when
 		this.mockMvc
 				.perform(this.getRequestWithValidCredentials(
-						String.format("/api/v1/workflows/%s/status", masterWorkFlowExecutionId)))
+						String.format("/api/v1/workflows/%s/status", mainWorkFlowExecutionId)))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.workFlowExecutionId",
-						Matchers.is(masterWorkFlowExecutionId.toString())))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.workFlowName", Matchers.is(testMasterWorkFlow)))
+						Matchers.is(mainWorkFlowExecutionId.toString())))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.workFlowName", Matchers.is(testMainWorkFlow)))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(WorkFlowStatus.IN_PROGRESS.name())))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.works[0].name", Matchers.is(testSubWorkFlow1)))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.works[0].type", Matchers.is(WorkType.WORKFLOW.name())))
@@ -160,7 +159,7 @@ class WorkFlowControllerTest extends ControllerMockClient {
 						Matchers.is(ParodosWorkStatus.COMPLETED.name())));
 
 		// then
-		Mockito.verify(this.workFlowService, Mockito.times(1)).getWorkFlowStatus(masterWorkFlowExecutionId);
+		Mockito.verify(this.workFlowService, Mockito.times(1)).getWorkFlowStatus(mainWorkFlowExecutionId);
 	}
 
 	@Test

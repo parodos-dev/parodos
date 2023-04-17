@@ -61,7 +61,7 @@ public class WorkFlowServiceDelegateTest {
 		UUID workFlowDefinitionId = UUID.randomUUID();
 		UUID projectId = UUID.randomUUID();
 
-		// workflow (master)
+		// workflow (main)
 		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(workFlowName).numberOfWorks(2)
 				.build();
 		workFlowDefinition.setId(workFlowDefinitionId);
@@ -81,7 +81,7 @@ public class WorkFlowServiceDelegateTest {
 		// sub workflow execution 1
 		WorkFlowExecution testSubWorkFlowExecution1 = WorkFlowExecution.builder().projectId(projectId)
 				.status(WorkFlowStatus.IN_PROGRESS).workFlowDefinitionId(testSubWorkFlowDefinitionId1)
-				.masterWorkFlowExecution(workFlowExecution).build();
+				.mainWorkFlowExecution(workFlowExecution).build();
 		testSubWorkFlowExecution1.setId(testSubWorkFlowExecutionId1);
 
 		// sub workflow 1 task 1
@@ -113,22 +113,22 @@ public class WorkFlowServiceDelegateTest {
 				.status(WorkFlowTaskStatus.COMPLETED).workFlowExecutionId(workFlowExecutionId)
 				.workFlowTaskDefinitionId(testWorkFlowTaskDefinitionId1).build();
 		testWorkFlowTaskExecution1.setId(testWorkFlowTaskExecutionId1);
-		// link workflow task definition 2 to master workFlow
+		// link workflow task definition 2 to main workFlow
 		workFlowDefinition.setWorkFlowTaskDefinitions(List.of(testWorkFlowTaskDefinition1));
 
 		// workflow's works
-		WorkFlowWorkDefinition masterWorkFlowWorkDefinition1 = WorkFlowWorkDefinition.builder()
+		WorkFlowWorkDefinition mainWorkFlowWorkDefinition1 = WorkFlowWorkDefinition.builder()
 				.workDefinitionId(testSubWorkFlowDefinitionId1).workDefinitionType(WorkType.WORKFLOW)
 				.workFlowDefinition(workFlowDefinition).build();
-		masterWorkFlowWorkDefinition1.setId(UUID.randomUUID());
+		mainWorkFlowWorkDefinition1.setId(UUID.randomUUID());
 
-		WorkFlowWorkDefinition masterWorkFlowWorkDefinition2 = WorkFlowWorkDefinition.builder()
+		WorkFlowWorkDefinition mainWorkFlowWorkDefinition2 = WorkFlowWorkDefinition.builder()
 				.workDefinitionId(testWorkFlowTaskDefinitionId1).workDefinitionType(WorkType.TASK)
 				.workFlowDefinition(workFlowDefinition).build();
-		masterWorkFlowWorkDefinition2.setId(UUID.randomUUID());
+		mainWorkFlowWorkDefinition2.setId(UUID.randomUUID());
 
 		workFlowDefinition
-				.setWorkFlowWorkDefinitions(List.of(masterWorkFlowWorkDefinition1, masterWorkFlowWorkDefinition2));
+				.setWorkFlowWorkDefinitions(List.of(mainWorkFlowWorkDefinition1, mainWorkFlowWorkDefinition2));
 
 		WorkFlowWorkDefinition subWorkFlowWorkDefinition1 = WorkFlowWorkDefinition.builder()
 				.workDefinitionId(testSubWorkFlowTaskDefinitionId1).workDefinitionType(WorkType.TASK)
@@ -137,12 +137,12 @@ public class WorkFlowServiceDelegateTest {
 
 		Mockito.when(this.workFlowWorkRepository
 				.findByWorkFlowDefinitionIdOrderByCreateDateAsc(Mockito.eq(workFlowDefinitionId)))
-				.thenReturn(List.of(masterWorkFlowWorkDefinition1, masterWorkFlowWorkDefinition2));
+				.thenReturn(List.of(mainWorkFlowWorkDefinition1, mainWorkFlowWorkDefinition2));
 
 		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.eq(testSubWorkFlowDefinitionId1)))
 				.thenReturn(Optional.of(testSubWorkFlowDefinition1));
 
-		Mockito.when(this.workFlowRepository.findFirstByMasterWorkFlowExecutionAndWorkFlowDefinitionId(
+		Mockito.when(this.workFlowRepository.findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(
 				Mockito.eq(workFlowExecution), Mockito.eq(testSubWorkFlowDefinitionId1)))
 				.thenReturn(testSubWorkFlowExecution1);
 

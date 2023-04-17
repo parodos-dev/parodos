@@ -45,7 +45,7 @@ public abstract class WorkFlowExecutionInterceptor implements WorkFlowIntercepto
 		this.workFlowContinuationServiceImpl = workFlowContinuationServiceImpl;
 	}
 
-	protected WorkFlowExecution saveWorkFlow(WorkFlowExecution masterWorkFlowExecution) {
+	protected WorkFlowExecution saveWorkFlow(WorkFlowExecution mainWorkFlowExecution) {
 		String arguments = WorkFlowDTOUtil.writeObjectValueAsString(
 				WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
 						workFlowDefinition.getName(), WorkContextDelegate.Resource.ARGUMENTS));
@@ -53,7 +53,7 @@ public abstract class WorkFlowExecutionInterceptor implements WorkFlowIntercepto
 				.read(workContext, WorkContextDelegate.ProcessType.PROJECT, WorkContextDelegate.Resource.ID)
 				.toString());
 		return workFlowService.saveWorkFlow(projectId, workFlowDefinition.getId(), WorkFlowStatus.IN_PROGRESS,
-				masterWorkFlowExecution, arguments);
+				mainWorkFlowExecution, arguments);
 	}
 
 	protected abstract WorkFlowExecution doPreWorkFlowExecution();
@@ -63,7 +63,7 @@ public abstract class WorkFlowExecutionInterceptor implements WorkFlowIntercepto
 		return this.workFlowExecution;
 	}
 
-	protected WorkFlowExecution getMasterWorkFlowExecution() {
+	protected WorkFlowExecution getMainWorkFlowExecution() {
 		return null;
 	}
 
@@ -85,11 +85,11 @@ public abstract class WorkFlowExecutionInterceptor implements WorkFlowIntercepto
 			case INFRASTRUCTURE:
 			case ASSESSMENT:
 				return new AssessmentInfrastructureWorkFlowPostInterceptor(workFlowDefinition, workContext,
-						workFlowService, workFlowRepository, workFlowExecution, getMasterWorkFlowExecution());
+						workFlowService, workFlowRepository, workFlowExecution, getMainWorkFlowExecution());
 			case CHECKER:
 				return new CheckerWorkFlowPostInterceptor(workFlowDefinition, workContext, workFlowService,
 						workFlowSchedulerService, workFlowContinuationServiceImpl, workFlowExecution,
-						getMasterWorkFlowExecution(), workFlow, workStatus);
+						getMainWorkFlowExecution(), workFlow, workStatus);
 			default:
 				workFlowService.updateWorkFlow(workFlowExecution);
 				break;

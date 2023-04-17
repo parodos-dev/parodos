@@ -14,14 +14,13 @@ import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.redhat.parodos.workflow.execution.aspect.WorkFlowExecutionFactory.isMasterWorkFlow;
+import static com.redhat.parodos.workflow.execution.aspect.WorkFlowExecutionFactory.isMainWorkFlow;
 
 @Slf4j
 public class AssessmentInfrastructureWorkFlowPostInterceptor implements WorkFlowPostInterceptor {
@@ -32,7 +31,7 @@ public class AssessmentInfrastructureWorkFlowPostInterceptor implements WorkFlow
 
 	private final WorkFlowExecution workFlowExecution;
 
-	private final WorkFlowExecution masterWorkFlowExecution;
+	private final WorkFlowExecution mainWorkFlowExecution;
 
 	private final WorkFlowServiceImpl workFlowService;
 
@@ -40,23 +39,23 @@ public class AssessmentInfrastructureWorkFlowPostInterceptor implements WorkFlow
 
 	public AssessmentInfrastructureWorkFlowPostInterceptor(WorkFlowDefinition workFlowDefinition,
 			WorkContext workContext, WorkFlowServiceImpl workFlowService, WorkFlowRepository workFlowRepository,
-			WorkFlowExecution workFlowExecution, WorkFlowExecution masterWorkFlowExecution) {
+			WorkFlowExecution workFlowExecution, WorkFlowExecution mainWorkFlowExecution) {
 		this.workFlowDefinition = workFlowDefinition;
 		this.workContext = workContext;
 		this.workFlowService = workFlowService;
 		this.workFlowRepository = workFlowRepository;
 		this.workFlowExecution = workFlowExecution;
-		this.masterWorkFlowExecution = masterWorkFlowExecution;
+		this.mainWorkFlowExecution = mainWorkFlowExecution;
 	}
 
 	public WorkReport handlePostWorkFlowExecution() {
 		WorkReport report = null;
-		if (isMasterWorkFlow(workFlowDefinition, workContext)) {
+		if (isMainWorkFlow(workFlowDefinition, workContext)) {
 			workFlowExecution.setWorkFlowExecutionContext(Optional
 					.ofNullable(workFlowExecution.getWorkFlowExecutionContext()).map(workFlowExecutionContext -> {
 						workFlowExecutionContext.setWorkContext(workContext);
 						return workFlowExecutionContext;
-					}).orElse(WorkFlowExecutionContext.builder().masterWorkFlowExecution(workFlowExecution)
+					}).orElse(WorkFlowExecutionContext.builder().mainWorkFlowExecution(workFlowExecution)
 							.workContext(workContext).build()));
 		}
 
@@ -72,10 +71,9 @@ public class AssessmentInfrastructureWorkFlowPostInterceptor implements WorkFlow
 				.getWorkFlowTaskDefinitions().stream().map(WorkFlowTaskDefinition::getWorkFlowCheckerMappingDefinition)
 				.filter(Objects::nonNull).collect(Collectors.toSet());
 
-		List<WorkFlowExecution> checkerExecutions = workFlowCheckerMappingDefinitions.stream()
-				.map(workFlowCheckerDefinition -> workFlowRepository
-						.findFirstByWorkFlowDefinitionIdAndMasterWorkFlowExecution(
-								workFlowCheckerDefinition.getCheckWorkFlow().getId(), masterWorkFlowExecution))
+		List<WorkFlowExecution> checkerExecutions = workFlowCheckerMappingDefinitions.stream().map(
+				workFlowCheckerDefinition -> workFlowRepository.findFirstByWorkFlowDefinitionIdAndMainWorkFlowExecution(
+						workFlowCheckerDefinition.getCheckWorkFlow().getId(), mainWorkFlowExecution))
 				.collect(Collectors.toList());
 
 		for (WorkFlowExecution checkerExecution : checkerExecutions)

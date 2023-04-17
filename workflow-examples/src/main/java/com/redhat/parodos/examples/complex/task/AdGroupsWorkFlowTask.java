@@ -1,4 +1,4 @@
-package com.redhat.parodos.examples.master.task;
+package com.redhat.parodos.examples.complex.task;
 
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;

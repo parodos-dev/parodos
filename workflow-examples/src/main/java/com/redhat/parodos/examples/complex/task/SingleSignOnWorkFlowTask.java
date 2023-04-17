@@ -1,4 +1,4 @@
-package com.redhat.parodos.examples.master.task;
+package com.redhat.parodos.examples.complex.task;
 
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
@@ -13,23 +13,26 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
 @Slf4j
-public class NamespaceWorkFlowTask extends BaseInfrastructureWorkFlowTask {
+public class SingleSignOnWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		log.info("NamespaceWorkFlowTask");
+		log.info("SingleSignOnWorkFlowTask");
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
 	@Override
 	public List<WorkParameter> getWorkFlowTaskParameters() {
-		return List.of(WorkParameter.builder().key("projectId").description("The project id")
-				.type(WorkParameterType.NUMBER).optional(false).build());
+		return List.of(
+				WorkParameter.builder().key("userId").description("The user id").type(WorkParameterType.TEXT)
+						.optional(false).build(),
+				WorkParameter.builder().key("password").description("The password").type(WorkParameterType.PASSWORD)
+						.optional(false).build());
 	}
 
 	@Override
 	public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
-		return List.of(WorkFlowTaskOutput.HTTP2XX);
+		return List.of(WorkFlowTaskOutput.OTHER);
 	}
 
 }

@@ -33,7 +33,7 @@ spring:
         bootstrap-mode: deferred
 
   liquibase:
-    change-log: classpath:/db/master.xml
+    change-log: classpath:/db/main.xml
 
   main:
     allow-bean-definition-overriding: true

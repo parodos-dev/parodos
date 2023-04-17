@@ -1,4 +1,4 @@
-package com.redhat.parodos.examples.master.task;
+package com.redhat.parodos.examples.complex.task;
 
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
@@ -13,26 +13,26 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
 @Slf4j
-public class SingleSignOnWorkFlowTask extends BaseInfrastructureWorkFlowTask {
+public class SslCertificationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		log.info("SingleSignOnWorkFlowTask");
+		log.info("SslCertificationWorkFlowTask");
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
 	@Override
 	public List<WorkParameter> getWorkFlowTaskParameters() {
 		return List.of(
-				WorkParameter.builder().key("userId").description("The user id").type(WorkParameterType.TEXT)
+				WorkParameter.builder().key("domainName").description("The domain name").type(WorkParameterType.URL)
 						.optional(false).build(),
-				WorkParameter.builder().key("password").description("The password").type(WorkParameterType.PASSWORD)
+				WorkParameter.builder().key("ipAddress").description("The api address").type(WorkParameterType.TEXT)
 						.optional(false).build());
 	}
 
 	@Override
 	public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
-		return List.of(WorkFlowTaskOutput.OTHER);
+		return List.of(WorkFlowTaskOutput.HTTP2XX);
 	}
 
 }
