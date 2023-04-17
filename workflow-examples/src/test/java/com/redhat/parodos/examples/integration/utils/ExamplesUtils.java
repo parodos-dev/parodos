@@ -18,8 +18,11 @@ import java.util.concurrent.locks.ReentrantLock;
 import javax.annotation.Nullable;
 
 import com.redhat.parodos.sdk.api.ProjectApi;
+import com.redhat.parodos.sdk.api.WorkflowApi;
 import com.redhat.parodos.sdk.invoker.ApiCallback;
 import com.redhat.parodos.sdk.invoker.ApiException;
+import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
+import com.redhat.parodos.workflows.work.WorkStatus;
 import org.assertj.core.util.Strings;
 import com.redhat.parodos.sdk.model.ProjectResponseDTO;
 import lombok.Data;
@@ -102,6 +105,22 @@ public final class ExamplesUtils {
 
 	public static void waitProjectStart(ProjectApi projectApi) throws InterruptedException, ApiException {
 		waitAsyncResponse((FuncExecutor<List<ProjectResponseDTO>>) callback -> projectApi.getProjectsAsync(callback));
+	}
+
+	public static WorkFlowStatusResponseDTO waitWorkflowStatusAsync(WorkflowApi workflowApi, String workFlowExecutionId)
+			throws InterruptedException, ApiException {
+		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = waitAsyncResponse(new FuncExecutor<>() {
+			@Override
+			public boolean check(WorkFlowStatusResponseDTO result) {
+				return !result.getStatus().equals(WorkStatus.COMPLETED.toString());
+			}
+
+			@Override
+			public void execute(ApiCallback<WorkFlowStatusResponseDTO> callback) throws ApiException {
+				workflowApi.getStatusAsync(workFlowExecutionId, callback);
+			}
+		});
+		return workFlowStatusResponseDTO;
 	}
 
 	@Nullable
