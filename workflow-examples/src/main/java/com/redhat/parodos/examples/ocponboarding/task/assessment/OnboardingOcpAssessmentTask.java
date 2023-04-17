@@ -21,8 +21,8 @@ import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflow.option.WorkFlowOptions;
 import com.redhat.parodos.workflow.task.assessment.BaseAssessmentTask;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
+import com.redhat.parodos.workflow.parameter.WorkParameter;
+import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -66,10 +66,10 @@ public class OnboardingOcpAssessmentTask extends BaseAssessmentTask {
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
-	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
-		return List.of(WorkFlowTaskParameter.builder().key(GIT_REPO_URL)
+	public List<WorkParameter> getWorkFlowTaskParameters() {
+		return List.of(WorkParameter.builder().key(GIT_REPO_URL)
 				.description("Enter some information to use for the Assessment to determine if they can onboard")
-				.optional(false).type(WorkFlowTaskParameterType.TEXT).build());
+				.optional(false).type(WorkParameterType.TEXT).build());
 	}
 
 	@Override

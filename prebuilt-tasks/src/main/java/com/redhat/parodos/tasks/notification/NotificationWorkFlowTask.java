@@ -8,8 +8,8 @@ import com.redhat.parodos.notification.sdk.model.NotificationMessageCreateReques
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
+import com.redhat.parodos.workflow.parameter.WorkParameter;
+import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -49,18 +49,18 @@ public class NotificationWorkFlowTask extends BaseWorkFlowTask {
 	}
 
 	@Override
-	public @NonNull List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
-		LinkedList<WorkFlowTaskParameter> params = new LinkedList<>();
-		params.add(WorkFlowTaskParameter.builder().key("type").type(WorkFlowTaskParameterType.TEXT).optional(false)
+	public @NonNull List<WorkParameter> getWorkFlowTaskParameters() {
+		LinkedList<WorkParameter> params = new LinkedList<>();
+		params.add(WorkParameter.builder().key("type").type(WorkParameterType.TEXT).optional(false)
 				.description("Message Type").build());
-		params.add(WorkFlowTaskParameter.builder().key("body").type(WorkFlowTaskParameterType.TEXT).optional(false)
+		params.add(WorkParameter.builder().key("body").type(WorkParameterType.TEXT).optional(false)
 				.description("Message Body").build());
-		params.add(WorkFlowTaskParameter.builder().key("subject").type(WorkFlowTaskParameterType.TEXT).optional(false)
+		params.add(WorkParameter.builder().key("subject").type(WorkParameterType.TEXT).optional(false)
 				.description("Message Subject").build());
 		// TODO Add an option for List parameter
-		params.add(WorkFlowTaskParameter.builder().key("userNames").type(WorkFlowTaskParameterType.TEXT).optional(true)
+		params.add(WorkParameter.builder().key("userNames").type(WorkParameterType.TEXT).optional(true)
 				.description("Comma separated list of user names").build());
-		params.add(WorkFlowTaskParameter.builder().key("groupNames").type(WorkFlowTaskParameterType.TEXT).optional(true)
+		params.add(WorkParameter.builder().key("groupNames").type(WorkParameterType.TEXT).optional(true)
 				.description("Comma separated list of group names").build());
 		return params;
 	}

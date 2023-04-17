@@ -2,8 +2,8 @@ package com.redhat.parodos.examples.master.task;
 
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
+import com.redhat.parodos.workflow.parameter.WorkParameter;
+import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -22,9 +22,9 @@ public class NamespaceWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	}
 
 	@Override
-	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
-		return List.of(WorkFlowTaskParameter.builder().key("projectId").description("The project id")
-				.type(WorkFlowTaskParameterType.NUMBER).optional(false).build());
+	public List<WorkParameter> getWorkFlowTaskParameters() {
+		return List.of(WorkParameter.builder().key("projectId").description("The project id")
+				.type(WorkParameterType.NUMBER).optional(false).build());
 	}
 
 	@Override

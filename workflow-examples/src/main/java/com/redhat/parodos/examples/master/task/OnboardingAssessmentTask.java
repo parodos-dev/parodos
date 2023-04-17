@@ -20,8 +20,8 @@ import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflow.option.WorkFlowOptions;
 import com.redhat.parodos.workflow.task.assessment.BaseAssessmentTask;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
+import com.redhat.parodos.workflow.parameter.WorkParameter;
+import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -48,18 +48,22 @@ public class OnboardingAssessmentTask extends BaseAssessmentTask {
 	public WorkReport execute(WorkContext workContext) {
 		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
 				WorkContextDelegate.Resource.WORKFLOW_OPTIONS,
-				// @formatter:off
-				new WorkFlowOptions.Builder()
-				.addNewOption(getWorkFlowOptions().get(0))
-				.build());
-				// @formatter:on
+				new WorkFlowOptions.Builder().addNewOption(getWorkFlowOptions().get(0)).build());
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
-	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
-		return List.of(WorkFlowTaskParameter.builder().key(INPUT)
-				.description("Enter some information to use for the Assessment to determine if they can onboard")
-				.optional(false).type(WorkFlowTaskParameterType.TEXT).build());
+	public List<WorkParameter> getWorkFlowTaskParameters() {
+		return List.of(
+				WorkParameter.builder().key(INPUT)
+						.description(
+								"Enter some information to use for the Assessment to determine if they can onboard")
+						.optional(false).type(WorkParameterType.TEXT).build(),
+				WorkParameter.builder().key("SELECT_SAMPLE").description("select sample").optional(true)
+						.type(WorkParameterType.SELECT).selectOptions(List.of("projectA", "projectB", "projectC"))
+						.build(),
+				WorkParameter.builder().key("MULTI_SELECT_SAMPLE").description("multi select sample").optional(true)
+						.type(WorkParameterType.MULTI_SELECT).selectOptions(List.of("projectA", "projectB", "projectC"))
+						.build());
 	}
 
 	@Override

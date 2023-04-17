@@ -1,4 +1,4 @@
-package com.redhat.parodos.workflow.task.parameter;
+package com.redhat.parodos.workflow.parameter;
 
 import junit.framework.TestCase;
 import org.junit.Test;
@@ -8,16 +8,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class WorkFlowTaskParameterTypeTest extends TestCase {
+public class WorkParameterTypeTest extends TestCase {
 
 	@Test
 	public void testJsonSchema() {
-		WorkFlowTaskParameterType[] inputValues = { WorkFlowTaskParameterType.PASSWORD, WorkFlowTaskParameterType.TEXT,
-				WorkFlowTaskParameterType.EMAIL, WorkFlowTaskParameterType.NUMBER, WorkFlowTaskParameterType.URL,
-				WorkFlowTaskParameterType.DATE };
+		WorkParameterType[] inputValues = { WorkParameterType.PASSWORD, WorkParameterType.TEXT, WorkParameterType.EMAIL,
+				WorkParameterType.NUMBER, WorkParameterType.URL, WorkParameterType.DATE, WorkParameterType.SELECT,
+				WorkParameterType.MULTI_SELECT };
 
 		List<Map<String, Object>> outputs = new ArrayList<>();
-		for (WorkFlowTaskParameterType inputValue : inputValues) {
+		for (WorkParameterType inputValue : inputValues) {
 			outputs.add(inputValue.getAsJsonSchema());
 		}
 		assertEquals(inputValues.length, outputs.size());
@@ -50,6 +50,16 @@ public class WorkFlowTaskParameterTypeTest extends TestCase {
 		expectedDateOutput.put("type", "string");
 		expectedDateOutput.put("format", "date");
 		assertEquals(expectedDateOutput, outputs.get(5));
+
+		Map<String, String> expectedSelectOutput = new HashMap<>();
+		expectedSelectOutput.put("type", "select");
+		assertTrue(WorkParameterType.SELECT.isSelect());
+		assertEquals(expectedSelectOutput, outputs.get(6));
+
+		Map<String, String> expectedMultiSelectOutput = new HashMap<>();
+		expectedMultiSelectOutput.put("type", "multi-select");
+		assertTrue(WorkParameterType.MULTI_SELECT.isSelect());
+		assertEquals(expectedMultiSelectOutput, outputs.get(7));
 
 	}
 

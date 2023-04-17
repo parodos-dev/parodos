@@ -19,7 +19,7 @@ import com.redhat.parodos.workflow.annotation.Checker;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
 import com.redhat.parodos.workflow.annotation.Parameter;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
-import com.redhat.parodos.workflow.parameter.WorkFlowParameterType;
+import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import org.parodos.workflow.examples.custom.task.CustomWorkFlowTask;
@@ -54,9 +54,9 @@ public class CustomWorkFlowConfiguration {
 
 	@Bean(name = "customWorkflow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
 	@Infrastructure(parameters = {
-			@Parameter(key = "workloadId", description = "The workload id", type = WorkFlowParameterType.TEXT,
+			@Parameter(key = "workloadId", description = "The workload id", type = WorkParameterType.TEXT,
 					optional = false),
-			@Parameter(key = "projectUrl", description = "The project url", type = WorkFlowParameterType.URL,
+			@Parameter(key = "projectUrl", description = "The project url", type = WorkParameterType.URL,
 					optional = true) })
 	WorkFlow customWorkflow(@Qualifier("customWorkFlowTaskOne") CustomWorkFlowTask customWorkFlowTaskOne,
 			@Qualifier("customWorkFlowTaskTwo") CustomWorkFlowTask customWorkFlowTaskTwo) {

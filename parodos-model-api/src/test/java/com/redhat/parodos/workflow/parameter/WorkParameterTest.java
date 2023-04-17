@@ -4,7 +4,7 @@ import junit.framework.TestCase;
 
 import java.util.Map;
 
-public class WorkFlowParameterTest extends TestCase {
+public class WorkParameterTest extends TestCase {
 
 	String key = "key";
 
@@ -13,8 +13,8 @@ public class WorkFlowParameterTest extends TestCase {
 	public void testGetAsJsonSchemaWithValidData() {
 
 		// given
-		WorkFlowParameter parameters = WorkFlowParameter.builder().key(key).description(description)
-				.type(WorkFlowParameterType.TEXT).build();
+		WorkParameter parameters = WorkParameter.builder().key(key).description(description)
+				.type(WorkParameterType.TEXT).build();
 		// when
 		Map<String, Object> result = parameters.getAsJsonSchema();
 		// then
@@ -28,7 +28,7 @@ public class WorkFlowParameterTest extends TestCase {
 
 	public void testGetAsJsonSchemaWithoutType() {
 		// given
-		WorkFlowParameter parameters = WorkFlowParameter.builder().key(key).description(description).build();
+		WorkParameter parameters = WorkParameter.builder().key(key).description(description).build();
 		// when
 		Map<String, Object> result = parameters.getAsJsonSchema();
 		// then

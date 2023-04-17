@@ -27,21 +27,26 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Map;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WorkFlowParameter {
+public class WorkParameter {
 
 	private String key;
 
-	private WorkFlowParameterType type;
+	private WorkParameterType type;
 
 	private String description;
 
 	private boolean optional;
+
+	private List<String> selectOptions;
+
+	private Map<String, Object> jsonSchemaOptions;
 
 	public Map<String, Object> getAsJsonSchema() {
 		if (this.getType() == null) {

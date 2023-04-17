@@ -2,8 +2,8 @@ package com.redhat.parodos.examples.master.task;
 
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
+import com.redhat.parodos.workflow.parameter.WorkParameter;
+import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -22,12 +22,12 @@ public class SingleSignOnWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	}
 
 	@Override
-	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
+	public List<WorkParameter> getWorkFlowTaskParameters() {
 		return List.of(
-				WorkFlowTaskParameter.builder().key("userId").description("The user id")
-						.type(WorkFlowTaskParameterType.TEXT).optional(false).build(),
-				WorkFlowTaskParameter.builder().key("password").description("The password")
-						.type(WorkFlowTaskParameterType.PASSWORD).optional(false).build());
+				WorkParameter.builder().key("userId").description("The user id").type(WorkParameterType.TEXT)
+						.optional(false).build(),
+				WorkParameter.builder().key("password").description("The password").type(WorkParameterType.PASSWORD)
+						.optional(false).build());
 	}
 
 	@Override
