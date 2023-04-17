@@ -2,7 +2,7 @@ package com.redhat.parodos.examples.master.checker;
 
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.checker.BaseWorkFlowCheckerTask;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
+import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -22,7 +22,7 @@ public class SslCertificationApprovalWorkFlowCheckerTask extends BaseWorkFlowChe
 	}
 
 	@Override
-	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
+	public List<WorkParameter> getWorkFlowTaskParameters() {
 		return Collections.emptyList();
 	}
 

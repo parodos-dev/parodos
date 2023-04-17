@@ -11,8 +11,8 @@ import com.atlassian.jira.rest.client.api.domain.input.TransitionInput;
 import com.atlassian.jira.rest.client.internal.async.AsynchronousJiraRestClientFactory;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
+import com.redhat.parodos.workflow.parameter.WorkParameter;
+import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -51,11 +51,11 @@ public class JiraTask extends BaseWorkFlowTask {
 	public static final int DEFAULT_EXECUTION_TIMEOUT_IN_SECONDS = 600;
 
 	@Override
-	public @NonNull List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
+	public @NonNull List<WorkParameter> getWorkFlowTaskParameters() {
 		return List.of(
-				WorkFlowTaskParameter.builder().key("serverURL").type(WorkFlowTaskParameterType.TEXT).optional(false)
+				WorkParameter.builder().key("serverURL").type(WorkParameterType.TEXT).optional(false)
 						.description("Base URL of the Jira instance - e.g https://jira.example.org").build(),
-				WorkFlowTaskParameter.builder().key("bearerToken").type(WorkFlowTaskParameterType.TEXT).optional(false)
+				WorkParameter.builder().key("bearerToken").type(WorkParameterType.TEXT).optional(false)
 						.description("Bearer token to authenticate Jira server requests").build());
 	}
 

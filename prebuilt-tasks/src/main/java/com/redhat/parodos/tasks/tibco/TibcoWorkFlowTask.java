@@ -4,8 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
+import com.redhat.parodos.workflow.parameter.WorkParameter;
+import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -39,11 +39,11 @@ public class TibcoWorkFlowTask extends BaseWorkFlowTask {
 	}
 
 	@Override
-	public @NonNull List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
-		LinkedList<WorkFlowTaskParameter> params = new LinkedList<WorkFlowTaskParameter>();
-		params.add(WorkFlowTaskParameter.builder().key("topic").type(WorkFlowTaskParameterType.TEXT).optional(false)
+	public @NonNull List<WorkParameter> getWorkFlowTaskParameters() {
+		LinkedList<WorkParameter> params = new LinkedList<WorkParameter>();
+		params.add(WorkParameter.builder().key("topic").type(WorkParameterType.TEXT).optional(false)
 				.description("Topic to send to").build());
-		params.add(WorkFlowTaskParameter.builder().key("message").type(WorkFlowTaskParameterType.TEXT).optional(false)
+		params.add(WorkParameter.builder().key("message").type(WorkParameterType.TEXT).optional(false)
 				.description("Message to send to topic").build());
 		return params;
 	}

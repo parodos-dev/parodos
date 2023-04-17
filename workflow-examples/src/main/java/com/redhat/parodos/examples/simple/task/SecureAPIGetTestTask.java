@@ -25,8 +25,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
+import com.redhat.parodos.workflow.parameter.WorkParameter;
+import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -81,16 +81,15 @@ public class SecureAPIGetTestTask extends BaseInfrastructureWorkFlowTask {
 	}
 
 	@Override
-	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
+	public List<WorkParameter> getWorkFlowTaskParameters() {
 		return List.of(
-				WorkFlowTaskParameter.builder().key(SECURED_URL)
-						.description("The URL of the Secured API you wish to call").optional(false)
-						.type(WorkFlowTaskParameterType.URL).build(),
-				WorkFlowTaskParameter.builder().key(USERNAME).description("Please enter your username authentication")
-						.optional(false).type(WorkFlowTaskParameterType.TEXT).build(),
-				WorkFlowTaskParameter.builder().key(PASSWORD)
+				WorkParameter.builder().key(SECURED_URL).description("The URL of the Secured API you wish to call")
+						.optional(false).type(WorkParameterType.URL).build(),
+				WorkParameter.builder().key(USERNAME).description("Please enter your username authentication")
+						.optional(false).type(WorkParameterType.TEXT).build(),
+				WorkParameter.builder().key(PASSWORD)
 						.description("Please enter your password for authentication (it will not be stored)")
-						.optional(false).type(WorkFlowTaskParameterType.PASSWORD).build());
+						.optional(false).type(WorkParameterType.PASSWORD).build());
 	}
 
 	@Override

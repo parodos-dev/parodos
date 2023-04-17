@@ -27,10 +27,8 @@ import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
-import com.redhat.parodos.workflow.parameter.WorkFlowParameter;
-import com.redhat.parodos.workflow.parameter.WorkFlowParameterType;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
+import com.redhat.parodos.workflow.parameter.WorkParameter;
+import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import com.redhat.parodos.workflows.workflow.WorkFlowPropertiesMetadata;
 import org.junit.jupiter.api.Test;
@@ -103,12 +101,12 @@ class WorkFlowDefinitionServiceImplTest {
 		// given
 		WorkFlowDefinition workFlowDefinition = this.sampleWorkFlowDefinition(workFlowName);
 		WorkFlowTask workFlowTask = Mockito.mock(WorkFlowTask.class);
-		WorkFlowTaskParameter workFlowTaskParameter = WorkFlowTaskParameter.builder().key("key").description("the key")
-				.optional(false).type(WorkFlowTaskParameterType.URL).build();
+		WorkParameter workParameter = WorkParameter.builder().key("key").description("the key").optional(false)
+				.type(WorkParameterType.URL).build();
 		Mockito.when(workFlowTask.getName()).thenReturn(workFlowTaskName);
-		Mockito.when(workFlowTask.getWorkFlowTaskParameters()).thenReturn(List.of(workFlowTaskParameter));
+		Mockito.when(workFlowTask.getWorkFlowTaskParameters()).thenReturn(List.of(workParameter));
 		WorkFlowTaskDefinition workFlowTaskDefinition = this.sampleWorkFlowTaskDefinition(workFlowDefinition,
-				workFlowTaskName, workFlowTaskParameter);
+				workFlowTaskName, workParameter);
 		workFlowDefinition.setWorkFlowTaskDefinitions(List.of(workFlowTaskDefinition));
 		Mockito.when(this.workFlowTaskDefinitionRepository.save(any())).thenReturn(workFlowTaskDefinition);
 		Mockito.when(this.workFlowDefinitionRepository.save(any())).thenReturn(workFlowDefinition);
@@ -143,12 +141,12 @@ class WorkFlowDefinitionServiceImplTest {
 		WorkFlowDefinition workFlowDefinition = this.sampleWorkFlowDefinition(workFlowName);
 		workFlowDefinition.setParameters("{}");
 		WorkFlowTask workFlowTask = Mockito.mock(WorkFlowTask.class);
-		WorkFlowTaskParameter workFlowTaskParameter = WorkFlowTaskParameter.builder().key("key").description("the key")
-				.optional(false).type(WorkFlowTaskParameterType.URL).build();
+		WorkParameter workParameter = WorkParameter.builder().key("key").description("the key").optional(false)
+				.type(WorkParameterType.URL).build();
 		Mockito.when(workFlowTask.getName()).thenReturn(workFlowTaskName);
-		Mockito.when(workFlowTask.getWorkFlowTaskParameters()).thenReturn(List.of(workFlowTaskParameter));
+		Mockito.when(workFlowTask.getWorkFlowTaskParameters()).thenReturn(List.of(workParameter));
 		WorkFlowTaskDefinition workFlowTaskDefinition = this.sampleWorkFlowTaskDefinition(workFlowDefinition,
-				workFlowTaskName, workFlowTaskParameter);
+				workFlowTaskName, workParameter);
 		workFlowTaskDefinition.setParameters("{}");
 		workFlowTaskDefinition.setOutputs("[]");
 		workFlowDefinition.setWorkFlowTaskDefinitions(List.of(workFlowTaskDefinition));
@@ -324,24 +322,25 @@ class WorkFlowDefinitionServiceImplTest {
 	}
 
 	private WorkFlowDefinition sampleWorkFlowDefinition(String name) {
-		WorkFlowParameter workFlowParameter = WorkFlowParameter.builder().key(KEY).description(KEY_DESCRIPTION)
-				.optional(false).type(WorkFlowParameterType.TEXT).build();
+		com.redhat.parodos.workflow.parameter.WorkParameter workParameter = com.redhat.parodos.workflow.parameter.WorkParameter
+				.builder().key(KEY).description(KEY_DESCRIPTION).optional(false)
+				.type(com.redhat.parodos.workflow.parameter.WorkParameterType.TEXT).build();
 
 		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(name).type(WorkFlowType.ASSESSMENT)
 				.properties(WorkFlowPropertiesDefinition.builder().version("1.0.0").build())
 				.processingType(WorkFlowProcessingType.SEQUENTIAL.name())
-				.parameters(WorkFlowDTOUtil.writeObjectValueAsString(
-						Map.of(workFlowParameter.getKey(), workFlowParameter.getAsJsonSchema())))
+				.parameters(WorkFlowDTOUtil
+						.writeObjectValueAsString(Map.of(workParameter.getKey(), workParameter.getAsJsonSchema())))
 				.numberOfWorks(1).build();
 		workFlowDefinition.setId(UUID.randomUUID());
 		return workFlowDefinition;
 	}
 
 	private WorkFlowTaskDefinition sampleWorkFlowTaskDefinition(WorkFlowDefinition workFlowDefinition,
-			String workFlowTaskName, WorkFlowTaskParameter workFlowTaskParameter) {
+			String workFlowTaskName, WorkParameter workParameter) {
 		WorkFlowTaskDefinition workFlowTaskDefinition = WorkFlowTaskDefinition.builder()
 				.workFlowDefinition(workFlowDefinition).name(workFlowTaskName)
-				.parameters(WorkFlowDTOUtil.writeObjectValueAsString(List.of(workFlowTaskParameter))).build();
+				.parameters(WorkFlowDTOUtil.writeObjectValueAsString(List.of(workParameter))).build();
 		workFlowTaskDefinition.setId(UUID.randomUUID());
 		return workFlowTaskDefinition;
 	}

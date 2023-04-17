@@ -15,23 +15,21 @@
  */
 package com.redhat.parodos.workflow.task;
 
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
+import com.redhat.parodos.workflow.parameter.WorkParameter;
+import com.redhat.parodos.workflows.work.Work;
+import lombok.NonNull;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
-import com.redhat.parodos.workflows.work.Work;
-
-import lombok.NonNull;
 
 /**
  * Basic Contract for Work in the Infrastructure Service
  *
  * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardW98)
- *
  */
 public interface WorkFlowTask extends Work {
 
@@ -43,7 +41,7 @@ public interface WorkFlowTask extends Work {
 	 * WorkContext
 	 */
 	@NonNull
-	default List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
+	default List<WorkParameter> getWorkFlowTaskParameters() {
 		return Collections.emptyList();
 	}
 
@@ -59,22 +57,21 @@ public interface WorkFlowTask extends Work {
 
 	default HashMap<String, Map<String, Object>> getAsJsonSchema() {
 		HashMap<String, Map<String, Object>> result = new HashMap<>();
-		for (WorkFlowTaskParameter workFlowTaskParameter : this.getWorkFlowTaskParameters()) {
-			if (workFlowTaskParameter == null) {
+		for (WorkParameter workParameter : this.getWorkFlowTaskParameters()) {
+			if (workParameter == null || workParameter.getType() == null) {
 				continue;
 			}
 
-			if (workFlowTaskParameter.getType() == null) {
-				continue;
+			Map<String, Object> properties = workParameter.getType().getAsJsonSchema();
+			properties.put("required", !workParameter.isOptional());
+			properties.put("description", workParameter.getDescription());
+			if (workParameter.getType().isSelect() && workParameter.getSelectOptions() != null) {
+				properties.put("enum", workParameter.getSelectOptions());
 			}
-
-			Map<String, Object> properties = workFlowTaskParameter.getType().getAsJsonSchema();
-			properties.put("required", !workFlowTaskParameter.isOptional());
-			properties.put("description", workFlowTaskParameter.getDescription());
-			if (workFlowTaskParameter.getJsonSchemaOptions() != null) {
-				properties.putAll(workFlowTaskParameter.getJsonSchemaOptions());
+			if (workParameter.getJsonSchemaOptions() != null) {
+				properties.putAll(workParameter.getJsonSchemaOptions());
 			}
-			result.put(workFlowTaskParameter.getKey(), properties);
+			result.put(workParameter.getKey(), properties);
 		}
 		return result;
 	}

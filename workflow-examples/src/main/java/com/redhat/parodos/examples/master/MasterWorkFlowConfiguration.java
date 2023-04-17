@@ -15,7 +15,7 @@ import com.redhat.parodos.workflow.annotation.Infrastructure;
 import com.redhat.parodos.workflow.annotation.Parameter;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
-import com.redhat.parodos.workflow.parameter.WorkFlowParameterType;
+import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflows.workflow.ParallelFlow;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
@@ -75,7 +75,7 @@ public class MasterWorkFlowConfiguration {
 
 	@Bean(name = "subWorkFlowOne")
 	@Infrastructure(parameters = { @Parameter(key = "comment", description = "The workflow comment",
-			type = WorkFlowParameterType.TEXT, optional = false) })
+			type = WorkParameterType.TEXT, optional = false) })
 	WorkFlow subWorkFlowOne(@Qualifier("adGroupsWorkFlowTask") AdGroupsWorkFlowTask adGroupsWorkFlowTask,
 			@Qualifier("splunkMonitoringWorkFlowTask") SplunkMonitoringWorkFlowTask splunkMonitoringWorkFlowTask) {
 		return ParallelFlow.Builder.aNewParallelFlow().named("subWorkFlowOne")
@@ -185,9 +185,9 @@ public class MasterWorkFlowConfiguration {
 
 	@Bean(name = "masterWorkFlow")
 	@Infrastructure(parameters = {
-			@Parameter(key = "workloadId", description = "The workload id", type = WorkFlowParameterType.TEXT,
+			@Parameter(key = "workloadId", description = "The workload id", type = WorkParameterType.TEXT,
 					optional = false),
-			@Parameter(key = "projectUrl", description = "The project url", type = WorkFlowParameterType.URL,
+			@Parameter(key = "projectUrl", description = "The project url", type = WorkParameterType.URL,
 					optional = true) })
 	WorkFlow masterWorkFlow(@Qualifier("subWorkFlowThree") WorkFlow subWorkFlowThree,
 			@Qualifier("subWorkFlowFour") WorkFlow subWorkFlowFour) {

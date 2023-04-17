@@ -15,6 +15,7 @@
  */
 package com.redhat.parodos.workflow.task;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
@@ -29,8 +30,8 @@ import org.junit.Test;
 
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
+import com.redhat.parodos.workflow.parameter.WorkParameter;
+import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.work.WorkContext;
@@ -47,9 +48,12 @@ public class WorkFlowTaskTest {
 		private boolean executed;
 
 		@Override
-		public @NonNull List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
-			return List.of(WorkFlowTaskParameter.builder().key("username").type(WorkFlowTaskParameterType.TEXT)
-					.optional(false).description("A username").build());
+		public @NonNull List<WorkParameter> getWorkFlowTaskParameters() {
+			return List.of(
+					WorkParameter.builder().key("username").type(WorkParameterType.TEXT).optional(false)
+							.description("A username").build(),
+					WorkParameter.builder().key("test-select").type(WorkParameterType.SELECT).optional(false)
+							.description("A test").selectOptions(List.of("test1", "test2")).build());
 		}
 
 		@Override
@@ -119,9 +123,14 @@ public class WorkFlowTaskTest {
 	@Test
 	public void checkTaskParams() {
 		TestTask task = new TestTask();
-		List<WorkFlowTaskParameter> params = task.getWorkFlowTaskParameters();
+		List<WorkParameter> params = task.getWorkFlowTaskParameters();
 
-		assertEquals(WorkFlowTaskParameterType.TEXT, params.get(0).getType());
+		assertEquals(WorkParameterType.TEXT, params.get(0).getType());
+		assertEquals(WorkParameterType.SELECT, params.get(1).getType());
+
+		HashMap<String, Map<String, Object>> jsonSchema = task.getAsJsonSchema();
+		assertThat(jsonSchema.get(params.get(1).getKey()).get("enum")).isInstanceOf(List.class)
+				.isEqualTo(List.of("test1", "test2"));
 	}
 
 }

@@ -5,8 +5,8 @@ import com.redhat.parodos.examples.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
+import com.redhat.parodos.workflow.parameter.WorkParameter;
+import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflow.utils.CredUtils;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -128,22 +128,22 @@ public class SecureAPIGetTestTaskTest extends BaseInfrastructureWorkFlowTaskTest
 
 	@Test
 	public void getWorkFlowTaskParameters() {
-		List<WorkFlowTaskParameter> workFlowTaskParameters = this.secureAPIGetTestTask.getWorkFlowTaskParameters();
+		List<WorkParameter> workParameters = this.secureAPIGetTestTask.getWorkFlowTaskParameters();
 		// then
-		assertNotNull(workFlowTaskParameters);
-		assertEquals(3, workFlowTaskParameters.size());
-		assertEquals(SECURED_URL, workFlowTaskParameters.get(0).getKey());
-		assertEquals("The URL of the Secured API you wish to call", workFlowTaskParameters.get(0).getDescription());
-		assertEquals(WorkFlowTaskParameterType.URL, workFlowTaskParameters.get(0).getType());
+		assertNotNull(workParameters);
+		assertEquals(3, workParameters.size());
+		assertEquals(SECURED_URL, workParameters.get(0).getKey());
+		assertEquals("The URL of the Secured API you wish to call", workParameters.get(0).getDescription());
+		assertEquals(WorkParameterType.URL, workParameters.get(0).getType());
 
-		assertEquals(USERNAME, workFlowTaskParameters.get(1).getKey());
-		assertEquals("Please enter your username authentication", workFlowTaskParameters.get(1).getDescription());
-		assertEquals(WorkFlowTaskParameterType.TEXT, workFlowTaskParameters.get(1).getType());
+		assertEquals(USERNAME, workParameters.get(1).getKey());
+		assertEquals("Please enter your username authentication", workParameters.get(1).getDescription());
+		assertEquals(WorkParameterType.TEXT, workParameters.get(1).getType());
 
-		assertEquals(PASSWORD, workFlowTaskParameters.get(2).getKey());
+		assertEquals(PASSWORD, workParameters.get(2).getKey());
 		assertEquals("Please enter your password for authentication (it will not be stored)",
-				workFlowTaskParameters.get(2).getDescription());
-		assertEquals(WorkFlowTaskParameterType.PASSWORD, workFlowTaskParameters.get(2).getType());
+				workParameters.get(2).getDescription());
+		assertEquals(WorkParameterType.PASSWORD, workParameters.get(2).getType());
 	}
 
 	@Test

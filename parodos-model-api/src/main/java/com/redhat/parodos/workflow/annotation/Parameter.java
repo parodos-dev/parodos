@@ -15,7 +15,7 @@
  */
 package com.redhat.parodos.workflow.annotation;
 
-import com.redhat.parodos.workflow.parameter.WorkFlowParameterType;
+import com.redhat.parodos.workflow.parameter.WorkParameterType;
 
 import static java.lang.annotation.ElementType.METHOD;
 
@@ -38,7 +38,7 @@ public @interface Parameter {
 
 	String description();
 
-	WorkFlowParameterType type();
+	WorkParameterType type();
 
 	boolean optional();
 
