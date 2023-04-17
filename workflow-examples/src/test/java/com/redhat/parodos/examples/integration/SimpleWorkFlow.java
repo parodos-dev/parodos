@@ -1,5 +1,6 @@
 package com.redhat.parodos.examples.integration;
 
+import com.redhat.parodos.examples.integration.utils.ExamplesUtils;
 import com.redhat.parodos.sdk.api.ProjectApi;
 import com.redhat.parodos.sdk.api.WorkflowApi;
 import com.redhat.parodos.sdk.api.WorkflowDefinitionApi;
@@ -58,40 +59,7 @@ public class SimpleWorkFlow {
 	public void runSimpleWorkFlow() throws ApiException, InterruptedException {
 		log.info("Running simple flow");
 
-		ProjectApi projectApi = new ProjectApi(apiClient);
-		waitProjectStart(projectApi);
-
-		log.info("Project is ✔️ on {}", apiClient.getBasePath());
-
-		ProjectResponseDTO testProject;
-
-		// RETRIEVE ALL PROJECTS AVAILABLE
-		log.info("Get all available projects");
-		List<ProjectResponseDTO> projects = projectApi.getProjects();
-		// CHECK IF testProject ALREADY EXISTS
-		testProject = getProjectByNameAndDescription(projects, projectName, projectDescription);
-
-		// CREATE PROJECT "Test Project Name" IF NOT EXISTS
-		if (testProject == null) {
-			log.info("There are no projects. Creating project {}", projectName);
-			// DEFINE A TEST PROJECT REQUEST
-			ProjectRequestDTO projectRequestDTO = new ProjectRequestDTO();
-			projectRequestDTO.setName(projectName);
-			projectRequestDTO.setDescription(projectDescription);
-
-			ProjectResponseDTO projectResponseDTO = projectApi.createProject(projectRequestDTO);
-			assertNotNull(projectResponseDTO);
-			assertEquals(projectName, projectResponseDTO.getName());
-			assertEquals(projectDescription, projectResponseDTO.getDescription());
-			log.info("Project {} successfully created", projectName);
-		}
-
-		// ASSERT PROJECT "testProject" IS PRESENT
-		projects = projectApi.getProjects();
-		log.debug("PROJECTS: {}", projects);
-		assertTrue(projects.size() > 0);
-		testProject = getProjectByNameAndDescription(projects, projectName, projectDescription);
-		assertNotNull(testProject);
+		ProjectResponseDTO testProject = ExamplesUtils.commonProjectAPI(apiClient, projectName, projectDescription);
 
 		// GET simpleSequentialWorkFlow DEFINITIONS
 		WorkflowDefinitionApi workflowDefinitionApi = new WorkflowDefinitionApi();
