@@ -32,10 +32,6 @@ spring:
     username: postgres
     password: postgres
 
-springdoc:
-  writer-with-order-by-keys: true
-  writer-with-default-pretty-printer: true
-
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the

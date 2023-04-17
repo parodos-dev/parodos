@@ -1,5 +1,5 @@
 # ===================================================================
-# Spring Boot configuration for the "dev" profile.
+# Spring Boot configuration for the "local" profile.
 #
 # This configuration overrides the application.yml file and should be
 # only used for development purpose.
@@ -42,10 +42,10 @@ spring:
     driverClassName: org.h2.Driver
     username: postgres
     password: postgres
-
-springdoc:
-  writer-with-order-by-keys: true
-  writer-with-default-pretty-printer: true
+  cloud:
+    config:
+      enabled: true
+      import: optional:configserver:http://localhost:8888
 
 # ===================================================================
 # Application specific properties
