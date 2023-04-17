@@ -1,6 +1,5 @@
 package com.redhat.parodos.examples.integration;
 
-import com.redhat.parodos.examples.integration.utils.ExamplesUtils;
 import com.redhat.parodos.sdk.api.ProjectApi;
 import com.redhat.parodos.sdk.api.WorkflowApi;
 import com.redhat.parodos.sdk.api.WorkflowDefinitionApi;
@@ -30,6 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.redhat.parodos.examples.integration.utils.ExamplesUtils.getProjectByNameAndDescription;
+import static com.redhat.parodos.examples.integration.utils.ExamplesUtils.waitProjectStart;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -59,8 +59,8 @@ public class SimpleWorkFlow {
 		log.info("Running simple flow");
 
 		ProjectApi projectApi = new ProjectApi(apiClient);
+		waitProjectStart(projectApi);
 
-		ExamplesUtils.waitProjectStart(projectApi);
 		log.info("Project is ✔️ on {}", apiClient.getBasePath());
 
 		ProjectResponseDTO testProject;
@@ -143,6 +143,7 @@ public class SimpleWorkFlow {
 
 		WorkflowApi workflowApi = new WorkflowApi();
 		log.info("******** Running The Simple Sequence Flow ********");
+
 		WorkFlowResponseDTO workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
 
 		assertNotNull(workFlowResponseDTO.getWorkFlowExecutionId());

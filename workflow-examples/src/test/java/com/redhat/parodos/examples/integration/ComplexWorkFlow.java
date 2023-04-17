@@ -4,6 +4,7 @@ import com.redhat.parodos.examples.integration.utils.ExamplesUtils;
 import com.redhat.parodos.sdk.api.ProjectApi;
 import com.redhat.parodos.sdk.api.WorkflowApi;
 import com.redhat.parodos.sdk.api.WorkflowDefinitionApi;
+import com.redhat.parodos.sdk.invoker.ApiCallback;
 import com.redhat.parodos.sdk.invoker.ApiClient;
 import com.redhat.parodos.sdk.invoker.ApiException;
 import com.redhat.parodos.sdk.invoker.Configuration;
@@ -17,6 +18,7 @@ import com.redhat.parodos.sdk.model.WorkFlowResponseDTO.WorkStatusEnum;
 import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.sdk.model.WorkRequestDTO;
 import com.redhat.parodos.workflow.utils.CredUtils;
+import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,13 +26,11 @@ import org.springframework.http.HttpHeaders;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.redhat.parodos.examples.integration.utils.ExamplesUtils.getProjectByNameAndDescription;
-import static com.redhat.parodos.examples.integration.utils.ExamplesUtils.waitAsyncStatusResponse;
+import static com.redhat.parodos.examples.integration.utils.ExamplesUtils.waitAsyncResponse;
+import static com.redhat.parodos.examples.integration.utils.ExamplesUtils.waitProjectStart;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -59,7 +59,7 @@ public class ComplexWorkFlow {
 		log.info("Running complex flow");
 		ProjectApi projectApi = new ProjectApi(apiClient);
 
-		ExamplesUtils.waitProjectStart(projectApi);
+		waitProjectStart(projectApi);
 		log.info("Project is ✔️ on {}", apiClient.getBasePath());
 
 		ProjectResponseDTO testProject;
@@ -158,8 +158,21 @@ public class ComplexWorkFlow {
 		assertEquals(workFlowResponseDTO.getWorkStatus(), WorkStatusEnum.IN_PROGRESS);
 		log.info("Onboarding workflow execution id: {}", workFlowResponseDTO.getWorkFlowExecutionId());
 
-		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = waitAsyncStatusResponse(workflowApi,
-				workFlowResponseDTO.getWorkFlowExecutionId());
+		WorkFlowResponseDTO finalWorkFlowResponseDTO = workFlowResponseDTO;
+
+		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = waitAsyncResponse(
+				new ExamplesUtils.FuncExecutor<WorkFlowStatusResponseDTO>() {
+					@Override
+					public boolean check(WorkFlowStatusResponseDTO result) {
+						return !result.getStatus().equals(WorkStatus.COMPLETED.toString());
+					}
+
+					@Override
+					public void execute(ApiCallback<WorkFlowStatusResponseDTO> callback) throws ApiException {
+						workflowApi.getStatusAsync(finalWorkFlowResponseDTO.getWorkFlowExecutionId(), callback);
+					}
+				});
+
 		assertNotNull(workFlowStatusResponseDTO);
 		assertNotNull(workFlowStatusResponseDTO.getWorkFlowExecutionId());
 		assertEquals(WorkStatusEnum.COMPLETED.toString(), workFlowStatusResponseDTO.getStatus());
