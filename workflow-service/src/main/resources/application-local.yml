@@ -17,6 +17,19 @@ spring:
       managerPassword: null
   lifecycle:
     timeout-per-shutdown-phase: "25s"
-springdoc:
-  writer-with-order-by-keys: true
-  writer-with-default-pretty-printer: true
+  cloud:
+    config:
+      enabled: true
+      import: optional:configserver:http://localhost:8888
+
+logging:
+  level:
+    ROOT: INFO
+    com.redhat.parodos.workflow: DEBUG
+
+# ===================================================================
+# Application specific properties
+# Add your own application properties here, see the
+# ApplicationProperties class to have type-safe configuration
+# ===================================================================
+

@@ -46,6 +46,16 @@
             <artifactId>spring-cloud-starter</artifactId>
         </dependency>
         <!-- END Web Dependencies -->
+        <!-- START Spring Cloud Dependencies -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
+        </dependency>
+        <!-- END Spring Cloud Dependencies -->
         <!-- START Spring Security Dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -136,6 +146,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.vaadin.external.google</groupId>
+                    <artifactId>android-json</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.modelmapper</groupId>
@@ -160,6 +176,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.vaadin.external.google</groupId>
+                    <artifactId>android-json</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>

@@ -47,6 +47,10 @@ spring:
   lifecycle:
     timeout-per-shutdown-phase: "25s"
 
+  cloud:
+    config:
+      enabled: false
+
 management:
   metrics:
     export:

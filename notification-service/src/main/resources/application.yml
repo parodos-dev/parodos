@@ -6,6 +6,9 @@ spring:
     default-property-inclusion: non_null
   main:
     lazy-initialization: true
+  cloud:
+    config:
+      enabled: false
 
 springdoc:
   writer-with-order-by-keys: true
