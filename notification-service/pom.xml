@@ -25,7 +25,6 @@
     <properties>
         <spring-cloud.version>2020.0.6</spring-cloud.version>
         <springdoc-openapi-ui.version>1.6.4</springdoc-openapi-ui.version>
-        <openapi.generator.version>5.4.0</openapi.generator.version>
         <gson-fire-version>1.8.5</gson-fire-version>
         <swagger-core-version>1.6.3</swagger-core-version>
         <jackson-databind-nullable-version>0.2.2</jackson-databind-nullable-version>
@@ -196,28 +195,6 @@
                 <version>2.5</version>
                 <executions>
                     <execution>
-                        <id>auto-clean</id>
-                        <phase>clean</phase>
-                        <goals>
-                            <goal>clean</goal>
-                        </goals>
-                        <configuration>
-                            <filesets>
-                                <fileset>
-                                    <directory>${project.parent.basedir}/notification-service-sdk</directory>
-                                    <includes>
-                                        <include>**</include>
-                                    </includes>
-                                    <excludes>
-                                        <exclude>.openapi-generator-ignore</exclude>
-                                        <exclude>pom.xml</exclude>
-                                    </excludes>
-                                    <followSymlinks>false</followSymlinks>
-                                </fileset>
-                            </filesets>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>clean-openapi-json</id>
                         <phase>clean</phase>
                         <goals>
@@ -305,46 +282,6 @@
                     </goals>
                     <phase>generate-test-sources</phase>
                 </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.openapitools</groupId>
-                <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>${openapi.generator.version}</version>
-                <executions>
-                    <execution>
-                        <id>generate-client-api-code</id>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <phase>package</phase>
-                        <configuration>
-                            <generatorName>java</generatorName>
-
-                            <groupId>dev.parodos</groupId>
-                            <artifactId>notification-service-sdk</artifactId>
-                            <packageName>com.redhat.parodos.notification.sdk</packageName>
-
-                            <inputSpec>${basedir}/generated/openapi.json</inputSpec>
-                            <output>${project.parent.basedir}/notification-service-sdk</output>
-
-                            <invokerPackage>com.redhat.parodos.notification.sdk.api</invokerPackage>
-                            <apiPackage>com.redhat.parodos.notification.sdk.api</apiPackage>
-                            <modelPackage>com.redhat.parodos.notification.sdk.model</modelPackage>
-                            <addCompileSourceRoot>true</addCompileSourceRoot>
-
-                            <configOptions>
-                                <basePackage>com.redhat.parodos.notification.sdk</basePackage>
-                                <configPackage>com.redhat.parodos.notification.sdk.configuration</configPackage>
-                                <parentArtifactId>parodos-parent</parentArtifactId>
-                                <parentGroupId>dev.parodos</parentGroupId>
-                                <parentVersion>${revision}</parentVersion>
-                                <artifactVersion>${revision}</artifactVersion>
-                                <dateLibrary>legacy</dateLibrary>
-                                <hideGenerationTimestamp>true</hideGenerationTimestamp>
-                            </configOptions>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
         </plugins>
