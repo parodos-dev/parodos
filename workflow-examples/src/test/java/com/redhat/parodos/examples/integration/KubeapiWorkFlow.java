@@ -1,5 +1,6 @@
 package com.redhat.parodos.examples.integration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.examples.integration.utils.ExamplesUtils;
 import com.redhat.parodos.sdk.api.WorkflowApi;
 import com.redhat.parodos.sdk.api.WorkflowDefinitionApi;
@@ -15,6 +16,8 @@ import com.redhat.parodos.workflow.utils.CredUtils;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 
@@ -56,8 +59,11 @@ public class KubeapiWorkFlow {
 			WorkflowApi workflowApi = new WorkflowApi();
 
 			// 1 - Define WorkRequests
+			String kubeconfigJson = Files.readString(new File("kubeconfig.json").toPath());
+
 			WorkRequestDTO workGet = new WorkRequestDTO().workName(taskName)
-					.arguments(Arrays.asList(new ArgumentRequestDTO().key("api-group").value(""),
+					.arguments(Arrays.asList(new ArgumentRequestDTO().key("kubeconfig-json").value(kubeconfigJson),
+							new ArgumentRequestDTO().key("api-group").value(""),
 							new ArgumentRequestDTO().key("api-version").value("v1"),
 							new ArgumentRequestDTO().key("kind-plural-name").value("configmaps"),
 							new ArgumentRequestDTO().key("operation").value("get"),
@@ -66,6 +72,7 @@ public class KubeapiWorkFlow {
 							new ArgumentRequestDTO().key("work-ctx-key").value("theKey")));
 
 			WorkRequestDTO workCreate = new WorkRequestDTO().workName(taskName).arguments(Arrays.asList(
+					new ArgumentRequestDTO().key("kubeconfig-json").value(kubeconfigJson),
 					new ArgumentRequestDTO().key("api-group").value(""),
 					new ArgumentRequestDTO().key("api-version").value("v1"),
 					new ArgumentRequestDTO().key("kind-plural-name").value("configmaps"),
@@ -75,6 +82,7 @@ public class KubeapiWorkFlow {
 							+ "\"metadata\": {\"name\": \"my-cm-create\",\"namespace\": \"test\"}}")));
 
 			WorkRequestDTO workUpdate = new WorkRequestDTO().workName(taskName).arguments(Arrays.asList(
+					new ArgumentRequestDTO().key("kubeconfig-json").value(kubeconfigJson),
 					new ArgumentRequestDTO().key("api-group").value(""),
 					new ArgumentRequestDTO().key("api-version").value("v1"),
 					new ArgumentRequestDTO().key("kind-plural-name").value("configmaps"),
