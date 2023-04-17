@@ -1,6 +1,6 @@
 package com.redhat.parodos.workflow.execution.aspect;
 
-import static com.redhat.parodos.workflow.execution.aspect.WorkFlowExecutionFactory.getMasterWorkFlowExecutionId;
+import static com.redhat.parodos.workflow.execution.aspect.WorkFlowExecutionFactory.getMainWorkFlowExecutionId;
 
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.exceptions.WorkflowExecutionNotFoundException;
@@ -11,11 +11,11 @@ import com.redhat.parodos.workflow.execution.scheduler.WorkFlowSchedulerServiceI
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 import com.redhat.parodos.workflows.work.WorkContext;
 
-public class MasterWorkFlowExecutionInterceptor extends WorkFlowExecutionInterceptor {
+public class MainWorkFlowExecutionInterceptor extends WorkFlowExecutionInterceptor {
 
-	private WorkFlowExecution masterWorkFlowExecution;
+	private WorkFlowExecution mainWorkFlowExecution;
 
-	public MasterWorkFlowExecutionInterceptor(WorkFlowDefinition workFlowDefinition, WorkContext workContext,
+	public MainWorkFlowExecutionInterceptor(WorkFlowDefinition workFlowDefinition, WorkContext workContext,
 			WorkFlowServiceImpl workFlowService, WorkFlowRepository workFlowRepository,
 			WorkFlowSchedulerServiceImpl workFlowSchedulerService,
 			WorkFlowContinuationServiceImpl workFlowContinuationServiceImpl) {
@@ -25,15 +25,15 @@ public class MasterWorkFlowExecutionInterceptor extends WorkFlowExecutionInterce
 
 	@Override
 	protected WorkFlowExecution doPreWorkFlowExecution() {
-		masterWorkFlowExecution = workFlowRepository.findById(getMasterWorkFlowExecutionId(workContext))
+		mainWorkFlowExecution = workFlowRepository.findById(getMainWorkFlowExecutionId(workContext))
 				.orElseThrow(() -> new WorkflowExecutionNotFoundException(
-						"masterWorkFlow not found for sub-workflow: " + workFlowDefinition.getName()));
-		return masterWorkFlowExecution;
+						"mainWorkFlow not found for sub-workflow: " + workFlowDefinition.getName()));
+		return mainWorkFlowExecution;
 	}
 
 	@Override
-	protected WorkFlowExecution getMasterWorkFlowExecution() {
-		return masterWorkFlowExecution;
+	protected WorkFlowExecution getMainWorkFlowExecution() {
+		return mainWorkFlowExecution;
 	}
 
 }

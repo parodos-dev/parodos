@@ -33,16 +33,16 @@ public class WorkFlowExecutionFactory {
 	}
 
 	public WorkFlowExecutionInterceptor createExecutionHandler(WorkFlowDefinition definition, WorkContext workContext) {
-		// get master WorkFlowExecution, this is the first time execution for master
+		// get main WorkFlowExecution, this is the first time execution for main
 		// workflow if return null
-		UUID masterWorkFlowExecutionId = getMasterWorkFlowExecutionId(workContext);
-		if (masterWorkFlowExecutionId == null) {
-			return new InitialMasterWorkflowInterceptor(definition, workContext, workFlowService, workFlowRepository,
+		UUID mainWorkFlowExecutionId = getMainWorkFlowExecutionId(workContext);
+		if (mainWorkFlowExecutionId == null) {
+			return new InitialMainWorkflowInterceptor(definition, workContext, workFlowService, workFlowRepository,
 					workFlowSchedulerService, workFlowContinuationServiceImpl);
 		}
 
-		if (isMasterWorkFlow(definition, workContext)) {
-			return new MasterWorkFlowExecutionInterceptor(definition, workContext, workFlowService, workFlowRepository,
+		if (isMainWorkFlow(definition, workContext)) {
+			return new MainWorkFlowExecutionInterceptor(definition, workContext, workFlowService, workFlowRepository,
 					workFlowSchedulerService, workFlowContinuationServiceImpl);
 		}
 		else {
@@ -51,13 +51,13 @@ public class WorkFlowExecutionFactory {
 		}
 	}
 
-	static boolean isMasterWorkFlow(WorkFlowDefinition workflow, WorkContext workContext) {
-		String masterWorkflowName = WorkContextDelegate.read(workContext,
+	static boolean isMainWorkFlow(WorkFlowDefinition workflow, WorkContext workContext) {
+		String mainWorkflowName = WorkContextDelegate.read(workContext,
 				WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION, WorkContextDelegate.Resource.NAME).toString();
-		return workflow.getName().equals(masterWorkflowName);
+		return workflow.getName().equals(mainWorkflowName);
 	}
 
-	static UUID getMasterWorkFlowExecutionId(WorkContext workContext) {
+	static UUID getMainWorkFlowExecutionId(WorkContext workContext) {
 		return Optional.ofNullable(WorkContextDelegate.read(workContext,
 				WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ID))
 				.map(id -> UUID.fromString(id.toString())).orElse(null);

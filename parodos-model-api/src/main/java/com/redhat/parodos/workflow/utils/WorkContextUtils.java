@@ -46,9 +46,9 @@ public class WorkContextUtils {
 	}
 
 	/**
-	 * get master workflow execution id from workContext
+	 * get main workflow execution id from workContext
 	 * @param workContext
-	 * @return master workflow execution id
+	 * @return main workflow execution id
 	 */
 	public static String getMainExecutionId(WorkContext workContext) {
 		return WorkContextDelegate

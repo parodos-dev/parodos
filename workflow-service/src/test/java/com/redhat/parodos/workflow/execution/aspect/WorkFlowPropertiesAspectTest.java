@@ -28,7 +28,7 @@ class WorkFlowPropertiesAspectTest {
 		aspect.env = env;
 
 		assertDoesNotThrow(() -> {
-			Object result = aspect.setProperitesForWorkflow(workflow, properties);
+			Object result = aspect.setPropertiesForWorkflow(workflow, properties);
 			assertNotNull(result);
 		});
 
@@ -53,7 +53,7 @@ class WorkFlowPropertiesAspectTest {
 		aspect.env = env;
 
 		assertDoesNotThrow(() -> {
-			Object result = aspect.setProperitesForWorkflow(workflow, properties);
+			Object result = aspect.setPropertiesForWorkflow(workflow, properties);
 			assertNotNull(result);
 		});
 
@@ -78,7 +78,7 @@ class WorkFlowPropertiesAspectTest {
 		aspect.env = env;
 
 		assertDoesNotThrow(() -> {
-			Object result = aspect.setProperitesForWorkflow(workflow, null);
+			Object result = aspect.setPropertiesForWorkflow(workflow, null);
 			assertNotNull(result);
 		});
 
@@ -104,7 +104,7 @@ class WorkFlowPropertiesAspectTest {
 		aspect.env = env;
 
 		assertDoesNotThrow(() -> {
-			Object result = aspect.setProperitesForWorkflow(workFlow, properties);
+			Object result = aspect.setPropertiesForWorkflow(workFlow, properties);
 			assertNotNull(result);
 		});
 

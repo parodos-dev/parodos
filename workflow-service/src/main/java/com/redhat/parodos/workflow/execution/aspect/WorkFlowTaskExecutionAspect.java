@@ -98,16 +98,16 @@ public class WorkFlowTaskExecutionAspect {
 		WorkFlowTaskDefinition workFlowTaskDefinition = workFlowTaskDefinitionRepository
 				.findFirstByName(workFlowTaskName);
 
-		UUID masterWorkFlowExecutionId = UUID.fromString(WorkContextDelegate
+		UUID mainWorkFlowExecutionId = UUID.fromString(WorkContextDelegate
 				.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ID)
 				.toString());
 
-		WorkFlowExecution masterWorkFlowExecution = workFlowRepository.findById(masterWorkFlowExecutionId).orElseThrow(
-				() -> new WorkflowExecutionNotFoundException("masterWorkFlow not found for task: " + workFlowTaskName));
+		WorkFlowExecution mainWorkFlowExecution = workFlowRepository.findById(mainWorkFlowExecutionId).orElseThrow(
+				() -> new WorkflowExecutionNotFoundException("mainWorkFlow not found for task: " + workFlowTaskName));
 
 		// get the workflow execution if it's executed again from continuation
 		WorkFlowExecution workFlowExecution = handleParentWorkflowUseCase(workContext, workFlowTaskDefinition,
-				masterWorkFlowExecution);
+				mainWorkFlowExecution);
 		WorkFlowTaskExecution workFlowTaskExecution = workFlowService.getWorkFlowTask(workFlowExecution.getId(),
 				workFlowTaskDefinition.getId());
 		if (workFlowTaskExecution == null) {
@@ -152,7 +152,7 @@ public class WorkFlowTaskExecutionAspect {
 		 */
 		if (WorkStatus.COMPLETED.equals(report.getStatus())
 				&& workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition() != null) {
-			handleChecker(proceedingJoinPoint, workContext, workFlowTaskDefinition, masterWorkFlowExecution);
+			handleChecker(proceedingJoinPoint, workContext, workFlowTaskDefinition, mainWorkFlowExecution);
 			return new DefaultWorkReport(WorkStatus.PENDING, workContext);
 		}
 		return report;
@@ -160,17 +160,17 @@ public class WorkFlowTaskExecutionAspect {
 
 	// Check the WorkFlow for Checkers
 	private void handleChecker(ProceedingJoinPoint proceedingJoinPoint, WorkContext workContext,
-			WorkFlowTaskDefinition workFlowTaskDefinition, WorkFlowExecution masterWorkFlowExecution) {
+			WorkFlowTaskDefinition workFlowTaskDefinition, WorkFlowExecution mainWorkFlowExecution) {
 
 		// if this task has no running checker
 		WorkFlowExecution checkerWorkFlowExecution = workFlowRepository
-				.findFirstByWorkFlowDefinitionIdAndMasterWorkFlowExecution(
-						workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition().getId(), masterWorkFlowExecution);
+				.findFirstByWorkFlowDefinitionIdAndMainWorkFlowExecution(
+						workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition().getId(), mainWorkFlowExecution);
 		if (checkerWorkFlowExecution == null) {
 			// schedule workflow checker for dynamic run on cron expression
 			List<WorkFlow> checkerWorkFlows = ((BaseWorkFlowTask) proceedingJoinPoint.getTarget())
 					.getWorkFlowCheckers();
-			startCheckerOnSchedule(masterWorkFlowExecution.getProjectId().toString(),
+			startCheckerOnSchedule(mainWorkFlowExecution.getProjectId().toString(),
 					workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition().getCheckWorkFlow().getName(),
 					checkerWorkFlows, workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition(), workContext);
 		}
@@ -178,14 +178,12 @@ public class WorkFlowTaskExecutionAspect {
 
 	// Deal with any logic related to Parent WorkFlows
 	private WorkFlowExecution handleParentWorkflowUseCase(WorkContext workContext,
-			WorkFlowTaskDefinition workFlowTaskDefinition, WorkFlowExecution masterWorkFlowExecution) {
+			WorkFlowTaskDefinition workFlowTaskDefinition, WorkFlowExecution mainWorkFlowExecution) {
 		return workFlowTaskDefinition.getWorkFlowDefinition().getName().equalsIgnoreCase(
 				WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION,
-						WorkContextDelegate.Resource.NAME).toString())
-								? masterWorkFlowExecution
-								: workFlowRepository.findFirstByWorkFlowDefinitionIdAndMasterWorkFlowExecution(
-										workFlowTaskDefinition.getWorkFlowDefinition().getId(),
-										masterWorkFlowExecution);
+						WorkContextDelegate.Resource.NAME).toString()) ? mainWorkFlowExecution
+								: workFlowRepository.findFirstByWorkFlowDefinitionIdAndMainWorkFlowExecution(
+										workFlowTaskDefinition.getWorkFlowDefinition().getId(), mainWorkFlowExecution);
 	}
 
 	// Iterate through the all the Checkers in the workflow and start them based on their

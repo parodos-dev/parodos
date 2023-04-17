@@ -1,4 +1,4 @@
-package com.redhat.parodos.examples.master.checker;
+package com.redhat.parodos.examples.complex.checker;
 
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.checker.BaseWorkFlowCheckerTask;

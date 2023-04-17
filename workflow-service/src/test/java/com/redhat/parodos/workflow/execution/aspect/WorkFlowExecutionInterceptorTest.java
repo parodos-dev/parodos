@@ -57,7 +57,7 @@ public class WorkFlowExecutionInterceptorTest {
 	private WorkFlowExecution expectedWorkFlowExecution;
 
 	@Mock
-	private WorkFlowExecution masterWorkFlowExecution;
+	private WorkFlowExecution mainWorkFlowExecution;
 
 	@BeforeEach
 	public void setUp() {
@@ -71,8 +71,8 @@ public class WorkFlowExecutionInterceptorTest {
 			}
 
 			@Override
-			protected WorkFlowExecution getMasterWorkFlowExecution() {
-				return masterWorkFlowExecution;
+			protected WorkFlowExecution getMainWorkFlowExecution() {
+				return mainWorkFlowExecution;
 			}
 		};
 	}
@@ -123,7 +123,7 @@ public class WorkFlowExecutionInterceptorTest {
 		when(workFlowDefinition.getType()).thenReturn(WorkFlowType.CHECKER);
 		when(workFlowDefinition.getCheckerWorkFlowDefinition())
 				.thenReturn(Mockito.mock(WorkFlowCheckerMappingDefinition.class));
-		when(masterWorkFlowExecution.getId()).thenReturn(UUID.randomUUID());
+		when(mainWorkFlowExecution.getId()).thenReturn(UUID.randomUUID());
 
 		// when
 		WorkFlowExecution workFlowExecution = interceptor.handlePreWorkFlowExecution();

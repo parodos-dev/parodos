@@ -4,7 +4,6 @@ import com.redhat.parodos.workflow.annotation.WorkFlowProperties;
 import com.redhat.parodos.workflow.version.WorkFlowVersionServiceImpl;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlowPropertiesMetadata;
-import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -37,10 +36,10 @@ public class WorkFlowPropertiesAspect {
 		}
 
 		WorkFlow workFlow = (WorkFlow) result;
-		return setProperitesForWorkflow(workFlow, properties);
+		return setPropertiesForWorkflow(workFlow, properties);
 	}
 
-	public Object setProperitesForWorkflow(WorkFlow workFlow, WorkFlowProperties properties) throws IOException {
+	public Object setPropertiesForWorkflow(WorkFlow workFlow, WorkFlowProperties properties) throws IOException {
 		if (properties == null) {
 			return workFlow;
 		}

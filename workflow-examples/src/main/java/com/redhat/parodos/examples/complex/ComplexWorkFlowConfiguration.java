@@ -1,14 +1,14 @@
-package com.redhat.parodos.examples.master;
+package com.redhat.parodos.examples.complex;
 
-import com.redhat.parodos.examples.master.checker.NamespaceApprovalWorkFlowCheckerTask;
-import com.redhat.parodos.examples.master.checker.SslCertificationApprovalWorkFlowCheckerTask;
-import com.redhat.parodos.examples.master.task.AdGroupsWorkFlowTask;
-import com.redhat.parodos.examples.master.task.LoadBalancerWorkFlowTask;
-import com.redhat.parodos.examples.master.task.NamespaceWorkFlowTask;
-import com.redhat.parodos.examples.master.task.OnboardingAssessmentTask;
-import com.redhat.parodos.examples.master.task.SingleSignOnWorkFlowTask;
-import com.redhat.parodos.examples.master.task.SplunkMonitoringWorkFlowTask;
-import com.redhat.parodos.examples.master.task.SslCertificationWorkFlowTask;
+import com.redhat.parodos.examples.complex.checker.NamespaceApprovalWorkFlowCheckerTask;
+import com.redhat.parodos.examples.complex.checker.SslCertificationApprovalWorkFlowCheckerTask;
+import com.redhat.parodos.examples.complex.task.AdGroupsWorkFlowTask;
+import com.redhat.parodos.examples.complex.task.LoadBalancerWorkFlowTask;
+import com.redhat.parodos.examples.complex.task.NamespaceWorkFlowTask;
+import com.redhat.parodos.examples.complex.task.OnboardingAssessmentTask;
+import com.redhat.parodos.examples.complex.task.SingleSignOnWorkFlowTask;
+import com.redhat.parodos.examples.complex.task.SplunkMonitoringWorkFlowTask;
+import com.redhat.parodos.examples.complex.task.SslCertificationWorkFlowTask;
 import com.redhat.parodos.workflow.annotation.Assessment;
 import com.redhat.parodos.workflow.annotation.Checker;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
@@ -27,33 +27,33 @@ import java.util.Arrays;
 import java.util.concurrent.Executors;
 
 @Configuration
-public class MasterWorkFlowConfiguration {
+public class ComplexWorkFlowConfiguration {
 
 	// Assessment workflow
 	@Bean
 	WorkFlowOption onboardingOption() {
-		return new WorkFlowOption.Builder("onboardingOption", "masterWorkFlow")
-				.addToDetails("An example workflow option of a complex master WorkFlow with Status checks")
+		return new WorkFlowOption.Builder("onboardingOption", "complexWorkFlow")
+				.addToDetails("An example workflow option of a complex workFlow with status checks")
 				.displayName("Onboarding").setDescription("An example of a complex WorkFlow").build();
 	}
 
 	// An AssessmentTask returns one or more WorkFlowOption wrapped in a WorkflowOptions
 	@Bean
-	OnboardingAssessmentTask onboardingMasterAssessmentTask(
+	OnboardingAssessmentTask onboardingComplexAssessmentTask(
 			@Qualifier("onboardingOption") WorkFlowOption awesomeToolsOption) {
 		return new OnboardingAssessmentTask(awesomeToolsOption);
 	}
 
 	// A Workflow designed to execute and return WorkflowOption(s) that can be executed
 	// next. In this case there is only one.
-	@Bean(name = "onboardingMasterAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
+	@Bean(name = "onboardingComplexAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
 	@Assessment
 	WorkFlow assessmentWorkFlow(
-			@Qualifier("onboardingMasterAssessmentTask") OnboardingAssessmentTask onboardingMasterAssessmentTask) {
+			@Qualifier("onboardingComplexAssessmentTask") OnboardingAssessmentTask onboardingComplexAssessmentTask) {
 		// @formatter:off
         return SequentialFlow.Builder.aNewSequentialFlow()
-                .named("onboardingMasterAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
-                .execute(onboardingMasterAssessmentTask)
+                .named("onboardingComplexAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
+                .execute(onboardingComplexAssessmentTask)
                 .build();
         // @formatter:on
 	}
@@ -183,15 +183,15 @@ public class MasterWorkFlowConfiguration {
 	// - subWorkFlowThree
 	// - subWorkFlowFour
 
-	@Bean(name = "masterWorkFlow")
+	@Bean(name = "complexWorkFlow")
 	@Infrastructure(parameters = {
 			@Parameter(key = "workloadId", description = "The workload id", type = WorkParameterType.TEXT,
 					optional = false),
 			@Parameter(key = "projectUrl", description = "The project url", type = WorkParameterType.URL,
 					optional = true) })
-	WorkFlow masterWorkFlow(@Qualifier("subWorkFlowThree") WorkFlow subWorkFlowThree,
+	WorkFlow complexWorkFlow(@Qualifier("subWorkFlowThree") WorkFlow subWorkFlowThree,
 			@Qualifier("subWorkFlowFour") WorkFlow subWorkFlowFour) {
-		return SequentialFlow.Builder.aNewSequentialFlow().named("masterWorkFlow").execute(subWorkFlowThree)
+		return SequentialFlow.Builder.aNewSequentialFlow().named("complexWorkFlow").execute(subWorkFlowThree)
 				.then(subWorkFlowFour).build();
 	}
 

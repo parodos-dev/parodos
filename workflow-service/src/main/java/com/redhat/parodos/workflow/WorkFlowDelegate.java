@@ -47,7 +47,7 @@ public class WorkFlowDelegate {
 	}
 
 	public WorkContext initWorkFlowContext(WorkFlowRequestDTO workFlowRequestDTO,
-			WorkFlowDefinitionResponseDTO masterWorkFlowDefinitionDto) {
+			WorkFlowDefinitionResponseDTO mainWorkFlowDefinitionDto) {
 		WorkContext workContext = new WorkContext();
 
 		if (workFlowRequestDTO.getArguments() != null && !workFlowRequestDTO.getArguments().isEmpty()) {
@@ -55,10 +55,9 @@ public class WorkFlowDelegate {
 					workFlowRequestDTO.getWorkFlowName(), WorkContextDelegate.Resource.ARGUMENTS,
 					WorkFlowDTOUtil.convertArgumentListToMap(workFlowRequestDTO.getArguments()));
 		}
-		if (masterWorkFlowDefinitionDto.getWorks() != null && !masterWorkFlowDefinitionDto.getWorks().isEmpty())
-			masterWorkFlowDefinitionDto.getWorks().forEach(
-					work -> initWorkContext(workContext, workFlowRequestDTO.findFirstWorkByName(work.getName()), work,
-							masterWorkFlowDefinitionDto.getName()));
+		if (mainWorkFlowDefinitionDto.getWorks() != null && !mainWorkFlowDefinitionDto.getWorks().isEmpty())
+			mainWorkFlowDefinitionDto.getWorks().forEach(work -> initWorkContext(workContext,
+					workFlowRequestDTO.findFirstWorkByName(work.getName()), work, mainWorkFlowDefinitionDto.getName()));
 		return workContext;
 	}
 
