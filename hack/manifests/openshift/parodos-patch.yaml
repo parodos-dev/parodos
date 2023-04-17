@@ -1,0 +1,161 @@
+# This is a very bad idea, if the deploy is more than one pod, it'll fail due
+# to the cookie-secret is different, but I really hope to:
+# 	- This oauth-proxy no-sense to be removed.
+# 	- To be handled by the operator, clearly kustomize cannot handle it
+# 	well.
+# NetworkPolicy should be created here, if not any kubernetes pod can acess to
+# the port 8080 and got access to it.
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workflow-service
+spec:
+  template:
+    spec:
+      initContainers:
+        - name: generate-cookie-secret
+          image: registry.access.redhat.com/ubi9/ubi
+          command:
+            - sh
+            - -c
+            - "head /dev/urandom | tr -dc A-Za-z0-9 | head -c43 > /tmp/cookie-secret/cookie-secret.txt"
+          volumeMounts:
+            - name: cookie-secret
+              mountPath: /tmp/cookie-secret
+      containers:
+        - name: workflow-service
+          imagePullPolicy: IfNotPresent
+        - name: oauth-proxy
+          args:
+            - -provider=openshift
+            - -https-address=:8888
+            - --client-id=oauth-proxy-client
+            - --client-secret=oauthproxysecret
+            - -email-domain=*
+            - -upstream=http://localhost:8080
+            - -tls-cert=/etc/tls/private/tls.crt
+            - -tls-key=/etc/tls/private/tls.key
+            - -cookie-secret-file=/tmp/cookie-secret/cookie-secret.txt
+            - -openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+            - -skip-auth-regex=^/actuator/
+            - -skip-provider-button
+            - --pass-access-token
+            - -request-logging=true
+          image: registry.redhat.io/openshift4/ose-oauth-proxy:v4.12
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: /etc/tls/private
+              name: workflow-tls
+            - name: cookie-secret
+              mountPath: /tmp/cookie-secret
+      volumes:
+        - name: workflow-tls
+          secret:
+            secretName: workflow-tls
+        - name: cookie-secret
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: workflow-service
+  annotations:
+    service.alpha.openshift.io/serving-cert-secret-name: workflow-tls
+spec:
+  selector:
+    app: workflow-service
+  ports:
+    - protocol: TCP
+      port: 8080
+      name: normal
+      targetPort: 8888 # This is the port of the oauth-proxy
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service
+spec:
+  template:
+    spec:
+      initContainers:
+        - name: generate-cookie-secret
+          image: registry.access.redhat.com/ubi9/ubi
+          command:
+            - sh
+            - -c
+            - "head /dev/urandom | tr -dc A-Za-z0-9 | head -c43 > /tmp/cookie-secret/cookie-secret.txt"
+          volumeMounts:
+            - name: cookie-secret
+              mountPath: /tmp/cookie-secret
+
+      containers:
+        - name: notification-service
+          imagePullPolicy: IfNotPresent
+
+        - name: oauth-proxy
+          args:
+            - -provider=openshift
+            - -https-address=:8888
+            - --client-id=oauth-proxy-client
+            - --client-secret=oauthproxysecret
+            - -email-domain=*
+            - -upstream=http://localhost:8080
+            - -tls-cert=/etc/tls/private/tls.crt
+            - -tls-key=/etc/tls/private/tls.key
+            - -cookie-secret-file=/tmp/cookie-secret/cookie-secret.txt
+            - -openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+            - -skip-auth-regex=^/actuator/
+            - -skip-provider-button
+            - --pass-access-token
+            - -request-logging=true
+          image: registry.redhat.io/openshift4/ose-oauth-proxy:v4.12
+          ports:
+            - name: oauth-proxy
+              containerPort: 8888
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /etc/tls/private
+              name: notification-tls
+            - mountPath: /tmp/cookie-secret
+              name: cookie-secret
+      volumes:
+        - name: notification-tls
+          secret:
+            secretName: notification-tls
+        - name: cookie-secret
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-service
+  annotations:
+    service.alpha.openshift.io/serving-cert-secret-name: notification-tls
+spec:
+  selector:
+    app: notification-service
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8888 # This is the port of the oauth-proxy
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: workflow-service-config
+data:
+  DATASOURCE_URL: "jdbc:postgresql://postgres:5432/parodos"
+  DATASOURCE_DRIVER: "org.postgresql.Driver"
+  DATASOURCE_USERNAME: "parodos"
+  DATASOURCE_PASSWORD: "parodos"
+  SPRING_PROFILES_ACTIVE: "dev"
+  PARODOS_AUTH: "false"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: notification-service-config
+data:
+  SPRING_PROFILES_ACTIVE: "local"
+

@@ -1,0 +1,8 @@
+kind: OAuthClient
+apiVersion: oauth.openshift.io/v1
+metadata:
+ name: oauth-proxy-client
+secret: "oauthproxysecret"
+redirectURIs:
+ - "https://example.com"
+grantMethod: prompt

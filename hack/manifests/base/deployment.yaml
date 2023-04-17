@@ -14,6 +14,8 @@ spec:
       containers:
       - name: notification-service
         image: quay.io/parodos/notification-service:latest
+        ports:
+          - containerPort: 8080
         envFrom:
           - configMapRef:
               name: notification-service-config
@@ -43,6 +45,8 @@ spec:
       - name: workflow-service
         image: quay.io/parodos/workflow-service:latest
         imagePullPolicy: Always
+        ports:
+          - containerPort: 8080
         envFrom:
           - configMapRef:
               name: workflow-service-config
