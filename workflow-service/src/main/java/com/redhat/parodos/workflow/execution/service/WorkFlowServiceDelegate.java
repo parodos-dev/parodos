@@ -29,7 +29,6 @@ import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
-import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -148,12 +147,18 @@ public class WorkFlowServiceDelegate {
 
 		WorkFlowExecution workExecution = workFlowRepository.findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(
 				workFlowExecution, workFlowWorkDefinition.getWorkDefinitionId());
+
 		/*
 		 * the workflow execution might be null when there is pending checker before it
 		 */
-		ParodosWorkStatus workStatus = workExecution == null
-				|| WorkFlowStatus.IN_PROGRESS.equals(workExecution.getStatus()) ? ParodosWorkStatus.PENDING
-						: ParodosWorkStatus.valueOf(workExecution.getStatus().name());
+		ParodosWorkStatus workStatus;
+
+		if (workExecution == null) {
+			workStatus = ParodosWorkStatus.PENDING;
+		}
+		else {
+			workStatus = ParodosWorkStatus.valueOf(workExecution.getStatus().name());
+		}
 
 		return WorkStatusResponseDTO.builder().name(workFlowDefinition.getName()).type(WorkType.WORKFLOW)
 				.status(workStatus).works(new ArrayList<>()).workExecution(workExecution)
@@ -175,9 +180,19 @@ public class WorkFlowServiceDelegate {
 		ParodosWorkStatus workStatus = ParodosWorkStatus.PENDING;
 
 		if (workFlowTaskExecutionOptional.isPresent()) {
-			workStatus = WorkFlowTaskStatus.IN_PROGRESS.equals(workFlowTaskExecutionOptional.get().getStatus())
-					? ParodosWorkStatus.PENDING
-					: ParodosWorkStatus.valueOf(workFlowTaskExecutionOptional.get().getStatus().name());
+			workStatus = ParodosWorkStatus.valueOf(workFlowTaskExecutionOptional.get().getStatus().name());
+			if (workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition() != null) {
+				workStatus = Optional
+						.ofNullable(workFlowRepository.findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(
+								workFlowExecution.getMainWorkFlowExecution(),
+								workFlowTaskDefinition
+										.getWorkFlowCheckerMappingDefinition().getCheckWorkFlow().getId()))
+						.map(WorkFlowExecution::getStatus)
+						.map(checkerStatus -> WorkFlowStatus.FAILED.equals(checkerStatus)
+								? ParodosWorkStatus.IN_PROGRESS : ParodosWorkStatus.valueOf(checkerStatus.name()))
+						.orElse(ParodosWorkStatus.COMPLETED.equals(workStatus) ? ParodosWorkStatus.IN_PROGRESS
+								: workStatus);
+			}
 		}
 
 		return WorkStatusResponseDTO.builder().name(workFlowTaskDefinition.getName()).type(WorkType.TASK)

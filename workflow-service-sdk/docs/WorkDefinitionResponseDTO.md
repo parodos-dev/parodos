@@ -12,7 +12,7 @@ Name | Type | Description | Notes
 **name** | **String** |  |  [optional]
 **outputs** | [**List&lt;OutputsEnum&gt;**](#List&lt;OutputsEnum&gt;) |  |  [optional]
 **parameters** | **Map&lt;String, Map&lt;String, Object&gt;&gt;** |  |  [optional]
-**processingType** | **String** |  |  [optional]
+**processingType** | [**ProcessingTypeEnum**](#ProcessingTypeEnum) |  |  [optional]
 **workType** | **String** |  |  [optional]
 **works** | [**List&lt;WorkDefinitionResponseDTO&gt;**](WorkDefinitionResponseDTO.md) |  |  [optional]
 
@@ -25,6 +25,16 @@ Name | Value
 EXCEPTION | &quot;EXCEPTION&quot;
 HTTP2XX | &quot;HTTP2XX&quot;
 NO_EXCEPTION | &quot;NO_EXCEPTION&quot;
+OTHER | &quot;OTHER&quot;
+
+
+
+## Enum: ProcessingTypeEnum
+
+Name | Value
+---- | -----
+SEQUENTIAL | &quot;SEQUENTIAL&quot;
+PARALLEL | &quot;PARALLEL&quot;
 OTHER | &quot;OTHER&quot;
 
 

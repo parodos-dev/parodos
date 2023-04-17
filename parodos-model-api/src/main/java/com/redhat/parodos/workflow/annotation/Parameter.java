@@ -42,4 +42,6 @@ public @interface Parameter {
 
 	boolean optional();
 
+	String[] selectOptions() default {};
+
 }

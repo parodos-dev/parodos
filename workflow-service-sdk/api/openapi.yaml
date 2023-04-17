@@ -297,7 +297,7 @@ components:
         outputs:
         - EXCEPTION
         - EXCEPTION
-        processingType: processingType
+        processingType: SEQUENTIAL
         works:
         - null
         - null
@@ -331,6 +331,10 @@ components:
             type: object
           type: object
         processingType:
+          enum:
+          - SEQUENTIAL
+          - PARALLEL
+          - OTHER
           type: string
         workType:
           type: string
@@ -354,12 +358,12 @@ components:
       type: object
     WorkFlowDefinitionResponseDTO:
       example:
-        processingType: processingType
+        processingType: SEQUENTIAL
         works:
         - outputs:
           - EXCEPTION
           - EXCEPTION
-          processingType: processingType
+          processingType: SEQUENTIAL
           works:
           - null
           - null
@@ -373,7 +377,7 @@ components:
         - outputs:
           - EXCEPTION
           - EXCEPTION
-          processingType: processingType
+          processingType: SEQUENTIAL
           works:
           - null
           - null
@@ -416,6 +420,10 @@ components:
             type: object
           type: object
         processingType:
+          enum:
+          - SEQUENTIAL
+          - PARALLEL
+          - OTHER
           type: string
         properties:
           $ref: '#/components/schemas/WorkFlowPropertiesDefinitionDTO'
@@ -766,6 +774,7 @@ components:
           - COMPLETED
           - PENDING
           - IN_PROGRESS
+          - REJECTED
           type: string
         type:
           enum:
