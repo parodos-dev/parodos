@@ -49,7 +49,9 @@ public class WorkStatusResponseDTO {
 
 		PENDING("PENDING"),
 
-		IN_PROGRESS("IN_PROGRESS");
+		IN_PROGRESS("IN_PROGRESS"),
+
+		REJECTED("REJECTED");
 
 		private String value;
 

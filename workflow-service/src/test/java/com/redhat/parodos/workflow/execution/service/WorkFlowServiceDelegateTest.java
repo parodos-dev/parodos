@@ -1,5 +1,6 @@
 package com.redhat.parodos.workflow.execution.service;
 
+import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowWorkDefinition;
@@ -16,9 +17,12 @@ import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -175,14 +179,14 @@ public class WorkFlowServiceDelegateTest {
 		// sub workflow 1
 		assertEquals(workStatusResponseDTOs.get(0).getType(), WorkType.WORKFLOW);
 		assertEquals(workStatusResponseDTOs.get(0).getName(), testSubWorkFlowDefinition1.getName());
-		assertEquals(workStatusResponseDTOs.get(0).getStatus(), ParodosWorkStatus.PENDING);
+		assertEquals(workStatusResponseDTOs.get(0).getStatus(), ParodosWorkStatus.IN_PROGRESS);
 		assertEquals(workStatusResponseDTOs.get(0).getWorks().size(), 1);
 
 		// sub workflow 1 task 1
 		assertEquals(workStatusResponseDTOs.get(0).getWorks().get(0).getType(), WorkType.TASK);
 		assertEquals(workStatusResponseDTOs.get(0).getWorks().get(0).getName(),
 				testSubWorkFlowTaskDefinition1.getName());
-		assertEquals(workStatusResponseDTOs.get(0).getWorks().get(0).getStatus(), ParodosWorkStatus.PENDING);
+		assertEquals(workStatusResponseDTOs.get(0).getWorks().get(0).getStatus(), ParodosWorkStatus.IN_PROGRESS);
 		assertNull(workStatusResponseDTOs.get(0).getWorks().get(0).getWorks());
 
 		// workflow task 1
@@ -190,6 +194,225 @@ public class WorkFlowServiceDelegateTest {
 		assertEquals(workStatusResponseDTOs.get(1).getName(), testWorkFlowTaskDefinition1.getName());
 		assertEquals(workStatusResponseDTOs.get(1).getStatus(), ParodosWorkStatus.COMPLETED);
 		assertNull(workStatusResponseDTOs.get(1).getWorks());
+	}
+
+	@Nested
+	@DisplayName("Tests for workflow with checker")
+	class TestGetWorkFlowWorksStatusWithChecker {
+
+		// master workflow vars
+		private static final String workFlowName = "testMasterWorkFlow";
+
+		private static final UUID masterWorkFlowExecutionId = UUID.randomUUID();
+
+		private static final UUID masterWorkFlowDefinitionId = UUID.randomUUID();
+
+		private static final UUID projectId = UUID.randomUUID();
+
+		// master workflow task vars
+		private static final String TEST_SUB_WORKFLOW_TASK_NAME = "testSubWorkFlowTask";
+
+		private static final UUID subWorkFlowTaskDefinitionId = UUID.randomUUID();
+
+		private static final UUID subWorkFlowTaskExecutionId = UUID.randomUUID();
+
+		// checker workflow vars
+		private static final UUID checkerWorkFlowExecutionId = UUID.randomUUID();
+
+		private static final UUID checkerWorkFlowDefinitionId = UUID.randomUUID();
+
+		private static final String checkerWorkFlowName = "testCheckerWorkFlow";
+
+		// checker workflow task vars
+		private static final String CHECKER_WORKFLOW_TASK_NAME_1 = "testWorkFlowTask1";
+
+		private static final UUID checkerWorkFlowTaskDefinitionId = UUID.randomUUID();
+
+		private static final UUID testCheckerWorkFlowTaskExecutionId1 = UUID.randomUUID();
+
+		private WorkFlowDefinition masterWorkflowDefinition;
+
+		private WorkFlowExecution masterWorkflowExecution;
+
+		private WorkFlowTaskDefinition masterWorkFlowTaskDefinition;
+
+		private WorkFlowTaskExecution masterWorkFlowTaskExecution;
+
+		private WorkFlowDefinition checkerWorkflowDefinition;
+
+		private WorkFlowExecution checkerWorkflowExecution;
+
+		private WorkFlowTaskDefinition checkerWorkFlowTaskDefinition;
+
+		private WorkFlowTaskExecution checkerWorkFlowTaskExecution;
+
+		private WorkFlowWorkDefinition masterWorkflowWorkDefinition;
+
+		private WorkFlowWorkDefinition checkerWorkflowWorkDefinition;
+
+		@BeforeEach
+		void beforeEach() {
+			setupCheckerWorkflow();
+			setupMasterWorkflow();
+			setupCheckerMapping();
+
+			Mockito.when(
+					workFlowWorkRepository.findByWorkFlowDefinitionIdOrderByCreateDateAsc(masterWorkFlowDefinitionId))
+					.thenReturn(List.of(masterWorkflowWorkDefinition, checkerWorkflowWorkDefinition));
+
+			// master
+			Mockito.when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(
+					masterWorkFlowExecutionId, subWorkFlowTaskDefinitionId))
+					.thenReturn(List.of(masterWorkFlowTaskExecution));
+
+			Mockito.when(workFlowTaskDefinitionRepository.findById(subWorkFlowTaskDefinitionId))
+					.thenReturn(Optional.of(masterWorkFlowTaskDefinition));
+
+			Mockito.when(
+					workFlowWorkRepository.findByWorkFlowDefinitionIdOrderByCreateDateAsc(masterWorkFlowDefinitionId))
+					.thenReturn(List.of(masterWorkflowWorkDefinition));
+
+			// checker
+			Mockito.when(workFlowTaskDefinitionRepository.findById(checkerWorkFlowTaskDefinitionId))
+					.thenReturn(Optional.of(checkerWorkFlowTaskDefinition));
+
+			Mockito.when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(
+					masterWorkFlowExecutionId, checkerWorkFlowTaskDefinitionId))
+					.thenReturn(List.of(checkerWorkFlowTaskExecution));
+
+			Mockito.when(
+					workFlowWorkRepository.findByWorkFlowDefinitionIdOrderByCreateDateAsc(checkerWorkFlowDefinitionId))
+					.thenReturn(List.of(checkerWorkflowWorkDefinition));
+
+			Mockito.when(workFlowRepository.findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(
+					Mockito.nullable(WorkFlowExecution.class), Mockito.eq(checkerWorkFlowDefinitionId)))
+					.thenReturn(checkerWorkflowExecution);
+		}
+
+		@Test
+		void testGetWorkFlowWorksStatusWithChecker_when_checkerIsFailed_then_taskShouldBeInProgress() {
+			checkerWorkflowExecution.setStatus(WorkFlowStatus.FAILED);
+
+			// then
+			List<WorkStatusResponseDTO> workStatusResponseDTOs = workFlowServiceDelegate
+					.getWorkFlowAndWorksStatus(masterWorkflowExecution, masterWorkflowDefinition);
+
+			// workflow
+			assertNotNull(workStatusResponseDTOs);
+			assertEquals(workStatusResponseDTOs.size(), 1);
+
+			// sub task
+			assertEquals(WorkType.TASK, workStatusResponseDTOs.get(0).getType());
+			assertEquals(workStatusResponseDTOs.get(0).getName(), masterWorkFlowTaskDefinition.getName());
+			assertEquals(ParodosWorkStatus.IN_PROGRESS, workStatusResponseDTOs.get(0).getStatus());
+			assertNull(workStatusResponseDTOs.get(0).getWorks());
+		}
+
+		@Test
+		void testGetWorkFlowWorksStatusWithChecker_when_checkerIsCompleted_then_taskShouldBeCompleted() {
+			checkerWorkflowExecution.setStatus(WorkFlowStatus.COMPLETED);
+
+			// then
+			List<WorkStatusResponseDTO> workStatusResponseDTOs = workFlowServiceDelegate
+					.getWorkFlowAndWorksStatus(masterWorkflowExecution, masterWorkflowDefinition);
+
+			// workflow
+			assertNotNull(workStatusResponseDTOs);
+			assertEquals(workStatusResponseDTOs.size(), 1);
+
+			// sub task
+			assertEquals(WorkType.TASK, workStatusResponseDTOs.get(0).getType());
+			assertEquals(workStatusResponseDTOs.get(0).getName(), masterWorkFlowTaskDefinition.getName());
+			assertEquals(ParodosWorkStatus.COMPLETED, workStatusResponseDTOs.get(0).getStatus());
+			assertNull(workStatusResponseDTOs.get(0).getWorks());
+		}
+
+		@Test
+		void testGetWorkFlowWorksStatusWithChecker_when_checkerIsRejected_then_taskShouldBeRejected() {
+			checkerWorkflowExecution.setStatus(WorkFlowStatus.REJECTED);
+
+			// then
+			List<WorkStatusResponseDTO> workStatusResponseDTOs = workFlowServiceDelegate
+					.getWorkFlowAndWorksStatus(masterWorkflowExecution, masterWorkflowDefinition);
+
+			// workflow
+			assertNotNull(workStatusResponseDTOs);
+			assertEquals(workStatusResponseDTOs.size(), 1);
+
+			// sub task
+			assertEquals(WorkType.TASK, workStatusResponseDTOs.get(0).getType());
+			assertEquals(workStatusResponseDTOs.get(0).getName(), masterWorkFlowTaskDefinition.getName());
+			assertEquals(ParodosWorkStatus.REJECTED, workStatusResponseDTOs.get(0).getStatus());
+			assertNull(workStatusResponseDTOs.get(0).getWorks());
+		}
+
+		private void setupCheckerMapping() {
+			WorkFlowCheckerMappingDefinition workFlowCheckerMappingDefinition = WorkFlowCheckerMappingDefinition
+					.builder().cronExpression("test-cron").checkWorkFlow(checkerWorkflowDefinition)
+					.tasks(new ArrayList<>(List.of(masterWorkFlowTaskDefinition))).build();
+			masterWorkFlowTaskDefinition.setWorkFlowCheckerMappingDefinition(workFlowCheckerMappingDefinition);
+		}
+
+		private void setupCheckerWorkflow() {
+			// task definition
+			checkerWorkFlowTaskDefinition = WorkFlowTaskDefinition.builder().name(CHECKER_WORKFLOW_TASK_NAME_1).build();
+			checkerWorkFlowTaskDefinition.setId(checkerWorkFlowTaskDefinitionId);
+
+			// task execution
+			checkerWorkFlowTaskExecution = WorkFlowTaskExecution.builder()
+					.workFlowExecutionId(checkerWorkFlowExecutionId)
+					.workFlowTaskDefinitionId(checkerWorkFlowTaskDefinitionId).build();
+			checkerWorkFlowTaskExecution.setId(testCheckerWorkFlowTaskExecutionId1);
+
+			// checker workflow
+			// workflow definition
+			checkerWorkflowDefinition = WorkFlowDefinition.builder().name(checkerWorkFlowName).numberOfWorks(1)
+					.workFlowTaskDefinitions(List.of(checkerWorkFlowTaskDefinition)).build();
+			checkerWorkflowDefinition.setId(checkerWorkFlowDefinitionId);
+			// workflow execution
+			checkerWorkflowExecution = WorkFlowExecution.builder().workFlowDefinitionId(checkerWorkFlowDefinitionId)
+					.status(WorkFlowStatus.FAILED).build();
+			checkerWorkflowExecution.setId(checkerWorkFlowExecutionId);
+
+			// workflowWork
+			checkerWorkflowWorkDefinition = WorkFlowWorkDefinition.builder()
+					.workDefinitionId(checkerWorkFlowTaskDefinitionId).workDefinitionType(WorkType.TASK)
+					.workFlowDefinition(checkerWorkflowDefinition).build();
+			checkerWorkflowWorkDefinition.setId(UUID.randomUUID());
+
+			checkerWorkflowDefinition.setWorkFlowWorkDefinitions(List.of(checkerWorkflowWorkDefinition));
+		}
+
+		private void setupMasterWorkflow() {
+
+			// workflow (master)
+			masterWorkflowDefinition = WorkFlowDefinition.builder().name(workFlowName).numberOfWorks(1).build();
+			masterWorkflowDefinition.setId(masterWorkFlowDefinitionId);
+
+			masterWorkflowExecution = WorkFlowExecution.builder().workFlowDefinitionId(masterWorkFlowDefinitionId)
+					.projectId(projectId).status(WorkFlowStatus.IN_PROGRESS).build();
+			masterWorkflowExecution.setId(masterWorkFlowExecutionId);
+
+			// sub task
+			// task definition
+			masterWorkFlowTaskDefinition = WorkFlowTaskDefinition.builder().name(TEST_SUB_WORKFLOW_TASK_NAME).build();
+			masterWorkFlowTaskDefinition.setId(subWorkFlowTaskDefinitionId);
+			// link sub task to master
+			masterWorkflowDefinition.setWorkFlowTaskDefinitions(List.of(masterWorkFlowTaskDefinition));
+			// sub task execution
+			masterWorkFlowTaskExecution = WorkFlowTaskExecution.builder().status(WorkFlowTaskStatus.IN_PROGRESS)
+					.workFlowExecutionId(masterWorkFlowExecutionId)
+					.workFlowTaskDefinitionId(subWorkFlowTaskDefinitionId).build();
+			masterWorkFlowTaskExecution.setId(subWorkFlowTaskExecutionId);
+
+			// workflow's works
+			masterWorkflowWorkDefinition = WorkFlowWorkDefinition.builder()
+					.workDefinitionId(subWorkFlowTaskDefinitionId).workDefinitionType(WorkType.TASK)
+					.workFlowDefinition(masterWorkflowDefinition).build();
+			masterWorkflowWorkDefinition.setId(UUID.randomUUID());
+			masterWorkflowDefinition.setWorkFlowWorkDefinitions(List.of(masterWorkflowWorkDefinition));
+		}
+
 	}
 
 }

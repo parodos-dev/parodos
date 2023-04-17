@@ -774,6 +774,7 @@ components:
           - COMPLETED
           - PENDING
           - IN_PROGRESS
+          - REJECTED
           type: string
         type:
           enum:

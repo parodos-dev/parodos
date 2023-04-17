@@ -117,7 +117,9 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 					.map(annotationAttribute -> WorkParameter.builder().key(annotationAttribute.getString("key"))
 							.description(annotationAttribute.getString("description"))
 							.type((WorkParameterType) annotationAttribute.get("type"))
-							.optional(annotationAttribute.getBoolean("optional")).build())
+							.optional(annotationAttribute.getBoolean("optional"))
+							.selectOptions(Arrays.stream(annotationAttribute.getStringArray("selectOptions")).toList())
+							.build())
 					.collect(Collectors.toList());
 		}
 		workFlowDefinitionService.save(workFlowBeanName, workFlowType, workFlowBean.getProperties(), workParameters,

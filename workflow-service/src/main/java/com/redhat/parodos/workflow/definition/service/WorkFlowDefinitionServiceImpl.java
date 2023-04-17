@@ -248,6 +248,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 						return;
 					}
 					responseDTOs.add(WorkDefinitionResponseDTO.fromWorkFlowTaskDefinition(wdt.get()));
+					break;
 				case WORKFLOW:
 					Optional<WorkFlowDefinition> wd = workFlowDefinitionRepository
 							.findById(workFlowWorkDefinition.getWorkDefinitionId());
@@ -261,6 +262,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 
 					responseDTOs.add(WorkDefinitionResponseDTO.fromWorkFlowDefinitionEntity(wd.get(),
 							wdWorkFlowWorkDependencies));
+					break;
 				default:
 					return;
 			}
