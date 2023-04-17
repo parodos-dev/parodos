@@ -18,8 +18,8 @@ package com.redhat.parodos.examples.simple.task;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.examples.utils.RestUtils;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
+import com.redhat.parodos.workflow.parameter.WorkParameter;
+import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -66,16 +66,14 @@ public class RestAPIWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	}
 
 	@Override
-	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
+	public List<WorkParameter> getWorkFlowTaskParameters() {
 		return List.of(
-				WorkFlowTaskParameter.builder().key(URL_KEY)
-						.description("The Url of the service (ie: https://httpbin.org/post").optional(false)
-						.type(WorkFlowTaskParameterType.URL).build(),
-				WorkFlowTaskParameter.builder().key(PAYLOAD_KEY)
-						.description("Json of what to provide for data. (ie: 'Hello!')").optional(false)
-						.type(WorkFlowTaskParameterType.TEXT).build(),
-				WorkFlowTaskParameter.builder().key("user-id").description("The user id")
-						.type(WorkFlowTaskParameterType.TEXT).optional(false).build());
+				WorkParameter.builder().key(URL_KEY).description("The Url of the service (ie: https://httpbin.org/post")
+						.optional(false).type(WorkParameterType.URL).build(),
+				WorkParameter.builder().key(PAYLOAD_KEY).description("Json of what to provide for data. (ie: 'Hello!')")
+						.optional(false).type(WorkParameterType.TEXT).build(),
+				WorkParameter.builder().key("user-id").description("The user id").type(WorkParameterType.TEXT)
+						.optional(false).build());
 	}
 
 	public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {

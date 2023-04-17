@@ -30,7 +30,7 @@ import com.redhat.parodos.workflow.annotation.Infrastructure;
 import com.redhat.parodos.workflow.annotation.Parameter;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
-import com.redhat.parodos.workflow.parameter.WorkFlowParameterType;
+import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import java.util.Date;
@@ -193,7 +193,7 @@ public class OcpOnboardingWorkFlowConfiguration {
 
 	@Bean(name = "ocpOnboardingWorkFlow")
 	@Infrastructure(parameters = { @Parameter(key = "NAMESPACE", description = "The namespace in the ocp cluster",
-			type = WorkFlowParameterType.TEXT, optional = false) })
+			type = WorkParameterType.TEXT, optional = false) })
 	WorkFlow ocpOnboardingWorkFlow(@Qualifier("workFlowA") WorkFlow workFlowA,
 			@Qualifier("workFlowB") WorkFlow workFlowB) {
 		return SequentialFlow.Builder.aNewSequentialFlow().named("ocpOnboardingWorkFlow").execute(workFlowA)

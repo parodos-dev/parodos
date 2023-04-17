@@ -24,8 +24,8 @@ import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
 import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
 import com.redhat.parodos.workflow.enums.WorkFlowProcessingType;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
-import com.redhat.parodos.workflow.parameter.WorkFlowParameter;
-import com.redhat.parodos.workflow.parameter.WorkFlowParameterType;
+import com.redhat.parodos.workflow.parameter.WorkParameter;
+import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
 import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
@@ -111,16 +111,16 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 		// workflow parameters from annotation attributes
 		AnnotationAttributes[] annotationAttributes = (AnnotationAttributes[]) workFlowTypeDetailsPair.getSecond()
 				.get("parameters");
-		List<WorkFlowParameter> workFlowParameters = new ArrayList<>();
+		List<WorkParameter> workParameters = new ArrayList<>();
 		if (annotationAttributes != null && annotationAttributes.length > 0) {
-			workFlowParameters = Arrays.stream(annotationAttributes)
-					.map(annotationAttribute -> WorkFlowParameter.builder().key(annotationAttribute.getString("key"))
+			workParameters = Arrays.stream(annotationAttributes)
+					.map(annotationAttribute -> WorkParameter.builder().key(annotationAttribute.getString("key"))
 							.description(annotationAttribute.getString("description"))
-							.type((WorkFlowParameterType) annotationAttribute.get("type"))
+							.type((WorkParameterType) annotationAttribute.get("type"))
 							.optional(annotationAttribute.getBoolean("optional")).build())
 					.collect(Collectors.toList());
 		}
-		workFlowDefinitionService.save(workFlowBeanName, workFlowType, workFlowBean.getProperties(), workFlowParameters,
+		workFlowDefinitionService.save(workFlowBeanName, workFlowType, workFlowBean.getProperties(), workParameters,
 				works, getWorkFlowProcessingType(workFlowBean));
 	}
 

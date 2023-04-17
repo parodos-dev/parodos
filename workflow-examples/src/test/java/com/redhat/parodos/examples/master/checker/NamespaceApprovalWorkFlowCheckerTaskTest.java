@@ -3,7 +3,7 @@ package com.redhat.parodos.examples.master.checker;
 import com.redhat.parodos.examples.base.BaseWorkFlowCheckerTaskTest;
 import com.redhat.parodos.workflow.task.checker.BaseWorkFlowCheckerTask;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
+import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
@@ -53,12 +53,11 @@ public class NamespaceApprovalWorkFlowCheckerTaskTest extends BaseWorkFlowChecke
 	@Test
 	public void getWorkFlowTaskParameters() {
 		// when
-		List<WorkFlowTaskParameter> workFlowTaskParameters = namespaceApprovalWorkFlowCheckerTask
-				.getWorkFlowTaskParameters();
+		List<WorkParameter> workParameters = namespaceApprovalWorkFlowCheckerTask.getWorkFlowTaskParameters();
 
 		// then
-		assertNotNull(workFlowTaskParameters);
-		assertEquals(0, workFlowTaskParameters.size());
+		assertNotNull(workParameters);
+		assertEquals(0, workParameters.size());
 	}
 
 	@Test

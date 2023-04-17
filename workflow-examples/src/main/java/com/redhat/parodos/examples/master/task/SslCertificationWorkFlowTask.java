@@ -2,8 +2,8 @@ package com.redhat.parodos.examples.master.task;
 
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
+import com.redhat.parodos.workflow.parameter.WorkParameter;
+import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -22,12 +22,12 @@ public class SslCertificationWorkFlowTask extends BaseInfrastructureWorkFlowTask
 	}
 
 	@Override
-	public List<WorkFlowTaskParameter> getWorkFlowTaskParameters() {
+	public List<WorkParameter> getWorkFlowTaskParameters() {
 		return List.of(
-				WorkFlowTaskParameter.builder().key("domainName").description("The domain name")
-						.type(WorkFlowTaskParameterType.URL).optional(false).build(),
-				WorkFlowTaskParameter.builder().key("ipAddress").description("The api address")
-						.type(WorkFlowTaskParameterType.TEXT).optional(false).build());
+				WorkParameter.builder().key("domainName").description("The domain name").type(WorkParameterType.URL)
+						.optional(false).build(),
+				WorkParameter.builder().key("ipAddress").description("The api address").type(WorkParameterType.TEXT)
+						.optional(false).build());
 	}
 
 	@Override

@@ -15,7 +15,6 @@
  */
 package com.redhat.parodos.workflow.definition.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.redhat.parodos.common.AbstractEntity;
 import com.redhat.parodos.workflow.definition.dto.WorkDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
@@ -31,7 +30,7 @@ import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
 import com.redhat.parodos.workflow.enums.WorkFlowProcessingType;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.enums.WorkType;
-import com.redhat.parodos.workflow.parameter.WorkFlowParameter;
+import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
 import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import com.redhat.parodos.workflows.work.Work;
@@ -85,24 +84,23 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 		this.modelMapper = modelMapper;
 	}
 
-	private HashMap<String, Map<String, Object>> convertWorkFlowParameters(List<WorkFlowParameter> workFlowParameters) {
+	private HashMap<String, Map<String, Object>> convertWorkParameters(List<WorkParameter> workParameters) {
 		HashMap<String, Map<String, Object>> result = new HashMap<>();
-		for (WorkFlowParameter workFlowParameter : workFlowParameters) {
-			if (workFlowParameter == null)
+		for (WorkParameter workParameter : workParameters) {
+			if (workParameter == null)
 				continue;
 
-			result.put(workFlowParameter.getKey(), workFlowParameter.getAsJsonSchema());
+			result.put(workParameter.getKey(), workParameter.getAsJsonSchema());
 		}
 		return result;
 	}
 
 	@Override
 	public WorkFlowDefinitionResponseDTO save(String workFlowName, WorkFlowType workFlowType,
-			WorkFlowPropertiesMetadata properties, List<WorkFlowParameter> workFlowParameters, List<Work> works,
+			WorkFlowPropertiesMetadata properties, List<WorkParameter> workParameters, List<Work> works,
 			WorkFlowProcessingType workFlowProcessingType) {
 
-		String stringifyParameters = WorkFlowDTOUtil
-				.writeObjectValueAsString(convertWorkFlowParameters(workFlowParameters));
+		String stringifyParameters = WorkFlowDTOUtil.writeObjectValueAsString(convertWorkParameters(workParameters));
 
 		// set and save workflow definition
 		WorkFlowPropertiesDefinition propertiesDefinition = WorkFlowPropertiesDefinition.builder().build();

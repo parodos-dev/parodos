@@ -19,8 +19,8 @@ import com.redhat.parodos.examples.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
+import com.redhat.parodos.workflow.parameter.WorkParameter;
+import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
@@ -98,19 +98,17 @@ public class RestAPIWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 	@Test
 	public void testGetWorkFlowTaskParameters() {
 		// when
-		List<WorkFlowTaskParameter> workFlowTaskParameters = restAPIWorkflowTask.getWorkFlowTaskParameters();
+		List<WorkParameter> workParameters = restAPIWorkflowTask.getWorkFlowTaskParameters();
 
 		// then
-		assertNotNull(workFlowTaskParameters);
-		assertEquals(3, workFlowTaskParameters.size());
-		assertEquals(URL_KEY, workFlowTaskParameters.get(0).getKey());
-		assertEquals("The Url of the service (ie: https://httpbin.org/post",
-				workFlowTaskParameters.get(0).getDescription());
-		assertEquals(WorkFlowTaskParameterType.URL, workFlowTaskParameters.get(0).getType());
-		assertEquals(PAYLOAD_KEY, workFlowTaskParameters.get(1).getKey());
-		assertEquals("Json of what to provide for data. (ie: 'Hello!')",
-				workFlowTaskParameters.get(1).getDescription());
-		assertEquals(WorkFlowTaskParameterType.TEXT, workFlowTaskParameters.get(1).getType());
+		assertNotNull(workParameters);
+		assertEquals(3, workParameters.size());
+		assertEquals(URL_KEY, workParameters.get(0).getKey());
+		assertEquals("The Url of the service (ie: https://httpbin.org/post", workParameters.get(0).getDescription());
+		assertEquals(WorkParameterType.URL, workParameters.get(0).getType());
+		assertEquals(PAYLOAD_KEY, workParameters.get(1).getKey());
+		assertEquals("Json of what to provide for data. (ie: 'Hello!')", workParameters.get(1).getDescription());
+		assertEquals(WorkParameterType.TEXT, workParameters.get(1).getType());
 	}
 
 	@Test

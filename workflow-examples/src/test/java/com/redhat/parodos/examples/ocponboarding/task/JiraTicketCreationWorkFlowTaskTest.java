@@ -10,7 +10,7 @@ import com.redhat.parodos.examples.ocponboarding.task.dto.jira.CreateJiraTicketR
 import com.redhat.parodos.examples.utils.RestUtils;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
+import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -113,11 +113,11 @@ public class JiraTicketCreationWorkFlowTaskTest extends BaseInfrastructureWorkFl
 	@Test
 	public void testGetWorkFlowTaskParameters() {
 		// when
-		List<WorkFlowTaskParameter> workFlowTaskParameters = jiraTicketCreationWorkFlowTask.getWorkFlowTaskParameters();
+		List<WorkParameter> workParameters = jiraTicketCreationWorkFlowTask.getWorkFlowTaskParameters();
 
 		// then
-		assertNotNull(workFlowTaskParameters);
-		assertEquals(0, workFlowTaskParameters.size());
+		assertNotNull(workParameters);
+		assertEquals(0, workParameters.size());
 	}
 
 	@Test

@@ -4,8 +4,8 @@ import com.redhat.parodos.examples.base.BaseInfrastructureWorkFlowTaskTest;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameter;
-import com.redhat.parodos.workflow.task.parameter.WorkFlowTaskParameterType;
+import com.redhat.parodos.workflow.parameter.WorkParameter;
+import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
@@ -83,14 +83,14 @@ public class LoggingWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 	@Test
 	public void getWorkFlowTaskParameters() {
 		// when
-		List<WorkFlowTaskParameter> workFlowTaskParameters = loggingWorkFlowTask.getWorkFlowTaskParameters();
+		List<WorkParameter> workParameters = loggingWorkFlowTask.getWorkFlowTaskParameters();
 
 		// then
 		assertNotNull(loggingWorkFlowTask.getWorkFlowTaskParameters());
-		assertEquals(2, workFlowTaskParameters.size());
-		assertEquals(WorkFlowTaskParameterType.URL, workFlowTaskParameters.get(0).getType());
-		assertEquals(WORKFLOW_PARAMETER_API_SERVER_KEY, workFlowTaskParameters.get(0).getKey());
-		assertEquals(WORKFLOW_PARAMETER_API_SERVER_DESCRIPTION, workFlowTaskParameters.get(0).getDescription());
+		assertEquals(2, workParameters.size());
+		assertEquals(WorkParameterType.URL, workParameters.get(0).getType());
+		assertEquals(WORKFLOW_PARAMETER_API_SERVER_KEY, workParameters.get(0).getKey());
+		assertEquals(WORKFLOW_PARAMETER_API_SERVER_DESCRIPTION, workParameters.get(0).getDescription());
 	}
 
 	@Test

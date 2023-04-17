@@ -15,14 +15,16 @@
  */
 package com.redhat.parodos.workflow.execution.dto;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Workflow request dto
@@ -77,6 +79,10 @@ public class WorkFlowRequestDTO {
 			String key;
 
 			String value;
+
+			public void setValue(Object value) {
+				this.value = String.valueOf(value);
+			}
 
 		}
 
