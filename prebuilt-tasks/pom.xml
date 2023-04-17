@@ -78,6 +78,11 @@
             <artifactId>assertj-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.kubernetes</groupId>
+            <artifactId>client-java</artifactId>
+            <version>18.0.0</version>
+        </dependency>
+        <dependency>
             <groupId>dev.parodos</groupId>
             <artifactId>notification-service-sdk</artifactId>
             <version>${revision}</version>
@@ -85,6 +90,10 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
         </dependency>
     </dependencies>
 </project>
