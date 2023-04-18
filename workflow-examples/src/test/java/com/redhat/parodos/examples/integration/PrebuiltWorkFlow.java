@@ -53,7 +53,7 @@ public class PrebuiltWorkFlow {
 
 		log.info("Running pre-built flow (name: {})", workFlowName);
 
-		ProjectResponseDTO testProject = ExamplesUtils.commonProjectAPI(apiClient, projectName, projectDescription);
+		ProjectResponseDTO testProject = ExamplesUtils.getProjectAsync(apiClient, projectName, projectDescription);
 
 		// GET preBuiltWorkFlow DEFINITIONS
 		WorkflowDefinitionApi workflowDefinitionApi = new WorkflowDefinitionApi(apiClient);
