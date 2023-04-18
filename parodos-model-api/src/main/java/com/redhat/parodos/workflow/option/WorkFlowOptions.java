@@ -17,6 +17,8 @@ package com.redhat.parodos.workflow.option;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -188,17 +190,22 @@ public class WorkFlowOptions {
 
 		private WorkFlowOption currentVersion;
 
-		private List<WorkFlowOption> upgradeOptions = new ArrayList<WorkFlowOption>();
+		private List<WorkFlowOption> upgradeOptions = new ArrayList<>();
 
-		private List<WorkFlowOption> migrationOptions = new ArrayList<WorkFlowOption>();
+		private List<WorkFlowOption> migrationOptions = new ArrayList<>();
 
-		private List<WorkFlowOption> newOptions = new ArrayList<WorkFlowOption>();
+		private List<WorkFlowOption> newOptions = new ArrayList<>();
 
-		private List<WorkFlowOption> continuationOptions = new ArrayList<WorkFlowOption>();
+		private List<WorkFlowOption> continuationOptions = new ArrayList<>();
 
-		private List<WorkFlowOption> otherOptions = new ArrayList<WorkFlowOption>();
+		private List<WorkFlowOption> otherOptions = new ArrayList<>();
 
 		public Builder() {
+			upgradeOptions = new ArrayList<>();
+			migrationOptions = new ArrayList<>();
+			newOptions = new ArrayList<>();
+			continuationOptions = new ArrayList<>();
+			otherOptions = new ArrayList<>();
 		}
 
 		public Builder setCurrentInfrastructure(WorkFlowOption currentVersion) {
@@ -211,8 +218,18 @@ public class WorkFlowOptions {
 			return this;
 		}
 
+		public Builder addTheseContinuationOptions(List<WorkFlowOption> continuationOptions) {
+			this.continuationOptions.addAll(continuationOptions);
+			return this;
+		}
+
 		public Builder addNewOption(WorkFlowOption newOption) {
 			this.newOptions.add(newOption);
+			return this;
+		}
+
+		public Builder addTheseNewOptions(List<WorkFlowOption> newOptions) {
+			this.newOptions.addAll(newOptions);
 			return this;
 		}
 
@@ -221,8 +238,18 @@ public class WorkFlowOptions {
 			return this;
 		}
 
+		public Builder addTheseUpgradeOptions(List<WorkFlowOption> updgradeOptions) {
+			this.upgradeOptions.addAll(updgradeOptions);
+			return this;
+		}
+
 		public Builder addMigrationOption(WorkFlowOption migrationOption) {
 			this.migrationOptions.add(migrationOption);
+			return this;
+		}
+
+		public Builder addTheseMigrationOptions(List<WorkFlowOption> migrationOptions) {
+			this.migrationOptions.addAll(migrationOptions);
 			return this;
 		}
 
@@ -231,8 +258,49 @@ public class WorkFlowOptions {
 			return this;
 		}
 
+		public Builder addTheseOtherOptions(List<WorkFlowOption> otherOptions) {
+			this.otherOptions.addAll(otherOptions);
+			return this;
+		}
+
 		public WorkFlowOptions build() {
 			return new WorkFlowOptions(this);
+		}
+
+		/**
+		 * Useful for finding a specific WorkFlowOption
+		 * @param name
+		 * @param workFlowOptions
+		 * @return
+		 */
+		public static WorkFlowOption findWorkFlowIdenifyingName(String idenifyingName,
+				List<WorkFlowOption> workFlowOptions) {
+			return workFlowOptions.stream().filter(option -> option.getIdentifier().matches(idenifyingName)).findFirst()
+					.get();
+		}
+
+		/**
+		 * Useful for finding a specific WorkFlowOption
+		 * @param name
+		 * @param workFlowOptions
+		 * @return
+		 */
+		public static List<WorkFlowOption> findWorkFlowIdenifyingNameLike(String idenifyingName,
+				List<WorkFlowOption> workFlowOptions) {
+			return workFlowOptions.stream().filter(option -> option.getIdentifier().contains(idenifyingName))
+					.collect(Collectors.toList());
+		}
+
+		/**
+		 * Useful for finding a specific WorkFlowOption
+		 * @param name
+		 * @param workFlowOptions
+		 * @return
+		 */
+		public static List<WorkFlowOption> findWorkFlowDescriptionContains(String value,
+				List<WorkFlowOption> workFlowOptions) {
+			return workFlowOptions.stream().filter(option -> option.getDescription().contains(value))
+					.collect(Collectors.toList());
 		}
 
 	}

@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2022 Red Hat Developer
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.redhat.parodos.examples.assessment;
 
 import java.io.IOException;
@@ -31,6 +46,13 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Example task that shows how Parodos's Pattern Detection library can be used to detect
+ * patterns in a code base and assign workflow options based on those detected patterns
+ *
+ * @author Luke Shannon (Github: lshannon)
+ *
+ */
 @Slf4j
 public class PatternDetectionAssessmentTask extends GithubPatternDetectionTask {
 
@@ -60,55 +82,38 @@ public class PatternDetectionAssessmentTask extends GithubPatternDetectionTask {
 		try {
 			// @formatter:off
 			myMap = Map.of(
-					REPO, getRequiredParameterValue(workContext, REPO), 
-					ORG, getRequiredParameterValue(workContext, ORG), 
+					REPO, getRequiredParameterValue(workContext, REPO),
+					ORG, getRequiredParameterValue(workContext, ORG),
 					BRANCH,getRequiredParameterValue(workContext, BRANCH)
 				);
 			// @formatter:on
-			// Get all the file names
-			var data = super.getDirectoriesAndFiles(getRequiredParameterValue(workContext, ORG), getRequiredParameterValue(workContext, REPO));
-			List<String> fileNames = new ArrayList<>();
-			for (Entry<String, List<String>> directory : data.entrySet()) {
-				fileNames.addAll(directory.getValue());
-			}
-			
-			// Clues to use during test cases
+			List<String> fileNames = getPathsToProcess(workContext);
 			BasicPatternImpl ocpTargetApp = configureCluesAndPatterns();
-			WorkContext context =
-					// @formatter:off
-					PatternDetectionWorkContextDelegate
-					.WorkContextBuilder.builder()
-					.addThisToDesiredPatterns(ocpTargetApp)
-					.addContentInputStreamClientAndPaths(
-							ContentInputStreamClientConfiguration.builder()
-							.contentClient(client)
-							.name("githubPatternDetection")
-							.pathsToProcessForContent(fileNames)
-							.parametersForClient(myMap)
-							.build())
-					.build();
-					// @formatter:on
+			WorkContext context = configurePatternDetectionContext(myMap, fileNames, ocpTargetApp);
 			DetectionResults results = PatternDetector.detect(context);
 			if (results.isAllPatternsWhereDetected()) {
 				// put workflow option for ocp onboarding in the context
 				WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-				         WorkContextDelegate.Resource.WORKFLOW_OPTIONS,
-				         // @formatter:off
-				         new WorkFlowOptions.Builder()
-				         .addNewOption(workFlowOptions.stream().filter(option -> option.getDisplayName().contains("Onboarding")).findFirst().get())
+						WorkContextDelegate.Resource.WORKFLOW_OPTIONS,
+						// @formatter:off
+				         new WorkFlowOptions
+				         .Builder()
+				         .addTheseNewOptions(WorkFlowOptions.Builder.findWorkFlowDescriptionContains("OCP", workFlowOptions))
 				         .build());
 				         // @formatter:on
 			}
 			else {
+				// if the pattern was not detected, return these workflowoptions
 				WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-				         WorkContextDelegate.Resource.WORKFLOW_OPTIONS,
-				         // @formatter:off
-				         new WorkFlowOptions.Builder()
-				         .addNewOption(workFlowOptions.stream().filter(option -> option.getDisplayName().contains("Not Supported Application")).findFirst().get())
+						WorkContextDelegate.Resource.WORKFLOW_OPTIONS,
+						// @formatter:off
+				         new WorkFlowOptions
+				         .Builder()
+				         .addOtherOption(WorkFlowOptions.Builder.findWorkFlowIdenifyingName("notSupportedOption", workFlowOptions))
 				         .build());
 				         // @formatter:on
 			}
-
+			// a successful completion (regardless of if Pattern was detected or not)
 			return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 		}
 		catch (MissingParameterException | IOException e) {
@@ -117,14 +122,52 @@ public class PatternDetectionAssessmentTask extends GithubPatternDetectionTask {
 		}
 	}
 
+	private List<String> getPathsToProcess(WorkContext workContext) throws IOException, MissingParameterException {
+		// Get all the file names
+		var data = super.getDirectoriesAndFiles(getRequiredParameterValue(workContext, ORG),
+				getRequiredParameterValue(workContext, REPO));
+		List<String> fileNames = new ArrayList<>();
+		for (Entry<String, List<String>> directory : data.entrySet()) {
+			fileNames.addAll(directory.getValue());
+		}
+		return fileNames;
+	}
+
+	private WorkContext configurePatternDetectionContext(Map<String, Object> myMap, List<String> fileNames,
+			BasicPatternImpl ocpTargetApp) {
+		return
+		// @formatter:off
+				PatternDetectionWorkContextDelegate
+				.WorkContextBuilder.builder()
+				.addThisToDesiredPatterns(ocpTargetApp)
+				.addContentInputStreamClientAndPaths(
+						ContentInputStreamClientConfiguration.builder()
+						.contentClient(client)
+						.name("githubPatternDetection")
+						.pathsToProcessForContent(fileNames)
+						.parametersForClient(myMap)
+						.build())
+				.build();
+		// @formatter:on
+	}
+
 	private BasicPatternImpl configureCluesAndPatterns() {
 		return
 		// @formatter:off
 			BasicPatternImpl
 			.Builder
 			.aNewPattern()
-			.addThisToAllAreRequiredClues(NameClueImpl.Builder.builder().name("maven").targetFileNamePatternString("pom.xml").build())
-			.addThisToAllAreRequiredClues(ContentsClueImpl.Builder.builder().name("tomcatConfig").targetFileExtensionPatternString(".java").targetContentPatternString(".*TomcatServletWebServerFactory.*").build())
+			.addThisToAllAreRequiredClues(
+					NameClueImpl.Builder.builder()
+					.name("maven")
+					.targetFileNamePatternString("pom.xml")
+					.build())
+			.addThisToAllAreRequiredClues(
+					ContentsClueImpl.Builder.builder()
+					.name("tomcatConfig")
+					.targetFileExtensionPatternString(".java")
+					.targetContentPatternString(".*TomcatServletWebServerFactory.*")
+					.build())
 			.build();
 			// @formatter:on
 	}

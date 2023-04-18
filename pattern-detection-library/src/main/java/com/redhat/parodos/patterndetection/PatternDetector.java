@@ -15,12 +15,10 @@
  */
 package com.redhat.parodos.patterndetection;
 
-import java.util.Date;
 import com.redhat.parodos.patterndetection.context.PatternDetectionWorkContextDelegate;
 import com.redhat.parodos.patterndetection.exceptions.PatternDetectionConfigurationException;
 import com.redhat.parodos.patterndetection.results.DetectionResults;
 import com.redhat.parodos.workflows.work.WorkContext;
-import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.workflow.ParallelFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 
@@ -32,8 +30,6 @@ import com.redhat.parodos.workflows.workflow.WorkFlow;
  *
  */
 public class PatternDetector {
-
-	private static final PatternDetectionWorkContextDelegate contextDelegate = new PatternDetectionWorkContextDelegate();
 
 	private PatternDetector() {
 	}
@@ -53,28 +49,16 @@ public class PatternDetector {
 	 *
 	 */
 	public static DetectionResults detect(WorkContext context) {
-		if (contextDelegate.validateAndIntializeContext(context)) {
-			Date startTime = new Date();
+		if (PatternDetectionWorkContextDelegate.validateAndIntializeContext(context)) {
 			// @formatter:off
 			WorkFlow workflow = ParallelFlow
 						.Builder
 						.aNewParallelFlow()
-						.execute(contextDelegate.getDesiredPatternsArray(context))
+						.execute(PatternDetectionWorkContextDelegate.getDesiredPatternsArray(context))
 						.with(ScanningThreadPool.getThreadPoolExecutor())
 						.build();
 			// @formatter:on
-			WorkReport report = workflow.execute(context);
-			contextDelegate.processResultsAfterScan(report.getWorkContext());
-			// @formatter:off
-			return DetectionResults
-					.builder()
-					.detectedClues(contextDelegate.getDetectedClue(context))
-					.detectedPatterns(contextDelegate.getDetectedPatterns(context))
-					.allPatternsWhereDetected(contextDelegate.areAllPatternsDetected(report))
-					.startTime(startTime)
-					.endTime(new Date())
-					.build();
-			// @formatter:on
+			return new DetectionResults.Builder(context, workflow).build();
 		}
 		else {
 			throw new PatternDetectionConfigurationException(

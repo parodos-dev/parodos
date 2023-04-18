@@ -20,9 +20,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.redhat.parodos.patterndetection.clue.Clue;
+import com.redhat.parodos.patterndetection.context.PatternDetectionWorkContextDelegate;
 import com.redhat.parodos.patterndetection.pattern.Pattern;
+import com.redhat.parodos.workflows.work.WorkContext;
+import com.redhat.parodos.workflows.work.WorkReport;
+import com.redhat.parodos.workflows.workflow.WorkFlow;
 
-import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -38,7 +41,6 @@ import lombok.Data;
  *
  */
 @Data
-@Builder
 public class DetectionResults {
 
 	private Map<Clue, List<String>> detectedClues;
@@ -49,6 +51,50 @@ public class DetectionResults {
 
 	private Date endTime;
 
+	private WorkReport report;
+
 	private boolean allPatternsWhereDetected;
+
+	private DetectionResults(Builder builder) {
+		detectedClues = builder.detectedClues;
+		detectedPatterns = builder.detectedPatterns;
+		allPatternsWhereDetected = builder.allPatternsWhereDetected;
+		startTime = builder.startTime;
+		endTime = new Date();
+		report = builder.report;
+	}
+
+	public static class Builder {
+
+		PatternDetectionWorkContextDelegate delegate;
+
+		WorkFlow workflow;
+
+		WorkContext context;
+
+		WorkReport report;
+
+		Map<Clue, List<String>> detectedClues;
+
+		List<Pattern> detectedPatterns;
+
+		boolean allPatternsWhereDetected;
+
+		Date startTime;
+
+		public Builder(WorkContext context, WorkFlow workflow) {
+			startTime = new Date();
+			report = workflow.execute(context);
+			PatternDetectionWorkContextDelegate.processResultsAfterScan(report.getWorkContext());
+			detectedClues = PatternDetectionWorkContextDelegate.getDetectedClue(context);
+			detectedPatterns = PatternDetectionWorkContextDelegate.getDetectedPatterns(context);
+			allPatternsWhereDetected = PatternDetectionWorkContextDelegate.areAllPatternsDetected(report);
+		}
+
+		public DetectionResults build() {
+			return new DetectionResults(this);
+		}
+
+	}
 
 }

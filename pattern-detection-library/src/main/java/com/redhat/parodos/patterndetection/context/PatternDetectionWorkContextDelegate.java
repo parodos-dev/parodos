@@ -53,7 +53,7 @@ public class PatternDetectionWorkContextDelegate {
 	 * @param context easy-flow WorkContext
 	 * @return true if everything, false if required parameter is missing
 	 */
-	public boolean validateAndIntializeContext(WorkContext context) {
+	public static final boolean validateAndIntializeContext(WorkContext context) {
 		if (context == null) {
 			log.error("Context was null. Please define a WorkContext reference");
 			return false;
@@ -86,7 +86,7 @@ public class PatternDetectionWorkContextDelegate {
 	 * @return true is all Patterns were detect, false is not all the Patterns were
 	 * detected
 	 */
-	public boolean areAllPatternsDetected(WorkReport report) {
+	public static boolean areAllPatternsDetected(WorkReport report) {
 		@SuppressWarnings("unchecked")
 		int numberOfTargetStatesRequired = ((List<Pattern>) report.getWorkContext()
 				.get(PatternDetectionConstants.DESIRED_PATTERNS.toString())).size();
@@ -97,60 +97,60 @@ public class PatternDetectionWorkContextDelegate {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ContentInputStreamClientConfiguration> getContentClientsAndPaths(WorkContext context) {
+	public static List<ContentInputStreamClientConfiguration> getContentClientsAndPaths(WorkContext context) {
 		return (List<ContentInputStreamClientConfiguration>) context
 				.get(PatternDetectionConstants.INPUT_STREAM_CLIENTS.toString());
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<InputStreamWrapper> getInputStreamWrappers(WorkContext context) {
+	public static List<InputStreamWrapper> getInputStreamWrappers(WorkContext context) {
 		return (List<InputStreamWrapper>) context.get(PatternDetectionConstants.INPUT_STREAMS_WRAPPERS.toString());
 	}
 
 	@SuppressWarnings("unchecked")
-	public Map<String, ArrayList<String>> getDirectoriesAndFiles(WorkContext context) {
+	public static Map<String, ArrayList<String>> getDirectoriesAndFiles(WorkContext context) {
 		return (Map<String, ArrayList<String>>) context.get(PatternDetectionConstants.DIRECTORY_FILE_PATHS.toString());
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<File> getFilesToScan(WorkContext context) {
+	public static List<File> getFilesToScan(WorkContext context) {
 		return (List<File>) context.get(PatternDetectionConstants.FILES_TO_SCAN.toString());
 	}
 
-	public Map<Clue, List<String>> getDetectedClue(WorkReport report) {
+	public static Map<Clue, List<String>> getDetectedClue(WorkReport report) {
 		return getDetectedClue(report.getWorkContext());
 	}
 
 	@SuppressWarnings("unchecked")
-	public Map<Clue, List<String>> getDetectedClue(WorkContext context) {
+	public static Map<Clue, List<String>> getDetectedClue(WorkContext context) {
 		return (Map<Clue, List<String>>) context.get(PatternDetectionConstants.DETECTED_CLUES.toString());
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Pattern> getDesiredPatterns(WorkContext context) {
+	public static List<Pattern> getDesiredPatterns(WorkContext context) {
 		return (List<Pattern>) context.get(PatternDetectionConstants.DESIRED_PATTERNS.toString());
 	}
 
-	public Pattern[] getDesiredPatternsArray(WorkContext context) {
+	public static Pattern[] getDesiredPatternsArray(WorkContext context) {
 		return getDesiredPatterns(context).toArray(new Pattern[0]);
 	}
 
-	public List<Pattern> getDetectedPatterns(WorkReport report) {
+	public static List<Pattern> getDetectedPatterns(WorkReport report) {
 		return getDetectedPatterns(report.getWorkContext());
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Pattern> getDetectedPatterns(WorkContext context) {
+	public static List<Pattern> getDetectedPatterns(WorkContext context) {
 		return (List<Pattern>) context.get(PatternDetectionConstants.DETECTED_PATTERNS.toString());
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<File> getFoldersToScan(WorkContext context) {
+	public static List<File> getFoldersToScan(WorkContext context) {
 		return (List<File>) context.get(PatternDetectionConstants.FOLDERS_TO_SCAN.toString());
 	}
 
 	@SuppressWarnings("unchecked")
-	public boolean isThisPatternDetected(Pattern pattern, WorkReport report) {
+	public static boolean isThisPatternDetected(Pattern pattern, WorkReport report) {
 		for (Pattern thisPattern : (List<Pattern>) report.getWorkContext()
 				.get(PatternDetectionConstants.DETECTED_PATTERNS.toString())) {
 			if (thisPattern.getName().equals(pattern.getName())) {
@@ -166,7 +166,7 @@ public class PatternDetectionWorkContextDelegate {
 	 * @param context WorkContext used through out the Scan
 	 * @return true if the Clue was detected, false if it was not
 	 */
-	public boolean isThisClueDetected(Clue clue, WorkReport report) {
+	public static boolean isThisClueDetected(Clue clue, WorkReport report) {
 		return getDetectedClue(report).containsKey(clue);
 	}
 
@@ -176,7 +176,7 @@ public class PatternDetectionWorkContextDelegate {
 	 * @param context WorkContext used through out the Scan
 	 * @return true if the Clue was detected, false if it was not
 	 */
-	public boolean isThisClueDetected(Clue clue, WorkContext context) {
+	public static boolean isThisClueDetected(Clue clue, WorkContext context) {
 		return getDetectedClue(context).containsKey(clue);
 	}
 
@@ -186,7 +186,7 @@ public class PatternDetectionWorkContextDelegate {
 	 * @param file File that triggered the detection
 	 * @param context WorkContext used during the Scan
 	 */
-	public void markClueAsDetected(Clue clue, String fileName, WorkContext context) {
+	public static void markClueAsDetected(Clue clue, String fileName, WorkContext context) {
 		if (getDetectedClue(context).containsKey(clue)) {
 			getDetectedClue(context).get(clue).add(fileName);
 		}
@@ -202,7 +202,7 @@ public class PatternDetectionWorkContextDelegate {
 	 * see if any of the DESIRED_PATTERNS could become DETECTED_PATTERNS
 	 * @param context WorkContext used during the Scan
 	 */
-	public void processResultsAfterScan(WorkContext context) {
+	public static void processResultsAfterScan(WorkContext context) {
 		for (Pattern pattern : getDesiredPatterns(context)) {
 			boolean needAllConditionsRequired = !pattern.getAllAreRequiredClues().isEmpty();
 			boolean needOneOfConditionsRequired = !pattern.getOnlyOneIsRequiredClues().isEmpty();
@@ -225,12 +225,13 @@ public class PatternDetectionWorkContextDelegate {
 	/*
 	 * Used when a root path is given
 	 */
-	private void getFilesAndDirectoriesFromRoot(WorkContext context) {
+	private static void getFilesAndDirectoriesFromRoot(WorkContext context) {
 		if (context.get(PatternDetectionConstants.START_DIRECTORY.toString()) != null) {
 			List<File> fileList = new ArrayList<>();
 			List<File> directoryList = new ArrayList<>();
 			try {
-				Files.walkFileTree(Paths.get(((String) context.get(PatternDetectionConstants.START_DIRECTORY.toString()))),
+				Files.walkFileTree(
+						Paths.get(((String) context.get(PatternDetectionConstants.START_DIRECTORY.toString()))),
 						new CollectFiles(fileList, directoryList));
 			}
 			catch (IOException e) {
@@ -239,10 +240,10 @@ public class PatternDetectionWorkContextDelegate {
 			}
 			context.put(PatternDetectionConstants.FILES_TO_SCAN.toString(), fileList);
 			context.put(PatternDetectionConstants.FOLDERS_TO_SCAN.toString(), directoryList);
-			}
+		}
 	}
 
-	private void initializeContext(WorkContext context) {
+	private static void initializeContext(WorkContext context) {
 		context.put(PatternDetectionConstants.DETECTED_CLUES.toString(), new HashMap<Clue, List<File>>());
 		context.put(PatternDetectionConstants.DETECTED_PATTERNS.toString(), new ArrayList<Pattern>());
 	}
@@ -250,7 +251,7 @@ public class PatternDetectionWorkContextDelegate {
 	/*
 	 * Internal class to be used by the File Walker to collect the files and directories
 	 */
-	class CollectFiles extends SimpleFileVisitor<Path> {
+	static class CollectFiles extends SimpleFileVisitor<Path> {
 
 		List<File> fileList;
 
@@ -281,7 +282,7 @@ public class PatternDetectionWorkContextDelegate {
 	 * done by comparing the One Of Required Clues in the Pattern and the DETECTED_CLUES
 	 * in the WorkContext
 	 */
-	private boolean processNeedOneOfClues(Pattern pattern, WorkContext context) {
+	private static boolean processNeedOneOfClues(Pattern pattern, WorkContext context) {
 		for (Clue oneOfClue : pattern.getOnlyOneIsRequiredClues()) {
 			if (isThisClueDetected((Clue) oneOfClue, context)) {
 				return true;
@@ -295,7 +296,7 @@ public class PatternDetectionWorkContextDelegate {
 	 * done by comparing the All Required Clues in the Pattern and the DETECTED_CLUES in
 	 * the WorkContext
 	 */
-	private boolean processNeedAllClue(Pattern pattern, WorkContext context) {
+	private static boolean processNeedAllClue(Pattern pattern, WorkContext context) {
 		long numberToFind = pattern.getAllAreRequiredClues().size();
 		long numberFound = 0;
 		for (Clue clue : pattern.getAllAreRequiredClues()) {

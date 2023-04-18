@@ -51,14 +51,14 @@ public class NameClueImpl extends AbstractClue {
 		if (continueToRunIfDetected || !workContextDelegate.isThisClueDetected(this, workContext)) {
 			List<File> filesToScan = collectFileAndFolderNames(workContext);
 			if (filesToScan != null) {
-			for (File thisFile : filesToScan) {
-				boolean matched = targetFileNameRegexPattern != null
-						? targetFileNameRegexPattern.matcher(thisFile.getName()).matches()
-						: nameMatchingDelegate.doesNameMatch(thisFile.getName());
-				if (matched) {
-					workContextDelegate.markClueAsDetected(this, thisFile.getAbsolutePath(), workContext);
+				for (File thisFile : filesToScan) {
+					boolean matched = targetFileNameRegexPattern != null
+							? targetFileNameRegexPattern.matcher(thisFile.getName()).matches()
+							: nameMatchingDelegate.doesNameMatch(thisFile.getName());
+					if (matched) {
+						workContextDelegate.markClueAsDetected(this, thisFile.getAbsolutePath(), workContext);
+					}
 				}
-			}
 			}
 		}
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
