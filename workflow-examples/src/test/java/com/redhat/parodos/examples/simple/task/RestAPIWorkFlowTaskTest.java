@@ -68,7 +68,7 @@ public class RestAPIWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 		// given
 		WorkContext workContext = Mockito.mock(WorkContext.class);
 		try (MockedStatic<RestUtils> restUtilsMockedStatic = Mockito.mockStatic(RestUtils.class)) {
-			restUtilsMockedStatic.when(() -> RestUtils.executePost(eq(valueUrl), eq(valuePayload)))
+			restUtilsMockedStatic.when(() -> RestUtils.executeGet(eq(valueUrl)))
 					.thenReturn(ResponseEntity.ok().build());
 			// when
 			WorkReport workReport = restAPIWorkflowTask.execute(workContext);
@@ -102,13 +102,10 @@ public class RestAPIWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 
 		// then
 		assertNotNull(workParameters);
-		assertEquals(3, workParameters.size());
+		assertEquals(2, workParameters.size());
 		assertEquals(URL_KEY, workParameters.get(0).getKey());
 		assertEquals("The Url of the service (ie: https://httpbin.org/post", workParameters.get(0).getDescription());
 		assertEquals(WorkParameterType.URL, workParameters.get(0).getType());
-		assertEquals(PAYLOAD_KEY, workParameters.get(1).getKey());
-		assertEquals("Json of what to provide for data. (ie: 'Hello!')", workParameters.get(1).getDescription());
-		assertEquals(WorkParameterType.TEXT, workParameters.get(1).getType());
 	}
 
 	@Test

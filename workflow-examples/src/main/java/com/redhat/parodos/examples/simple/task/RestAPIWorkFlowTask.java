@@ -40,8 +40,6 @@ import java.util.List;
 @Slf4j
 public class RestAPIWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
-	private static final String PAYLOAD_KEY = "payload";
-
 	private static final String URL_KEY = "url";
 
 	/**
@@ -50,9 +48,8 @@ public class RestAPIWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	public WorkReport execute(WorkContext workContext) {
 		try {
 			String urlString = getRequiredParameterValue(workContext, URL_KEY);
-			String payload = getRequiredParameterValue(workContext, PAYLOAD_KEY);
-			log.info("Running Task REST API Call: urlString: {} payload: {} ", urlString, payload);
-			ResponseEntity<String> result = RestUtils.executePost(urlString, payload);
+			log.info("Running Task REST API Call: urlString: {}", urlString);
+			ResponseEntity<String> result = RestUtils.executeGet(urlString);
 			if (result.getStatusCode().is2xxSuccessful()) {
 				log.info("Rest call completed: {}", result.getBody());
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
@@ -70,8 +67,6 @@ public class RestAPIWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 		return List.of(
 				WorkParameter.builder().key(URL_KEY).description("The Url of the service (ie: https://httpbin.org/post")
 						.optional(false).type(WorkParameterType.URL).build(),
-				WorkParameter.builder().key(PAYLOAD_KEY).description("Json of what to provide for data. (ie: 'Hello!')")
-						.optional(false).type(WorkParameterType.TEXT).build(),
 				WorkParameter.builder().key("user-id").description("The user id").type(WorkParameterType.TEXT)
 						.optional(false).build());
 	}

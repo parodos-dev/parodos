@@ -55,6 +55,17 @@ public final class RestUtils {
 	}
 
 	/**
+	 * Execute the GET HTTP method to the given URL
+	 *
+	 * @param urlString the URL
+	 * @return HTTP response as string
+	 */
+	public static ResponseEntity<String> executeGet(String urlString) {
+		RestTemplate restTemplate = new RestTemplate();
+		return restTemplate.getForEntity(urlString, String.class);
+	}
+
+	/**
 	 * Execute the GET HTTP method to the given URL, writing the given request entity to
 	 * the request, and returns the response as ResponseEntity.
 	 *
