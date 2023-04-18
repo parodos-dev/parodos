@@ -167,11 +167,7 @@ run_simple_flow() {
               "arguments": [
                   {
                     "key": "url",
-                    "value": "https://httpbin.org/post"
-                  },
-                  {
-                    "key": "payload",
-                    "value": "'Hello!'"
+                    "value": "http://localhost:8080/actuator/health"
                   }
               ]
           },
