@@ -123,7 +123,7 @@
                     <format>json</format>
                     <gitDescribe>
                         <skip>false</skip>
-                        <always>false</always>
+                        <always>true</always>
                         <dirty>-dirty</dirty>
                     </gitDescribe>
                 </configuration>
