@@ -133,6 +133,16 @@ jobs:
         with:
           version: "v0.16.0"
 
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Restore Maven cache
+        uses: skjolber/maven-cache-github-action@v1
+        with:
+          step: restore
+
       - name: Waiting for kind to be ready
         run: |
           kubectl cluster-info
@@ -180,12 +190,13 @@ jobs:
           }
           kubectl get pods --all-namespaces
 
-      - name: Run example script
+      - name: Maven Build
+        run: mvn -Dmaven.test.skip=true clean install
+
+      - name: Run integration tests
         run: |
           export SERVERIP=$(kubectl get nodes kind-control-plane -o json  |  jq -r '[.status.addresses[] | select(.type=="InternalIP")] | .[0].address')
-          SERVER_IP="${SERVERIP}" SERVERPORT=80 ./workflow-examples/run_examples.sh escalation
-          SERVER_IP="${SERVERIP}" SERVERPORT=80 ./workflow-examples/run_examples.sh simple
-          SERVER_IP="${SERVERIP}" SERVERPORT=80 ./workflow-examples/run_examples.sh complex
+          SERVER_IP="${SERVERIP}" SERVERPORT=80 mvn verify -pl integration-tests -P integration-test
 
       - name: Collect logs
         if: ${{ failure() }}
