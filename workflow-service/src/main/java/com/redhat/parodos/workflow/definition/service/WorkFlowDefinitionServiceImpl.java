@@ -233,6 +233,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 	private void getWorksFromWorkDefinition(List<WorkFlowWorkDefinition> workFlowWorkDefinitions,
 			CopyOnWriteArrayList<WorkDefinitionResponseDTO> responseDTOs) {
 		workFlowWorkDefinitions.forEach(workFlowWorkDefinition -> {
+
 			WorkType workType = workFlowWorkDefinition.getWorkDefinitionType();
 			if (workType == null) {
 				return;
@@ -284,6 +285,8 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 		this.getWorksFromWorkDefinition(workFlowWorkDefinitions, workDefinitionResponseDTOs);
 
 		// fill in subsequent workUnits
+		// this responseSize is like this because we modify the size of the
+		// workDefinitionResponseDTO
 		for (int i = 1; i < workDefinitionResponseDTOs.size(); i++) {
 			if (workDefinitionResponseDTOs.get(i).getWorkType().equalsIgnoreCase(WorkType.WORKFLOW.name())) {
 
@@ -295,7 +298,6 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 								UUID.fromString(workDefinitionResponseDTOs.get(i).getId()))
 						.stream().sorted(Comparator.comparing(WorkFlowWorkDefinition::getCreateDate))
 						.collect(Collectors.toList());
-
 				this.getWorksFromWorkDefinition(workFlowWorkUnits1Definition, workDefinitionResponseDTOs);
 			}
 		}
@@ -303,10 +305,11 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 		for (int j = workDefinitionResponseDTOs.size() - 1; j >= 0; j--) {
 			if (workDefinitionResponseDTOs.get(j).getWorkType().equalsIgnoreCase(WorkType.WORKFLOW.name())) {
 				List<WorkDefinitionResponseDTO> tmpList = new ArrayList<>();
-				for (int k = workFlowWorksStartIndex
-						.get(workDefinitionResponseDTOs.get(j).getName()); k < workFlowWorksStartIndex
-								.get(workDefinitionResponseDTOs.get(j).getName())
-								+ workDefinitionResponseDTOs.get(j).getNumberOfWorkUnits(); k++) {
+				for (int k = workFlowWorksStartIndex.get(workDefinitionResponseDTOs.get(j)
+						.getName()); k < workFlowWorksStartIndex.get(workDefinitionResponseDTOs.get(j).getName())
+								+ workDefinitionResponseDTOs.get(j).getNumberOfWorkUnits()
+								&& k < workDefinitionResponseDTOs.size(); k++) {
+
 					tmpList.add(workDefinitionResponseDTOs.get(k));
 				}
 				workDefinitionResponseDTOs.get(j).setWorks(tmpList);

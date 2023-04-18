@@ -17,6 +17,7 @@ package com.redhat.parodos.workflow.definition.service;
 
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowPropertiesDefinition;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowWorkDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowCheckerMappingDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
 import com.redhat.parodos.workflow.enums.WorkFlowProcessingType;
@@ -27,6 +28,7 @@ import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
+import com.redhat.parodos.workflow.enums.WorkType;
 import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
@@ -223,6 +225,61 @@ class WorkFlowDefinitionServiceImplTest {
 	}
 
 	@Test
+	public void getWorkFlowDefinitionByNameWithMasterWorkflow() {
+		// given
+		WorkFlowDefinition masterWorkFlow = sampleWorkFlowDefinition(TEST);
+		WorkFlowWorkDefinition workFlowWorkDefinition = sampleWorkFlowWorkDefinition("workTest");
+		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(any())).thenReturn(masterWorkFlow);
+
+		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.any()))
+				.thenReturn(Optional.of(sampleWorkFlowDefinition("SubWorkFlow")));
+
+		Mockito.when(this.workFlowWorkRepository.findByWorkFlowDefinitionIdOrderByCreateDateAsc(masterWorkFlow.getId()))
+				.thenReturn(List.of(sampleWorkFlowWorkDefinition("SubWorkFlow")));
+
+		// when
+		WorkFlowDefinitionResponseDTO result = this.workFlowDefinitionService.getWorkFlowDefinitionByName(TEST);
+
+		// then
+		assertNotNull(result);
+		assertEquals(result.getName(), TEST);
+
+		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).findFirstByName(any());
+		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(any()))
+				.thenReturn(sampleWorkFlowDefinition(TEST));
+
+		assertEquals(result.getWorks().size(), 1);
+		assertEquals(result.getWorks().get(0).getName(), "SubWorkFlow");
+		assertEquals(result.getWorks().get(0).getWorkType(), WorkType.WORKFLOW.toString());
+	}
+
+	@Test
+	public void getWorkFlowDefinitionByNameWithEmptyMasterWorkflow() {
+		// given
+		WorkFlowDefinition masterWorkFlow = sampleWorkFlowDefinition(TEST);
+		WorkFlowWorkDefinition workFlowWorkDefinition = sampleWorkFlowWorkDefinition("workTest");
+		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(any())).thenReturn(masterWorkFlow);
+
+		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.any())).thenReturn(Optional.empty());
+
+		Mockito.when(this.workFlowWorkRepository.findByWorkFlowDefinitionIdOrderByCreateDateAsc(Mockito.any()))
+				.thenReturn(List.of(workFlowWorkDefinition));
+
+		// when
+		WorkFlowDefinitionResponseDTO result = this.workFlowDefinitionService.getWorkFlowDefinitionByName(TEST);
+
+		// then
+		assertNotNull(result);
+		assertEquals(result.getName(), TEST);
+
+		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).findFirstByName(any());
+		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(any()))
+				.thenReturn(sampleWorkFlowDefinition(TEST));
+
+		assertEquals(result.getWorks().size(), 0);
+	}
+
+	@Test
 	public void getWorkFlowDefinitionByNameWithInvalidNameTest() {
 		// given
 		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(any())).thenReturn(null);
@@ -343,6 +400,13 @@ class WorkFlowDefinitionServiceImplTest {
 				.parameters(WorkFlowDTOUtil.writeObjectValueAsString(List.of(workParameter))).build();
 		workFlowTaskDefinition.setId(UUID.randomUUID());
 		return workFlowTaskDefinition;
+	}
+
+	private WorkFlowWorkDefinition sampleWorkFlowWorkDefinition(String name) {
+		WorkFlowWorkDefinition workFlowWorkDefinition = WorkFlowWorkDefinition.builder().build();
+		workFlowWorkDefinition.setWorkDefinitionType(WorkType.WORKFLOW);
+		workFlowWorkDefinition.setId(UUID.randomUUID());
+		return workFlowWorkDefinition;
 	}
 
 	private WorkFlowDefinitionServiceImpl getWorkflowDefinitionService() {
