@@ -95,7 +95,8 @@ public class SimpleWorkFlow {
 		// Define WorkRequests
 		WorkRequestDTO work1 = new WorkRequestDTO();
 		work1.setWorkName("restCallTask");
-		work1.setArguments(Arrays.asList(new ArgumentRequestDTO().key("url").value("http://localhost:8080/actuator/health")));
+		work1.setArguments(
+				Arrays.asList(new ArgumentRequestDTO().key("url").value("http://localhost:8080/actuator/health")));
 
 		WorkRequestDTO work2 = new WorkRequestDTO();
 		work2.setWorkName("loggingTask");
