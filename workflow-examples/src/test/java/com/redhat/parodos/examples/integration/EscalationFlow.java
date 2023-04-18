@@ -17,7 +17,7 @@ import org.springframework.http.HttpHeaders;
 
 import java.io.IOException;
 
-import static com.redhat.parodos.examples.integration.utils.ExamplesUtils.commonProjectAPI;
+import static com.redhat.parodos.examples.integration.utils.ExamplesUtils.getProjectAsync;
 import static com.redhat.parodos.examples.integration.utils.ExamplesUtils.waitWorkflowStatusAsync;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -43,7 +43,7 @@ public class EscalationFlow {
 	@Test
 	public void runEscalationFlow() throws ApiException, InterruptedException {
 		log.info("Running escalation flow");
-		ProjectResponseDTO testProject = commonProjectAPI(apiClient, projectName, projectDescription);
+		ProjectResponseDTO testProject = getProjectAsync(apiClient, projectName, projectDescription);
 		WorkflowApi workflowApi = new WorkflowApi();
 
 		log.info("******** Running The Escalation WorkFlow ********");

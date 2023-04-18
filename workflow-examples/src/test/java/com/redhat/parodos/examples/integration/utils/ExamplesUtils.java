@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
 import com.redhat.parodos.sdk.invoker.ApiClient;
 import com.redhat.parodos.sdk.model.ProjectRequestDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -153,8 +154,8 @@ public final class ExamplesUtils {
 
 	}
 
-	public static ProjectResponseDTO commonProjectAPI(ApiClient apiClient, String projectName,
-			String projectDescription) throws InterruptedException, ApiException {
+	public static ProjectResponseDTO getProjectAsync(ApiClient apiClient, String projectName, String projectDescription)
+			throws InterruptedException, ApiException {
 		ProjectApi projectApi = new ProjectApi(apiClient);
 
 		waitProjectStart(projectApi);
