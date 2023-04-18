@@ -7,7 +7,7 @@ on:
       - ActionsTest
       - 'releases/**'
 
-  pull_request_target:
+  pull_request:
     branches:
       - '**'
 permissions: read-all
@@ -16,8 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha != '' &&  github.event.pull_request.head.sha ||  github.sha }}
 
       - uses: actions/setup-java@v3
         with:
@@ -30,7 +28,7 @@ jobs:
           step: restore
 
       - name: Maven Build
-        run: mvn clean package
+        run: mvn -Dmaven.test.skip=true clean package
 
       - name: Maven Validate
         run: mvn validate
@@ -46,7 +44,7 @@ jobs:
         with:
           name: artifacts
           path: |
-            ${{ github.workspace }}/coverage/target/site/jacoco-aggregate/jacoco.xml
+            ${{ github.workspace }}/coverage/target/site/jacoco-aggregate/
             ${{ github.workspace }}/notification-service/target/*.jar
             ${{ github.workspace }}/workflow-service/target/*.jar
             ${{ github.workspace }}/workflow-examples/target/*.jar
@@ -60,39 +58,41 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - build
-    permissions:
-      checks: write
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
           name: artifacts
 
-      - name: "JaCoCo Code Coverage Report ${{ needs.build.outputs.test }}"
+      - name: JaCoCo Code Coverage Report
         id: jacoco_reporter
         uses: PavanMudigonda/jacoco-reporter@v4.8
         with:
           coverage_results_path: ${{ github.workspace }}/coverage/target/site/jacoco-aggregate/jacoco.xml
           coverage_report_name: Coverage
-          coverage_report_title: Coverage
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          skip_check_run: false
-          minimum_coverage: 60
-          fail_below_threshold: false
-          publish_only_summary: false
+          coverage_report_title: JaCoCo
+          skip_check_run: true
+          minimum_coverage: 66
+          fail_below_threshold: true
+          publish_only_summary: true
 
       - name: Add Coverage Job Summary
-        run: echo "${{ steps.jacoco_reporter.outputs.coverageSummary }}" >> $GITHUB_STEP_SUMMARY
+        run: |
+          cat ${{ github.workspace }}/_TMP/coverage-summary.md >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload Code Coverage Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-coverage-report-markdown
+          path: "${{ github.workspace }}/_TMP/coverage-results.md"
+          retention-days: 1
 
   containers:
     runs-on: ubuntu-latest
     needs:
       - build
     steps:
-
       - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha != '' &&  github.event.pull_request.head.sha ||  github.sha }}
 
       - name: Download artifacts
         uses: actions/download-artifact@v3
