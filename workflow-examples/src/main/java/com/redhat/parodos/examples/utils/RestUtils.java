@@ -56,7 +56,6 @@ public final class RestUtils {
 
 	/**
 	 * Execute the GET HTTP method to the given URL
-	 *
 	 * @param urlString the URL
 	 * @return HTTP response as string
 	 */
