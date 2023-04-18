@@ -8,6 +8,7 @@ import static org.junit.Assert.fail;
 
 import com.redhat.parodos.sdk.invoker.ApiClient;
 import com.redhat.parodos.sdk.model.ProjectRequestDTO;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -28,12 +29,24 @@ import org.assertj.core.util.Strings;
 import com.redhat.parodos.sdk.model.ProjectResponseDTO;
 import lombok.Data;
 
-/**
- * @author Gloria Ciavarrini (Github: gciavarrini)
+/***
+ * A utility
+ *
+ * class to ease the writing of new examples.
  */
+
 @Slf4j
 public final class ExamplesUtils {
 
+	/**
+	 * Executes a @see FuncExecutor. Waits at most 60 seconds for a successful result of
+	 * an async API invocation.
+	 * @param f the @see FuncExecutor
+	 * @param <T> the type of the function executor
+	 * @return @see AsyncResult
+	 * @throws ApiException if the api invocation fails
+	 * @throws InterruptedException If the async call reaches the waiting timeout
+	 */
 	public static <T> T waitAsyncResponse(FuncExecutor<T> f) throws ApiException, InterruptedException {
 		AsyncResult<T> asyncResult = new AsyncResult<>();
 		Lock lock = new ReentrantLock();
@@ -104,10 +117,28 @@ public final class ExamplesUtils {
 		return asyncResult.getResult();
 	}
 
+	/**
+	 * Invokes @see
+	 * com.redhat.parodos.sdk.api.ProjectAPI#getProjectsAsync(ApiCallback<List<ProjectResponseDTO>>)
+	 * and retries for 60 seconds.
+	 * @param projectApi the Project API
+	 * @throws InterruptedException If the async call reaches the waiting timeout
+	 * @throws ApiException If the API method invocation fails
+	 */
 	public static void waitProjectStart(ProjectApi projectApi) throws InterruptedException, ApiException {
 		waitAsyncResponse((FuncExecutor<List<ProjectResponseDTO>>) callback -> projectApi.getProjectsAsync(callback));
 	}
 
+	/**
+	 * Invokes @see com.redhat.parodos.sdk.api.WorkflowApi#getStatusAsync(String,
+	 * ApiCallback<WorkFlowStatusResponseDTO>) and retries for 60 seconds.
+	 * @param workflowApi the WorkflowAPI
+	 * @param workFlowExecutionId the workflow execution Id to monitor, as {String}
+	 * @return the workflow status if it's equal to @see
+	 * com.redhat.parodos.workflows.work.WorkStatus#COMPLETED
+	 * @throws InterruptedException If the async call reaches the waiting timeout
+	 * @throws ApiException If the API method invocation fails
+	 */
 	public static WorkFlowStatusResponseDTO waitWorkflowStatusAsync(WorkflowApi workflowApi, String workFlowExecutionId)
 			throws InterruptedException, ApiException {
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = waitAsyncResponse(new FuncExecutor<>() {
@@ -117,13 +148,20 @@ public final class ExamplesUtils {
 			}
 
 			@Override
-			public void execute(ApiCallback<WorkFlowStatusResponseDTO> callback) throws ApiException {
+			public void execute(@NonNull ApiCallback<WorkFlowStatusResponseDTO> callback) throws ApiException {
 				workflowApi.getStatusAsync(workFlowExecutionId, callback);
 			}
 		});
 		return workFlowStatusResponseDTO;
 	}
 
+	/**
+	 * Finds a project with @see #projectName and @see #projectDescription
+	 * @param projects List to of project to analyze
+	 * @param projectName the {String} project name to find
+	 * @param projectDescription the {String} project decription to find
+	 * @return the {ProjectResponse} if the project exists, {null} otherwise
+	 */
 	@Nullable
 	public static ProjectResponseDTO getProjectByNameAndDescription(List<ProjectResponseDTO> projects,
 			String projectName, String projectDescription) {
@@ -146,14 +184,38 @@ public final class ExamplesUtils {
 
 	public interface FuncExecutor<T> {
 
-		void execute(ApiCallback<T> callback) throws ApiException;
+		/**
+		 * Defines the @see com.redhat.parodos.sdk.invoker.ApiCallback to execute
+		 * @param callback the
+		 * @throws ApiException If the API callback invocation fails
+		 */
+		void execute(@NonNull ApiCallback<T> callback) throws ApiException;
 
+		/**
+		 * Define when considering an ApiCallback result as successful.
+		 * @param result the result to check
+		 * @return {true} if it is necessary to continue monitoring the result, {false}
+		 * when it's possible to stop the monitoring.
+		 */
 		default boolean check(T result) {
 			return true;
 		}
 
 	}
 
+	/**
+	 * Checks if a project with {projectName} and {projectDescription} exists. Creates a
+	 * new project, if it doesn't exist and asserts that it has been successfully created.
+	 * <p>
+	 * Returns the {ProjectAPI} response for the project with {projectName} and
+	 * {projectDescription}.
+	 * @param apiClient the API client
+	 * @param projectName the project name
+	 * @param projectDescription the project description
+	 * @return The ProjectApiResponse
+	 * @throws InterruptedException If the async call reaches the waiting timeout
+	 * @throws ApiException If the API methods invocations fail
+	 */
 	public static ProjectResponseDTO getProjectAsync(ApiClient apiClient, String projectName, String projectDescription)
 			throws InterruptedException, ApiException {
 		ProjectApi projectApi = new ProjectApi(apiClient);
