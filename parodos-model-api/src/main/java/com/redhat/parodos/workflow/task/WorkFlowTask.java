@@ -62,16 +62,7 @@ public interface WorkFlowTask extends Work {
 				continue;
 			}
 
-			Map<String, Object> properties = workParameter.getType().getAsJsonSchema();
-			properties.put("required", !workParameter.isOptional());
-			properties.put("description", workParameter.getDescription());
-			if (workParameter.getType().isSelect() && workParameter.getSelectOptions() != null) {
-				properties.put("enum", workParameter.getSelectOptions());
-			}
-			if (workParameter.getJsonSchemaOptions() != null) {
-				properties.putAll(workParameter.getJsonSchemaOptions());
-			}
-			result.put(workParameter.getKey(), properties);
+			result.put(workParameter.getKey(), workParameter.getAsJsonSchema());
 		}
 		return result;
 	}

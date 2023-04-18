@@ -95,7 +95,7 @@ public class WorkFlowController {
 	@PostMapping("/{workFlowExecutionId}/checkers/{workFlowCheckerTaskName}")
 	public void updateWorkFlowCheckerTaskStatus(@PathVariable String workFlowExecutionId,
 			@PathVariable String workFlowCheckerTaskName,
-			@Valid @RequestBody WorkFlowCheckerTaskRequestDTO workFlowCheckerTaskRequestDTO) throws Exception {
+			@Valid @RequestBody WorkFlowCheckerTaskRequestDTO workFlowCheckerTaskRequestDTO) {
 		workFlowService.updateWorkFlowCheckerTaskStatus(UUID.fromString(workFlowExecutionId), workFlowCheckerTaskName,
 				workFlowCheckerTaskRequestDTO.getStatus());
 	}

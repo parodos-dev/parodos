@@ -6,6 +6,8 @@ import java.util.Map;
 
 public class WorkParameterTest extends TestCase {
 
+	private static final String VALUE_PROVIDER_NAME = "valueProviderName";
+
 	String key = "key";
 
 	String description = "key description";
@@ -14,14 +16,15 @@ public class WorkParameterTest extends TestCase {
 
 		// given
 		WorkParameter parameters = WorkParameter.builder().key(key).description(description)
-				.type(WorkParameterType.TEXT).build();
+				.valueProviderName(VALUE_PROVIDER_NAME).type(WorkParameterType.TEXT).build();
 		// when
 		Map<String, Object> result = parameters.getAsJsonSchema();
 		// then
 		assertNotNull(result);
-		assertEquals(result.size(), 4);
+		assertEquals(result.size(), 5);
 		assertEquals(result.get("type"), "string");
 		assertEquals(result.get("description"), description);
+		assertEquals(result.get("valueProviderName"), VALUE_PROVIDER_NAME);
 		assertEquals(result.get("format"), "text");
 		assertEquals(result.get("required"), true);
 	}

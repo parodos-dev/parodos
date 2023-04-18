@@ -120,6 +120,7 @@ Class | Method | HTTP request | Description
 *WorkflowApi* | [**updateWorkFlowCheckerTaskStatus**](docs/WorkflowApi.md#updateWorkFlowCheckerTaskStatus) | **POST** /api/v1/workflows/{workFlowExecutionId}/checkers/{workFlowCheckerTaskName} | Updates a workflow checker task status
 *WorkflowDefinitionApi* | [**getWorkFlowDefinitionById**](docs/WorkflowDefinitionApi.md#getWorkFlowDefinitionById) | **GET** /api/v1/workflowdefinitions/{id} | Returns information about a workflow definition by id
 *WorkflowDefinitionApi* | [**getWorkFlowDefinitions**](docs/WorkflowDefinitionApi.md#getWorkFlowDefinitions) | **GET** /api/v1/workflowdefinitions | Returns a list of workflow definition
+*WorkflowDefinitionApi* | [**updateParameter**](docs/WorkflowDefinitionApi.md#updateParameter) | **POST** /api/v1/workflowdefinitions/{workflowDefinitionName}/parameters/update/{valueProviderName} | Returns updated parameter value
 
 
 ## Documentation for Models
@@ -136,6 +137,8 @@ Class | Method | HTTP request | Description
  - [WorkFlowRequestDTO](docs/WorkFlowRequestDTO.md)
  - [WorkFlowResponseDTO](docs/WorkFlowResponseDTO.md)
  - [WorkFlowStatusResponseDTO](docs/WorkFlowStatusResponseDTO.md)
+ - [WorkParameterValueRequestDTO](docs/WorkParameterValueRequestDTO.md)
+ - [WorkParameterValueResponseDTO](docs/WorkParameterValueResponseDTO.md)
  - [WorkRequestDTO](docs/WorkRequestDTO.md)
  - [WorkStatusResponseDTO](docs/WorkStatusResponseDTO.md)
 

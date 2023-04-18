@@ -2,6 +2,7 @@ package com.redhat.parodos.examples.complex;
 
 import com.redhat.parodos.examples.complex.checker.NamespaceApprovalWorkFlowCheckerTask;
 import com.redhat.parodos.examples.complex.checker.SslCertificationApprovalWorkFlowCheckerTask;
+import com.redhat.parodos.examples.complex.parameter.ComplexWorkParameterValueProvider;
 import com.redhat.parodos.examples.complex.task.AdGroupsWorkFlowTask;
 import com.redhat.parodos.examples.complex.task.LoadBalancerWorkFlowTask;
 import com.redhat.parodos.examples.complex.task.NamespaceWorkFlowTask;
@@ -15,6 +16,7 @@ import com.redhat.parodos.workflow.annotation.Infrastructure;
 import com.redhat.parodos.workflow.annotation.Parameter;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
+import com.redhat.parodos.workflow.parameter.WorkParameterValueProvider;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflows.workflow.ParallelFlow;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
@@ -190,14 +192,21 @@ public class ComplexWorkFlowConfiguration {
 			@Parameter(key = "projectUrl", description = "The project url", type = WorkParameterType.URL,
 					optional = true),
 			@Parameter(key = "WORKFLOW_SELECT_SAMPLE", description = "Workflow select parameter sample",
-					type = WorkParameterType.SELECT, optional = true, selectOptions = { "option1", "option2" }),
+					type = WorkParameterType.SELECT, optional = true, selectOptions = { "option1", "option2" },
+					valueProviderName = "complexWorkFlowValueProvider"),
 			@Parameter(key = "WORKFLOW_MULTI_SELECT_SAMPLE", description = "Workflow multi-select parameter sample",
-					type = WorkParameterType.MULTI_SELECT, optional = true,
-					selectOptions = { "option1", "option2", "option3" }) })
+					type = WorkParameterType.MULTI_SELECT, optional = true),
+			@Parameter(key = "DYNAMIC_TEXT_SAMPLE", description = "dynamic text sample", type = WorkParameterType.TEXT,
+					optional = true) })
 	WorkFlow complexWorkFlow(@Qualifier("subWorkFlowThree") WorkFlow subWorkFlowThree,
 			@Qualifier("subWorkFlowFour") WorkFlow subWorkFlowFour) {
 		return SequentialFlow.Builder.aNewSequentialFlow().named("complexWorkFlow").execute(subWorkFlowThree)
 				.then(subWorkFlowFour).build();
+	}
+
+	@Bean(name = "complexWorkFlowValueProvider")
+	WorkParameterValueProvider complexWorkFlowValueProvider() {
+		return new ComplexWorkParameterValueProvider("complexWorkFlow");
 	}
 
 }

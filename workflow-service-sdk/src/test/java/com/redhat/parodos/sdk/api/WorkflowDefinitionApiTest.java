@@ -14,6 +14,8 @@ package com.redhat.parodos.sdk.api;
 
 import com.redhat.parodos.sdk.invoker.ApiException;
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
+import com.redhat.parodos.sdk.model.WorkParameterValueRequestDTO;
+import com.redhat.parodos.sdk.model.WorkParameterValueResponseDTO;
 import org.junit.Test;
 import org.junit.Ignore;
 
@@ -49,6 +51,20 @@ public class WorkflowDefinitionApiTest {
 	public void getWorkFlowDefinitionsTest() throws ApiException {
 		String name = null;
 		List<WorkFlowDefinitionResponseDTO> response = api.getWorkFlowDefinitions(name);
+		// TODO: test validations
+	}
+
+	/**
+	 * Returns updated parameter value
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void updateParameterTest() throws ApiException {
+		String workflowDefinitionName = null;
+		String valueProviderName = null;
+		List<WorkParameterValueRequestDTO> workParameterValueRequestDTO = null;
+		WorkParameterValueResponseDTO response = api.updateParameter(workflowDefinitionName, valueProviderName,
+				workParameterValueRequestDTO);
 		// TODO: test validations
 	}
 

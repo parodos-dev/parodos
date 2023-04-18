@@ -16,11 +16,13 @@
 package com.redhat.parodos.workflow.definition.controller;
 
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
+import com.redhat.parodos.workflow.definition.dto.WorkParameterValueRequestDTO;
+import com.redhat.parodos.workflow.definition.dto.WorkParameterValueResponseDTO;
+import com.redhat.parodos.workflow.definition.parameter.WorkParameterService;
 import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
-import java.util.List;
-import java.util.UUID;
-
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -31,9 +33,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.UUID;
 
 import static java.util.Objects.isNull;
 
@@ -52,8 +59,12 @@ public class WorkFlowDefinitionController {
 
 	private final WorkFlowDefinitionServiceImpl workFlowDefinitionService;
 
-	public WorkFlowDefinitionController(WorkFlowDefinitionServiceImpl workFlowDefinitionService) {
+	private final WorkParameterService workParameterService;
+
+	public WorkFlowDefinitionController(WorkFlowDefinitionServiceImpl workFlowDefinitionService,
+			WorkParameterService workParameterService) {
 		this.workFlowDefinitionService = workFlowDefinitionService;
+		this.workParameterService = workParameterService;
 	}
 
 	@Operation(summary = "Returns a list of workflow definition")
@@ -88,6 +99,27 @@ public class WorkFlowDefinitionController {
 			return ResponseEntity.notFound().build();
 		}
 		return ResponseEntity.ok(response);
+	}
+
+	@Operation(summary = "Returns updated parameter value")
+	@Parameters(value = {
+			@Parameter(name = "workflowDefinitionName", description = "workflow Definition Name",
+					example = "complexWorkFlow"),
+			@Parameter(name = "valueProviderName",
+					description = "valueProvider Name. It can be referenced to 'valueProviderName' in [GET /getWorkFlowDefinitions](#/Workflow%20Definition/getWorkFlowDefinitions)",
+					example = "complexWorkFlowValueProvider") })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Succeeded",
+					content = { @Content(mediaType = "application/json",
+							schema = @Schema(allOf = WorkParameterValueResponseDTO.class)) }),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content) })
+	@PostMapping("/{workflowDefinitionName}/parameters/update/{valueProviderName}")
+	public ResponseEntity<List<WorkParameterValueResponseDTO>> updateParameter(
+			@PathVariable String workflowDefinitionName, @PathVariable String valueProviderName,
+			@RequestBody List<WorkParameterValueRequestDTO> workParameterValueRequestDTOS) {
+		return ResponseEntity.ok(workParameterService.getValues(workflowDefinitionName, valueProviderName,
+				workParameterValueRequestDTOS));
 	}
 
 }

@@ -18,10 +18,10 @@ package com.redhat.parodos.examples.complex.task;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflow.option.WorkFlowOptions;
-import com.redhat.parodos.workflow.task.assessment.BaseAssessmentTask;
-import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
+import com.redhat.parodos.workflow.task.assessment.BaseAssessmentTask;
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -62,8 +62,7 @@ public class OnboardingAssessmentTask extends BaseAssessmentTask {
 						.type(WorkParameterType.SELECT).selectOptions(List.of("projectA", "projectB", "projectC"))
 						.build(),
 				WorkParameter.builder().key("MULTI_SELECT_SAMPLE").description("multi select sample").optional(true)
-						.type(WorkParameterType.MULTI_SELECT).selectOptions(List.of("projectA", "projectB", "projectC"))
-						.build());
+						.type(WorkParameterType.MULTI_SELECT).selectOptions(List.of("select1", "select2")).build());
 	}
 
 	@Override
