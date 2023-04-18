@@ -26,6 +26,8 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
+import com.redhat.parodos.sdk.model.WorkParameterValueRequestDTO;
+import com.redhat.parodos.sdk.model.WorkParameterValueResponseDTO;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -480,6 +482,253 @@ public class WorkflowDefinitionApi {
 
 		okhttp3.Call localVarCall = getWorkFlowDefinitionsValidateBeforeCall(name, _callback);
 		Type localVarReturnType = new TypeToken<List<WorkFlowDefinitionResponseDTO>>() {
+		}.getType();
+		localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+		return localVarCall;
+	}
+
+	/**
+	 * Build call for updateParameter
+	 * @param workflowDefinitionName workflow Definition Name (required)
+	 * @param valueProviderName valueProvider Name. It can be referenced to
+	 * &#39;valueProviderName&#39; in [GET
+	 * /getWorkFlowDefinitions](#/Workflow%20Definition/getWorkFlowDefinitions) (required)
+	 * @param workParameterValueRequestDTO (required)
+	 * @param _callback Callback for upload/download progress
+	 * @return Call to execute
+	 * @throws ApiException If fail to serialize the request body object
+	 * @http.response.details
+	 * <table summary="Response Details" border="1">
+	 * <tr>
+	 * <td>Status Code</td>
+	 * <td>Description</td>
+	 * <td>Response Headers</td>
+	 * </tr>
+	 * <tr>
+	 * <td>200</td>
+	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>403</td>
+	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * </table>
+	 */
+	public okhttp3.Call updateParameterCall(String workflowDefinitionName, String valueProviderName,
+			List<WorkParameterValueRequestDTO> workParameterValueRequestDTO, final ApiCallback _callback)
+			throws ApiException {
+		String basePath = null;
+
+		// Operation Servers
+		String[] localBasePaths = new String[] {};
+
+		// Determine Base Path to Use
+		if (localCustomBaseUrl != null) {
+			basePath = localCustomBaseUrl;
+		}
+		else if (localBasePaths.length > 0) {
+			basePath = localBasePaths[localHostIndex];
+		}
+		else {
+			basePath = null;
+		}
+
+		Object localVarPostBody = workParameterValueRequestDTO;
+
+		// create path and map variables
+		String localVarPath = "/api/v1/workflowdefinitions/{workflowDefinitionName}/parameters/update/{valueProviderName}"
+				.replaceAll("\\{" + "workflowDefinitionName" + "\\}",
+						localVarApiClient.escapeString(workflowDefinitionName.toString()))
+				.replaceAll("\\{" + "valueProviderName" + "\\}",
+						localVarApiClient.escapeString(valueProviderName.toString()));
+
+		List<Pair> localVarQueryParams = new ArrayList<Pair>();
+		List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+		Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+		Map<String, String> localVarCookieParams = new HashMap<String, String>();
+		Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+		final String[] localVarAccepts = { "application/json" };
+		final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+		if (localVarAccept != null) {
+			localVarHeaderParams.put("Accept", localVarAccept);
+		}
+
+		final String[] localVarContentTypes = { "application/json" };
+		final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+		if (localVarContentType != null) {
+			localVarHeaderParams.put("Content-Type", localVarContentType);
+		}
+
+		String[] localVarAuthNames = new String[] {};
+		return localVarApiClient.buildCall(basePath, localVarPath, "POST", localVarQueryParams,
+				localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams,
+				localVarFormParams, localVarAuthNames, _callback);
+	}
+
+	@SuppressWarnings("rawtypes")
+	private okhttp3.Call updateParameterValidateBeforeCall(String workflowDefinitionName, String valueProviderName,
+			List<WorkParameterValueRequestDTO> workParameterValueRequestDTO, final ApiCallback _callback)
+			throws ApiException {
+
+		// verify the required parameter 'workflowDefinitionName' is set
+		if (workflowDefinitionName == null) {
+			throw new ApiException(
+					"Missing the required parameter 'workflowDefinitionName' when calling updateParameter(Async)");
+		}
+
+		// verify the required parameter 'valueProviderName' is set
+		if (valueProviderName == null) {
+			throw new ApiException(
+					"Missing the required parameter 'valueProviderName' when calling updateParameter(Async)");
+		}
+
+		// verify the required parameter 'workParameterValueRequestDTO' is set
+		if (workParameterValueRequestDTO == null) {
+			throw new ApiException(
+					"Missing the required parameter 'workParameterValueRequestDTO' when calling updateParameter(Async)");
+		}
+
+		okhttp3.Call localVarCall = updateParameterCall(workflowDefinitionName, valueProviderName,
+				workParameterValueRequestDTO, _callback);
+		return localVarCall;
+
+	}
+
+	/**
+	 * Returns updated parameter value
+	 * @param workflowDefinitionName workflow Definition Name (required)
+	 * @param valueProviderName valueProvider Name. It can be referenced to
+	 * &#39;valueProviderName&#39; in [GET
+	 * /getWorkFlowDefinitions](#/Workflow%20Definition/getWorkFlowDefinitions) (required)
+	 * @param workParameterValueRequestDTO (required)
+	 * @return WorkParameterValueResponseDTO
+	 * @throws ApiException If fail to call the API, e.g. server error or cannot
+	 * deserialize the response body
+	 * @http.response.details
+	 * <table summary="Response Details" border="1">
+	 * <tr>
+	 * <td>Status Code</td>
+	 * <td>Description</td>
+	 * <td>Response Headers</td>
+	 * </tr>
+	 * <tr>
+	 * <td>200</td>
+	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>403</td>
+	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * </table>
+	 */
+	public WorkParameterValueResponseDTO updateParameter(String workflowDefinitionName, String valueProviderName,
+			List<WorkParameterValueRequestDTO> workParameterValueRequestDTO) throws ApiException {
+		ApiResponse<WorkParameterValueResponseDTO> localVarResp = updateParameterWithHttpInfo(workflowDefinitionName,
+				valueProviderName, workParameterValueRequestDTO);
+		return localVarResp.getData();
+	}
+
+	/**
+	 * Returns updated parameter value
+	 * @param workflowDefinitionName workflow Definition Name (required)
+	 * @param valueProviderName valueProvider Name. It can be referenced to
+	 * &#39;valueProviderName&#39; in [GET
+	 * /getWorkFlowDefinitions](#/Workflow%20Definition/getWorkFlowDefinitions) (required)
+	 * @param workParameterValueRequestDTO (required)
+	 * @return ApiResponse&lt;WorkParameterValueResponseDTO&gt;
+	 * @throws ApiException If fail to call the API, e.g. server error or cannot
+	 * deserialize the response body
+	 * @http.response.details
+	 * <table summary="Response Details" border="1">
+	 * <tr>
+	 * <td>Status Code</td>
+	 * <td>Description</td>
+	 * <td>Response Headers</td>
+	 * </tr>
+	 * <tr>
+	 * <td>200</td>
+	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>403</td>
+	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * </table>
+	 */
+	public ApiResponse<WorkParameterValueResponseDTO> updateParameterWithHttpInfo(String workflowDefinitionName,
+			String valueProviderName, List<WorkParameterValueRequestDTO> workParameterValueRequestDTO)
+			throws ApiException {
+		okhttp3.Call localVarCall = updateParameterValidateBeforeCall(workflowDefinitionName, valueProviderName,
+				workParameterValueRequestDTO, null);
+		Type localVarReturnType = new TypeToken<WorkParameterValueResponseDTO>() {
+		}.getType();
+		return localVarApiClient.execute(localVarCall, localVarReturnType);
+	}
+
+	/**
+	 * Returns updated parameter value (asynchronously)
+	 * @param workflowDefinitionName workflow Definition Name (required)
+	 * @param valueProviderName valueProvider Name. It can be referenced to
+	 * &#39;valueProviderName&#39; in [GET
+	 * /getWorkFlowDefinitions](#/Workflow%20Definition/getWorkFlowDefinitions) (required)
+	 * @param workParameterValueRequestDTO (required)
+	 * @param _callback The callback to be executed when the API call finishes
+	 * @return The request call
+	 * @throws ApiException If fail to process the API call, e.g. serializing the request
+	 * body object
+	 * @http.response.details
+	 * <table summary="Response Details" border="1">
+	 * <tr>
+	 * <td>Status Code</td>
+	 * <td>Description</td>
+	 * <td>Response Headers</td>
+	 * </tr>
+	 * <tr>
+	 * <td>200</td>
+	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>403</td>
+	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * </table>
+	 */
+	public okhttp3.Call updateParameterAsync(String workflowDefinitionName, String valueProviderName,
+			List<WorkParameterValueRequestDTO> workParameterValueRequestDTO,
+			final ApiCallback<WorkParameterValueResponseDTO> _callback) throws ApiException {
+
+		okhttp3.Call localVarCall = updateParameterValidateBeforeCall(workflowDefinitionName, valueProviderName,
+				workParameterValueRequestDTO, _callback);
+		Type localVarReturnType = new TypeToken<WorkParameterValueResponseDTO>() {
 		}.getType();
 		localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
 		return localVarCall;

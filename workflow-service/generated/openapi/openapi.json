@@ -198,6 +198,65 @@
         "tags" : [ "Workflow Definition" ]
       }
     },
+    "/api/v1/workflowdefinitions/{workflowDefinitionName}/parameters/update/{valueProviderName}" : {
+      "post" : {
+        "operationId" : "updateParameter",
+        "parameters" : [ {
+          "description" : "workflow Definition Name",
+          "example" : "complexWorkFlow",
+          "in" : "path",
+          "name" : "workflowDefinitionName",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "valueProvider Name. It can be referenced to 'valueProviderName' in [GET /getWorkFlowDefinitions](#/Workflow%20Definition/getWorkFlowDefinitions)",
+          "example" : "complexWorkFlowValueProvider",
+          "in" : "path",
+          "name" : "valueProviderName",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/components/schemas/WorkParameterValueRequestDTO"
+                }
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/WorkParameterValueResponseDTO"
+                  } ]
+                }
+              }
+            },
+            "description" : "Succeeded"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          }
+        },
+        "summary" : "Returns updated parameter value",
+        "tags" : [ "Workflow Definition" ]
+      }
+    },
     "/api/v1/workflows" : {
       "post" : {
         "operationId" : "execute",
@@ -599,6 +658,40 @@
             "items" : {
               "$ref" : "#/components/schemas/WorkStatusResponseDTO"
             }
+          }
+        }
+      },
+      "WorkParameterValueRequestDTO" : {
+        "type" : "object",
+        "properties" : {
+          "key" : {
+            "type" : "string"
+          },
+          "value" : {
+            "type" : "string"
+          },
+          "workName" : {
+            "type" : "string"
+          }
+        }
+      },
+      "WorkParameterValueResponseDTO" : {
+        "type" : "object",
+        "properties" : {
+          "key" : {
+            "type" : "string"
+          },
+          "options" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "propertyPath" : {
+            "type" : "string"
+          },
+          "value" : {
+            "type" : "string"
           }
         }
       },

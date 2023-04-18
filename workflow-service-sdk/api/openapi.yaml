@@ -153,6 +153,54 @@ paths:
       tags:
       - Workflow Definition
       x-accepts: application/json
+  /api/v1/workflowdefinitions/{workflowDefinitionName}/parameters/update/{valueProviderName}:
+    post:
+      operationId: updateParameter
+      parameters:
+      - description: workflow Definition Name
+        example: complexWorkFlow
+        explode: false
+        in: path
+        name: workflowDefinitionName
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: valueProvider Name. It can be referenced to 'valueProviderName'
+          in [GET /getWorkFlowDefinitions](#/Workflow%20Definition/getWorkFlowDefinitions)
+        example: complexWorkFlowValueProvider
+        explode: false
+        in: path
+        name: valueProviderName
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              items:
+                $ref: '#/components/schemas/WorkParameterValueRequestDTO'
+              type: array
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/WorkParameterValueResponseDTO'
+          description: Succeeded
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+      summary: Returns updated parameter value
+      tags:
+      - Workflow Definition
+      x-contentType: application/json
+      x-accepts: application/json
   /api/v1/workflows:
     post:
       operationId: execute
@@ -743,6 +791,32 @@ components:
           items:
             $ref: '#/components/schemas/WorkStatusResponseDTO'
           type: array
+      type: object
+    WorkParameterValueRequestDTO:
+      example:
+        workName: workName
+        value: value
+        key: key
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+        workName:
+          type: string
+      type: object
+    WorkParameterValueResponseDTO:
+      properties:
+        key:
+          type: string
+        options:
+          items:
+            type: string
+          type: array
+        propertyPath:
+          type: string
+        value:
+          type: string
       type: object
     WorkRequestDTO:
       example:

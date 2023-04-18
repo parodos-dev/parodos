@@ -44,4 +44,6 @@ public @interface Parameter {
 
 	String[] selectOptions() default {};
 
+	String valueProviderName() default "";
+
 }

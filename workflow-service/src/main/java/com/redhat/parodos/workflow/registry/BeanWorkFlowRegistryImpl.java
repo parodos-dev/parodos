@@ -119,8 +119,8 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 							.type((WorkParameterType) annotationAttribute.get("type"))
 							.optional(annotationAttribute.getBoolean("optional"))
 							.selectOptions(Arrays.stream(annotationAttribute.getStringArray("selectOptions")).toList())
-							.build())
-					.collect(Collectors.toList());
+							.valueProviderName(annotationAttribute.getString("valueProviderName")).build())
+					.toList();
 		}
 		workFlowDefinitionService.save(workFlowBeanName, workFlowType, workFlowBean.getProperties(), workParameters,
 				works, getWorkFlowProcessingType(workFlowBean));
