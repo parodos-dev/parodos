@@ -66,7 +66,8 @@ public class PrebuiltWorkFlow {
 
 		assertNotNull(prebuiltWorkFlowDefinition.getId());
 		assertEquals(workFlowName, prebuiltWorkFlowDefinition.getName());
-		assertEquals(WorkFlowDefinitionResponseDTO.ProcessingTypeEnum.SEQUENTIAL, prebuiltWorkFlowDefinition.getProcessingType());
+		assertEquals(WorkFlowDefinitionResponseDTO.ProcessingTypeEnum.SEQUENTIAL,
+				prebuiltWorkFlowDefinition.getProcessingType());
 		assertEquals(WorkFlowType.INFRASTRUCTURE.toString(), prebuiltWorkFlowDefinition.getType());
 
 		assertNotNull(prebuiltWorkFlowDefinition.getWorks());
