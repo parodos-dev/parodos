@@ -93,7 +93,7 @@ public class UseSDKExample {
 
 			assertEquals("simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW,
 					simpleSequentialWorkFlowDefinition.getName());
-			assertEquals(WorkFlowProcessingType.SEQUENTIAL.toString(),
+			assertEquals(WorkFlowDefinitionResponseDTO.ProcessingTypeEnum.SEQUENTIAL,
 					simpleSequentialWorkFlowDefinition.getProcessingType());
 			assertEquals(WorkFlowType.INFRASTRUCTURE.toString(), simpleSequentialWorkFlowDefinition.getType());
 
