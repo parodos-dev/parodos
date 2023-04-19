@@ -184,7 +184,8 @@ public class WorkFlowServiceDelegate {
 			if (workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition() != null) {
 				workStatus = Optional
 						.ofNullable(workFlowRepository.findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(
-								workFlowExecution.getMainWorkFlowExecution(),
+								Optional.ofNullable(workFlowExecution.getMainWorkFlowExecution())
+										.orElse(workFlowExecution),
 								workFlowTaskDefinition
 										.getWorkFlowCheckerMappingDefinition().getCheckWorkFlow().getId()))
 						.map(WorkFlowExecution::getStatus)
