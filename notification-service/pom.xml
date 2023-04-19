@@ -23,6 +23,7 @@
         <url>http://github.com/parodos-dev/parodos/tree/main</url>
     </scm>
     <properties>
+        <java.version>11</java.version>
         <spring-cloud.version>2020.0.6</spring-cloud.version>
         <springdoc-openapi-ui.version>1.6.4</springdoc-openapi-ui.version>
         <gson-fire-version>1.8.5</gson-fire-version>

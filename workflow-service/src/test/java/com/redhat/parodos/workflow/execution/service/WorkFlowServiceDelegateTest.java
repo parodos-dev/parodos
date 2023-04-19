@@ -201,54 +201,54 @@ public class WorkFlowServiceDelegateTest {
 	class TestGetWorkFlowWorksStatusWithChecker {
 
 		// master workflow vars
-		private static final String workFlowName = "testMasterWorkFlow";
+		final String workFlowName = "testMasterWorkFlow";
 
-		private static final UUID masterWorkFlowExecutionId = UUID.randomUUID();
+		final UUID masterWorkFlowExecutionId = UUID.randomUUID();
 
-		private static final UUID masterWorkFlowDefinitionId = UUID.randomUUID();
+		final UUID masterWorkFlowDefinitionId = UUID.randomUUID();
 
-		private static final UUID projectId = UUID.randomUUID();
+		final UUID projectId = UUID.randomUUID();
 
 		// master workflow task vars
-		private static final String TEST_SUB_WORKFLOW_TASK_NAME = "testSubWorkFlowTask";
+		final String TEST_SUB_WORKFLOW_TASK_NAME = "testSubWorkFlowTask";
 
-		private static final UUID subWorkFlowTaskDefinitionId = UUID.randomUUID();
+		final UUID subWorkFlowTaskDefinitionId = UUID.randomUUID();
 
-		private static final UUID subWorkFlowTaskExecutionId = UUID.randomUUID();
+		final UUID subWorkFlowTaskExecutionId = UUID.randomUUID();
 
 		// checker workflow vars
-		private static final UUID checkerWorkFlowExecutionId = UUID.randomUUID();
+		final UUID checkerWorkFlowExecutionId = UUID.randomUUID();
 
-		private static final UUID checkerWorkFlowDefinitionId = UUID.randomUUID();
+		final UUID checkerWorkFlowDefinitionId = UUID.randomUUID();
 
-		private static final String checkerWorkFlowName = "testCheckerWorkFlow";
+		final String checkerWorkFlowName = "testCheckerWorkFlow";
 
 		// checker workflow task vars
-		private static final String CHECKER_WORKFLOW_TASK_NAME_1 = "testWorkFlowTask1";
+		final String CHECKER_WORKFLOW_TASK_NAME_1 = "testWorkFlowTask1";
 
-		private static final UUID checkerWorkFlowTaskDefinitionId = UUID.randomUUID();
+		final UUID checkerWorkFlowTaskDefinitionId = UUID.randomUUID();
 
-		private static final UUID testCheckerWorkFlowTaskExecutionId1 = UUID.randomUUID();
+		final UUID testCheckerWorkFlowTaskExecutionId1 = UUID.randomUUID();
 
-		private WorkFlowDefinition masterWorkflowDefinition;
+		WorkFlowDefinition masterWorkflowDefinition;
 
-		private WorkFlowExecution masterWorkflowExecution;
+		WorkFlowExecution masterWorkflowExecution;
 
-		private WorkFlowTaskDefinition masterWorkFlowTaskDefinition;
+		WorkFlowTaskDefinition masterWorkFlowTaskDefinition;
 
-		private WorkFlowTaskExecution masterWorkFlowTaskExecution;
+		WorkFlowTaskExecution masterWorkFlowTaskExecution;
 
-		private WorkFlowDefinition checkerWorkflowDefinition;
+		WorkFlowDefinition checkerWorkflowDefinition;
 
-		private WorkFlowExecution checkerWorkflowExecution;
+		WorkFlowExecution checkerWorkflowExecution;
 
-		private WorkFlowTaskDefinition checkerWorkFlowTaskDefinition;
+		WorkFlowTaskDefinition checkerWorkFlowTaskDefinition;
 
-		private WorkFlowTaskExecution checkerWorkFlowTaskExecution;
+		WorkFlowTaskExecution checkerWorkFlowTaskExecution;
 
-		private WorkFlowWorkDefinition masterWorkflowWorkDefinition;
+		WorkFlowWorkDefinition masterWorkflowWorkDefinition;
 
-		private WorkFlowWorkDefinition checkerWorkflowWorkDefinition;
+		WorkFlowWorkDefinition checkerWorkflowWorkDefinition;
 
 		@BeforeEach
 		void beforeEach() {

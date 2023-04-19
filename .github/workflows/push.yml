@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - java11
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,7 +16,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '11'
 
       - name: Maven Verify 
         run: mvn clean verify 
