@@ -67,25 +67,6 @@ class WorkFlowExecutionFactoryTest {
 	}
 
 	@Test
-	void testCreateInitialMainWorkFlowExecutionInterceptor() {
-		// given
-		WorkFlowDefinition workflow = mock(WorkFlowDefinition.class);
-		when(workflow.getName()).thenReturn("TestWorkflow");
-
-		WorkContext workContext = mock(WorkContext.class);
-		when(WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-				WorkContextDelegate.Resource.ID)).thenReturn(null);
-
-		// when
-		WorkFlowExecutionInterceptor executionHandler = factory.createExecutionHandler(workflow, workContext);
-
-		// then
-		// verify that the correct interceptor is created
-		assertNotNull(executionHandler);
-		assertTrue(executionHandler instanceof InitialMainWorkflowInterceptor);
-	}
-
-	@Test
 	void testCreateContinuedWorkFlowExecutionInterceptor() {
 		// given
 		WorkFlowDefinition workflow = mock(WorkFlowDefinition.class);
@@ -115,6 +96,8 @@ class WorkFlowExecutionFactoryTest {
 		WorkContext workContext = mock(WorkContext.class);
 		when(WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION,
 				WorkContextDelegate.Resource.NAME)).thenReturn("TestWorkflow");
+		when(WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ID)).thenReturn(UUID.randomUUID().toString());
 
 		// given
 		boolean isMain = WorkFlowExecutionFactory.isMainWorkFlow(workflow, workContext);

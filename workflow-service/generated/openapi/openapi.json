@@ -307,7 +307,7 @@
           "required" : true
         },
         "responses" : {
-          "200" : {
+          "202" : {
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -315,7 +315,7 @@
                 }
               }
             },
-            "description" : "Succeeded"
+            "description" : "Accepted"
           },
           "401" : {
             "description" : "Unauthorized"
@@ -653,47 +653,6 @@
           }
         }
       },
-      "WorkFlowOptions" : {
-        "type" : "object",
-        "properties" : {
-          "continuationOptions" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/WorkFlowOption"
-            }
-          },
-          "currentVersion" : {
-            "$ref" : "#/components/schemas/WorkFlowOption"
-          },
-          "migrationOptions" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/WorkFlowOption"
-            }
-          },
-          "newOptions" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/WorkFlowOption"
-            }
-          },
-          "optionsAvailable" : {
-            "type" : "boolean"
-          },
-          "otherOptions" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/WorkFlowOption"
-            }
-          },
-          "upgradeOptions" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/WorkFlowOption"
-            }
-          }
-        }
-      },
       "WorkFlowOptionsResponseDTO" : {
         "type" : "object",
         "properties" : {
@@ -786,9 +745,6 @@
           },
           "workFlowName" : {
             "type" : "string"
-          },
-          "workFlowOptions" : {
-            "$ref" : "#/components/schemas/WorkFlowOptions"
           },
           "workStatus" : {
             "type" : "string",

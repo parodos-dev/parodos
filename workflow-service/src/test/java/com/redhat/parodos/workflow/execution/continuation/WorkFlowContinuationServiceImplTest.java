@@ -13,6 +13,7 @@ import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionContext;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
+import com.redhat.parodos.workflow.execution.service.WorkFlowExecutor;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +48,7 @@ class WorkFlowContinuationServiceImplTest {
 
 	private WorkFlowContinuationServiceImpl service;
 
-	private AsyncWorkFlowContinuerImpl asyncWorkFlowContinuer;
+	private WorkFlowExecutor workFlowExecutor;
 
 	@BeforeEach
 	void initEach() {
@@ -55,9 +56,9 @@ class WorkFlowContinuationServiceImplTest {
 		this.workFlowTaskDefinitionRepository = mock(WorkFlowTaskDefinitionRepository.class);
 		this.workFlowRepository = mock(WorkFlowRepository.class);
 		this.workFlowTaskRepository = mock(WorkFlowTaskRepository.class);
-		this.asyncWorkFlowContinuer = mock(AsyncWorkFlowContinuerImpl.class);
+		this.workFlowExecutor = mock(WorkFlowExecutor.class);
 		this.service = new WorkFlowContinuationServiceImpl(this.workFlowDefinitionRepository, this.workFlowRepository,
-				this.asyncWorkFlowContinuer);
+				this.workFlowExecutor);
 	}
 
 	@Test
@@ -70,7 +71,7 @@ class WorkFlowContinuationServiceImplTest {
 
 		// then
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
-		verify(this.asyncWorkFlowContinuer, times(0)).executeAsync(any(), any(), any(), any());
+		verify(this.workFlowExecutor, times(0)).executeAsync(any(), any(), any(), any());
 	}
 
 	@Test
@@ -84,8 +85,8 @@ class WorkFlowContinuationServiceImplTest {
 
 		// then
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
-		verify(this.asyncWorkFlowContinuer, times(1)).executeAsync(eq(workFlowExecution.getProjectId()),
-				eq(TEST_WORKFLOW), any(), any());
+		verify(this.workFlowExecutor, times(1)).executeAsync(eq(workFlowExecution.getProjectId()), eq(TEST_WORKFLOW),
+				any(), any());
 	}
 
 	@Test
@@ -99,8 +100,8 @@ class WorkFlowContinuationServiceImplTest {
 
 		// then
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
-		verify(this.asyncWorkFlowContinuer, times(1)).executeAsync(eq(workFlowExecution.getProjectId()),
-				eq(TEST_WORKFLOW), any(), any());
+		verify(this.workFlowExecutor, times(1)).executeAsync(
+				eq(workFlowExecution.getProjectId()), eq(TEST_WORKFLOW), any(), any());
 	}
 
 	@Test
@@ -124,8 +125,8 @@ class WorkFlowContinuationServiceImplTest {
 
 		// then
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
-		verify(this.asyncWorkFlowContinuer, times(1)).executeAsync(eq(workFlowExecution.getProjectId()),
-				eq(TEST_WORKFLOW), any(), any());
+		verify(this.workFlowExecutor, times(1)).executeAsync(
+				eq(workFlowExecution.getProjectId()), eq(TEST_WORKFLOW), any(), any());
 	}
 
 	@Test
@@ -143,8 +144,7 @@ class WorkFlowContinuationServiceImplTest {
 
 		when(this.workFlowTaskRepository.findByWorkFlowExecutionId(wfExecution.getId()))
 				.thenReturn(List.of(workFlowTaskExecution));
-		doThrow(new RuntimeException("JsonParseException")).when(asyncWorkFlowContinuer).executeAsync(any(), any(),
-				any(), any());
+		doThrow(new RuntimeException("JsonParseException")).when(workFlowExecutor).executeAsync(any(),any(), any(), any());
 
 		// when
 		Exception exception = assertThrows(RuntimeException.class, () -> this.service.workFlowRunAfterStartup());
@@ -154,7 +154,8 @@ class WorkFlowContinuationServiceImplTest {
 		assertTrue(exception.getMessage().contains("JsonParseException"));
 
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
-		verify(this.asyncWorkFlowContinuer, times(1)).executeAsync(any(), any(), any(), any());
+		verify(this.workFlowExecutor, times(1)).executeAsync(any(), any(), any(), any());
+
 	}
 
 	private WorkFlowExecution sampleWorkFlowExecution(WorkStatus workStatus) {

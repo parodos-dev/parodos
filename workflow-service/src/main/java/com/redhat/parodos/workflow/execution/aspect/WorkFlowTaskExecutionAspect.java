@@ -32,6 +32,7 @@ import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
 import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
+import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -98,10 +99,7 @@ public class WorkFlowTaskExecutionAspect {
 		WorkFlowTaskDefinition workFlowTaskDefinition = workFlowTaskDefinitionRepository
 				.findFirstByName(workFlowTaskName);
 
-		UUID mainWorkFlowExecutionId = UUID.fromString(WorkContextDelegate
-				.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ID)
-				.toString());
-
+		UUID mainWorkFlowExecutionId = WorkContextUtils.getMainExecutionId(workContext);
 		WorkFlowExecution mainWorkFlowExecution = workFlowRepository.findById(mainWorkFlowExecutionId).orElseThrow(
 				() -> new WorkflowExecutionNotFoundException("mainWorkFlow not found for task: " + workFlowTaskName));
 

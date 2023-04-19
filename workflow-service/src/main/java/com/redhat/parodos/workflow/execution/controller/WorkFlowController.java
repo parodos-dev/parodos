@@ -33,7 +33,7 @@ import com.redhat.parodos.workflow.execution.dto.WorkFlowResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.service.WorkFlowService;
 import com.redhat.parodos.workflow.execution.validation.PubliclyVisible;
-import com.redhat.parodos.workflow.option.WorkFlowOptions;
+import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.WorkReport;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -76,7 +76,7 @@ public class WorkFlowController {
 
 	@Operation(summary = "Executes a workflow")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Succeeded",
+			@ApiResponse(responseCode = "202", description = "Accepted",
 					content = { @Content(mediaType = "application/json",
 							schema = @Schema(implementation = WorkFlowResponseDTO.class)) }),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
@@ -87,14 +87,9 @@ public class WorkFlowController {
 		if (workReport == null) {
 			return ResponseEntity.status(500).build();
 		}
-		String workflowExecutionId = WorkContextDelegate.read(workReport.getWorkContext(),
-				WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ID).toString();
-		return ResponseEntity.ok(WorkFlowResponseDTO.builder().workFlowExecutionId(UUID.fromString(workflowExecutionId))
-				.workFlowOptions((WorkFlowOptions) WorkContextDelegate.read(workReport.getWorkContext(),
-						WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-						WorkContextDelegate.Resource.WORKFLOW_OPTIONS))
+		return ResponseEntity.ok(WorkFlowResponseDTO.builder()
+				.workFlowExecutionId(WorkContextUtils.getMainExecutionId(workReport.getWorkContext()))
 				.workStatus(workReport.getStatus()).build());
-
 	}
 
 	@Operation(summary = "Updates a workflow checker task status")

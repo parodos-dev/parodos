@@ -38,4 +38,31 @@ public class WorkContextUtilsTest {
 		WorkContextUtils.setProjectId(new WorkContext(), null);
 	}
 
+	@Test(expected = NoSuchElementException.class)
+	public void testGetMainExecutionIdWithoutProjectId() {
+		WorkContext context = new WorkContext();
+		WorkContextUtils.getMainExecutionId(context);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testGetMainExecutionIdWithIllegalId() {
+		WorkContext context = new WorkContext();
+		WorkContextDelegate.write(context, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ID, "illegal");
+		WorkContextUtils.getMainExecutionId(context);
+	}
+
+	@Test
+	public void testSetAndGetMainExecutionId() {
+		UUID mainExecutionId = UUID.randomUUID();
+		WorkContext context = new WorkContext();
+		WorkContextUtils.setMainExecutionId(context, mainExecutionId);
+		assertEquals(mainExecutionId, WorkContextUtils.getMainExecutionId(context));
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void testSetMainExecutionIdWithNullId() {
+		WorkContextUtils.setMainExecutionId(new WorkContext(), null);
+	}
+
 }

@@ -7,6 +7,18 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+<<<<<<< HEAD
+=======
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.nullable;
+
+>>>>>>> 0b7997af (Execute main workflow asynchronously)
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
 import com.redhat.parodos.project.service.ProjectService;
 import com.redhat.parodos.workflow.WorkFlowDelegate;
@@ -49,6 +61,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.server.ResponseStatusException;
 
+<<<<<<< HEAD
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -63,8 +76,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+=======
+>>>>>>> 0b7997af (Execute main workflow asynchronously)
 @ExtendWith(SpringExtension.class)
 class WorkFlowServiceImplTest {
+
+	private static final String TEST_WORKFLOW_NAME = "test-workflow";
 
 	private WorkFlowDelegate workFlowDelegate;
 
@@ -90,6 +107,8 @@ class WorkFlowServiceImplTest {
 
 	private ModelMapper modelMapper;
 
+	private WorkFlowExecutor workFlowExecutor;
+
 	@BeforeEach
 	void initEach() {
 		this.workFlowDelegate = mock(WorkFlowDelegate.class);
@@ -103,11 +122,11 @@ class WorkFlowServiceImplTest {
 		this.metricRegistry = new SimpleMeterRegistry();
 		this.projectService = mock(ProjectService.class);
 		this.modelMapper = new ModelMapper();
-
+		this.workFlowExecutor = new WorkFlowExecutorImpl(this.workFlowDelegate);
 		this.workFlowService = new WorkFlowServiceImpl(this.workFlowDelegate, this.workFlowServiceDelegate,
 				this.workFlowDefinitionRepository, this.workFlowTaskDefinitionRepository, this.workFlowRepository,
 				this.workFlowTaskRepository, this.workFlowWorkRepository, this.workFlowDefinitionService,
-				this.metricRegistry, this.projectService, this.modelMapper);
+				this.metricRegistry, this.projectService, this.modelMapper, workFlowExecutor);
 	}
 
 	@Test
@@ -116,6 +135,7 @@ class WorkFlowServiceImplTest {
 		Work work = mock(Work.class);
 		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow().named("test").execute(work).build();
 
+<<<<<<< HEAD
 		when(work.execute(any())).thenReturn(new DefaultWorkReport(WorkStatus.COMPLETED, new WorkContext() {
 			{
 				put("foo", "bar");
@@ -124,11 +144,24 @@ class WorkFlowServiceImplTest {
 		when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
 		when(this.workFlowDelegate.initWorkFlowContext(any(), any())).thenReturn(new WorkContext());
 		when(this.workFlowDefinitionRepository.findFirstByName(any()))
+=======
+		Mockito.when(work.execute(Mockito.any()))
+				.thenReturn(new DefaultWorkReport(WorkStatus.COMPLETED, new WorkContext() {
+					{
+						put("foo", "bar");
+					}
+				}));
+		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName(TEST_WORKFLOW_NAME)).thenReturn(workFlow);
+		Mockito.when(this.workFlowDelegate.initWorkFlowContext(Mockito.any(), Mockito.any()))
+				.thenReturn(new WorkContext());
+		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(Mockito.any()))
+>>>>>>> 0b7997af (Execute main workflow asynchronously)
 				.thenReturn(this.sampleWorkflowDefinition("test"));
 
 		// when
-		WorkReport report = this.workFlowService.execute(UUID.randomUUID(), "test-workflow", new WorkContext(),
+		WorkReport report = this.workFlowExecutor.execute(UUID.randomUUID(), TEST_WORKFLOW_NAME, new WorkContext(),
 				UUID.randomUUID());
+
 		// then
 		assertNotNull(report);
 		assertEquals(report.getStatus().toString(), "COMPLETED");
@@ -149,7 +182,8 @@ class WorkFlowServiceImplTest {
 
 		// when
 		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId(UUID.randomUUID())
-				.works(List.of()).workFlowName("test-workflow").build());
+				.works(List.of()).workFlowName(TEST_WORKFLOW_NAME).build());
+
 		// then
 		assertNotNull(report);
 		assertEquals(report.getStatus().toString(), "FAILED");
@@ -174,16 +208,31 @@ class WorkFlowServiceImplTest {
 		}));
 		when(this.workFlowDefinitionRepository.findFirstByName(any()))
 				.thenReturn(this.sampleWorkflowDefinition("test"));
+<<<<<<< HEAD
 		when(this.workFlowWorkRepository.findFirstByWorkDefinitionId(any())).thenReturn(null);
 		when(this.workFlowDelegate.initWorkFlowContext(any(), any())).thenReturn(new WorkContext());
 		when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
 
+=======
+		Mockito.when(this.workFlowWorkRepository.findFirstByWorkDefinitionId(Mockito.any())).thenReturn(null);
+		Mockito.when(this.workFlowDelegate.initWorkFlowContext(Mockito.any(), Mockito.any()))
+				.thenReturn(new WorkContext());
+		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName(TEST_WORKFLOW_NAME)).thenReturn(workFlow);
+		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().status(WorkFlowStatus.IN_PROGRESS).build();
+		workFlowExecution.setId(UUID.randomUUID());
+		Mockito.when(this.workFlowRepository.save(Mockito.any())).thenReturn(workFlowExecution);
+		WorkFlowDefinitionResponseDTO workFlowDefinitionResponseDTO = WorkFlowDefinitionResponseDTO.builder()
+				.name(TEST_WORKFLOW_NAME).works(List.of()).build();
+		Mockito.when(this.workFlowDefinitionService.getWorkFlowDefinitionByName(TEST_WORKFLOW_NAME))
+				.thenReturn(workFlowDefinitionResponseDTO);
+>>>>>>> 0b7997af (Execute main workflow asynchronously)
 		// when
 		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId(UUID.randomUUID())
-				.works(List.of()).workFlowName("test-workflow").build());
+				.works(List.of()).workFlowName(TEST_WORKFLOW_NAME).build());
+
 		// then
 		assertNotNull(report);
-		assertEquals(report.getStatus().toString(), "COMPLETED");
+		assertEquals("IN_PROGRESS", report.getStatus().toString());
 		assertNull(report.getError());
 
 		assertNotNull(report.getWorkContext());
@@ -203,11 +252,16 @@ class WorkFlowServiceImplTest {
 		when(this.workFlowWorkRepository.findFirstByWorkDefinitionId(any()))
 				.thenReturn(WorkFlowWorkDefinition.builder().build());
 
+<<<<<<< HEAD
 		when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
+=======
+		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName(TEST_WORKFLOW_NAME)).thenReturn(workFlow);
+>>>>>>> 0b7997af (Execute main workflow asynchronously)
 
 		// when
 		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId(UUID.randomUUID())
-				.works(List.of()).workFlowName("test-workflow").build());
+				.works(List.of()).workFlowName(TEST_WORKFLOW_NAME).build());
+
 		// then
 		assertNotNull(report);
 		assertEquals(report.getStatus().toString(), "FAILED");
@@ -225,12 +279,18 @@ class WorkFlowServiceImplTest {
 		// given
 		Work work = mock(Work.class);
 		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow().named("test").execute(work).build();
+<<<<<<< HEAD
 		when(this.workFlowDefinitionRepository.findFirstByName(any())).thenReturn(null);
 		when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
+=======
+		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(Mockito.any())).thenReturn(null);
+		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName(TEST_WORKFLOW_NAME)).thenReturn(workFlow);
+>>>>>>> 0b7997af (Execute main workflow asynchronously)
 
 		// when
 		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId(UUID.randomUUID())
-				.works(List.of()).workFlowName("test-workflow").build());
+				.works(List.of()).workFlowName(TEST_WORKFLOW_NAME).build());
+
 		// then
 		assertNotNull(report);
 		assertEquals(report.getStatus().toString(), "FAILED");
@@ -331,7 +391,7 @@ class WorkFlowServiceImplTest {
 		assertEquals(this.metricRegistry.get("workflow.executions").tag("status", "COMPLETED").counter().count(), 1);
 		// No other tags are created under workflow.executions metrics
 		assertEquals(this.metricRegistry.get("workflow.executions").counter().count(), 1);
-		// check that IN_PROGESS tag was not addded
+		// check that IN_PROGRESS tag was not added
 		assertThrows(MeterNotFoundException.class, () -> {
 			this.metricRegistry.get("workflow.executions").tag("status", "IN_PROGRESS").counter();
 		});
