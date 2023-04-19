@@ -71,3 +71,9 @@ workflow-service-sdk/.openapi-generator/
 workflow-service-sdk/build.*
 workflow-service-sdk/git_push.sh
 workflow-service-sdk/.travis.yml
+
+##############################
+## Nofication Service SDK Generated files
+##############################
+notification-service-sdk/.openapi-generator/FILES
+
