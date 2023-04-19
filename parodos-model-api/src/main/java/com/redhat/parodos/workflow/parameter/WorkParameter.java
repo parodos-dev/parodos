@@ -55,6 +55,9 @@ public class WorkParameter {
 		Map<String, Object> properties = this.getType().getAsJsonSchema();
 		properties.put("required", !this.isOptional());
 		properties.put("description", this.getDescription());
+		if (type.isSelect() && selectOptions != null && !selectOptions.isEmpty()) {
+			properties.put("enum", selectOptions);
+		}
 		return properties;
 	}
 

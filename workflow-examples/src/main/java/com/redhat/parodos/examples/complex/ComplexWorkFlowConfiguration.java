@@ -188,7 +188,12 @@ public class ComplexWorkFlowConfiguration {
 			@Parameter(key = "workloadId", description = "The workload id", type = WorkParameterType.TEXT,
 					optional = false),
 			@Parameter(key = "projectUrl", description = "The project url", type = WorkParameterType.URL,
-					optional = true) })
+					optional = true),
+			@Parameter(key = "WORKFLOW_SELECT_SAMPLE", description = "Workflow select parameter sample",
+					type = WorkParameterType.SELECT, optional = true, selectOptions = { "option1", "option2" }),
+			@Parameter(key = "WORKFLOW_MULTI_SELECT_SAMPLE", description = "Workflow multi-select parameter sample",
+					type = WorkParameterType.MULTI_SELECT, optional = true,
+					selectOptions = { "option1", "option2", "option3" }) })
 	WorkFlow complexWorkFlow(@Qualifier("subWorkFlowThree") WorkFlow subWorkFlowThree,
 			@Qualifier("subWorkFlowFour") WorkFlow subWorkFlowFour) {
 		return SequentialFlow.Builder.aNewSequentialFlow().named("complexWorkFlow").execute(subWorkFlowThree)

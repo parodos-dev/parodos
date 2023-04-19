@@ -40,37 +40,36 @@ public enum WorkParameterType {
 	public Map<String, Object> getAsJsonSchema() {
 		Map<String, Object> properties = new HashMap<>();
 		switch (this) {
-			case PASSWORD:
+			case PASSWORD -> {
 				properties.put("type", "string");
 				properties.put("format", "password");
-				break;
-			case TEXT:
+			}
+			case TEXT -> {
 				properties.put("type", "string");
 				properties.put("format", "text");
-				break;
-			case EMAIL:
+			}
+			case EMAIL -> {
 				properties.put("type", "string");
 				properties.put("format", "email");
-				break;
-			case NUMBER:
-				properties.put("type", "number");
-				break;
-			case URL:
+			}
+			case NUMBER -> properties.put("type", "number");
+			case URL -> {
 				properties.put("type", "string");
 				properties.put("format", "url");
-				break;
-			case DATE:
+			}
+			case DATE -> {
 				properties.put("type", "string");
 				properties.put("format", "date");
-				break;
-			case SELECT:
-				properties.put("type", "select");
-				break;
-			case MULTI_SELECT:
-				properties.put("type", "multi-select");
-				break;
-			default:
-				throw new IllegalArgumentException("Invalid parameter type");
+			}
+			case SELECT -> {
+				properties.put("type", "string");
+				properties.put("format", "select");
+			}
+			case MULTI_SELECT -> {
+				properties.put("type", "string");
+				properties.put("format", "multi-select");
+			}
+			default -> throw new IllegalArgumentException("Invalid parameter type");
 		}
 		return properties;
 	}
