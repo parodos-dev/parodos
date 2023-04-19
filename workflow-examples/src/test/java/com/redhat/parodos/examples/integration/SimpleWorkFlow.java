@@ -14,7 +14,6 @@ import com.redhat.parodos.sdk.model.WorkFlowResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowResponseDTO.WorkStatusEnum;
 import com.redhat.parodos.sdk.model.WorkRequestDTO;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
-import com.redhat.parodos.workflow.enums.WorkFlowProcessingType;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.enums.WorkType;
 import com.redhat.parodos.workflow.utils.CredUtils;
@@ -70,7 +69,7 @@ public class SimpleWorkFlow {
 		assertNotNull(simpleSequentialWorkFlowDefinition.getId());
 		assertEquals("simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW,
 				simpleSequentialWorkFlowDefinition.getName());
-		assertEquals(WorkFlowProcessingType.SEQUENTIAL.toString(),
+		assertEquals(WorkFlowDefinitionResponseDTO.ProcessingTypeEnum.SEQUENTIAL,
 				simpleSequentialWorkFlowDefinition.getProcessingType());
 		assertEquals(WorkFlowType.INFRASTRUCTURE.toString(), simpleSequentialWorkFlowDefinition.getType());
 
