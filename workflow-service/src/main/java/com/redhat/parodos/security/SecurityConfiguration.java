@@ -16,6 +16,7 @@
 package com.redhat.parodos.security;
 
 import com.redhat.parodos.config.properties.LdapConnectionProperties;
+import com.redhat.parodos.config.properties.SecurityProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -49,11 +50,17 @@ public class SecurityConfiguration {
 	@Autowired
 	private LdapConnectionProperties ldapConnectionProperties;
 
+	@Autowired
+	private SecurityProperties securityProperties;
+
 	public HttpSecurity setHttpSecurity(HttpSecurity http) throws Exception {
+		http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+
+		if (!this.securityProperties.getAuthentication()) {
+			return http;
+		}
+
 		// @formatter:off
-		http
-			.csrf()
-			.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 		http
 			.authorizeRequests()
 			.mvcMatchers(HttpMethod.OPTIONS, "/**")
@@ -79,6 +86,9 @@ public class SecurityConfiguration {
 
 	@Autowired
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
+		if (!this.securityProperties.getAuthentication()) {
+			return;
+		}
 		// @formatter:off
 		auth.ldapAuthentication()
 			.userDnPatterns(this.ldapConnectionProperties.getUserDNPatterns())
