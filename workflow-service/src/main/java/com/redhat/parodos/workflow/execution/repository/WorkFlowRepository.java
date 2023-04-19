@@ -38,6 +38,8 @@ public interface WorkFlowRepository extends JpaRepository<WorkFlowExecution, UUI
 
 	List<WorkFlowExecution> findByMainWorkFlowExecution(WorkFlowExecution mainWorkFlowExecution);
 
+	List<WorkFlowExecution> findAllByProjectId(UUID projectId);
+
 	WorkFlowExecution findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(WorkFlowExecution mainWorkFlowExecution,
 			UUID workFlowDefinitionId);
 

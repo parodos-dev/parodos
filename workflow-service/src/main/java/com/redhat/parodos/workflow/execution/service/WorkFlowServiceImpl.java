@@ -167,6 +167,12 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	}
 
 	@Override
+	public List<WorkFlowStatusResponseDTO> getWorkFlowStatusByProjectId(UUID projectId) {
+		return workFlowRepository.findAllByProjectId(projectId).stream()
+				.map(workFlowExecution -> getWorkFlowStatus(workFlowExecution.getProjectId())).toList();
+	}
+
+	@Override
 	public WorkFlowStatusResponseDTO getWorkFlowStatus(UUID workFlowExecutionId) {
 		WorkFlowExecution workFlowExecution = workFlowRepository.findById(workFlowExecutionId).orElseThrow(() -> {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,

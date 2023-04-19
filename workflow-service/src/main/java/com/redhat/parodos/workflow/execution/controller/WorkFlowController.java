@@ -36,9 +36,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -110,6 +112,20 @@ public class WorkFlowController {
 	@GetMapping("/{workFlowExecutionId}/status")
 	public ResponseEntity<WorkFlowStatusResponseDTO> getStatus(@PathVariable String workFlowExecutionId) {
 		return ResponseEntity.ok(workFlowService.getWorkFlowStatus(UUID.fromString(workFlowExecutionId)));
+	}
+
+	@Operation(summary = "Returns workflows' status by project id")
+	@ApiResponses(
+			value = {
+					@ApiResponse(responseCode = "200", description = "Succeeded",
+							content = { @Content(mediaType = "application/json",
+									schema = @Schema(implementation = List.class)) }),
+					@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+					@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content) })
+	@GetMapping("/status")
+	public ResponseEntity<List<WorkFlowStatusResponseDTO>> getStatusByProjectId(
+			@RequestParam("projectId") String projectId) {
+		return ResponseEntity.ok(workFlowService.getWorkFlowStatusByProjectId(UUID.fromString(projectId)));
 	}
 
 }
