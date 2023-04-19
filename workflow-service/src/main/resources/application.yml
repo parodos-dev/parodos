@@ -4,6 +4,8 @@ spring:
     title: Parodos Workflow Service
     version: 1.0.8-SNAPSHOT
 
+
+
   jackson:
     serialization:
       indent-output: true
@@ -39,10 +41,7 @@ spring:
     allow-bean-definition-overriding: true
 
   security:
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: ${keycloak_url:http://localhost:3434/realms/Parodos/protocol/openid-connect/certs}
+    authentication: ${PARODOS_AUTH:true}
 
   lifecycle:
     timeout-per-shutdown-phase: "25s"
