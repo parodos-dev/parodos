@@ -12,7 +12,9 @@ import com.redhat.parodos.sdk.model.ProjectResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
 import com.redhat.parodos.sdk.model.WorkFlowResponseDTO;
+import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.sdk.model.WorkRequestDTO;
+import com.redhat.parodos.sdkutils.SdkUtils;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.enums.WorkType;
@@ -21,11 +23,11 @@ import org.junit.Test;
 
 import org.springframework.util.CollectionUtils;
 
-import static com.redhat.parodos.sdkutils.SdkUtils.getProjectAsync;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
 
 @Slf4j
 public class PrebuiltWorkFlow extends BaseIntegrationTest {
@@ -40,7 +42,7 @@ public class PrebuiltWorkFlow extends BaseIntegrationTest {
 
 		log.info("Running pre-built flow (name: {})", workFlowName);
 
-		ProjectResponseDTO testProject = getProjectAsync(apiClient, projectName, projectDescription);
+		ProjectResponseDTO testProject = SdkUtils.getProjectAsync(apiClient, projectName, projectDescription);
 
 		// GET preBuiltWorkFlow DEFINITIONS
 		WorkflowDefinitionApi workflowDefinitionApi = new WorkflowDefinitionApi(apiClient);
@@ -85,10 +87,13 @@ public class PrebuiltWorkFlow extends BaseIntegrationTest {
 		WorkFlowResponseDTO workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
 
 		assertNotNull(workFlowResponseDTO.getWorkFlowExecutionId());
-		assertNull(workFlowResponseDTO.getWorkFlowOptions());
 		assertNotNull(workFlowResponseDTO.getWorkStatus());
-		assertEquals(WorkFlowResponseDTO.WorkStatusEnum.COMPLETED, workFlowResponseDTO.getWorkStatus());
+		assertEquals(WorkFlowResponseDTO.WorkStatusEnum.IN_PROGRESS, workFlowResponseDTO.getWorkStatus());
 
+		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = SdkUtils.waitWorkflowStatusAsync(workflowApi,
+				workFlowResponseDTO.getWorkFlowExecutionId());
+		assertEquals(WorkFlowResponseDTO.WorkStatusEnum.COMPLETED,
+				WorkFlowResponseDTO.WorkStatusEnum.valueOf(workFlowStatusResponseDTO.getStatus()));
 		log.info("workflow finished successfully with response: {}", workFlowResponseDTO);
 		log.info("******** PreBuilt Sequence Flow Completed ********");
 	}

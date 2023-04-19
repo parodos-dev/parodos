@@ -65,7 +65,7 @@ public abstract class BaseWorkFlowTask implements WorkFlowTask, BeanNameAware {
 		return WorkContextUtils.getProjectId(workContext);
 	}
 
-	public String getMainExecutionId(WorkContext workContext) {
+	public UUID getMainExecutionId(WorkContext workContext) {
 		return WorkContextUtils.getMainExecutionId(workContext);
 	}
 

@@ -9,6 +9,7 @@ import com.redhat.parodos.workflow.execution.continuation.WorkFlowContinuationSe
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.scheduler.WorkFlowSchedulerServiceImpl;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
+import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.WorkContext;
 
 import org.springframework.stereotype.Service;
@@ -34,14 +35,6 @@ public class WorkFlowExecutionFactory {
 	}
 
 	public WorkFlowExecutionInterceptor createExecutionHandler(WorkFlowDefinition definition, WorkContext workContext) {
-		// get main WorkFlowExecution, this is the first time execution for main
-		// workflow if return null
-		UUID mainWorkFlowExecutionId = getMainWorkFlowExecutionId(workContext);
-		if (mainWorkFlowExecutionId == null) {
-			return new InitialMainWorkflowInterceptor(definition, workContext, workFlowService, workFlowRepository,
-					workFlowSchedulerService, workFlowContinuationServiceImpl);
-		}
-
 		if (isMainWorkFlow(definition, workContext)) {
 			return new MainWorkFlowExecutionInterceptor(definition, workContext, workFlowService, workFlowRepository,
 					workFlowSchedulerService, workFlowContinuationServiceImpl);
@@ -53,14 +46,17 @@ public class WorkFlowExecutionFactory {
 	}
 
 	static boolean isMainWorkFlow(WorkFlowDefinition workflow, WorkContext workContext) {
+		UUID mainWorkFlowExecutionId = getMainWorkFlowExecutionId(workContext);
+		if (mainWorkFlowExecutionId == null) {
+			return false;
+		}
 		String mainWorkflowName = WorkContextDelegate.read(workContext,
 				WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION, WorkContextDelegate.Resource.NAME).toString();
 		return workflow.getName().equals(mainWorkflowName);
 	}
 
 	static UUID getMainWorkFlowExecutionId(WorkContext workContext) {
-		return Optional.ofNullable(WorkContextDelegate.read(workContext,
-				WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ID))
+		return Optional.ofNullable(WorkContextUtils.getMainExecutionId(workContext))
 				.map(id -> UUID.fromString(id.toString())).orElse(null);
 	}
 

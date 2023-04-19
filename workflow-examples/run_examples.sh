@@ -72,6 +72,38 @@ get_workflow_id() {
     -H 'Content-Type: application/json' | jq '.[] | select(.name=="'$1'")' | jq -r '.id'
 }
 
+get_workflow_options() {
+  curl -X 'GET' -s \
+    "${TARGET_URL}/api/v1/workflows/$1/context?param=WORKFLOW_OPTIONS" \
+    -H 'accept: */*' \
+    -H 'Authorization: Basic dGVzdDp0ZXN0' \
+    -H "X-XSRF-TOKEN: ${TOKEN}" \
+    -b $COOKIEFP \
+    -H 'Content-Type: application/json' | jq -r
+}
+
+get_workflow_status() {
+  curl -X 'GET' -s \
+    "${TARGET_URL}/api/v1/workflows/$1/status" \
+    -H 'accept: */*' \
+    -H 'Authorization: Basic dGVzdDp0ZXN0' \
+    -H "X-XSRF-TOKEN: ${TOKEN}" \
+    -b $COOKIEFP \
+    -H 'Content-Type: application/json' | jq -r '.status'
+}
+
+wait_for_workflow_status() {
+  for i in {1..10}
+  do
+    STATUS=$(get_workflow_status $1)
+    echo "Workflow status: $STATUS"
+    [ "$STATUS" == "$2" ] && break
+    sleep 2s
+    refresh_token
+    [ $i -eq "10" ] && @fail "Workflow didn't finish yet (status: $STATUS)"
+  done
+}
+
 get_checker_workflow() {
   curl -X 'GET' -s \
     "${TARGET_URL}/api/v1/workflowdefinitions/$1/" \
@@ -188,9 +220,11 @@ run_simple_flow() {
           }
       ]
     }'
-  response=$(execute_workflow "$params" "COMPLETED")
-  echo "workflow finished successfully with response: $response"
+  response=$(execute_workflow "$params" "IN_PROGRESS")
+  echo "workflow started successfully with response: $response"
   echo "                                                "
+  workflow_id=$(echo "$response" | jq -r '.workFlowExecutionId')
+  wait_for_workflow_status $workflow_id "COMPLETED"
   echo_blue "******** Simple Sequence Flow Completed ********"
   echo "                                                "
 }
@@ -227,9 +261,14 @@ run_complex_flow() {
       "workFlowName": "onboardingComplexAssessment_ASSESSMENT_WORKFLOW",
       "works": []
   }'
-  response=$(execute_workflow "$params" "COMPLETED")
+  response=$(execute_workflow "$params" "IN_PROGRESS")
+  workflow_id=$(echo "$response" | jq -r '.workFlowExecutionId')
+  wait_for_workflow_status $workflow_id "COMPLETED"
   echo "workflow finished successfully with response: $response"
   echo "                                               "
+  response=$(get_workflow_options "$workflow_id")
+
+  echo "Workflow options response: $response"
   INFRASTRUCTURE_OPTION=$(echo "$response" | jq -r '.workFlowOptions.newOptions[0].workFlowName')
   echo "The Following Option Is Available:" $(echo_green ${INFRASTRUCTURE_OPTION})
   [ ${#INFRASTRUCTURE_OPTION} -gt "10" ] || @fail "There is no valid INFRASTRUCTURE_OPTION"

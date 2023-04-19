@@ -1,6 +1,7 @@
 package com.redhat.parodos.workflow.execution.aspect;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
@@ -10,6 +11,7 @@ import com.redhat.parodos.workflow.execution.continuation.WorkFlowContinuationSe
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
+import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,6 +63,7 @@ class AssessmentInfrastructureWorkFlowPostInterceptorTest {
 		WorkContext workContext = new WorkContext();
 		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION,
 				WorkContextDelegate.Resource.NAME, "");
+		WorkContextUtils.setMainExecutionId(workContext, UUID.randomUUID());
 
 		when(workFlowDefinitionRepository.findFirstByName(any())).thenReturn(workFlowDefinition);
 		when(workFlowRepository.findFirstByWorkFlowDefinitionIdAndMainWorkFlowExecution(any(), any()))

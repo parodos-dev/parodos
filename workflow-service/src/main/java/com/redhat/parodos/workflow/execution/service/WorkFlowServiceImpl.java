@@ -30,6 +30,7 @@ import com.redhat.parodos.project.service.ProjectService;
 import com.redhat.parodos.security.SecurityUtils;
 import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
+import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
@@ -49,8 +50,8 @@ import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
+import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import com.redhat.parodos.workflow.utils.WorkContextUtils;
-import com.redhat.parodos.workflows.engine.WorkFlowEngineBuilder;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -98,12 +99,14 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
 	private final MeterRegistry metricRegistry;
 
+	private final WorkFlowExecutor workFlowExecutor;
+
 	public WorkFlowServiceImpl(WorkFlowDelegate workFlowDelegate, WorkFlowServiceDelegate workFlowServiceDelegate,
 			WorkFlowDefinitionRepository workFlowDefinitionRepository,
 			WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository, WorkFlowRepository workFlowRepository,
 			WorkFlowTaskRepository workFlowTaskRepository, WorkFlowWorkRepository workFlowWorkRepository,
 			WorkFlowDefinitionService workFlowDefinitionService, MeterRegistry metricRegistry,
-			ProjectService projectService, ModelMapper modelMapper) {
+			ProjectService projectService, ModelMapper modelMapper, WorkFlowExecutor workFlowExecutor) {
 		this.workFlowDelegate = workFlowDelegate;
 		this.workFlowServiceDelegate = workFlowServiceDelegate;
 		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
@@ -114,6 +117,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		this.workFlowDefinitionService = workFlowDefinitionService;
 		this.metricRegistry = metricRegistry;
 		this.projectService = projectService;
+		this.workFlowExecutor = workFlowExecutor;
 	}
 
 	private void statusCounterWithStatus(WorkStatus status) {
@@ -127,30 +131,26 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	@Override
 	public WorkReport execute(WorkFlowRequestDTO workFlowRequestDTO) {
 		String workflowName = workFlowRequestDTO.getWorkFlowName();
-
 		WorkFlow workFlow = workFlowDelegate.getWorkFlowExecutionByName(workflowName);
 		String validationFailedMsg = validateWorkflow(workflowName, workFlow);
 		if (validationFailedMsg != null) {
 			return new DefaultWorkReport(WorkStatus.FAILED, new WorkContext(), new Throwable(validationFailedMsg));
 		}
 
-		WorkContext workContext = workFlowDelegate.initWorkFlowContext(workFlowRequestDTO,
-				workFlowDefinitionService.getWorkFlowDefinitionByName(workflowName));
+		WorkFlowDefinitionResponseDTO workFlowDefinition = workFlowDefinitionService
+				.getWorkFlowDefinitionByName(workflowName);
+		WorkContext workContext = workFlowDelegate.initWorkFlowContext(workFlowRequestDTO, workFlowDefinition);
 
+		// save workflow execution
+		String arguments = WorkFlowDTOUtil.writeObjectValueAsString(
+				WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+						workFlowDefinition.getName(), WorkContextDelegate.Resource.ARGUMENTS));
 		UUID projectId = workFlowRequestDTO.getProjectId();
-		return execute(projectId, workflowName, workContext, null);
-	}
-
-	public WorkReport execute(UUID projectId, String workflowName, WorkContext workContext, UUID executionId) {
-		WorkFlow workFlow = workFlowDelegate.getWorkFlowExecutionByName(workflowName);
-		log.info("execute workFlow '{}': {}", workflowName, workFlow);
-		WorkContextUtils.setProjectId(workContext, projectId);
-		if (executionId != null)
-			WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-					WorkContextDelegate.Resource.ID, executionId.toString());
-		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION,
-				WorkContextDelegate.Resource.NAME, workflowName);
-		return WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(workFlow, workContext);
+		WorkFlowExecution workFlowExecution = saveWorkFlow(projectId, workFlowDefinition.getId(),
+				WorkStatus.IN_PROGRESS, null, arguments);
+		WorkContextUtils.setMainExecutionId(workContext, workFlowExecution.getId());
+		workFlowExecutor.executeAsync(projectId, workflowName, workContext, workFlowExecution.getId());
+		return new DefaultWorkReport(WorkStatus.IN_PROGRESS, workContext, null);
 	}
 
 	@Override

@@ -13,7 +13,10 @@ import com.redhat.parodos.sdk.model.ProjectResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
 import com.redhat.parodos.sdk.model.WorkFlowResponseDTO;
+import com.redhat.parodos.sdk.model.WorkFlowResponseDTO.WorkStatusEnum;
+import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.sdk.model.WorkRequestDTO;
+import com.redhat.parodos.sdkutils.SdkUtils;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.enums.WorkType;
@@ -22,11 +25,11 @@ import org.junit.Test;
 
 import org.springframework.util.CollectionUtils;
 
-import static com.redhat.parodos.sdkutils.SdkUtils.getProjectAsync;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
 
 /**
  * @author Gloria Ciavarrini (Github: gciavarrini)
@@ -42,7 +45,7 @@ public class SimpleWorkFlow extends BaseIntegrationTest {
 	public void runSimpleWorkFlow() throws ApiException, InterruptedException {
 		log.info("Running simple flow");
 
-		ProjectResponseDTO testProject = getProjectAsync(apiClient, projectName, projectDescription);
+		ProjectResponseDTO testProject = SdkUtils.getProjectAsync(apiClient, projectName, projectDescription);
 
 		// GET simpleSequentialWorkFlow DEFINITIONS
 		WorkflowDefinitionApi workflowDefinitionApi = new WorkflowDefinitionApi();
@@ -98,10 +101,15 @@ public class SimpleWorkFlow extends BaseIntegrationTest {
 		WorkFlowResponseDTO workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
 
 		assertNotNull(workFlowResponseDTO.getWorkFlowExecutionId());
-		assertNull(workFlowResponseDTO.getWorkFlowOptions());
 		assertNotNull(workFlowResponseDTO.getWorkStatus());
-		assertEquals(WorkFlowResponseDTO.WorkStatusEnum.COMPLETED, workFlowResponseDTO.getWorkStatus());
+		assertEquals(WorkStatusEnum.IN_PROGRESS, workFlowResponseDTO.getWorkStatus());
 
+		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = SdkUtils.waitWorkflowStatusAsync(workflowApi,
+				workFlowResponseDTO.getWorkFlowExecutionId());
+
+		assertNotNull(workFlowStatusResponseDTO.getWorkFlowExecutionId());
+		assertNotNull(workFlowStatusResponseDTO.getStatus());
+		assertEquals(WorkStatusEnum.COMPLETED, workFlowStatusResponseDTO.getStatus());
 		log.info("workflow finished successfully with response: {}", workFlowResponseDTO);
 		log.info("******** Simple Sequence Flow Completed ********");
 	}

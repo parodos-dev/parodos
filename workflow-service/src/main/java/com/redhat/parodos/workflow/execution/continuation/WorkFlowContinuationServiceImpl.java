@@ -22,6 +22,7 @@ import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
+import com.redhat.parodos.workflow.execution.service.WorkFlowExecutor;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.extern.slf4j.Slf4j;
@@ -45,13 +46,13 @@ public class WorkFlowContinuationServiceImpl implements WorkFlowContinuationServ
 
 	private final WorkFlowRepository workFlowRepository;
 
-	private final AsyncWorkFlowContinuerImpl asyncWorkFlowContinuerImpl;
+	private final WorkFlowExecutor workFlowExecutor;
 
 	public WorkFlowContinuationServiceImpl(WorkFlowDefinitionRepository workFlowDefinitionRepository,
-			WorkFlowRepository workFlowRepository, AsyncWorkFlowContinuerImpl asyncWorkFlowContinuerImpl) {
+			WorkFlowRepository workFlowRepository, WorkFlowExecutor workFlowExecutor) {
 		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
 		this.workFlowRepository = workFlowRepository;
-		this.asyncWorkFlowContinuerImpl = asyncWorkFlowContinuerImpl;
+		this.workFlowExecutor = workFlowExecutor;
 	}
 
 	/**
@@ -77,7 +78,7 @@ public class WorkFlowContinuationServiceImpl implements WorkFlowContinuationServ
 	}
 
 	public void continueWorkFlow(UUID projectId, String workflowName, WorkContext workContext, UUID executionId) {
-		asyncWorkFlowContinuerImpl.executeAsync(projectId, workflowName, workContext, executionId);
+		workFlowExecutor.executeAsync(projectId, workflowName, workContext, executionId);
 	}
 
 }
