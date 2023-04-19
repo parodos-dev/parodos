@@ -23,7 +23,6 @@ import java.util.Map;
  * Workflow parameter type
  *
  * @author Annel Ketcha (Github: anludke)
- *
  */
 public enum WorkParameterType {
 
@@ -40,36 +39,39 @@ public enum WorkParameterType {
 	public Map<String, Object> getAsJsonSchema() {
 		Map<String, Object> properties = new HashMap<>();
 		switch (this) {
-			case PASSWORD -> {
+			case PASSWORD:
 				properties.put("type", "string");
 				properties.put("format", "password");
-			}
-			case TEXT -> {
+				break;
+			case TEXT:
 				properties.put("type", "string");
 				properties.put("format", "text");
-			}
-			case EMAIL -> {
+				break;
+			case EMAIL:
 				properties.put("type", "string");
 				properties.put("format", "email");
-			}
-			case NUMBER -> properties.put("type", "number");
-			case URL -> {
+				break;
+			case NUMBER:
+				properties.put("type", "number");
+				break;
+			case URL:
 				properties.put("type", "string");
 				properties.put("format", "url");
-			}
-			case DATE -> {
+				break;
+			case DATE:
 				properties.put("type", "string");
 				properties.put("format", "date");
-			}
-			case SELECT -> {
+				break;
+			case SELECT:
 				properties.put("type", "string");
 				properties.put("format", "select");
-			}
-			case MULTI_SELECT -> {
+				break;
+			case MULTI_SELECT:
 				properties.put("type", "string");
 				properties.put("format", "multi-select");
-			}
-			default -> throw new IllegalArgumentException("Invalid parameter type");
+				break;
+			default:
+				throw new IllegalArgumentException("Invalid parameter type");
 		}
 		return properties;
 	}

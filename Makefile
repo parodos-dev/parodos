@@ -24,8 +24,8 @@ GIT_HASH := $(shell git rev-parse HEAD)
 
 MVN_JAVA_VERSION := $(shell $(MAVEN) --version | awk 'NR==3 { split($$3, ver, "."); print ver[1] }')
 JAVA_VERSION := $(shell java --version | awk 'NR==1 { split($$2, ver, "."); print ver[1] }')
-JAVA_VERSION_MAX_SUPPORTED=17
-JAVA_VERSION_MIN_SUPPORTED=17
+JAVA_VERSION_MAX_SUPPORTED=11
+JAVA_VERSION_MIN_SUPPORTED=11
 
 # Setting SHELL to bash allows bash commands to be executed by recipes.
 # This is a requirement for 'setup-envtest.sh' in the test target.

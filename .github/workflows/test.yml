@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - ActionsTest
+      - java11
       - 'releases/**'
 
   pull_request:
@@ -20,7 +21,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '11'
 
       - name: Restore Maven cache
         uses: skjolber/maven-cache-github-action@v1

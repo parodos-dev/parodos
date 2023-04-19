@@ -113,14 +113,12 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 				.get("parameters");
 		List<WorkParameter> workParameters = new ArrayList<>();
 		if (annotationAttributes != null && annotationAttributes.length > 0) {
-			workParameters = Arrays.stream(annotationAttributes)
-					.map(annotationAttribute -> WorkParameter.builder().key(annotationAttribute.getString("key"))
-							.description(annotationAttribute.getString("description"))
-							.type((WorkParameterType) annotationAttribute.get("type"))
-							.optional(annotationAttribute.getBoolean("optional"))
-							.selectOptions(Arrays.stream(annotationAttribute.getStringArray("selectOptions")).toList())
-							.build())
-					.collect(Collectors.toList());
+			workParameters = Arrays.stream(annotationAttributes).map(annotationAttribute -> WorkParameter.builder()
+					.key(annotationAttribute.getString("key")).description(annotationAttribute.getString("description"))
+					.type((WorkParameterType) annotationAttribute.get("type"))
+					.optional(annotationAttribute.getBoolean("optional")).selectOptions(Arrays
+							.stream(annotationAttribute.getStringArray("selectOptions")).collect(Collectors.toList()))
+					.build()).collect(Collectors.toList());
 		}
 		workFlowDefinitionService.save(workFlowBeanName, workFlowType, workFlowBean.getProperties(), workParameters,
 				works, getWorkFlowProcessingType(workFlowBean));

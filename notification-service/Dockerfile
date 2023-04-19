@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi9/openjdk-17-runtime
+FROM registry.access.redhat.com/ubi9/openjdk-11-runtime
 
 WORKDIR /app
 
