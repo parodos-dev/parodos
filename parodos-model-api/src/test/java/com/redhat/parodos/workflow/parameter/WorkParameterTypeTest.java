@@ -52,12 +52,14 @@ public class WorkParameterTypeTest extends TestCase {
 		assertEquals(expectedDateOutput, outputs.get(5));
 
 		Map<String, String> expectedSelectOutput = new HashMap<>();
-		expectedSelectOutput.put("type", "select");
+		expectedSelectOutput.put("type", "string");
+		expectedSelectOutput.put("format", "select");
 		assertTrue(WorkParameterType.SELECT.isSelect());
 		assertEquals(expectedSelectOutput, outputs.get(6));
 
 		Map<String, String> expectedMultiSelectOutput = new HashMap<>();
-		expectedMultiSelectOutput.put("type", "multi-select");
+		expectedMultiSelectOutput.put("type", "string");
+		expectedMultiSelectOutput.put("format", "multi-select");
 		assertTrue(WorkParameterType.MULTI_SELECT.isSelect());
 		assertEquals(expectedMultiSelectOutput, outputs.get(7));
 
