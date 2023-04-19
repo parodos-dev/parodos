@@ -39,7 +39,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>dev.parodos</groupId>
   <artifactId>notification-service-sdk</artifactId>
-  <version>1.0.8-SNAPSHOT</version>
+  <version>1.0.9-SNAPSHOT</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -55,7 +55,7 @@ Add this dependency to your project's build file:
   }
 
   dependencies {
-     implementation "dev.parodos:notification-service-sdk:1.0.8-SNAPSHOT"
+     implementation "dev.parodos:notification-service-sdk:1.0.9-SNAPSHOT"
   }
 ```
 
@@ -69,7 +69,7 @@ mvn clean package
 
 Then manually install the following JARs:
 
-* `target/notification-service-sdk-1.0.8-SNAPSHOT.jar`
+* `target/notification-service-sdk-1.0.9-SNAPSHOT.jar`
 * `target/lib/*.jar`
 
 ## Getting Started
