@@ -116,10 +116,63 @@ public class WorkDefinitionResponseDTO {
 	@SerializedName(SERIALIZED_NAME_PARAMETERS)
 	private Map<String, Map<String, Object>> parameters = null;
 
+	/**
+	 * Gets or Sets processingType
+	 */
+	@JsonAdapter(ProcessingTypeEnum.Adapter.class)
+	public enum ProcessingTypeEnum {
+
+		SEQUENTIAL("SEQUENTIAL"),
+
+		PARALLEL("PARALLEL"),
+
+		OTHER("OTHER");
+
+		private String value;
+
+		ProcessingTypeEnum(String value) {
+			this.value = value;
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		@Override
+		public String toString() {
+			return String.valueOf(value);
+		}
+
+		public static ProcessingTypeEnum fromValue(String value) {
+			for (ProcessingTypeEnum b : ProcessingTypeEnum.values()) {
+				if (b.value.equals(value)) {
+					return b;
+				}
+			}
+			throw new IllegalArgumentException("Unexpected value '" + value + "'");
+		}
+
+		public static class Adapter extends TypeAdapter<ProcessingTypeEnum> {
+
+			@Override
+			public void write(final JsonWriter jsonWriter, final ProcessingTypeEnum enumeration) throws IOException {
+				jsonWriter.value(enumeration.getValue());
+			}
+
+			@Override
+			public ProcessingTypeEnum read(final JsonReader jsonReader) throws IOException {
+				String value = jsonReader.nextString();
+				return ProcessingTypeEnum.fromValue(value);
+			}
+
+		}
+
+	}
+
 	public static final String SERIALIZED_NAME_PROCESSING_TYPE = "processingType";
 
 	@SerializedName(SERIALIZED_NAME_PROCESSING_TYPE)
-	private String processingType;
+	private ProcessingTypeEnum processingType;
 
 	public static final String SERIALIZED_NAME_WORK_TYPE = "workType";
 
@@ -255,7 +308,7 @@ public class WorkDefinitionResponseDTO {
 		this.parameters = parameters;
 	}
 
-	public WorkDefinitionResponseDTO processingType(String processingType) {
+	public WorkDefinitionResponseDTO processingType(ProcessingTypeEnum processingType) {
 
 		this.processingType = processingType;
 		return this;
@@ -268,11 +321,11 @@ public class WorkDefinitionResponseDTO {
 	@javax.annotation.Nullable
 	@ApiModelProperty(value = "")
 
-	public String getProcessingType() {
+	public ProcessingTypeEnum getProcessingType() {
 		return processingType;
 	}
 
-	public void setProcessingType(String processingType) {
+	public void setProcessingType(ProcessingTypeEnum processingType) {
 		this.processingType = processingType;
 	}
 
