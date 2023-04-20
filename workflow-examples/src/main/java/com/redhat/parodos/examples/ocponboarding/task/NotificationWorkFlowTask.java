@@ -38,9 +38,15 @@ import org.springframework.http.ResponseEntity;
 @Slf4j
 public class NotificationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
-	private static final String NOTIFICATION_MESSAGE = "NOTIFICATION_MESSAGE";
+	private static final String JIRA_TICKET_URL_WORKFLOW_TASK_PARAMETER_NAME = "ISSUE_LINK";
 
-	private static final String NOTIFICATION_SUBJECT = "NOTIFICATION_SUBJECT";
+	private static final String OCP_APP_LINK_WORKFLOW_TASK_PARAMETER_NAME = "APP_LINK";
+
+	private static final String NOTIFICATION_SUBJECT = "Ocp Onboarding";
+
+	private static final String NOTIFICATION_USERNAME = "test";
+
+	private static final String NOTIFICATION_PASSWORD = "test";
 
 	private final String notificationServiceUrl;
 
@@ -54,14 +60,15 @@ public class NotificationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	 */
 	public WorkReport execute(WorkContext workContext) {
 		try {
-			String subject = getRequiredParameterValue(workContext, NOTIFICATION_SUBJECT);
-			String message = getRequiredParameterValue(workContext, NOTIFICATION_MESSAGE);
+			String jiraTicketUrl = getRequiredParameterValue(workContext, JIRA_TICKET_URL_WORKFLOW_TASK_PARAMETER_NAME);
 
-			NotificationRequest request = NotificationRequest.builder().usernames(List.of("test")).subject(subject)
-					.body(message).build();
+			String ocpAppLink = getRequiredParameterValue(workContext, OCP_APP_LINK_WORKFLOW_TASK_PARAMETER_NAME);
+
+			NotificationRequest request = NotificationRequest.builder().usernames(List.of(NOTIFICATION_USERNAME))
+					.subject(NOTIFICATION_SUBJECT).body(buildMessage(jiraTicketUrl, ocpAppLink)).build();
 
 			HttpEntity<NotificationRequest> notificationRequestHttpEntity = RestUtils.getRequestWithHeaders(request,
-					"test", "test");
+					NOTIFICATION_USERNAME, NOTIFICATION_PASSWORD);
 
 			ResponseEntity<String> response = RestUtils.executePost(notificationServiceUrl + "/api/v1/messages",
 					notificationRequestHttpEntity);
@@ -80,6 +87,11 @@ public class NotificationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
 	public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
 		return List.of(WorkFlowTaskOutput.HTTP2XX, WorkFlowTaskOutput.OTHER);
+	}
+
+	private String buildMessage(String jiraTicketUrl, String ocpAppLink) {
+		return "The ocp onboarding completed with the following details:" + "\n" + "jira ticket url: " + jiraTicketUrl
+				+ "\n" + "ocp app link: " + ocpAppLink;
 	}
 
 }

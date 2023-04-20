@@ -39,10 +39,6 @@ import org.springframework.http.ResponseEntity;
 @Slf4j
 public class JiraTicketCreationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
-	private static final String NOTIFICATION_MESSAGE = "NOTIFICATION_MESSAGE";
-
-	private static final String NOTIFICATION_SUBJECT = "NOTIFICATION_SUBJECT";
-
 	private static final String NAMESPACE = "NAMESPACE";
 
 	private static final String ISSUE_KEY = "ISSUE_KEY";
@@ -50,10 +46,6 @@ public class JiraTicketCreationWorkFlowTask extends BaseInfrastructureWorkFlowTa
 	private static final String ISSUE_LINK = "ISSUE_LINK";
 
 	private static final String WEB_LINK = "web";
-
-	private static final String JIRA_TICKET_CREATED = "jira ticket created - ";
-
-	private static final String JIRA_TICKET_LINK = "jira ticket link: ";
 
 	private final String jiraServiceBaseUrl;
 
@@ -101,11 +93,6 @@ public class JiraTicketCreationWorkFlowTask extends BaseInfrastructureWorkFlowTa
 				addParameter(workContext, ISSUE_KEY, Objects.requireNonNull(response.getBody()).getIssueKey());
 				addParameter(workContext, ISSUE_LINK,
 						Objects.requireNonNull(response.getBody()).getLinks().get(WEB_LINK));
-
-				addParameter(workContext, NOTIFICATION_SUBJECT,
-						JIRA_TICKET_CREATED + Objects.requireNonNull(response.getBody()).getIssueKey());
-				addParameter(workContext, NOTIFICATION_MESSAGE,
-						JIRA_TICKET_LINK + Objects.requireNonNull(response.getBody()).getLinks().get(WEB_LINK));
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 			}
 			log.error("Call to the API was not successful. Response: {}", response.getStatusCode());

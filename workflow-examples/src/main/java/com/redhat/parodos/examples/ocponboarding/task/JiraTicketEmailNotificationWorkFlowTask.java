@@ -102,8 +102,8 @@ public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureW
 	}
 
 	private String getMessage(String jiraTicketUrl) {
-		return "Hi there," + "\n" + "Please review the jira ticket below and approve." + "\n" + "Jira ticket url: "
-				+ jiraTicketUrl + "\n" + "Thank you," + "\n" + "The Parodos Team";
+		return "Hi there," + "\n" + "The jira ticket to monitor updates in your request is provided below." + "\n"
+				+ "Jira ticket url: " + jiraTicketUrl + "\n" + "Thank you," + "\n" + "The Parodos Team";
 	}
 
 }
