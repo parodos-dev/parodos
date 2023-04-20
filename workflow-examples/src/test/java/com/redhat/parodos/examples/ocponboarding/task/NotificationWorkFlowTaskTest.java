@@ -32,13 +32,13 @@ import org.springframework.http.ResponseEntity;
  */
 public class NotificationWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest {
 
-	private static final String NOTIFICATION_MESSAGE_TEST = "NOTIFICATION_MESSAGE";
+	private static final String JIRA_TICKET_URL_WORKFLOW_TASK_PARAMETER_NAME_TEST = "ISSUE_LINK";
 
-	private static final String NOTIFICATION_MESSAGE_VALUE_TEST = "notification-message-value-test";
+	private static final String JIRA_TICKET_URL_WORKFLOW_TASK_PARAMETER_VALUE_TEST = "jira-ticket-url-value-test";
 
-	private static final String NOTIFICATION_SUBJECT_TEST = "NOTIFICATION_SUBJECT";
+	private static final String OCP_APP_LINK_WORKFLOW_TASK_PARAMETER_NAME_TEST = "APP_LINK";
 
-	private static final String NOTIFICATION_SUBJECT_VALUE_TEST = "notification-subject-value-test";
+	private static final String OCP_APP_LINK_WORKFLOW_TASK_PARAMETER_VALUE_TEST = "ocp-app-link-test";
 
 	private static final String NOTIFICATION_SERVICE_URL = "notification-service-url";
 
@@ -48,11 +48,13 @@ public class NotificationWorkFlowTaskTest extends BaseInfrastructureWorkFlowTask
 	public void setUp() {
 		this.notificationWorkFlowTask = spy((NotificationWorkFlowTask) getConcretePersonImplementation());
 		try {
-			doReturn(NOTIFICATION_SUBJECT_VALUE_TEST).when(this.notificationWorkFlowTask)
-					.getRequiredParameterValue(Mockito.any(WorkContext.class), eq(NOTIFICATION_SUBJECT_TEST));
+			doReturn(JIRA_TICKET_URL_WORKFLOW_TASK_PARAMETER_VALUE_TEST).when(this.notificationWorkFlowTask)
+					.getRequiredParameterValue(Mockito.any(WorkContext.class),
+							eq(JIRA_TICKET_URL_WORKFLOW_TASK_PARAMETER_NAME_TEST));
 
-			doReturn(NOTIFICATION_MESSAGE_VALUE_TEST).when(this.notificationWorkFlowTask)
-					.getRequiredParameterValue(Mockito.any(WorkContext.class), eq(NOTIFICATION_MESSAGE_TEST));
+			doReturn(OCP_APP_LINK_WORKFLOW_TASK_PARAMETER_VALUE_TEST).when(this.notificationWorkFlowTask)
+					.getRequiredParameterValue(Mockito.any(WorkContext.class),
+							eq(OCP_APP_LINK_WORKFLOW_TASK_PARAMETER_NAME_TEST));
 		}
 		catch (MissingParameterException e) {
 			throw new RuntimeException(e);

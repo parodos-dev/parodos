@@ -51,6 +51,8 @@ public class OcpAppDeploymentWorkFlowTask extends BaseInfrastructureWorkFlowTask
 
 	private static final String APP_LINK = "APP_LINK";
 
+	private static final String ROUTE_PROTOCOl = "http://";
+
 	private static final String NGINX = "nginx";
 
 	private static final String NAMESPACE = "NAMESPACE";
@@ -100,7 +102,8 @@ public class OcpAppDeploymentWorkFlowTask extends BaseInfrastructureWorkFlowTask
 						.endSpec().build();
 				route = client.routes().inNamespace(namespace).resource(route).create();
 
-				addParameter(workContext, APP_LINK, route.getSpec().getHost());
+				addParameter(workContext, APP_LINK, String.format("%s%s", ROUTE_PROTOCOl, route.getSpec().getHost()));
+
 				log.info("deployment is successful");
 			}
 		}
