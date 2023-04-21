@@ -58,6 +58,11 @@ public class ProjectResponseDTO {
 	@SerializedName(SERIALIZED_NAME_NAME)
 	private String name;
 
+	public static final String SERIALIZED_NAME_STATUS = "status";
+
+	@SerializedName(SERIALIZED_NAME_STATUS)
+	private String status;
+
 	public static final String SERIALIZED_NAME_USERNAME = "username";
 
 	@SerializedName(SERIALIZED_NAME_USERNAME)
@@ -171,6 +176,27 @@ public class ProjectResponseDTO {
 		this.name = name;
 	}
 
+	public ProjectResponseDTO status(String status) {
+
+		this.status = status;
+		return this;
+	}
+
+	/**
+	 * Get status
+	 * @return status
+	 **/
+	@javax.annotation.Nullable
+	@ApiModelProperty(value = "")
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	public ProjectResponseDTO username(String username) {
 
 		this.username = username;
@@ -206,12 +232,13 @@ public class ProjectResponseDTO {
 				&& Objects.equals(this.id, projectResponseDTO.id)
 				&& Objects.equals(this.modifyDate, projectResponseDTO.modifyDate)
 				&& Objects.equals(this.name, projectResponseDTO.name)
+				&& Objects.equals(this.status, projectResponseDTO.status)
 				&& Objects.equals(this.username, projectResponseDTO.username);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(createDate, description, id, modifyDate, name, username);
+		return Objects.hash(createDate, description, id, modifyDate, name, status, username);
 	}
 
 	@Override
@@ -223,6 +250,7 @@ public class ProjectResponseDTO {
 		sb.append("    id: ").append(toIndentedString(id)).append("\n");
 		sb.append("    modifyDate: ").append(toIndentedString(modifyDate)).append("\n");
 		sb.append("    name: ").append(toIndentedString(name)).append("\n");
+		sb.append("    status: ").append(toIndentedString(status)).append("\n");
 		sb.append("    username: ").append(toIndentedString(username)).append("\n");
 		sb.append("}");
 		return sb.toString();

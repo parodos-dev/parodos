@@ -364,6 +364,9 @@
           "name" : {
             "type" : "string"
           },
+          "status" : {
+            "type" : "string"
+          },
           "username" : {
             "type" : "string"
           }

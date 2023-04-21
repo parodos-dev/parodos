@@ -50,4 +50,6 @@ public interface WorkFlowRepository extends JpaRepository<WorkFlowExecution, UUI
 	@Query("SELECT w FROM workflow_execution w WHERE w.mainWorkFlowExecution.id = :mainWorkflowId and EXISTS (SELECT f.type FROM workflow_definition f WHERE f.id = w.workFlowDefinitionId AND f.type = com.redhat.parodos.workflow.enums.WorkFlowType.CHECKER)")
 	List<WorkFlowExecution> findCheckers(@Param("mainWorkflowId") UUID mainWorkflowId);
 
+	WorkFlowExecution findFirstByProjectIdAndMainWorkFlowExecutionIsNullOrderByStartDateDesc(UUID projectId);
+
 }
