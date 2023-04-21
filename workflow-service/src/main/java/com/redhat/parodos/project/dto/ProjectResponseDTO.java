@@ -16,7 +16,11 @@
 package com.redhat.parodos.project.dto;
 
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -26,6 +30,7 @@ import lombok.NoArgsConstructor;
  * @author Annel Ketcha (Github: anludke)
  */
 
+@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -42,5 +47,9 @@ public class ProjectResponseDTO {
 	private Date modifyDate;
 
 	private String username;
+
+	// TODO: introducing for UI quick fix
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	private String status;
 
 }
