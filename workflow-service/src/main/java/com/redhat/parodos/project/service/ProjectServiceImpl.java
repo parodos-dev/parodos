@@ -18,9 +18,11 @@ package com.redhat.parodos.project.service;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
+import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
 import com.redhat.parodos.project.dto.ProjectRequestDTO;
@@ -39,10 +41,14 @@ public class ProjectServiceImpl implements ProjectService {
 
 	private final ProjectRepository projectRepository;
 
+	private final WorkFlowRepository workFlowRepository;
+
 	private final ModelMapper modelMapper;
 
-	public ProjectServiceImpl(ProjectRepository projectRepository, ModelMapper modelMapper) {
+	public ProjectServiceImpl(ProjectRepository projectRepository, WorkFlowRepository workFlowRepository,
+			ModelMapper modelMapper) {
 		this.projectRepository = projectRepository;
+		this.workFlowRepository = workFlowRepository;
 		this.modelMapper = modelMapper;
 	}
 
@@ -64,8 +70,18 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Override
 	public List<ProjectResponseDTO> getProjects() {
-		return modelMapper.map(projectRepository.findAll(), new TypeToken<List<ProjectResponseDTO>>() {
-		}.getType());
+		List<Project> projects = projectRepository.findAll();
+		return projects.stream().map(project -> {
+			WorkFlowExecution workFlowExecution = workFlowRepository
+					.findFirstByProjectIdAndMainWorkFlowExecutionIsNullOrderByStartDateDesc(project.getId());
+			return ProjectResponseDTO.builder().id(project.getId().toString()).name(project.getName())
+					.createDate(project.getCreateDate()).modifyDate(project.getModifyDate())
+					.description(project.getDescription())
+					.status(null == workFlowExecution ? "" : workFlowExecution.getStatus().name()).build();
+		}).collect(Collectors.toList());
+		// return modelMapper.map(projectRepository.findAll(), new
+		// TypeToken<List<ProjectResponseDTO>>() {
+		// }.getType());
 	}
 
 }

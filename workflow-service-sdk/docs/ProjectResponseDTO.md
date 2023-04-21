@@ -12,6 +12,7 @@ Name | Type | Description | Notes
 **id** | **String** |  |  [optional]
 **modifyDate** | **Date** |  |  [optional]
 **name** | **String** |  |  [optional]
+**status** | **String** |  |  [optional]
 **username** | **String** |  |  [optional]
 
 

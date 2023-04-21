@@ -4,6 +4,9 @@ import com.redhat.parodos.project.dto.ProjectRequestDTO;
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
 import com.redhat.parodos.project.entity.Project;
 import com.redhat.parodos.project.repository.ProjectRepository;
+import com.redhat.parodos.workflow.enums.WorkFlowStatus;
+import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
+import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -20,17 +23,24 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 
 class ProjectServiceImplTest {
 
 	private ProjectRepository projectRepository;
+
+	private WorkFlowRepository workFlowRepository;
 
 	private ProjectServiceImpl projectService;
 
 	@BeforeEach
 	public void initEach() {
 		this.projectRepository = Mockito.mock(ProjectRepository.class);
-		this.projectService = new ProjectServiceImpl(this.projectRepository, new ModelMapper());
+		this.workFlowRepository = Mockito.mock(WorkFlowRepository.class);
+		this.projectService = new ProjectServiceImpl(this.projectRepository, this.workFlowRepository,
+				new ModelMapper());
 	}
 
 	private Project getSampleProject(String name) {
@@ -71,9 +81,33 @@ class ProjectServiceImplTest {
 
 	@Test
 	public void testGetProjectsWithValidData() {
+		// project one
+		UUID projectIdOne = UUID.randomUUID();
+
+		Project projectOne = Project.builder().name("projectOne").description("project one description")
+				.createDate(new Date()).modifyDate(new Date()).build();
+		projectOne.setId(projectIdOne);
+
+		// project two
+		UUID projectIdTwo = UUID.randomUUID();
+
+		Project projectTwo = Project.builder().name("projectTwo").description("project two description")
+				.createDate(new Date()).modifyDate(new Date()).build();
+		projectTwo.setId(projectIdTwo);
+
+		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().projectId(projectIdTwo)
+				.status(WorkFlowStatus.COMPLETED).mainWorkFlowExecution(null).build();
+
 		// given
-		Mockito.when(this.projectRepository.findAll())
-				.thenReturn(Arrays.asList(getSampleProject("test"), getSampleProject("foo")));
+		Mockito.when(this.workFlowRepository
+				.findFirstByProjectIdAndMainWorkFlowExecutionIsNullOrderByStartDateDesc(eq(projectIdOne)))
+				.thenReturn(null);
+
+		Mockito.when(this.workFlowRepository
+				.findFirstByProjectIdAndMainWorkFlowExecutionIsNullOrderByStartDateDesc(eq(projectIdTwo)))
+				.thenReturn(workFlowExecution);
+
+		Mockito.when(this.projectRepository.findAll()).thenReturn(Arrays.asList(projectOne, projectTwo));
 
 		// when
 		List<ProjectResponseDTO> res = this.projectService.getProjects();
@@ -81,8 +115,10 @@ class ProjectServiceImplTest {
 		// then
 		assertNotNull(res);
 		assertEquals(res.size(), 2);
-		assertEquals(res.get(0).getName(), "test");
-		assertEquals(res.get(1).getName(), "foo");
+		assertEquals(res.get(0).getName(), "projectOne");
+		assertTrue(res.get(0).getStatus().isEmpty());
+		assertEquals(res.get(1).getName(), "projectTwo");
+		assertEquals(res.get(1).getStatus(), "COMPLETED");
 	}
 
 	@Test
@@ -102,7 +138,7 @@ class ProjectServiceImplTest {
 	public void testSaveWithValidData() {
 		// given
 		Project project = getSampleProject("test");
-		Mockito.when(this.projectRepository.save(Mockito.any(Project.class))).thenReturn(project);
+		Mockito.when(this.projectRepository.save(any(Project.class))).thenReturn(project);
 
 		ProjectRequestDTO projectDTO = ProjectRequestDTO.builder().name("dto").description("dto description").build();
 

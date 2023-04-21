@@ -275,6 +275,7 @@ components:
         description: description
         id: id
         createDate: 2000-01-23T04:56:07.000+00:00
+        status: status
         username: username
       properties:
         createDate:
@@ -288,6 +289,8 @@ components:
           format: date-time
           type: string
         name:
+          type: string
+        status:
           type: string
         username:
           type: string
