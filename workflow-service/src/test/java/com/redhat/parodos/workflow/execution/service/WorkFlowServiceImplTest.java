@@ -1,23 +1,39 @@
 package com.redhat.parodos.workflow.execution.service;
 
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+
 import com.redhat.parodos.workflow.WorkFlowDelegate;
+import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
-import com.redhat.parodos.workflow.definition.entity.WorkFlowWorkDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowWorkDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
 import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
 import com.redhat.parodos.workflow.enums.WorkFlowStatus;
-
 import com.redhat.parodos.workflow.enums.WorkType;
+import com.redhat.parodos.workflow.execution.dto.WorkFlowContextResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
+import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionContext;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
+import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.Work;
@@ -34,18 +50,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 
 class WorkFlowServiceImplTest {
 
@@ -611,7 +615,7 @@ class WorkFlowServiceImplTest {
 	}
 
 	@Test
-	void testGetWorkFlowStatusWithNonmainWorkFlowData() {
+	void testGetWorkFlowStatusWithNonMainWorkFlowData() {
 		// workflow
 		UUID workFlowExecutionId = UUID.randomUUID();
 		UUID workFlowDefinitionId = UUID.randomUUID();
@@ -842,6 +846,65 @@ class WorkFlowServiceImplTest {
 
 		Mockito.verify(this.workFlowTaskRepository, Mockito.never()).save(any());
 
+	}
+
+	@Test
+	public void testGetWorkflowParametersWithWorkflowOptions() {
+		// given
+		UUID workFlowExecutionId = UUID.randomUUID();
+		WorkFlowExecution workFlowExecution = Mockito.mock(WorkFlowExecution.class);
+		Mockito.when(workFlowExecution.getId()).thenReturn(workFlowExecutionId);
+		WorkFlowExecutionContext executionContext = Mockito.mock(WorkFlowExecutionContext.class);
+		Mockito.when(workFlowExecution.getWorkFlowExecutionContext()).thenReturn(executionContext);
+		WorkContext workContext = new WorkContext();
+		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.WORKFLOW_OPTIONS,
+				Map.of("newOptions", List.of(new WorkFlowOption.Builder("test-id", "test-workflow").build())));
+		Mockito.when(executionContext.getWorkContext()).thenReturn(workContext);
+
+		Mockito.when(this.workFlowRepository.findById(Mockito.eq(workFlowExecutionId)))
+				.thenReturn(Optional.of(workFlowExecution));
+
+		// when
+		WorkFlowContextResponseDTO workflowParameters = this.workFlowService.getWorkflowParameters(workFlowExecutionId,
+				List.of(WorkContextDelegate.Resource.WORKFLOW_OPTIONS));
+
+		// then
+		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findById(any());
+		assertNotNull(workflowParameters);
+		assertNotNull(workflowParameters.getWorkFlowOptions());
+		assertEquals(workFlowExecutionId.toString(), workflowParameters.getWorkFlowExecutionId());
+		List<WorkFlowOption> newOptions = workflowParameters.getWorkFlowOptions().getNewOptions();
+		assertNotNull(newOptions);
+		assertNull(workflowParameters.getWorkFlowOptions().getUpgradeOptions());
+		assertNull(workflowParameters.getWorkFlowOptions().getCurrentVersion());
+		assertEquals(1, newOptions.size());
+		assertEquals("test-workflow", newOptions.get(0).getWorkFlowName());
+	}
+
+	@Test
+	public void testGetWorkflowParametersWithoutWorkflowOptions() {
+		// given
+		UUID workFlowExecutionId = UUID.randomUUID();
+		WorkFlowExecution workFlowExecution = Mockito.mock(WorkFlowExecution.class);
+		Mockito.when(workFlowExecution.getId()).thenReturn(workFlowExecutionId);
+		WorkFlowExecutionContext executionContext = Mockito.mock(WorkFlowExecutionContext.class);
+		Mockito.when(workFlowExecution.getWorkFlowExecutionContext()).thenReturn(executionContext);
+		Mockito.when(executionContext.getWorkContext()).thenReturn(new WorkContext());
+
+		Mockito.when(this.workFlowRepository.findById(Mockito.eq(workFlowExecutionId)))
+				.thenReturn(Optional.of(workFlowExecution));
+
+		// when
+		WorkFlowContextResponseDTO workflowParameters = this.workFlowService.getWorkflowParameters(workFlowExecutionId,
+				List.of(WorkContextDelegate.Resource.WORKFLOW_OPTIONS));
+
+		// then
+		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findById(any());
+		assertNotNull(workflowParameters);
+		assertNotNull(workflowParameters.getWorkFlowOptions());
+		assertEquals(workFlowExecutionId.toString(), workflowParameters.getWorkFlowExecutionId());
+		assertNull(workflowParameters.getWorkFlowOptions().getNewOptions());
 	}
 
 	private WorkFlowDefinition sampleWorkflowDefinition(String name) {

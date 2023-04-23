@@ -16,6 +16,10 @@
 package com.redhat.parodos.workflow.execution.service;
 
 import com.redhat.parodos.workflow.WorkFlowDelegate;
+import com.redhat.parodos.workflow.execution.dto.WorkFlowContextResponseDTO;
+import com.redhat.parodos.workflow.execution.dto.WorkFlowOptionsResponseDTO;
+import com.redhat.parodos.workflow.option.WorkFlowOption;
+import com.redhat.parodos.workflow.option.WorkFlowOptions;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
@@ -43,6 +47,7 @@ import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -52,6 +57,7 @@ import javax.annotation.PreDestroy;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static java.util.Objects.isNull;
@@ -192,6 +198,38 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		return WorkFlowStatusResponseDTO.builder().workFlowExecutionId(workFlowExecution.getId().toString())
 				.workFlowName(workFlowDefinition.getName()).status(workFlowExecution.getStatus().name())
 				.works(workFlowWorksStatusResponseDTOs).build();
+	}
+
+	@Override
+	public WorkFlowContextResponseDTO getWorkflowParameters(UUID workFlowExecutionId,
+			List<WorkContextDelegate.Resource> params) {
+		WorkFlowExecution workFlowExecution = workFlowRepository.findById(workFlowExecutionId).orElseThrow(() -> {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					String.format("workflow execution id: %s not found!", workFlowExecutionId));
+		});
+		Map options = null;
+		if (params.contains(WorkContextDelegate.Resource.WORKFLOW_OPTIONS)) {
+			options = (Map) WorkContextDelegate.read(workFlowExecution.getWorkFlowExecutionContext().getWorkContext(),
+					WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.WORKFLOW_OPTIONS);
+		}
+		if (options == null) {
+			options = Map.of();
+		}
+
+		return WorkFlowContextResponseDTO.builder().workFlowExecutionId(workFlowExecution.getId().toString())
+				.workFlowOptions(WorkFlowOptionsResponseDTO.builder()
+						.currentVersion((WorkFlowOption) options.get("currentVersion"))
+						.continuationOptions(getFlowOptions(options, "continuationOptions"))
+						.migrationOptions(getFlowOptions(options, "migrationOptions"))
+						.otherOptions(getFlowOptions(options, "otherOptions"))
+						.upgradeOptions(getFlowOptions(options, "upgradeOptions"))
+						.newOptions(getFlowOptions(options, "newOptions")).build())
+				.build();
+	}
+
+	@Nullable
+	private static List<WorkFlowOption> getFlowOptions(Map options, String key) {
+		return options.containsKey(key) ? (List<WorkFlowOption>) options.get(key) : null;
 	}
 
 	@Override

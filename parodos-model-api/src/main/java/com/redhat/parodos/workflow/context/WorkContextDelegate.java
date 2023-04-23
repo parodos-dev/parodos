@@ -43,7 +43,39 @@ public class WorkContextDelegate {
 
 	public enum Resource {
 
-		ID, NAME, PARAMETERS, ARGUMENTS, STATUS, WORKFLOW_OPTIONS, PARENT_WORKFLOW,
+		// @formatter:off
+		ID,
+
+		NAME,
+
+		PARAMETERS,
+
+		ARGUMENTS,
+
+		STATUS,
+
+		WORKFLOW_OPTIONS(Visibility.PUBLIC),
+
+		PARENT_WORKFLOW;
+		// @formatter:on
+
+		private final Visibility visibility;
+
+		Resource() {
+			this.visibility = Visibility.PRIVATE;
+		}
+
+		Resource(Visibility visibility) {
+			this.visibility = visibility;
+		}
+
+		public Visibility getVisibility() {
+			return visibility;
+		}
+
+		public boolean isPublic() {
+			return Visibility.PUBLIC.equals(visibility);
+		}
 
 	}
 

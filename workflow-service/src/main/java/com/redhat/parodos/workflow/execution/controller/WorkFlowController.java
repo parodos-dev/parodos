@@ -15,8 +15,13 @@
  */
 package com.redhat.parodos.workflow.execution.controller;
 
+import javax.validation.Valid;
+import java.util.List;
+import java.util.UUID;
+
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowCheckerTaskRequestDTO;
+import com.redhat.parodos.workflow.execution.dto.WorkFlowContextResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowStatusResponseDTO;
@@ -29,6 +34,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,10 +42,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
-import java.util.UUID;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  * Workflow controller to execute workflow and get status
@@ -110,6 +115,29 @@ public class WorkFlowController {
 	@GetMapping("/{workFlowExecutionId}/status")
 	public ResponseEntity<WorkFlowStatusResponseDTO> getStatus(@PathVariable String workFlowExecutionId) {
 		return ResponseEntity.ok(workFlowService.getWorkFlowStatus(UUID.fromString(workFlowExecutionId)));
+	}
+
+	@Operation(summary = "Returns workflow context parameters")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Succeeded",
+					content = { @Content(mediaType = "application/json",
+							schema = @Schema(implementation = WorkFlowContextResponseDTO.class)) }),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content) })
+	@GetMapping("/{workFlowExecutionId}/context")
+	public ResponseEntity<WorkFlowContextResponseDTO> getWorkflowParameters(@PathVariable String workFlowExecutionId,
+			@RequestParam List<WorkContextDelegate.Resource> param) {
+		// validate only public parameters are requested by checking the visibility of the
+		// parameters
+		param.forEach(p -> {
+			if (!p.isPublic()) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+						String.format("parameter: %s is not public!", p));
+			}
+		});
+		WorkFlowContextResponseDTO responseDTO = workFlowService
+				.getWorkflowParameters(UUID.fromString(workFlowExecutionId), param);
+		return ResponseEntity.ok(responseDTO);
 	}
 
 }
