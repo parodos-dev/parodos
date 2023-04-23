@@ -117,6 +117,7 @@ Class | Method | HTTP request | Description
 *ProjectApi* | [**getProjects**](docs/ProjectApi.md#getProjects) | **GET** /api/v1/projects | Returns a list of project
 *WorkflowApi* | [**execute**](docs/WorkflowApi.md#execute) | **POST** /api/v1/workflows | Executes a workflow
 *WorkflowApi* | [**getStatus**](docs/WorkflowApi.md#getStatus) | **GET** /api/v1/workflows/{workFlowExecutionId}/status | Returns a workflow status
+*WorkflowApi* | [**getWorkflowParameters**](docs/WorkflowApi.md#getWorkflowParameters) | **GET** /api/v1/workflows/{workFlowExecutionId}/context | Returns workflow context parameters
 *WorkflowApi* | [**updateWorkFlowCheckerTaskStatus**](docs/WorkflowApi.md#updateWorkFlowCheckerTaskStatus) | **POST** /api/v1/workflows/{workFlowExecutionId}/checkers/{workFlowCheckerTaskName} | Updates a workflow checker task status
 *WorkflowDefinitionApi* | [**getWorkFlowDefinitionById**](docs/WorkflowDefinitionApi.md#getWorkFlowDefinitionById) | **GET** /api/v1/workflowdefinitions/{id} | Returns information about a workflow definition by id
 *WorkflowDefinitionApi* | [**getWorkFlowDefinitions**](docs/WorkflowDefinitionApi.md#getWorkFlowDefinitions) | **GET** /api/v1/workflowdefinitions | Returns a list of workflow definition
@@ -130,9 +131,11 @@ Class | Method | HTTP request | Description
  - [ProjectResponseDTO](docs/ProjectResponseDTO.md)
  - [WorkDefinitionResponseDTO](docs/WorkDefinitionResponseDTO.md)
  - [WorkFlowCheckerTaskRequestDTO](docs/WorkFlowCheckerTaskRequestDTO.md)
+ - [WorkFlowContextResponseDTO](docs/WorkFlowContextResponseDTO.md)
  - [WorkFlowDefinitionResponseDTO](docs/WorkFlowDefinitionResponseDTO.md)
  - [WorkFlowOption](docs/WorkFlowOption.md)
  - [WorkFlowOptions](docs/WorkFlowOptions.md)
+ - [WorkFlowOptionsResponseDTO](docs/WorkFlowOptionsResponseDTO.md)
  - [WorkFlowPropertiesDefinitionDTO](docs/WorkFlowPropertiesDefinitionDTO.md)
  - [WorkFlowRequestDTO](docs/WorkFlowRequestDTO.md)
  - [WorkFlowResponseDTO](docs/WorkFlowResponseDTO.md)

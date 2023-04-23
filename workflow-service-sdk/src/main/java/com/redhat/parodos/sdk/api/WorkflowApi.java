@@ -26,6 +26,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 
 import com.redhat.parodos.sdk.model.WorkFlowCheckerTaskRequestDTO;
+import com.redhat.parodos.sdk.model.WorkFlowContextResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
 import com.redhat.parodos.sdk.model.WorkFlowResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
@@ -484,6 +485,230 @@ public class WorkflowApi {
 
 		okhttp3.Call localVarCall = getStatusValidateBeforeCall(workFlowExecutionId, _callback);
 		Type localVarReturnType = new TypeToken<WorkFlowStatusResponseDTO>() {
+		}.getType();
+		localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+		return localVarCall;
+	}
+
+	/**
+	 * Build call for getWorkflowParameters
+	 * @param workFlowExecutionId (required)
+	 * @param param (required)
+	 * @param _callback Callback for upload/download progress
+	 * @return Call to execute
+	 * @throws ApiException If fail to serialize the request body object
+	 * @http.response.details
+	 * <table summary="Response Details" border="1">
+	 * <tr>
+	 * <td>Status Code</td>
+	 * <td>Description</td>
+	 * <td>Response Headers</td>
+	 * </tr>
+	 * <tr>
+	 * <td>200</td>
+	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>403</td>
+	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * </table>
+	 */
+	public okhttp3.Call getWorkflowParametersCall(String workFlowExecutionId, List<String> param,
+			final ApiCallback _callback) throws ApiException {
+		String basePath = null;
+
+		// Operation Servers
+		String[] localBasePaths = new String[] {};
+
+		// Determine Base Path to Use
+		if (localCustomBaseUrl != null) {
+			basePath = localCustomBaseUrl;
+		}
+		else if (localBasePaths.length > 0) {
+			basePath = localBasePaths[localHostIndex];
+		}
+		else {
+			basePath = null;
+		}
+
+		Object localVarPostBody = null;
+
+		// create path and map variables
+		String localVarPath = "/api/v1/workflows/{workFlowExecutionId}/context".replaceAll(
+				"\\{" + "workFlowExecutionId" + "\\}", localVarApiClient.escapeString(workFlowExecutionId.toString()));
+
+		List<Pair> localVarQueryParams = new ArrayList<Pair>();
+		List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+		Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+		Map<String, String> localVarCookieParams = new HashMap<String, String>();
+		Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+		if (param != null) {
+			localVarCollectionQueryParams.addAll(localVarApiClient.parameterToPairs("multi", "param", param));
+		}
+
+		final String[] localVarAccepts = { "application/json" };
+		final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+		if (localVarAccept != null) {
+			localVarHeaderParams.put("Accept", localVarAccept);
+		}
+
+		final String[] localVarContentTypes = {
+
+		};
+		final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+		if (localVarContentType != null) {
+			localVarHeaderParams.put("Content-Type", localVarContentType);
+		}
+
+		String[] localVarAuthNames = new String[] {};
+		return localVarApiClient.buildCall(basePath, localVarPath, "GET", localVarQueryParams,
+				localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams,
+				localVarFormParams, localVarAuthNames, _callback);
+	}
+
+	@SuppressWarnings("rawtypes")
+	private okhttp3.Call getWorkflowParametersValidateBeforeCall(String workFlowExecutionId, List<String> param,
+			final ApiCallback _callback) throws ApiException {
+
+		// verify the required parameter 'workFlowExecutionId' is set
+		if (workFlowExecutionId == null) {
+			throw new ApiException(
+					"Missing the required parameter 'workFlowExecutionId' when calling getWorkflowParameters(Async)");
+		}
+
+		// verify the required parameter 'param' is set
+		if (param == null) {
+			throw new ApiException("Missing the required parameter 'param' when calling getWorkflowParameters(Async)");
+		}
+
+		okhttp3.Call localVarCall = getWorkflowParametersCall(workFlowExecutionId, param, _callback);
+		return localVarCall;
+
+	}
+
+	/**
+	 * Returns workflow context parameters
+	 * @param workFlowExecutionId (required)
+	 * @param param (required)
+	 * @return WorkFlowContextResponseDTO
+	 * @throws ApiException If fail to call the API, e.g. server error or cannot
+	 * deserialize the response body
+	 * @http.response.details
+	 * <table summary="Response Details" border="1">
+	 * <tr>
+	 * <td>Status Code</td>
+	 * <td>Description</td>
+	 * <td>Response Headers</td>
+	 * </tr>
+	 * <tr>
+	 * <td>200</td>
+	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>403</td>
+	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * </table>
+	 */
+	public WorkFlowContextResponseDTO getWorkflowParameters(String workFlowExecutionId, List<String> param)
+			throws ApiException {
+		ApiResponse<WorkFlowContextResponseDTO> localVarResp = getWorkflowParametersWithHttpInfo(workFlowExecutionId,
+				param);
+		return localVarResp.getData();
+	}
+
+	/**
+	 * Returns workflow context parameters
+	 * @param workFlowExecutionId (required)
+	 * @param param (required)
+	 * @return ApiResponse&lt;WorkFlowContextResponseDTO&gt;
+	 * @throws ApiException If fail to call the API, e.g. server error or cannot
+	 * deserialize the response body
+	 * @http.response.details
+	 * <table summary="Response Details" border="1">
+	 * <tr>
+	 * <td>Status Code</td>
+	 * <td>Description</td>
+	 * <td>Response Headers</td>
+	 * </tr>
+	 * <tr>
+	 * <td>200</td>
+	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>403</td>
+	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * </table>
+	 */
+	public ApiResponse<WorkFlowContextResponseDTO> getWorkflowParametersWithHttpInfo(String workFlowExecutionId,
+			List<String> param) throws ApiException {
+		okhttp3.Call localVarCall = getWorkflowParametersValidateBeforeCall(workFlowExecutionId, param, null);
+		Type localVarReturnType = new TypeToken<WorkFlowContextResponseDTO>() {
+		}.getType();
+		return localVarApiClient.execute(localVarCall, localVarReturnType);
+	}
+
+	/**
+	 * Returns workflow context parameters (asynchronously)
+	 * @param workFlowExecutionId (required)
+	 * @param param (required)
+	 * @param _callback The callback to be executed when the API call finishes
+	 * @return The request call
+	 * @throws ApiException If fail to process the API call, e.g. serializing the request
+	 * body object
+	 * @http.response.details
+	 * <table summary="Response Details" border="1">
+	 * <tr>
+	 * <td>Status Code</td>
+	 * <td>Description</td>
+	 * <td>Response Headers</td>
+	 * </tr>
+	 * <tr>
+	 * <td>200</td>
+	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>403</td>
+	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * </table>
+	 */
+	public okhttp3.Call getWorkflowParametersAsync(String workFlowExecutionId, List<String> param,
+			final ApiCallback<WorkFlowContextResponseDTO> _callback) throws ApiException {
+
+		okhttp3.Call localVarCall = getWorkflowParametersValidateBeforeCall(workFlowExecutionId, param, _callback);
+		Type localVarReturnType = new TypeToken<WorkFlowContextResponseDTO>() {
 		}.getType();
 		localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
 		return localVarCall;

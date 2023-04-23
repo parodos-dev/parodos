@@ -268,6 +268,49 @@ paths:
       - Workflow
       x-contentType: application/json
       x-accepts: application/json
+  /api/v1/workflows/{workFlowExecutionId}/context:
+    get:
+      operationId: getWorkflowParameters
+      parameters:
+      - explode: false
+        in: path
+        name: workFlowExecutionId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: true
+        in: query
+        name: param
+        required: true
+        schema:
+          items:
+            enum:
+            - ID
+            - NAME
+            - PARAMETERS
+            - ARGUMENTS
+            - STATUS
+            - WORKFLOW_OPTIONS
+            - PARENT_WORKFLOW
+            type: string
+          type: array
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkFlowContextResponseDTO'
+          description: Succeeded
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+      summary: Returns workflow context parameters
+      tags:
+      - Workflow
+      x-accepts: application/json
   /api/v1/workflows/{workFlowExecutionId}/status:
     get:
       operationId: getStatus
@@ -406,6 +449,99 @@ components:
           - PENDING
           - REJECTED
           type: string
+      type: object
+    WorkFlowContextResponseDTO:
+      example:
+        workFlowOptions:
+          continuationOptions:
+          - identifier: identifier
+            workFlowName: workFlowName
+            displayName: displayName
+            description: description
+            details:
+            - details
+            - details
+          - identifier: identifier
+            workFlowName: workFlowName
+            displayName: displayName
+            description: description
+            details:
+            - details
+            - details
+          upgradeOptions:
+          - identifier: identifier
+            workFlowName: workFlowName
+            displayName: displayName
+            description: description
+            details:
+            - details
+            - details
+          - identifier: identifier
+            workFlowName: workFlowName
+            displayName: displayName
+            description: description
+            details:
+            - details
+            - details
+          newOptions:
+          - identifier: identifier
+            workFlowName: workFlowName
+            displayName: displayName
+            description: description
+            details:
+            - details
+            - details
+          - identifier: identifier
+            workFlowName: workFlowName
+            displayName: displayName
+            description: description
+            details:
+            - details
+            - details
+          migrationOptions:
+          - identifier: identifier
+            workFlowName: workFlowName
+            displayName: displayName
+            description: description
+            details:
+            - details
+            - details
+          - identifier: identifier
+            workFlowName: workFlowName
+            displayName: displayName
+            description: description
+            details:
+            - details
+            - details
+          otherOptions:
+          - identifier: identifier
+            workFlowName: workFlowName
+            displayName: displayName
+            description: description
+            details:
+            - details
+            - details
+          - identifier: identifier
+            workFlowName: workFlowName
+            displayName: displayName
+            description: description
+            details:
+            - details
+            - details
+          currentVersion:
+            identifier: identifier
+            workFlowName: workFlowName
+            displayName: displayName
+            description: description
+            details:
+            - details
+            - details
+        workFlowExecutionId: workFlowExecutionId
+      properties:
+        workFlowExecutionId:
+          type: string
+        workFlowOptions:
+          $ref: '#/components/schemas/WorkFlowOptionsResponseDTO'
       type: object
     WorkFlowDefinitionResponseDTO:
       example:
@@ -611,6 +747,115 @@ components:
           type: array
         optionsAvailable:
           type: boolean
+        otherOptions:
+          items:
+            $ref: '#/components/schemas/WorkFlowOption'
+          type: array
+        upgradeOptions:
+          items:
+            $ref: '#/components/schemas/WorkFlowOption'
+          type: array
+      type: object
+    WorkFlowOptionsResponseDTO:
+      example:
+        continuationOptions:
+        - identifier: identifier
+          workFlowName: workFlowName
+          displayName: displayName
+          description: description
+          details:
+          - details
+          - details
+        - identifier: identifier
+          workFlowName: workFlowName
+          displayName: displayName
+          description: description
+          details:
+          - details
+          - details
+        upgradeOptions:
+        - identifier: identifier
+          workFlowName: workFlowName
+          displayName: displayName
+          description: description
+          details:
+          - details
+          - details
+        - identifier: identifier
+          workFlowName: workFlowName
+          displayName: displayName
+          description: description
+          details:
+          - details
+          - details
+        newOptions:
+        - identifier: identifier
+          workFlowName: workFlowName
+          displayName: displayName
+          description: description
+          details:
+          - details
+          - details
+        - identifier: identifier
+          workFlowName: workFlowName
+          displayName: displayName
+          description: description
+          details:
+          - details
+          - details
+        migrationOptions:
+        - identifier: identifier
+          workFlowName: workFlowName
+          displayName: displayName
+          description: description
+          details:
+          - details
+          - details
+        - identifier: identifier
+          workFlowName: workFlowName
+          displayName: displayName
+          description: description
+          details:
+          - details
+          - details
+        otherOptions:
+        - identifier: identifier
+          workFlowName: workFlowName
+          displayName: displayName
+          description: description
+          details:
+          - details
+          - details
+        - identifier: identifier
+          workFlowName: workFlowName
+          displayName: displayName
+          description: description
+          details:
+          - details
+          - details
+        currentVersion:
+          identifier: identifier
+          workFlowName: workFlowName
+          displayName: displayName
+          description: description
+          details:
+          - details
+          - details
+      properties:
+        continuationOptions:
+          items:
+            $ref: '#/components/schemas/WorkFlowOption'
+          type: array
+        currentVersion:
+          $ref: '#/components/schemas/WorkFlowOption'
+        migrationOptions:
+          items:
+            $ref: '#/components/schemas/WorkFlowOption'
+          type: array
+        newOptions:
+          items:
+            $ref: '#/components/schemas/WorkFlowOption'
+          type: array
         otherOptions:
           items:
             $ref: '#/components/schemas/WorkFlowOption'
