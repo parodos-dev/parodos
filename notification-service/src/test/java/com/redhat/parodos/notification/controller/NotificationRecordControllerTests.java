@@ -108,22 +108,19 @@ class NotificationRecordControllerTests extends AbstractControllerTests {
 		this.mockMvc
 				.perform(get("/api/v1/notifications").accept(MediaType.APPLICATION_JSON)
 						.param("username", NotificationsDataCreator.USER_A_1).param("page", "0").param("size", "10"))
-				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$._embedded.*", hasSize(1)))
-				.andExpect(jsonPath("$._embedded.notificationrecords[0].subject",
-						Matchers.is(NotificationsDataCreator.MESSAGE_SUBJECT)))
+				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.content", hasSize(1)))
+				.andExpect(jsonPath("$.content[0].subject", Matchers.is(NotificationsDataCreator.MESSAGE_SUBJECT)))
 				.andReturn();
 
 		MvcResult mvcResult = this.mockMvc
 				.perform(get("/api/v1/notifications").accept(MediaType.APPLICATION_JSON)
 						.param("username", NotificationsDataCreator.USER_A_1).param("status", State.UNREAD.toString())
 						.param("page", "0").param("size", "10"))
-				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$._embedded.*", hasSize(1)))
-				.andExpect(jsonPath("$._embedded.notificationrecords[0].subject",
-						Matchers.is(NotificationsDataCreator.MESSAGE_SUBJECT)))
-				.andExpect(jsonPath("$._embedded.notificationrecords[0].read", is(false))).andReturn();
+				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.content", hasSize(1)))
+				.andExpect(jsonPath("$.content[0].subject", Matchers.is(NotificationsDataCreator.MESSAGE_SUBJECT)))
+				.andExpect(jsonPath("$.content[0].read", is(false))).andReturn();
 
-		String id = JsonPath.read(mvcResult.getResponse().getContentAsString(),
-				"$._embedded.notificationrecords[0].id");
+		String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.content[0].id");
 
 		this.mockMvc.perform(put("/api/v1/notifications/{id}", id).param("operation", Operation.READ.toString())
 				.accept(MediaType.APPLICATION_JSON)).andDo(print());
@@ -131,10 +128,9 @@ class NotificationRecordControllerTests extends AbstractControllerTests {
 		this.mockMvc
 				.perform(get("/api/v1/notifications").accept(MediaType.APPLICATION_JSON)
 						.param("username", NotificationsDataCreator.USER_A_1).param("page", "0").param("size", "10"))
-				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$._embedded.*", hasSize(1)))
-				.andExpect(jsonPath("$._embedded.notificationrecords[0].subject",
-						Matchers.is(NotificationsDataCreator.MESSAGE_SUBJECT)))
-				.andExpect(jsonPath("$._embedded.notificationrecords[0].read", is(true))).andReturn();
+				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.content", hasSize(1)))
+				.andExpect(jsonPath("$.content[0].subject", Matchers.is(NotificationsDataCreator.MESSAGE_SUBJECT)))
+				.andExpect(jsonPath("$.content[0].read", is(true))).andReturn();
 	}
 
 }
