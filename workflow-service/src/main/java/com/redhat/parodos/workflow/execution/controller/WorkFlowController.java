@@ -126,15 +126,7 @@ public class WorkFlowController {
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content) })
 	@GetMapping("/{workFlowExecutionId}/context")
 	public ResponseEntity<WorkFlowContextResponseDTO> getWorkflowParameters(@PathVariable String workFlowExecutionId,
-			@RequestParam List<WorkContextDelegate.Resource> param) {
-		// validate only public parameters are requested by checking the visibility of the
-		// parameters
-		param.forEach(p -> {
-			if (!p.isPublic()) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-						String.format("parameter: %s is not public!", p));
-			}
-		});
+			@RequestParam @PublicVisible List<WorkContextDelegate.Resource> param) {
 		WorkFlowContextResponseDTO responseDTO = workFlowService
 				.getWorkflowParameters(UUID.fromString(workFlowExecutionId), param);
 		return ResponseEntity.ok(responseDTO);
