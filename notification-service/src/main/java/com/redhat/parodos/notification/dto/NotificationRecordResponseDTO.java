@@ -19,6 +19,8 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
+import com.redhat.parodos.notification.jpa.entity.NotificationMessage;
+import com.redhat.parodos.notification.jpa.entity.NotificationRecord;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
@@ -60,6 +62,22 @@ public class NotificationRecordResponseDTO extends RepresentationModel<Notificat
 		return "NotificationDTO {" + "id=" + id + ", subject='" + subject + '\'' + ", createdOn=" + createdOn
 				+ ", messageType='" + messageType + '\'' + ", body='" + body + '\'' + ", fromuser='" + fromuser + '\''
 				+ ", read=" + read + ", tags=" + tags + ", folder='" + folder + '\'' + '}';
+	}
+
+	public static NotificationRecordResponseDTO toModel(NotificationRecord entity) {
+		NotificationRecordResponseDTO dto = new NotificationRecordResponseDTO();
+		NotificationMessage notificationMessage = entity.getNotificationMessage();
+
+		dto.setBody(notificationMessage.getBody());
+		dto.setCreatedOn(notificationMessage.getCreatedOn());
+		dto.setFolder(entity.getFolder());
+		dto.setFromuser(notificationMessage.getFromuser());
+		dto.setRead(entity.isRead());
+		dto.setSubject(notificationMessage.getSubject());
+		dto.setMessageType(notificationMessage.getMessageType());
+		dto.setTags(entity.getTags());
+		dto.setId(entity.getId());
+		return dto;
 	}
 
 }

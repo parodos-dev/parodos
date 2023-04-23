@@ -3,7 +3,6 @@ package com.redhat.parodos.notification.dto;
 import com.redhat.parodos.notification.jpa.entity.NotificationMessage;
 import com.redhat.parodos.notification.jpa.entity.NotificationRecord;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.time.Instant;
@@ -13,7 +12,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class NotificationAssemblerDTOTest {
+class NotificationRecordResponseDTOTest {
 
 	@Test
 	void toModel() {
@@ -42,8 +41,7 @@ class NotificationAssemblerDTOTest {
 		Mockito.when(notificationMessage.getSubject()).thenReturn(messageSubject);
 		Mockito.when(notificationMessage.getMessageType()).thenReturn(messageType);
 
-		NotificationAssemblerDTO notificationAssemblerDTO = new NotificationAssemblerDTO();
-		NotificationRecordResponseDTO result = notificationAssemblerDTO.toModel(entity);
+		NotificationRecordResponseDTO result = NotificationRecordResponseDTO.toModel(entity);
 
 		assertEquals(messageBody, result.getBody());
 		assertEquals(messageCreation, result.getCreatedOn());
