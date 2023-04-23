@@ -261,7 +261,7 @@ public class OnboardingAssessmentTask extends BaseAssessmentTask {
 	@Override
 	public WorkReport execute(WorkContext workContext) {
 		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-				WorkContextDelegate.Resource.WORKFLOW_OPTIONS,
+				WorkFlowContextParameters.WORKFLOW_OPTIONS,
 				// @formatter:off
 				new WorkFlowOptions.Builder()
 				.addNewOption(getWorkFlowOptions().get(0))
