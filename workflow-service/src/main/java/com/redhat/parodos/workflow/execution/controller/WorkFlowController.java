@@ -15,9 +15,14 @@
  */
 package com.redhat.parodos.workflow.execution.controller;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowCheckerTaskRequestDTO;
@@ -36,7 +41,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,7 +51,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 /**
  * Workflow controller to execute workflow and get status
@@ -55,6 +61,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @CrossOrigin(origins = "*", maxAge = 1800)
 @RestController
+@Validated
 @RequestMapping("/api/v1/workflows")
 @Tag(name = "Workflow", description = "Operations about workflow")
 public class WorkFlowController {
@@ -126,10 +133,23 @@ public class WorkFlowController {
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content) })
 	@GetMapping("/{workFlowExecutionId}/context")
 	public ResponseEntity<WorkFlowContextResponseDTO> getWorkflowParameters(@PathVariable String workFlowExecutionId,
-			@RequestParam @PublicVisible List<WorkContextDelegate.Resource> param) {
+			@NotEmpty @RequestParam List<WorkContextDelegate.@PublicVisible Resource> param) {
 		WorkFlowContextResponseDTO responseDTO = workFlowService
 				.getWorkflowParameters(UUID.fromString(workFlowExecutionId), param);
 		return ResponseEntity.ok(responseDTO);
+	}
+
+	@ExceptionHandler(ConstraintViolationException.class)
+	public ResponseEntity<String> handle(ConstraintViolationException constraintViolationException) {
+		Set<ConstraintViolation<?>> violations = constraintViolationException.getConstraintViolations();
+		String errorMessage;
+		if (!violations.isEmpty()) {
+			errorMessage = violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(" "));
+		}
+		else {
+			errorMessage = "ConstraintViolationException occurred.";
+		}
+		return ResponseEntity.badRequest().body(errorMessage);
 	}
 
 }
