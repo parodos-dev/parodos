@@ -7,12 +7,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.PARAMETER)
+@Target({ ElementType.TYPE_USE, ElementType.PARAMETER, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = PublicVisibleValidator.class)
 public @interface PublicVisible {
 
-	String message() default "Resource is not public visible";
+	String message() default "Resource not publicly visible";
 
 	Class<?>[] groups() default {};
 
