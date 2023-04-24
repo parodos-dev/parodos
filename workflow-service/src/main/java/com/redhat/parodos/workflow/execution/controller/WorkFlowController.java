@@ -141,12 +141,9 @@ public class WorkFlowController {
 	@ExceptionHandler(ConstraintViolationException.class)
 	public ResponseEntity<String> handle(ConstraintViolationException constraintViolationException) {
 		Set<ConstraintViolation<?>> violations = constraintViolationException.getConstraintViolations();
-		String errorMessage;
+		String errorMessage = "ConstraintViolationException occurred.";
 		if (!violations.isEmpty()) {
-			errorMessage = violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(" "));
-		}
-		else {
-			errorMessage = "ConstraintViolationException occurred.";
+			errorMessage = violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(", "));
 		}
 		return ResponseEntity.badRequest().body(errorMessage);
 	}
