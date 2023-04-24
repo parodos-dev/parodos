@@ -39,7 +39,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -133,7 +132,7 @@ public class WorkFlowController {
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content) })
 	@GetMapping("/{workFlowExecutionId}/context")
 	public ResponseEntity<WorkFlowContextResponseDTO> getWorkflowParameters(@PathVariable String workFlowExecutionId,
-			@NotEmpty @RequestParam List<WorkContextDelegate.@PublicVisible Resource> param) {
+			@NotEmpty @RequestParam List<WorkContextDelegate.@PubliclyVisible Resource> param) {
 		WorkFlowContextResponseDTO responseDTO = workFlowService
 				.getWorkflowParameters(UUID.fromString(workFlowExecutionId), param);
 		return ResponseEntity.ok(responseDTO);

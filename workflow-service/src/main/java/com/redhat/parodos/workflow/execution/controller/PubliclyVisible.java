@@ -9,8 +9,8 @@ import java.lang.annotation.Target;
 
 @Target({ ElementType.TYPE_USE, ElementType.PARAMETER, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = PublicVisibleValidator.class)
-public @interface PublicVisible {
+@Constraint(validatedBy = PublicVisibilityValidator.class)
+public @interface PubliclyVisible {
 
 	String message() default "Resource not publicly visible";
 
