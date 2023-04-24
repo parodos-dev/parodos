@@ -10,15 +10,15 @@ import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import org.junit.Before;
 import org.junit.Test;
 
-public class PublicVisibleValidatorTest {
+public class PubliclyVisibleValidatorTest {
 
-	private PublicVisibleValidator validator;
+	private PublicVisibilityValidator validator;
 
 	private ConstraintValidatorContext constraintValidatorContext;
 
 	@Before
 	public void setUp() {
-		validator = new PublicVisibleValidator();
+		validator = new PublicVisibilityValidator();
 		constraintValidatorContext = mock(ConstraintValidatorContext.class);
 	}
 

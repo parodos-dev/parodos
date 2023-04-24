@@ -5,7 +5,7 @@ import javax.validation.ConstraintValidatorContext;
 
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 
-public class PublicVisibleValidator implements ConstraintValidator<PublicVisible, WorkContextDelegate.Resource> {
+public class PublicVisibilityValidator implements ConstraintValidator<PubliclyVisible, WorkContextDelegate.Resource> {
 
 	@Override
 	public boolean isValid(WorkContextDelegate.Resource value, ConstraintValidatorContext context) {
