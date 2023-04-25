@@ -31,6 +31,7 @@ import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.service.WorkFlowService;
+import com.redhat.parodos.workflow.execution.validation.PubliclyVisible;
 import com.redhat.parodos.workflow.option.WorkFlowOptions;
 import com.redhat.parodos.workflows.work.WorkReport;
 import io.swagger.v3.oas.annotations.Operation;

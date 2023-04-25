@@ -1,4 +1,4 @@
-package com.redhat.parodos.workflow.execution.controller;
+package com.redhat.parodos.workflow.execution.validation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
