@@ -58,6 +58,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import static java.util.Objects.isNull;
@@ -207,13 +208,13 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
 					String.format("workflow execution id: %s not found!", workFlowExecutionId));
 		});
-		Map options = null;
+		Map options = Map.of();
 		if (params.contains(WorkContextDelegate.Resource.WORKFLOW_OPTIONS)) {
-			options = (Map) WorkContextDelegate.read(workFlowExecution.getWorkFlowExecutionContext().getWorkContext(),
-					WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.WORKFLOW_OPTIONS);
-		}
-		if (options == null) {
-			options = Map.of();
+			options = Optional.ofNullable(
+					(Map) WorkContextDelegate.read(workFlowExecution.getWorkFlowExecutionContext().getWorkContext(),
+							WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+							WorkContextDelegate.Resource.WORKFLOW_OPTIONS))
+					.orElse(Map.of());
 		}
 
 		return WorkFlowContextResponseDTO.builder().workFlowExecutionId(workFlowExecution.getId().toString())

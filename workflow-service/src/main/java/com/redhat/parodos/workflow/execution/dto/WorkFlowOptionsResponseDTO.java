@@ -13,24 +13,19 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class WorkFlowOptionsResponseDTO {
 
-	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private WorkFlowOption currentVersion;
 
-	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private List<WorkFlowOption> upgradeOptions;
 
-	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private List<WorkFlowOption> migrationOptions;
 
-	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private List<WorkFlowOption> newOptions;
 
-	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private List<WorkFlowOption> continuationOptions;
 
-	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private List<WorkFlowOption> otherOptions;
 
 }
