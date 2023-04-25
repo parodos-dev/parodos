@@ -12,7 +12,7 @@ MAVEN ?= /usr/bin/mvn
 
 # set quiet mode by default
 
-ORG=quay.io/parodos/
+ORG=quay.io/parodos-dev/
 WORKFLOW_SERVICE_IMAGE=workflow-service
 NOTIFICATION_SERVICE_IMAGE=notification-service
 
