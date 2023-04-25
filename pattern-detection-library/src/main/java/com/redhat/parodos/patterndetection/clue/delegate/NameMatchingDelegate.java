@@ -64,8 +64,9 @@ public class NameMatchingDelegate {
 	 * 'targetFileExtensionPatternString' was specified
 	 */
 	public boolean isThisATargetFileExtension(String fileName) {
-		if (getExtensionByStringHandling(fileName).isPresent() && targetFileExtensionPattern != null) {
-			return targetFileExtensionPattern.matcher(getExtensionByStringHandling(fileName).get()).matches();
+		if (targetFileExtensionPattern != null) {
+			Optional<String> fileExtension = getExtensionByStringHandling(fileName);
+			return fileExtension.isPresent() && targetFileExtensionPattern.matcher(fileExtension.get()).matches();
 		}
 		log.warn("Trying to check for a file extension with a file the extension could not be obtained for: {}",
 				fileName);
@@ -80,23 +81,18 @@ public class NameMatchingDelegate {
 	 */
 	public boolean shouldProcessPath(String path) {
 		File potentialFile = new File(path);
-		// Check if this is a file name pattern we should ignore
-		if (isIgnoreFileNameDefined()) {
-			return !ignoreFileNamePattern.matcher(potentialFile.getName()).matches();
+		String fileName = potentialFile.getName();
+		// check if the file name is on the ignore list
+		if (isIgnoreFileNameDefined() && ignoreFileNamePattern.matcher(fileName).matches()) {
+			return false;
 		}
-		// check if this is an extension we are interested in
+		// if a target file extension is supplied, only read files with that extension
 		if (targetFileExtensionPattern != null) {
-			// don't need optional - String or Null
-			Optional<String> extension = getExtensionByStringHandling(path);
-			return extension.isPresent() && !targetFileExtensionPattern.matcher(extension.get()).matches();
+			String extension = getExtensionByStringHandling(fileName).orElse(null);
+			return extension != null && !targetFileExtensionPattern.matcher(extension).matches();
 		}
-		// if we got to here, this is a file/folder we are interested in. Apply the name
-		// match
-		if (targetFileNameRegexPattern != null) {
-			// the file name is not the one specified - skip reading this file
-			return targetFileNameRegexPattern.matcher(potentialFile.getName()).matches();
-		}
-		return true;
+		// if a target filename regex is supplied, only target file names that match that
+		return targetFileNameRegexPattern == null || targetFileNameRegexPattern.matcher(fileName).matches();
 	}
 
 	boolean isIgnoreFileNameDefined() {
@@ -112,6 +108,12 @@ public class NameMatchingDelegate {
 	// @formatter:on
 	}
 
+	/**
+	 * Builder for creating the delegate
+	 *
+	 * @author Luke Shannon (Github: lshannon)
+	 *
+	 */
 	public static class Builder {
 
 		private Builder() {

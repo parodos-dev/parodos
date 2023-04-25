@@ -17,19 +17,17 @@ package com.redhat.parodos.patterndetection.clue;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
 import com.redhat.parodos.patterndetection.clue.client.ContentInputStreamClientConfiguration;
+import com.redhat.parodos.patterndetection.context.PatternDetectionWorkContextDelegate;
 import com.redhat.parodos.patterndetection.exceptions.ClueConfigurationException;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -48,7 +46,7 @@ public class NameClueImpl extends AbstractClue {
 
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		if (continueToRunIfDetected || !workContextDelegate.isThisClueDetected(this, workContext)) {
+		if (continueToRunIfDetected || !PatternDetectionWorkContextDelegate.isThisClueDetected(this, workContext)) {
 			List<File> filesToScan = collectFileAndFolderNames(workContext);
 			if (filesToScan != null) {
 				for (File thisFile : filesToScan) {
@@ -56,7 +54,8 @@ public class NameClueImpl extends AbstractClue {
 							? targetFileNameRegexPattern.matcher(thisFile.getName()).matches()
 							: nameMatchingDelegate.doesNameMatch(thisFile.getName());
 					if (matched) {
-						workContextDelegate.markClueAsDetected(this, thisFile.getAbsolutePath(), workContext);
+						PatternDetectionWorkContextDelegate.markClueAsDetected(this, thisFile.getAbsolutePath(),
+								workContext);
 					}
 				}
 			}
@@ -65,38 +64,50 @@ public class NameClueImpl extends AbstractClue {
 	}
 
 	private List<File> collectFileAndFolderNames(WorkContext workContext) {
-		List<File> filesToScan = new ArrayList<>();
-		// get all the folders
-		if (nameMatchingDelegate.isFolder()) {
-			filesToScan = workContextDelegate.getFoldersToScan(workContext);
-		}
-		else {
-			// get any lists of files supplied
-			if (workContextDelegate.getFilesToScan(workContext) != null) {
-				filesToScan.addAll(workContextDelegate.getFilesToScan(workContext));
-			}
-			// get the files names from the ContentInputStreams
-			for (ContentInputStreamClientConfiguration clientConfig : workContextDelegate
-					.getContentClientsAndPaths(workContext)) {
-				for (String path : clientConfig.getPathsToProcessForContent()) {
-					filesToScan.add(new File(path));
-				}
-			}
-			// Get the File names from the InputStreamWrappers
-			for (InputStreamWrapper wrapper : workContextDelegate.getInputStreamWrappers(workContext)) {
-				filesToScan.add(new File(wrapper.getFileName()));
-			}
-			// Get the Folder and file names from the directoriesAndFiles
-			Map<String, ArrayList<String>> directoriesAndFiles = workContextDelegate
-					.getDirectoriesAndFiles(workContext);
-			for (Map.Entry<String, ArrayList<String>> entry : directoriesAndFiles.entrySet()) {
-				String directory = entry.getKey();
-				filesToScan.add(new File(directory));
-				filesToScan.addAll(Collections.unmodifiableList(entry.getValue()).stream().map(File::new)
-						.collect(Collectors.toList()));
-			}
-		}
+		List<File> filesToScan = nameMatchingDelegate.isFolder()
+				? PatternDetectionWorkContextDelegate.getFoldersToScan(workContext) : new ArrayList<>();
+		collectFilesFromAllSources(workContext, filesToScan);
 		return filesToScan;
+	}
+
+	private void collectFilesFromAllSources(WorkContext workContext, List<File> filesToScan) {
+		getFileAndFolderNamesFromLocalFileReference(workContext, filesToScan);
+		getFileAndFolderNamesFromClients(workContext, filesToScan);
+		getFileAndFolderNamesFromStreamWrappers(workContext, filesToScan);
+		getFileAndFoldersFromContextDirectoryList(workContext, filesToScan);
+	}
+
+	private void getFileAndFolderNamesFromLocalFileReference(WorkContext workContext, List<File> filesToScan) {
+		if (PatternDetectionWorkContextDelegate.getFilesToScan(workContext) != null) {
+			filesToScan.addAll(PatternDetectionWorkContextDelegate.getFilesToScan(workContext));
+		}
+	}
+
+	private void getFileAndFoldersFromContextDirectoryList(WorkContext workContext, List<File> filesToScan) {
+		Map<String, ArrayList<String>> directoriesAndFiles = PatternDetectionWorkContextDelegate
+				.getDirectoriesAndFiles(workContext);
+		for (var entry : directoriesAndFiles.entrySet()) {
+			String directory = entry.getKey();
+			filesToScan.add(new File(directory));
+			filesToScan.addAll(entry.getValue().stream().map(fileName -> new File(directory, fileName))
+					.collect(Collectors.toList()));
+		}
+	}
+
+	private void getFileAndFolderNamesFromStreamWrappers(WorkContext workContext, List<File> filesToScan) {
+		for (InputStreamWrapper wrapper : PatternDetectionWorkContextDelegate.getInputStreamWrappers(workContext)) {
+			filesToScan.add(new File(wrapper.getFileName()));
+		}
+	}
+
+	private void getFileAndFolderNamesFromClients(WorkContext workContext, List<File> filesToScan) {
+		// get the files names from the ContentInputStreams
+		for (ContentInputStreamClientConfiguration clientConfig : PatternDetectionWorkContextDelegate
+				.getContentClientsAndPaths(workContext)) {
+			for (String path : clientConfig.getPathsToProcessForContent()) {
+				filesToScan.add(new File(path));
+			}
+		}
 	}
 
 	public static class Builder extends AbstractClue.Builder<NameClueImpl.Builder> {

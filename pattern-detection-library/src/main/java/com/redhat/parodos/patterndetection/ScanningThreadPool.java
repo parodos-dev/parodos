@@ -42,4 +42,14 @@ public class ScanningThreadPool {
 		return executorService;
 	}
 
+	public static synchronized ExecutorService getThreadPoolExecutor(int corePoolSize, int maxPoolSize,
+			long keepAliveTime, TimeUnit unit) {
+		if (executorService == null) {
+			var boundedQueue = new ArrayBlockingQueue<Runnable>(1000);
+			executorService = new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveTime, unit, boundedQueue,
+					new AbortPolicy());
+		}
+		return executorService;
+	}
+
 }

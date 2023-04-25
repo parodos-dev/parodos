@@ -17,7 +17,6 @@ package com.redhat.parodos.patterndetection.clue;
 
 import java.util.UUID;
 import com.redhat.parodos.patterndetection.clue.delegate.NameMatchingDelegate;
-import com.redhat.parodos.patterndetection.context.PatternDetectionWorkContextDelegate;
 import lombok.Data;
 
 /**
@@ -37,8 +36,6 @@ import lombok.Data;
  */
 @Data
 public abstract class AbstractClue implements Clue {
-
-	PatternDetectionWorkContextDelegate workContextDelegate = new PatternDetectionWorkContextDelegate();
 
 	NameMatchingDelegate nameMatchingDelegate;
 
@@ -112,7 +109,7 @@ public abstract class AbstractClue implements Clue {
 			instance.setName(name);
 			instance.setNameMatchingDelegate(getNameMatchingDelegate());
 			instance.setContinueToRunIfDetected(continueToRunIfDetected);
-			return (S) instance;
+			return instance;
 		}
 
 	}

@@ -24,7 +24,8 @@ import com.redhat.parodos.workflows.workflow.WorkFlow;
 
 /**
  *
- * Main entry point to the library
+ * Main entry point to the library. This runs the Scan with all arguments placed in the
+ * WorkContext
  *
  * @author Luke Shannon (Github: lshannon)
  *
@@ -55,7 +56,7 @@ public class PatternDetector {
 						.Builder
 						.aNewParallelFlow()
 						.execute(PatternDetectionWorkContextDelegate.getDesiredPatternsArray(context))
-						.with(ScanningThreadPool.getThreadPoolExecutor())
+						.with(PatternDetectionWorkContextDelegate.getScanningThreadPool(context) != null ? PatternDetectionWorkContextDelegate.getScanningThreadPool(context) : ScanningThreadPool.getThreadPoolExecutor())
 						.build();
 			// @formatter:on
 			return new DetectionResults.Builder(context, workflow).build();

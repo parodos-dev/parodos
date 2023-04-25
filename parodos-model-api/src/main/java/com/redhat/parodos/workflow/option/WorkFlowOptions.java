@@ -275,8 +275,9 @@ public class WorkFlowOptions {
 		 */
 		public static WorkFlowOption findWorkFlowIdenifyingName(String idenifyingName,
 				List<WorkFlowOption> workFlowOptions) {
-			return workFlowOptions.stream().filter(option -> option.getIdentifier().matches(idenifyingName)).findFirst()
-					.get();
+			Optional<WorkFlowOption> potentialOption = workFlowOptions.stream()
+					.filter(option -> option.getIdentifier().matches(idenifyingName)).findFirst();
+			return potentialOption.isPresent() ? potentialOption.get() : null;
 		}
 
 		/**

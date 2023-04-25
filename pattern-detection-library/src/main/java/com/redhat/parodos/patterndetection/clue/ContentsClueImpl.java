@@ -21,16 +21,15 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-
 import com.redhat.parodos.patterndetection.clue.client.ContentInputStreamClientConfiguration;
 import com.redhat.parodos.patterndetection.clue.delegate.ContentsDelegate;
+import com.redhat.parodos.patterndetection.context.PatternDetectionWorkContextDelegate;
 import com.redhat.parodos.patterndetection.exceptions.PatternDetectionConfigurationException;
 import com.redhat.parodos.patterndetection.exceptions.PatternDetectionRuntimeException;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -52,50 +51,67 @@ public class ContentsClueImpl extends AbstractClue {
 
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		if (continueToRunIfDetected || !workContextDelegate.isThisClueDetected(this, workContext)) {
-			// get all the possible sources of content
-			List<ContentInputStreamClientConfiguration> contentClientsAndPaths = workContextDelegate
-					.getContentClientsAndPaths(workContext);
-			List<InputStreamWrapper> inputStreamWrappers = workContextDelegate.getInputStreamWrappers(workContext);
-			List<File> filesToScan = workContextDelegate.getFilesToScan(workContext);
-			// process content using clients
-			contentClientsAndPaths.stream().forEach(inputStreamClient -> {
-				try {
-					processInputsForStreamContentWithClient(workContext, inputStreamClient);
-				}
-				catch (IOException e) {
-					log.error("Unable to execute Detection using ContentStreamClient {} ", inputStreamClient.getName(),
-							e);
-					throw new PatternDetectionRuntimeException("Error getting content using a ContentStreamClient", e);
-				}
-			});
-			// process content from InputStreamWrappers
-			inputStreamWrappers.stream().forEach(inputStreamWrapper -> {
-				try {
-					extractInputStreamContent(workContext, inputStreamWrapper);
-				}
-				catch (IOException e) {
-					log.error("Unable to execute Detection of {} clue on File: {}", inputStreamWrapper.getFileName(),
-							e);
-					throw new PatternDetectionRuntimeException("Error getting content using a InputStreamWrapper", e);
-				}
-			});
-			// process content from Local File System
-			if (filesToScan != null) {
-				filesToScan.stream().forEach(thisFile -> {
-					try {
-						extractFileContent(workContext, thisFile);
-					}
-					catch (IOException e) {
-						log.error("Unable to execute Scan of {} clue on File: {}", this.name,
-								thisFile.getAbsolutePath(), e);
-						throw new PatternDetectionRuntimeException(
-								"Error getting content from files on local File system", e);
-					}
-				});
-			}
+		if (continueToRunIfDetected || !PatternDetectionWorkContextDelegate.isThisClueDetected(this, workContext)) {
+			getContentClientConfigurations(workContext);
+			getInputStreamWrappers(workContext);
+			getFilesToScan(workContext);
 		}
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
+	}
+
+	/*
+	 * Get Files to scan (local) and process their content
+	 */
+	private void getFilesToScan(WorkContext workContext) {
+		List<File> filesToScan = PatternDetectionWorkContextDelegate.getFilesToScan(workContext);
+		if (filesToScan != null) {
+			filesToScan.stream().forEach(thisFile -> {
+				try {
+					extractFileContent(workContext, thisFile);
+				}
+				catch (IOException e) {
+					log.error("Unable to execute Scan of {} clue on File: {}", this.name, thisFile.getAbsolutePath(),
+							e);
+					throw new PatternDetectionRuntimeException("Error getting content from files on local File system",
+							e);
+				}
+			});
+		}
+	}
+
+	/*
+	 * Get the InputStream wrappers from the WorkContext and process their content
+	 */
+	private void getInputStreamWrappers(WorkContext workContext) {
+		List<InputStreamWrapper> inputStreamWrappers = PatternDetectionWorkContextDelegate
+				.getInputStreamWrappers(workContext);
+		inputStreamWrappers.stream().forEach(inputStreamWrapper -> {
+			try {
+				extractInputStreamContent(workContext, inputStreamWrapper);
+			}
+			catch (IOException e) {
+				log.error("Unable to execute Detection of {} clue on File: {}", inputStreamWrapper.getFileName(), e);
+				throw new PatternDetectionRuntimeException("Error getting content using a InputStreamWrapper", e);
+			}
+		});
+	}
+
+	/*
+	 * Get the ContentClient Configurations from the WorkContext and get each client to
+	 * obtain its content
+	 */
+	private void getContentClientConfigurations(WorkContext workContext) {
+		List<ContentInputStreamClientConfiguration> contentClientsAndPaths = PatternDetectionWorkContextDelegate
+				.getContentClientsAndPaths(workContext);
+		contentClientsAndPaths.stream().forEach(inputStreamClient -> {
+			try {
+				processInputsForStreamContentWithClient(workContext, inputStreamClient);
+			}
+			catch (IOException e) {
+				log.error("Unable to execute Detection using ContentStreamClient {} ", inputStreamClient.getName(), e);
+				throw new PatternDetectionRuntimeException("Error getting content using a ContentStreamClient", e);
+			}
+		});
 	}
 
 	/*
@@ -148,7 +164,7 @@ public class ContentsClueImpl extends AbstractClue {
 	private void processContentsForMatch(WorkContext workContext, String fileName, List<String> fileContent) {
 		for (String line : fileContent) {
 			if (!line.isEmpty() && targetContentPattern.matcher(line.trim()).matches()) {
-				workContextDelegate.markClueAsDetected(this, fileName, workContext);
+				PatternDetectionWorkContextDelegate.markClueAsDetected(this, fileName, workContext);
 			}
 		}
 	}

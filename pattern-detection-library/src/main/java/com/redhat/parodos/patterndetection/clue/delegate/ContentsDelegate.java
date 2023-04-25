@@ -41,6 +41,7 @@ import com.redhat.parodos.patterndetection.clue.client.ContentInputStreamClientC
  */
 public class ContentsDelegate {
 
+	// Only static method access
 	private ContentsDelegate() {
 	}
 

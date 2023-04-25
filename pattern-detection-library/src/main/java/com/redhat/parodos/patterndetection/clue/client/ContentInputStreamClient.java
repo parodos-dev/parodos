@@ -20,8 +20,8 @@ import java.util.Map;
 
 /**
  *
- * It might be an expensive operation to obtain an inputstream for Detection. An
- * implementation of this can provide an oppertunity during the Detection phase to do
+ * It might be an expensive operation to obtain an InputStream for Detection. An
+ * implementation of this can provide an opportunity during the Detection phase to do
  * something extra (or even skip) obtaining content for a resource
  *
  * @author Luke Shannon (Github: lshannon)

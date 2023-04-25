@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import com.redhat.parodos.patterndetection.clue.Clue;
 import com.redhat.parodos.patterndetection.clue.InputStreamWrapper;
@@ -46,42 +47,50 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PatternDetectionWorkContextDelegate {
 
+	private PatternDetectionWorkContextDelegate() {
+	}
+
 	/**
-	 * Checks if the WorkContext has everything to perform the Detection: -
-	 * START_DIRECTORY : the root location to begin processing the files - START_FILE :
-	 * the root java.util.File to begin processing the files
-	 * @param context easy-flow WorkContext
-	 * @return true if everything, false if required parameter is missing
+	 * - Checks if the WorkContext has everything to perform the Detection:
+	 * START_DIRECTORY : the root location to begin processing the files START_FILE : the
+	 * root java.util.File to begin processing the files INPUT_STREAMS_WRAPPERS: key/value
+	 * pairs of file paths/inputstream contents INPUT_STREAM_CLIENTS: a collection of @see
+	 * ContentInputStreamClient implementations FILES_TO_SCAN: A collection of files on
+	 * the local file system FOLDERS_TO_SCAN: A collection of folders on the local file
+	 * system
+	 * @param
+	 * @return true if at least one of these are present, false if none are configured.
+	 * This will return false if there are no clues or patterns configured
 	 */
 	public static final boolean validateAndIntializeContext(WorkContext context) {
 		if (context == null) {
 			log.error("Context was null. Please define a WorkContext reference");
 			return false;
 		}
-		if (context.get(PatternDetectionConstants.START_DIRECTORY.toString()) == null
-				&& context.get(PatternDetectionConstants.START_FILE.toString()) == null
-				&& context.get(PatternDetectionConstants.INPUT_STREAMS_WRAPPERS.toString()) == null
-				&& context.get(PatternDetectionConstants.INPUT_STREAM_CLIENTS.toString()) == null
-				&& context.get(PatternDetectionConstants.DIRECTORY_FILE_PATHS.toString()) == null
-				&& context.get(PatternDetectionConstants.FILES_TO_SCAN.toString()) == null
-				&& context.get(PatternDetectionConstants.FOLDERS_TO_SCAN.toString()) == null) {
-			log.error("No target content defined. Ensure the WorkContext contains an a valid scanning target");
+		if (Stream
+				.of(PatternDetectionConstants.START_DIRECTORY.toString(),
+						PatternDetectionConstants.INPUT_STREAMS_WRAPPERS.toString(),
+						PatternDetectionConstants.INPUT_STREAM_CLIENTS.toString(),
+						PatternDetectionConstants.DIRECTORY_FILE_PATHS.toString(),
+						PatternDetectionConstants.FILES_TO_SCAN.toString(),
+						PatternDetectionConstants.FOLDERS_TO_SCAN.toString())
+				.noneMatch(key -> context.get(key) != null)) {
+			log.error("No target content defined. Ensure the WorkContext contains a valid scanning target");
 			return false;
 		}
-		for (Pattern pattern : getDesiredPatterns(context)) {
-			if (pattern.getAllAreRequiredClues().isEmpty() && pattern.getOnlyOneIsRequiredClues().isEmpty()) {
-				log.error(
+		getDesiredPatterns(context).stream().filter(
+				pattern -> pattern.getAllAreRequiredClues().isEmpty() && pattern.getOnlyOneIsRequiredClues().isEmpty())
+				.forEach(pattern -> log.error(
 						"Pattern {} does not have any associated Clues. Running this Scan will never result in anything being detected",
-						pattern.getName());
-			}
-		}
+						pattern.getName()));
 		initializeContext(context);
-		getFilesAndDirectoriesFromRoot(context);
+		getFilesAndDirectoriesFromLocalStartFolder(context);
 		return true;
 	}
 
 	/**
-	 * Compares the DETECT_PATTERNS to the DESIRED_PATTERNS to see if all were detected
+	 * Compares the DETECT_PATTERNS to the DESIRED_PATTERNS to see if all desired Patterns
+	 * were detected
 	 * @param report WorkReport passed in at the start of the Scan
 	 * @return true is all Patterns were detect, false is not all the Patterns were
 	 * detected
@@ -96,59 +105,122 @@ public class PatternDetectionWorkContextDelegate {
 		return numberOfTargetStatesRequired == numberOfTargetStatesFound;
 	}
 
+	/**
+	 * Gets the list @see ContentInputStreamClientConfiguration
+	 * @param context WorkContext for the scan
+	 * @return List of ContentInputStreamClientConfiguration
+	 */
 	@SuppressWarnings("unchecked")
 	public static List<ContentInputStreamClientConfiguration> getContentClientsAndPaths(WorkContext context) {
 		return (List<ContentInputStreamClientConfiguration>) context
 				.get(PatternDetectionConstants.INPUT_STREAM_CLIENTS.toString());
 	}
 
+	/**
+	 * Gets the InputStreamWrappers from the WorkContext
+	 * @param context
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public static List<InputStreamWrapper> getInputStreamWrappers(WorkContext context) {
 		return (List<InputStreamWrapper>) context.get(PatternDetectionConstants.INPUT_STREAMS_WRAPPERS.toString());
 	}
 
+	/**
+	 * Get the Directories and respective files to scan from the context
+	 * @param context
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public static Map<String, ArrayList<String>> getDirectoriesAndFiles(WorkContext context) {
 		return (Map<String, ArrayList<String>>) context.get(PatternDetectionConstants.DIRECTORY_FILE_PATHS.toString());
 	}
 
+	/**
+	 * Gets a list of files to scan from the context
+	 * @param context
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public static List<File> getFilesToScan(WorkContext context) {
 		return (List<File>) context.get(PatternDetectionConstants.FILES_TO_SCAN.toString());
 	}
 
-	public static Map<Clue, List<String>> getDetectedClue(WorkReport report) {
-		return getDetectedClue(report.getWorkContext());
+	/**
+	 * Gets the detected Clues from the report (this should be ran after the scan is
+	 * completed)
+	 * @param report
+	 * @return
+	 */
+	public static Map<Clue, List<String>> getDetectedCluesFromReport(WorkReport report) {
+		return getDetectedCluesFromContext(report.getWorkContext());
 	}
 
+	/**
+	 * Get the detected Clues from the Context (used during scanning)
+	 * @param context
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
-	public static Map<Clue, List<String>> getDetectedClue(WorkContext context) {
+	public static Map<Clue, List<String>> getDetectedCluesFromContext(WorkContext context) {
 		return (Map<Clue, List<String>>) context.get(PatternDetectionConstants.DETECTED_CLUES.toString());
 	}
 
+	/**
+	 * Get the desired Patterns from the Context
+	 * @param context
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public static List<Pattern> getDesiredPatterns(WorkContext context) {
 		return (List<Pattern>) context.get(PatternDetectionConstants.DESIRED_PATTERNS.toString());
 	}
 
+	/**
+	 * Get the desired Patterns from the Context as a Array
+	 * @param context
+	 * @return
+	 */
 	public static Pattern[] getDesiredPatternsArray(WorkContext context) {
 		return getDesiredPatterns(context).toArray(new Pattern[0]);
 	}
 
-	public static List<Pattern> getDetectedPatterns(WorkReport report) {
-		return getDetectedPatterns(report.getWorkContext());
+	/**
+	 * Gets all the Pattern detected from the @see WorkReport. This can be called at the
+	 * end of the scan
+	 * @param report generated at the end of the scan
+	 * @return list of Patterns detected after the scan is completed
+	 */
+	public static List<Pattern> getDetectedPatternsAfterTheScan(WorkReport report) {
+		return getDetectedPatternsDuringScan(report.getWorkContext());
 	}
 
+	/**
+	 * Gets the detected Patterns from the context (used during scanning)
+	 * @param context
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
-	public static List<Pattern> getDetectedPatterns(WorkContext context) {
+	public static List<Pattern> getDetectedPatternsDuringScan(WorkContext context) {
 		return (List<Pattern>) context.get(PatternDetectionConstants.DETECTED_PATTERNS.toString());
 	}
 
+	/**
+	 * Get the Folders to scan from the context
+	 * @param context
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public static List<File> getFoldersToScan(WorkContext context) {
 		return (List<File>) context.get(PatternDetectionConstants.FOLDERS_TO_SCAN.toString());
 	}
 
+	/**
+	 * Determines if a specific Pattern was detected after the scan
+	 * @param pattern in question
+	 * @param report generated after the scan has completed
+	 * @return true is the Pattern is detected, false if its not
+	 */
 	@SuppressWarnings("unchecked")
 	public static boolean isThisPatternDetected(Pattern pattern, WorkReport report) {
 		for (Pattern thisPattern : (List<Pattern>) report.getWorkContext()
@@ -167,7 +239,7 @@ public class PatternDetectionWorkContextDelegate {
 	 * @return true if the Clue was detected, false if it was not
 	 */
 	public static boolean isThisClueDetected(Clue clue, WorkReport report) {
-		return getDetectedClue(report).containsKey(clue);
+		return getDetectedCluesFromReport(report).containsKey(clue);
 	}
 
 	/**
@@ -177,7 +249,7 @@ public class PatternDetectionWorkContextDelegate {
 	 * @return true if the Clue was detected, false if it was not
 	 */
 	public static boolean isThisClueDetected(Clue clue, WorkContext context) {
-		return getDetectedClue(context).containsKey(clue);
+		return getDetectedCluesFromContext(context).containsKey(clue);
 	}
 
 	/**
@@ -187,13 +259,13 @@ public class PatternDetectionWorkContextDelegate {
 	 * @param context WorkContext used during the Scan
 	 */
 	public static void markClueAsDetected(Clue clue, String fileName, WorkContext context) {
-		if (getDetectedClue(context).containsKey(clue)) {
-			getDetectedClue(context).get(clue).add(fileName);
+		if (getDetectedCluesFromContext(context).containsKey(clue)) {
+			getDetectedCluesFromContext(context).get(clue).add(fileName);
 		}
 		else {
 			List<String> detectedFiles = new ArrayList<>();
 			detectedFiles.add(fileName);
-			getDetectedClue(context).put(clue, detectedFiles);
+			getDetectedCluesFromContext(context).put(clue, detectedFiles);
 		}
 	}
 
@@ -217,15 +289,16 @@ public class PatternDetectionWorkContextDelegate {
 						|| (needOneOfConditionsRequired && needOneOfConditionsAchieved);
 			}
 			if (patternDetected) {
-				getDetectedPatterns(context).add(pattern);
+				getDetectedPatternsDuringScan(context).add(pattern);
 			}
 		}
 	}
 
 	/*
-	 * Used when a root path is given
+	 * Used when a root path is given using the START_DIRECTORY. A list of files and
+	 * folders were be determined by recursively stepping through the file hierarchy
 	 */
-	private static void getFilesAndDirectoriesFromRoot(WorkContext context) {
+	private static void getFilesAndDirectoriesFromLocalStartFolder(WorkContext context) {
 		if (context.get(PatternDetectionConstants.START_DIRECTORY.toString()) != null) {
 			List<File> fileList = new ArrayList<>();
 			List<File> directoryList = new ArrayList<>();
@@ -243,6 +316,9 @@ public class PatternDetectionWorkContextDelegate {
 		}
 	}
 
+	/*
+	 * Create the Maps and lists to contain detected Clues and Patterns
+	 */
 	private static void initializeContext(WorkContext context) {
 		context.put(PatternDetectionConstants.DETECTED_CLUES.toString(), new HashMap<Clue, List<File>>());
 		context.put(PatternDetectionConstants.DETECTED_PATTERNS.toString(), new ArrayList<Pattern>());
@@ -284,7 +360,7 @@ public class PatternDetectionWorkContextDelegate {
 	 */
 	private static boolean processNeedOneOfClues(Pattern pattern, WorkContext context) {
 		for (Clue oneOfClue : pattern.getOnlyOneIsRequiredClues()) {
-			if (isThisClueDetected((Clue) oneOfClue, context)) {
+			if (isThisClueDetected(oneOfClue, context)) {
 				return true;
 			}
 		}
@@ -300,13 +376,21 @@ public class PatternDetectionWorkContextDelegate {
 		long numberToFind = pattern.getAllAreRequiredClues().size();
 		long numberFound = 0;
 		for (Clue clue : pattern.getAllAreRequiredClues()) {
-			if (isThisClueDetected((Clue) clue, context)) {
+			if (isThisClueDetected(clue, context)) {
 				numberFound++;
 			}
 		}
 		return numberToFind == numberFound;
 	}
 
+	/**
+	 * A Builder for creating a WorkContext for use of Pattern Detection. It contains
+	 * helper methods to configure what Patterns to look for and the location of where the
+	 * content will come from to search
+	 *
+	 * @author Luke Shannon (Github: lshannon)
+	 *
+	 */
 	public static class WorkContextBuilder {
 
 		private List<Pattern> desiredPatterns;
@@ -316,6 +400,10 @@ public class PatternDetectionWorkContextDelegate {
 		private List<ContentInputStreamClientConfiguration> contentClients;
 
 		private Map<String, ArrayList<String>> directoriesAndFiles;
+
+		private List<File> files;
+
+		private List<File> folders;
 
 		private List<InputStreamWrapper> inputStreams;
 
@@ -328,6 +416,28 @@ public class PatternDetectionWorkContextDelegate {
 			directoriesAndFiles = new HashMap<>();
 			inputStreams = new ArrayList<>();
 			contentClients = new ArrayList<>();
+			files = new ArrayList<>();
+			folders = new ArrayList<>();
+		}
+
+		public WorkContextBuilder addFileToFilesToScan(File file) {
+			this.files.add(file);
+			return this;
+		}
+
+		public WorkContextBuilder addAllToFilesToScan(List<File> files) {
+			this.files.addAll(files);
+			return this;
+		}
+
+		public WorkContextBuilder addFolderToFoldersToScan(File folder) {
+			this.folders.add(folder);
+			return this;
+		}
+
+		public WorkContextBuilder addAllToFoldersToScan(List<File> folders) {
+			this.folders.addAll(folders);
+			return this;
 		}
 
 		public WorkContextBuilder setDirectoriesAndFiles(Map<String, ArrayList<String>> directoriesAndFiles) {
@@ -371,6 +481,10 @@ public class PatternDetectionWorkContextDelegate {
 			return this;
 		}
 
+		/**
+		 * Method for building a WorkContext
+		 * @return WorkContext with
+		 */
 		public WorkContext build() {
 			WorkContext context = new WorkContext();
 			if (startDirectory != null) {
@@ -380,6 +494,8 @@ public class PatternDetectionWorkContextDelegate {
 			context.put(PatternDetectionConstants.INPUT_STREAMS_WRAPPERS.toString(), inputStreams);
 			context.put(PatternDetectionConstants.DIRECTORY_FILE_PATHS.toString(), directoriesAndFiles);
 			context.put(PatternDetectionConstants.INPUT_STREAM_CLIENTS.toString(), contentClients);
+			context.put(PatternDetectionConstants.FILES_TO_SCAN.toString(), files);
+			context.put(PatternDetectionConstants.FOLDERS_TO_SCAN.toString(), folders);
 			return context;
 		}
 
