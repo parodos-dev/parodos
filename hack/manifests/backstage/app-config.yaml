@@ -1,6 +1,10 @@
 app:
   title: Scaffolded Backstage App
   baseUrl: http://0.0.0.0:3000
+parodos:
+  workflows:
+    assessment: 'onboardingAssessment_ASSESSMENT_WORKFLOW'
+    assessmentTask: 'onboardingAssessmentTask'
 
 organization:
   name: My Company
@@ -56,6 +60,16 @@ proxy:
   #   changeOrigin: true
   '/parodos':
     target: 'http://workflow-service.default.svc.cluster.local:8080/api/v1'
+    changeOrigin: true
+    redirect: follow
+    cache: 'no-cache'
+    headers:
+      Content-Type: 'application/json'
+      accept: 'application/json'
+      Authorization: 'Basic dGVzdDp0ZXN0'
+
+  '/parodos-notifications':
+    target: 'http://notification-service.default.svc.cluster.local:8080/api/v1'
     changeOrigin: true
     redirect: follow
     cache: 'no-cache'
