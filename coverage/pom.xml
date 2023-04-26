@@ -60,6 +60,7 @@
                 </executions>
                 <configuration>
                     <excludes>${project.parent.basedir}/workflow-service-sdk/*</excludes>
+                    <excludes>${project.parent.basedir}/notification-service-sdk/*</excludes>
                     <excludes>${project.parent.basedir}/integration-tests/*</excludes>
                 </configuration>
             </plugin>
