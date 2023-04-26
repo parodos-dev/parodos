@@ -18,6 +18,8 @@ NOTIFICATION_SERVICE_IMAGE=notification-service
 
 # get version from pom
 VERSION = $(shell sed -n "s/<revision>\(.*\)<\/revision>/\1/p" $(PWD)/pom.xml | sed 's/\ *//g')
+RELEASE_VERSION = $(shell echo $(VERSION) | sed -e s/-SNAPSHOT//)
+NEXT_VERSION = $(shell echo $(RELEASE_VERSION) | awk -F. -v OFS=. '{$$NF += 1 ; print}')-SNAPSHOT
 
 GIT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD | sed s,^main$$,latest,g)
 GIT_HASH := $(shell git rev-parse HEAD)
@@ -74,7 +76,10 @@ FAST_BUILD_ARGS = -Dmaven.test.skip=true -Dmaven.javadoc.skip=true
 clean: ## Clean all modules
 	$(MAVEN) clean
 
-all: mvn-checks java-checks clean ## Build all modules
+all: mvn-checks java-checks install ## Build all modules
+
+install: ARGS = $(FAST_BUILD_ARGS)
+install: clean
 	$(MAVEN) $(ARGS) install
 
 deploy: clean ## push snapshot modules to maven central
@@ -130,23 +135,25 @@ fast-build-coverage: coverage
 
 # Build docker images
 .PHONY: build-images tag-images push-images push-images-to-kind install-nginx install-kubernetes-dependencies wait-kubernetes-dependencies
-	
+
 build-images: ## Build docker images
 	$(DOCKER-COMPOSE) -f ./docker-compose/docker-compose.yml build
 
 tag-images: ## Tag docker images with git hash and branch name
-	$(DOCKER) tag docker-compose_workflow-service:latest $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(GIT_HASH)
-	$(DOCKER) tag docker-compose_notification-service:latest $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(GIT_HASH)
+	$(eval TAG?=$(GIT_HASH))
+	$(DOCKER) tag docker-compose_workflow-service:latest $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(TAG)
+	$(DOCKER) tag docker-compose_notification-service:latest $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(TAG)
 
-	$(DOCKER) tag docker-compose_workflow-service:latest $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(GIT_BRANCH)
-	$(DOCKER) tag docker-compose_notification-service:latest $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(GIT_BRANCH)
+	$(DOCKER) tag docker-compose_workflow-service:latest $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(TAG)
+	$(DOCKER) tag docker-compose_notification-service:latest $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(TAG)
 
 push-images: ## Push docker images to quay.io registry
-	$(DOCKER) push  $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(GIT_HASH)
-	$(DOCKER) push  $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(GIT_HASH)
+	$(eval TAG?=$(GIT_HASH))
+	$(DOCKER) push  $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(TAG)
+	$(DOCKER) push  $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(TAG)
 
-	$(DOCKER) push  $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(GIT_BRANCH)
-	$(DOCKER) push  $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(GIT_BRANCH)
+	$(DOCKER) push  $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(TAG)
+	$(DOCKER) push  $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(TAG)
 
 push-images-to-kind: ## Push docker images to kind
 	$(DOCKER) tag docker-compose_workflow-service:latest $(ORG)$(WORKFLOW_SERVICE_IMAGE):test
@@ -165,6 +172,27 @@ wait-kubernetes-dependencies: ## Wait for dependencies to be ready
 	  --for=condition=ready pod \
 	  --selector=app.kubernetes.io/component=controller \
 	  --timeout=90s
+
+update-version: ## update release version
+	find . -type f | xargs sed -i 's/$(VERSION)/${RELEASE_VERSION}/g'
+
+bump-version: ## update post-release version and update commit message
+	find . -type f | xargs sed -i 's/$(RELEASE_VERSION)/${NEXT_VERSION}/g'
+
+bump-git-commit: ## adds all files and bumps the version
+	git add -u .
+	git commit -m 'Version bump to ${NEXT_VERSION}'
+
+git-release: ## adds all release files and commits
+	git add -u .
+	git commit -m 'Release $(RELEASE_VERSION)'
+
+git-tag: TAG = v$(RELEASE_VERSION)
+git-tag: ## tag commit and prepare for image release
+	git tag -a $(TAG) -m "$(TAG)"
+	$(eval TAG=$(TAG))
+
+release-all: clean update-version release git-release git-tag build-images tag-images push-images bump-version install bump-git-commit
 
 ##@ Run
 .PHONY: docker-run docker-stop
