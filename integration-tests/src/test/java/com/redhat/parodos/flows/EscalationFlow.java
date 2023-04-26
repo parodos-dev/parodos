@@ -1,4 +1,4 @@
-package com.redhat.parodos.examples.integration;
+package com.redhat.parodos.flows;
 
 import com.redhat.parodos.sdk.api.WorkflowApi;
 import com.redhat.parodos.sdk.invoker.ApiClient;
@@ -14,10 +14,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 
-import java.io.IOException;
-
-import static com.redhat.parodos.examples.integration.utils.ExamplesUtils.getProjectAsync;
-import static com.redhat.parodos.examples.integration.utils.ExamplesUtils.waitWorkflowStatusAsync;
+import static com.redhat.parodos.flows.utils.IntegrationTestUtils.getProjectAsync;
+import static com.redhat.parodos.flows.utils.IntegrationTestUtils.waitWorkflowStatusAsync;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -34,7 +32,7 @@ public class EscalationFlow {
 	private ApiClient apiClient;
 
 	@Before
-	public void setUp() throws IOException {
+	public void setUp() {
 		apiClient = Configuration.getDefaultApiClient();
 		apiClient.addDefaultHeader(HttpHeaders.AUTHORIZATION, "Basic " + CredUtils.getBase64Creds("test", "test"));
 	}
@@ -68,7 +66,6 @@ public class EscalationFlow {
 		assertNotNull(workFlowStatusResponseDTO.getWorkFlowExecutionId());
 		assertEquals(WorkFlowResponseDTO.WorkStatusEnum.COMPLETED.toString(), workFlowStatusResponseDTO.getStatus());
 		log.info("******** Simple Escalation Flow {} ********", workFlowStatusResponseDTO.getStatus());
-
 	}
 
 }

@@ -1,5 +1,18 @@
 
-package com.redhat.parodos.examples.integration.utils;
+package com.redhat.parodos.flows.utils;
+
+import com.redhat.parodos.sdk.api.ProjectApi;
+import com.redhat.parodos.sdk.api.WorkflowApi;
+import com.redhat.parodos.sdk.invoker.ApiCallback;
+import com.redhat.parodos.sdk.invoker.ApiClient;
+import com.redhat.parodos.sdk.invoker.ApiException;
+import com.redhat.parodos.sdk.model.ProjectRequestDTO;
+import com.redhat.parodos.sdk.model.ProjectResponseDTO;
+import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
+import com.redhat.parodos.workflows.work.WorkStatus;
+import lombok.Data;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -15,27 +28,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import com.redhat.parodos.sdk.api.ProjectApi;
-import com.redhat.parodos.sdk.api.WorkflowApi;
-import com.redhat.parodos.sdk.invoker.ApiCallback;
-import com.redhat.parodos.sdk.invoker.ApiClient;
-import com.redhat.parodos.sdk.invoker.ApiException;
-import com.redhat.parodos.sdk.model.ProjectRequestDTO;
-import com.redhat.parodos.sdk.model.ProjectResponseDTO;
-import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
-import com.redhat.parodos.workflows.work.WorkStatus;
-import lombok.Data;
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
-
 /***
- * A utility
- *
- * class to ease the writing of new examples.
+ * A utility class to ease the writing of new examples.
  */
 
 @Slf4j
-public final class ExamplesUtils {
+public final class IntegrationTestUtils {
 
 	/**
 	 * Executes a @see FuncExecutor. Waits at most 60 seconds for a successful result of
@@ -217,7 +215,7 @@ public final class ExamplesUtils {
 	public static ProjectResponseDTO getProjectAsync(ApiClient apiClient, String projectName, String projectDescription)
 			throws InterruptedException, ApiException {
 		ProjectApi projectApi = new ProjectApi(apiClient);
-
+		log.info("Wait project to be ready on {}", apiClient.getBasePath());
 		waitProjectStart(projectApi);
 		log.info("Project is ✔️ on {}", apiClient.getBasePath());
 
@@ -226,6 +224,7 @@ public final class ExamplesUtils {
 		// RETRIEVE ALL PROJECTS AVAILABLE
 		log.info("Get all available projects");
 		List<ProjectResponseDTO> projects = projectApi.getProjects();
+
 		// CHECK IF testProject ALREADY EXISTS
 		testProject = getProjectByNameAndDescription(projects, projectName, projectDescription);
 
