@@ -75,6 +75,7 @@
         <module>workflow-examples</module>
         <module>pattern-detection-library</module>
         <module>coverage</module>
+        <module>integration-tests</module>
     </modules>
 
     <dependencyManagement>
