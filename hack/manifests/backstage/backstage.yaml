@@ -26,7 +26,7 @@ spec:
             - "packages/backend"
             - "--config"
             - "/app/app-config.yaml"
-          image: quay.io/parodos/orion-ui:latest
+          image: quay.io/parodos-dev/backstage-parodos:latest
           imagePullPolicy: Always
           ports:
             - name: backend
