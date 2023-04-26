@@ -4,13 +4,12 @@ on:
   push:
     branches:
       - main
+      - GHActions
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha != '' &&  github.event.pull_request.head.sha ||  github.sha }}
 
       - uses: actions/setup-java@v3
         with:
