@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 import java.util.stream.Stream;
 
 import com.redhat.parodos.patterndetection.clue.Clue;
@@ -87,6 +88,10 @@ public class PatternDetectionWorkContextDelegate {
 		getFilesAndDirectoriesFromLocalStartFolder(context);
 		return true;
 	}
+	
+	public static ExecutorService getScanningThreadPool(WorkContext context) {
+		return (ExecutorService) context.get(PatternDetectionConstants.SCANNING_THREAD_POOL.toString());
+	}
 
 	/**
 	 * Compares the DETECT_PATTERNS to the DESIRED_PATTERNS to see if all desired Patterns
@@ -135,6 +140,7 @@ public class PatternDetectionWorkContextDelegate {
 	public static Map<String, ArrayList<String>> getDirectoriesAndFiles(WorkContext context) {
 		return (Map<String, ArrayList<String>>) context.get(PatternDetectionConstants.DIRECTORY_FILE_PATHS.toString());
 	}
+	
 
 	/**
 	 * Gets a list of files to scan from the context
@@ -500,5 +506,7 @@ public class PatternDetectionWorkContextDelegate {
 		}
 
 	}
+
+	
 
 }
