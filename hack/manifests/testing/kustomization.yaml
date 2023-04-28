@@ -9,10 +9,10 @@ patchesStrategicMerge:
 - parodos-patch.yaml
 
 images:
-- name: quay.io/parodos-dev/workflow-service:latest
+- name: quay.io/parodos-dev/workflow-service:main
   newTag: test
 
-- name: quay.io/parodos-dev/notification-service:latest
+- name: quay.io/parodos-dev/notification-service:main
   newTag: test
 
 configMapGenerator:
