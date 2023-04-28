@@ -188,14 +188,12 @@ jobs:
           SERVER_IP="${SERVERIP}" SERVERPORT=80 ./workflow-examples/run_examples.sh complex
 
       - name: Collect logs
-        if: ${{ failure() }}
         run: |
           kubectl get pods --all-namespaces
           kind export logs dist
 
       - name: Archive logs
         uses: actions/upload-artifact@v3
-        if: ${{ failure() }}
         with:
           name: logs
           path: |
