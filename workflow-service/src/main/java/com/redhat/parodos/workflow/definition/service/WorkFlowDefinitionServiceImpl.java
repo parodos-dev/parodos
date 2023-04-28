@@ -101,7 +101,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 			WorkFlowProcessingType workFlowProcessingType) {
 
 		String stringifyParameters = WorkFlowDTOUtil.writeObjectValueAsString(convertWorkParameters(workParameters));
-
+		log.error("WorkflowDefinition::Eloy::{}", workFlowName);
 		// set and save workflow definition
 		WorkFlowPropertiesDefinition propertiesDefinition = WorkFlowPropertiesDefinition.builder().build();
 		if (properties != null) {
