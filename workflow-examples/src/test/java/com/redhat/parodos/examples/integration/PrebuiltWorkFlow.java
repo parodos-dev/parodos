@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -74,7 +75,7 @@ public class PrebuiltWorkFlow {
 		assertTrue(prebuiltWorkFlowDefinition.getWorks().size() == 1);
 		assertEquals("notificationTask", prebuiltWorkFlowDefinition.getWorks().get(0).getName());
 		assertEquals(WorkType.TASK.toString(), prebuiltWorkFlowDefinition.getWorks().get(0).getWorkType());
-		assertNull(prebuiltWorkFlowDefinition.getWorks().get(0).getWorks());
+		assertTrue(CollectionUtils.isEmpty(prebuiltWorkFlowDefinition.getWorks().get(0).getWorks()));
 		assertNull(prebuiltWorkFlowDefinition.getWorks().get(0).getProcessingType());
 		assertNotNull(prebuiltWorkFlowDefinition.getWorks().get(0).getParameters());
 

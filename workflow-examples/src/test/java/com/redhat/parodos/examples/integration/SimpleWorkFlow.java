@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -77,13 +78,13 @@ public class SimpleWorkFlow {
 		assertTrue(simpleSequentialWorkFlowDefinition.getWorks().size() == 2);
 		assertEquals("restCallTask", simpleSequentialWorkFlowDefinition.getWorks().get(0).getName());
 		assertEquals(WorkType.TASK.toString(), simpleSequentialWorkFlowDefinition.getWorks().get(0).getWorkType());
-		assertNull(simpleSequentialWorkFlowDefinition.getWorks().get(0).getWorks());
+		assertTrue(CollectionUtils.isEmpty(simpleSequentialWorkFlowDefinition.getWorks().get(0).getWorks()));
 		assertNull(simpleSequentialWorkFlowDefinition.getWorks().get(0).getProcessingType());
 		assertNotNull(simpleSequentialWorkFlowDefinition.getWorks().get(0).getParameters());
 
 		assertEquals("loggingTask", simpleSequentialWorkFlowDefinition.getWorks().get(1).getName());
 		assertEquals(WorkType.TASK.toString(), simpleSequentialWorkFlowDefinition.getWorks().get(1).getWorkType());
-		assertNull(simpleSequentialWorkFlowDefinition.getWorks().get(1).getWorks());
+		assertTrue(CollectionUtils.isEmpty(simpleSequentialWorkFlowDefinition.getWorks().get(1).getWorks()));
 		assertNull(simpleSequentialWorkFlowDefinition.getWorks().get(1).getProcessingType());
 		assertNotNull(simpleSequentialWorkFlowDefinition.getWorks().get(1).getParameters());
 
