@@ -26,8 +26,8 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 
 import com.redhat.parodos.notification.sdk.model.NotificationRecordResponseDTO;
+import com.redhat.parodos.notification.sdk.model.PageNotificationRecordResponseDTO;
 import com.redhat.parodos.notification.sdk.model.Pageable;
-import com.redhat.parodos.notification.sdk.model.PagedModelNotificationRecordResponseDTO;
 import java.util.UUID;
 
 import java.lang.reflect.Type;
@@ -92,7 +92,17 @@ public class NotificationRecordApi {
 	 * </tr>
 	 * <tr>
 	 * <td>200</td>
-	 * <td>OK</td>
+	 * <td>Successfully retrieved the amount of notifications</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>403</td>
+	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -160,6 +170,7 @@ public class NotificationRecordApi {
 	}
 
 	/**
+	 * Return the number of the unread notification records for the user
 	 * @param state (required)
 	 * @return Integer
 	 * @throws ApiException If fail to call the API, e.g. server error or cannot
@@ -173,7 +184,17 @@ public class NotificationRecordApi {
 	 * </tr>
 	 * <tr>
 	 * <td>200</td>
-	 * <td>OK</td>
+	 * <td>Successfully retrieved the amount of notifications</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>403</td>
+	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -184,6 +205,7 @@ public class NotificationRecordApi {
 	}
 
 	/**
+	 * Return the number of the unread notification records for the user
 	 * @param state (required)
 	 * @return ApiResponse&lt;Integer&gt;
 	 * @throws ApiException If fail to call the API, e.g. server error or cannot
@@ -197,7 +219,17 @@ public class NotificationRecordApi {
 	 * </tr>
 	 * <tr>
 	 * <td>200</td>
-	 * <td>OK</td>
+	 * <td>Successfully retrieved the amount of notifications</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>403</td>
+	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -210,7 +242,7 @@ public class NotificationRecordApi {
 	}
 
 	/**
-	 * (asynchronously)
+	 * Return the number of the unread notification records for the user (asynchronously)
 	 * @param state (required)
 	 * @param _callback The callback to be executed when the API call finishes
 	 * @return The request call
@@ -225,7 +257,17 @@ public class NotificationRecordApi {
 	 * </tr>
 	 * <tr>
 	 * <td>200</td>
-	 * <td>OK</td>
+	 * <td>Successfully retrieved the amount of notifications</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>403</td>
+	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -254,8 +296,18 @@ public class NotificationRecordApi {
 	 * <td>Response Headers</td>
 	 * </tr>
 	 * <tr>
-	 * <td>204</td>
-	 * <td>No Content</td>
+	 * <td>200</td>
+	 * <td>Successfully retrieved the amount of notifications</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>403</td>
+	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -319,6 +371,7 @@ public class NotificationRecordApi {
 	}
 
 	/**
+	 * Delete the specified notification record
 	 * @param id (required)
 	 * @throws ApiException If fail to call the API, e.g. server error or cannot
 	 * deserialize the response body
@@ -330,8 +383,18 @@ public class NotificationRecordApi {
 	 * <td>Response Headers</td>
 	 * </tr>
 	 * <tr>
-	 * <td>204</td>
-	 * <td>No Content</td>
+	 * <td>200</td>
+	 * <td>Successfully retrieved the amount of notifications</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>403</td>
+	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -341,6 +404,7 @@ public class NotificationRecordApi {
 	}
 
 	/**
+	 * Delete the specified notification record
 	 * @param id (required)
 	 * @return ApiResponse&lt;Void&gt;
 	 * @throws ApiException If fail to call the API, e.g. server error or cannot
@@ -353,8 +417,18 @@ public class NotificationRecordApi {
 	 * <td>Response Headers</td>
 	 * </tr>
 	 * <tr>
-	 * <td>204</td>
-	 * <td>No Content</td>
+	 * <td>200</td>
+	 * <td>Successfully retrieved the amount of notifications</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>403</td>
+	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -365,7 +439,7 @@ public class NotificationRecordApi {
 	}
 
 	/**
-	 * (asynchronously)
+	 * Delete the specified notification record (asynchronously)
 	 * @param id (required)
 	 * @param _callback The callback to be executed when the API call finishes
 	 * @return The request call
@@ -379,8 +453,18 @@ public class NotificationRecordApi {
 	 * <td>Response Headers</td>
 	 * </tr>
 	 * <tr>
-	 * <td>204</td>
-	 * <td>No Content</td>
+	 * <td>200</td>
+	 * <td>Successfully retrieved the amount of notifications</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>403</td>
+	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -409,7 +493,17 @@ public class NotificationRecordApi {
 	 * </tr>
 	 * <tr>
 	 * <td>200</td>
-	 * <td>OK</td>
+	 * <td>Successfully retrieved page of notifications</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>403</td>
+	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -485,10 +579,11 @@ public class NotificationRecordApi {
 	}
 
 	/**
+	 * Return a list of notification records for the user
 	 * @param pageable (required)
 	 * @param state (optional)
 	 * @param searchTerm (optional)
-	 * @return PagedModelNotificationRecordResponseDTO
+	 * @return PageNotificationRecordResponseDTO
 	 * @throws ApiException If fail to call the API, e.g. server error or cannot
 	 * deserialize the response body
 	 * @http.response.details
@@ -500,23 +595,34 @@ public class NotificationRecordApi {
 	 * </tr>
 	 * <tr>
 	 * <td>200</td>
-	 * <td>OK</td>
+	 * <td>Successfully retrieved page of notifications</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>403</td>
+	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
 	 */
-	public PagedModelNotificationRecordResponseDTO getNotifications(Pageable pageable, String state, String searchTerm)
+	public PageNotificationRecordResponseDTO getNotifications(Pageable pageable, String state, String searchTerm)
 			throws ApiException {
-		ApiResponse<PagedModelNotificationRecordResponseDTO> localVarResp = getNotificationsWithHttpInfo(pageable,
-				state, searchTerm);
+		ApiResponse<PageNotificationRecordResponseDTO> localVarResp = getNotificationsWithHttpInfo(pageable, state,
+				searchTerm);
 		return localVarResp.getData();
 	}
 
 	/**
+	 * Return a list of notification records for the user
 	 * @param pageable (required)
 	 * @param state (optional)
 	 * @param searchTerm (optional)
-	 * @return ApiResponse&lt;PagedModelNotificationRecordResponseDTO&gt;
+	 * @return ApiResponse&lt;PageNotificationRecordResponseDTO&gt;
 	 * @throws ApiException If fail to call the API, e.g. server error or cannot
 	 * deserialize the response body
 	 * @http.response.details
@@ -528,21 +634,31 @@ public class NotificationRecordApi {
 	 * </tr>
 	 * <tr>
 	 * <td>200</td>
-	 * <td>OK</td>
+	 * <td>Successfully retrieved page of notifications</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>403</td>
+	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
 	 */
-	public ApiResponse<PagedModelNotificationRecordResponseDTO> getNotificationsWithHttpInfo(Pageable pageable,
-			String state, String searchTerm) throws ApiException {
+	public ApiResponse<PageNotificationRecordResponseDTO> getNotificationsWithHttpInfo(Pageable pageable, String state,
+			String searchTerm) throws ApiException {
 		okhttp3.Call localVarCall = getNotificationsValidateBeforeCall(pageable, state, searchTerm, null);
-		Type localVarReturnType = new TypeToken<PagedModelNotificationRecordResponseDTO>() {
+		Type localVarReturnType = new TypeToken<PageNotificationRecordResponseDTO>() {
 		}.getType();
 		return localVarApiClient.execute(localVarCall, localVarReturnType);
 	}
 
 	/**
-	 * (asynchronously)
+	 * Return a list of notification records for the user (asynchronously)
 	 * @param pageable (required)
 	 * @param state (optional)
 	 * @param searchTerm (optional)
@@ -559,16 +675,26 @@ public class NotificationRecordApi {
 	 * </tr>
 	 * <tr>
 	 * <td>200</td>
-	 * <td>OK</td>
+	 * <td>Successfully retrieved page of notifications</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>403</td>
+	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call getNotificationsAsync(Pageable pageable, String state, String searchTerm,
-			final ApiCallback<PagedModelNotificationRecordResponseDTO> _callback) throws ApiException {
+			final ApiCallback<PageNotificationRecordResponseDTO> _callback) throws ApiException {
 
 		okhttp3.Call localVarCall = getNotificationsValidateBeforeCall(pageable, state, searchTerm, _callback);
-		Type localVarReturnType = new TypeToken<PagedModelNotificationRecordResponseDTO>() {
+		Type localVarReturnType = new TypeToken<PageNotificationRecordResponseDTO>() {
 		}.getType();
 		localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
 		return localVarCall;
@@ -590,7 +716,17 @@ public class NotificationRecordApi {
 	 * </tr>
 	 * <tr>
 	 * <td>200</td>
-	 * <td>OK</td>
+	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -666,6 +802,7 @@ public class NotificationRecordApi {
 	}
 
 	/**
+	 * Update the specified notification record with user operation
 	 * @param id (required)
 	 * @param operation (required)
 	 * @return NotificationRecordResponseDTO
@@ -680,7 +817,17 @@ public class NotificationRecordApi {
 	 * </tr>
 	 * <tr>
 	 * <td>200</td>
-	 * <td>OK</td>
+	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -692,6 +839,7 @@ public class NotificationRecordApi {
 	}
 
 	/**
+	 * Update the specified notification record with user operation
 	 * @param id (required)
 	 * @param operation (required)
 	 * @return ApiResponse&lt;NotificationRecordResponseDTO&gt;
@@ -706,7 +854,17 @@ public class NotificationRecordApi {
 	 * </tr>
 	 * <tr>
 	 * <td>200</td>
-	 * <td>OK</td>
+	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -720,7 +878,7 @@ public class NotificationRecordApi {
 	}
 
 	/**
-	 * (asynchronously)
+	 * Update the specified notification record with user operation (asynchronously)
 	 * @param id (required)
 	 * @param operation (required)
 	 * @param _callback The callback to be executed when the API call finishes
@@ -736,7 +894,17 @@ public class NotificationRecordApi {
 	 * </tr>
 	 * <tr>
 	 * <td>200</td>
-	 * <td>OK</td>
+	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>

@@ -43,112 +43,87 @@ import java.util.Set;
 import com.redhat.parodos.notification.sdk.api.JSON;
 
 /**
- * PageMetadata
+ * Sort
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
-public class PageMetadata {
+public class Sort {
 
-	public static final String SERIALIZED_NAME_NUMBER = "number";
+	public static final String SERIALIZED_NAME_EMPTY = "empty";
 
-	@SerializedName(SERIALIZED_NAME_NUMBER)
-	private Long number;
+	@SerializedName(SERIALIZED_NAME_EMPTY)
+	private Boolean empty;
 
-	public static final String SERIALIZED_NAME_SIZE = "size";
+	public static final String SERIALIZED_NAME_SORTED = "sorted";
 
-	@SerializedName(SERIALIZED_NAME_SIZE)
-	private Long size;
+	@SerializedName(SERIALIZED_NAME_SORTED)
+	private Boolean sorted;
 
-	public static final String SERIALIZED_NAME_TOTAL_ELEMENTS = "totalElements";
+	public static final String SERIALIZED_NAME_UNSORTED = "unsorted";
 
-	@SerializedName(SERIALIZED_NAME_TOTAL_ELEMENTS)
-	private Long totalElements;
+	@SerializedName(SERIALIZED_NAME_UNSORTED)
+	private Boolean unsorted;
 
-	public static final String SERIALIZED_NAME_TOTAL_PAGES = "totalPages";
-
-	@SerializedName(SERIALIZED_NAME_TOTAL_PAGES)
-	private Long totalPages;
-
-	public PageMetadata() {
+	public Sort() {
 	}
 
-	public PageMetadata number(Long number) {
+	public Sort empty(Boolean empty) {
 
-		this.number = number;
+		this.empty = empty;
 		return this;
 	}
 
 	/**
-	 * Get number
-	 * @return number
+	 * Get empty
+	 * @return empty
 	 **/
 	@javax.annotation.Nullable
 
-	public Long getNumber() {
-		return number;
+	public Boolean getEmpty() {
+		return empty;
 	}
 
-	public void setNumber(Long number) {
-		this.number = number;
+	public void setEmpty(Boolean empty) {
+		this.empty = empty;
 	}
 
-	public PageMetadata size(Long size) {
+	public Sort sorted(Boolean sorted) {
 
-		this.size = size;
+		this.sorted = sorted;
 		return this;
 	}
 
 	/**
-	 * Get size
-	 * @return size
+	 * Get sorted
+	 * @return sorted
 	 **/
 	@javax.annotation.Nullable
 
-	public Long getSize() {
-		return size;
+	public Boolean getSorted() {
+		return sorted;
 	}
 
-	public void setSize(Long size) {
-		this.size = size;
+	public void setSorted(Boolean sorted) {
+		this.sorted = sorted;
 	}
 
-	public PageMetadata totalElements(Long totalElements) {
+	public Sort unsorted(Boolean unsorted) {
 
-		this.totalElements = totalElements;
+		this.unsorted = unsorted;
 		return this;
 	}
 
 	/**
-	 * Get totalElements
-	 * @return totalElements
+	 * Get unsorted
+	 * @return unsorted
 	 **/
 	@javax.annotation.Nullable
 
-	public Long getTotalElements() {
-		return totalElements;
+	public Boolean getUnsorted() {
+		return unsorted;
 	}
 
-	public void setTotalElements(Long totalElements) {
-		this.totalElements = totalElements;
-	}
-
-	public PageMetadata totalPages(Long totalPages) {
-
-		this.totalPages = totalPages;
-		return this;
-	}
-
-	/**
-	 * Get totalPages
-	 * @return totalPages
-	 **/
-	@javax.annotation.Nullable
-
-	public Long getTotalPages() {
-		return totalPages;
-	}
-
-	public void setTotalPages(Long totalPages) {
-		this.totalPages = totalPages;
+	public void setUnsorted(Boolean unsorted) {
+		this.unsorted = unsorted;
 	}
 
 	@Override
@@ -159,25 +134,23 @@ public class PageMetadata {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		PageMetadata pageMetadata = (PageMetadata) o;
-		return Objects.equals(this.number, pageMetadata.number) && Objects.equals(this.size, pageMetadata.size)
-				&& Objects.equals(this.totalElements, pageMetadata.totalElements)
-				&& Objects.equals(this.totalPages, pageMetadata.totalPages);
+		Sort sort = (Sort) o;
+		return Objects.equals(this.empty, sort.empty) && Objects.equals(this.sorted, sort.sorted)
+				&& Objects.equals(this.unsorted, sort.unsorted);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(number, size, totalElements, totalPages);
+		return Objects.hash(empty, sorted, unsorted);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("class PageMetadata {\n");
-		sb.append("    number: ").append(toIndentedString(number)).append("\n");
-		sb.append("    size: ").append(toIndentedString(size)).append("\n");
-		sb.append("    totalElements: ").append(toIndentedString(totalElements)).append("\n");
-		sb.append("    totalPages: ").append(toIndentedString(totalPages)).append("\n");
+		sb.append("class Sort {\n");
+		sb.append("    empty: ").append(toIndentedString(empty)).append("\n");
+		sb.append("    sorted: ").append(toIndentedString(sorted)).append("\n");
+		sb.append("    unsorted: ").append(toIndentedString(unsorted)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}
@@ -200,10 +173,9 @@ public class PageMetadata {
 	static {
 		// a set of all properties/fields (JSON key names)
 		openapiFields = new HashSet<String>();
-		openapiFields.add("number");
-		openapiFields.add("size");
-		openapiFields.add("totalElements");
-		openapiFields.add("totalPages");
+		openapiFields.add("empty");
+		openapiFields.add("sorted");
+		openapiFields.add("unsorted");
 
 		// a set of required properties/fields (JSON key names)
 		openapiRequiredFields = new HashSet<String>();
@@ -212,25 +184,24 @@ public class PageMetadata {
 	/**
 	 * Validates the JSON Object and throws an exception if issues found
 	 * @param jsonObj JSON Object
-	 * @throws IOException if the JSON Object is invalid with respect to PageMetadata
+	 * @throws IOException if the JSON Object is invalid with respect to Sort
 	 */
 	public static void validateJsonObject(JsonObject jsonObj) throws IOException {
 		if (jsonObj == null) {
-			if (!PageMetadata.openapiRequiredFields.isEmpty()) { // has required fields
-																	// but JSON object is
-																	// null
+			if (!Sort.openapiRequiredFields.isEmpty()) { // has required fields but JSON
+															// object is null
 				throw new IllegalArgumentException(
-						String.format("The required field(s) %s in PageMetadata is not found in the empty JSON string",
-								PageMetadata.openapiRequiredFields.toString()));
+						String.format("The required field(s) %s in Sort is not found in the empty JSON string",
+								Sort.openapiRequiredFields.toString()));
 			}
 		}
 
 		Set<Entry<String, JsonElement>> entries = jsonObj.entrySet();
 		// check to see if the JSON string contains additional fields
 		for (Entry<String, JsonElement> entry : entries) {
-			if (!PageMetadata.openapiFields.contains(entry.getKey())) {
+			if (!Sort.openapiFields.contains(entry.getKey())) {
 				throw new IllegalArgumentException(String.format(
-						"The field `%s` in the JSON string is not defined in the `PageMetadata` properties. JSON: %s",
+						"The field `%s` in the JSON string is not defined in the `Sort` properties. JSON: %s",
 						entry.getKey(), jsonObj.toString()));
 			}
 		}
@@ -241,22 +212,21 @@ public class PageMetadata {
 		@SuppressWarnings("unchecked")
 		@Override
 		public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
-			if (!PageMetadata.class.isAssignableFrom(type.getRawType())) {
-				return null; // this class only serializes 'PageMetadata' and its subtypes
+			if (!Sort.class.isAssignableFrom(type.getRawType())) {
+				return null; // this class only serializes 'Sort' and its subtypes
 			}
 			final TypeAdapter<JsonElement> elementAdapter = gson.getAdapter(JsonElement.class);
-			final TypeAdapter<PageMetadata> thisAdapter = gson.getDelegateAdapter(this,
-					TypeToken.get(PageMetadata.class));
+			final TypeAdapter<Sort> thisAdapter = gson.getDelegateAdapter(this, TypeToken.get(Sort.class));
 
-			return (TypeAdapter<T>) new TypeAdapter<PageMetadata>() {
+			return (TypeAdapter<T>) new TypeAdapter<Sort>() {
 				@Override
-				public void write(JsonWriter out, PageMetadata value) throws IOException {
+				public void write(JsonWriter out, Sort value) throws IOException {
 					JsonObject obj = thisAdapter.toJsonTree(value).getAsJsonObject();
 					elementAdapter.write(out, obj);
 				}
 
 				@Override
-				public PageMetadata read(JsonReader in) throws IOException {
+				public Sort read(JsonReader in) throws IOException {
 					JsonObject jsonObj = elementAdapter.read(in).getAsJsonObject();
 					validateJsonObject(jsonObj);
 					return thisAdapter.fromJsonTree(jsonObj);
@@ -268,17 +238,17 @@ public class PageMetadata {
 	}
 
 	/**
-	 * Create an instance of PageMetadata given an JSON string
+	 * Create an instance of Sort given an JSON string
 	 * @param jsonString JSON string
-	 * @return An instance of PageMetadata
-	 * @throws IOException if the JSON string is invalid with respect to PageMetadata
+	 * @return An instance of Sort
+	 * @throws IOException if the JSON string is invalid with respect to Sort
 	 */
-	public static PageMetadata fromJson(String jsonString) throws IOException {
-		return JSON.getGson().fromJson(jsonString, PageMetadata.class);
+	public static Sort fromJson(String jsonString) throws IOException {
+		return JSON.getGson().fromJson(jsonString, Sort.class);
 	}
 
 	/**
-	 * Convert an instance of PageMetadata to an JSON string
+	 * Convert an instance of Sort to an JSON string
 	 * @return JSON string
 	 */
 	public String toJson() {

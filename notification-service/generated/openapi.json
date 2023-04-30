@@ -69,13 +69,34 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/PagedModelNotificationRecordResponseDTO"
+                  "$ref" : "#/components/schemas/PageNotificationRecordResponseDTO"
                 }
               }
             },
-            "description" : "OK"
+            "description" : "Successfully retrieved page of notifications"
+          },
+          "401" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PageNotificationRecordResponseDTO"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PageNotificationRecordResponseDTO"
+                }
+              }
+            },
+            "description" : "Forbidden"
           }
         },
+        "summary" : "Return a list of notification records for the user",
         "tags" : [ "Notification Record" ]
       }
     },
@@ -101,9 +122,32 @@
                 }
               }
             },
-            "description" : "OK"
+            "description" : "Successfully retrieved the amount of notifications"
+          },
+          "401" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "integer",
+                  "format" : "int32"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "integer",
+                  "format" : "int32"
+                }
+              }
+            },
+            "description" : "Forbidden"
           }
         },
+        "summary" : "Return the number of the unread notification records for the user",
         "tags" : [ "Notification Record" ]
       }
     },
@@ -120,10 +164,17 @@
           }
         } ],
         "responses" : {
-          "204" : {
-            "description" : "No Content"
+          "200" : {
+            "description" : "Successfully retrieved the amount of notifications"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
           }
         },
+        "summary" : "Delete the specified notification record",
         "tags" : [ "Notification Record" ]
       },
       "put" : {
@@ -154,9 +205,30 @@
                 }
               }
             },
-            "description" : "OK"
+            "description" : "Succeeded"
+          },
+          "401" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/NotificationRecordResponseDTO"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/NotificationRecordResponseDTO"
+                }
+              }
+            },
+            "description" : "Not found"
           }
         },
+        "summary" : "Update the specified notification record with user operation",
         "tags" : [ "Notification Record" ]
       }
     }
@@ -264,16 +336,41 @@
           }
         }
       },
-      "PageMetadata" : {
+      "PageNotificationRecordResponseDTO" : {
         "type" : "object",
         "properties" : {
+          "content" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/NotificationRecordResponseDTO"
+            }
+          },
+          "empty" : {
+            "type" : "boolean"
+          },
+          "first" : {
+            "type" : "boolean"
+          },
+          "last" : {
+            "type" : "boolean"
+          },
           "number" : {
             "type" : "integer",
-            "format" : "int64"
+            "format" : "int32"
+          },
+          "numberOfElements" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "pageable" : {
+            "$ref" : "#/components/schemas/PageableObject"
           },
           "size" : {
             "type" : "integer",
-            "format" : "int64"
+            "format" : "int32"
+          },
+          "sort" : {
+            "$ref" : "#/components/schemas/Sort"
           },
           "totalElements" : {
             "type" : "integer",
@@ -281,7 +378,7 @@
           },
           "totalPages" : {
             "type" : "integer",
-            "format" : "int64"
+            "format" : "int32"
           }
         }
       },
@@ -306,23 +403,43 @@
           }
         }
       },
-      "PagedModelNotificationRecordResponseDTO" : {
+      "PageableObject" : {
         "type" : "object",
         "properties" : {
-          "content" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/NotificationRecordResponseDTO"
-            }
+          "offset" : {
+            "type" : "integer",
+            "format" : "int64"
           },
-          "links" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Link"
-            }
+          "pageNumber" : {
+            "type" : "integer",
+            "format" : "int32"
           },
-          "page" : {
-            "$ref" : "#/components/schemas/PageMetadata"
+          "pageSize" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "paged" : {
+            "type" : "boolean"
+          },
+          "sort" : {
+            "$ref" : "#/components/schemas/Sort"
+          },
+          "unpaged" : {
+            "type" : "boolean"
+          }
+        }
+      },
+      "Sort" : {
+        "type" : "object",
+        "properties" : {
+          "empty" : {
+            "type" : "boolean"
+          },
+          "sorted" : {
+            "type" : "boolean"
+          },
+          "unsorted" : {
+            "type" : "boolean"
           }
         }
       }
