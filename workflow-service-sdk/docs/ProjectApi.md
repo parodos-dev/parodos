@@ -2,11 +2,11 @@
 
 All URIs are relative to *http://localhost:8080*
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**createProject**](ProjectApi.md#createProject) | **POST** /api/v1/projects | Creates a new project
-[**getProjectById**](ProjectApi.md#getProjectById) | **GET** /api/v1/projects/{id} | Returns information about a specified project
-[**getProjects**](ProjectApi.md#getProjects) | **GET** /api/v1/projects | Returns a list of project
+| Method | HTTP request | Description |
+|------------- | ------------- | -------------|
+| [**createProject**](ProjectApi.md#createProject) | **POST** /api/v1/projects | Creates a new project |
+| [**getProjectById**](ProjectApi.md#getProjectById) | **GET** /api/v1/projects/{id} | Returns information about a specified project |
+| [**getProjects**](ProjectApi.md#getProjects) | **GET** /api/v1/projects | Returns a list of project |
 
 
 <a name="createProject"></a>
@@ -47,9 +47,9 @@ public class Example {
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **projectRequestDTO** | [**ProjectRequestDTO**](ProjectRequestDTO.md)|  |
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **projectRequestDTO** | [**ProjectRequestDTO**](ProjectRequestDTO.md)|  | |
 
 ### Return type
 
@@ -67,8 +67,8 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**201** | Created |  -  |
-**401** | Unauthorized |  -  |
+| **201** | Created |  -  |
+| **401** | Unauthorized |  -  |
 
 <a name="getProjectById"></a>
 # **getProjectById**
@@ -108,9 +108,9 @@ public class Example {
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **id** | **String**|  |
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **id** | **String**|  | |
 
 ### Return type
 
@@ -128,9 +128,9 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Succeeded |  -  |
-**401** | Unauthorized |  -  |
-**404** | Not found |  -  |
+| **200** | Succeeded |  -  |
+| **401** | Unauthorized |  -  |
+| **404** | Not found |  -  |
 
 <a name="getProjects"></a>
 # **getProjects**
@@ -186,7 +186,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Succeeded |  -  |
-**401** | Unauthorized |  -  |
-**403** | Forbidden |  -  |
+| **200** | Succeeded |  -  |
+| **401** | Unauthorized |  -  |
+| **403** | Forbidden |  -  |
 

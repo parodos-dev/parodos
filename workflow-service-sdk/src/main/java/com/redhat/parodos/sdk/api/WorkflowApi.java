@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.ws.rs.core.GenericType;
 
 public class WorkflowApi {
 
@@ -110,7 +111,6 @@ public class WorkflowApi {
 	public okhttp3.Call executeCall(WorkFlowRequestDTO workFlowRequestDTO, final ApiCallback _callback)
 			throws ApiException {
 		String basePath = null;
-
 		// Operation Servers
 		String[] localBasePaths = new String[] {};
 
@@ -157,14 +157,12 @@ public class WorkflowApi {
 	@SuppressWarnings("rawtypes")
 	private okhttp3.Call executeValidateBeforeCall(WorkFlowRequestDTO workFlowRequestDTO, final ApiCallback _callback)
 			throws ApiException {
-
 		// verify the required parameter 'workFlowRequestDTO' is set
 		if (workFlowRequestDTO == null) {
 			throw new ApiException("Missing the required parameter 'workFlowRequestDTO' when calling execute(Async)");
 		}
 
-		okhttp3.Call localVarCall = executeCall(workFlowRequestDTO, _callback);
-		return localVarCall;
+		return executeCall(workFlowRequestDTO, _callback);
 
 	}
 
@@ -314,7 +312,6 @@ public class WorkflowApi {
 	 */
 	public okhttp3.Call getStatusCall(String workFlowExecutionId, final ApiCallback _callback) throws ApiException {
 		String basePath = null;
-
 		// Operation Servers
 		String[] localBasePaths = new String[] {};
 
@@ -332,8 +329,8 @@ public class WorkflowApi {
 		Object localVarPostBody = null;
 
 		// create path and map variables
-		String localVarPath = "/api/v1/workflows/{workFlowExecutionId}/status".replaceAll(
-				"\\{" + "workFlowExecutionId" + "\\}", localVarApiClient.escapeString(workFlowExecutionId.toString()));
+		String localVarPath = "/api/v1/workflows/{workFlowExecutionId}/status".replace(
+				"{" + "workFlowExecutionId" + "}", localVarApiClient.escapeString(workFlowExecutionId.toString()));
 
 		List<Pair> localVarQueryParams = new ArrayList<Pair>();
 		List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -347,9 +344,7 @@ public class WorkflowApi {
 			localVarHeaderParams.put("Accept", localVarAccept);
 		}
 
-		final String[] localVarContentTypes = {
-
-		};
+		final String[] localVarContentTypes = {};
 		final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
 		if (localVarContentType != null) {
 			localVarHeaderParams.put("Content-Type", localVarContentType);
@@ -364,15 +359,13 @@ public class WorkflowApi {
 	@SuppressWarnings("rawtypes")
 	private okhttp3.Call getStatusValidateBeforeCall(String workFlowExecutionId, final ApiCallback _callback)
 			throws ApiException {
-
 		// verify the required parameter 'workFlowExecutionId' is set
 		if (workFlowExecutionId == null) {
 			throw new ApiException(
 					"Missing the required parameter 'workFlowExecutionId' when calling getStatus(Async)");
 		}
 
-		okhttp3.Call localVarCall = getStatusCall(workFlowExecutionId, _callback);
-		return localVarCall;
+		return getStatusCall(workFlowExecutionId, _callback);
 
 	}
 
@@ -524,7 +517,6 @@ public class WorkflowApi {
 	public okhttp3.Call getWorkflowParametersCall(String workFlowExecutionId, List<String> param,
 			final ApiCallback _callback) throws ApiException {
 		String basePath = null;
-
 		// Operation Servers
 		String[] localBasePaths = new String[] {};
 
@@ -542,8 +534,8 @@ public class WorkflowApi {
 		Object localVarPostBody = null;
 
 		// create path and map variables
-		String localVarPath = "/api/v1/workflows/{workFlowExecutionId}/context".replaceAll(
-				"\\{" + "workFlowExecutionId" + "\\}", localVarApiClient.escapeString(workFlowExecutionId.toString()));
+		String localVarPath = "/api/v1/workflows/{workFlowExecutionId}/context".replace(
+				"{" + "workFlowExecutionId" + "}", localVarApiClient.escapeString(workFlowExecutionId.toString()));
 
 		List<Pair> localVarQueryParams = new ArrayList<Pair>();
 		List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -561,9 +553,7 @@ public class WorkflowApi {
 			localVarHeaderParams.put("Accept", localVarAccept);
 		}
 
-		final String[] localVarContentTypes = {
-
-		};
+		final String[] localVarContentTypes = {};
 		final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
 		if (localVarContentType != null) {
 			localVarHeaderParams.put("Content-Type", localVarContentType);
@@ -578,7 +568,6 @@ public class WorkflowApi {
 	@SuppressWarnings("rawtypes")
 	private okhttp3.Call getWorkflowParametersValidateBeforeCall(String workFlowExecutionId, List<String> param,
 			final ApiCallback _callback) throws ApiException {
-
 		// verify the required parameter 'workFlowExecutionId' is set
 		if (workFlowExecutionId == null) {
 			throw new ApiException(
@@ -590,8 +579,7 @@ public class WorkflowApi {
 			throw new ApiException("Missing the required parameter 'param' when calling getWorkflowParameters(Async)");
 		}
 
-		okhttp3.Call localVarCall = getWorkflowParametersCall(workFlowExecutionId, param, _callback);
-		return localVarCall;
+		return getWorkflowParametersCall(workFlowExecutionId, param, _callback);
 
 	}
 
@@ -755,7 +743,6 @@ public class WorkflowApi {
 			WorkFlowCheckerTaskRequestDTO workFlowCheckerTaskRequestDTO, final ApiCallback _callback)
 			throws ApiException {
 		String basePath = null;
-
 		// Operation Servers
 		String[] localBasePaths = new String[] {};
 
@@ -774,9 +761,9 @@ public class WorkflowApi {
 
 		// create path and map variables
 		String localVarPath = "/api/v1/workflows/{workFlowExecutionId}/checkers/{workFlowCheckerTaskName}"
-				.replaceAll("\\{" + "workFlowExecutionId" + "\\}",
+				.replace("{" + "workFlowExecutionId" + "}",
 						localVarApiClient.escapeString(workFlowExecutionId.toString()))
-				.replaceAll("\\{" + "workFlowCheckerTaskName" + "\\}",
+				.replace("{" + "workFlowCheckerTaskName" + "}",
 						localVarApiClient.escapeString(workFlowCheckerTaskName.toString()));
 
 		List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -807,7 +794,6 @@ public class WorkflowApi {
 	private okhttp3.Call updateWorkFlowCheckerTaskStatusValidateBeforeCall(String workFlowExecutionId,
 			String workFlowCheckerTaskName, WorkFlowCheckerTaskRequestDTO workFlowCheckerTaskRequestDTO,
 			final ApiCallback _callback) throws ApiException {
-
 		// verify the required parameter 'workFlowExecutionId' is set
 		if (workFlowExecutionId == null) {
 			throw new ApiException(
@@ -826,9 +812,8 @@ public class WorkflowApi {
 					"Missing the required parameter 'workFlowCheckerTaskRequestDTO' when calling updateWorkFlowCheckerTaskStatus(Async)");
 		}
 
-		okhttp3.Call localVarCall = updateWorkFlowCheckerTaskStatusCall(workFlowExecutionId, workFlowCheckerTaskName,
+		return updateWorkFlowCheckerTaskStatusCall(workFlowExecutionId, workFlowCheckerTaskName,
 				workFlowCheckerTaskRequestDTO, _callback);
-		return localVarCall;
 
 	}
 

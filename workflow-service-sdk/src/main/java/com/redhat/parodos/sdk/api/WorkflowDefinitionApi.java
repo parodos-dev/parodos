@@ -25,15 +25,16 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 
+import com.redhat.parodos.sdk.model.UpdateParameter200Response;
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.sdk.model.WorkParameterValueRequestDTO;
-import com.redhat.parodos.sdk.model.WorkParameterValueResponseDTO;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.ws.rs.core.GenericType;
 
 public class WorkflowDefinitionApi {
 
@@ -107,7 +108,6 @@ public class WorkflowDefinitionApi {
 	 */
 	public okhttp3.Call getWorkFlowDefinitionByIdCall(String id, final ApiCallback _callback) throws ApiException {
 		String basePath = null;
-
 		// Operation Servers
 		String[] localBasePaths = new String[] {};
 
@@ -125,7 +125,7 @@ public class WorkflowDefinitionApi {
 		Object localVarPostBody = null;
 
 		// create path and map variables
-		String localVarPath = "/api/v1/workflowdefinitions/{id}".replaceAll("\\{" + "id" + "\\}",
+		String localVarPath = "/api/v1/workflowdefinitions/{id}".replace("{" + "id" + "}",
 				localVarApiClient.escapeString(id.toString()));
 
 		List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -140,9 +140,7 @@ public class WorkflowDefinitionApi {
 			localVarHeaderParams.put("Accept", localVarAccept);
 		}
 
-		final String[] localVarContentTypes = {
-
-		};
+		final String[] localVarContentTypes = {};
 		final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
 		if (localVarContentType != null) {
 			localVarHeaderParams.put("Content-Type", localVarContentType);
@@ -157,14 +155,12 @@ public class WorkflowDefinitionApi {
 	@SuppressWarnings("rawtypes")
 	private okhttp3.Call getWorkFlowDefinitionByIdValidateBeforeCall(String id, final ApiCallback _callback)
 			throws ApiException {
-
 		// verify the required parameter 'id' is set
 		if (id == null) {
 			throw new ApiException("Missing the required parameter 'id' when calling getWorkFlowDefinitionById(Async)");
 		}
 
-		okhttp3.Call localVarCall = getWorkFlowDefinitionByIdCall(id, _callback);
-		return localVarCall;
+		return getWorkFlowDefinitionByIdCall(id, _callback);
 
 	}
 
@@ -314,7 +310,6 @@ public class WorkflowDefinitionApi {
 	 */
 	public okhttp3.Call getWorkFlowDefinitionsCall(String name, final ApiCallback _callback) throws ApiException {
 		String basePath = null;
-
 		// Operation Servers
 		String[] localBasePaths = new String[] {};
 
@@ -350,9 +345,7 @@ public class WorkflowDefinitionApi {
 			localVarHeaderParams.put("Accept", localVarAccept);
 		}
 
-		final String[] localVarContentTypes = {
-
-		};
+		final String[] localVarContentTypes = {};
 		final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
 		if (localVarContentType != null) {
 			localVarHeaderParams.put("Content-Type", localVarContentType);
@@ -367,9 +360,7 @@ public class WorkflowDefinitionApi {
 	@SuppressWarnings("rawtypes")
 	private okhttp3.Call getWorkFlowDefinitionsValidateBeforeCall(String name, final ApiCallback _callback)
 			throws ApiException {
-
-		okhttp3.Call localVarCall = getWorkFlowDefinitionsCall(name, _callback);
-		return localVarCall;
+		return getWorkFlowDefinitionsCall(name, _callback);
 
 	}
 
@@ -525,7 +516,6 @@ public class WorkflowDefinitionApi {
 			List<WorkParameterValueRequestDTO> workParameterValueRequestDTO, final ApiCallback _callback)
 			throws ApiException {
 		String basePath = null;
-
 		// Operation Servers
 		String[] localBasePaths = new String[] {};
 
@@ -544,10 +534,9 @@ public class WorkflowDefinitionApi {
 
 		// create path and map variables
 		String localVarPath = "/api/v1/workflowdefinitions/{workflowDefinitionName}/parameters/update/{valueProviderName}"
-				.replaceAll("\\{" + "workflowDefinitionName" + "\\}",
+				.replace("{" + "workflowDefinitionName" + "}",
 						localVarApiClient.escapeString(workflowDefinitionName.toString()))
-				.replaceAll("\\{" + "valueProviderName" + "\\}",
-						localVarApiClient.escapeString(valueProviderName.toString()));
+				.replace("{" + "valueProviderName" + "}", localVarApiClient.escapeString(valueProviderName.toString()));
 
 		List<Pair> localVarQueryParams = new ArrayList<Pair>();
 		List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -577,7 +566,6 @@ public class WorkflowDefinitionApi {
 	private okhttp3.Call updateParameterValidateBeforeCall(String workflowDefinitionName, String valueProviderName,
 			List<WorkParameterValueRequestDTO> workParameterValueRequestDTO, final ApiCallback _callback)
 			throws ApiException {
-
 		// verify the required parameter 'workflowDefinitionName' is set
 		if (workflowDefinitionName == null) {
 			throw new ApiException(
@@ -596,9 +584,7 @@ public class WorkflowDefinitionApi {
 					"Missing the required parameter 'workParameterValueRequestDTO' when calling updateParameter(Async)");
 		}
 
-		okhttp3.Call localVarCall = updateParameterCall(workflowDefinitionName, valueProviderName,
-				workParameterValueRequestDTO, _callback);
-		return localVarCall;
+		return updateParameterCall(workflowDefinitionName, valueProviderName, workParameterValueRequestDTO, _callback);
 
 	}
 
@@ -609,7 +595,7 @@ public class WorkflowDefinitionApi {
 	 * &#39;valueProviderName&#39; in [GET
 	 * /getWorkFlowDefinitions](#/Workflow%20Definition/getWorkFlowDefinitions) (required)
 	 * @param workParameterValueRequestDTO (required)
-	 * @return WorkParameterValueResponseDTO
+	 * @return UpdateParameter200Response
 	 * @throws ApiException If fail to call the API, e.g. server error or cannot
 	 * deserialize the response body
 	 * @http.response.details
@@ -636,9 +622,9 @@ public class WorkflowDefinitionApi {
 	 * </tr>
 	 * </table>
 	 */
-	public WorkParameterValueResponseDTO updateParameter(String workflowDefinitionName, String valueProviderName,
+	public UpdateParameter200Response updateParameter(String workflowDefinitionName, String valueProviderName,
 			List<WorkParameterValueRequestDTO> workParameterValueRequestDTO) throws ApiException {
-		ApiResponse<WorkParameterValueResponseDTO> localVarResp = updateParameterWithHttpInfo(workflowDefinitionName,
+		ApiResponse<UpdateParameter200Response> localVarResp = updateParameterWithHttpInfo(workflowDefinitionName,
 				valueProviderName, workParameterValueRequestDTO);
 		return localVarResp.getData();
 	}
@@ -650,7 +636,7 @@ public class WorkflowDefinitionApi {
 	 * &#39;valueProviderName&#39; in [GET
 	 * /getWorkFlowDefinitions](#/Workflow%20Definition/getWorkFlowDefinitions) (required)
 	 * @param workParameterValueRequestDTO (required)
-	 * @return ApiResponse&lt;WorkParameterValueResponseDTO&gt;
+	 * @return ApiResponse&lt;UpdateParameter200Response&gt;
 	 * @throws ApiException If fail to call the API, e.g. server error or cannot
 	 * deserialize the response body
 	 * @http.response.details
@@ -677,12 +663,12 @@ public class WorkflowDefinitionApi {
 	 * </tr>
 	 * </table>
 	 */
-	public ApiResponse<WorkParameterValueResponseDTO> updateParameterWithHttpInfo(String workflowDefinitionName,
+	public ApiResponse<UpdateParameter200Response> updateParameterWithHttpInfo(String workflowDefinitionName,
 			String valueProviderName, List<WorkParameterValueRequestDTO> workParameterValueRequestDTO)
 			throws ApiException {
 		okhttp3.Call localVarCall = updateParameterValidateBeforeCall(workflowDefinitionName, valueProviderName,
 				workParameterValueRequestDTO, null);
-		Type localVarReturnType = new TypeToken<WorkParameterValueResponseDTO>() {
+		Type localVarReturnType = new TypeToken<UpdateParameter200Response>() {
 		}.getType();
 		return localVarApiClient.execute(localVarCall, localVarReturnType);
 	}
@@ -724,11 +710,11 @@ public class WorkflowDefinitionApi {
 	 */
 	public okhttp3.Call updateParameterAsync(String workflowDefinitionName, String valueProviderName,
 			List<WorkParameterValueRequestDTO> workParameterValueRequestDTO,
-			final ApiCallback<WorkParameterValueResponseDTO> _callback) throws ApiException {
+			final ApiCallback<UpdateParameter200Response> _callback) throws ApiException {
 
 		okhttp3.Call localVarCall = updateParameterValidateBeforeCall(workflowDefinitionName, valueProviderName,
 				workParameterValueRequestDTO, _callback);
-		Type localVarReturnType = new TypeToken<WorkParameterValueResponseDTO>() {
+		Type localVarReturnType = new TypeToken<UpdateParameter200Response>() {
 		}.getType();
 		localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
 		return localVarCall;

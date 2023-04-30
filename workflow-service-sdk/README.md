@@ -12,7 +12,7 @@ This is the API documentation for the Parodos Workflow Service. It provides oper
 ## Requirements
 
 Building the API client library requires:
-1. Java 1.7+
+1. Java 1.8+
 2. Maven (3.8.3+)/Gradle (7.2+)
 
 ## Installation
@@ -129,6 +129,7 @@ Class | Method | HTTP request | Description
  - [ArgumentRequestDTO](docs/ArgumentRequestDTO.md)
  - [ProjectRequestDTO](docs/ProjectRequestDTO.md)
  - [ProjectResponseDTO](docs/ProjectResponseDTO.md)
+ - [UpdateParameter200Response](docs/UpdateParameter200Response.md)
  - [WorkDefinitionResponseDTO](docs/WorkDefinitionResponseDTO.md)
  - [WorkFlowCheckerTaskRequestDTO](docs/WorkFlowCheckerTaskRequestDTO.md)
  - [WorkFlowContextResponseDTO](docs/WorkFlowContextResponseDTO.md)

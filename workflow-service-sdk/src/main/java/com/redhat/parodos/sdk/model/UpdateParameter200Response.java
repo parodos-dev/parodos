@@ -20,6 +20,8 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -43,30 +45,35 @@ import java.util.Set;
 import com.redhat.parodos.sdk.invoker.JSON;
 
 /**
- * WorkParameterValueRequestDTO
+ * UpdateParameter200Response
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
-public class WorkParameterValueRequestDTO {
+public class UpdateParameter200Response {
 
 	public static final String SERIALIZED_NAME_KEY = "key";
 
 	@SerializedName(SERIALIZED_NAME_KEY)
 	private String key;
 
+	public static final String SERIALIZED_NAME_OPTIONS = "options";
+
+	@SerializedName(SERIALIZED_NAME_OPTIONS)
+	private List<String> options = new ArrayList<>();
+
+	public static final String SERIALIZED_NAME_PROPERTY_PATH = "propertyPath";
+
+	@SerializedName(SERIALIZED_NAME_PROPERTY_PATH)
+	private String propertyPath;
+
 	public static final String SERIALIZED_NAME_VALUE = "value";
 
 	@SerializedName(SERIALIZED_NAME_VALUE)
 	private String value;
 
-	public static final String SERIALIZED_NAME_WORK_NAME = "workName";
-
-	@SerializedName(SERIALIZED_NAME_WORK_NAME)
-	private String workName;
-
-	public WorkParameterValueRequestDTO() {
+	public UpdateParameter200Response() {
 	}
 
-	public WorkParameterValueRequestDTO key(String key) {
+	public UpdateParameter200Response key(String key) {
 
 		this.key = key;
 		return this;
@@ -86,7 +93,55 @@ public class WorkParameterValueRequestDTO {
 		this.key = key;
 	}
 
-	public WorkParameterValueRequestDTO value(String value) {
+	public UpdateParameter200Response options(List<String> options) {
+
+		this.options = options;
+		return this;
+	}
+
+	public UpdateParameter200Response addOptionsItem(String optionsItem) {
+		if (this.options == null) {
+			this.options = new ArrayList<>();
+		}
+		this.options.add(optionsItem);
+		return this;
+	}
+
+	/**
+	 * Get options
+	 * @return options
+	 **/
+	@javax.annotation.Nullable
+
+	public List<String> getOptions() {
+		return options;
+	}
+
+	public void setOptions(List<String> options) {
+		this.options = options;
+	}
+
+	public UpdateParameter200Response propertyPath(String propertyPath) {
+
+		this.propertyPath = propertyPath;
+		return this;
+	}
+
+	/**
+	 * Get propertyPath
+	 * @return propertyPath
+	 **/
+	@javax.annotation.Nullable
+
+	public String getPropertyPath() {
+		return propertyPath;
+	}
+
+	public void setPropertyPath(String propertyPath) {
+		this.propertyPath = propertyPath;
+	}
+
+	public UpdateParameter200Response value(String value) {
 
 		this.value = value;
 		return this;
@@ -106,26 +161,6 @@ public class WorkParameterValueRequestDTO {
 		this.value = value;
 	}
 
-	public WorkParameterValueRequestDTO workName(String workName) {
-
-		this.workName = workName;
-		return this;
-	}
-
-	/**
-	 * Get workName
-	 * @return workName
-	 **/
-	@javax.annotation.Nullable
-
-	public String getWorkName() {
-		return workName;
-	}
-
-	public void setWorkName(String workName) {
-		this.workName = workName;
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -134,24 +169,26 @@ public class WorkParameterValueRequestDTO {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		WorkParameterValueRequestDTO workParameterValueRequestDTO = (WorkParameterValueRequestDTO) o;
-		return Objects.equals(this.key, workParameterValueRequestDTO.key)
-				&& Objects.equals(this.value, workParameterValueRequestDTO.value)
-				&& Objects.equals(this.workName, workParameterValueRequestDTO.workName);
+		UpdateParameter200Response updateParameter200Response = (UpdateParameter200Response) o;
+		return Objects.equals(this.key, updateParameter200Response.key)
+				&& Objects.equals(this.options, updateParameter200Response.options)
+				&& Objects.equals(this.propertyPath, updateParameter200Response.propertyPath)
+				&& Objects.equals(this.value, updateParameter200Response.value);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(key, value, workName);
+		return Objects.hash(key, options, propertyPath, value);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("class WorkParameterValueRequestDTO {\n");
+		sb.append("class UpdateParameter200Response {\n");
 		sb.append("    key: ").append(toIndentedString(key)).append("\n");
+		sb.append("    options: ").append(toIndentedString(options)).append("\n");
+		sb.append("    propertyPath: ").append(toIndentedString(propertyPath)).append("\n");
 		sb.append("    value: ").append(toIndentedString(value)).append("\n");
-		sb.append("    workName: ").append(toIndentedString(workName)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}
@@ -175,8 +212,9 @@ public class WorkParameterValueRequestDTO {
 		// a set of all properties/fields (JSON key names)
 		openapiFields = new HashSet<String>();
 		openapiFields.add("key");
+		openapiFields.add("options");
+		openapiFields.add("propertyPath");
 		openapiFields.add("value");
-		openapiFields.add("workName");
 
 		// a set of required properties/fields (JSON key names)
 		openapiRequiredFields = new HashSet<String>();
@@ -186,30 +224,29 @@ public class WorkParameterValueRequestDTO {
 	 * Validates the JSON Object and throws an exception if issues found
 	 * @param jsonObj JSON Object
 	 * @throws IOException if the JSON Object is invalid with respect to
-	 * WorkParameterValueRequestDTO
+	 * UpdateParameter200Response
 	 */
 	public static void validateJsonObject(JsonObject jsonObj) throws IOException {
 		if (jsonObj == null) {
-			if (!WorkParameterValueRequestDTO.openapiRequiredFields.isEmpty()) { // has
-																					// required
-																					// fields
-																					// but
-																					// JSON
-																					// object
-																					// is
-																					// null
+			if (!UpdateParameter200Response.openapiRequiredFields.isEmpty()) { // has
+																				// required
+																				// fields
+																				// but
+																				// JSON
+																				// object
+																				// is null
 				throw new IllegalArgumentException(String.format(
-						"The required field(s) %s in WorkParameterValueRequestDTO is not found in the empty JSON string",
-						WorkParameterValueRequestDTO.openapiRequiredFields.toString()));
+						"The required field(s) %s in UpdateParameter200Response is not found in the empty JSON string",
+						UpdateParameter200Response.openapiRequiredFields.toString()));
 			}
 		}
 
 		Set<Entry<String, JsonElement>> entries = jsonObj.entrySet();
 		// check to see if the JSON string contains additional fields
 		for (Entry<String, JsonElement> entry : entries) {
-			if (!WorkParameterValueRequestDTO.openapiFields.contains(entry.getKey())) {
+			if (!UpdateParameter200Response.openapiFields.contains(entry.getKey())) {
 				throw new IllegalArgumentException(String.format(
-						"The field `%s` in the JSON string is not defined in the `WorkParameterValueRequestDTO` properties. JSON: %s",
+						"The field `%s` in the JSON string is not defined in the `UpdateParameter200Response` properties. JSON: %s",
 						entry.getKey(), jsonObj.toString()));
 			}
 		}
@@ -218,17 +255,23 @@ public class WorkParameterValueRequestDTO {
 					String.format("Expected the field `key` to be a primitive type in the JSON string but got `%s`",
 							jsonObj.get("key").toString()));
 		}
+		// ensure the optional json data is an array if present
+		if (jsonObj.get("options") != null && !jsonObj.get("options").isJsonArray()) {
+			throw new IllegalArgumentException(
+					String.format("Expected the field `options` to be an array in the JSON string but got `%s`",
+							jsonObj.get("options").toString()));
+		}
+		if ((jsonObj.get("propertyPath") != null && !jsonObj.get("propertyPath").isJsonNull())
+				&& !jsonObj.get("propertyPath").isJsonPrimitive()) {
+			throw new IllegalArgumentException(String.format(
+					"Expected the field `propertyPath` to be a primitive type in the JSON string but got `%s`",
+					jsonObj.get("propertyPath").toString()));
+		}
 		if ((jsonObj.get("value") != null && !jsonObj.get("value").isJsonNull())
 				&& !jsonObj.get("value").isJsonPrimitive()) {
 			throw new IllegalArgumentException(
 					String.format("Expected the field `value` to be a primitive type in the JSON string but got `%s`",
 							jsonObj.get("value").toString()));
-		}
-		if ((jsonObj.get("workName") != null && !jsonObj.get("workName").isJsonNull())
-				&& !jsonObj.get("workName").isJsonPrimitive()) {
-			throw new IllegalArgumentException(String.format(
-					"Expected the field `workName` to be a primitive type in the JSON string but got `%s`",
-					jsonObj.get("workName").toString()));
 		}
 	}
 
@@ -237,23 +280,23 @@ public class WorkParameterValueRequestDTO {
 		@SuppressWarnings("unchecked")
 		@Override
 		public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
-			if (!WorkParameterValueRequestDTO.class.isAssignableFrom(type.getRawType())) {
-				return null; // this class only serializes 'WorkParameterValueRequestDTO'
+			if (!UpdateParameter200Response.class.isAssignableFrom(type.getRawType())) {
+				return null; // this class only serializes 'UpdateParameter200Response'
 								// and its subtypes
 			}
 			final TypeAdapter<JsonElement> elementAdapter = gson.getAdapter(JsonElement.class);
-			final TypeAdapter<WorkParameterValueRequestDTO> thisAdapter = gson.getDelegateAdapter(this,
-					TypeToken.get(WorkParameterValueRequestDTO.class));
+			final TypeAdapter<UpdateParameter200Response> thisAdapter = gson.getDelegateAdapter(this,
+					TypeToken.get(UpdateParameter200Response.class));
 
-			return (TypeAdapter<T>) new TypeAdapter<WorkParameterValueRequestDTO>() {
+			return (TypeAdapter<T>) new TypeAdapter<UpdateParameter200Response>() {
 				@Override
-				public void write(JsonWriter out, WorkParameterValueRequestDTO value) throws IOException {
+				public void write(JsonWriter out, UpdateParameter200Response value) throws IOException {
 					JsonObject obj = thisAdapter.toJsonTree(value).getAsJsonObject();
 					elementAdapter.write(out, obj);
 				}
 
 				@Override
-				public WorkParameterValueRequestDTO read(JsonReader in) throws IOException {
+				public UpdateParameter200Response read(JsonReader in) throws IOException {
 					JsonObject jsonObj = elementAdapter.read(in).getAsJsonObject();
 					validateJsonObject(jsonObj);
 					return thisAdapter.fromJsonTree(jsonObj);
@@ -265,18 +308,18 @@ public class WorkParameterValueRequestDTO {
 	}
 
 	/**
-	 * Create an instance of WorkParameterValueRequestDTO given an JSON string
+	 * Create an instance of UpdateParameter200Response given an JSON string
 	 * @param jsonString JSON string
-	 * @return An instance of WorkParameterValueRequestDTO
+	 * @return An instance of UpdateParameter200Response
 	 * @throws IOException if the JSON string is invalid with respect to
-	 * WorkParameterValueRequestDTO
+	 * UpdateParameter200Response
 	 */
-	public static WorkParameterValueRequestDTO fromJson(String jsonString) throws IOException {
-		return JSON.getGson().fromJson(jsonString, WorkParameterValueRequestDTO.class);
+	public static UpdateParameter200Response fromJson(String jsonString) throws IOException {
+		return JSON.getGson().fromJson(jsonString, UpdateParameter200Response.class);
 	}
 
 	/**
-	 * Convert an instance of WorkParameterValueRequestDTO to an JSON string
+	 * Convert an instance of UpdateParameter200Response to an JSON string
 	 * @return JSON string
 	 */
 	public String toJson() {

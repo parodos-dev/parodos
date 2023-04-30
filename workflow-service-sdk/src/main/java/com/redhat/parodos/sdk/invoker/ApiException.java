@@ -15,6 +15,8 @@ package com.redhat.parodos.sdk.invoker;
 import java.util.Map;
 import java.util.List;
 
+import javax.ws.rs.core.GenericType;
+
 /**
  * <p>
  * ApiException class.
@@ -111,7 +113,8 @@ public class ApiException extends Exception {
 	 * @param responseBody the response body
 	 */
 	public ApiException(int code, Map<String, List<String>> responseHeaders, String responseBody) {
-		this((String) null, (Throwable) null, code, responseHeaders, responseBody);
+		this("Response Code: " + code + " Response Body: " + responseBody, (Throwable) null, code, responseHeaders,
+				responseBody);
 	}
 
 	/**
@@ -163,6 +166,15 @@ public class ApiException extends Exception {
 	 */
 	public String getResponseBody() {
 		return responseBody;
+	}
+
+	/**
+	 * Get the exception message including HTTP response data.
+	 * @return The exception message
+	 */
+	public String getMessage() {
+		return String.format("Message: %s%nHTTP response code: %s%nHTTP response body: %s%nHTTP response headers: %s",
+				super.getMessage(), this.getCode(), this.getResponseBody(), this.getResponseHeaders());
 	}
 
 }

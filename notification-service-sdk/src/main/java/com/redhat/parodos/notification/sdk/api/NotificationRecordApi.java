@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.ws.rs.core.GenericType;
 
 public class NotificationRecordApi {
 
@@ -98,7 +99,6 @@ public class NotificationRecordApi {
 	 */
 	public okhttp3.Call countUnreadNotificationsCall(String state, final ApiCallback _callback) throws ApiException {
 		String basePath = null;
-
 		// Operation Servers
 		String[] localBasePaths = new String[] {};
 
@@ -134,9 +134,7 @@ public class NotificationRecordApi {
 			localVarHeaderParams.put("Accept", localVarAccept);
 		}
 
-		final String[] localVarContentTypes = {
-
-		};
+		final String[] localVarContentTypes = {};
 		final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
 		if (localVarContentType != null) {
 			localVarHeaderParams.put("Content-Type", localVarContentType);
@@ -151,15 +149,13 @@ public class NotificationRecordApi {
 	@SuppressWarnings("rawtypes")
 	private okhttp3.Call countUnreadNotificationsValidateBeforeCall(String state, final ApiCallback _callback)
 			throws ApiException {
-
 		// verify the required parameter 'state' is set
 		if (state == null) {
 			throw new ApiException(
 					"Missing the required parameter 'state' when calling countUnreadNotifications(Async)");
 		}
 
-		okhttp3.Call localVarCall = countUnreadNotificationsCall(state, _callback);
-		return localVarCall;
+		return countUnreadNotificationsCall(state, _callback);
 
 	}
 
@@ -266,7 +262,6 @@ public class NotificationRecordApi {
 	 */
 	public okhttp3.Call deleteNotificationCall(UUID id, final ApiCallback _callback) throws ApiException {
 		String basePath = null;
-
 		// Operation Servers
 		String[] localBasePaths = new String[] {};
 
@@ -284,7 +279,7 @@ public class NotificationRecordApi {
 		Object localVarPostBody = null;
 
 		// create path and map variables
-		String localVarPath = "/api/v1/notifications/{id}".replaceAll("\\{" + "id" + "\\}",
+		String localVarPath = "/api/v1/notifications/{id}".replace("{" + "id" + "}",
 				localVarApiClient.escapeString(id.toString()));
 
 		List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -293,17 +288,13 @@ public class NotificationRecordApi {
 		Map<String, String> localVarCookieParams = new HashMap<String, String>();
 		Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-		final String[] localVarAccepts = {
-
-		};
+		final String[] localVarAccepts = {};
 		final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
 		if (localVarAccept != null) {
 			localVarHeaderParams.put("Accept", localVarAccept);
 		}
 
-		final String[] localVarContentTypes = {
-
-		};
+		final String[] localVarContentTypes = {};
 		final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
 		if (localVarContentType != null) {
 			localVarHeaderParams.put("Content-Type", localVarContentType);
@@ -318,14 +309,12 @@ public class NotificationRecordApi {
 	@SuppressWarnings("rawtypes")
 	private okhttp3.Call deleteNotificationValidateBeforeCall(UUID id, final ApiCallback _callback)
 			throws ApiException {
-
 		// verify the required parameter 'id' is set
 		if (id == null) {
 			throw new ApiException("Missing the required parameter 'id' when calling deleteNotification(Async)");
 		}
 
-		okhttp3.Call localVarCall = deleteNotificationCall(id, _callback);
-		return localVarCall;
+		return deleteNotificationCall(id, _callback);
 
 	}
 
@@ -428,7 +417,6 @@ public class NotificationRecordApi {
 	public okhttp3.Call getNotificationsCall(Pageable pageable, String state, String searchTerm,
 			final ApiCallback _callback) throws ApiException {
 		String basePath = null;
-
 		// Operation Servers
 		String[] localBasePaths = new String[] {};
 
@@ -472,9 +460,7 @@ public class NotificationRecordApi {
 			localVarHeaderParams.put("Accept", localVarAccept);
 		}
 
-		final String[] localVarContentTypes = {
-
-		};
+		final String[] localVarContentTypes = {};
 		final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
 		if (localVarContentType != null) {
 			localVarHeaderParams.put("Content-Type", localVarContentType);
@@ -489,14 +475,12 @@ public class NotificationRecordApi {
 	@SuppressWarnings("rawtypes")
 	private okhttp3.Call getNotificationsValidateBeforeCall(Pageable pageable, String state, String searchTerm,
 			final ApiCallback _callback) throws ApiException {
-
 		// verify the required parameter 'pageable' is set
 		if (pageable == null) {
 			throw new ApiException("Missing the required parameter 'pageable' when calling getNotifications(Async)");
 		}
 
-		okhttp3.Call localVarCall = getNotificationsCall(pageable, state, searchTerm, _callback);
-		return localVarCall;
+		return getNotificationsCall(pageable, state, searchTerm, _callback);
 
 	}
 
@@ -614,7 +598,6 @@ public class NotificationRecordApi {
 	public okhttp3.Call updateNotificationStatusByIdCall(UUID id, String operation, final ApiCallback _callback)
 			throws ApiException {
 		String basePath = null;
-
 		// Operation Servers
 		String[] localBasePaths = new String[] {};
 
@@ -632,7 +615,7 @@ public class NotificationRecordApi {
 		Object localVarPostBody = null;
 
 		// create path and map variables
-		String localVarPath = "/api/v1/notifications/{id}".replaceAll("\\{" + "id" + "\\}",
+		String localVarPath = "/api/v1/notifications/{id}".replace("{" + "id" + "}",
 				localVarApiClient.escapeString(id.toString()));
 
 		List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -651,9 +634,7 @@ public class NotificationRecordApi {
 			localVarHeaderParams.put("Accept", localVarAccept);
 		}
 
-		final String[] localVarContentTypes = {
-
-		};
+		final String[] localVarContentTypes = {};
 		final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
 		if (localVarContentType != null) {
 			localVarHeaderParams.put("Content-Type", localVarContentType);
@@ -668,7 +649,6 @@ public class NotificationRecordApi {
 	@SuppressWarnings("rawtypes")
 	private okhttp3.Call updateNotificationStatusByIdValidateBeforeCall(UUID id, String operation,
 			final ApiCallback _callback) throws ApiException {
-
 		// verify the required parameter 'id' is set
 		if (id == null) {
 			throw new ApiException(
@@ -681,8 +661,7 @@ public class NotificationRecordApi {
 					"Missing the required parameter 'operation' when calling updateNotificationStatusById(Async)");
 		}
 
-		okhttp3.Call localVarCall = updateNotificationStatusByIdCall(id, operation, _callback);
-		return localVarCall;
+		return updateNotificationStatusByIdCall(id, operation, _callback);
 
 	}
 

@@ -23,7 +23,6 @@ import com.google.gson.JsonElement;
 import io.gsonfire.GsonFireBuilder;
 import io.gsonfire.TypeSelector;
 
-import com.redhat.parodos.sdk.model.*;
 import okio.ByteString;
 
 import java.io.IOException;
@@ -32,22 +31,31 @@ import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.ParsePosition;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 import java.util.HashMap;
 
+/*
+ * A JSON utility class
+ *
+ * NOTE: in the future, this class may be converted to static, which may break
+ *       backward-compatibility
+ */
 public class JSON {
 
-	private Gson gson;
+	private static Gson gson;
 
-	private boolean isLenientOnJson = false;
+	private static boolean isLenientOnJson = false;
 
-	private DateTypeAdapter dateTypeAdapter = new DateTypeAdapter();
+	private static DateTypeAdapter dateTypeAdapter = new DateTypeAdapter();
 
-	private SqlDateTypeAdapter sqlDateTypeAdapter = new SqlDateTypeAdapter();
+	private static SqlDateTypeAdapter sqlDateTypeAdapter = new SqlDateTypeAdapter();
 
-	private ByteArrayAdapter byteArrayAdapter = new ByteArrayAdapter();
+	private static ByteArrayAdapter byteArrayAdapter = new ByteArrayAdapter();
 
 	@SuppressWarnings("unchecked")
 	public static GsonBuilder createGson() {
@@ -79,40 +87,70 @@ public class JSON {
 		return clazz;
 	}
 
-	public JSON() {
-		gson = createGson().registerTypeAdapter(Date.class, dateTypeAdapter)
-				.registerTypeAdapter(java.sql.Date.class, sqlDateTypeAdapter)
-				.registerTypeAdapter(byte[].class, byteArrayAdapter).create();
+	{
+		GsonBuilder gsonBuilder = createGson();
+		gsonBuilder.registerTypeAdapter(Date.class, dateTypeAdapter);
+		gsonBuilder.registerTypeAdapter(java.sql.Date.class, sqlDateTypeAdapter);
+		gsonBuilder.registerTypeAdapter(byte[].class, byteArrayAdapter);
+		gsonBuilder.registerTypeAdapterFactory(
+				new com.redhat.parodos.sdk.model.ArgumentRequestDTO.CustomTypeAdapterFactory());
+		gsonBuilder.registerTypeAdapterFactory(
+				new com.redhat.parodos.sdk.model.ProjectRequestDTO.CustomTypeAdapterFactory());
+		gsonBuilder.registerTypeAdapterFactory(
+				new com.redhat.parodos.sdk.model.ProjectResponseDTO.CustomTypeAdapterFactory());
+		gsonBuilder.registerTypeAdapterFactory(
+				new com.redhat.parodos.sdk.model.UpdateParameter200Response.CustomTypeAdapterFactory());
+		gsonBuilder.registerTypeAdapterFactory(
+				new com.redhat.parodos.sdk.model.WorkDefinitionResponseDTO.CustomTypeAdapterFactory());
+		gsonBuilder.registerTypeAdapterFactory(
+				new com.redhat.parodos.sdk.model.WorkFlowCheckerTaskRequestDTO.CustomTypeAdapterFactory());
+		gsonBuilder.registerTypeAdapterFactory(
+				new com.redhat.parodos.sdk.model.WorkFlowContextResponseDTO.CustomTypeAdapterFactory());
+		gsonBuilder.registerTypeAdapterFactory(
+				new com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO.CustomTypeAdapterFactory());
+		gsonBuilder
+				.registerTypeAdapterFactory(new com.redhat.parodos.sdk.model.WorkFlowOption.CustomTypeAdapterFactory());
+		gsonBuilder.registerTypeAdapterFactory(
+				new com.redhat.parodos.sdk.model.WorkFlowOptions.CustomTypeAdapterFactory());
+		gsonBuilder.registerTypeAdapterFactory(
+				new com.redhat.parodos.sdk.model.WorkFlowOptionsResponseDTO.CustomTypeAdapterFactory());
+		gsonBuilder.registerTypeAdapterFactory(
+				new com.redhat.parodos.sdk.model.WorkFlowPropertiesDefinitionDTO.CustomTypeAdapterFactory());
+		gsonBuilder.registerTypeAdapterFactory(
+				new com.redhat.parodos.sdk.model.WorkFlowRequestDTO.CustomTypeAdapterFactory());
+		gsonBuilder.registerTypeAdapterFactory(
+				new com.redhat.parodos.sdk.model.WorkFlowResponseDTO.CustomTypeAdapterFactory());
+		gsonBuilder.registerTypeAdapterFactory(
+				new com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO.CustomTypeAdapterFactory());
+		gsonBuilder.registerTypeAdapterFactory(
+				new com.redhat.parodos.sdk.model.WorkParameterValueRequestDTO.CustomTypeAdapterFactory());
+		gsonBuilder.registerTypeAdapterFactory(
+				new com.redhat.parodos.sdk.model.WorkParameterValueResponseDTO.CustomTypeAdapterFactory());
+		gsonBuilder
+				.registerTypeAdapterFactory(new com.redhat.parodos.sdk.model.WorkRequestDTO.CustomTypeAdapterFactory());
+		gsonBuilder.registerTypeAdapterFactory(
+				new com.redhat.parodos.sdk.model.WorkStatusResponseDTO.CustomTypeAdapterFactory());
+		gson = gsonBuilder.create();
 	}
 
 	/**
 	 * Get Gson.
 	 * @return Gson
 	 */
-	public Gson getGson() {
+	public static Gson getGson() {
 		return gson;
 	}
 
 	/**
 	 * Set Gson.
 	 * @param gson Gson
-	 * @return JSON
 	 */
-	public JSON setGson(Gson gson) {
-		this.gson = gson;
-		return this;
+	public static void setGson(Gson gson) {
+		JSON.gson = gson;
 	}
 
-	/**
-	 * Configure the parser to be liberal in what it accepts.
-	 * @param lenientOnJson Set it to true to ignore some syntax errors
-	 * @return JSON
-	 * @see <a href=
-	 * "https://www.javadoc.io/doc/com.google.code.gson/gson/2.8.5/com/google/gson/stream/JsonReader.html">https://www.javadoc.io/doc/com.google.code.gson/gson/2.8.5/com/google/gson/stream/JsonReader.html</a>
-	 */
-	public JSON setLenientOnJson(boolean lenientOnJson) {
+	public static void setLenientOnJson(boolean lenientOnJson) {
 		isLenientOnJson = lenientOnJson;
-		return this;
 	}
 
 	/**
@@ -120,7 +158,7 @@ public class JSON {
 	 * @param obj Object
 	 * @return String representation of the JSON
 	 */
-	public String serialize(Object obj) {
+	public static String serialize(Object obj) {
 		return gson.toJson(obj);
 	}
 
@@ -132,12 +170,12 @@ public class JSON {
 	 * @return The deserialized Java object
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T deserialize(String body, Type returnType) {
+	public static <T> T deserialize(String body, Type returnType) {
 		try {
 			if (isLenientOnJson) {
 				JsonReader jsonReader = new JsonReader(new StringReader(body));
 				// see
-				// https://www.javadoc.io/doc/com.google.code.gson/gson/2.8.5/com/google/gson/stream/JsonReader.html
+				// https://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/com/google/gson/stream/JsonReader.html#setLenient(boolean)
 				jsonReader.setLenient(true);
 				return gson.fromJson(jsonReader, returnType);
 			}
@@ -160,7 +198,7 @@ public class JSON {
 	/**
 	 * Gson TypeAdapter for Byte Array type
 	 */
-	public class ByteArrayAdapter extends TypeAdapter<byte[]> {
+	public static class ByteArrayAdapter extends TypeAdapter<byte[]> {
 
 		@Override
 		public void write(JsonWriter out, byte[] value) throws IOException {
@@ -308,14 +346,12 @@ public class JSON {
 
 	}
 
-	public JSON setDateFormat(DateFormat dateFormat) {
+	public static void setDateFormat(DateFormat dateFormat) {
 		dateTypeAdapter.setFormat(dateFormat);
-		return this;
 	}
 
-	public JSON setSqlDateFormat(DateFormat dateFormat) {
+	public static void setSqlDateFormat(DateFormat dateFormat) {
 		sqlDateTypeAdapter.setFormat(dateFormat);
-		return this;
 	}
 
 }

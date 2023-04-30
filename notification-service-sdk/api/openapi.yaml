@@ -28,7 +28,7 @@ paths:
           description: Created
       tags:
       - Notification Message
-      x-contentType: application/json
+      x-content-type: application/json
       x-accepts: application/json
   /api/v1/notifications:
     get:

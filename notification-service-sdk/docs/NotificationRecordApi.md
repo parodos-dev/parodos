@@ -2,12 +2,12 @@
 
 All URIs are relative to *http://localhost:8080*
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**countUnreadNotifications**](NotificationRecordApi.md#countUnreadNotifications) | **GET** /api/v1/notifications/count | 
-[**deleteNotification**](NotificationRecordApi.md#deleteNotification) | **DELETE** /api/v1/notifications/{id} | 
-[**getNotifications**](NotificationRecordApi.md#getNotifications) | **GET** /api/v1/notifications | 
-[**updateNotificationStatusById**](NotificationRecordApi.md#updateNotificationStatusById) | **PUT** /api/v1/notifications/{id} | 
+| Method | HTTP request | Description |
+|------------- | ------------- | -------------|
+| [**countUnreadNotifications**](NotificationRecordApi.md#countUnreadNotifications) | **GET** /api/v1/notifications/count |  |
+| [**deleteNotification**](NotificationRecordApi.md#deleteNotification) | **DELETE** /api/v1/notifications/{id} |  |
+| [**getNotifications**](NotificationRecordApi.md#getNotifications) | **GET** /api/v1/notifications |  |
+| [**updateNotificationStatusById**](NotificationRecordApi.md#updateNotificationStatusById) | **PUT** /api/v1/notifications/{id} |  |
 
 
 <a name="countUnreadNotifications"></a>
@@ -48,9 +48,9 @@ public class Example {
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **state** | **String**|  | [enum: ARCHIVED, UNREAD]
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **state** | **String**|  | [enum: ARCHIVED, UNREAD] |
 
 ### Return type
 
@@ -68,7 +68,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | OK |  -  |
+| **200** | OK |  -  |
 
 <a name="deleteNotification"></a>
 # **deleteNotification**
@@ -107,9 +107,9 @@ public class Example {
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **id** | **UUID**|  |
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **id** | **UUID**|  | |
 
 ### Return type
 
@@ -127,7 +127,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**204** | No Content |  -  |
+| **204** | No Content |  -  |
 
 <a name="getNotifications"></a>
 # **getNotifications**
@@ -150,7 +150,7 @@ public class Example {
     defaultClient.setBasePath("http://localhost:8080");
 
     NotificationRecordApi apiInstance = new NotificationRecordApi(defaultClient);
-    Pageable pageable = new Pageable(); // Pageable | 
+    Pageable pageable = new HashMap(); // Pageable | 
     String state = "ARCHIVED"; // String | 
     String searchTerm = "searchTerm_example"; // String | 
     try {
@@ -169,11 +169,11 @@ public class Example {
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **pageable** | [**Pageable**](.md)|  |
- **state** | **String**|  | [optional] [enum: ARCHIVED, UNREAD]
- **searchTerm** | **String**|  | [optional]
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **pageable** | [**Pageable**](.md)|  | |
+| **state** | **String**|  | [optional] [enum: ARCHIVED, UNREAD] |
+| **searchTerm** | **String**|  | [optional] |
 
 ### Return type
 
@@ -191,7 +191,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | OK |  -  |
+| **200** | OK |  -  |
 
 <a name="updateNotificationStatusById"></a>
 # **updateNotificationStatusById**
@@ -232,10 +232,10 @@ public class Example {
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **id** | **UUID**|  |
- **operation** | **String**|  | [enum: ARCHIVE, READ]
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **id** | **UUID**|  | |
+| **operation** | **String**|  | [enum: ARCHIVE, READ] |
 
 ### Return type
 
@@ -253,5 +253,5 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | OK |  -  |
+| **200** | OK |  -  |
 
