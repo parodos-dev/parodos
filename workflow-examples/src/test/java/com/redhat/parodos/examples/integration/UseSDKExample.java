@@ -31,7 +31,7 @@ import static org.junit.Assert.fail;
 /**
  * UseSDKExample is a dummy class to demonstrate very basic usage of @see
  * workflow-service-sdk.
- * 
+ *
  * Future PRs will update or delete this class.
  *
  * @author Gloria Ciavarrini (Github: gciavarrini)
@@ -64,8 +64,8 @@ public class UseSDKExample {
 			// CREATE PROJECT "Test Project Name" IF NOT EXISTS
 			if (testProject == null) {
 				// DEFINE A TEST PROJECT REQUEST
-				ProjectRequestDTO projectRequestDTO = ProjectRequestDTO.builder().name(testPrjName)
-						.description(testPrjDescription).build();
+				ProjectRequestDTO projectRequestDTO = new ProjectRequestDTO().name(testPrjName)
+						.description(testPrjDescription);
 
 				ProjectResponseDTO projectResponseDTO = apiInstance.createProject(projectRequestDTO);
 				assertNotNull(projectResponseDTO);
@@ -101,20 +101,18 @@ public class UseSDKExample {
 			WorkflowApi workflowApi = new WorkflowApi();
 
 			// 1 - Define WorkRequests
-			WorkRequestDTO work1 = WorkRequestDTO.builder().workName("restCallTask")
+			WorkRequestDTO work1 = new WorkRequestDTO().workName("restCallTask")
 					.arguments(Arrays.asList(new ArgumentRequestDTO().key("url").value("https://httpbin.org/post"),
-							new ArgumentRequestDTO().key("payload").value("'Hello!'")))
-					.build();
+							new ArgumentRequestDTO().key("payload").value("'Hello!'")));
 
-			WorkRequestDTO work2 = WorkRequestDTO.builder().workName("loggingTask")
+			WorkRequestDTO work2 = new WorkRequestDTO().workName("loggingTask")
 					.arguments(Arrays.asList(new ArgumentRequestDTO().key("user-id").value("test-user-id"),
-							new ArgumentRequestDTO().key("api-server").value("test-api-server")))
-					.build();
+							new ArgumentRequestDTO().key("api-server").value("test-api-server")));
 
 			// 2 - Define WorkFlowRequest
-			WorkFlowRequestDTO workFlowRequestDTO = WorkFlowRequestDTO.builder().projectId(testProject.getId())
-					.workFlowName("simpleSequentialWorkFlow_INFRASTRUCTURE_WORKFLOW").works(Arrays.asList(work1, work2))
-					.build();
+			WorkFlowRequestDTO workFlowRequestDTO = new WorkFlowRequestDTO().projectId(testProject.getId())
+					.workFlowName("simpleSequentialWorkFlow_INFRASTRUCTURE_WORKFLOW")
+					.works(Arrays.asList(work1, work2));
 
 			// 3 - Execute Workflow
 			WorkFlowResponseDTO execute = workflowApi.execute(workFlowRequestDTO);

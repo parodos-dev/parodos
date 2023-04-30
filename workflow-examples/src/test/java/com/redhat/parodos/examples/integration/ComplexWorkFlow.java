@@ -63,9 +63,8 @@ public class ComplexWorkFlow {
 		WorkFlowRequestDTO workFlowRequestDTO = new WorkFlowRequestDTO();
 		workFlowRequestDTO.setProjectId(testProject.getId());
 		workFlowRequestDTO.setWorkFlowName("onboardingComplexAssessment_ASSESSMENT_WORKFLOW");
-		workFlowRequestDTO.setWorks(List.of(WorkRequestDTO.builder()
-				.arguments(List.of(ArgumentRequestDTO.builder().key("GIT_REPO_URL").value("git_repo_url").build()))
-				.build()));
+		workFlowRequestDTO.setWorks(List.of(new WorkRequestDTO()
+				.arguments(List.of(new ArgumentRequestDTO().key("GIT_REPO_URL").value("git_repo_url")))));
 
 		WorkFlowResponseDTO workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
 		assertEquals(WorkStatusEnum.COMPLETED, workFlowResponseDTO.getWorkStatus());
