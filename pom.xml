@@ -149,6 +149,9 @@
                         <includes>
                             <include>**/*Test*.java</include>
                         </includes>
+			<excludes>
+			    <exclude>%regex[.*.integration.*]</exclude>
+			</excludes>
                         <reportFormat>html</reportFormat>
                     </configuration>
                 </plugin>

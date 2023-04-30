@@ -67,7 +67,7 @@ help: ## Display this help.
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
 ##@ Build
-.PHONY: all workflow-service notification-service fast-build-notification-service
+.PHONY: all workflow-service notification-service fast-build-notification-service unit-tests workflow-integration-tests notification-integration-tests
 .PHONY: model-api fast-build-model-api fast-build
 
 # maven arguments for fast build
@@ -90,6 +90,15 @@ release: clean ## release and push modules to maven central
 
 fast-build: ARGS = $(FAST_BUILD_ARGS) ## Build all modules without running the tests and generate javadoc
 fast-build: all
+
+unit-tests: mvn-checks java-checks
+	$(MAVEN) $(ARGS) surefire:test
+
+workflow-integration-tests: mvn-checks java-checks
+	$(MAVEN) $(ARGS) surefire:test '-Dtest=%regex[.*.examples.integration.*]' -pl workflow-examples
+
+notification-integration-tests: mvn-checks java-checks
+	$(MAVEN) $(ARGS) surefire:test '-Dtest=%regex[.*.notification.integration.*]' -pl workflow-examples
 
 workflow-service: mvn-checks ## Build workload service
 	$(MAVEN) $(ARGS) install -pl workflow-service
