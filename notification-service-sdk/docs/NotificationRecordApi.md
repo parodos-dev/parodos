@@ -4,17 +4,17 @@ All URIs are relative to *http://localhost:8080*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**countUnreadNotifications**](NotificationRecordApi.md#countUnreadNotifications) | **GET** /api/v1/notifications/count |  |
-| [**deleteNotification**](NotificationRecordApi.md#deleteNotification) | **DELETE** /api/v1/notifications/{id} |  |
-| [**getNotifications**](NotificationRecordApi.md#getNotifications) | **GET** /api/v1/notifications |  |
-| [**updateNotificationStatusById**](NotificationRecordApi.md#updateNotificationStatusById) | **PUT** /api/v1/notifications/{id} |  |
+| [**countUnreadNotifications**](NotificationRecordApi.md#countUnreadNotifications) | **GET** /api/v1/notifications/count | Return the number of the unread notification records for the user |
+| [**deleteNotification**](NotificationRecordApi.md#deleteNotification) | **DELETE** /api/v1/notifications/{id} | Delete the specified notification record |
+| [**getNotifications**](NotificationRecordApi.md#getNotifications) | **GET** /api/v1/notifications | Return a list of notification records for the user |
+| [**updateNotificationStatusById**](NotificationRecordApi.md#updateNotificationStatusById) | **PUT** /api/v1/notifications/{id} | Update the specified notification record with user operation |
 
 
 <a name="countUnreadNotifications"></a>
 # **countUnreadNotifications**
 > Integer countUnreadNotifications(state)
 
-
+Return the number of the unread notification records for the user
 
 ### Example
 ```java
@@ -68,13 +68,15 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | OK |  -  |
+| **200** | Successfully retrieved the amount of notifications |  -  |
+| **401** | Unauthorized |  -  |
+| **403** | Forbidden |  -  |
 
 <a name="deleteNotification"></a>
 # **deleteNotification**
 > deleteNotification(id)
 
-
+Delete the specified notification record
 
 ### Example
 ```java
@@ -127,13 +129,15 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **204** | No Content |  -  |
+| **200** | Successfully retrieved the amount of notifications |  -  |
+| **401** | Unauthorized |  -  |
+| **403** | Forbidden |  -  |
 
 <a name="getNotifications"></a>
 # **getNotifications**
-> PagedModelNotificationRecordResponseDTO getNotifications(pageable, state, searchTerm)
+> PageNotificationRecordResponseDTO getNotifications(pageable, state, searchTerm)
 
-
+Return a list of notification records for the user
 
 ### Example
 ```java
@@ -154,7 +158,7 @@ public class Example {
     String state = "ARCHIVED"; // String | 
     String searchTerm = "searchTerm_example"; // String | 
     try {
-      PagedModelNotificationRecordResponseDTO result = apiInstance.getNotifications(pageable, state, searchTerm);
+      PageNotificationRecordResponseDTO result = apiInstance.getNotifications(pageable, state, searchTerm);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling NotificationRecordApi#getNotifications");
@@ -177,7 +181,7 @@ public class Example {
 
 ### Return type
 
-[**PagedModelNotificationRecordResponseDTO**](PagedModelNotificationRecordResponseDTO.md)
+[**PageNotificationRecordResponseDTO**](PageNotificationRecordResponseDTO.md)
 
 ### Authorization
 
@@ -191,13 +195,15 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | OK |  -  |
+| **200** | Successfully retrieved page of notifications |  -  |
+| **401** | Unauthorized |  -  |
+| **403** | Forbidden |  -  |
 
 <a name="updateNotificationStatusById"></a>
 # **updateNotificationStatusById**
 > NotificationRecordResponseDTO updateNotificationStatusById(id, operation)
 
-
+Update the specified notification record with user operation
 
 ### Example
 ```java
@@ -253,5 +259,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | OK |  -  |
+| **200** | Succeeded |  -  |
+| **401** | Unauthorized |  -  |
+| **404** | Not found |  -  |
 

@@ -99,11 +99,13 @@ public class JSON {
 		gsonBuilder.registerTypeAdapterFactory(
 				new com.redhat.parodos.notification.sdk.model.NotificationRecordResponseDTO.CustomTypeAdapterFactory());
 		gsonBuilder.registerTypeAdapterFactory(
-				new com.redhat.parodos.notification.sdk.model.PageMetadata.CustomTypeAdapterFactory());
+				new com.redhat.parodos.notification.sdk.model.PageNotificationRecordResponseDTO.CustomTypeAdapterFactory());
 		gsonBuilder.registerTypeAdapterFactory(
 				new com.redhat.parodos.notification.sdk.model.Pageable.CustomTypeAdapterFactory());
 		gsonBuilder.registerTypeAdapterFactory(
-				new com.redhat.parodos.notification.sdk.model.PagedModelNotificationRecordResponseDTO.CustomTypeAdapterFactory());
+				new com.redhat.parodos.notification.sdk.model.PageableObject.CustomTypeAdapterFactory());
+		gsonBuilder.registerTypeAdapterFactory(
+				new com.redhat.parodos.notification.sdk.model.Sort.CustomTypeAdapterFactory());
 		gson = gsonBuilder.create();
 	}
 
