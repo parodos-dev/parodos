@@ -15,8 +15,6 @@
     <url>https://github.com/parodos-dev/parodos</url>
     <properties>
         <spring.javaformat.version>0.0.34</spring.javaformat.version>
-        <openapi.generator.version>5.4.0</openapi.generator.version>
-        <lombok.version>1.18.26</lombok.version>
         <skip.sdk.generation>false</skip.sdk.generation>
     </properties>
 
@@ -153,9 +151,6 @@
                                 <scmDeveloperConnection>scm:git:ssh://github.com/parodos-dev/parodos.git
                                 </scmDeveloperConnection>
                                 <scmUrl>http://github.com/parodos-dev/parodos/tree/master</scmUrl>
-                                <additionalModelTypeAnnotations>@lombok.Data @lombok.AllArgsConstructor
-                                    @lombok.Builder
-                                </additionalModelTypeAnnotations>
                             </configOptions>
                         </configuration>
                     </execution>
@@ -196,7 +191,7 @@
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
-            <version>0.2.1</version>
+            <version>${jackson-databind-nullable-version}</version>
         </dependency>
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
@@ -209,7 +204,7 @@
         <dependency>
             <groupId>io.gsonfire</groupId>
             <artifactId>gson-fire</artifactId>
-            <version>1.8.5</version>
+            <version>${gson-fire-version}</version>
         </dependency>
         <dependency>
             <groupId>javax.annotation</groupId>
@@ -223,10 +218,20 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
+	    <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-web-api</artifactId>
+            <version>6.0</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

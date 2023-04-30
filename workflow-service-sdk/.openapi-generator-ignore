@@ -22,3 +22,5 @@
 # Then explicitly reverse the ignore rule for a single file:
 #!docs/README.md
 pom.xml
+src/test/**/*.java
+.github/workflows/maven.yml

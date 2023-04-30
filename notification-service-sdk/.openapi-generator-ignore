@@ -33,3 +33,5 @@ gradlew
 gradlew.bat
 settings.gradle
 pom.xml
+src/test/**/*.java
+.github/workflows/maven.yml
