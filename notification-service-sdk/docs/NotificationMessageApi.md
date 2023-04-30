@@ -2,9 +2,9 @@
 
 All URIs are relative to *http://localhost:8080*
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**create**](NotificationMessageApi.md#create) | **POST** /api/v1/messages | 
+| Method | HTTP request | Description |
+|------------- | ------------- | -------------|
+| [**create**](NotificationMessageApi.md#create) | **POST** /api/v1/messages |  |
 
 
 <a name="create"></a>
@@ -44,9 +44,9 @@ public class Example {
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **notificationMessageCreateRequestDTO** | [**NotificationMessageCreateRequestDTO**](NotificationMessageCreateRequestDTO.md)|  |
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **notificationMessageCreateRequestDTO** | [**NotificationMessageCreateRequestDTO**](NotificationMessageCreateRequestDTO.md)|  | |
 
 ### Return type
 
@@ -64,5 +64,5 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**201** | Created |  -  |
+| **201** | Created |  -  |
 

@@ -22,11 +22,30 @@ import com.google.gson.stream.JsonWriter;
 import com.redhat.parodos.notification.sdk.model.Link;
 import com.redhat.parodos.notification.sdk.model.NotificationRecordResponseDTO;
 import com.redhat.parodos.notification.sdk.model.PageMetadata;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.TypeAdapterFactory;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import com.redhat.parodos.notification.sdk.api.JSON;
 
 /**
  * PagedModelNotificationRecordResponseDTO
@@ -37,12 +56,12 @@ public class PagedModelNotificationRecordResponseDTO {
 	public static final String SERIALIZED_NAME_CONTENT = "content";
 
 	@SerializedName(SERIALIZED_NAME_CONTENT)
-	private List<NotificationRecordResponseDTO> content = null;
+	private List<NotificationRecordResponseDTO> content = new ArrayList<>();
 
 	public static final String SERIALIZED_NAME_LINKS = "links";
 
 	@SerializedName(SERIALIZED_NAME_LINKS)
-	private List<Link> links = null;
+	private List<Link> links = new ArrayList<>();
 
 	public static final String SERIALIZED_NAME_PAGE = "page";
 
@@ -60,7 +79,7 @@ public class PagedModelNotificationRecordResponseDTO {
 
 	public PagedModelNotificationRecordResponseDTO addContentItem(NotificationRecordResponseDTO contentItem) {
 		if (this.content == null) {
-			this.content = new ArrayList<NotificationRecordResponseDTO>();
+			this.content = new ArrayList<>();
 		}
 		this.content.add(contentItem);
 		return this;
@@ -71,7 +90,6 @@ public class PagedModelNotificationRecordResponseDTO {
 	 * @return content
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public List<NotificationRecordResponseDTO> getContent() {
 		return content;
@@ -89,7 +107,7 @@ public class PagedModelNotificationRecordResponseDTO {
 
 	public PagedModelNotificationRecordResponseDTO addLinksItem(Link linksItem) {
 		if (this.links == null) {
-			this.links = new ArrayList<Link>();
+			this.links = new ArrayList<>();
 		}
 		this.links.add(linksItem);
 		return this;
@@ -100,7 +118,6 @@ public class PagedModelNotificationRecordResponseDTO {
 	 * @return links
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public List<Link> getLinks() {
 		return links;
@@ -121,7 +138,6 @@ public class PagedModelNotificationRecordResponseDTO {
 	 * @return page
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public PageMetadata getPage() {
 		return page;
@@ -170,6 +186,144 @@ public class PagedModelNotificationRecordResponseDTO {
 			return "null";
 		}
 		return o.toString().replace("\n", "\n    ");
+	}
+
+	public static HashSet<String> openapiFields;
+
+	public static HashSet<String> openapiRequiredFields;
+
+	static {
+		// a set of all properties/fields (JSON key names)
+		openapiFields = new HashSet<String>();
+		openapiFields.add("content");
+		openapiFields.add("links");
+		openapiFields.add("page");
+
+		// a set of required properties/fields (JSON key names)
+		openapiRequiredFields = new HashSet<String>();
+	}
+
+	/**
+	 * Validates the JSON Object and throws an exception if issues found
+	 * @param jsonObj JSON Object
+	 * @throws IOException if the JSON Object is invalid with respect to
+	 * PagedModelNotificationRecordResponseDTO
+	 */
+	public static void validateJsonObject(JsonObject jsonObj) throws IOException {
+		if (jsonObj == null) {
+			if (!PagedModelNotificationRecordResponseDTO.openapiRequiredFields.isEmpty()) { // has
+																							// required
+																							// fields
+																							// but
+																							// JSON
+																							// object
+																							// is
+																							// null
+				throw new IllegalArgumentException(String.format(
+						"The required field(s) %s in PagedModelNotificationRecordResponseDTO is not found in the empty JSON string",
+						PagedModelNotificationRecordResponseDTO.openapiRequiredFields.toString()));
+			}
+		}
+
+		Set<Entry<String, JsonElement>> entries = jsonObj.entrySet();
+		// check to see if the JSON string contains additional fields
+		for (Entry<String, JsonElement> entry : entries) {
+			if (!PagedModelNotificationRecordResponseDTO.openapiFields.contains(entry.getKey())) {
+				throw new IllegalArgumentException(String.format(
+						"The field `%s` in the JSON string is not defined in the `PagedModelNotificationRecordResponseDTO` properties. JSON: %s",
+						entry.getKey(), jsonObj.toString()));
+			}
+		}
+		if (jsonObj.get("content") != null && !jsonObj.get("content").isJsonNull()) {
+			JsonArray jsonArraycontent = jsonObj.getAsJsonArray("content");
+			if (jsonArraycontent != null) {
+				// ensure the json data is an array
+				if (!jsonObj.get("content").isJsonArray()) {
+					throw new IllegalArgumentException(
+							String.format("Expected the field `content` to be an array in the JSON string but got `%s`",
+									jsonObj.get("content").toString()));
+				}
+
+				// validate the optional field `content` (array)
+				for (int i = 0; i < jsonArraycontent.size(); i++) {
+					NotificationRecordResponseDTO.validateJsonObject(jsonArraycontent.get(i).getAsJsonObject());
+				}
+				;
+			}
+		}
+		if (jsonObj.get("links") != null && !jsonObj.get("links").isJsonNull()) {
+			JsonArray jsonArraylinks = jsonObj.getAsJsonArray("links");
+			if (jsonArraylinks != null) {
+				// ensure the json data is an array
+				if (!jsonObj.get("links").isJsonArray()) {
+					throw new IllegalArgumentException(
+							String.format("Expected the field `links` to be an array in the JSON string but got `%s`",
+									jsonObj.get("links").toString()));
+				}
+
+				// validate the optional field `links` (array)
+				for (int i = 0; i < jsonArraylinks.size(); i++) {
+					Link.validateJsonObject(jsonArraylinks.get(i).getAsJsonObject());
+				}
+				;
+			}
+		}
+		// validate the optional field `page`
+		if (jsonObj.get("page") != null && !jsonObj.get("page").isJsonNull()) {
+			PageMetadata.validateJsonObject(jsonObj.getAsJsonObject("page"));
+		}
+	}
+
+	public static class CustomTypeAdapterFactory implements TypeAdapterFactory {
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
+			if (!PagedModelNotificationRecordResponseDTO.class.isAssignableFrom(type.getRawType())) {
+				return null; // this class only serializes
+								// 'PagedModelNotificationRecordResponseDTO' and its
+								// subtypes
+			}
+			final TypeAdapter<JsonElement> elementAdapter = gson.getAdapter(JsonElement.class);
+			final TypeAdapter<PagedModelNotificationRecordResponseDTO> thisAdapter = gson.getDelegateAdapter(this,
+					TypeToken.get(PagedModelNotificationRecordResponseDTO.class));
+
+			return (TypeAdapter<T>) new TypeAdapter<PagedModelNotificationRecordResponseDTO>() {
+				@Override
+				public void write(JsonWriter out, PagedModelNotificationRecordResponseDTO value) throws IOException {
+					JsonObject obj = thisAdapter.toJsonTree(value).getAsJsonObject();
+					elementAdapter.write(out, obj);
+				}
+
+				@Override
+				public PagedModelNotificationRecordResponseDTO read(JsonReader in) throws IOException {
+					JsonObject jsonObj = elementAdapter.read(in).getAsJsonObject();
+					validateJsonObject(jsonObj);
+					return thisAdapter.fromJsonTree(jsonObj);
+				}
+
+			}.nullSafe();
+		}
+
+	}
+
+	/**
+	 * Create an instance of PagedModelNotificationRecordResponseDTO given an JSON string
+	 * @param jsonString JSON string
+	 * @return An instance of PagedModelNotificationRecordResponseDTO
+	 * @throws IOException if the JSON string is invalid with respect to
+	 * PagedModelNotificationRecordResponseDTO
+	 */
+	public static PagedModelNotificationRecordResponseDTO fromJson(String jsonString) throws IOException {
+		return JSON.getGson().fromJson(jsonString, PagedModelNotificationRecordResponseDTO.class);
+	}
+
+	/**
+	 * Convert an instance of PagedModelNotificationRecordResponseDTO to an JSON string
+	 * @return JSON string
+	 */
+	public String toJson() {
+		return JSON.getGson().toJson(this);
 	}
 
 }

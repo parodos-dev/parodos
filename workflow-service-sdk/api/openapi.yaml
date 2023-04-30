@@ -71,7 +71,7 @@ paths:
       summary: Creates a new project
       tags:
       - Project
-      x-contentType: application/json
+      x-content-type: application/json
       x-accepts: application/json
   /api/v1/projects/{id}:
     get:
@@ -166,8 +166,8 @@ paths:
         schema:
           type: string
         style: simple
-      - description: valueProvider Name. It can be referenced to 'valueProviderName'
-          in [GET /getWorkFlowDefinitions](#/Workflow%20Definition/getWorkFlowDefinitions)
+      - description: "valueProvider Name. It can be referenced to 'valueProviderName'\
+          \ in [GET /getWorkFlowDefinitions](#/Workflow%20Definition/getWorkFlowDefinitions)"
         example: complexWorkFlowValueProvider
         explode: false
         in: path
@@ -189,8 +189,7 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                - $ref: '#/components/schemas/WorkParameterValueResponseDTO'
+                $ref: '#/components/schemas/updateParameter_200_response'
           description: Succeeded
         "401":
           description: Unauthorized
@@ -199,7 +198,7 @@ paths:
       summary: Returns updated parameter value
       tags:
       - Workflow Definition
-      x-contentType: application/json
+      x-content-type: application/json
       x-accepts: application/json
   /api/v1/workflows:
     post:
@@ -224,7 +223,7 @@ paths:
       summary: Executes a workflow
       tags:
       - Workflow
-      x-contentType: application/json
+      x-content-type: application/json
       x-accepts: application/json
   /api/v1/workflows/{workFlowExecutionId}/checkers/{workFlowCheckerTaskName}:
     post:
@@ -266,7 +265,7 @@ paths:
       summary: Updates a workflow checker task status
       tags:
       - Workflow
-      x-contentType: application/json
+      x-content-type: application/json
       x-accepts: application/json
   /api/v1/workflows/{workFlowExecutionId}/context:
     get:
@@ -401,7 +400,7 @@ components:
         id: id
         parameters:
           key:
-            key: '{}'
+            key: "{}"
       properties:
         author:
           type: string
@@ -560,7 +559,7 @@ components:
           id: id
           parameters:
             key:
-              key: '{}'
+              key: "{}"
         - outputs:
           - EXCEPTION
           - EXCEPTION
@@ -574,7 +573,7 @@ components:
           id: id
           parameters:
             key:
-              key: '{}'
+              key: "{}"
         modifyDate: 2000-01-23T04:56:07.000+00:00
         author: author
         name: name
@@ -582,7 +581,7 @@ components:
         type: type
         parameters:
           key:
-            key: '{}'
+            key: "{}"
         properties:
           version: version
         createDate: 2000-01-23T04:56:07.000+00:00
@@ -1104,4 +1103,7 @@ components:
           - WORKFLOW
           type: string
       type: object
+    updateParameter_200_response:
+      allOf:
+      - $ref: '#/components/schemas/WorkParameterValueResponseDTO'
 

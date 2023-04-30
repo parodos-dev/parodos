@@ -2,11 +2,11 @@
 
 All URIs are relative to *http://localhost:8080*
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**getWorkFlowDefinitionById**](WorkflowDefinitionApi.md#getWorkFlowDefinitionById) | **GET** /api/v1/workflowdefinitions/{id} | Returns information about a workflow definition by id
-[**getWorkFlowDefinitions**](WorkflowDefinitionApi.md#getWorkFlowDefinitions) | **GET** /api/v1/workflowdefinitions | Returns a list of workflow definition
-[**updateParameter**](WorkflowDefinitionApi.md#updateParameter) | **POST** /api/v1/workflowdefinitions/{workflowDefinitionName}/parameters/update/{valueProviderName} | Returns updated parameter value
+| Method | HTTP request | Description |
+|------------- | ------------- | -------------|
+| [**getWorkFlowDefinitionById**](WorkflowDefinitionApi.md#getWorkFlowDefinitionById) | **GET** /api/v1/workflowdefinitions/{id} | Returns information about a workflow definition by id |
+| [**getWorkFlowDefinitions**](WorkflowDefinitionApi.md#getWorkFlowDefinitions) | **GET** /api/v1/workflowdefinitions | Returns a list of workflow definition |
+| [**updateParameter**](WorkflowDefinitionApi.md#updateParameter) | **POST** /api/v1/workflowdefinitions/{workflowDefinitionName}/parameters/update/{valueProviderName} | Returns updated parameter value |
 
 
 <a name="getWorkFlowDefinitionById"></a>
@@ -47,9 +47,9 @@ public class Example {
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **id** | **String**|  |
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **id** | **String**|  | |
 
 ### Return type
 
@@ -67,9 +67,9 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Succeeded |  -  |
-**401** | Unauthorized |  -  |
-**404** | Not found |  -  |
+| **200** | Succeeded |  -  |
+| **401** | Unauthorized |  -  |
+| **404** | Not found |  -  |
 
 <a name="getWorkFlowDefinitions"></a>
 # **getWorkFlowDefinitions**
@@ -109,9 +109,9 @@ public class Example {
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **name** | **String**|  | [optional]
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **name** | **String**|  | [optional] |
 
 ### Return type
 
@@ -129,13 +129,13 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Succeeded |  -  |
-**401** | Unauthorized |  -  |
-**403** | Forbidden |  -  |
+| **200** | Succeeded |  -  |
+| **401** | Unauthorized |  -  |
+| **403** | Forbidden |  -  |
 
 <a name="updateParameter"></a>
 # **updateParameter**
-> WorkParameterValueResponseDTO updateParameter(workflowDefinitionName, valueProviderName, workParameterValueRequestDTO)
+> UpdateParameter200Response updateParameter(workflowDefinitionName, valueProviderName, workParameterValueRequestDTO)
 
 Returns updated parameter value
 
@@ -158,7 +158,7 @@ public class Example {
     String valueProviderName = "complexWorkFlowValueProvider"; // String | valueProvider Name. It can be referenced to 'valueProviderName' in [GET /getWorkFlowDefinitions](#/Workflow%20Definition/getWorkFlowDefinitions)
     List<WorkParameterValueRequestDTO> workParameterValueRequestDTO = Arrays.asList(); // List<WorkParameterValueRequestDTO> | 
     try {
-      WorkParameterValueResponseDTO result = apiInstance.updateParameter(workflowDefinitionName, valueProviderName, workParameterValueRequestDTO);
+      UpdateParameter200Response result = apiInstance.updateParameter(workflowDefinitionName, valueProviderName, workParameterValueRequestDTO);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling WorkflowDefinitionApi#updateParameter");
@@ -173,15 +173,15 @@ public class Example {
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **workflowDefinitionName** | **String**| workflow Definition Name |
- **valueProviderName** | **String**| valueProvider Name. It can be referenced to &#39;valueProviderName&#39; in [GET /getWorkFlowDefinitions](#/Workflow%20Definition/getWorkFlowDefinitions) |
- **workParameterValueRequestDTO** | [**List&lt;WorkParameterValueRequestDTO&gt;**](WorkParameterValueRequestDTO.md)|  |
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **workflowDefinitionName** | **String**| workflow Definition Name | |
+| **valueProviderName** | **String**| valueProvider Name. It can be referenced to &#39;valueProviderName&#39; in [GET /getWorkFlowDefinitions](#/Workflow%20Definition/getWorkFlowDefinitions) | |
+| **workParameterValueRequestDTO** | [**List&lt;WorkParameterValueRequestDTO&gt;**](WorkParameterValueRequestDTO.md)|  | |
 
 ### Return type
 
-[**WorkParameterValueResponseDTO**](WorkParameterValueResponseDTO.md)
+[**UpdateParameter200Response**](UpdateParameter200Response.md)
 
 ### Authorization
 
@@ -195,7 +195,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Succeeded |  -  |
-**401** | Unauthorized |  -  |
-**403** | Forbidden |  -  |
+| **200** | Succeeded |  -  |
+| **401** | Unauthorized |  -  |
+| **403** | Forbidden |  -  |
 

@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.ws.rs.core.GenericType;
 
 public class ProjectApi {
 
@@ -102,7 +103,6 @@ public class ProjectApi {
 	public okhttp3.Call createProjectCall(ProjectRequestDTO projectRequestDTO, final ApiCallback _callback)
 			throws ApiException {
 		String basePath = null;
-
 		// Operation Servers
 		String[] localBasePaths = new String[] {};
 
@@ -149,15 +149,13 @@ public class ProjectApi {
 	@SuppressWarnings("rawtypes")
 	private okhttp3.Call createProjectValidateBeforeCall(ProjectRequestDTO projectRequestDTO,
 			final ApiCallback _callback) throws ApiException {
-
 		// verify the required parameter 'projectRequestDTO' is set
 		if (projectRequestDTO == null) {
 			throw new ApiException(
 					"Missing the required parameter 'projectRequestDTO' when calling createProject(Async)");
 		}
 
-		okhttp3.Call localVarCall = createProjectCall(projectRequestDTO, _callback);
-		return localVarCall;
+		return createProjectCall(projectRequestDTO, _callback);
 
 	}
 
@@ -292,7 +290,6 @@ public class ProjectApi {
 	 */
 	public okhttp3.Call getProjectByIdCall(String id, final ApiCallback _callback) throws ApiException {
 		String basePath = null;
-
 		// Operation Servers
 		String[] localBasePaths = new String[] {};
 
@@ -310,7 +307,7 @@ public class ProjectApi {
 		Object localVarPostBody = null;
 
 		// create path and map variables
-		String localVarPath = "/api/v1/projects/{id}".replaceAll("\\{" + "id" + "\\}",
+		String localVarPath = "/api/v1/projects/{id}".replace("{" + "id" + "}",
 				localVarApiClient.escapeString(id.toString()));
 
 		List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -325,9 +322,7 @@ public class ProjectApi {
 			localVarHeaderParams.put("Accept", localVarAccept);
 		}
 
-		final String[] localVarContentTypes = {
-
-		};
+		final String[] localVarContentTypes = {};
 		final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
 		if (localVarContentType != null) {
 			localVarHeaderParams.put("Content-Type", localVarContentType);
@@ -341,14 +336,12 @@ public class ProjectApi {
 
 	@SuppressWarnings("rawtypes")
 	private okhttp3.Call getProjectByIdValidateBeforeCall(String id, final ApiCallback _callback) throws ApiException {
-
 		// verify the required parameter 'id' is set
 		if (id == null) {
 			throw new ApiException("Missing the required parameter 'id' when calling getProjectById(Async)");
 		}
 
-		okhttp3.Call localVarCall = getProjectByIdCall(id, _callback);
-		return localVarCall;
+		return getProjectByIdCall(id, _callback);
 
 	}
 
@@ -496,7 +489,6 @@ public class ProjectApi {
 	 */
 	public okhttp3.Call getProjectsCall(final ApiCallback _callback) throws ApiException {
 		String basePath = null;
-
 		// Operation Servers
 		String[] localBasePaths = new String[] {};
 
@@ -528,9 +520,7 @@ public class ProjectApi {
 			localVarHeaderParams.put("Accept", localVarAccept);
 		}
 
-		final String[] localVarContentTypes = {
-
-		};
+		final String[] localVarContentTypes = {};
 		final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
 		if (localVarContentType != null) {
 			localVarHeaderParams.put("Content-Type", localVarContentType);
@@ -544,9 +534,7 @@ public class ProjectApi {
 
 	@SuppressWarnings("rawtypes")
 	private okhttp3.Call getProjectsValidateBeforeCall(final ApiCallback _callback) throws ApiException {
-
-		okhttp3.Call localVarCall = getProjectsCall(_callback);
-		return localVarCall;
+		return getProjectsCall(_callback);
 
 	}
 

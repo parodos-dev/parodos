@@ -20,16 +20,32 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.redhat.parodos.sdk.model.WorkFlowOptionsResponseDTO;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.TypeAdapterFactory;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import com.redhat.parodos.sdk.invoker.JSON;
 
 /**
  * WorkFlowContextResponseDTO
  */
-@lombok.Data
-@lombok.AllArgsConstructor
-@lombok.Builder
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowContextResponseDTO {
 
@@ -57,7 +73,6 @@ public class WorkFlowContextResponseDTO {
 	 * @return workFlowExecutionId
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public String getWorkFlowExecutionId() {
 		return workFlowExecutionId;
@@ -78,7 +93,6 @@ public class WorkFlowContextResponseDTO {
 	 * @return workFlowOptions
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public WorkFlowOptionsResponseDTO getWorkFlowOptions() {
 		return workFlowOptions;
@@ -125,6 +139,113 @@ public class WorkFlowContextResponseDTO {
 			return "null";
 		}
 		return o.toString().replace("\n", "\n    ");
+	}
+
+	public static HashSet<String> openapiFields;
+
+	public static HashSet<String> openapiRequiredFields;
+
+	static {
+		// a set of all properties/fields (JSON key names)
+		openapiFields = new HashSet<String>();
+		openapiFields.add("workFlowExecutionId");
+		openapiFields.add("workFlowOptions");
+
+		// a set of required properties/fields (JSON key names)
+		openapiRequiredFields = new HashSet<String>();
+	}
+
+	/**
+	 * Validates the JSON Object and throws an exception if issues found
+	 * @param jsonObj JSON Object
+	 * @throws IOException if the JSON Object is invalid with respect to
+	 * WorkFlowContextResponseDTO
+	 */
+	public static void validateJsonObject(JsonObject jsonObj) throws IOException {
+		if (jsonObj == null) {
+			if (!WorkFlowContextResponseDTO.openapiRequiredFields.isEmpty()) { // has
+																				// required
+																				// fields
+																				// but
+																				// JSON
+																				// object
+																				// is null
+				throw new IllegalArgumentException(String.format(
+						"The required field(s) %s in WorkFlowContextResponseDTO is not found in the empty JSON string",
+						WorkFlowContextResponseDTO.openapiRequiredFields.toString()));
+			}
+		}
+
+		Set<Entry<String, JsonElement>> entries = jsonObj.entrySet();
+		// check to see if the JSON string contains additional fields
+		for (Entry<String, JsonElement> entry : entries) {
+			if (!WorkFlowContextResponseDTO.openapiFields.contains(entry.getKey())) {
+				throw new IllegalArgumentException(String.format(
+						"The field `%s` in the JSON string is not defined in the `WorkFlowContextResponseDTO` properties. JSON: %s",
+						entry.getKey(), jsonObj.toString()));
+			}
+		}
+		if ((jsonObj.get("workFlowExecutionId") != null && !jsonObj.get("workFlowExecutionId").isJsonNull())
+				&& !jsonObj.get("workFlowExecutionId").isJsonPrimitive()) {
+			throw new IllegalArgumentException(String.format(
+					"Expected the field `workFlowExecutionId` to be a primitive type in the JSON string but got `%s`",
+					jsonObj.get("workFlowExecutionId").toString()));
+		}
+		// validate the optional field `workFlowOptions`
+		if (jsonObj.get("workFlowOptions") != null && !jsonObj.get("workFlowOptions").isJsonNull()) {
+			WorkFlowOptionsResponseDTO.validateJsonObject(jsonObj.getAsJsonObject("workFlowOptions"));
+		}
+	}
+
+	public static class CustomTypeAdapterFactory implements TypeAdapterFactory {
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
+			if (!WorkFlowContextResponseDTO.class.isAssignableFrom(type.getRawType())) {
+				return null; // this class only serializes 'WorkFlowContextResponseDTO'
+								// and its subtypes
+			}
+			final TypeAdapter<JsonElement> elementAdapter = gson.getAdapter(JsonElement.class);
+			final TypeAdapter<WorkFlowContextResponseDTO> thisAdapter = gson.getDelegateAdapter(this,
+					TypeToken.get(WorkFlowContextResponseDTO.class));
+
+			return (TypeAdapter<T>) new TypeAdapter<WorkFlowContextResponseDTO>() {
+				@Override
+				public void write(JsonWriter out, WorkFlowContextResponseDTO value) throws IOException {
+					JsonObject obj = thisAdapter.toJsonTree(value).getAsJsonObject();
+					elementAdapter.write(out, obj);
+				}
+
+				@Override
+				public WorkFlowContextResponseDTO read(JsonReader in) throws IOException {
+					JsonObject jsonObj = elementAdapter.read(in).getAsJsonObject();
+					validateJsonObject(jsonObj);
+					return thisAdapter.fromJsonTree(jsonObj);
+				}
+
+			}.nullSafe();
+		}
+
+	}
+
+	/**
+	 * Create an instance of WorkFlowContextResponseDTO given an JSON string
+	 * @param jsonString JSON string
+	 * @return An instance of WorkFlowContextResponseDTO
+	 * @throws IOException if the JSON string is invalid with respect to
+	 * WorkFlowContextResponseDTO
+	 */
+	public static WorkFlowContextResponseDTO fromJson(String jsonString) throws IOException {
+		return JSON.getGson().fromJson(jsonString, WorkFlowContextResponseDTO.class);
+	}
+
+	/**
+	 * Convert an instance of WorkFlowContextResponseDTO to an JSON string
+	 * @return JSON string
+	 */
+	public String toJson() {
+		return JSON.getGson().toJson(this);
 	}
 
 }

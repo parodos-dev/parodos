@@ -12,7 +12,7 @@ This is the API documentation for the Parodos Notification Service. It provides 
 ## Requirements
 
 Building the API client library requires:
-1. Java 1.7+
+1. Java 1.8+
 2. Maven (3.8.3+)/Gradle (7.2+)
 
 ## Installation

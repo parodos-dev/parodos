@@ -42,11 +42,11 @@ public class ServerConfiguration {
 			if (variables != null && variables.containsKey(name)) {
 				value = variables.get(name);
 				if (serverVariable.enumValues.size() > 0 && !serverVariable.enumValues.contains(value)) {
-					throw new RuntimeException(
+					throw new IllegalArgumentException(
 							"The variable " + name + " in the server URL has invalid value " + value + ".");
 				}
 			}
-			url = url.replaceAll("\\{" + name + "\\}", value);
+			url = url.replace("{" + name + "}", value);
 		}
 		return url;
 	}

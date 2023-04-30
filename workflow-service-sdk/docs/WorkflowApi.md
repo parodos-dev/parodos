@@ -2,12 +2,12 @@
 
 All URIs are relative to *http://localhost:8080*
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**execute**](WorkflowApi.md#execute) | **POST** /api/v1/workflows | Executes a workflow
-[**getStatus**](WorkflowApi.md#getStatus) | **GET** /api/v1/workflows/{workFlowExecutionId}/status | Returns a workflow status
-[**getWorkflowParameters**](WorkflowApi.md#getWorkflowParameters) | **GET** /api/v1/workflows/{workFlowExecutionId}/context | Returns workflow context parameters
-[**updateWorkFlowCheckerTaskStatus**](WorkflowApi.md#updateWorkFlowCheckerTaskStatus) | **POST** /api/v1/workflows/{workFlowExecutionId}/checkers/{workFlowCheckerTaskName} | Updates a workflow checker task status
+| Method | HTTP request | Description |
+|------------- | ------------- | -------------|
+| [**execute**](WorkflowApi.md#execute) | **POST** /api/v1/workflows | Executes a workflow |
+| [**getStatus**](WorkflowApi.md#getStatus) | **GET** /api/v1/workflows/{workFlowExecutionId}/status | Returns a workflow status |
+| [**getWorkflowParameters**](WorkflowApi.md#getWorkflowParameters) | **GET** /api/v1/workflows/{workFlowExecutionId}/context | Returns workflow context parameters |
+| [**updateWorkFlowCheckerTaskStatus**](WorkflowApi.md#updateWorkFlowCheckerTaskStatus) | **POST** /api/v1/workflows/{workFlowExecutionId}/checkers/{workFlowCheckerTaskName} | Updates a workflow checker task status |
 
 
 <a name="execute"></a>
@@ -48,9 +48,9 @@ public class Example {
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **workFlowRequestDTO** | [**WorkFlowRequestDTO**](WorkFlowRequestDTO.md)|  |
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **workFlowRequestDTO** | [**WorkFlowRequestDTO**](WorkFlowRequestDTO.md)|  | |
 
 ### Return type
 
@@ -68,9 +68,9 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Succeeded |  -  |
-**401** | Unauthorized |  -  |
-**403** | Forbidden |  -  |
+| **200** | Succeeded |  -  |
+| **401** | Unauthorized |  -  |
+| **403** | Forbidden |  -  |
 
 <a name="getStatus"></a>
 # **getStatus**
@@ -110,9 +110,9 @@ public class Example {
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **workFlowExecutionId** | **String**|  |
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **workFlowExecutionId** | **String**|  | |
 
 ### Return type
 
@@ -130,9 +130,9 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Succeeded |  -  |
-**401** | Unauthorized |  -  |
-**403** | Forbidden |  -  |
+| **200** | Succeeded |  -  |
+| **401** | Unauthorized |  -  |
+| **403** | Forbidden |  -  |
 
 <a name="getWorkflowParameters"></a>
 # **getWorkflowParameters**
@@ -173,10 +173,10 @@ public class Example {
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **workFlowExecutionId** | **String**|  |
- **param** | [**List&lt;String&gt;**](String.md)|  | [enum: ID, NAME, PARAMETERS, ARGUMENTS, STATUS, WORKFLOW_OPTIONS, PARENT_WORKFLOW]
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **workFlowExecutionId** | **String**|  | |
+| **param** | [**List&lt;String&gt;**](String.md)|  | [enum: ID, NAME, PARAMETERS, ARGUMENTS, STATUS, WORKFLOW_OPTIONS, PARENT_WORKFLOW] |
 
 ### Return type
 
@@ -194,9 +194,9 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Succeeded |  -  |
-**401** | Unauthorized |  -  |
-**403** | Forbidden |  -  |
+| **200** | Succeeded |  -  |
+| **401** | Unauthorized |  -  |
+| **403** | Forbidden |  -  |
 
 <a name="updateWorkFlowCheckerTaskStatus"></a>
 # **updateWorkFlowCheckerTaskStatus**
@@ -238,11 +238,11 @@ public class Example {
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **workFlowExecutionId** | **String**|  |
- **workFlowCheckerTaskName** | **String**|  |
- **workFlowCheckerTaskRequestDTO** | [**WorkFlowCheckerTaskRequestDTO**](WorkFlowCheckerTaskRequestDTO.md)|  |
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **workFlowExecutionId** | **String**|  | |
+| **workFlowCheckerTaskName** | **String**|  | |
+| **workFlowCheckerTaskRequestDTO** | [**WorkFlowCheckerTaskRequestDTO**](WorkFlowCheckerTaskRequestDTO.md)|  | |
 
 ### Return type
 
@@ -260,8 +260,8 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Succeeded |  -  |
-**401** | Unauthorized |  -  |
-**403** | Forbidden |  -  |
-**404** | Not found |  -  |
+| **200** | Succeeded |  -  |
+| **401** | Unauthorized |  -  |
+| **403** | Forbidden |  -  |
+| **404** | Not found |  -  |
 

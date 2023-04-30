@@ -19,11 +19,30 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.TypeAdapterFactory;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import com.redhat.parodos.notification.sdk.api.JSON;
 
 /**
  * NotificationMessageCreateRequestDTO
@@ -39,7 +58,7 @@ public class NotificationMessageCreateRequestDTO {
 	public static final String SERIALIZED_NAME_GROUPNAMES = "groupnames";
 
 	@SerializedName(SERIALIZED_NAME_GROUPNAMES)
-	private List<String> groupnames = null;
+	private List<String> groupnames = new ArrayList<>();
 
 	public static final String SERIALIZED_NAME_MESSAGE_TYPE = "messageType";
 
@@ -54,7 +73,7 @@ public class NotificationMessageCreateRequestDTO {
 	public static final String SERIALIZED_NAME_USERNAMES = "usernames";
 
 	@SerializedName(SERIALIZED_NAME_USERNAMES)
-	private List<String> usernames = null;
+	private List<String> usernames = new ArrayList<>();
 
 	public NotificationMessageCreateRequestDTO() {
 	}
@@ -70,7 +89,6 @@ public class NotificationMessageCreateRequestDTO {
 	 * @return body
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public String getBody() {
 		return body;
@@ -88,7 +106,7 @@ public class NotificationMessageCreateRequestDTO {
 
 	public NotificationMessageCreateRequestDTO addGroupnamesItem(String groupnamesItem) {
 		if (this.groupnames == null) {
-			this.groupnames = new ArrayList<String>();
+			this.groupnames = new ArrayList<>();
 		}
 		this.groupnames.add(groupnamesItem);
 		return this;
@@ -99,7 +117,6 @@ public class NotificationMessageCreateRequestDTO {
 	 * @return groupnames
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public List<String> getGroupnames() {
 		return groupnames;
@@ -120,7 +137,6 @@ public class NotificationMessageCreateRequestDTO {
 	 * @return messageType
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public String getMessageType() {
 		return messageType;
@@ -141,7 +157,6 @@ public class NotificationMessageCreateRequestDTO {
 	 * @return subject
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public String getSubject() {
 		return subject;
@@ -159,7 +174,7 @@ public class NotificationMessageCreateRequestDTO {
 
 	public NotificationMessageCreateRequestDTO addUsernamesItem(String usernamesItem) {
 		if (this.usernames == null) {
-			this.usernames = new ArrayList<String>();
+			this.usernames = new ArrayList<>();
 		}
 		this.usernames.add(usernamesItem);
 		return this;
@@ -170,7 +185,6 @@ public class NotificationMessageCreateRequestDTO {
 	 * @return usernames
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public List<String> getUsernames() {
 		return usernames;
@@ -223,6 +237,137 @@ public class NotificationMessageCreateRequestDTO {
 			return "null";
 		}
 		return o.toString().replace("\n", "\n    ");
+	}
+
+	public static HashSet<String> openapiFields;
+
+	public static HashSet<String> openapiRequiredFields;
+
+	static {
+		// a set of all properties/fields (JSON key names)
+		openapiFields = new HashSet<String>();
+		openapiFields.add("body");
+		openapiFields.add("groupnames");
+		openapiFields.add("messageType");
+		openapiFields.add("subject");
+		openapiFields.add("usernames");
+
+		// a set of required properties/fields (JSON key names)
+		openapiRequiredFields = new HashSet<String>();
+	}
+
+	/**
+	 * Validates the JSON Object and throws an exception if issues found
+	 * @param jsonObj JSON Object
+	 * @throws IOException if the JSON Object is invalid with respect to
+	 * NotificationMessageCreateRequestDTO
+	 */
+	public static void validateJsonObject(JsonObject jsonObj) throws IOException {
+		if (jsonObj == null) {
+			if (!NotificationMessageCreateRequestDTO.openapiRequiredFields.isEmpty()) { // has
+																						// required
+																						// fields
+																						// but
+																						// JSON
+																						// object
+																						// is
+																						// null
+				throw new IllegalArgumentException(String.format(
+						"The required field(s) %s in NotificationMessageCreateRequestDTO is not found in the empty JSON string",
+						NotificationMessageCreateRequestDTO.openapiRequiredFields.toString()));
+			}
+		}
+
+		Set<Entry<String, JsonElement>> entries = jsonObj.entrySet();
+		// check to see if the JSON string contains additional fields
+		for (Entry<String, JsonElement> entry : entries) {
+			if (!NotificationMessageCreateRequestDTO.openapiFields.contains(entry.getKey())) {
+				throw new IllegalArgumentException(String.format(
+						"The field `%s` in the JSON string is not defined in the `NotificationMessageCreateRequestDTO` properties. JSON: %s",
+						entry.getKey(), jsonObj.toString()));
+			}
+		}
+		if ((jsonObj.get("body") != null && !jsonObj.get("body").isJsonNull())
+				&& !jsonObj.get("body").isJsonPrimitive()) {
+			throw new IllegalArgumentException(
+					String.format("Expected the field `body` to be a primitive type in the JSON string but got `%s`",
+							jsonObj.get("body").toString()));
+		}
+		// ensure the optional json data is an array if present
+		if (jsonObj.get("groupnames") != null && !jsonObj.get("groupnames").isJsonArray()) {
+			throw new IllegalArgumentException(
+					String.format("Expected the field `groupnames` to be an array in the JSON string but got `%s`",
+							jsonObj.get("groupnames").toString()));
+		}
+		if ((jsonObj.get("messageType") != null && !jsonObj.get("messageType").isJsonNull())
+				&& !jsonObj.get("messageType").isJsonPrimitive()) {
+			throw new IllegalArgumentException(String.format(
+					"Expected the field `messageType` to be a primitive type in the JSON string but got `%s`",
+					jsonObj.get("messageType").toString()));
+		}
+		if ((jsonObj.get("subject") != null && !jsonObj.get("subject").isJsonNull())
+				&& !jsonObj.get("subject").isJsonPrimitive()) {
+			throw new IllegalArgumentException(
+					String.format("Expected the field `subject` to be a primitive type in the JSON string but got `%s`",
+							jsonObj.get("subject").toString()));
+		}
+		// ensure the optional json data is an array if present
+		if (jsonObj.get("usernames") != null && !jsonObj.get("usernames").isJsonArray()) {
+			throw new IllegalArgumentException(
+					String.format("Expected the field `usernames` to be an array in the JSON string but got `%s`",
+							jsonObj.get("usernames").toString()));
+		}
+	}
+
+	public static class CustomTypeAdapterFactory implements TypeAdapterFactory {
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
+			if (!NotificationMessageCreateRequestDTO.class.isAssignableFrom(type.getRawType())) {
+				return null; // this class only serializes
+								// 'NotificationMessageCreateRequestDTO' and its subtypes
+			}
+			final TypeAdapter<JsonElement> elementAdapter = gson.getAdapter(JsonElement.class);
+			final TypeAdapter<NotificationMessageCreateRequestDTO> thisAdapter = gson.getDelegateAdapter(this,
+					TypeToken.get(NotificationMessageCreateRequestDTO.class));
+
+			return (TypeAdapter<T>) new TypeAdapter<NotificationMessageCreateRequestDTO>() {
+				@Override
+				public void write(JsonWriter out, NotificationMessageCreateRequestDTO value) throws IOException {
+					JsonObject obj = thisAdapter.toJsonTree(value).getAsJsonObject();
+					elementAdapter.write(out, obj);
+				}
+
+				@Override
+				public NotificationMessageCreateRequestDTO read(JsonReader in) throws IOException {
+					JsonObject jsonObj = elementAdapter.read(in).getAsJsonObject();
+					validateJsonObject(jsonObj);
+					return thisAdapter.fromJsonTree(jsonObj);
+				}
+
+			}.nullSafe();
+		}
+
+	}
+
+	/**
+	 * Create an instance of NotificationMessageCreateRequestDTO given an JSON string
+	 * @param jsonString JSON string
+	 * @return An instance of NotificationMessageCreateRequestDTO
+	 * @throws IOException if the JSON string is invalid with respect to
+	 * NotificationMessageCreateRequestDTO
+	 */
+	public static NotificationMessageCreateRequestDTO fromJson(String jsonString) throws IOException {
+		return JSON.getGson().fromJson(jsonString, NotificationMessageCreateRequestDTO.class);
+	}
+
+	/**
+	 * Convert an instance of NotificationMessageCreateRequestDTO to an JSON string
+	 * @return JSON string
+	 */
+	public String toJson() {
+		return JSON.getGson().toJson(this);
 	}
 
 }

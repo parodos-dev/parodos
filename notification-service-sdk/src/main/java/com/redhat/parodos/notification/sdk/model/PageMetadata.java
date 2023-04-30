@@ -19,9 +19,28 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.TypeAdapterFactory;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import com.redhat.parodos.notification.sdk.api.JSON;
 
 /**
  * PageMetadata
@@ -63,7 +82,6 @@ public class PageMetadata {
 	 * @return number
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public Long getNumber() {
 		return number;
@@ -84,7 +102,6 @@ public class PageMetadata {
 	 * @return size
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public Long getSize() {
 		return size;
@@ -105,7 +122,6 @@ public class PageMetadata {
 	 * @return totalElements
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public Long getTotalElements() {
 		return totalElements;
@@ -126,7 +142,6 @@ public class PageMetadata {
 	 * @return totalPages
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public Long getTotalPages() {
 		return totalPages;
@@ -176,6 +191,98 @@ public class PageMetadata {
 			return "null";
 		}
 		return o.toString().replace("\n", "\n    ");
+	}
+
+	public static HashSet<String> openapiFields;
+
+	public static HashSet<String> openapiRequiredFields;
+
+	static {
+		// a set of all properties/fields (JSON key names)
+		openapiFields = new HashSet<String>();
+		openapiFields.add("number");
+		openapiFields.add("size");
+		openapiFields.add("totalElements");
+		openapiFields.add("totalPages");
+
+		// a set of required properties/fields (JSON key names)
+		openapiRequiredFields = new HashSet<String>();
+	}
+
+	/**
+	 * Validates the JSON Object and throws an exception if issues found
+	 * @param jsonObj JSON Object
+	 * @throws IOException if the JSON Object is invalid with respect to PageMetadata
+	 */
+	public static void validateJsonObject(JsonObject jsonObj) throws IOException {
+		if (jsonObj == null) {
+			if (!PageMetadata.openapiRequiredFields.isEmpty()) { // has required fields
+																	// but JSON object is
+																	// null
+				throw new IllegalArgumentException(
+						String.format("The required field(s) %s in PageMetadata is not found in the empty JSON string",
+								PageMetadata.openapiRequiredFields.toString()));
+			}
+		}
+
+		Set<Entry<String, JsonElement>> entries = jsonObj.entrySet();
+		// check to see if the JSON string contains additional fields
+		for (Entry<String, JsonElement> entry : entries) {
+			if (!PageMetadata.openapiFields.contains(entry.getKey())) {
+				throw new IllegalArgumentException(String.format(
+						"The field `%s` in the JSON string is not defined in the `PageMetadata` properties. JSON: %s",
+						entry.getKey(), jsonObj.toString()));
+			}
+		}
+	}
+
+	public static class CustomTypeAdapterFactory implements TypeAdapterFactory {
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
+			if (!PageMetadata.class.isAssignableFrom(type.getRawType())) {
+				return null; // this class only serializes 'PageMetadata' and its subtypes
+			}
+			final TypeAdapter<JsonElement> elementAdapter = gson.getAdapter(JsonElement.class);
+			final TypeAdapter<PageMetadata> thisAdapter = gson.getDelegateAdapter(this,
+					TypeToken.get(PageMetadata.class));
+
+			return (TypeAdapter<T>) new TypeAdapter<PageMetadata>() {
+				@Override
+				public void write(JsonWriter out, PageMetadata value) throws IOException {
+					JsonObject obj = thisAdapter.toJsonTree(value).getAsJsonObject();
+					elementAdapter.write(out, obj);
+				}
+
+				@Override
+				public PageMetadata read(JsonReader in) throws IOException {
+					JsonObject jsonObj = elementAdapter.read(in).getAsJsonObject();
+					validateJsonObject(jsonObj);
+					return thisAdapter.fromJsonTree(jsonObj);
+				}
+
+			}.nullSafe();
+		}
+
+	}
+
+	/**
+	 * Create an instance of PageMetadata given an JSON string
+	 * @param jsonString JSON string
+	 * @return An instance of PageMetadata
+	 * @throws IOException if the JSON string is invalid with respect to PageMetadata
+	 */
+	public static PageMetadata fromJson(String jsonString) throws IOException {
+		return JSON.getGson().fromJson(jsonString, PageMetadata.class);
+	}
+
+	/**
+	 * Convert an instance of PageMetadata to an JSON string
+	 * @return JSON string
+	 */
+	public String toJson() {
+		return JSON.getGson().toJson(this);
 	}
 
 }

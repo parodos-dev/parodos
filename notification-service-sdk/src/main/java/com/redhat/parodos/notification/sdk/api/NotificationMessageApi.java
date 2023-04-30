@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.ws.rs.core.GenericType;
 
 public class NotificationMessageApi {
 
@@ -96,7 +97,6 @@ public class NotificationMessageApi {
 	public okhttp3.Call createCall(NotificationMessageCreateRequestDTO notificationMessageCreateRequestDTO,
 			final ApiCallback _callback) throws ApiException {
 		String basePath = null;
-
 		// Operation Servers
 		String[] localBasePaths = new String[] {};
 
@@ -122,9 +122,7 @@ public class NotificationMessageApi {
 		Map<String, String> localVarCookieParams = new HashMap<String, String>();
 		Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-		final String[] localVarAccepts = {
-
-		};
+		final String[] localVarAccepts = {};
 		final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
 		if (localVarAccept != null) {
 			localVarHeaderParams.put("Accept", localVarAccept);
@@ -146,15 +144,13 @@ public class NotificationMessageApi {
 	private okhttp3.Call createValidateBeforeCall(
 			NotificationMessageCreateRequestDTO notificationMessageCreateRequestDTO, final ApiCallback _callback)
 			throws ApiException {
-
 		// verify the required parameter 'notificationMessageCreateRequestDTO' is set
 		if (notificationMessageCreateRequestDTO == null) {
 			throw new ApiException(
 					"Missing the required parameter 'notificationMessageCreateRequestDTO' when calling create(Async)");
 		}
 
-		okhttp3.Call localVarCall = createCall(notificationMessageCreateRequestDTO, _callback);
-		return localVarCall;
+		return createCall(notificationMessageCreateRequestDTO, _callback);
 
 	}
 

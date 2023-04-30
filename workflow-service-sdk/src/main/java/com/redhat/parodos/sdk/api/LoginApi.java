@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.ws.rs.core.GenericType;
 
 public class LoginApi {
 
@@ -97,7 +98,6 @@ public class LoginApi {
 	 */
 	public okhttp3.Call loginCall(final ApiCallback _callback) throws ApiException {
 		String basePath = null;
-
 		// Operation Servers
 		String[] localBasePaths = new String[] {};
 
@@ -123,17 +123,13 @@ public class LoginApi {
 		Map<String, String> localVarCookieParams = new HashMap<String, String>();
 		Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-		final String[] localVarAccepts = {
-
-		};
+		final String[] localVarAccepts = {};
 		final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
 		if (localVarAccept != null) {
 			localVarHeaderParams.put("Accept", localVarAccept);
 		}
 
-		final String[] localVarContentTypes = {
-
-		};
+		final String[] localVarContentTypes = {};
 		final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
 		if (localVarContentType != null) {
 			localVarHeaderParams.put("Content-Type", localVarContentType);
@@ -147,9 +143,7 @@ public class LoginApi {
 
 	@SuppressWarnings("rawtypes")
 	private okhttp3.Call loginValidateBeforeCall(final ApiCallback _callback) throws ApiException {
-
-		okhttp3.Call localVarCall = loginCall(_callback);
-		return localVarCall;
+		return loginCall(_callback);
 
 	}
 

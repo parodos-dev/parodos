@@ -20,25 +20,41 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.redhat.parodos.sdk.model.WorkFlowOption;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.TypeAdapterFactory;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import com.redhat.parodos.sdk.invoker.JSON;
+
 /**
  * WorkFlowOptionsResponseDTO
  */
-@lombok.Data
-@lombok.AllArgsConstructor
-@lombok.Builder
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowOptionsResponseDTO {
 
 	public static final String SERIALIZED_NAME_CONTINUATION_OPTIONS = "continuationOptions";
 
 	@SerializedName(SERIALIZED_NAME_CONTINUATION_OPTIONS)
-	private List<WorkFlowOption> continuationOptions = null;
+	private List<WorkFlowOption> continuationOptions = new ArrayList<>();
 
 	public static final String SERIALIZED_NAME_CURRENT_VERSION = "currentVersion";
 
@@ -48,22 +64,22 @@ public class WorkFlowOptionsResponseDTO {
 	public static final String SERIALIZED_NAME_MIGRATION_OPTIONS = "migrationOptions";
 
 	@SerializedName(SERIALIZED_NAME_MIGRATION_OPTIONS)
-	private List<WorkFlowOption> migrationOptions = null;
+	private List<WorkFlowOption> migrationOptions = new ArrayList<>();
 
 	public static final String SERIALIZED_NAME_NEW_OPTIONS = "newOptions";
 
 	@SerializedName(SERIALIZED_NAME_NEW_OPTIONS)
-	private List<WorkFlowOption> newOptions = null;
+	private List<WorkFlowOption> newOptions = new ArrayList<>();
 
 	public static final String SERIALIZED_NAME_OTHER_OPTIONS = "otherOptions";
 
 	@SerializedName(SERIALIZED_NAME_OTHER_OPTIONS)
-	private List<WorkFlowOption> otherOptions = null;
+	private List<WorkFlowOption> otherOptions = new ArrayList<>();
 
 	public static final String SERIALIZED_NAME_UPGRADE_OPTIONS = "upgradeOptions";
 
 	@SerializedName(SERIALIZED_NAME_UPGRADE_OPTIONS)
-	private List<WorkFlowOption> upgradeOptions = null;
+	private List<WorkFlowOption> upgradeOptions = new ArrayList<>();
 
 	public WorkFlowOptionsResponseDTO() {
 	}
@@ -76,7 +92,7 @@ public class WorkFlowOptionsResponseDTO {
 
 	public WorkFlowOptionsResponseDTO addContinuationOptionsItem(WorkFlowOption continuationOptionsItem) {
 		if (this.continuationOptions == null) {
-			this.continuationOptions = new ArrayList<WorkFlowOption>();
+			this.continuationOptions = new ArrayList<>();
 		}
 		this.continuationOptions.add(continuationOptionsItem);
 		return this;
@@ -87,7 +103,6 @@ public class WorkFlowOptionsResponseDTO {
 	 * @return continuationOptions
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public List<WorkFlowOption> getContinuationOptions() {
 		return continuationOptions;
@@ -108,7 +123,6 @@ public class WorkFlowOptionsResponseDTO {
 	 * @return currentVersion
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public WorkFlowOption getCurrentVersion() {
 		return currentVersion;
@@ -126,7 +140,7 @@ public class WorkFlowOptionsResponseDTO {
 
 	public WorkFlowOptionsResponseDTO addMigrationOptionsItem(WorkFlowOption migrationOptionsItem) {
 		if (this.migrationOptions == null) {
-			this.migrationOptions = new ArrayList<WorkFlowOption>();
+			this.migrationOptions = new ArrayList<>();
 		}
 		this.migrationOptions.add(migrationOptionsItem);
 		return this;
@@ -137,7 +151,6 @@ public class WorkFlowOptionsResponseDTO {
 	 * @return migrationOptions
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public List<WorkFlowOption> getMigrationOptions() {
 		return migrationOptions;
@@ -155,7 +168,7 @@ public class WorkFlowOptionsResponseDTO {
 
 	public WorkFlowOptionsResponseDTO addNewOptionsItem(WorkFlowOption newOptionsItem) {
 		if (this.newOptions == null) {
-			this.newOptions = new ArrayList<WorkFlowOption>();
+			this.newOptions = new ArrayList<>();
 		}
 		this.newOptions.add(newOptionsItem);
 		return this;
@@ -166,7 +179,6 @@ public class WorkFlowOptionsResponseDTO {
 	 * @return newOptions
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public List<WorkFlowOption> getNewOptions() {
 		return newOptions;
@@ -184,7 +196,7 @@ public class WorkFlowOptionsResponseDTO {
 
 	public WorkFlowOptionsResponseDTO addOtherOptionsItem(WorkFlowOption otherOptionsItem) {
 		if (this.otherOptions == null) {
-			this.otherOptions = new ArrayList<WorkFlowOption>();
+			this.otherOptions = new ArrayList<>();
 		}
 		this.otherOptions.add(otherOptionsItem);
 		return this;
@@ -195,7 +207,6 @@ public class WorkFlowOptionsResponseDTO {
 	 * @return otherOptions
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public List<WorkFlowOption> getOtherOptions() {
 		return otherOptions;
@@ -213,7 +224,7 @@ public class WorkFlowOptionsResponseDTO {
 
 	public WorkFlowOptionsResponseDTO addUpgradeOptionsItem(WorkFlowOption upgradeOptionsItem) {
 		if (this.upgradeOptions == null) {
-			this.upgradeOptions = new ArrayList<WorkFlowOption>();
+			this.upgradeOptions = new ArrayList<>();
 		}
 		this.upgradeOptions.add(upgradeOptionsItem);
 		return this;
@@ -224,7 +235,6 @@ public class WorkFlowOptionsResponseDTO {
 	 * @return upgradeOptions
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public List<WorkFlowOption> getUpgradeOptions() {
 		return upgradeOptions;
@@ -280,6 +290,196 @@ public class WorkFlowOptionsResponseDTO {
 			return "null";
 		}
 		return o.toString().replace("\n", "\n    ");
+	}
+
+	public static HashSet<String> openapiFields;
+
+	public static HashSet<String> openapiRequiredFields;
+
+	static {
+		// a set of all properties/fields (JSON key names)
+		openapiFields = new HashSet<String>();
+		openapiFields.add("continuationOptions");
+		openapiFields.add("currentVersion");
+		openapiFields.add("migrationOptions");
+		openapiFields.add("newOptions");
+		openapiFields.add("otherOptions");
+		openapiFields.add("upgradeOptions");
+
+		// a set of required properties/fields (JSON key names)
+		openapiRequiredFields = new HashSet<String>();
+	}
+
+	/**
+	 * Validates the JSON Object and throws an exception if issues found
+	 * @param jsonObj JSON Object
+	 * @throws IOException if the JSON Object is invalid with respect to
+	 * WorkFlowOptionsResponseDTO
+	 */
+	public static void validateJsonObject(JsonObject jsonObj) throws IOException {
+		if (jsonObj == null) {
+			if (!WorkFlowOptionsResponseDTO.openapiRequiredFields.isEmpty()) { // has
+																				// required
+																				// fields
+																				// but
+																				// JSON
+																				// object
+																				// is null
+				throw new IllegalArgumentException(String.format(
+						"The required field(s) %s in WorkFlowOptionsResponseDTO is not found in the empty JSON string",
+						WorkFlowOptionsResponseDTO.openapiRequiredFields.toString()));
+			}
+		}
+
+		Set<Entry<String, JsonElement>> entries = jsonObj.entrySet();
+		// check to see if the JSON string contains additional fields
+		for (Entry<String, JsonElement> entry : entries) {
+			if (!WorkFlowOptionsResponseDTO.openapiFields.contains(entry.getKey())) {
+				throw new IllegalArgumentException(String.format(
+						"The field `%s` in the JSON string is not defined in the `WorkFlowOptionsResponseDTO` properties. JSON: %s",
+						entry.getKey(), jsonObj.toString()));
+			}
+		}
+		if (jsonObj.get("continuationOptions") != null && !jsonObj.get("continuationOptions").isJsonNull()) {
+			JsonArray jsonArraycontinuationOptions = jsonObj.getAsJsonArray("continuationOptions");
+			if (jsonArraycontinuationOptions != null) {
+				// ensure the json data is an array
+				if (!jsonObj.get("continuationOptions").isJsonArray()) {
+					throw new IllegalArgumentException(String.format(
+							"Expected the field `continuationOptions` to be an array in the JSON string but got `%s`",
+							jsonObj.get("continuationOptions").toString()));
+				}
+
+				// validate the optional field `continuationOptions` (array)
+				for (int i = 0; i < jsonArraycontinuationOptions.size(); i++) {
+					WorkFlowOption.validateJsonObject(jsonArraycontinuationOptions.get(i).getAsJsonObject());
+				}
+				;
+			}
+		}
+		// validate the optional field `currentVersion`
+		if (jsonObj.get("currentVersion") != null && !jsonObj.get("currentVersion").isJsonNull()) {
+			WorkFlowOption.validateJsonObject(jsonObj.getAsJsonObject("currentVersion"));
+		}
+		if (jsonObj.get("migrationOptions") != null && !jsonObj.get("migrationOptions").isJsonNull()) {
+			JsonArray jsonArraymigrationOptions = jsonObj.getAsJsonArray("migrationOptions");
+			if (jsonArraymigrationOptions != null) {
+				// ensure the json data is an array
+				if (!jsonObj.get("migrationOptions").isJsonArray()) {
+					throw new IllegalArgumentException(String.format(
+							"Expected the field `migrationOptions` to be an array in the JSON string but got `%s`",
+							jsonObj.get("migrationOptions").toString()));
+				}
+
+				// validate the optional field `migrationOptions` (array)
+				for (int i = 0; i < jsonArraymigrationOptions.size(); i++) {
+					WorkFlowOption.validateJsonObject(jsonArraymigrationOptions.get(i).getAsJsonObject());
+				}
+				;
+			}
+		}
+		if (jsonObj.get("newOptions") != null && !jsonObj.get("newOptions").isJsonNull()) {
+			JsonArray jsonArraynewOptions = jsonObj.getAsJsonArray("newOptions");
+			if (jsonArraynewOptions != null) {
+				// ensure the json data is an array
+				if (!jsonObj.get("newOptions").isJsonArray()) {
+					throw new IllegalArgumentException(String.format(
+							"Expected the field `newOptions` to be an array in the JSON string but got `%s`",
+							jsonObj.get("newOptions").toString()));
+				}
+
+				// validate the optional field `newOptions` (array)
+				for (int i = 0; i < jsonArraynewOptions.size(); i++) {
+					WorkFlowOption.validateJsonObject(jsonArraynewOptions.get(i).getAsJsonObject());
+				}
+				;
+			}
+		}
+		if (jsonObj.get("otherOptions") != null && !jsonObj.get("otherOptions").isJsonNull()) {
+			JsonArray jsonArrayotherOptions = jsonObj.getAsJsonArray("otherOptions");
+			if (jsonArrayotherOptions != null) {
+				// ensure the json data is an array
+				if (!jsonObj.get("otherOptions").isJsonArray()) {
+					throw new IllegalArgumentException(String.format(
+							"Expected the field `otherOptions` to be an array in the JSON string but got `%s`",
+							jsonObj.get("otherOptions").toString()));
+				}
+
+				// validate the optional field `otherOptions` (array)
+				for (int i = 0; i < jsonArrayotherOptions.size(); i++) {
+					WorkFlowOption.validateJsonObject(jsonArrayotherOptions.get(i).getAsJsonObject());
+				}
+				;
+			}
+		}
+		if (jsonObj.get("upgradeOptions") != null && !jsonObj.get("upgradeOptions").isJsonNull()) {
+			JsonArray jsonArrayupgradeOptions = jsonObj.getAsJsonArray("upgradeOptions");
+			if (jsonArrayupgradeOptions != null) {
+				// ensure the json data is an array
+				if (!jsonObj.get("upgradeOptions").isJsonArray()) {
+					throw new IllegalArgumentException(String.format(
+							"Expected the field `upgradeOptions` to be an array in the JSON string but got `%s`",
+							jsonObj.get("upgradeOptions").toString()));
+				}
+
+				// validate the optional field `upgradeOptions` (array)
+				for (int i = 0; i < jsonArrayupgradeOptions.size(); i++) {
+					WorkFlowOption.validateJsonObject(jsonArrayupgradeOptions.get(i).getAsJsonObject());
+				}
+				;
+			}
+		}
+	}
+
+	public static class CustomTypeAdapterFactory implements TypeAdapterFactory {
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
+			if (!WorkFlowOptionsResponseDTO.class.isAssignableFrom(type.getRawType())) {
+				return null; // this class only serializes 'WorkFlowOptionsResponseDTO'
+								// and its subtypes
+			}
+			final TypeAdapter<JsonElement> elementAdapter = gson.getAdapter(JsonElement.class);
+			final TypeAdapter<WorkFlowOptionsResponseDTO> thisAdapter = gson.getDelegateAdapter(this,
+					TypeToken.get(WorkFlowOptionsResponseDTO.class));
+
+			return (TypeAdapter<T>) new TypeAdapter<WorkFlowOptionsResponseDTO>() {
+				@Override
+				public void write(JsonWriter out, WorkFlowOptionsResponseDTO value) throws IOException {
+					JsonObject obj = thisAdapter.toJsonTree(value).getAsJsonObject();
+					elementAdapter.write(out, obj);
+				}
+
+				@Override
+				public WorkFlowOptionsResponseDTO read(JsonReader in) throws IOException {
+					JsonObject jsonObj = elementAdapter.read(in).getAsJsonObject();
+					validateJsonObject(jsonObj);
+					return thisAdapter.fromJsonTree(jsonObj);
+				}
+
+			}.nullSafe();
+		}
+
+	}
+
+	/**
+	 * Create an instance of WorkFlowOptionsResponseDTO given an JSON string
+	 * @param jsonString JSON string
+	 * @return An instance of WorkFlowOptionsResponseDTO
+	 * @throws IOException if the JSON string is invalid with respect to
+	 * WorkFlowOptionsResponseDTO
+	 */
+	public static WorkFlowOptionsResponseDTO fromJson(String jsonString) throws IOException {
+		return JSON.getGson().fromJson(jsonString, WorkFlowOptionsResponseDTO.class);
+	}
+
+	/**
+	 * Convert an instance of WorkFlowOptionsResponseDTO to an JSON string
+	 * @return JSON string
+	 */
+	public String toJson() {
+		return JSON.getGson().toJson(this);
 	}
 
 }

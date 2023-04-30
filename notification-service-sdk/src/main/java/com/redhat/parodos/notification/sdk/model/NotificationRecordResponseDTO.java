@@ -20,13 +20,32 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.redhat.parodos.notification.sdk.model.Link;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.TypeAdapterFactory;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import com.redhat.parodos.notification.sdk.api.JSON;
 
 /**
  * NotificationRecordResponseDTO
@@ -62,7 +81,7 @@ public class NotificationRecordResponseDTO {
 	public static final String SERIALIZED_NAME_LINKS = "links";
 
 	@SerializedName(SERIALIZED_NAME_LINKS)
-	private List<Link> links = null;
+	private List<Link> links = new ArrayList<>();
 
 	public static final String SERIALIZED_NAME_MESSAGE_TYPE = "messageType";
 
@@ -82,7 +101,7 @@ public class NotificationRecordResponseDTO {
 	public static final String SERIALIZED_NAME_TAGS = "tags";
 
 	@SerializedName(SERIALIZED_NAME_TAGS)
-	private List<String> tags = null;
+	private List<String> tags = new ArrayList<>();
 
 	public NotificationRecordResponseDTO() {
 	}
@@ -98,7 +117,6 @@ public class NotificationRecordResponseDTO {
 	 * @return body
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public String getBody() {
 		return body;
@@ -119,7 +137,6 @@ public class NotificationRecordResponseDTO {
 	 * @return createdOn
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public Date getCreatedOn() {
 		return createdOn;
@@ -140,7 +157,6 @@ public class NotificationRecordResponseDTO {
 	 * @return folder
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public String getFolder() {
 		return folder;
@@ -161,7 +177,6 @@ public class NotificationRecordResponseDTO {
 	 * @return fromuser
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public String getFromuser() {
 		return fromuser;
@@ -182,7 +197,6 @@ public class NotificationRecordResponseDTO {
 	 * @return id
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public UUID getId() {
 		return id;
@@ -200,7 +214,7 @@ public class NotificationRecordResponseDTO {
 
 	public NotificationRecordResponseDTO addLinksItem(Link linksItem) {
 		if (this.links == null) {
-			this.links = new ArrayList<Link>();
+			this.links = new ArrayList<>();
 		}
 		this.links.add(linksItem);
 		return this;
@@ -211,7 +225,6 @@ public class NotificationRecordResponseDTO {
 	 * @return links
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public List<Link> getLinks() {
 		return links;
@@ -232,7 +245,6 @@ public class NotificationRecordResponseDTO {
 	 * @return messageType
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public String getMessageType() {
 		return messageType;
@@ -253,7 +265,6 @@ public class NotificationRecordResponseDTO {
 	 * @return read
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public Boolean getRead() {
 		return read;
@@ -274,7 +285,6 @@ public class NotificationRecordResponseDTO {
 	 * @return subject
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public String getSubject() {
 		return subject;
@@ -292,7 +302,7 @@ public class NotificationRecordResponseDTO {
 
 	public NotificationRecordResponseDTO addTagsItem(String tagsItem) {
 		if (this.tags == null) {
-			this.tags = new ArrayList<String>();
+			this.tags = new ArrayList<>();
 		}
 		this.tags.add(tagsItem);
 		return this;
@@ -303,7 +313,6 @@ public class NotificationRecordResponseDTO {
 	 * @return tags
 	 **/
 	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
 
 	public List<String> getTags() {
 		return tags;
@@ -366,6 +375,170 @@ public class NotificationRecordResponseDTO {
 			return "null";
 		}
 		return o.toString().replace("\n", "\n    ");
+	}
+
+	public static HashSet<String> openapiFields;
+
+	public static HashSet<String> openapiRequiredFields;
+
+	static {
+		// a set of all properties/fields (JSON key names)
+		openapiFields = new HashSet<String>();
+		openapiFields.add("body");
+		openapiFields.add("createdOn");
+		openapiFields.add("folder");
+		openapiFields.add("fromuser");
+		openapiFields.add("id");
+		openapiFields.add("links");
+		openapiFields.add("messageType");
+		openapiFields.add("read");
+		openapiFields.add("subject");
+		openapiFields.add("tags");
+
+		// a set of required properties/fields (JSON key names)
+		openapiRequiredFields = new HashSet<String>();
+	}
+
+	/**
+	 * Validates the JSON Object and throws an exception if issues found
+	 * @param jsonObj JSON Object
+	 * @throws IOException if the JSON Object is invalid with respect to
+	 * NotificationRecordResponseDTO
+	 */
+	public static void validateJsonObject(JsonObject jsonObj) throws IOException {
+		if (jsonObj == null) {
+			if (!NotificationRecordResponseDTO.openapiRequiredFields.isEmpty()) { // has
+																					// required
+																					// fields
+																					// but
+																					// JSON
+																					// object
+																					// is
+																					// null
+				throw new IllegalArgumentException(String.format(
+						"The required field(s) %s in NotificationRecordResponseDTO is not found in the empty JSON string",
+						NotificationRecordResponseDTO.openapiRequiredFields.toString()));
+			}
+		}
+
+		Set<Entry<String, JsonElement>> entries = jsonObj.entrySet();
+		// check to see if the JSON string contains additional fields
+		for (Entry<String, JsonElement> entry : entries) {
+			if (!NotificationRecordResponseDTO.openapiFields.contains(entry.getKey())) {
+				throw new IllegalArgumentException(String.format(
+						"The field `%s` in the JSON string is not defined in the `NotificationRecordResponseDTO` properties. JSON: %s",
+						entry.getKey(), jsonObj.toString()));
+			}
+		}
+		if ((jsonObj.get("body") != null && !jsonObj.get("body").isJsonNull())
+				&& !jsonObj.get("body").isJsonPrimitive()) {
+			throw new IllegalArgumentException(
+					String.format("Expected the field `body` to be a primitive type in the JSON string but got `%s`",
+							jsonObj.get("body").toString()));
+		}
+		if ((jsonObj.get("folder") != null && !jsonObj.get("folder").isJsonNull())
+				&& !jsonObj.get("folder").isJsonPrimitive()) {
+			throw new IllegalArgumentException(
+					String.format("Expected the field `folder` to be a primitive type in the JSON string but got `%s`",
+							jsonObj.get("folder").toString()));
+		}
+		if ((jsonObj.get("fromuser") != null && !jsonObj.get("fromuser").isJsonNull())
+				&& !jsonObj.get("fromuser").isJsonPrimitive()) {
+			throw new IllegalArgumentException(String.format(
+					"Expected the field `fromuser` to be a primitive type in the JSON string but got `%s`",
+					jsonObj.get("fromuser").toString()));
+		}
+		if ((jsonObj.get("id") != null && !jsonObj.get("id").isJsonNull()) && !jsonObj.get("id").isJsonPrimitive()) {
+			throw new IllegalArgumentException(
+					String.format("Expected the field `id` to be a primitive type in the JSON string but got `%s`",
+							jsonObj.get("id").toString()));
+		}
+		if (jsonObj.get("links") != null && !jsonObj.get("links").isJsonNull()) {
+			JsonArray jsonArraylinks = jsonObj.getAsJsonArray("links");
+			if (jsonArraylinks != null) {
+				// ensure the json data is an array
+				if (!jsonObj.get("links").isJsonArray()) {
+					throw new IllegalArgumentException(
+							String.format("Expected the field `links` to be an array in the JSON string but got `%s`",
+									jsonObj.get("links").toString()));
+				}
+
+				// validate the optional field `links` (array)
+				for (int i = 0; i < jsonArraylinks.size(); i++) {
+					Link.validateJsonObject(jsonArraylinks.get(i).getAsJsonObject());
+				}
+				;
+			}
+		}
+		if ((jsonObj.get("messageType") != null && !jsonObj.get("messageType").isJsonNull())
+				&& !jsonObj.get("messageType").isJsonPrimitive()) {
+			throw new IllegalArgumentException(String.format(
+					"Expected the field `messageType` to be a primitive type in the JSON string but got `%s`",
+					jsonObj.get("messageType").toString()));
+		}
+		if ((jsonObj.get("subject") != null && !jsonObj.get("subject").isJsonNull())
+				&& !jsonObj.get("subject").isJsonPrimitive()) {
+			throw new IllegalArgumentException(
+					String.format("Expected the field `subject` to be a primitive type in the JSON string but got `%s`",
+							jsonObj.get("subject").toString()));
+		}
+		// ensure the optional json data is an array if present
+		if (jsonObj.get("tags") != null && !jsonObj.get("tags").isJsonArray()) {
+			throw new IllegalArgumentException(
+					String.format("Expected the field `tags` to be an array in the JSON string but got `%s`",
+							jsonObj.get("tags").toString()));
+		}
+	}
+
+	public static class CustomTypeAdapterFactory implements TypeAdapterFactory {
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
+			if (!NotificationRecordResponseDTO.class.isAssignableFrom(type.getRawType())) {
+				return null; // this class only serializes 'NotificationRecordResponseDTO'
+								// and its subtypes
+			}
+			final TypeAdapter<JsonElement> elementAdapter = gson.getAdapter(JsonElement.class);
+			final TypeAdapter<NotificationRecordResponseDTO> thisAdapter = gson.getDelegateAdapter(this,
+					TypeToken.get(NotificationRecordResponseDTO.class));
+
+			return (TypeAdapter<T>) new TypeAdapter<NotificationRecordResponseDTO>() {
+				@Override
+				public void write(JsonWriter out, NotificationRecordResponseDTO value) throws IOException {
+					JsonObject obj = thisAdapter.toJsonTree(value).getAsJsonObject();
+					elementAdapter.write(out, obj);
+				}
+
+				@Override
+				public NotificationRecordResponseDTO read(JsonReader in) throws IOException {
+					JsonObject jsonObj = elementAdapter.read(in).getAsJsonObject();
+					validateJsonObject(jsonObj);
+					return thisAdapter.fromJsonTree(jsonObj);
+				}
+
+			}.nullSafe();
+		}
+
+	}
+
+	/**
+	 * Create an instance of NotificationRecordResponseDTO given an JSON string
+	 * @param jsonString JSON string
+	 * @return An instance of NotificationRecordResponseDTO
+	 * @throws IOException if the JSON string is invalid with respect to
+	 * NotificationRecordResponseDTO
+	 */
+	public static NotificationRecordResponseDTO fromJson(String jsonString) throws IOException {
+		return JSON.getGson().fromJson(jsonString, NotificationRecordResponseDTO.class);
+	}
+
+	/**
+	 * Convert an instance of NotificationRecordResponseDTO to an JSON string
+	 * @return JSON string
+	 */
+	public String toJson() {
+		return JSON.getGson().toJson(this);
 	}
 
 }
