@@ -349,7 +349,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 			return String.format("workflow '%s' is not registered!", workflowName);
 		}
 
-		if (!workFlowWorkRepository.findByWorkDefinitionId(workFlowDefinition.getId()).isEmpty()) {
+		if (workFlowWorkRepository.findFirstByWorkDefinitionId(workFlowDefinition.getId()) != null) {
 			log.error("workflow '{}' is not main workflow!", workflowName);
 			return String.format("workflow '%s' is not main workflow!", workflowName);
 		}

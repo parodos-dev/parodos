@@ -27,7 +27,9 @@ public class AdGroupsWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 				WorkParameter.builder().key("adGroups").description("The ad groups").type(WorkParameterType.TEXT)
 						.optional(false).build(),
 				WorkParameter.builder().key("userId").description("The user id").type(WorkParameterType.TEXT)
-						.optional(false).build());
+						.optional(false).build(),
+				WorkParameter.builder().key("dynamic-options").description("Dynamic options")
+						.type(WorkParameterType.SELECT).optional(true).build());
 	}
 
 	@Override

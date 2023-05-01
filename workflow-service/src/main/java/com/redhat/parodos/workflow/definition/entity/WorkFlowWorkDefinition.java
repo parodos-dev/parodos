@@ -47,6 +47,7 @@ import java.util.UUID;
 @Setter
 public class WorkFlowWorkDefinition extends AbstractEntity {
 
+	@Column(unique = true)
 	private UUID workDefinitionId;
 
 	@Enumerated(EnumType.STRING)

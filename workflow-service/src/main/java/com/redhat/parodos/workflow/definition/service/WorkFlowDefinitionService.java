@@ -15,6 +15,7 @@
  */
 package com.redhat.parodos.workflow.definition.service;
 
+import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.enums.WorkFlowProcessingType;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
@@ -24,6 +25,7 @@ import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.workflow.WorkFlowPropertiesMetadata;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -47,6 +49,10 @@ public interface WorkFlowDefinitionService {
 
 	void saveWorkFlowChecker(String workFlowTaskName, String workFlowCheckerName,
 			WorkFlowCheckerDTO workFlowCheckerDTO);
+
+	Map<String, Object> getWorkParametersByWorkName(String workName);
+
+	WorkFlowDefinition getParentWorkFlowByWorkName(String workName);
 
 	void cleanAllDefinitionMappings();
 

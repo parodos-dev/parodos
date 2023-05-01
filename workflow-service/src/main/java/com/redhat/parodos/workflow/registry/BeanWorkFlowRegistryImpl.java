@@ -25,7 +25,6 @@ import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceI
 import com.redhat.parodos.workflow.enums.WorkFlowProcessingType;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.parameter.WorkParameter;
-import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
 import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
@@ -41,12 +40,10 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * An implementation of the WorkflowRegistry that loads all Bean definitions of type
@@ -59,7 +56,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
+public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry {
 
 	// Spring will populate this through classpath scanning when the Context starts up
 	private final ConfigurableListableBeanFactory beanFactory;
@@ -109,19 +106,8 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 		// workflow type
 		WorkFlowType workFlowType = workFlowTypeDetailsPair.getFirst();
 		// workflow parameters from annotation attributes
-		AnnotationAttributes[] annotationAttributes = (AnnotationAttributes[]) workFlowTypeDetailsPair.getSecond()
-				.get("parameters");
-		List<WorkParameter> workParameters = new ArrayList<>();
-		if (annotationAttributes != null && annotationAttributes.length > 0) {
-			workParameters = Arrays.stream(annotationAttributes)
-					.map(annotationAttribute -> WorkParameter.builder().key(annotationAttribute.getString("key"))
-							.description(annotationAttribute.getString("description"))
-							.type((WorkParameterType) annotationAttribute.get("type"))
-							.optional(annotationAttribute.getBoolean("optional"))
-							.selectOptions(Arrays.stream(annotationAttribute.getStringArray("selectOptions")).toList())
-							.valueProviderName(annotationAttribute.getString("valueProviderName")).build())
-					.toList();
-		}
+		List<WorkParameter> workParameters = WorkFlowRegistryDelegate
+				.getWorkParameters((AnnotationAttributes[]) workFlowTypeDetailsPair.getSecond().get("parameters"));
 		workFlowDefinitionService.save(workFlowBeanName, workFlowType, workFlowBean.getProperties(), workParameters,
 				works, getWorkFlowProcessingType(workFlowBean));
 	}
@@ -129,7 +115,7 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry<String> {
 	private List<Work> getWorks(String workFlowName) {
 		return Arrays.stream(beanFactory.getDependenciesForBean(workFlowName))
 				.filter(dependency -> isBeanInstanceOf(beanFactory, dependency, WorkFlow.class, WorkFlowTask.class))
-				.map(dependency -> beanFactory.getBean(dependency, Work.class)).collect(Collectors.toList());
+				.map(dependency -> beanFactory.getBean(dependency, Work.class)).toList();
 	}
 
 	private void saveChecker(Map<String, WorkFlowTask> workFlowTasks) {

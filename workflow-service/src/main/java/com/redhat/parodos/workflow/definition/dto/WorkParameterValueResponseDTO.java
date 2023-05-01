@@ -1,6 +1,7 @@
 package com.redhat.parodos.workflow.definition.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.redhat.parodos.workflow.parameter.WorkParameterValueResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,5 +23,12 @@ public class WorkParameterValueResponseDTO {
 	private String value;
 
 	private String propertyPath;
+
+	public static WorkParameterValueResponseDTO convertToDto(WorkParameterValueResponse workParameterValueResponse,
+			String propertyPath) {
+		return WorkParameterValueResponseDTO.builder().key(workParameterValueResponse.getKey())
+				.options(workParameterValueResponse.getOptions()).value(workParameterValueResponse.getValue())
+				.propertyPath(propertyPath).build();
+	}
 
 }

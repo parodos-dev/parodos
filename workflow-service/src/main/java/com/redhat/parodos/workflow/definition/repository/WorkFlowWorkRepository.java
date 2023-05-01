@@ -31,6 +31,6 @@ public interface WorkFlowWorkRepository extends JpaRepository<WorkFlowWorkDefini
 
 	List<WorkFlowWorkDefinition> findByWorkFlowDefinitionIdOrderByCreateDateAsc(UUID workFlowDefinitionId);
 
-	List<WorkFlowWorkDefinition> findByWorkDefinitionId(UUID workDefinitionId);
+	WorkFlowWorkDefinition findFirstByWorkDefinitionId(UUID workDefinitionId);
 
 }

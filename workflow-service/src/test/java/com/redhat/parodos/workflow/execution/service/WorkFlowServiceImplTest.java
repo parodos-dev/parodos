@@ -176,7 +176,7 @@ class WorkFlowServiceImplTest {
 				}));
 		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(Mockito.any()))
 				.thenReturn(this.sampleWorkflowDefinition("test"));
-		Mockito.when(this.workFlowWorkRepository.findByWorkDefinitionId(Mockito.any())).thenReturn(List.of());
+		Mockito.when(this.workFlowWorkRepository.findFirstByWorkDefinitionId(Mockito.any())).thenReturn(null);
 		Mockito.when(this.workFlowDelegate.initWorkFlowContext(Mockito.any(), Mockito.any()))
 				.thenReturn(new WorkContext());
 		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
@@ -203,8 +203,8 @@ class WorkFlowServiceImplTest {
 		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow().named("test").execute(work).build();
 		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(Mockito.any()))
 				.thenReturn(this.sampleWorkflowDefinition("test"));
-		Mockito.when(this.workFlowWorkRepository.findByWorkDefinitionId(Mockito.any()))
-				.thenReturn(List.of(WorkFlowWorkDefinition.builder().build()));
+		Mockito.when(this.workFlowWorkRepository.findFirstByWorkDefinitionId(Mockito.any()))
+				.thenReturn(WorkFlowWorkDefinition.builder().build());
 
 		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
 
@@ -244,7 +244,7 @@ class WorkFlowServiceImplTest {
 		Mockito.verify(this.workFlowDelegate, Mockito.times(1)).getWorkFlowExecutionByName(Mockito.any());
 		Mockito.verify(this.workFlowDelegate, Mockito.never()).initWorkFlowContext(Mockito.any(), Mockito.any());
 		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).findFirstByName(Mockito.any());
-		Mockito.verify(this.workFlowWorkRepository, Mockito.never()).findByWorkDefinitionId(Mockito.any());
+		Mockito.verify(this.workFlowWorkRepository, Mockito.never()).findFirstByWorkDefinitionId(Mockito.any());
 	}
 
 	@Test
