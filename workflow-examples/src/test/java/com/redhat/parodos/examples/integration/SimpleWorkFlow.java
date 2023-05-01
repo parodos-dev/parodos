@@ -11,7 +11,6 @@ import com.redhat.parodos.sdk.model.ProjectResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
 import com.redhat.parodos.sdk.model.WorkFlowResponseDTO;
-import com.redhat.parodos.sdk.model.WorkFlowResponseDTO.WorkStatusEnum;
 import com.redhat.parodos.sdk.model.WorkRequestDTO;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
@@ -114,7 +113,7 @@ public class SimpleWorkFlow {
 		assertNotNull(workFlowResponseDTO.getWorkFlowExecutionId());
 		assertNull(workFlowResponseDTO.getWorkFlowOptions());
 		assertNotNull(workFlowResponseDTO.getWorkStatus());
-		assertEquals(WorkStatusEnum.COMPLETED, workFlowResponseDTO.getWorkStatus());
+		assertEquals(WorkFlowResponseDTO.WorkStatusEnum.COMPLETED, workFlowResponseDTO.getWorkStatus());
 
 		log.info("workflow finished successfully with response: {}", workFlowResponseDTO);
 		log.info("******** Simple Sequence Flow Completed ********");

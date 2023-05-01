@@ -6,7 +6,7 @@
 
     <changeSet id="1" author="luke" runAlways="false" runOnChange="true">
         <!-- insert to User Table -->
-        <insert tableName="user">
+        <insert tableName="users">
             <column name="username" value="test"/>
             <column name="password" value="$2a$04$Bq4K2efcqJe8Ofe4ZUB8Aej7FN.DlnVna9OjRD1mKNx8cYhaTsF8G"/>
             <column name="authority" value="ROLE_ADMIN"/>

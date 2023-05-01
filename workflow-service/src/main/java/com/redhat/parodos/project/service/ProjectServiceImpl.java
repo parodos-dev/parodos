@@ -15,22 +15,24 @@
  */
 package com.redhat.parodos.project.service;
 
+import com.redhat.parodos.project.dto.ProjectRequestDTO;
+import com.redhat.parodos.project.dto.ProjectResponseDTO;
+import com.redhat.parodos.project.entity.Project;
+import com.redhat.parodos.project.repository.ProjectRepository;
+import com.redhat.parodos.security.SecurityUtils;
+import com.redhat.parodos.user.service.UserService;
+import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
+import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import javax.persistence.EntityExistsException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
-
-import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
-import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
-
-import com.redhat.parodos.project.dto.ProjectRequestDTO;
-import com.redhat.parodos.project.dto.ProjectResponseDTO;
-import com.redhat.parodos.project.entity.Project;
-import com.redhat.parodos.project.repository.ProjectRepository;
 
 /**
  * Project service implementation
@@ -45,12 +47,15 @@ public class ProjectServiceImpl implements ProjectService {
 
 	private final WorkFlowRepository workFlowRepository;
 
+	private final UserService userService;
+
 	private final ModelMapper modelMapper;
 
 	public ProjectServiceImpl(ProjectRepository projectRepository, WorkFlowRepository workFlowRepository,
-			ModelMapper modelMapper) {
+			UserService userService, ModelMapper modelMapper) {
 		this.projectRepository = projectRepository;
 		this.workFlowRepository = workFlowRepository;
+		this.userService = userService;
 		this.modelMapper = modelMapper;
 	}
 
@@ -63,16 +68,16 @@ public class ProjectServiceImpl implements ProjectService {
 		}
 		// get user from security utils and set on project
 		Project project = projectRepository.save(Project.builder().name(projectRequestDTO.getName())
-				.description(projectRequestDTO.getDescription()).createDate(new Date()).modifyDate(new Date()).build());
+				.description(projectRequestDTO.getDescription()).createDate(new Date()).modifyDate(new Date())
+				.user(userService.getUserEntityByUsername(SecurityUtils.getUsername())).build());
 		return modelMapper.map(project, ProjectResponseDTO.class);
 	}
 
 	@Override
 	public ProjectResponseDTO getProjectById(UUID id) {
-		return modelMapper.map(
-				projectRepository.findById(id)
-						.orElseThrow(() -> new RuntimeException(String.format("Project with id: %s not found", id))),
-				ProjectResponseDTO.class);
+		return modelMapper
+				.map(projectRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						String.format("Project with id: %s not found", id))), ProjectResponseDTO.class);
 	}
 
 	@Override
@@ -85,7 +90,22 @@ public class ProjectServiceImpl implements ProjectService {
 					.createDate(project.getCreateDate()).modifyDate(project.getModifyDate())
 					.description(project.getDescription())
 					.status(null == workFlowExecution ? "" : workFlowExecution.getStatus().name()).build();
-		}).collect(Collectors.toList());
+		}).toList();
+	}
+
+	@Override
+	public ProjectResponseDTO getProjectByIdAndUsername(UUID id, String username) {
+		return modelMapper.map(
+				projectRepository.findByIdAndUserUsername(id, username)
+						.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(
+								"Project with id: %s not found for user: %s", id, SecurityUtils.getUsername()))),
+				ProjectResponseDTO.class);
+	}
+
+	@Override
+	public List<ProjectResponseDTO> findProjectsByUserName(String username) {
+		return projectRepository.findAllByUserUsername(username).stream()
+				.map(project -> modelMapper.map(project, ProjectResponseDTO.class)).toList();
 	}
 
 }

@@ -17,6 +17,7 @@ package com.redhat.parodos.project.service;
 
 import com.redhat.parodos.project.dto.ProjectRequestDTO;
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -32,5 +33,9 @@ public interface ProjectService {
 	ProjectResponseDTO getProjectById(UUID id);
 
 	List<ProjectResponseDTO> getProjects();
+
+	List<ProjectResponseDTO> findProjectsByUserName(String userName);
+
+	ProjectResponseDTO getProjectByIdAndUsername(UUID id, String username);
 
 }

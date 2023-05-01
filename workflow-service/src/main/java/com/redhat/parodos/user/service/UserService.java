@@ -33,4 +33,6 @@ public interface UserService {
 
 	UserResponseDTO getUserByUsername(String username);
 
+	User getUserEntityByUsername(String username);
+
 }

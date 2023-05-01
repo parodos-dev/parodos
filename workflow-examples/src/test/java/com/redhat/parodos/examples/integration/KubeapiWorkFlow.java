@@ -1,6 +1,5 @@
 package com.redhat.parodos.examples.integration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.examples.integration.utils.ExamplesUtils;
 import com.redhat.parodos.sdk.api.WorkflowApi;
 import com.redhat.parodos.sdk.api.WorkflowDefinitionApi;

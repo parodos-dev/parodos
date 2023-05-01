@@ -6,7 +6,7 @@
 
     <changeSet id="1" author="luke" runAlways="false" runOnChange="true">
         <!-- User Table -->
-        <createTable tableName="user">
+        <createTable tableName="users">
             <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -36,7 +36,7 @@
             <column name="create_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="modify_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="user_id" type="${uuidType}">
-                <constraints nullable="true" foreignKeyName="fk_project_user" references="user(id)"/>
+                <constraints nullable="true" foreignKeyName="fk_project_user" references="users(id)"/>
             </column>
             <column name="object_version" type="bigint"/>
         </createTable>

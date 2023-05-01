@@ -36,14 +36,23 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class WorkFlowResponseDTO {
 
 	private UUID workFlowExecutionId;
 
-	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	private UUID projectId;
+
+	private String workFlowName;
+
 	private WorkFlowOptions workFlowOptions;
 
-	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private WorkStatus workStatus;
+
+	private String startDate;
+
+	private String endDate;
+
+	private String createUser;
 
 }

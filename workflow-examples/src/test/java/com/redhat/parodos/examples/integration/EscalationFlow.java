@@ -7,7 +7,6 @@ import com.redhat.parodos.sdk.invoker.Configuration;
 import com.redhat.parodos.sdk.model.ProjectResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
 import com.redhat.parodos.sdk.model.WorkFlowResponseDTO;
-import com.redhat.parodos.sdk.model.WorkFlowResponseDTO.WorkStatusEnum;
 import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.workflow.utils.CredUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +56,7 @@ public class EscalationFlow {
 		WorkFlowResponseDTO workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
 
 		assertNotNull("There is no valid WorkFlowExecutionId", workFlowResponseDTO.getWorkFlowExecutionId());
-		assertEquals(workFlowResponseDTO.getWorkStatus(), WorkStatusEnum.IN_PROGRESS);
+		assertEquals(workFlowResponseDTO.getWorkStatus(), WorkFlowResponseDTO.WorkStatusEnum.IN_PROGRESS);
 		log.info("Simple escalation workflow execution id: {}", workFlowResponseDTO.getWorkFlowExecutionId());
 		log.info("Simple Escalation Flow {}", workFlowResponseDTO.getWorkStatus());
 		log.info("Waiting for checkers to complete...");
@@ -67,7 +66,7 @@ public class EscalationFlow {
 
 		assertNotNull(workFlowStatusResponseDTO);
 		assertNotNull(workFlowStatusResponseDTO.getWorkFlowExecutionId());
-		assertEquals(WorkStatusEnum.COMPLETED.toString(), workFlowStatusResponseDTO.getStatus());
+		assertEquals(WorkFlowResponseDTO.WorkStatusEnum.COMPLETED.toString(), workFlowStatusResponseDTO.getStatus());
 		log.info("******** Simple Escalation Flow {} ********", workFlowStatusResponseDTO.getStatus());
 
 	}

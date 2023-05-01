@@ -17,6 +17,7 @@ package com.redhat.parodos.project.repository;
 
 import com.redhat.parodos.project.entity.Project;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -29,5 +30,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ProjectRepository extends JpaRepository<Project, UUID> {
 
 	Optional<Project> findByNameIgnoreCase(String name);
+
+	List<Project> findAllByUserUsername(String username);
+
+	Optional<Project> findByIdAndUserUsername(UUID id, String username);
 
 }

@@ -4,14 +4,20 @@ import com.redhat.parodos.project.dto.ProjectRequestDTO;
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
 import com.redhat.parodos.project.entity.Project;
 import com.redhat.parodos.project.repository.ProjectRepository;
+import com.redhat.parodos.user.entity.User;
+import com.redhat.parodos.user.service.UserService;
 import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +32,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.nullable;
 
+@ExtendWith(SpringExtension.class)
 class ProjectServiceImplTest {
 
 	private ProjectRepository projectRepository;
@@ -35,11 +43,14 @@ class ProjectServiceImplTest {
 
 	private ProjectServiceImpl projectService;
 
+	private UserService userService;
+
 	@BeforeEach
 	public void initEach() {
 		this.projectRepository = Mockito.mock(ProjectRepository.class);
 		this.workFlowRepository = Mockito.mock(WorkFlowRepository.class);
-		this.projectService = new ProjectServiceImpl(this.projectRepository, this.workFlowRepository,
+		this.userService = Mockito.mock(UserService.class);
+		this.projectService = new ProjectServiceImpl(this.projectRepository, this.workFlowRepository, userService,
 				new ModelMapper());
 	}
 
@@ -65,18 +76,30 @@ class ProjectServiceImplTest {
 	}
 
 	@Test
+	public void testFindProjectByIdAndUserNameWithValidData() {
+		String username = "test-user";
+		// given
+		Project project = getSampleProject("test");
+		Mockito.when(this.projectRepository.findByIdAndUserUsername(project.getId(), username))
+				.thenReturn(Optional.of(project));
+
+		// when
+		ProjectResponseDTO res = this.projectService.getProjectByIdAndUsername(project.getId(), username);
+
+		// then
+		assertNotNull(res);
+		assertEquals(res.getId().toString(), project.getId().toString());
+	}
+
+	@Test
 	public void testFindProjectByIdWithInvalidData() {
 		// given
 		Project project = getSampleProject("test");
 		Mockito.when(this.projectRepository.findById(project.getId())).thenReturn(Optional.empty());
 
 		// when
-		Exception exception = assertThrows(RuntimeException.class, () -> {
-			this.projectService.getProjectById(project.getId());
-		});
-
-		// then
-		assertEquals(exception.getMessage(), String.format("Project with id: %s not found", project.getId()));
+		assertThrows(ResponseStatusException.class, () -> this.projectService.getProjectById(project.getId()),
+				String.format("404 NOT_FOUND \"Project with id: %s not found\"", project.getId()));
 	}
 
 	@Test
@@ -135,11 +158,13 @@ class ProjectServiceImplTest {
 	}
 
 	@Test
+	@WithMockUser(username = "test-user")
 	public void testSaveWithValidData() {
 		// given
 		Project project = getSampleProject("test");
 		Mockito.when(this.projectRepository.save(any(Project.class))).thenReturn(project);
-
+		Mockito.when(userService.getUserEntityByUsername(nullable(String.class)))
+				.thenReturn(User.builder().username("test-user").build());
 		ProjectRequestDTO projectDTO = ProjectRequestDTO.builder().name("dto").description("dto description").build();
 
 		// when

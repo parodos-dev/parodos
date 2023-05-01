@@ -14,12 +14,14 @@ import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.enums.WorkType;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowCheckerTaskRequestDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
+import com.redhat.parodos.workflow.execution.dto.WorkFlowResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
+import com.redhat.parodos.workflows.work.WorkStatus;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -34,6 +36,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.server.ResponseStatusException;
+
+import static org.hamcrest.Matchers.equalToIgnoringCase;
+import static org.hamcrest.Matchers.hasSize;
 
 @SpringBootTest
 @DirtiesContext
@@ -230,6 +235,22 @@ class WorkFlowControllerTest extends ControllerMockClient {
 				.perform(this.getRequestWithValidCredentials(
 						String.format("/api/v1/workflows/%s/status", UUID.randomUUID().toString())))
 				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test
+	void TestGetWorkFlowByProjectIdWithValidData() throws Exception {
+		UUID workFlowExecutionId = UUID.randomUUID();
+		UUID projectId = UUID.randomUUID();
+		Mockito.when(workFlowService.getWorkFlowsByProjectId(projectId)).thenReturn(List.of(WorkFlowResponseDTO
+				.builder().workFlowExecutionId(workFlowExecutionId).workStatus(WorkStatus.COMPLETED).build()));
+		// when
+		this.mockMvc
+				.perform(this.getRequestWithValidCredentials("/api/v1/workflows").param("projectId",
+						projectId.toString()))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(1))).andExpect(MockMvcResultMatchers
+						.jsonPath("$[0].workStatus", equalToIgnoringCase(ParodosWorkStatus.COMPLETED.name())));
 	}
 
 	private String getWorkFlowCheckerTaskRequestDTOJsonPayload() throws JsonProcessingException {
