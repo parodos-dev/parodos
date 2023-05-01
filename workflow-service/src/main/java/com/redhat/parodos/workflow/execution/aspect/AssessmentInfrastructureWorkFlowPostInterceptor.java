@@ -77,13 +77,13 @@ public class AssessmentInfrastructureWorkFlowPostInterceptor implements WorkFlow
 				.collect(Collectors.toList());
 
 		for (WorkFlowExecution checkerExecution : checkerExecutions)
-			if (checkerExecution != null && checkerExecution.getStatus().isRejected()) {
+			if (checkerExecution != null && checkerExecution.getStatus() == WorkFlowStatus.FAILED) {
 				log.info("fail workflow: {} because it has declined checker(s)", workFlowDefinition.getName());
 				workFlowExecution.setStatus(WorkFlowStatus.FAILED);
 				report = new DefaultWorkReport(WorkStatus.FAILED, workContext);
 				break;
 			}
-			else if (checkerExecution == null || checkerExecution.getStatus().isFailed()) {
+			else if (checkerExecution == null || checkerExecution.getStatus() == WorkFlowStatus.FAILED) {
 				log.info("workflow: {} has a pending/running checker: {}", workFlowDefinition.getName(),
 						checkerExecution == null ? "checker is pending"
 								: checkerExecution.getWorkFlowDefinitionId().toString());
