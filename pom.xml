@@ -61,7 +61,6 @@
         <assertj.version>3.17.2</assertj.version>
         <okhttp-version>4.9.2</okhttp-version>
         <openapi.generator.version>6.4.0</openapi.generator.version>
-        <jackson-databind-nullable-version>0.2.2</jackson-databind-nullable-version>
         <gson-fire-version>1.8.5</gson-fire-version>
     </properties>
     <modules>
