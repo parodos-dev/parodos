@@ -35,7 +35,7 @@ public class WorkParameterValueResponse {
 
 	private String key;
 
-	private String propertyPath;
+	private String workName;
 
 	private List<String> options;
 

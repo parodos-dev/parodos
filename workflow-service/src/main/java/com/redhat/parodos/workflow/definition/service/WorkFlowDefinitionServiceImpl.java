@@ -15,12 +15,14 @@
  */
 package com.redhat.parodos.workflow.definition.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.redhat.parodos.common.AbstractEntity;
 import com.redhat.parodos.workflow.definition.dto.WorkDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowPropertiesDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowWorkDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowCheckerMappingDefinitionRepository;
@@ -39,7 +41,6 @@ import com.redhat.parodos.workflows.workflow.WorkFlowPropertiesMetadata;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import com.redhat.parodos.workflow.definition.entity.WorkFlowPropertiesDefinition;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -50,7 +51,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
 
 /**
  * workflow definition service implementation
@@ -190,7 +190,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 				.orElseThrow(() -> new RuntimeException(String.format("Workflow definition id %s not found", id)));
 		List<WorkFlowWorkDefinition> workFlowWorkDependencies = workFlowWorkRepository
 				.findByWorkFlowDefinitionIdOrderByCreateDateAsc(workFlowDefinition.getId()).stream()
-				.sorted(Comparator.comparing(WorkFlowWorkDefinition::getCreateDate)).collect(Collectors.toList());
+				.sorted(Comparator.comparing(WorkFlowWorkDefinition::getCreateDate)).toList();
 		return WorkFlowDefinitionResponseDTO.fromEntity(workFlowDefinition,
 				buildWorkFlowWorksDTOs(workFlowDefinition, workFlowWorkDependencies));
 	}
@@ -203,7 +203,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 		}
 		List<WorkFlowWorkDefinition> workFlowWorkDependencies = workFlowWorkRepository
 				.findByWorkFlowDefinitionIdOrderByCreateDateAsc(workFlowDefinition.getId()).stream()
-				.sorted(Comparator.comparing(WorkFlowWorkDefinition::getCreateDate)).collect(Collectors.toList());
+				.sorted(Comparator.comparing(WorkFlowWorkDefinition::getCreateDate)).toList();
 
 		return WorkFlowDefinitionResponseDTO.fromEntity(workFlowDefinition,
 				buildWorkFlowWorksDTOs(workFlowDefinition, workFlowWorkDependencies));
@@ -228,6 +228,29 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 		catch (Exception e) {
 			log.error(e.getMessage());
 		}
+	}
+
+	@Override
+	public Map<String, Object> getWorkParametersByWorkName(String workName) {
+		return Optional.ofNullable(workFlowTaskDefinitionRepository.findFirstByName(workName))
+				.map(WorkFlowTaskDefinition::getParameters).map(stringifyParameters -> WorkFlowDTOUtil
+						.readStringAsObject(stringifyParameters, new TypeReference<Map<String, Object>>() {
+						}, null))
+				.orElse(Optional.ofNullable(workFlowDefinitionRepository.findFirstByName(workName))
+						.map(WorkFlowDefinition::getParameters).map(stringifyParameters -> WorkFlowDTOUtil
+								.readStringAsObject(stringifyParameters, new TypeReference<Map<String, Object>>() {
+								}, null))
+						.orElse(null));
+	}
+
+	@Override
+	public WorkFlowDefinition getParentWorkFlowByWorkName(String workName) {
+		UUID workId = Optional.ofNullable(workFlowDefinitionRepository.findFirstByName(workName))
+				.map(AbstractEntity::getId)
+				.orElse(Optional.ofNullable(workFlowTaskDefinitionRepository.findFirstByName(workName))
+						.map(AbstractEntity::getId).orElse(null));
+		return workId == null ? null : Optional.ofNullable(workFlowWorkRepository.findFirstByWorkDefinitionId(workId))
+				.map(WorkFlowWorkDefinition::getWorkFlowDefinition).orElse(null);
 	}
 
 	private void getWorksFromWorkDefinition(List<WorkFlowWorkDefinition> workFlowWorkDefinitions,
@@ -296,8 +319,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 
 				List<WorkFlowWorkDefinition> workFlowWorkUnits1Definition = workFlowWorkRepository
 						.findByWorkFlowDefinitionIdOrderByCreateDateAsc(workDefinitionResponseDTOs.get(i).getId())
-						.stream().sorted(Comparator.comparing(WorkFlowWorkDefinition::getCreateDate))
-						.collect(Collectors.toList());
+						.stream().sorted(Comparator.comparing(WorkFlowWorkDefinition::getCreateDate)).toList();
 				this.getWorksFromWorkDefinition(workFlowWorkUnits1Definition, workDefinitionResponseDTOs);
 			}
 		}

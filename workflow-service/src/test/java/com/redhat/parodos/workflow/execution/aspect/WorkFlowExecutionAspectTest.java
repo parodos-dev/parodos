@@ -156,8 +156,8 @@ class WorkFlowExecutionAspectTest {
 		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(Mockito.any())).thenReturn(workFlowDefinition);
 		Mockito.when(this.workFlowService.saveWorkFlow(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(),
 				Mockito.any())).thenReturn(workFlowExecution);
-		Mockito.when(workFlowWorkRepository.findByWorkDefinitionId(Mockito.any()))
-				.thenReturn(List.of(workFlowWorkDefinition));
+		Mockito.when(workFlowWorkRepository.findFirstByWorkDefinitionId(Mockito.any()))
+				.thenReturn(workFlowWorkDefinition);
 		ProceedingJoinPoint proceedingJoinPoint = Mockito.mock(ProceedingJoinPoint.class);
 		WorkFlow workFlow = Mockito.mock(WorkFlow.class);
 		Mockito.when(proceedingJoinPoint.getTarget()).thenReturn(workFlow);

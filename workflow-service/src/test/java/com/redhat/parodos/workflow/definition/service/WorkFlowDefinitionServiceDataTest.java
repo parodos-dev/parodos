@@ -69,6 +69,11 @@ class WorkFlowDefinitionServiceDataTest {
 
 	@BeforeEach
 	void init() {
+		workFlowCheckerMappingDefinitionRepository.deleteAllInBatch();
+		workFlowWorkRepository.deleteAllInBatch();
+		workFlowTaskDefinitionRepository.deleteAllInBatch();
+		workFlowDefinitionRepository.deleteAllInBatch();
+
 		workFlowDefinitionService = new WorkFlowDefinitionServiceImpl(workFlowDefinitionRepository,
 				workFlowTaskDefinitionRepository, workFlowCheckerMappingDefinitionRepository, workFlowWorkRepository,
 				new ModelMapper());
@@ -83,10 +88,10 @@ class WorkFlowDefinitionServiceDataTest {
 				.build();
 		WorkFlowWorkDefinition workFlowWorkDefinition = WorkFlowWorkDefinition.builder()
 				.workDefinitionId(UUID.randomUUID()).workFlowDefinition(workFlowDefinition).build();
-		entityManager.persist(workFlowDefinition);
-		entityManager.persist(workFlowTaskDefinition);
-		entityManager.persist(workFlowCheckerMappingDefinition);
-		entityManager.persist(workFlowWorkDefinition);
+		entityManager.persistAndFlush(workFlowDefinition);
+		entityManager.persistAndFlush(workFlowTaskDefinition);
+		entityManager.persistAndFlush(workFlowCheckerMappingDefinition);
+		entityManager.persistAndFlush(workFlowWorkDefinition);
 	}
 
 	@Test
