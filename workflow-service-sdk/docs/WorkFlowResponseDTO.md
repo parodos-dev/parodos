@@ -7,7 +7,12 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
+|**createUser** | **String** |  |  [optional] |
+|**endDate** | **String** |  |  [optional] |
+|**projectId** | **UUID** |  |  [optional] |
+|**startDate** | **String** |  |  [optional] |
 |**workFlowExecutionId** | **UUID** |  |  [optional] |
+|**workFlowName** | **String** |  |  [optional] |
 |**workFlowOptions** | [**WorkFlowOptions**](WorkFlowOptions.md) |  |  [optional] |
 |**workStatus** | [**WorkStatusEnum**](#WorkStatusEnum) |  |  [optional] |
 

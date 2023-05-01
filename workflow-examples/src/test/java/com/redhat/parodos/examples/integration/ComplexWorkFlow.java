@@ -11,7 +11,6 @@ import com.redhat.parodos.sdk.model.ProjectResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
 import com.redhat.parodos.sdk.model.WorkFlowResponseDTO;
-import com.redhat.parodos.sdk.model.WorkFlowResponseDTO.WorkStatusEnum;
 import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.sdk.model.WorkRequestDTO;
 import com.redhat.parodos.workflow.utils.CredUtils;
@@ -67,10 +66,10 @@ public class ComplexWorkFlow {
 				.arguments(List.of(new ArgumentRequestDTO().key("GIT_REPO_URL").value("git_repo_url")))));
 
 		WorkFlowResponseDTO workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
-		assertEquals(WorkStatusEnum.COMPLETED, workFlowResponseDTO.getWorkStatus());
+		assertEquals(WorkFlowResponseDTO.WorkStatusEnum.COMPLETED, workFlowResponseDTO.getWorkStatus());
 		log.info("workflow finished successfully with response: {}", workFlowResponseDTO);
 		if (workFlowResponseDTO.getWorkFlowOptions() == null
-				|| workFlowResponseDTO.getWorkStatus() != WorkStatusEnum.COMPLETED) {
+				|| workFlowResponseDTO.getWorkStatus() != WorkFlowResponseDTO.WorkStatusEnum.COMPLETED) {
 			fail("There is no valid INFRASTRUCTURE_OPTION");
 		}
 
@@ -112,7 +111,7 @@ public class ComplexWorkFlow {
 		workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
 
 		assertNotNull("There is no valid WorkFlowExecutionId", workFlowResponseDTO.getWorkFlowExecutionId());
-		assertEquals(workFlowResponseDTO.getWorkStatus(), WorkStatusEnum.IN_PROGRESS);
+		assertEquals(workFlowResponseDTO.getWorkStatus(), WorkFlowResponseDTO.WorkStatusEnum.IN_PROGRESS);
 		log.info("Onboarding workflow execution id: {}", workFlowResponseDTO.getWorkFlowExecutionId());
 
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = waitWorkflowStatusAsync(workflowApi,
@@ -120,7 +119,7 @@ public class ComplexWorkFlow {
 
 		assertNotNull(workFlowStatusResponseDTO);
 		assertNotNull(workFlowStatusResponseDTO.getWorkFlowExecutionId());
-		assertEquals(WorkStatusEnum.COMPLETED.toString(), workFlowStatusResponseDTO.getStatus());
+		assertEquals(WorkFlowResponseDTO.WorkStatusEnum.COMPLETED.toString(), workFlowStatusResponseDTO.getStatus());
 		log.info("Onboarding workflow execution completed with status {}", workFlowStatusResponseDTO.getStatus());
 	}
 

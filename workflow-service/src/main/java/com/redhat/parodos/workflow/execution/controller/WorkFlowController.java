@@ -15,15 +15,6 @@
  */
 package com.redhat.parodos.workflow.execution.controller;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowCheckerTaskRequestDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowContextResponseDTO;
@@ -51,6 +42,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Workflow controller to execute workflow and get status
@@ -122,6 +122,20 @@ public class WorkFlowController {
 	@GetMapping("/{workFlowExecutionId}/status")
 	public ResponseEntity<WorkFlowStatusResponseDTO> getStatus(@PathVariable UUID workFlowExecutionId) {
 		return ResponseEntity.ok(workFlowService.getWorkFlowStatus(workFlowExecutionId));
+	}
+
+	@Operation(summary = "Returns workflows by project id")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Succeeded",
+					content = { @Content(mediaType = "application/json",
+							schema = @Schema(allOf = WorkFlowStatusResponseDTO.class)) }),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content) })
+	@GetMapping()
+	public ResponseEntity<List<WorkFlowResponseDTO>> getStatusByProjectId(
+			@RequestParam(value = "projectId", required = false) UUID projectId) {
+		return ResponseEntity.ok(projectId != null ? workFlowService.getWorkFlowsByProjectId(projectId)
+				: workFlowService.getWorkFlows());
 	}
 
 	@Operation(summary = "Returns workflow context parameters")

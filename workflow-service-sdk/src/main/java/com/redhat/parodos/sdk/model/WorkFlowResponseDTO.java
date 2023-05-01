@@ -50,10 +50,35 @@ import com.redhat.parodos.sdk.invoker.JSON;
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowResponseDTO {
 
+	public static final String SERIALIZED_NAME_CREATE_USER = "createUser";
+
+	@SerializedName(SERIALIZED_NAME_CREATE_USER)
+	private String createUser;
+
+	public static final String SERIALIZED_NAME_END_DATE = "endDate";
+
+	@SerializedName(SERIALIZED_NAME_END_DATE)
+	private String endDate;
+
+	public static final String SERIALIZED_NAME_PROJECT_ID = "projectId";
+
+	@SerializedName(SERIALIZED_NAME_PROJECT_ID)
+	private UUID projectId;
+
+	public static final String SERIALIZED_NAME_START_DATE = "startDate";
+
+	@SerializedName(SERIALIZED_NAME_START_DATE)
+	private String startDate;
+
 	public static final String SERIALIZED_NAME_WORK_FLOW_EXECUTION_ID = "workFlowExecutionId";
 
 	@SerializedName(SERIALIZED_NAME_WORK_FLOW_EXECUTION_ID)
 	private UUID workFlowExecutionId;
+
+	public static final String SERIALIZED_NAME_WORK_FLOW_NAME = "workFlowName";
+
+	@SerializedName(SERIALIZED_NAME_WORK_FLOW_NAME)
+	private String workFlowName;
 
 	public static final String SERIALIZED_NAME_WORK_FLOW_OPTIONS = "workFlowOptions";
 
@@ -125,6 +150,86 @@ public class WorkFlowResponseDTO {
 	public WorkFlowResponseDTO() {
 	}
 
+	public WorkFlowResponseDTO createUser(String createUser) {
+
+		this.createUser = createUser;
+		return this;
+	}
+
+	/**
+	 * Get createUser
+	 * @return createUser
+	 **/
+	@javax.annotation.Nullable
+
+	public String getCreateUser() {
+		return createUser;
+	}
+
+	public void setCreateUser(String createUser) {
+		this.createUser = createUser;
+	}
+
+	public WorkFlowResponseDTO endDate(String endDate) {
+
+		this.endDate = endDate;
+		return this;
+	}
+
+	/**
+	 * Get endDate
+	 * @return endDate
+	 **/
+	@javax.annotation.Nullable
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+	public WorkFlowResponseDTO projectId(UUID projectId) {
+
+		this.projectId = projectId;
+		return this;
+	}
+
+	/**
+	 * Get projectId
+	 * @return projectId
+	 **/
+	@javax.annotation.Nullable
+
+	public UUID getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(UUID projectId) {
+		this.projectId = projectId;
+	}
+
+	public WorkFlowResponseDTO startDate(String startDate) {
+
+		this.startDate = startDate;
+		return this;
+	}
+
+	/**
+	 * Get startDate
+	 * @return startDate
+	 **/
+	@javax.annotation.Nullable
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
 	public WorkFlowResponseDTO workFlowExecutionId(UUID workFlowExecutionId) {
 
 		this.workFlowExecutionId = workFlowExecutionId;
@@ -143,6 +248,26 @@ public class WorkFlowResponseDTO {
 
 	public void setWorkFlowExecutionId(UUID workFlowExecutionId) {
 		this.workFlowExecutionId = workFlowExecutionId;
+	}
+
+	public WorkFlowResponseDTO workFlowName(String workFlowName) {
+
+		this.workFlowName = workFlowName;
+		return this;
+	}
+
+	/**
+	 * Get workFlowName
+	 * @return workFlowName
+	 **/
+	@javax.annotation.Nullable
+
+	public String getWorkFlowName() {
+		return workFlowName;
+	}
+
+	public void setWorkFlowName(String workFlowName) {
+		this.workFlowName = workFlowName;
 	}
 
 	public WorkFlowResponseDTO workFlowOptions(WorkFlowOptions workFlowOptions) {
@@ -194,21 +319,32 @@ public class WorkFlowResponseDTO {
 			return false;
 		}
 		WorkFlowResponseDTO workFlowResponseDTO = (WorkFlowResponseDTO) o;
-		return Objects.equals(this.workFlowExecutionId, workFlowResponseDTO.workFlowExecutionId)
+		return Objects.equals(this.createUser, workFlowResponseDTO.createUser)
+				&& Objects.equals(this.endDate, workFlowResponseDTO.endDate)
+				&& Objects.equals(this.projectId, workFlowResponseDTO.projectId)
+				&& Objects.equals(this.startDate, workFlowResponseDTO.startDate)
+				&& Objects.equals(this.workFlowExecutionId, workFlowResponseDTO.workFlowExecutionId)
+				&& Objects.equals(this.workFlowName, workFlowResponseDTO.workFlowName)
 				&& Objects.equals(this.workFlowOptions, workFlowResponseDTO.workFlowOptions)
 				&& Objects.equals(this.workStatus, workFlowResponseDTO.workStatus);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(workFlowExecutionId, workFlowOptions, workStatus);
+		return Objects.hash(createUser, endDate, projectId, startDate, workFlowExecutionId, workFlowName,
+				workFlowOptions, workStatus);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("class WorkFlowResponseDTO {\n");
+		sb.append("    createUser: ").append(toIndentedString(createUser)).append("\n");
+		sb.append("    endDate: ").append(toIndentedString(endDate)).append("\n");
+		sb.append("    projectId: ").append(toIndentedString(projectId)).append("\n");
+		sb.append("    startDate: ").append(toIndentedString(startDate)).append("\n");
 		sb.append("    workFlowExecutionId: ").append(toIndentedString(workFlowExecutionId)).append("\n");
+		sb.append("    workFlowName: ").append(toIndentedString(workFlowName)).append("\n");
 		sb.append("    workFlowOptions: ").append(toIndentedString(workFlowOptions)).append("\n");
 		sb.append("    workStatus: ").append(toIndentedString(workStatus)).append("\n");
 		sb.append("}");
@@ -233,7 +369,12 @@ public class WorkFlowResponseDTO {
 	static {
 		// a set of all properties/fields (JSON key names)
 		openapiFields = new HashSet<String>();
+		openapiFields.add("createUser");
+		openapiFields.add("endDate");
+		openapiFields.add("projectId");
+		openapiFields.add("startDate");
 		openapiFields.add("workFlowExecutionId");
+		openapiFields.add("workFlowName");
 		openapiFields.add("workFlowOptions");
 		openapiFields.add("workStatus");
 
@@ -267,11 +408,41 @@ public class WorkFlowResponseDTO {
 						entry.getKey(), jsonObj.toString()));
 			}
 		}
+		if ((jsonObj.get("createUser") != null && !jsonObj.get("createUser").isJsonNull())
+				&& !jsonObj.get("createUser").isJsonPrimitive()) {
+			throw new IllegalArgumentException(String.format(
+					"Expected the field `createUser` to be a primitive type in the JSON string but got `%s`",
+					jsonObj.get("createUser").toString()));
+		}
+		if ((jsonObj.get("endDate") != null && !jsonObj.get("endDate").isJsonNull())
+				&& !jsonObj.get("endDate").isJsonPrimitive()) {
+			throw new IllegalArgumentException(
+					String.format("Expected the field `endDate` to be a primitive type in the JSON string but got `%s`",
+							jsonObj.get("endDate").toString()));
+		}
+		if ((jsonObj.get("projectId") != null && !jsonObj.get("projectId").isJsonNull())
+				&& !jsonObj.get("projectId").isJsonPrimitive()) {
+			throw new IllegalArgumentException(String.format(
+					"Expected the field `projectId` to be a primitive type in the JSON string but got `%s`",
+					jsonObj.get("projectId").toString()));
+		}
+		if ((jsonObj.get("startDate") != null && !jsonObj.get("startDate").isJsonNull())
+				&& !jsonObj.get("startDate").isJsonPrimitive()) {
+			throw new IllegalArgumentException(String.format(
+					"Expected the field `startDate` to be a primitive type in the JSON string but got `%s`",
+					jsonObj.get("startDate").toString()));
+		}
 		if ((jsonObj.get("workFlowExecutionId") != null && !jsonObj.get("workFlowExecutionId").isJsonNull())
 				&& !jsonObj.get("workFlowExecutionId").isJsonPrimitive()) {
 			throw new IllegalArgumentException(String.format(
 					"Expected the field `workFlowExecutionId` to be a primitive type in the JSON string but got `%s`",
 					jsonObj.get("workFlowExecutionId").toString()));
+		}
+		if ((jsonObj.get("workFlowName") != null && !jsonObj.get("workFlowName").isJsonNull())
+				&& !jsonObj.get("workFlowName").isJsonPrimitive()) {
+			throw new IllegalArgumentException(String.format(
+					"Expected the field `workFlowName` to be a primitive type in the JSON string but got `%s`",
+					jsonObj.get("workFlowName").toString()));
 		}
 		// validate the optional field `workFlowOptions`
 		if (jsonObj.get("workFlowOptions") != null && !jsonObj.get("workFlowOptions").isJsonNull()) {

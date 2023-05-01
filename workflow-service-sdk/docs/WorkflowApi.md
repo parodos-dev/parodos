@@ -6,6 +6,7 @@ All URIs are relative to *http://localhost:8080*
 |------------- | ------------- | -------------|
 | [**execute**](WorkflowApi.md#execute) | **POST** /api/v1/workflows | Executes a workflow |
 | [**getStatus**](WorkflowApi.md#getStatus) | **GET** /api/v1/workflows/{workFlowExecutionId}/status | Returns a workflow status |
+| [**getStatusByProjectId**](WorkflowApi.md#getStatusByProjectId) | **GET** /api/v1/workflows | Returns workflows by project id |
 | [**getWorkflowParameters**](WorkflowApi.md#getWorkflowParameters) | **GET** /api/v1/workflows/{workFlowExecutionId}/context | Returns workflow context parameters |
 | [**updateWorkFlowCheckerTaskStatus**](WorkflowApi.md#updateWorkFlowCheckerTaskStatus) | **POST** /api/v1/workflows/{workFlowExecutionId}/checkers/{workFlowCheckerTaskName} | Updates a workflow checker task status |
 
@@ -117,6 +118,68 @@ public class Example {
 ### Return type
 
 [**WorkFlowStatusResponseDTO**](WorkFlowStatusResponseDTO.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Succeeded |  -  |
+| **401** | Unauthorized |  -  |
+| **403** | Forbidden |  -  |
+
+<a name="getStatusByProjectId"></a>
+# **getStatusByProjectId**
+> GetStatusByProjectId200Response getStatusByProjectId(projectId)
+
+Returns workflows by project id
+
+### Example
+```java
+// Import classes:
+import com.redhat.parodos.sdk.invoker.ApiClient;
+import com.redhat.parodos.sdk.invoker.ApiException;
+import com.redhat.parodos.sdk.invoker.Configuration;
+import com.redhat.parodos.sdk.invoker.models.*;
+import com.redhat.parodos.sdk.api.WorkflowApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("http://localhost:8080");
+
+    WorkflowApi apiInstance = new WorkflowApi(defaultClient);
+    UUID projectId = UUID.randomUUID(); // UUID | 
+    try {
+      GetStatusByProjectId200Response result = apiInstance.getStatusByProjectId(projectId);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling WorkflowApi#getStatusByProjectId");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **projectId** | **UUID**|  | [optional] |
+
+### Return type
+
+[**GetStatusByProjectId200Response**](GetStatusByProjectId200Response.md)
 
 ### Authorization
 

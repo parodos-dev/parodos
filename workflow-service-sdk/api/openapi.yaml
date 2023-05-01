@@ -203,6 +203,32 @@ paths:
       x-content-type: application/json
       x-accepts: application/json
   /api/v1/workflows:
+    get:
+      operationId: getStatusByProjectId
+      parameters:
+      - explode: true
+        in: query
+        name: projectId
+        required: false
+        schema:
+          format: uuid
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getStatusByProjectId_200_response'
+          description: Succeeded
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+      summary: Returns workflows by project id
+      tags:
+      - Workflow
+      x-accepts: application/json
     post:
       operationId: execute
       requestBody:
@@ -921,6 +947,7 @@ components:
     WorkFlowResponseDTO:
       example:
         workStatus: FAILED
+        workFlowName: workFlowName
         workFlowOptions:
           continuationOptions:
           - identifier: identifier
@@ -1006,10 +1033,25 @@ components:
             details:
             - details
             - details
+        endDate: endDate
         workFlowExecutionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        createUser: createUser
+        projectId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        startDate: startDate
       properties:
+        createUser:
+          type: string
+        endDate:
+          type: string
+        projectId:
+          format: uuid
+          type: string
+        startDate:
+          type: string
         workFlowExecutionId:
           format: uuid
+          type: string
+        workFlowName:
           type: string
         workFlowOptions:
           $ref: '#/components/schemas/WorkFlowOptions'
@@ -1117,4 +1159,7 @@ components:
     updateParameter_200_response:
       allOf:
       - $ref: '#/components/schemas/WorkParameterValueResponseDTO'
+    getStatusByProjectId_200_response:
+      allOf:
+      - $ref: '#/components/schemas/WorkFlowStatusResponseDTO'
 

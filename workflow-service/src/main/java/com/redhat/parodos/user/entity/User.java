@@ -39,7 +39,7 @@ import lombok.Setter;
  * @author Annel Ketcha (Github: anludke)
  */
 
-@Entity(name = "user")
+@Entity(name = "users")
 @Builder
 @Getter
 @Setter

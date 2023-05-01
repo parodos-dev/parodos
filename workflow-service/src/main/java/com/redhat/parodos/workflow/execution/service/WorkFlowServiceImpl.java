@@ -15,6 +15,9 @@
  */
 package com.redhat.parodos.workflow.execution.service;
 
+import com.redhat.parodos.project.dto.ProjectResponseDTO;
+import com.redhat.parodos.project.service.ProjectService;
+import com.redhat.parodos.security.SecurityUtils;
 import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowContextResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowOptionsResponseDTO;
@@ -33,6 +36,7 @@ import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.exceptions.WorkflowPersistenceFailedException;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
+import com.redhat.parodos.workflow.execution.dto.WorkFlowResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
@@ -48,6 +52,7 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
+import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -74,6 +79,8 @@ import static java.util.Objects.isNull;
 @Service
 public class WorkFlowServiceImpl implements WorkFlowService {
 
+	private final ProjectService projectService;
+
 	private final WorkFlowDelegate workFlowDelegate;
 
 	private final WorkFlowServiceDelegate workFlowServiceDelegate;
@@ -96,7 +103,8 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 			WorkFlowDefinitionRepository workFlowDefinitionRepository,
 			WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository, WorkFlowRepository workFlowRepository,
 			WorkFlowTaskRepository workFlowTaskRepository, WorkFlowWorkRepository workFlowWorkRepository,
-			WorkFlowDefinitionService workFlowDefinitionService, MeterRegistry metricRegistry) {
+			WorkFlowDefinitionService workFlowDefinitionService, MeterRegistry metricRegistry,
+			ProjectService projectService, ModelMapper modelMapper) {
 		this.workFlowDelegate = workFlowDelegate;
 		this.workFlowServiceDelegate = workFlowServiceDelegate;
 		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
@@ -106,6 +114,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		this.workFlowWorkRepository = workFlowWorkRepository;
 		this.workFlowDefinitionService = workFlowDefinitionService;
 		this.metricRegistry = metricRegistry;
+		this.projectService = projectService;
 	}
 
 	private void statusCounterWithStatus(WorkFlowStatus status) {
@@ -170,6 +179,24 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	public synchronized WorkFlowExecution updateWorkFlow(WorkFlowExecution workFlowExecution) {
 		this.statusCounterWithStatus(workFlowExecution.getStatus());
 		return workFlowRepository.save(workFlowExecution);
+	}
+
+	@Override
+	public List<WorkFlowResponseDTO> getWorkFlowsByProjectId(UUID projectId) {
+		ProjectResponseDTO project = projectService.getProjectByIdAndUsername(projectId, SecurityUtils.getUsername());
+		return workFlowRepository.findAllByProjectId(project.getId()).stream()
+				.filter(workFlowExecution -> workFlowExecution.getMainWorkFlowExecution() == null)
+				.map(this::buildWorkflowResponseDTO).toList();
+	}
+
+	@Override
+	public List<WorkFlowResponseDTO> getWorkFlows() {
+		List<ProjectResponseDTO> projects = projectService.findProjectsByUserName(SecurityUtils.getUsername());
+		return projects.stream()
+				.flatMap(project -> workFlowRepository.findAllByProjectId(project.getId()).stream()
+						.filter(workFlowExecution -> workFlowExecution.getMainWorkFlowExecution() == null)
+						.map(this::buildWorkflowResponseDTO))
+				.toList();
 	}
 
 	@Override
@@ -334,6 +361,17 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	@PreDestroy
 	public void gracefulShutdown() {
 		log.info(">> Shutting down the workflow service");
+	}
+
+	private WorkFlowResponseDTO buildWorkflowResponseDTO(WorkFlowExecution workflowExecution) {
+		return WorkFlowResponseDTO.builder().workFlowExecutionId(workflowExecution.getId())
+				.projectId(workflowExecution.getProjectId())
+				.workFlowName(workFlowDefinitionService
+						.getWorkFlowDefinitionById(workflowExecution.getWorkFlowDefinitionId()).getName())
+				.workStatus(WorkStatus.valueOf(workflowExecution.getStatus().name()))
+				.startDate(Optional.ofNullable(workflowExecution.getStartDate()).map(Date::toString).orElse(null))
+				.endDate(Optional.ofNullable(workflowExecution.getEndDate()).map(Date::toString).orElse(null))
+				.createUser(SecurityUtils.getUsername()).build();
 	}
 
 }

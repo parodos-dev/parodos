@@ -117,6 +117,7 @@ Class | Method | HTTP request | Description
 *ProjectApi* | [**getProjects**](docs/ProjectApi.md#getProjects) | **GET** /api/v1/projects | Returns a list of project
 *WorkflowApi* | [**execute**](docs/WorkflowApi.md#execute) | **POST** /api/v1/workflows | Executes a workflow
 *WorkflowApi* | [**getStatus**](docs/WorkflowApi.md#getStatus) | **GET** /api/v1/workflows/{workFlowExecutionId}/status | Returns a workflow status
+*WorkflowApi* | [**getStatusByProjectId**](docs/WorkflowApi.md#getStatusByProjectId) | **GET** /api/v1/workflows | Returns workflows by project id
 *WorkflowApi* | [**getWorkflowParameters**](docs/WorkflowApi.md#getWorkflowParameters) | **GET** /api/v1/workflows/{workFlowExecutionId}/context | Returns workflow context parameters
 *WorkflowApi* | [**updateWorkFlowCheckerTaskStatus**](docs/WorkflowApi.md#updateWorkFlowCheckerTaskStatus) | **POST** /api/v1/workflows/{workFlowExecutionId}/checkers/{workFlowCheckerTaskName} | Updates a workflow checker task status
 *WorkflowDefinitionApi* | [**getWorkFlowDefinitionById**](docs/WorkflowDefinitionApi.md#getWorkFlowDefinitionById) | **GET** /api/v1/workflowdefinitions/{id} | Returns information about a workflow definition by id
@@ -127,6 +128,7 @@ Class | Method | HTTP request | Description
 ## Documentation for Models
 
  - [ArgumentRequestDTO](docs/ArgumentRequestDTO.md)
+ - [GetStatusByProjectId200Response](docs/GetStatusByProjectId200Response.md)
  - [ProjectRequestDTO](docs/ProjectRequestDTO.md)
  - [ProjectResponseDTO](docs/ProjectResponseDTO.md)
  - [UpdateParameter200Response](docs/UpdateParameter200Response.md)
