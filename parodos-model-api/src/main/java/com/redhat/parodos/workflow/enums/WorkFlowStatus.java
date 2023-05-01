@@ -26,12 +26,4 @@ public enum WorkFlowStatus {
 
 	FAILED, IN_PROGRESS, COMPLETED, PENDING, REJECTED;
 
-	public boolean isFailed() {
-		return FAILED.name().equals(name());
-	}
-
-	public boolean isRejected() {
-		return REJECTED.name().equals(name());
-	}
-
 }
