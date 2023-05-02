@@ -153,7 +153,7 @@ class ProjectServiceImplTest {
 		assertEquals(argument.getValue().getName(), "dto");
 
 		assertNotNull(res);
-		assertEquals(res.getId(), project.getId().toString());
+		assertEquals(res.getId(), project.getId());
 	}
 
 }

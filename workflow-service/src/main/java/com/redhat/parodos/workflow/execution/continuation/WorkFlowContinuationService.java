@@ -29,6 +29,6 @@ public interface WorkFlowContinuationService {
 
 	void workFlowRunAfterStartup();
 
-	void continueWorkFlow(String projectId, String workflowName, WorkContext workContext, UUID executionId);
+	void continueWorkFlow(UUID projectId, String workflowName, WorkContext workContext, UUID executionId);
 
 }

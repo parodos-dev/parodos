@@ -1,5 +1,11 @@
 package com.redhat.parodos.workflow.execution.controller;
 
+import java.util.List;
+import java.util.UUID;
+
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.ControllerMockClient;
@@ -29,11 +35,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.UUID;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-
 @SpringBootTest
 @DirtiesContext
 @AutoConfigureMockMvc
@@ -59,7 +60,7 @@ class WorkFlowControllerTest extends ControllerMockClient {
 	public void ExecuteWithValidData() throws Exception {
 
 		// given
-		WorkFlowRequestDTO workFlowRequestDTO = WorkFlowRequestDTO.builder().projectId(UUID.randomUUID().toString())
+		WorkFlowRequestDTO workFlowRequestDTO = WorkFlowRequestDTO.builder().projectId(UUID.randomUUID())
 				.workFlowName("FooWorkFlow").build();
 
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -85,7 +86,7 @@ class WorkFlowControllerTest extends ControllerMockClient {
 	@Test
 	public void ServiceExecuteFails() throws Exception {
 		// given
-		WorkFlowRequestDTO workFlowRequestDTO = WorkFlowRequestDTO.builder().projectId(UUID.randomUUID().toString())
+		WorkFlowRequestDTO workFlowRequestDTO = WorkFlowRequestDTO.builder().projectId(UUID.randomUUID())
 				.workFlowName("FooWorkFlow").build();
 
 		ObjectMapper objectMapper = new ObjectMapper();

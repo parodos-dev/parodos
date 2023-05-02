@@ -113,7 +113,7 @@ class WorkFlowServiceImplTest {
 				.thenReturn(this.sampleWorkflowDefinition("test"));
 
 		// when
-		WorkReport report = this.workFlowService.execute("test-project", "test-workflow", new WorkContext(),
+		WorkReport report = this.workFlowService.execute(UUID.randomUUID(), "test-workflow", new WorkContext(),
 				UUID.randomUUID());
 		// then
 		assertNotNull(report);
@@ -134,7 +134,7 @@ class WorkFlowServiceImplTest {
 		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName(Mockito.any())).thenReturn(null);
 
 		// when
-		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId("test-project")
+		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId(UUID.randomUUID())
 				.works(List.of()).workFlowName("test-workflow").build());
 		// then
 		assertNotNull(report);
@@ -167,7 +167,7 @@ class WorkFlowServiceImplTest {
 		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
 
 		// when
-		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId("test-project")
+		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId(UUID.randomUUID())
 				.works(List.of()).workFlowName("test-workflow").build());
 		// then
 		assertNotNull(report);
@@ -194,7 +194,7 @@ class WorkFlowServiceImplTest {
 		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
 
 		// when
-		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId("test-project")
+		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId(UUID.randomUUID())
 				.works(List.of()).workFlowName("test-workflow").build());
 		// then
 		assertNotNull(report);
@@ -217,7 +217,7 @@ class WorkFlowServiceImplTest {
 		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
 
 		// when
-		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId("test-project")
+		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId(UUID.randomUUID())
 				.works(List.of()).workFlowName("test-workflow").build());
 		// then
 		assertNotNull(report);

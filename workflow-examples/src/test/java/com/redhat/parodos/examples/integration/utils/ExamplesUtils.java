@@ -167,7 +167,7 @@ public final class ExamplesUtils {
 			String projectName, String projectDescription) {
 		return projects.stream()
 				.filter(prj -> projectName.equals(prj.getName()) && projectDescription.equals(prj.getDescription())
-						&& prj.getUsername() == null && !Strings.isNullOrEmpty(prj.getId()))
+						&& prj.getUsername() == null && prj.getId() == null)
 				.findAny().orElse(null);
 	}
 

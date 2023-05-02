@@ -134,7 +134,7 @@ public class WorkFlowExecutionInterceptorTest {
 		verify(workFlowService, Mockito.times(0)).saveWorkFlow(any(UUID.class), any(UUID.class),
 				eq(WorkFlowStatus.IN_PROGRESS), any(), anyString());
 		verify(workFlowSchedulerService, Mockito.times(1)).stop(Mockito.any(), Mockito.any(WorkFlow.class));
-		verify(workFlowContinuationServiceImpl, Mockito.times(1)).continueWorkFlow(Mockito.anyString(),
+		verify(workFlowContinuationServiceImpl, Mockito.times(1)).continueWorkFlow(Mockito.any(UUID.class),
 				Mockito.anyString(), Mockito.any(WorkContext.class), Mockito.any(UUID.class));
 		assertEquals(result.getStatus(), report.getStatus());
 	}

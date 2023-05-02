@@ -68,14 +68,14 @@ public class WorkFlowContinuationServiceImpl implements WorkFlowContinuationServ
 					.findById(workFlowExecution.getWorkFlowDefinitionId()).get();
 
 			// continue with the same execution id
-			continueWorkFlow(workFlowExecution.getProjectId().toString(), workFlowDefinition.getName(),
+			continueWorkFlow(workFlowExecution.getProjectId(), workFlowDefinition.getName(),
 					workFlowExecution.getWorkFlowExecutionContext().getWorkContext(), workFlowExecution.getId());
 
 			// TODO: continue 'FAILED' Checkers in this main workflow execution
 		});
 	}
 
-	public void continueWorkFlow(String projectId, String workflowName, WorkContext workContext, UUID executionId) {
+	public void continueWorkFlow(UUID projectId, String workflowName, WorkContext workContext, UUID executionId) {
 		asyncWorkFlowContinuerImpl.executeAsync(projectId, workflowName, workContext, executionId);
 	}
 

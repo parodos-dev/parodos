@@ -15,6 +15,10 @@
  */
 package com.redhat.parodos.workflow.execution.aspect;
 
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
@@ -40,10 +44,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * Aspect pointcut to perform state management for a workflow task executions
@@ -170,7 +170,7 @@ public class WorkFlowTaskExecutionAspect {
 			// schedule workflow checker for dynamic run on cron expression
 			List<WorkFlow> checkerWorkFlows = ((BaseWorkFlowTask) proceedingJoinPoint.getTarget())
 					.getWorkFlowCheckers();
-			startCheckerOnSchedule(mainWorkFlowExecution.getProjectId().toString(),
+			startCheckerOnSchedule(mainWorkFlowExecution.getProjectId(),
 					workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition().getCheckWorkFlow().getName(),
 					checkerWorkFlows, workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition(), workContext);
 		}
@@ -188,7 +188,7 @@ public class WorkFlowTaskExecutionAspect {
 
 	// Iterate through the all the Checkers in the workflow and start them based on their
 	// schedules
-	private void startCheckerOnSchedule(String projectId, String workFlowName, List<WorkFlow> workFlows,
+	private void startCheckerOnSchedule(UUID projectId, String workFlowName, List<WorkFlow> workFlows,
 			WorkFlowCheckerMappingDefinition workFlowCheckerMappingDefinition, WorkContext workContext) {
 		log.info("Schedule workflow checker: {} to run per cron expression: {}", workFlowName,
 				workFlowCheckerMappingDefinition.getCronExpression());

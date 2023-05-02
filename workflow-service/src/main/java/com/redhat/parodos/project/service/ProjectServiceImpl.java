@@ -74,14 +74,11 @@ public class ProjectServiceImpl implements ProjectService {
 		return projects.stream().map(project -> {
 			WorkFlowExecution workFlowExecution = workFlowRepository
 					.findFirstByProjectIdAndMainWorkFlowExecutionIsNullOrderByStartDateDesc(project.getId());
-			return ProjectResponseDTO.builder().id(project.getId().toString()).name(project.getName())
+			return ProjectResponseDTO.builder().id(project.getId()).name(project.getName())
 					.createDate(project.getCreateDate()).modifyDate(project.getModifyDate())
 					.description(project.getDescription())
 					.status(null == workFlowExecution ? "" : workFlowExecution.getStatus().name()).build();
 		}).collect(Collectors.toList());
-		// return modelMapper.map(projectRepository.findAll(), new
-		// TypeToken<List<ProjectResponseDTO>>() {
-		// }.getType());
 	}
 
 }

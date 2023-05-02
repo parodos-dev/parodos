@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 import com.redhat.parodos.workflows.work.WorkContext;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,7 +16,7 @@ public class AsyncWorkFlowContinuerImpl implements AsyncWorkFlowContinuer {
 	}
 
 	@Override
-	public void executeAsync(String projectId, String workflowName, WorkContext workContext, UUID executionId) {
+	public void executeAsync(UUID projectId, String workflowName, WorkContext workContext, UUID executionId) {
 		workFlowService.execute(projectId, workflowName, workContext, executionId);
 	}
 

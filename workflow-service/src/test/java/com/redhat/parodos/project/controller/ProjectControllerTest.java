@@ -1,5 +1,8 @@
 package com.redhat.parodos.project.controller;
 
+import java.util.List;
+import java.util.UUID;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.ControllerMockClient;
 import com.redhat.parodos.project.dto.ProjectRequestDTO;
@@ -17,9 +20,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import java.util.List;
-import java.util.UUID;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -54,7 +54,7 @@ public class ProjectControllerTest extends ControllerMockClient {
 		mockMvc.perform(this.postRequestWithValidCredentials("/api/v1/projects/").content(json)
 				.contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isCreated())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(response.getId())))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(response.getId().toString())))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.is(response.getName())));
 
 		// Then
@@ -87,9 +87,9 @@ public class ProjectControllerTest extends ControllerMockClient {
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)))
-				.andExpect(MockMvcResultMatchers.jsonPath("$[0].id", Matchers.is(project1DTO.getId())))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[0].id", Matchers.is(project1DTO.getId().toString())))
 				.andExpect(MockMvcResultMatchers.jsonPath("$[0].name", Matchers.is(project1DTO.getName())))
-				.andExpect(MockMvcResultMatchers.jsonPath("$[1].id", Matchers.is(project2DTO.getId())))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[1].id", Matchers.is(project2DTO.getId().toString())))
 				.andExpect(MockMvcResultMatchers.jsonPath("$[1].name", Matchers.is(project2DTO.getName())));
 
 		// Then
@@ -106,15 +106,15 @@ public class ProjectControllerTest extends ControllerMockClient {
 	}
 
 	@Test
-	public void testGetProjectbyIdWithValidID() throws Exception {
+	public void testGetProjectByIdWithValidID() throws Exception {
 		ProjectResponseDTO project1DTO = createSampleProject(PROJECT_NAME_1);
-		Mockito.when(projectService.getProjectById(UUID.fromString(project1DTO.getId()))).thenReturn(project1DTO);
+		Mockito.when(projectService.getProjectById(project1DTO.getId())).thenReturn(project1DTO);
 
 		// When
 		mockMvc.perform(this.getRequestWithValidCredentials(String.format("/api/v1/projects/%s", project1DTO.getId())))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(project1DTO.getId())))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(project1DTO.getId().toString())))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.is(project1DTO.getName())));
 
 		// Then
@@ -122,7 +122,7 @@ public class ProjectControllerTest extends ControllerMockClient {
 	}
 
 	@Test
-	public void testGetProjectbyIdWithInValidID() throws Exception {
+	public void testGetProjectByIdWithInvalidID() throws Exception {
 		Mockito.when(projectService.getProjectById(Mockito.any())).thenReturn(null);
 
 		// When
@@ -144,7 +144,7 @@ public class ProjectControllerTest extends ControllerMockClient {
 
 	ProjectResponseDTO createSampleProject(String name) {
 		ProjectResponseDTO responseDTO = new ProjectResponseDTO();
-		responseDTO.setId(UUID.randomUUID().toString());
+		responseDTO.setId(UUID.randomUUID());
 		responseDTO.setName(name);
 		return responseDTO;
 	}
