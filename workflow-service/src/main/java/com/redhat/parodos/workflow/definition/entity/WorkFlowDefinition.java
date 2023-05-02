@@ -56,7 +56,7 @@ import java.util.List;
 @TypeDef(name = "json", typeClass = JsonType.class)
 public class WorkFlowDefinition extends AbstractEntity {
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String name;
 
 	@Enumerated(EnumType.STRING)

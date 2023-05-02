@@ -10,7 +10,9 @@
             <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="username" type="varchar(255)"/>
+            <column name="username" type="varchar(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
             <column name="password" type="varchar(255)"/>
             <column name="authority" type="varchar(255)"/>
             <column name="enabled" type="tinyint"/>
@@ -27,7 +29,9 @@
             <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="name" type="varchar(255)"/>
+            <column name="name" type="varchar(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
             <column name="description" type="varchar(255)"/>
             <column name="create_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="modify_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>

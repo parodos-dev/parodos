@@ -15,13 +15,14 @@
  */
 package com.redhat.parodos.project.entity;
 
-import com.redhat.parodos.user.entity.User;
-import com.redhat.parodos.common.AbstractEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.util.Date;
+
+import com.redhat.parodos.common.AbstractEntity;
+import com.redhat.parodos.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,6 +43,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Project extends AbstractEntity {
 
+	@Column(unique = true)
 	private String name;
 
 	private String description;

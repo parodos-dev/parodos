@@ -15,12 +15,14 @@
  */
 package com.redhat.parodos.user.service;
 
+import java.util.Optional;
 import java.util.UUID;
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
+
 import com.redhat.parodos.user.dto.UserResponseDTO;
 import com.redhat.parodos.user.entity.User;
 import com.redhat.parodos.user.repository.UserRepository;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 
 /**
  * User service implementation
@@ -54,7 +56,11 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserResponseDTO getUserByUsername(String username) {
-		return modelMapper.map(userRepository.findByUsername(username).stream().findFirst(), UserResponseDTO.class);
+		Optional<User> user = userRepository.findByUsername(username);
+		if (!user.isPresent()) {
+			throw new RuntimeException(String.format("User with username: %s not found", username));
+		}
+		return modelMapper.map(user.get(), UserResponseDTO.class);
 	}
 
 }

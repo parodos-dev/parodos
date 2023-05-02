@@ -8,38 +8,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.redhat.parodos.project.entity.Project;
+import com.redhat.parodos.repository.RepositoryTestBase;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionContext;
 import com.redhat.parodos.workflows.work.WorkContext;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
+import org.junit.jupiter.api.Test;
 
-@RunWith(SpringRunner.class)
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Transactional
-public class WorkFlowRepositoryTest {
-
-	@Autowired
-	private WorkFlowRepository workFlowRepository;
-
-	@Autowired
-	private TestEntityManager entityManager;
-
-	@Test
-	public void injectedComponentsAreNotNull() {
-		assertNotNull(workFlowRepository);
-		assertNotNull(entityManager);
-	}
+public class WorkFlowRepositoryTest extends RepositoryTestBase {
 
 	@Test
 	public void testFindAll() {

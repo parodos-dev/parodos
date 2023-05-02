@@ -15,8 +15,10 @@
  */
 package com.redhat.parodos.project.service;
 
+import javax.persistence.EntityExistsException;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -54,6 +56,11 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Override
 	public ProjectResponseDTO save(ProjectRequestDTO projectRequestDTO) {
+		Optional<Project> projectByName = projectRepository.findByNameIgnoreCase(projectRequestDTO.getName());
+		if (projectByName.isPresent()) {
+			throw new EntityExistsException(
+					String.format("Project with name: %s already exists", projectByName.get().getName()));
+		}
 		// get user from security utils and set on project
 		Project project = projectRepository.save(Project.builder().name(projectRequestDTO.getName())
 				.description(projectRequestDTO.getDescription()).createDate(new Date()).modifyDate(new Date()).build());
