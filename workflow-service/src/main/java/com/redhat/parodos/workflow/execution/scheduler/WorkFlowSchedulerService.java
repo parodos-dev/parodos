@@ -15,6 +15,8 @@
  */
 package com.redhat.parodos.workflow.execution.scheduler;
 
+import java.util.UUID;
+
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 
@@ -27,8 +29,8 @@ import com.redhat.parodos.workflows.workflow.WorkFlow;
 
 public interface WorkFlowSchedulerService {
 
-	void schedule(String projectId, WorkFlow workFlow, WorkContext workContext, String cronExpression);
+	void schedule(UUID projectId, WorkFlow workFlow, WorkContext workContext, String cronExpression);
 
-	boolean stop(String projectId, WorkFlow workFlow);
+	boolean stop(UUID projectId, WorkFlow workFlow);
 
 }

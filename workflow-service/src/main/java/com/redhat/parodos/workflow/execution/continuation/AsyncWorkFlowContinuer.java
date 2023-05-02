@@ -8,6 +8,6 @@ import org.springframework.scheduling.annotation.Async;
 public interface AsyncWorkFlowContinuer {
 
 	@Async
-	void executeAsync(String projectId, String workflowName, WorkContext workContext, UUID executionId);
+	void executeAsync(UUID projectId, String workflowName, WorkContext workContext, UUID executionId);
 
 }

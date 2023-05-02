@@ -1,5 +1,10 @@
 package com.redhat.parodos.workflow.execution.scheduler;
 
+import java.util.UUID;
+import java.util.concurrent.ScheduledFuture;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
@@ -8,11 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
-
-import java.util.UUID;
-import java.util.concurrent.ScheduledFuture;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class WorkFlowSchedulerServiceImplTest {
 
@@ -43,7 +43,7 @@ class WorkFlowSchedulerServiceImplTest {
 		Mockito.when(this.taskScheduler.schedule(Mockito.any(Runnable.class), Mockito.any(CronTrigger.class)))
 				.thenReturn(null);
 		// when
-		this.service.schedule(UUID.randomUUID().toString(), this.workFlow, new WorkContext(), CRON_EXPRESSION);
+		this.service.schedule(UUID.randomUUID(), this.workFlow, new WorkContext(), CRON_EXPRESSION);
 		// then
 		Mockito.verify(this.taskScheduler, Mockito.times(1)).schedule(Mockito.any(Runnable.class),
 				Mockito.any(CronTrigger.class));
@@ -51,7 +51,7 @@ class WorkFlowSchedulerServiceImplTest {
 
 	@Test
 	void workFlowIsNotScheduledTwice() {
-		String projectId = UUID.randomUUID().toString();
+		UUID projectId = UUID.randomUUID();
 		// given
 		Mockito.when(this.taskScheduler.schedule(Mockito.any(Runnable.class), Mockito.any(CronTrigger.class)))
 				.thenReturn(null);
@@ -68,7 +68,7 @@ class WorkFlowSchedulerServiceImplTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	void workFlowCanBeCancel() {
-		String projectId = UUID.randomUUID().toString();
+		UUID projectId = UUID.randomUUID();
 		// given
 		var mockScheduledFuture = Mockito.mock(ScheduledFuture.class);
 		Mockito.when(mockScheduledFuture.cancel(false)).thenReturn(true);
@@ -90,7 +90,7 @@ class WorkFlowSchedulerServiceImplTest {
 		ScheduledFuture mockScheduledFuture = Mockito.mock(ScheduledFuture.class);
 		Mockito.when(mockScheduledFuture.cancel(Mockito.anyBoolean())).thenReturn(true);
 		// when
-		boolean res = this.service.stop(UUID.randomUUID().toString(), this.workFlow);
+		boolean res = this.service.stop(UUID.randomUUID(), this.workFlow);
 
 		// then
 		assertFalse(res);

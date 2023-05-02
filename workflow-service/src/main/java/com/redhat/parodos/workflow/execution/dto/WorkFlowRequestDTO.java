@@ -15,8 +15,6 @@
  */
 package com.redhat.parodos.workflow.execution.dto;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +22,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -39,7 +38,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class WorkFlowRequestDTO {
 
-	private String projectId;
+	private UUID projectId;
 
 	private String workFlowName;
 

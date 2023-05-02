@@ -104,7 +104,8 @@
           "name" : "id",
           "required" : true,
           "schema" : {
-            "type" : "string"
+            "type" : "string",
+            "format" : "uuid"
           }
         } ],
         "responses" : {
@@ -458,7 +459,8 @@
             "type" : "string"
           },
           "id" : {
-            "type" : "string"
+            "type" : "string",
+            "format" : "uuid"
           },
           "modifyDate" : {
             "type" : "string",
@@ -706,7 +708,8 @@
             }
           },
           "projectId" : {
-            "type" : "string"
+            "type" : "string",
+            "format" : "uuid"
           },
           "workFlowName" : {
             "type" : "string"

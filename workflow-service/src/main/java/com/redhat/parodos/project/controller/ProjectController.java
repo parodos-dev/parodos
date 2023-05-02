@@ -15,14 +15,14 @@
  */
 package com.redhat.parodos.project.controller;
 
-import com.redhat.parodos.project.dto.ProjectRequestDTO;
-import com.redhat.parodos.project.dto.ProjectResponseDTO;
-import com.redhat.parodos.project.service.ProjectServiceImpl;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
+import com.redhat.parodos.project.dto.ProjectRequestDTO;
+import com.redhat.parodos.project.dto.ProjectResponseDTO;
+import com.redhat.parodos.project.service.ProjectServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -94,8 +94,8 @@ public class ProjectController {
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Not found", content = @Content) })
 	@GetMapping("/{id}")
-	public ResponseEntity<ProjectResponseDTO> getProjectById(@PathVariable String id) {
-		ProjectResponseDTO projectResponseDTO = projectService.getProjectById(UUID.fromString(id));
+	public ResponseEntity<ProjectResponseDTO> getProjectById(@PathVariable UUID id) {
+		ProjectResponseDTO projectResponseDTO = projectService.getProjectById(id);
 		if (projectResponseDTO == null) {
 			return ResponseEntity.notFound().build();
 		}

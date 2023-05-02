@@ -15,13 +15,15 @@
  */
 package com.redhat.parodos.workflow.execution.scheduler;
 
-import com.redhat.parodos.workflows.work.WorkContext;
-import com.redhat.parodos.workflows.workflow.WorkFlow;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
+
+import com.redhat.parodos.workflows.work.WorkContext;
+import com.redhat.parodos.workflows.workflow.WorkFlow;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
@@ -40,14 +42,14 @@ public class WorkFlowSchedulerServiceImpl implements WorkFlowSchedulerService {
 
 	private final TaskScheduler taskScheduler;
 
-	private final Map<String, Map<String, ScheduledFuture<?>>> hm = new ConcurrentHashMap<>();
+	private final Map<UUID, Map<String, ScheduledFuture<?>>> hm = new ConcurrentHashMap<>();
 
 	public WorkFlowSchedulerServiceImpl(TaskScheduler taskScheduler) {
 		this.taskScheduler = taskScheduler;
 	}
 
 	@Override
-	public void schedule(String projectId, WorkFlow workFlow, WorkContext workContext, String cronExpression) {
+	public void schedule(UUID projectId, WorkFlow workFlow, WorkContext workContext, String cronExpression) {
 		hm.computeIfAbsent(projectId, key -> new HashMap<>());
 		if (!hm.get(projectId).containsKey(workFlow.getName())) {
 			log.info("Scheduling workflow: {} for project: {} to be executed following cron expression: {}",
@@ -62,7 +64,7 @@ public class WorkFlowSchedulerServiceImpl implements WorkFlowSchedulerService {
 	}
 
 	@Override
-	public boolean stop(String projectId, WorkFlow workFlow) {
+	public boolean stop(UUID projectId, WorkFlow workFlow) {
 		if (hm.containsKey(projectId) && hm.get(projectId).containsKey(workFlow.getName())) {
 			log.info("Stopping workflow: {} for project: {}", workFlow.getName(), projectId);
 			boolean stopped = hm.get(projectId).get(workFlow.getName()).cancel(false);

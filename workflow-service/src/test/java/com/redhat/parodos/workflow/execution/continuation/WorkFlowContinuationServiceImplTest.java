@@ -1,5 +1,13 @@
 package com.redhat.parodos.workflow.execution.continuation;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
@@ -16,22 +24,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 class WorkFlowContinuationServiceImplTest {
 
 	private static final String TEST_WORKFLOW = "testWorkFlow";
 
 	private static final String TEST_WORKFLOW_TASK = "testWorkFlowTask";
 
-	private List<WorkFlowStatus> workFlowStatuses = List.of(WorkFlowStatus.IN_PROGRESS, WorkFlowStatus.PENDING);
+	private final List<WorkFlowStatus> workFlowStatuses = List.of(WorkFlowStatus.IN_PROGRESS, WorkFlowStatus.PENDING);
 
 	private WorkFlowDefinitionRepository workFlowDefinitionRepository;
 
@@ -59,7 +58,7 @@ class WorkFlowContinuationServiceImplTest {
 	@Test
 	void workFlowSkipCompletedJobs() {
 		// given
-		Mockito.when(this.workFlowRepository.findByStatusInAndIsMain(workFlowStatuses)).thenReturn(Arrays.asList());
+		Mockito.when(this.workFlowRepository.findByStatusInAndIsMain(workFlowStatuses)).thenReturn(List.of());
 
 		// when
 		this.service.workFlowRunAfterStartup();
@@ -84,8 +83,7 @@ class WorkFlowContinuationServiceImplTest {
 		// then
 		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findByStatusInAndIsMain(workFlowStatuses);
 		Mockito.verify(this.asyncWorkFlowContinuer, Mockito.times(1)).executeAsync(
-				Mockito.eq(workFlowExecution.getProjectId().toString()), Mockito.eq(TEST_WORKFLOW), Mockito.any(),
-				Mockito.any());
+				Mockito.eq(workFlowExecution.getProjectId()), Mockito.eq(TEST_WORKFLOW), Mockito.any(), Mockito.any());
 	}
 
 	@Test
@@ -102,8 +100,7 @@ class WorkFlowContinuationServiceImplTest {
 		// then
 		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findByStatusInAndIsMain(workFlowStatuses);
 		Mockito.verify(this.asyncWorkFlowContinuer, Mockito.times(1)).executeAsync(
-				Mockito.eq(workFlowExecution.getProjectId().toString()), Mockito.eq(TEST_WORKFLOW), Mockito.any(),
-				Mockito.any());
+				Mockito.eq(workFlowExecution.getProjectId()), Mockito.eq(TEST_WORKFLOW), Mockito.any(), Mockito.any());
 	}
 
 	@Test
@@ -132,8 +129,7 @@ class WorkFlowContinuationServiceImplTest {
 		// then
 		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findByStatusInAndIsMain(workFlowStatuses);
 		Mockito.verify(this.asyncWorkFlowContinuer, Mockito.times(1)).executeAsync(
-				Mockito.eq(workFlowExecution.getProjectId().toString()), Mockito.eq(TEST_WORKFLOW), Mockito.any(),
-				Mockito.any());
+				Mockito.eq(workFlowExecution.getProjectId()), Mockito.eq(TEST_WORKFLOW), Mockito.any(), Mockito.any());
 	}
 
 	@Test
@@ -157,9 +153,7 @@ class WorkFlowContinuationServiceImplTest {
 				.executeAsync(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
 
 		// when
-		Exception exception = assertThrows(RuntimeException.class, () -> {
-			this.service.workFlowRunAfterStartup();
-		});
+		Exception exception = assertThrows(RuntimeException.class, () -> this.service.workFlowRunAfterStartup());
 
 		// then
 		assertNotNull(exception);

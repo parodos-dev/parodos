@@ -16,8 +16,8 @@
 package com.redhat.parodos.project.dto;
 
 import java.util.Date;
+import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,7 +36,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProjectResponseDTO {
 
-	private String id;
+	private UUID id;
 
 	private String name;
 

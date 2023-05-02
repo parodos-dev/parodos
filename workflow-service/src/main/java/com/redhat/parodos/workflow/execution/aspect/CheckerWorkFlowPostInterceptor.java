@@ -1,5 +1,7 @@
 package com.redhat.parodos.workflow.execution.aspect;
 
+import java.util.UUID;
+
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
@@ -58,13 +60,13 @@ public class CheckerWorkFlowPostInterceptor implements WorkFlowPostInterceptor {
 		 * cron expression or stop if done
 		 */
 		startOrStopWorkFlowCheckerOnSchedule(workFlow, workFlowDefinition.getCheckerWorkFlowDefinition(), workStatus,
-				workContext, workFlowExecution.getProjectId().toString(), mainWorkFlowExecution);
+				workContext, workFlowExecution.getProjectId(), mainWorkFlowExecution);
 		return null;
 	}
 
 	private void startOrStopWorkFlowCheckerOnSchedule(WorkFlow workFlow,
 			WorkFlowCheckerMappingDefinition workFlowCheckerMappingDefinition, WorkStatus workStatus,
-			WorkContext workContext, String projectId, WorkFlowExecution mainWorkFlowExecution) {
+			WorkContext workContext, UUID projectId, WorkFlowExecution mainWorkFlowExecution) {
 		/*
 		 * if this workflow is a checker, schedule workflow checker for dynamic run on
 		 * cron expression or stop if done
