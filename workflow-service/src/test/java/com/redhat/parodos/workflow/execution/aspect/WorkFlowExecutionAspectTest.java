@@ -3,6 +3,7 @@ package com.redhat.parodos.workflow.execution.aspect;
 import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowWorkDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
@@ -184,17 +185,18 @@ class WorkFlowExecutionAspectTest {
 				.updateWorkFlow(Mockito.argThat(w -> w.getStatus().toString().equals(FAILED)));
 	}
 
-	WorkFlowExecution getSampleWorkFlowExecution() {
+	static WorkFlowExecution getSampleWorkFlowExecution() {
 		return new WorkFlowExecution() {
 			{
 				setId(UUID.randomUUID());
+				setWorkFlowDefinitionId(UUID.randomUUID());
 				setStatus(WorkFlowStatus.IN_PROGRESS);
 				setProjectId(UUID.randomUUID());
 			}
 		};
 	}
 
-	WorkFlowDefinition getSampleWorkFlowDefinition(String name) {
+	static WorkFlowDefinition getSampleWorkFlowDefinition(String name) {
 		WorkFlowCheckerMappingDefinition workFlowCheckerMappingDefinition = WorkFlowCheckerMappingDefinition.builder()
 				.cronExpression(CRON_EXPRESSION).build();
 		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().type(WorkFlowType.CHECKER)

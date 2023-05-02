@@ -69,11 +69,11 @@ public class CheckerWorkFlowPostInterceptor implements WorkFlowPostInterceptor {
 		 * if this workflow is a checker, schedule workflow checker for dynamic run on
 		 * cron expression or stop if done
 		 */
-		if (!workStatus.equals(WorkStatus.COMPLETED)) {
+		if (workStatus != WorkStatus.COMPLETED) {
 			/*
 			 * decide if checker-workflow is rejected by filtering rejected checker-task
 			 */
-			if (!workStatus.equals(WorkStatus.REJECTED)) {
+			if (workStatus != WorkStatus.REJECTED) {
 				log.info("Schedule workflow checker: {} to run per cron expression: {}", workFlow.getName(),
 						workFlowCheckerMappingDefinition.getCronExpression());
 				workFlowSchedulerService.schedule(projectId, workFlow, workContext,

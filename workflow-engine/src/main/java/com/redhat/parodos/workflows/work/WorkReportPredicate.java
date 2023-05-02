@@ -44,9 +44,9 @@ public interface WorkReportPredicate {
 
 	WorkReportPredicate ALWAYS_FALSE = workReport -> false;
 
-	WorkReportPredicate COMPLETED = workReport -> workReport.getStatus().equals(WorkStatus.COMPLETED);
+	WorkReportPredicate COMPLETED = workReport -> workReport.getStatus() == WorkStatus.COMPLETED;
 
-	WorkReportPredicate FAILED = workReport -> workReport.getStatus().equals(WorkStatus.FAILED);
+	WorkReportPredicate FAILED = workReport -> workReport.getStatus() == WorkStatus.FAILED;
 
 	/**
 	 * A predicate that returns true after a given number of times.
