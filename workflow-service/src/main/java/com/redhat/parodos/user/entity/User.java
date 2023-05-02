@@ -15,20 +15,18 @@
  */
 package com.redhat.parodos.user.entity;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import com.nimbusds.jose.shaded.json.annotate.JsonIgnore;
 import com.redhat.parodos.common.AbstractEntity;
 import com.redhat.parodos.project.entity.Project;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -49,6 +47,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class User extends AbstractEntity {
 
+	@Column(unique = true)
 	private String username;
 
 	@JsonIgnore

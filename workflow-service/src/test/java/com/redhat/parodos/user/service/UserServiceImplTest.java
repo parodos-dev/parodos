@@ -1,15 +1,6 @@
 package com.redhat.parodos.user.service;
 
-import com.redhat.parodos.user.dto.UserResponseDTO;
-import com.redhat.parodos.user.entity.User;
-import com.redhat.parodos.user.repository.UserRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.modelmapper.ModelMapper;
-
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -18,6 +9,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import com.redhat.parodos.user.dto.UserResponseDTO;
+import com.redhat.parodos.user.entity.User;
+import com.redhat.parodos.user.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.modelmapper.ModelMapper;
 
 class UserServiceImplTest {
 
@@ -87,14 +86,14 @@ class UserServiceImplTest {
 	void GetUserByNameWithValidData() {
 		// given
 		User user = getSampleUser("test");
-		Mockito.when(this.userRepository.findByUsername(user.getUsername())).thenReturn(List.of(user));
+		Mockito.when(this.userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
 
 		// when
 		UserResponseDTO res = this.service.getUserByUsername(user.getUsername());
 
 		// then
 		assertNotNull(res);
-		assertEquals(res.getId().toString(), user.getId().toString());
+		assertEquals(res.getId(), user.getId().toString());
 		assertEquals(res.getUsername(), user.getUsername());
 		assertEquals(res.getEmail(), user.getEmail());
 		Mockito.verify(this.userRepository, Mockito.times(1)).findByUsername(Mockito.any());
@@ -104,13 +103,10 @@ class UserServiceImplTest {
 	void GetUserByNameWithInvalidData() {
 		// given
 		User user = getSampleUser("test");
-		Mockito.when(this.userRepository.findByUsername(user.getUsername())).thenReturn(Collections.emptyList());
-
-		// when
-		UserResponseDTO res = this.service.getUserByUsername(user.getUsername());
+		Mockito.when(this.userRepository.findByUsername(user.getUsername())).thenReturn(Optional.empty());
 
 		// then
-		assertNull(res);
+		assertThrows(RuntimeException.class, () -> this.service.getUserByUsername(user.getUsername()));
 		Mockito.verify(this.userRepository, Mockito.times(1)).findByUsername(Mockito.any());
 	}
 

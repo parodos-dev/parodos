@@ -15,14 +15,14 @@
  */
 package com.redhat.parodos.project.controller;
 
-import com.redhat.parodos.project.dto.ProjectRequestDTO;
-import com.redhat.parodos.project.dto.ProjectResponseDTO;
-import com.redhat.parodos.project.service.ProjectServiceImpl;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
+import com.redhat.parodos.project.dto.ProjectRequestDTO;
+import com.redhat.parodos.project.dto.ProjectResponseDTO;
+import com.redhat.parodos.project.service.ProjectServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
