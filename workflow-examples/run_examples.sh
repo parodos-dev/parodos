@@ -139,6 +139,8 @@ run_simple_flow() {
 
   echo_blue "******** Create Project ********"
   echo "                                                "
+  # generate random project name
+  PROJECT_NAME="project-$RANDOM"
   PROJECT_ID=$(curl -X 'POST' -s \
     "${TARGET_URL}/api/v1/projects" \
     -H 'accept: */*' \
@@ -147,7 +149,7 @@ run_simple_flow() {
     -H "X-XSRF-TOKEN: ${TOKEN}" \
     -b $COOKIEFP \
     -d '{
-                 "name": "project-1",
+                 "name": "'"${PROJECT_NAME}"'",
                  "description": "an example project"
                }' | jq -r '.id')
   [ ${#PROJECT_ID} -eq "36" ] || @fail "Project ID ${PROJECT_ID} is not present"
@@ -201,6 +203,7 @@ run_complex_flow() {
   echo " "
   echo_blue "******** Create Project ********"
   echo "                                                "
+  PROJECT_NAME="project-$RANDOM"
   PROJECT_ID=$(curl -X 'POST' -s \
     "${TARGET_URL}/api/v1/projects" \
     -H 'accept: */*' \
@@ -209,7 +212,7 @@ run_complex_flow() {
     -b $COOKIEFP \
     -H 'Content-Type: application/json' \
     -d '{
-                 "name": "project-1",
+                 "name": "'"${PROJECT_NAME}"'",
                  "description": "an example project"
                }' | jq -r '.id')
   [ ${#PROJECT_ID} -eq "36" ] || @fail "Project ID ${PROJECT_ID} is not present"
@@ -301,8 +304,8 @@ run_escalation_flow() {
   echo "                                                  "
 
   wait_project_start
-
-   PROJECT_ID=$(curl -X 'POST' -s \
+  PROJECT_NAME="project-$RANDOM"
+  PROJECT_ID=$(curl -X 'POST' -s \
     "${TARGET_URL}/api/v1/projects" \
     -H 'accept: */*' \
     -H 'Authorization: Basic dGVzdDp0ZXN0' \
@@ -310,7 +313,7 @@ run_escalation_flow() {
     -b $COOKIEFP \
     -H 'Content-Type: application/json' \
     -d '{
-                 "name": "project-1",
+                 "name": "'"${PROJECT_NAME}"'",
                  "description": "an example project"
                }' | jq -r '.id')
   echo "Project id is " $(echo_green $PROJECT_ID)
