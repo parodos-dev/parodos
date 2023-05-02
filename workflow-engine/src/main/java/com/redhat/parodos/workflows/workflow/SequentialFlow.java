@@ -59,7 +59,7 @@ public class SequentialFlow extends AbstractWorkFlow {
 		WorkReport workReport = null;
 		for (Work work : workUnits) {
 			workReport = work.execute(workContext);
-			if (workReport == null || !WorkStatus.COMPLETED.equals(workReport.getStatus())) {
+			if (workReport == null || WorkStatus.COMPLETED != workReport.getStatus()) {
 				if (workReport == null) {
 					LOGGER.info("Work unit \"{}\" returned with empty WorkReport, skipping subsequent work units",
 							work.getName());

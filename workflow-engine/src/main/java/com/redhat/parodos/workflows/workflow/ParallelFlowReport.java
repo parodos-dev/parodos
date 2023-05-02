@@ -94,11 +94,13 @@ public class ParallelFlowReport implements WorkReport {
 	public WorkStatus getStatus() {
 		WorkStatus workStatus = WorkStatus.COMPLETED;
 		for (WorkReport report : reports) {
-			if (List.of(WorkStatus.FAILED, WorkStatus.REJECTED).contains(report.getStatus())) {
-				return report.getStatus();
-			}
-			if (!report.getStatus().equals(WorkStatus.COMPLETED)) {
-				workStatus = report.getStatus();
+			switch (report.getStatus()) {
+				case FAILED, REJECTED -> {
+					return report.getStatus();
+				}
+				case COMPLETED -> {
+				}
+				default -> workStatus = report.getStatus();
 			}
 		}
 		return workStatus;
