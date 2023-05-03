@@ -1,5 +1,9 @@
 package com.redhat.parodos.examples.ocponboarding.task;
 
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.any;
@@ -8,9 +12,9 @@ import static org.mockito.Mockito.spy;
 import com.redhat.parodos.examples.base.BaseInfrastructureWorkFlowTaskTest;
 import com.redhat.parodos.examples.ocponboarding.task.dto.jira.CreateJiraTicketResponseDto;
 import com.redhat.parodos.examples.utils.RestUtils;
+import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
-import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -21,8 +25,6 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Jira Ticket Creation Workflow Task execution test
@@ -39,7 +41,7 @@ public class JiraTicketCreationWorkFlowTaskTest extends BaseInfrastructureWorkFl
 
 	private static final String APPROVER_ID_TEST = "approver-id-test";
 
-	private static final String PROJECT_ID_TEST = "project-id-test";
+	private static final UUID PROJECT_ID_TEST = UUID.randomUUID();
 
 	private static final String ISSUE_ID_TEST = "issue-ID-test";
 

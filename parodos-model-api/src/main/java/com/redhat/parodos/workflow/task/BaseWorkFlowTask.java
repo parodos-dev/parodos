@@ -21,6 +21,8 @@ import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanNameAware;
@@ -58,7 +60,7 @@ public abstract class BaseWorkFlowTask implements WorkFlowTask, BeanNameAware {
 		this.workFlowCheckers = workFlowCheckers;
 	}
 
-	public String getProjectId(WorkContext workContext) {
+	public UUID getProjectId(WorkContext workContext) {
 		return WorkContextUtils.getProjectId(workContext);
 	}
 

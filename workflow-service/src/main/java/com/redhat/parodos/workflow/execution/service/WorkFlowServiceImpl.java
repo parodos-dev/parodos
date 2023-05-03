@@ -19,6 +19,7 @@ import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowContextResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowOptionsResponseDTO;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
+import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
@@ -135,8 +136,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	public WorkReport execute(UUID projectId, String workflowName, WorkContext workContext, UUID executionId) {
 		WorkFlow workFlow = workFlowDelegate.getWorkFlowExecutionByName(workflowName);
 		log.info("execute workFlow '{}': {}", workflowName, workFlow);
-		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.PROJECT, WorkContextDelegate.Resource.ID,
-				projectId.toString());
+		WorkContextUtils.setProjectId(workContext, projectId);
 		if (executionId != null)
 			WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
 					WorkContextDelegate.Resource.ID, executionId.toString());

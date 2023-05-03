@@ -15,14 +15,18 @@
  */
 package com.redhat.parodos.workflow.utils;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.UUID;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
+import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflows.work.WorkContext;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import lombok.NonNull;
 
 /**
  * Util Class to parse WorkContext
@@ -40,9 +44,22 @@ public class WorkContextUtils {
 	 * @param workContext
 	 * @return project id
 	 */
-	public static String getProjectId(WorkContext workContext) {
-		return WorkContextDelegate
-				.read(workContext, WorkContextDelegate.ProcessType.PROJECT, WorkContextDelegate.Resource.ID).toString();
+	public static UUID getProjectId(WorkContext workContext) {
+		Object projectId = WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.PROJECT,
+				WorkContextDelegate.Resource.ID);
+		projectId = Optional.ofNullable(projectId)
+				.orElseThrow(() -> new NoSuchElementException("Project ID is missing from workContext."));
+		return UUID.fromString(projectId.toString());
+	}
+
+	/**
+	 * method to set project id to workContext
+	 * @param workContext
+	 * @param projectId
+	 */
+	public static void setProjectId(WorkContext workContext, @NonNull UUID projectId) {
+		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.PROJECT, WorkContextDelegate.Resource.ID,
+				projectId.toString());
 	}
 
 	/**

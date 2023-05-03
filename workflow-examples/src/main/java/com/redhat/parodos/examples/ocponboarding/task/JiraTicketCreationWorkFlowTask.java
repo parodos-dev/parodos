@@ -73,7 +73,7 @@ public class JiraTicketCreationWorkFlowTask extends BaseInfrastructureWorkFlowTa
 			String urlString = jiraServiceBaseUrl + "/rest/servicedeskapi/request";
 			String serviceDeskId = "1";
 			String requestTypeId = "35";
-			String projectId = getProjectId(workContext);
+			String projectId = getProjectId(workContext).toString();
 			String namespace = getOptionalParameterValue(workContext, NAMESPACE, "demo");
 			log.info("Calling: urlString: {} username: {}", urlString, jiraUsername);
 

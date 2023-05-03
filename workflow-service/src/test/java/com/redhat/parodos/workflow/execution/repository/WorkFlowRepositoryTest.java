@@ -60,6 +60,10 @@ public class WorkFlowRepositoryTest extends RepositoryTestBase {
 		workFlowExecution = workFlowRepository.save(workFlowExecution);
 		WorkContext WorkContext = new WorkContext();
 		WorkContext.put("test_key", "test_value");
+		UUID testUUID = UUID.randomUUID();
+		WorkContext.put("test_uuid", testUUID);
+		List<String> testList = List.of("test1", "test2");
+		WorkContext.put("test_list", testList);
 		WorkFlowExecutionContext workContext = WorkFlowExecutionContext.builder()
 				.mainWorkFlowExecution(workFlowExecution).workContext(WorkContext).build();
 		workFlowExecution.setWorkFlowExecutionContext(workContext);
@@ -73,6 +77,9 @@ public class WorkFlowRepositoryTest extends RepositoryTestBase {
 		assertNotNull(flowExecution.getWorkFlowExecutionContext());
 		assertNotNull(flowExecution.getWorkFlowExecutionContext().getWorkContext());
 		assertEquals("test_value", flowExecution.getWorkFlowExecutionContext().getWorkContext().get("test_key"));
+		assertEquals(testList, flowExecution.getWorkFlowExecutionContext().getWorkContext().get("test_list"));
+		assertEquals(testUUID.toString(),
+				flowExecution.getWorkFlowExecutionContext().getWorkContext().get("test_uuid"));
 	}
 
 	@Test
