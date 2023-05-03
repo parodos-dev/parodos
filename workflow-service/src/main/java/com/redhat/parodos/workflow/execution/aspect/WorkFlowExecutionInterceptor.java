@@ -9,6 +9,7 @@ import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.scheduler.WorkFlowSchedulerServiceImpl;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
+import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
@@ -49,9 +50,7 @@ public abstract class WorkFlowExecutionInterceptor implements WorkFlowIntercepto
 		String arguments = WorkFlowDTOUtil.writeObjectValueAsString(
 				WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
 						workFlowDefinition.getName(), WorkContextDelegate.Resource.ARGUMENTS));
-		UUID projectId = UUID.fromString(WorkContextDelegate
-				.read(workContext, WorkContextDelegate.ProcessType.PROJECT, WorkContextDelegate.Resource.ID)
-				.toString());
+		UUID projectId = WorkContextUtils.getProjectId(workContext);
 		return workFlowService.saveWorkFlow(projectId, workFlowDefinition.getId(), WorkFlowStatus.IN_PROGRESS,
 				mainWorkFlowExecution, arguments);
 	}
