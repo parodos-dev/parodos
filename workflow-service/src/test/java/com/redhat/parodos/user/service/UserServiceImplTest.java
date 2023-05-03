@@ -1,13 +1,11 @@
 package com.redhat.parodos.user.service;
 
-import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
 import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.redhat.parodos.user.dto.UserResponseDTO;
@@ -33,7 +31,7 @@ class UserServiceImplTest {
 	@Test
 	void saveTestWithValidData() {
 		// given
-		User user = getSampleUser("test");
+		User user = getSampleUser();
 		Mockito.when(this.userRepository.save(Mockito.any(User.class))).thenReturn(user);
 
 		// when
@@ -41,7 +39,7 @@ class UserServiceImplTest {
 
 		// then
 		assertNotNull(res);
-		assertEquals(res.getId(), user.getId().toString());
+		assertEquals(res.getId(), user.getId());
 		assertEquals(res.getUsername(), user.getUsername());
 		assertEquals(res.getEmail(), user.getEmail());
 
@@ -51,7 +49,7 @@ class UserServiceImplTest {
 	@Test
 	void GetUserByIdWithValidData() {
 		// given
-		User user = getSampleUser("test");
+		User user = getSampleUser();
 		Mockito.when(this.userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
 		// when
@@ -59,7 +57,7 @@ class UserServiceImplTest {
 
 		// then
 		assertNotNull(res);
-		assertEquals(res.getId(), user.getId().toString());
+		assertEquals(res.getId(), user.getId());
 		assertEquals(res.getUsername(), user.getUsername());
 		assertEquals(res.getEmail(), user.getEmail());
 		Mockito.verify(this.userRepository, Mockito.times(1)).findById(Mockito.any());
@@ -68,13 +66,11 @@ class UserServiceImplTest {
 	@Test
 	void GetUserByIdWithInvalidData() {
 		// given
-		User user = getSampleUser("test");
+		User user = getSampleUser();
 		Mockito.when(this.userRepository.findById(user.getId())).thenReturn(Optional.empty());
 
 		// when
-		Exception exception = assertThrows(RuntimeException.class, () -> {
-			this.service.getUserById(user.getId());
-		});
+		Exception exception = assertThrows(RuntimeException.class, () -> this.service.getUserById(user.getId()));
 
 		// then
 		assertNotNull(exception);
@@ -85,7 +81,7 @@ class UserServiceImplTest {
 	@Test
 	void GetUserByNameWithValidData() {
 		// given
-		User user = getSampleUser("test");
+		User user = getSampleUser();
 		Mockito.when(this.userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
 
 		// when
@@ -93,16 +89,16 @@ class UserServiceImplTest {
 
 		// then
 		assertNotNull(res);
-		assertEquals(res.getId(), user.getId().toString());
-		assertEquals(res.getUsername(), user.getUsername());
-		assertEquals(res.getEmail(), user.getEmail());
+		assertEquals(user.getId(), res.getId());
+		assertEquals(user.getUsername(), res.getUsername());
+		assertEquals(user.getEmail(), res.getEmail());
 		Mockito.verify(this.userRepository, Mockito.times(1)).findByUsername(Mockito.any());
 	}
 
 	@Test
 	void GetUserByNameWithInvalidData() {
 		// given
-		User user = getSampleUser("test");
+		User user = getSampleUser();
 		Mockito.when(this.userRepository.findByUsername(user.getUsername())).thenReturn(Optional.empty());
 
 		// then
@@ -110,8 +106,8 @@ class UserServiceImplTest {
 		Mockito.verify(this.userRepository, Mockito.times(1)).findByUsername(Mockito.any());
 	}
 
-	private User getSampleUser(String name) {
-		User user = User.builder().username(name).email("test@test.com").build();
+	private User getSampleUser() {
+		User user = User.builder().username(UUID.randomUUID().toString()).email("test@test.com").build();
 		user.setId(UUID.randomUUID());
 		return user;
 	}
