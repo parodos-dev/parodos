@@ -24,6 +24,7 @@ import com.redhat.parodos.sdk.model.WorkRequestDTO;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -60,7 +61,7 @@ public class WorkFlowRequestDTO {
 	public static final String SERIALIZED_NAME_PROJECT_ID = "projectId";
 
 	@SerializedName(SERIALIZED_NAME_PROJECT_ID)
-	private String projectId;
+	private UUID projectId;
 
 	public static final String SERIALIZED_NAME_WORK_FLOW_NAME = "workFlowName";
 
@@ -103,7 +104,7 @@ public class WorkFlowRequestDTO {
 		this.arguments = arguments;
 	}
 
-	public WorkFlowRequestDTO projectId(String projectId) {
+	public WorkFlowRequestDTO projectId(UUID projectId) {
 
 		this.projectId = projectId;
 		return this;
@@ -115,11 +116,11 @@ public class WorkFlowRequestDTO {
 	 **/
 	@javax.annotation.Nullable
 
-	public String getProjectId() {
+	public UUID getProjectId() {
 		return projectId;
 	}
 
-	public void setProjectId(String projectId) {
+	public void setProjectId(UUID projectId) {
 		this.projectId = projectId;
 	}
 

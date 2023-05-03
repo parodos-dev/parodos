@@ -91,7 +91,7 @@ public class Example {
     defaultClient.setBasePath("http://localhost:8080");
 
     ProjectApi apiInstance = new ProjectApi(defaultClient);
-    String id = "id_example"; // String | 
+    UUID id = UUID.randomUUID(); // UUID | 
     try {
       ProjectResponseDTO result = apiInstance.getProjectById(id);
       System.out.println(result);
@@ -110,7 +110,7 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **id** | **String**|  | |
+| **id** | **UUID**|  | |
 
 ### Return type
 
