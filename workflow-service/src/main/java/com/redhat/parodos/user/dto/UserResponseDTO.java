@@ -16,6 +16,8 @@
 package com.redhat.parodos.user.dto;
 
 import java.util.Date;
+import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,7 +33,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserResponseDTO {
 
-	private String id;
+	private UUID id;
 
 	private String username;
 
