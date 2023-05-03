@@ -9,7 +9,7 @@
 |------------ | ------------- | ------------- | -------------|
 |**createDate** | **Date** |  |  [optional] |
 |**description** | **String** |  |  [optional] |
-|**id** | **String** |  |  [optional] |
+|**id** | **UUID** |  |  [optional] |
 |**modifyDate** | **Date** |  |  [optional] |
 |**name** | **String** |  |  [optional] |
 |**status** | **String** |  |  [optional] |

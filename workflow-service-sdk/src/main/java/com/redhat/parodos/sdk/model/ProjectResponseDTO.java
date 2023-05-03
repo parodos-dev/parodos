@@ -21,6 +21,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.Date;
+import java.util.UUID;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -62,7 +63,7 @@ public class ProjectResponseDTO {
 	public static final String SERIALIZED_NAME_ID = "id";
 
 	@SerializedName(SERIALIZED_NAME_ID)
-	private String id;
+	private UUID id;
 
 	public static final String SERIALIZED_NAME_MODIFY_DATE = "modifyDate";
 
@@ -127,7 +128,7 @@ public class ProjectResponseDTO {
 		this.description = description;
 	}
 
-	public ProjectResponseDTO id(String id) {
+	public ProjectResponseDTO id(UUID id) {
 
 		this.id = id;
 		return this;
@@ -139,11 +140,11 @@ public class ProjectResponseDTO {
 	 **/
 	@javax.annotation.Nullable
 
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 

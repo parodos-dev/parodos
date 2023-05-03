@@ -27,6 +27,7 @@ import java.io.IOException;
 
 import com.redhat.parodos.sdk.model.ProjectRequestDTO;
 import com.redhat.parodos.sdk.model.ProjectResponseDTO;
+import java.util.UUID;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -288,7 +289,7 @@ public class ProjectApi {
 	 * </tr>
 	 * </table>
 	 */
-	public okhttp3.Call getProjectByIdCall(String id, final ApiCallback _callback) throws ApiException {
+	public okhttp3.Call getProjectByIdCall(UUID id, final ApiCallback _callback) throws ApiException {
 		String basePath = null;
 		// Operation Servers
 		String[] localBasePaths = new String[] {};
@@ -335,7 +336,7 @@ public class ProjectApi {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private okhttp3.Call getProjectByIdValidateBeforeCall(String id, final ApiCallback _callback) throws ApiException {
+	private okhttp3.Call getProjectByIdValidateBeforeCall(UUID id, final ApiCallback _callback) throws ApiException {
 		// verify the required parameter 'id' is set
 		if (id == null) {
 			throw new ApiException("Missing the required parameter 'id' when calling getProjectById(Async)");
@@ -375,7 +376,7 @@ public class ProjectApi {
 	 * </tr>
 	 * </table>
 	 */
-	public ProjectResponseDTO getProjectById(String id) throws ApiException {
+	public ProjectResponseDTO getProjectById(UUID id) throws ApiException {
 		ApiResponse<ProjectResponseDTO> localVarResp = getProjectByIdWithHttpInfo(id);
 		return localVarResp.getData();
 	}
@@ -410,7 +411,7 @@ public class ProjectApi {
 	 * </tr>
 	 * </table>
 	 */
-	public ApiResponse<ProjectResponseDTO> getProjectByIdWithHttpInfo(String id) throws ApiException {
+	public ApiResponse<ProjectResponseDTO> getProjectByIdWithHttpInfo(UUID id) throws ApiException {
 		okhttp3.Call localVarCall = getProjectByIdValidateBeforeCall(id, null);
 		Type localVarReturnType = new TypeToken<ProjectResponseDTO>() {
 		}.getType();
@@ -448,7 +449,7 @@ public class ProjectApi {
 	 * </tr>
 	 * </table>
 	 */
-	public okhttp3.Call getProjectByIdAsync(String id, final ApiCallback<ProjectResponseDTO> _callback)
+	public okhttp3.Call getProjectByIdAsync(UUID id, final ApiCallback<ProjectResponseDTO> _callback)
 			throws ApiException {
 
 		okhttp3.Call localVarCall = getProjectByIdValidateBeforeCall(id, _callback);

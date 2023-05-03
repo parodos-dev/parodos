@@ -82,6 +82,7 @@ paths:
         name: id
         required: true
         schema:
+          format: uuid
           type: string
         style: simple
       responses:
@@ -363,7 +364,7 @@ components:
         modifyDate: 2000-01-23T04:56:07.000+00:00
         name: name
         description: description
-        id: id
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         createDate: 2000-01-23T04:56:07.000+00:00
         status: status
         username: username
@@ -374,6 +375,7 @@ components:
         description:
           type: string
         id:
+          format: uuid
           type: string
         modifyDate:
           format: date-time
@@ -894,13 +896,14 @@ components:
           key: key
         - value: value
           key: key
-        projectId: projectId
+        projectId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
       properties:
         arguments:
           items:
             $ref: '#/components/schemas/ArgumentRequestDTO'
           type: array
         projectId:
+          format: uuid
           type: string
         workFlowName:
           type: string
