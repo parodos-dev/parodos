@@ -121,7 +121,7 @@ class WorkFlowControllerTest extends ControllerMockClient {
 		String testWorkFlowTask1 = "testWorkFlowTask1";
 
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = WorkFlowStatusResponseDTO.builder()
-				.workFlowExecutionId(mainWorkFlowExecutionId.toString()).status(WorkFlowStatus.IN_PROGRESS.name())
+				.workFlowExecutionId(mainWorkFlowExecutionId).status(WorkFlowStatus.IN_PROGRESS.name())
 				.workFlowName(testMainWorkFlow)
 				.works(List.of(
 						WorkStatusResponseDTO.builder().name(testSubWorkFlow1).status(ParodosWorkStatus.PENDING)

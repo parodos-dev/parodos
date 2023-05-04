@@ -301,7 +301,8 @@
           "name" : "workFlowExecutionId",
           "required" : true,
           "schema" : {
-            "type" : "string"
+            "type" : "string",
+            "format" : "uuid"
           }
         }, {
           "in" : "path",
@@ -354,7 +355,8 @@
           "name" : "workFlowExecutionId",
           "required" : true,
           "schema" : {
-            "type" : "string"
+            "type" : "string",
+            "format" : "uuid"
           }
         }, {
           "in" : "query",
@@ -398,7 +400,8 @@
           "name" : "workFlowExecutionId",
           "required" : true,
           "schema" : {
-            "type" : "string"
+            "type" : "string",
+            "format" : "uuid"
           }
         } ],
         "responses" : {
@@ -533,7 +536,8 @@
         "type" : "object",
         "properties" : {
           "workFlowExecutionId" : {
-            "type" : "string"
+            "type" : "string",
+            "format" : "uuid"
           },
           "workFlowOptions" : {
             "$ref" : "#/components/schemas/WorkFlowOptionsResponseDTO"
@@ -726,7 +730,8 @@
         "type" : "object",
         "properties" : {
           "workFlowExecutionId" : {
-            "type" : "string"
+            "type" : "string",
+            "format" : "uuid"
           },
           "workFlowOptions" : {
             "$ref" : "#/components/schemas/WorkFlowOptions"
@@ -744,7 +749,8 @@
             "type" : "string"
           },
           "workFlowExecutionId" : {
-            "type" : "string"
+            "type" : "string",
+            "format" : "uuid"
           },
           "workFlowName" : {
             "type" : "string"

@@ -195,7 +195,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		List<WorkStatusResponseDTO> workFlowWorksStatusResponseDTOs = workFlowServiceDelegate
 				.getWorkFlowAndWorksStatus(workFlowExecution, workFlowDefinition);
 
-		return WorkFlowStatusResponseDTO.builder().workFlowExecutionId(workFlowExecution.getId().toString())
+		return WorkFlowStatusResponseDTO.builder().workFlowExecutionId(workFlowExecution.getId())
 				.workFlowName(workFlowDefinition.getName()).status(workFlowExecution.getStatus().name())
 				.works(workFlowWorksStatusResponseDTOs).build();
 	}
@@ -216,7 +216,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 					.orElse(Map.of());
 		}
 
-		return WorkFlowContextResponseDTO.builder().workFlowExecutionId(workFlowExecution.getId().toString())
+		return WorkFlowContextResponseDTO.builder().workFlowExecutionId(workFlowExecution.getId())
 				.workFlowOptions(WorkFlowOptionsResponseDTO.builder()
 						.currentVersion((WorkFlowOption) options.get("currentVersion"))
 						.continuationOptions(getFlowOptions(options, "continuationOptions"))
