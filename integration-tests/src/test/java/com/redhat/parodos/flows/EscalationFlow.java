@@ -14,8 +14,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 
-import static com.redhat.parodos.flows.utils.IntegrationTestUtils.getProjectAsync;
-import static com.redhat.parodos.flows.utils.IntegrationTestUtils.waitWorkflowStatusAsync;
+import static com.redhat.parodos.sdkutils.SdkUtils.getProjectAsync;
+import static com.redhat.parodos.sdkutils.SdkUtils.waitWorkflowStatusAsync;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 

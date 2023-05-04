@@ -1,4 +1,4 @@
-package com.redhat.parodos.flows.config;
+package com.redhat.parodos.sdkutils;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;

@@ -37,6 +37,12 @@
         </dependency>
         <dependency>
             <groupId>dev.parodos</groupId>
+            <artifactId>sdk-utils</artifactId>
+            <version>${revision}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>dev.parodos</groupId>
             <artifactId>parodos-model-api</artifactId>
             <version>${revision}</version>
             <scope>test</scope>

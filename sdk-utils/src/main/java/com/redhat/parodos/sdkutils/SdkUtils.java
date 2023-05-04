@@ -1,6 +1,6 @@
+package com.redhat.parodos.sdkutils;
 
-package com.redhat.parodos.flows.utils;
-
+import com.google.common.base.Strings;
 import com.redhat.parodos.sdk.api.ProjectApi;
 import com.redhat.parodos.sdk.api.WorkflowApi;
 import com.redhat.parodos.sdk.invoker.ApiCallback;
@@ -13,6 +13,7 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.MissingRequiredPropertiesException;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -22,18 +23,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import java.util.stream.Stream;
 
 /***
  * A utility class to ease the writing of new examples.
  */
 
 @Slf4j
-public final class IntegrationTestUtils {
+public final class SdkUtils {
 
 	/**
 	 * Executes a @see FuncExecutor. Waits at most 60 seconds for a successful result of
@@ -105,7 +102,8 @@ public final class IntegrationTestUtils {
 			// should be more than enough
 			response.await(60, TimeUnit.SECONDS);
 			if (asyncResult.getError() != null) {
-				fail("An error occurred while executing waitAsyncResponse: " + asyncResult.getError());
+				throw new ApiException(
+						"An error occurred while executing waitAsyncResponse: " + asyncResult.getError());
 			}
 		}
 		finally {
@@ -237,19 +235,32 @@ public final class IntegrationTestUtils {
 			projectRequestDTO.setDescription(projectDescription);
 
 			ProjectResponseDTO projectResponseDTO = projectApi.createProject(projectRequestDTO);
-			assertNotNull(projectResponseDTO);
-			assertEquals(projectName, projectResponseDTO.getName());
-			assertEquals(projectDescription, projectResponseDTO.getDescription());
+
+			if (projectResponseDTO == null || projectResponseDTO.getName() == null
+					|| projectResponseDTO.getDescription() == null) {
+				throw new ApiException("Can't create new project");
+			}
+			if (!projectName.equals(projectResponseDTO.getName())
+					|| !projectDescription.equals(projectResponseDTO.getDescription())) {
+				throw new ApiException("Can't create project correctly. Requested project name and description are: "
+						+ projectName + "," + projectDescription + ". Actual are: " + projectResponseDTO.getName()
+						+ projectResponseDTO.getDescription());
+			}
 			log.info("Project {} successfully created", projectName);
 		}
 
 		// ASSERT PROJECT "testProject" IS PRESENT
 		projects = projectApi.getProjects();
 		log.debug("PROJECTS: {}", projects);
-		assertTrue(projects.size() > 0);
-		testProject = getProjectByNameAndDescription(projects, projectName, projectDescription);
-		assertNotNull(testProject);
 
+		if (projects.isEmpty()) {
+			throw new ApiException("Project has not been created.");
+		}
+		testProject = getProjectByNameAndDescription(projects, projectName, projectDescription);
+
+		if (testProject == null) {
+			throw new ApiException("Can retrieve project with name " + projectName);
+		}
 		return testProject;
 	}
 
