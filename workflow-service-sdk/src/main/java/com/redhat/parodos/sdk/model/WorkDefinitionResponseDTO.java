@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -60,7 +61,7 @@ public class WorkDefinitionResponseDTO {
 	public static final String SERIALIZED_NAME_ID = "id";
 
 	@SerializedName(SERIALIZED_NAME_ID)
-	private String id;
+	private UUID id;
 
 	public static final String SERIALIZED_NAME_NAME = "name";
 
@@ -223,7 +224,7 @@ public class WorkDefinitionResponseDTO {
 		this.author = author;
 	}
 
-	public WorkDefinitionResponseDTO id(String id) {
+	public WorkDefinitionResponseDTO id(UUID id) {
 
 		this.id = id;
 		return this;
@@ -235,11 +236,11 @@ public class WorkDefinitionResponseDTO {
 	 **/
 	@javax.annotation.Nullable
 
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 

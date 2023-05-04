@@ -25,6 +25,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -65,7 +66,7 @@ public class SimpleWorkFlow {
 
 		// GET WORKFLOW DEFINITION BY Id
 		WorkFlowDefinitionResponseDTO simpleSequentialWorkFlowDefinition = workflowDefinitionApi
-				.getWorkFlowDefinitionById(simpleSequentialWorkFlowDefinitions.get(0).getId().toString());
+				.getWorkFlowDefinitionById(simpleSequentialWorkFlowDefinitions.get(0).getId());
 
 		assertNotNull(simpleSequentialWorkFlowDefinition.getId());
 		assertEquals("simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW,
@@ -75,7 +76,7 @@ public class SimpleWorkFlow {
 		assertEquals(WorkFlowType.INFRASTRUCTURE.toString(), simpleSequentialWorkFlowDefinition.getType());
 
 		assertNotNull(simpleSequentialWorkFlowDefinition.getWorks());
-		assertTrue(simpleSequentialWorkFlowDefinition.getWorks().size() == 2);
+		assertEquals(2, simpleSequentialWorkFlowDefinition.getWorks().size());
 		assertEquals("restCallTask", simpleSequentialWorkFlowDefinition.getWorks().get(0).getName());
 		assertEquals(WorkType.TASK.toString(), simpleSequentialWorkFlowDefinition.getWorks().get(0).getWorkType());
 		assertTrue(CollectionUtils.isEmpty(simpleSequentialWorkFlowDefinition.getWorks().get(0).getWorks()));
@@ -91,8 +92,8 @@ public class SimpleWorkFlow {
 		// Define WorkRequests
 		WorkRequestDTO work1 = new WorkRequestDTO();
 		work1.setWorkName("restCallTask");
-		work1.setArguments(
-				Arrays.asList(new ArgumentRequestDTO().key("url").value("http://localhost:8080/actuator/health")));
+		work1.setArguments(Collections
+				.singletonList(new ArgumentRequestDTO().key("url").value("http://localhost:8080/actuator/health")));
 
 		WorkRequestDTO work2 = new WorkRequestDTO();
 		work2.setWorkName("loggingTask");

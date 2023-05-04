@@ -25,6 +25,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 
+import java.util.UUID;
 import com.redhat.parodos.sdk.model.UpdateParameter200Response;
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.sdk.model.WorkParameterValueRequestDTO;
@@ -106,7 +107,7 @@ public class WorkflowDefinitionApi {
 	 * </tr>
 	 * </table>
 	 */
-	public okhttp3.Call getWorkFlowDefinitionByIdCall(String id, final ApiCallback _callback) throws ApiException {
+	public okhttp3.Call getWorkFlowDefinitionByIdCall(UUID id, final ApiCallback _callback) throws ApiException {
 		String basePath = null;
 		// Operation Servers
 		String[] localBasePaths = new String[] {};
@@ -153,7 +154,7 @@ public class WorkflowDefinitionApi {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private okhttp3.Call getWorkFlowDefinitionByIdValidateBeforeCall(String id, final ApiCallback _callback)
+	private okhttp3.Call getWorkFlowDefinitionByIdValidateBeforeCall(UUID id, final ApiCallback _callback)
 			throws ApiException {
 		// verify the required parameter 'id' is set
 		if (id == null) {
@@ -194,7 +195,7 @@ public class WorkflowDefinitionApi {
 	 * </tr>
 	 * </table>
 	 */
-	public WorkFlowDefinitionResponseDTO getWorkFlowDefinitionById(String id) throws ApiException {
+	public WorkFlowDefinitionResponseDTO getWorkFlowDefinitionById(UUID id) throws ApiException {
 		ApiResponse<WorkFlowDefinitionResponseDTO> localVarResp = getWorkFlowDefinitionByIdWithHttpInfo(id);
 		return localVarResp.getData();
 	}
@@ -229,7 +230,7 @@ public class WorkflowDefinitionApi {
 	 * </tr>
 	 * </table>
 	 */
-	public ApiResponse<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitionByIdWithHttpInfo(String id)
+	public ApiResponse<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitionByIdWithHttpInfo(UUID id)
 			throws ApiException {
 		okhttp3.Call localVarCall = getWorkFlowDefinitionByIdValidateBeforeCall(id, null);
 		Type localVarReturnType = new TypeToken<WorkFlowDefinitionResponseDTO>() {
@@ -268,7 +269,7 @@ public class WorkflowDefinitionApi {
 	 * </tr>
 	 * </table>
 	 */
-	public okhttp3.Call getWorkFlowDefinitionByIdAsync(String id,
+	public okhttp3.Call getWorkFlowDefinitionByIdAsync(UUID id,
 			final ApiCallback<WorkFlowDefinitionResponseDTO> _callback) throws ApiException {
 
 		okhttp3.Call localVarCall = getWorkFlowDefinitionByIdValidateBeforeCall(id, _callback);

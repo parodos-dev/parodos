@@ -137,6 +137,7 @@ paths:
         name: id
         required: true
         schema:
+          format: uuid
           type: string
         style: simple
       responses:
@@ -399,7 +400,7 @@ components:
         author: author
         name: name
         workType: workType
-        id: id
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         parameters:
           key:
             key: "{}"
@@ -407,6 +408,7 @@ components:
         author:
           type: string
         id:
+          format: uuid
           type: string
         name:
           type: string
@@ -558,7 +560,7 @@ components:
           author: author
           name: name
           workType: workType
-          id: id
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           parameters:
             key:
               key: "{}"
@@ -572,7 +574,7 @@ components:
           author: author
           name: name
           workType: workType
-          id: id
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           parameters:
             key:
               key: "{}"

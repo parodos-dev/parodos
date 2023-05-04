@@ -8,7 +8,7 @@
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
 |**author** | **String** |  |  [optional] |
-|**id** | **String** |  |  [optional] |
+|**id** | **UUID** |  |  [optional] |
 |**name** | **String** |  |  [optional] |
 |**outputs** | [**List&lt;OutputsEnum&gt;**](#List&lt;OutputsEnum&gt;) |  |  [optional] |
 |**parameters** | **Map&lt;String, Map&lt;String, Object&gt;&gt;** |  |  [optional] |

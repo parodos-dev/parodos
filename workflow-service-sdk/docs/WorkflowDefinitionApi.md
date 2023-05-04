@@ -30,7 +30,7 @@ public class Example {
     defaultClient.setBasePath("http://localhost:8080");
 
     WorkflowDefinitionApi apiInstance = new WorkflowDefinitionApi(defaultClient);
-    String id = "id_example"; // String | 
+    UUID id = UUID.randomUUID(); // UUID | 
     try {
       WorkFlowDefinitionResponseDTO result = apiInstance.getWorkFlowDefinitionById(id);
       System.out.println(result);
@@ -49,7 +49,7 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **id** | **String**|  | |
+| **id** | **UUID**|  | |
 
 ### Return type
 

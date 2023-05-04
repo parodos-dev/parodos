@@ -1,5 +1,13 @@
 package com.redhat.parodos.examples.integration;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.redhat.parodos.sdk.api.ProjectApi;
 import com.redhat.parodos.sdk.api.WorkflowApi;
 import com.redhat.parodos.sdk.api.WorkflowDefinitionApi;
@@ -14,19 +22,10 @@ import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
 import com.redhat.parodos.sdk.model.WorkFlowResponseDTO;
 import com.redhat.parodos.sdk.model.WorkRequestDTO;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
-import com.redhat.parodos.workflow.enums.WorkFlowProcessingType;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.utils.CredUtils;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * UseSDKExample is a dummy class to demonstrate very basic usage of @see
@@ -89,7 +88,7 @@ public class UseSDKExample {
 
 			// GET WORKFLOW DEFINITION BY Id
 			WorkFlowDefinitionResponseDTO simpleSequentialWorkFlowDefinition = workflowDefinitionApi
-					.getWorkFlowDefinitionById(simpleSequentialWorkFlowDefinitions.get(0).getId().toString());
+					.getWorkFlowDefinitionById(simpleSequentialWorkFlowDefinitions.get(0).getId());
 
 			assertEquals("simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW,
 					simpleSequentialWorkFlowDefinition.getName());
