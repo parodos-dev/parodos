@@ -31,7 +31,7 @@ class WorkDefinitionResponseDTOTest {
 		WorkDefinitionResponseDTO result = WorkDefinitionResponseDTO.fromWorkFlowTaskDefinition(wdt);
 
 		// then
-		assertEquals(result.getId(), id.toString());
+		assertEquals(id, result.getId());
 		assertEquals(result.getWorkType(), WorkType.TASK.name());
 		assertEquals(result.getName(), "foo");
 
@@ -60,7 +60,7 @@ class WorkDefinitionResponseDTOTest {
 		WorkDefinitionResponseDTO result = WorkDefinitionResponseDTO.fromWorkFlowDefinitionEntity(wd, dependencies);
 
 		// then
-		assertEquals(result.getId(), id.toString());
+		assertEquals(id, result.getId());
 		assertEquals(result.getWorkType(), WorkType.WORKFLOW.name());
 		assertEquals(result.getName(), "foo");
 

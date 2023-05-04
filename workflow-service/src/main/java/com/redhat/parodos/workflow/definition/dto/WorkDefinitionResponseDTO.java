@@ -29,13 +29,13 @@ import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Workflow task definition response dto
@@ -51,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor
 public class WorkDefinitionResponseDTO {
 
-	private String id;
+	private UUID id;
 
 	private String name;
 
@@ -91,14 +91,14 @@ public class WorkDefinitionResponseDTO {
 
 	public static WorkDefinitionResponseDTO fromWorkFlowDefinitionEntity(WorkFlowDefinition wd,
 			List<WorkFlowWorkDefinition> dependencies) {
-		return WorkDefinitionResponseDTO.builder().id(wd.getId().toString()).workType(WorkType.WORKFLOW.name())
-				.name(wd.getName()).parameterFromString(wd.getParameters()).processingType(wd.getProcessingType())
-				.works(new ArrayList<>()).numberOfWorkUnits(dependencies.size()).build();
+		return WorkDefinitionResponseDTO.builder().id(wd.getId()).workType(WorkType.WORKFLOW.name()).name(wd.getName())
+				.parameterFromString(wd.getParameters()).processingType(wd.getProcessingType()).works(new ArrayList<>())
+				.numberOfWorkUnits(dependencies.size()).build();
 	}
 
 	public static WorkDefinitionResponseDTO fromWorkFlowTaskDefinition(WorkFlowTaskDefinition wdt) {
-		return WorkDefinitionResponseDTO.builder().id(wdt.getId().toString()).workType(WorkType.TASK.name())
-				.name(wdt.getName()).parameterFromString(wdt.getParameters())
+		return WorkDefinitionResponseDTO.builder().id(wdt.getId()).workType(WorkType.TASK.name()).name(wdt.getName())
+				.parameterFromString(wdt.getParameters())
 				.outputs(WorkFlowDTOUtil.readStringAsObject(wdt.getOutputs(), new TypeReference<>() {
 				}, List.of())).build();
 	}

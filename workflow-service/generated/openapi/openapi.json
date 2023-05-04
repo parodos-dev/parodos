@@ -174,7 +174,8 @@
           "name" : "id",
           "required" : true,
           "schema" : {
-            "type" : "string"
+            "type" : "string",
+            "format" : "uuid"
           }
         } ],
         "responses" : {
@@ -487,7 +488,8 @@
             "type" : "string"
           },
           "id" : {
-            "type" : "string"
+            "type" : "string",
+            "format" : "uuid"
           },
           "name" : {
             "type" : "string"
