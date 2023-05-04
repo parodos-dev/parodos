@@ -118,7 +118,7 @@ public abstract class SdkUtils {
 
 			@Override
 			public void onFailure(ApiException e, int statusCode, Map<String, List<String>> responseHeaders) {
-
+				log.info("onFailure {}", e.getMessage());
 				try {
 					f.execute(this);
 				}
