@@ -235,6 +235,7 @@ paths:
         name: workFlowExecutionId
         required: true
         schema:
+          format: uuid
           type: string
         style: simple
       - explode: false
@@ -277,6 +278,7 @@ paths:
         name: workFlowExecutionId
         required: true
         schema:
+          format: uuid
           type: string
         style: simple
       - explode: true
@@ -320,6 +322,7 @@ paths:
         name: workFlowExecutionId
         required: true
         schema:
+          format: uuid
           type: string
         style: simple
       responses:
@@ -537,9 +540,10 @@ components:
             details:
             - details
             - details
-        workFlowExecutionId: workFlowExecutionId
+        workFlowExecutionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
       properties:
         workFlowExecutionId:
+          format: uuid
           type: string
         workFlowOptions:
           $ref: '#/components/schemas/WorkFlowOptionsResponseDTO'
@@ -1000,9 +1004,10 @@ components:
             details:
             - details
             - details
-        workFlowExecutionId: workFlowExecutionId
+        workFlowExecutionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
       properties:
         workFlowExecutionId:
+          format: uuid
           type: string
         workFlowOptions:
           $ref: '#/components/schemas/WorkFlowOptions'
@@ -1025,12 +1030,13 @@ components:
         - name: name
           type: TASK
           status: FAILED
-        workFlowExecutionId: workFlowExecutionId
+        workFlowExecutionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         status: status
       properties:
         status:
           type: string
         workFlowExecutionId:
+          format: uuid
           type: string
         workFlowName:
           type: string

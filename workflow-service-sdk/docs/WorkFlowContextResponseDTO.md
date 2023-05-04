@@ -7,7 +7,7 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**workFlowExecutionId** | **String** |  |  [optional] |
+|**workFlowExecutionId** | **UUID** |  |  [optional] |
 |**workFlowOptions** | [**WorkFlowOptionsResponseDTO**](WorkFlowOptionsResponseDTO.md) |  |  [optional] |
 
 

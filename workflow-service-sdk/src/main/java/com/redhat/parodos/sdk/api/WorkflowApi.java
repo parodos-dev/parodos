@@ -25,6 +25,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 
+import java.util.UUID;
 import com.redhat.parodos.sdk.model.WorkFlowCheckerTaskRequestDTO;
 import com.redhat.parodos.sdk.model.WorkFlowContextResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
@@ -310,7 +311,7 @@ public class WorkflowApi {
 	 * </tr>
 	 * </table>
 	 */
-	public okhttp3.Call getStatusCall(String workFlowExecutionId, final ApiCallback _callback) throws ApiException {
+	public okhttp3.Call getStatusCall(UUID workFlowExecutionId, final ApiCallback _callback) throws ApiException {
 		String basePath = null;
 		// Operation Servers
 		String[] localBasePaths = new String[] {};
@@ -357,7 +358,7 @@ public class WorkflowApi {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private okhttp3.Call getStatusValidateBeforeCall(String workFlowExecutionId, final ApiCallback _callback)
+	private okhttp3.Call getStatusValidateBeforeCall(UUID workFlowExecutionId, final ApiCallback _callback)
 			throws ApiException {
 		// verify the required parameter 'workFlowExecutionId' is set
 		if (workFlowExecutionId == null) {
@@ -399,7 +400,7 @@ public class WorkflowApi {
 	 * </tr>
 	 * </table>
 	 */
-	public WorkFlowStatusResponseDTO getStatus(String workFlowExecutionId) throws ApiException {
+	public WorkFlowStatusResponseDTO getStatus(UUID workFlowExecutionId) throws ApiException {
 		ApiResponse<WorkFlowStatusResponseDTO> localVarResp = getStatusWithHttpInfo(workFlowExecutionId);
 		return localVarResp.getData();
 	}
@@ -434,8 +435,7 @@ public class WorkflowApi {
 	 * </tr>
 	 * </table>
 	 */
-	public ApiResponse<WorkFlowStatusResponseDTO> getStatusWithHttpInfo(String workFlowExecutionId)
-			throws ApiException {
+	public ApiResponse<WorkFlowStatusResponseDTO> getStatusWithHttpInfo(UUID workFlowExecutionId) throws ApiException {
 		okhttp3.Call localVarCall = getStatusValidateBeforeCall(workFlowExecutionId, null);
 		Type localVarReturnType = new TypeToken<WorkFlowStatusResponseDTO>() {
 		}.getType();
@@ -473,8 +473,8 @@ public class WorkflowApi {
 	 * </tr>
 	 * </table>
 	 */
-	public okhttp3.Call getStatusAsync(String workFlowExecutionId,
-			final ApiCallback<WorkFlowStatusResponseDTO> _callback) throws ApiException {
+	public okhttp3.Call getStatusAsync(UUID workFlowExecutionId, final ApiCallback<WorkFlowStatusResponseDTO> _callback)
+			throws ApiException {
 
 		okhttp3.Call localVarCall = getStatusValidateBeforeCall(workFlowExecutionId, _callback);
 		Type localVarReturnType = new TypeToken<WorkFlowStatusResponseDTO>() {
@@ -514,7 +514,7 @@ public class WorkflowApi {
 	 * </tr>
 	 * </table>
 	 */
-	public okhttp3.Call getWorkflowParametersCall(String workFlowExecutionId, List<String> param,
+	public okhttp3.Call getWorkflowParametersCall(UUID workFlowExecutionId, List<String> param,
 			final ApiCallback _callback) throws ApiException {
 		String basePath = null;
 		// Operation Servers
@@ -566,7 +566,7 @@ public class WorkflowApi {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private okhttp3.Call getWorkflowParametersValidateBeforeCall(String workFlowExecutionId, List<String> param,
+	private okhttp3.Call getWorkflowParametersValidateBeforeCall(UUID workFlowExecutionId, List<String> param,
 			final ApiCallback _callback) throws ApiException {
 		// verify the required parameter 'workFlowExecutionId' is set
 		if (workFlowExecutionId == null) {
@@ -614,7 +614,7 @@ public class WorkflowApi {
 	 * </tr>
 	 * </table>
 	 */
-	public WorkFlowContextResponseDTO getWorkflowParameters(String workFlowExecutionId, List<String> param)
+	public WorkFlowContextResponseDTO getWorkflowParameters(UUID workFlowExecutionId, List<String> param)
 			throws ApiException {
 		ApiResponse<WorkFlowContextResponseDTO> localVarResp = getWorkflowParametersWithHttpInfo(workFlowExecutionId,
 				param);
@@ -652,7 +652,7 @@ public class WorkflowApi {
 	 * </tr>
 	 * </table>
 	 */
-	public ApiResponse<WorkFlowContextResponseDTO> getWorkflowParametersWithHttpInfo(String workFlowExecutionId,
+	public ApiResponse<WorkFlowContextResponseDTO> getWorkflowParametersWithHttpInfo(UUID workFlowExecutionId,
 			List<String> param) throws ApiException {
 		okhttp3.Call localVarCall = getWorkflowParametersValidateBeforeCall(workFlowExecutionId, param, null);
 		Type localVarReturnType = new TypeToken<WorkFlowContextResponseDTO>() {
@@ -692,7 +692,7 @@ public class WorkflowApi {
 	 * </tr>
 	 * </table>
 	 */
-	public okhttp3.Call getWorkflowParametersAsync(String workFlowExecutionId, List<String> param,
+	public okhttp3.Call getWorkflowParametersAsync(UUID workFlowExecutionId, List<String> param,
 			final ApiCallback<WorkFlowContextResponseDTO> _callback) throws ApiException {
 
 		okhttp3.Call localVarCall = getWorkflowParametersValidateBeforeCall(workFlowExecutionId, param, _callback);
@@ -739,7 +739,7 @@ public class WorkflowApi {
 	 * </tr>
 	 * </table>
 	 */
-	public okhttp3.Call updateWorkFlowCheckerTaskStatusCall(String workFlowExecutionId, String workFlowCheckerTaskName,
+	public okhttp3.Call updateWorkFlowCheckerTaskStatusCall(UUID workFlowExecutionId, String workFlowCheckerTaskName,
 			WorkFlowCheckerTaskRequestDTO workFlowCheckerTaskRequestDTO, final ApiCallback _callback)
 			throws ApiException {
 		String basePath = null;
@@ -791,7 +791,7 @@ public class WorkflowApi {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private okhttp3.Call updateWorkFlowCheckerTaskStatusValidateBeforeCall(String workFlowExecutionId,
+	private okhttp3.Call updateWorkFlowCheckerTaskStatusValidateBeforeCall(UUID workFlowExecutionId,
 			String workFlowCheckerTaskName, WorkFlowCheckerTaskRequestDTO workFlowCheckerTaskRequestDTO,
 			final ApiCallback _callback) throws ApiException {
 		// verify the required parameter 'workFlowExecutionId' is set
@@ -854,7 +854,7 @@ public class WorkflowApi {
 	 * </tr>
 	 * </table>
 	 */
-	public String updateWorkFlowCheckerTaskStatus(String workFlowExecutionId, String workFlowCheckerTaskName,
+	public String updateWorkFlowCheckerTaskStatus(UUID workFlowExecutionId, String workFlowCheckerTaskName,
 			WorkFlowCheckerTaskRequestDTO workFlowCheckerTaskRequestDTO) throws ApiException {
 		ApiResponse<String> localVarResp = updateWorkFlowCheckerTaskStatusWithHttpInfo(workFlowExecutionId,
 				workFlowCheckerTaskName, workFlowCheckerTaskRequestDTO);
@@ -898,7 +898,7 @@ public class WorkflowApi {
 	 * </tr>
 	 * </table>
 	 */
-	public ApiResponse<String> updateWorkFlowCheckerTaskStatusWithHttpInfo(String workFlowExecutionId,
+	public ApiResponse<String> updateWorkFlowCheckerTaskStatusWithHttpInfo(UUID workFlowExecutionId,
 			String workFlowCheckerTaskName, WorkFlowCheckerTaskRequestDTO workFlowCheckerTaskRequestDTO)
 			throws ApiException {
 		okhttp3.Call localVarCall = updateWorkFlowCheckerTaskStatusValidateBeforeCall(workFlowExecutionId,
@@ -946,7 +946,7 @@ public class WorkflowApi {
 	 * </tr>
 	 * </table>
 	 */
-	public okhttp3.Call updateWorkFlowCheckerTaskStatusAsync(String workFlowExecutionId, String workFlowCheckerTaskName,
+	public okhttp3.Call updateWorkFlowCheckerTaskStatusAsync(UUID workFlowExecutionId, String workFlowCheckerTaskName,
 			WorkFlowCheckerTaskRequestDTO workFlowCheckerTaskRequestDTO, final ApiCallback<String> _callback)
 			throws ApiException {
 

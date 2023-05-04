@@ -93,7 +93,7 @@ public class Example {
     defaultClient.setBasePath("http://localhost:8080");
 
     WorkflowApi apiInstance = new WorkflowApi(defaultClient);
-    String workFlowExecutionId = "workFlowExecutionId_example"; // String | 
+    UUID workFlowExecutionId = UUID.randomUUID(); // UUID | 
     try {
       WorkFlowStatusResponseDTO result = apiInstance.getStatus(workFlowExecutionId);
       System.out.println(result);
@@ -112,7 +112,7 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **workFlowExecutionId** | **String**|  | |
+| **workFlowExecutionId** | **UUID**|  | |
 
 ### Return type
 
@@ -155,7 +155,7 @@ public class Example {
     defaultClient.setBasePath("http://localhost:8080");
 
     WorkflowApi apiInstance = new WorkflowApi(defaultClient);
-    String workFlowExecutionId = "workFlowExecutionId_example"; // String | 
+    UUID workFlowExecutionId = UUID.randomUUID(); // UUID | 
     List<String> param = Arrays.asList(); // List<String> | 
     try {
       WorkFlowContextResponseDTO result = apiInstance.getWorkflowParameters(workFlowExecutionId, param);
@@ -175,7 +175,7 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **workFlowExecutionId** | **String**|  | |
+| **workFlowExecutionId** | **UUID**|  | |
 | **param** | [**List&lt;String&gt;**](String.md)|  | [enum: ID, NAME, PARAMETERS, ARGUMENTS, STATUS, WORKFLOW_OPTIONS, PARENT_WORKFLOW] |
 
 ### Return type
@@ -219,7 +219,7 @@ public class Example {
     defaultClient.setBasePath("http://localhost:8080");
 
     WorkflowApi apiInstance = new WorkflowApi(defaultClient);
-    String workFlowExecutionId = "workFlowExecutionId_example"; // String | 
+    UUID workFlowExecutionId = UUID.randomUUID(); // UUID | 
     String workFlowCheckerTaskName = "workFlowCheckerTaskName_example"; // String | 
     WorkFlowCheckerTaskRequestDTO workFlowCheckerTaskRequestDTO = new WorkFlowCheckerTaskRequestDTO(); // WorkFlowCheckerTaskRequestDTO | 
     try {
@@ -240,7 +240,7 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **workFlowExecutionId** | **String**|  | |
+| **workFlowExecutionId** | **UUID**|  | |
 | **workFlowCheckerTaskName** | **String**|  | |
 | **workFlowCheckerTaskRequestDTO** | [**WorkFlowCheckerTaskRequestDTO**](WorkFlowCheckerTaskRequestDTO.md)|  | |
 
