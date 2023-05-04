@@ -21,6 +21,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.redhat.parodos.sdk.model.WorkFlowOptionsResponseDTO;
 import java.io.IOException;
+import java.util.UUID;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -52,7 +53,7 @@ public class WorkFlowContextResponseDTO {
 	public static final String SERIALIZED_NAME_WORK_FLOW_EXECUTION_ID = "workFlowExecutionId";
 
 	@SerializedName(SERIALIZED_NAME_WORK_FLOW_EXECUTION_ID)
-	private String workFlowExecutionId;
+	private UUID workFlowExecutionId;
 
 	public static final String SERIALIZED_NAME_WORK_FLOW_OPTIONS = "workFlowOptions";
 
@@ -62,7 +63,7 @@ public class WorkFlowContextResponseDTO {
 	public WorkFlowContextResponseDTO() {
 	}
 
-	public WorkFlowContextResponseDTO workFlowExecutionId(String workFlowExecutionId) {
+	public WorkFlowContextResponseDTO workFlowExecutionId(UUID workFlowExecutionId) {
 
 		this.workFlowExecutionId = workFlowExecutionId;
 		return this;
@@ -74,11 +75,11 @@ public class WorkFlowContextResponseDTO {
 	 **/
 	@javax.annotation.Nullable
 
-	public String getWorkFlowExecutionId() {
+	public UUID getWorkFlowExecutionId() {
 		return workFlowExecutionId;
 	}
 
-	public void setWorkFlowExecutionId(String workFlowExecutionId) {
+	public void setWorkFlowExecutionId(UUID workFlowExecutionId) {
 		this.workFlowExecutionId = workFlowExecutionId;
 	}
 

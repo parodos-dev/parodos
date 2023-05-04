@@ -7,7 +7,7 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**workFlowExecutionId** | **String** |  |  [optional] |
+|**workFlowExecutionId** | **UUID** |  |  [optional] |
 |**workFlowOptions** | [**WorkFlowOptions**](WorkFlowOptions.md) |  |  [optional] |
 |**workStatus** | [**WorkStatusEnum**](#WorkStatusEnum) |  |  [optional] |
 
