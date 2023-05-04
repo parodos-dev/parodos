@@ -63,7 +63,7 @@ public class PrebuiltWorkFlow {
 
 		// GET WORKFLOW DEFINITION BY Id
 		WorkFlowDefinitionResponseDTO prebuiltWorkFlowDefinition = workflowDefinitionApi
-				.getWorkFlowDefinitionById(prebuiltWorkFlowDefinitions.get(0).getId().toString());
+				.getWorkFlowDefinitionById(prebuiltWorkFlowDefinitions.get(0).getId());
 
 		assertNotNull(prebuiltWorkFlowDefinition.getId());
 		assertEquals(workFlowName, prebuiltWorkFlowDefinition.getName());
@@ -72,7 +72,7 @@ public class PrebuiltWorkFlow {
 		assertEquals(WorkFlowType.INFRASTRUCTURE.toString(), prebuiltWorkFlowDefinition.getType());
 
 		assertNotNull(prebuiltWorkFlowDefinition.getWorks());
-		assertTrue(prebuiltWorkFlowDefinition.getWorks().size() == 1);
+		assertEquals(1, prebuiltWorkFlowDefinition.getWorks().size());
 		assertEquals("notificationTask", prebuiltWorkFlowDefinition.getWorks().get(0).getName());
 		assertEquals(WorkType.TASK.toString(), prebuiltWorkFlowDefinition.getWorks().get(0).getWorkType());
 		assertTrue(CollectionUtils.isEmpty(prebuiltWorkFlowDefinition.getWorks().get(0).getWorks()));
@@ -91,7 +91,7 @@ public class PrebuiltWorkFlow {
 		WorkFlowRequestDTO workFlowRequestDTO = new WorkFlowRequestDTO();
 		workFlowRequestDTO.setProjectId(testProject.getId());
 		workFlowRequestDTO.setWorkFlowName(workFlowName);
-		workFlowRequestDTO.setWorks(Arrays.asList(work1));
+		workFlowRequestDTO.setWorks(List.of(work1));
 
 		WorkflowApi workflowApi = new WorkflowApi(apiClient);
 		log.info("******** Running The PreBuilt Flow ********");

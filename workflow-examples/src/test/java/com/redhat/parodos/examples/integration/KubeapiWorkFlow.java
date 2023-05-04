@@ -53,7 +53,7 @@ public class KubeapiWorkFlow {
 
 			// GET WORKFLOW DEFINITION BY Id
 			WorkFlowDefinitionResponseDTO simpleSequentialWorkFlowDefinition = workflowDefinitionApi
-					.getWorkFlowDefinitionById(simpleSequentialWorkFlowDefinitions.get(0).getId().toString());
+					.getWorkFlowDefinitionById(simpleSequentialWorkFlowDefinitions.get(0).getId());
 
 			// EXECUTE WORKFLOW
 			WorkflowApi workflowApi = new WorkflowApi();
