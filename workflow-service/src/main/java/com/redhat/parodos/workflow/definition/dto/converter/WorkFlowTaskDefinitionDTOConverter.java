@@ -43,7 +43,7 @@ public class WorkFlowTaskDefinitionDTOConverter
 		List<WorkFlowTaskDefinition> source = context.getSource();
 		return source.stream().map(workFlowTaskDefinition -> {
 			try {
-				return WorkDefinitionResponseDTO.builder().id(workFlowTaskDefinition.getId().toString())
+				return WorkDefinitionResponseDTO.builder().id(workFlowTaskDefinition.getId())
 						.name(workFlowTaskDefinition.getName())
 						.outputs(objectMapper.readValue(workFlowTaskDefinition.getOutputs(), new TypeReference<>() {
 						})).parameterFromString(workFlowTaskDefinition.getParameters()).build();

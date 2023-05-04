@@ -239,7 +239,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 				return;
 			}
 			switch (workType) {
-				case TASK:
+				case TASK -> {
 					Optional<WorkFlowTaskDefinition> wdt = workFlowTaskDefinitionRepository
 							.findById(workFlowWorkDefinition.getWorkDefinitionId());
 					if (wdt.isEmpty()) {
@@ -248,8 +248,8 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 						return;
 					}
 					responseDTOs.add(WorkDefinitionResponseDTO.fromWorkFlowTaskDefinition(wdt.get()));
-					break;
-				case WORKFLOW:
+				}
+				case WORKFLOW -> {
 					Optional<WorkFlowDefinition> wd = workFlowDefinitionRepository
 							.findById(workFlowWorkDefinition.getWorkDefinitionId());
 					if (wd.isEmpty()) {
@@ -259,12 +259,11 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 					}
 					List<WorkFlowWorkDefinition> wdWorkFlowWorkDependencies = workFlowWorkRepository
 							.findByWorkFlowDefinitionIdOrderByCreateDateAsc(wd.get().getId());
-
 					responseDTOs.add(WorkDefinitionResponseDTO.fromWorkFlowDefinitionEntity(wd.get(),
 							wdWorkFlowWorkDependencies));
-					break;
-				default:
-					return;
+				}
+				default -> {
+				}
 			}
 		});
 
@@ -276,11 +275,11 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 		Map<String, Integer> workFlowWorksStartIndex = new HashMap<>();
 
 		// add workflow
-		workDefinitionResponseDTOs.add(WorkDefinitionResponseDTO.builder().id(workFlowDefinition.getId().toString())
-				.workType(WorkType.WORKFLOW.name()).name(workFlowDefinition.getName())
-				.parameterFromString(workFlowDefinition.getParameters())
-				.processingType(workFlowDefinition.getProcessingType()).works(new ArrayList<>())
-				.numberOfWorkUnits(workFlowWorkDefinitions.size()).build());
+		workDefinitionResponseDTOs.add(
+				WorkDefinitionResponseDTO.builder().id(workFlowDefinition.getId()).workType(WorkType.WORKFLOW.name())
+						.name(workFlowDefinition.getName()).parameterFromString(workFlowDefinition.getParameters())
+						.processingType(workFlowDefinition.getProcessingType()).works(new ArrayList<>())
+						.numberOfWorkUnits(workFlowWorkDefinitions.size()).build());
 		workFlowWorksStartIndex.put(workFlowDefinition.getName(), 1);
 
 		// add workflowWorkUnits
@@ -296,8 +295,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 						workDefinitionResponseDTOs.size());
 
 				List<WorkFlowWorkDefinition> workFlowWorkUnits1Definition = workFlowWorkRepository
-						.findByWorkFlowDefinitionIdOrderByCreateDateAsc(
-								UUID.fromString(workDefinitionResponseDTOs.get(i).getId()))
+						.findByWorkFlowDefinitionIdOrderByCreateDateAsc(workDefinitionResponseDTOs.get(i).getId())
 						.stream().sorted(Comparator.comparing(WorkFlowWorkDefinition::getCreateDate))
 						.collect(Collectors.toList());
 				this.getWorksFromWorkDefinition(workFlowWorkUnits1Definition, workDefinitionResponseDTOs);

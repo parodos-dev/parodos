@@ -1,5 +1,8 @@
 package com.redhat.parodos.workflow.definition.controller;
 
+import java.util.List;
+import java.util.UUID;
+
 import com.redhat.parodos.ControllerMockClient;
 import com.redhat.parodos.workflow.definition.dto.WorkDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
@@ -16,9 +19,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import java.util.UUID;
-import java.util.List;
 
 @SpringBootTest
 @DirtiesContext
@@ -126,8 +126,8 @@ class WorkFlowDefinitionControllerTest extends ControllerMockClient {
 
 	private WorkDefinitionResponseDTO createSampleWorkFlowTaskDefinition(String name) {
 		String parameters = "{\"param1\": {\"description\": \"param1\"}}";
-		return WorkDefinitionResponseDTO.builder().id(UUID.randomUUID().toString()).name(name)
-				.parameterFromString(parameters).build();
+		return WorkDefinitionResponseDTO.builder().id(UUID.randomUUID()).name(name).parameterFromString(parameters)
+				.build();
 	}
 
 }
