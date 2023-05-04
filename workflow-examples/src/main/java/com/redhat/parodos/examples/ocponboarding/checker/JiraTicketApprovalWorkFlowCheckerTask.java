@@ -26,6 +26,8 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import com.redhat.parodos.examples.ocponboarding.task.dto.jira.GetJiraTicketResponseDto;
 import com.redhat.parodos.examples.ocponboarding.task.dto.jira.GetJiraTicketResponseValue;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
+
+import java.time.Instant;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -56,9 +58,9 @@ public class JiraTicketApprovalWorkFlowCheckerTask extends BaseWorkFlowCheckerTa
 
 	private final String jiraPassword;
 
-	public JiraTicketApprovalWorkFlowCheckerTask(WorkFlow jiraTicketApprovalEscalationWorkFlow, long sla,
+	public JiraTicketApprovalWorkFlowCheckerTask(WorkFlow jiraTicketApprovalEscalationWorkFlow, Instant deadline,
 			String jiraServiceBaseUrl, String jiraUsername, String jiraPassword) {
-		super(jiraTicketApprovalEscalationWorkFlow, sla);
+		super(jiraTicketApprovalEscalationWorkFlow, deadline);
 		this.jiraServiceBaseUrl = jiraServiceBaseUrl;
 		this.jiraUsername = jiraUsername;
 		this.jiraPassword = jiraPassword;

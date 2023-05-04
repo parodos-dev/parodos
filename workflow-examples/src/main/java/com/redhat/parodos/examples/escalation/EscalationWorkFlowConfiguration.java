@@ -1,7 +1,7 @@
 package com.redhat.parodos.examples.escalation;
 
+import java.time.Instant;
 import java.util.Arrays;
-import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -72,7 +72,7 @@ public class EscalationWorkFlowConfiguration {
 	@Bean
 	public SimpleTaskOneChecker simpleTaskOneCheckerTask(
 			@Qualifier("simpleTaskOneEscalatorWorkflow") WorkFlow simpleTaskOneEscalatorWorkflow) {
-		return new SimpleTaskOneChecker(simpleTaskOneEscalatorWorkflow, new Date().getTime() / 1000 + 30);
+		return new SimpleTaskOneChecker(simpleTaskOneEscalatorWorkflow, Instant.now().plusSeconds(30));
 	}
 
 	@Bean

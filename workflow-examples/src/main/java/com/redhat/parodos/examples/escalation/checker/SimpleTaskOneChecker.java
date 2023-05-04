@@ -9,6 +9,8 @@ import com.redhat.parodos.workflows.workflow.WorkFlow;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.Instant;
+
 /**
  * A simple WorkflowChecker that will fail 3 times and then succeed every time after
  *
@@ -20,8 +22,8 @@ public class SimpleTaskOneChecker extends BaseWorkFlowCheckerTask {
 
 	private int failCount = 0;
 
-	public SimpleTaskOneChecker(WorkFlow simpleTaskOneEscalatorWorkflow, long sla) {
-		super(simpleTaskOneEscalatorWorkflow, sla);
+	public SimpleTaskOneChecker(WorkFlow simpleTaskOneEscalatorWorkflow, Instant deadline) {
+		super(simpleTaskOneEscalatorWorkflow, deadline);
 	}
 
 	@Override

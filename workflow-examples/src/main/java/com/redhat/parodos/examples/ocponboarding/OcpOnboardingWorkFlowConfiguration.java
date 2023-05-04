@@ -33,7 +33,8 @@ import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
-import java.util.Date;
+
+import java.time.Instant;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -117,7 +118,7 @@ public class OcpOnboardingWorkFlowConfiguration {
 			@Value("${JIRA_URL:test}") String url, @Value("${JIRA_USER:user}") String username,
 			@Value("${JIRA_TOKEN:token}") String password) {
 		return new JiraTicketApprovalWorkFlowCheckerTask(jiraTicketApprovalEscalationWorkFlow,
-				new Date().getTime() / 1000 + 30, url, username, password);
+				Instant.now().plusSeconds(30), url, username, password);
 	}
 
 	@Bean(name = "jiraTicketApprovalWorkFlowChecker")

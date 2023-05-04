@@ -15,7 +15,7 @@
  */
 package com.redhat.parodos.workflow.task.checker;
 
-import java.util.Date;
+import java.time.Instant;
 
 import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskType;
@@ -42,11 +42,11 @@ public abstract class BaseWorkFlowCheckerTask extends BaseWorkFlowTask {
 	 */
 	private WorkFlow escalationWorkflow;
 
-	private long expectedCompletionDate;
+	private Instant deadline;
 
-	protected BaseWorkFlowCheckerTask(WorkFlow escalationWorkflow, long expectedSlaBeforeEscalationInSeconds) {
+	protected BaseWorkFlowCheckerTask(WorkFlow escalationWorkflow, Instant deadline) {
 		super();
-		this.expectedCompletionDate = expectedSlaBeforeEscalationInSeconds;
+		this.deadline = deadline;
 		this.escalationWorkflow = escalationWorkflow;
 	}
 
@@ -72,8 +72,7 @@ public abstract class BaseWorkFlowCheckerTask extends BaseWorkFlowTask {
 		// run the checker
 		WorkReport report = checkWorkFlowStatus(workContext);
 		// determine if there is an escalation path for a failing checker
-		if (escalationWorkflow != null && report.getStatus() == WorkStatus.FAILED
-				&& new Date().getTime() > expectedCompletionDate) {
+		if (escalationWorkflow != null && report.getStatus() == WorkStatus.FAILED && Instant.now().isAfter(deadline)) {
 			// run escalation if SLA is exceeded
 			WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(escalationWorkflow, workContext);
 		}
