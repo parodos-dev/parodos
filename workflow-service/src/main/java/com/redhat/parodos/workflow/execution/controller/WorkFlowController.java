@@ -85,9 +85,9 @@ public class WorkFlowController {
 		if (workReport == null) {
 			return ResponseEntity.status(500).build();
 		}
-		return ResponseEntity.ok(WorkFlowResponseDTO.builder()
-				.workFlowExecutionId(WorkContextDelegate.read(workReport.getWorkContext(),
-						WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ID).toString())
+		String workflowExecutionId = WorkContextDelegate.read(workReport.getWorkContext(),
+				WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ID).toString();
+		return ResponseEntity.ok(WorkFlowResponseDTO.builder().workFlowExecutionId(UUID.fromString(workflowExecutionId))
 				.workFlowOptions((WorkFlowOptions) WorkContextDelegate.read(workReport.getWorkContext(),
 						WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
 						WorkContextDelegate.Resource.WORKFLOW_OPTIONS))
@@ -105,10 +105,10 @@ public class WorkFlowController {
 					@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
 					@ApiResponse(responseCode = "404", description = "Not found", content = @Content) })
 	@PostMapping("/{workFlowExecutionId}/checkers/{workFlowCheckerTaskName}")
-	public void updateWorkFlowCheckerTaskStatus(@PathVariable String workFlowExecutionId,
+	public void updateWorkFlowCheckerTaskStatus(@PathVariable UUID workFlowExecutionId,
 			@PathVariable String workFlowCheckerTaskName,
 			@Valid @RequestBody WorkFlowCheckerTaskRequestDTO workFlowCheckerTaskRequestDTO) {
-		workFlowService.updateWorkFlowCheckerTaskStatus(UUID.fromString(workFlowExecutionId), workFlowCheckerTaskName,
+		workFlowService.updateWorkFlowCheckerTaskStatus(workFlowExecutionId, workFlowCheckerTaskName,
 				workFlowCheckerTaskRequestDTO.getStatus());
 	}
 
@@ -120,8 +120,8 @@ public class WorkFlowController {
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content) })
 	@GetMapping("/{workFlowExecutionId}/status")
-	public ResponseEntity<WorkFlowStatusResponseDTO> getStatus(@PathVariable String workFlowExecutionId) {
-		return ResponseEntity.ok(workFlowService.getWorkFlowStatus(UUID.fromString(workFlowExecutionId)));
+	public ResponseEntity<WorkFlowStatusResponseDTO> getStatus(@PathVariable UUID workFlowExecutionId) {
+		return ResponseEntity.ok(workFlowService.getWorkFlowStatus(workFlowExecutionId));
 	}
 
 	@Operation(summary = "Returns workflow context parameters")
@@ -132,10 +132,9 @@ public class WorkFlowController {
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content) })
 	@GetMapping("/{workFlowExecutionId}/context")
-	public ResponseEntity<WorkFlowContextResponseDTO> getWorkflowParameters(@PathVariable String workFlowExecutionId,
+	public ResponseEntity<WorkFlowContextResponseDTO> getWorkflowParameters(@PathVariable UUID workFlowExecutionId,
 			@NotEmpty @RequestParam List<WorkContextDelegate.@PubliclyVisible Resource> param) {
-		WorkFlowContextResponseDTO responseDTO = workFlowService
-				.getWorkflowParameters(UUID.fromString(workFlowExecutionId), param);
+		WorkFlowContextResponseDTO responseDTO = workFlowService.getWorkflowParameters(workFlowExecutionId, param);
 		return ResponseEntity.ok(responseDTO);
 	}
 

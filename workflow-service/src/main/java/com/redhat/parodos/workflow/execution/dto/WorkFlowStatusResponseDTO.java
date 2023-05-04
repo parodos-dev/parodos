@@ -15,13 +15,14 @@
  */
 package com.redhat.parodos.workflow.execution.dto;
 
+import java.util.List;
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 /**
  * Workflow status response dto
@@ -36,7 +37,7 @@ import java.util.List;
 @NoArgsConstructor
 public class WorkFlowStatusResponseDTO {
 
-	private String workFlowExecutionId;
+	private UUID workFlowExecutionId;
 
 	private String workFlowName;
 

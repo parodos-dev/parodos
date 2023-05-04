@@ -15,6 +15,8 @@
  */
 package com.redhat.parodos.workflow.execution.dto;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.redhat.parodos.workflow.option.WorkFlowOptions;
 import com.redhat.parodos.workflows.work.WorkStatus;
@@ -36,7 +38,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WorkFlowResponseDTO {
 
-	private String workFlowExecutionId;
+	private UUID workFlowExecutionId;
 
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private WorkFlowOptions workFlowOptions;

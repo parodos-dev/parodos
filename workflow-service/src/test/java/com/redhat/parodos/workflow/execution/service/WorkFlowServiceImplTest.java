@@ -546,7 +546,7 @@ class WorkFlowServiceImplTest {
 
 		// workflow (main)
 		assertNotNull(workFlowStatusResponseDTO);
-		assertEquals(workFlowStatusResponseDTO.getWorkFlowExecutionId(), workFlowExecution.getId().toString());
+		assertEquals(workFlowExecution.getId(), workFlowStatusResponseDTO.getWorkFlowExecutionId());
 		assertEquals(workFlowStatusResponseDTO.getWorkFlowName(), workFlowDefinition.getName());
 		assertEquals(workFlowStatusResponseDTO.getStatus(), WorkFlowStatus.IN_PROGRESS.name());
 		assertEquals(workFlowStatusResponseDTO.getWorks().size(), 2);
@@ -730,7 +730,7 @@ class WorkFlowServiceImplTest {
 
 		// main workflow
 		assertNotNull(workFlowStatusResponseDTO);
-		assertEquals(workFlowStatusResponseDTO.getWorkFlowExecutionId(), workFlowExecution.getId().toString());
+		assertEquals(workFlowExecution.getId(), workFlowStatusResponseDTO.getWorkFlowExecutionId());
 		assertEquals(workFlowStatusResponseDTO.getWorkFlowName(), workFlowDefinition.getName());
 		assertEquals(workFlowStatusResponseDTO.getStatus(), WorkFlowStatus.IN_PROGRESS.name());
 		assertEquals(workFlowStatusResponseDTO.getWorks().size(), 2);
@@ -873,7 +873,7 @@ class WorkFlowServiceImplTest {
 		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findById(any());
 		assertNotNull(workflowParameters);
 		assertNotNull(workflowParameters.getWorkFlowOptions());
-		assertEquals(workFlowExecutionId.toString(), workflowParameters.getWorkFlowExecutionId());
+		assertEquals(workFlowExecutionId, workflowParameters.getWorkFlowExecutionId());
 		List<WorkFlowOption> newOptions = workflowParameters.getWorkFlowOptions().getNewOptions();
 		assertNotNull(newOptions);
 		assertNull(workflowParameters.getWorkFlowOptions().getUpgradeOptions());
@@ -903,7 +903,7 @@ class WorkFlowServiceImplTest {
 		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findById(any());
 		assertNotNull(workflowParameters);
 		assertNotNull(workflowParameters.getWorkFlowOptions());
-		assertEquals(workFlowExecutionId.toString(), workflowParameters.getWorkFlowExecutionId());
+		assertEquals(workFlowExecutionId, workflowParameters.getWorkFlowExecutionId());
 		assertNull(workflowParameters.getWorkFlowOptions().getNewOptions());
 	}
 
