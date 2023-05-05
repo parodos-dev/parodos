@@ -69,7 +69,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Succeeded |  -  |
+| **202** | Accepted |  -  |
 | **401** | Unauthorized |  -  |
 | **403** | Forbidden |  -  |
 
