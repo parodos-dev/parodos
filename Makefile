@@ -192,6 +192,7 @@ git-tag: ## tag commit and prepare for image release
 	git tag -a $(TAG) -m "$(TAG)"
 	$(eval TAG=$(TAG))
 
+release-all: ARGS = $(FAST_BUILD_ARGS)
 release-all: clean update-version release git-release git-tag build-images tag-images push-images bump-version install bump-git-commit
 
 ##@ Run
