@@ -1,6 +1,6 @@
-package com.redhat.parodos.examples.integration;
+package com.redhat.parodos.examples.kubeapi;
 
-import com.redhat.parodos.examples.integration.utils.ExamplesUtils;
+import com.redhat.parodos.examples.kubeapi.utils.ExamplesUtils;
 import com.redhat.parodos.sdk.api.WorkflowApi;
 import com.redhat.parodos.sdk.api.WorkflowDefinitionApi;
 import com.redhat.parodos.sdk.invoker.ApiClient;
