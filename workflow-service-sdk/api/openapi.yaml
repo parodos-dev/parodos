@@ -238,12 +238,12 @@ paths:
               $ref: '#/components/schemas/WorkFlowRequestDTO'
         required: true
       responses:
-        "200":
+        "202":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/WorkFlowResponseDTO'
-          description: Succeeded
+          description: Accepted
         "401":
           description: Unauthorized
         "403":
@@ -685,118 +685,6 @@ components:
         workFlowName:
           type: string
       type: object
-    WorkFlowOptions:
-      example:
-        continuationOptions:
-        - identifier: identifier
-          workFlowName: workFlowName
-          displayName: displayName
-          description: description
-          details:
-          - details
-          - details
-        - identifier: identifier
-          workFlowName: workFlowName
-          displayName: displayName
-          description: description
-          details:
-          - details
-          - details
-        upgradeOptions:
-        - identifier: identifier
-          workFlowName: workFlowName
-          displayName: displayName
-          description: description
-          details:
-          - details
-          - details
-        - identifier: identifier
-          workFlowName: workFlowName
-          displayName: displayName
-          description: description
-          details:
-          - details
-          - details
-        newOptions:
-        - identifier: identifier
-          workFlowName: workFlowName
-          displayName: displayName
-          description: description
-          details:
-          - details
-          - details
-        - identifier: identifier
-          workFlowName: workFlowName
-          displayName: displayName
-          description: description
-          details:
-          - details
-          - details
-        migrationOptions:
-        - identifier: identifier
-          workFlowName: workFlowName
-          displayName: displayName
-          description: description
-          details:
-          - details
-          - details
-        - identifier: identifier
-          workFlowName: workFlowName
-          displayName: displayName
-          description: description
-          details:
-          - details
-          - details
-        optionsAvailable: true
-        otherOptions:
-        - identifier: identifier
-          workFlowName: workFlowName
-          displayName: displayName
-          description: description
-          details:
-          - details
-          - details
-        - identifier: identifier
-          workFlowName: workFlowName
-          displayName: displayName
-          description: description
-          details:
-          - details
-          - details
-        currentVersion:
-          identifier: identifier
-          workFlowName: workFlowName
-          displayName: displayName
-          description: description
-          details:
-          - details
-          - details
-      properties:
-        continuationOptions:
-          items:
-            $ref: '#/components/schemas/WorkFlowOption'
-          type: array
-        currentVersion:
-          $ref: '#/components/schemas/WorkFlowOption'
-        migrationOptions:
-          items:
-            $ref: '#/components/schemas/WorkFlowOption'
-          type: array
-        newOptions:
-          items:
-            $ref: '#/components/schemas/WorkFlowOption'
-          type: array
-        optionsAvailable:
-          type: boolean
-        otherOptions:
-          items:
-            $ref: '#/components/schemas/WorkFlowOption'
-          type: array
-        upgradeOptions:
-          items:
-            $ref: '#/components/schemas/WorkFlowOption'
-          type: array
-      type: object
     WorkFlowOptionsResponseDTO:
       example:
         continuationOptions:
@@ -956,91 +844,6 @@ components:
       example:
         workStatus: FAILED
         workFlowName: workFlowName
-        workFlowOptions:
-          continuationOptions:
-          - identifier: identifier
-            workFlowName: workFlowName
-            displayName: displayName
-            description: description
-            details:
-            - details
-            - details
-          - identifier: identifier
-            workFlowName: workFlowName
-            displayName: displayName
-            description: description
-            details:
-            - details
-            - details
-          upgradeOptions:
-          - identifier: identifier
-            workFlowName: workFlowName
-            displayName: displayName
-            description: description
-            details:
-            - details
-            - details
-          - identifier: identifier
-            workFlowName: workFlowName
-            displayName: displayName
-            description: description
-            details:
-            - details
-            - details
-          newOptions:
-          - identifier: identifier
-            workFlowName: workFlowName
-            displayName: displayName
-            description: description
-            details:
-            - details
-            - details
-          - identifier: identifier
-            workFlowName: workFlowName
-            displayName: displayName
-            description: description
-            details:
-            - details
-            - details
-          migrationOptions:
-          - identifier: identifier
-            workFlowName: workFlowName
-            displayName: displayName
-            description: description
-            details:
-            - details
-            - details
-          - identifier: identifier
-            workFlowName: workFlowName
-            displayName: displayName
-            description: description
-            details:
-            - details
-            - details
-          optionsAvailable: true
-          otherOptions:
-          - identifier: identifier
-            workFlowName: workFlowName
-            displayName: displayName
-            description: description
-            details:
-            - details
-            - details
-          - identifier: identifier
-            workFlowName: workFlowName
-            displayName: displayName
-            description: description
-            details:
-            - details
-            - details
-          currentVersion:
-            identifier: identifier
-            workFlowName: workFlowName
-            displayName: displayName
-            description: description
-            details:
-            - details
-            - details
         endDate: endDate
         workFlowExecutionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         createUser: createUser
@@ -1061,8 +864,6 @@ components:
           type: string
         workFlowName:
           type: string
-        workFlowOptions:
-          $ref: '#/components/schemas/WorkFlowOptions'
         workStatus:
           enum:
           - FAILED

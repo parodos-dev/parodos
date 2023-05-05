@@ -67,11 +67,6 @@ public class WorkFlowResponseDTO {
 	@SerializedName(SERIALIZED_NAME_WORK_FLOW_NAME)
 	private String workFlowName;
 
-	public static final String SERIALIZED_NAME_WORK_FLOW_OPTIONS = "workFlowOptions";
-
-	@SerializedName(SERIALIZED_NAME_WORK_FLOW_OPTIONS)
-	private WorkFlowOptions workFlowOptions;
-
 	/**
 	 * Gets or Sets workStatus
 	 */
@@ -257,26 +252,6 @@ public class WorkFlowResponseDTO {
 		this.workFlowName = workFlowName;
 	}
 
-	public WorkFlowResponseDTO workFlowOptions(WorkFlowOptions workFlowOptions) {
-
-		this.workFlowOptions = workFlowOptions;
-		return this;
-	}
-
-	/**
-	 * Get workFlowOptions
-	 * @return workFlowOptions
-	 **/
-	@javax.annotation.Nullable
-
-	public WorkFlowOptions getWorkFlowOptions() {
-		return workFlowOptions;
-	}
-
-	public void setWorkFlowOptions(WorkFlowOptions workFlowOptions) {
-		this.workFlowOptions = workFlowOptions;
-	}
-
 	public WorkFlowResponseDTO workStatus(WorkStatusEnum workStatus) {
 
 		this.workStatus = workStatus;
@@ -312,14 +287,12 @@ public class WorkFlowResponseDTO {
 				&& Objects.equals(this.startDate, workFlowResponseDTO.startDate)
 				&& Objects.equals(this.workFlowExecutionId, workFlowResponseDTO.workFlowExecutionId)
 				&& Objects.equals(this.workFlowName, workFlowResponseDTO.workFlowName)
-				&& Objects.equals(this.workFlowOptions, workFlowResponseDTO.workFlowOptions)
 				&& Objects.equals(this.workStatus, workFlowResponseDTO.workStatus);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(createUser, endDate, projectId, startDate, workFlowExecutionId, workFlowName,
-				workFlowOptions, workStatus);
+		return Objects.hash(createUser, endDate, projectId, startDate, workFlowExecutionId, workFlowName, workStatus);
 	}
 
 	@Override
@@ -332,7 +305,6 @@ public class WorkFlowResponseDTO {
 		sb.append("    startDate: ").append(toIndentedString(startDate)).append("\n");
 		sb.append("    workFlowExecutionId: ").append(toIndentedString(workFlowExecutionId)).append("\n");
 		sb.append("    workFlowName: ").append(toIndentedString(workFlowName)).append("\n");
-		sb.append("    workFlowOptions: ").append(toIndentedString(workFlowOptions)).append("\n");
 		sb.append("    workStatus: ").append(toIndentedString(workStatus)).append("\n");
 		sb.append("}");
 		return sb.toString();
@@ -362,7 +334,6 @@ public class WorkFlowResponseDTO {
 		openapiFields.add("startDate");
 		openapiFields.add("workFlowExecutionId");
 		openapiFields.add("workFlowName");
-		openapiFields.add("workFlowOptions");
 		openapiFields.add("workStatus");
 
 		// a set of required properties/fields (JSON key names)
@@ -430,10 +401,6 @@ public class WorkFlowResponseDTO {
 			throw new IllegalArgumentException(String.format(
 					"Expected the field `workFlowName` to be a primitive type in the JSON string but got `%s`",
 					jsonObj.get("workFlowName").toString()));
-		}
-		// validate the optional field `workFlowOptions`
-		if (jsonObj.get("workFlowOptions") != null && !jsonObj.get("workFlowOptions").isJsonNull()) {
-			WorkFlowOptions.validateJsonObject(jsonObj.getAsJsonObject("workFlowOptions"));
 		}
 		if ((jsonObj.get("workStatus") != null && !jsonObj.get("workStatus").isJsonNull())
 				&& !jsonObj.get("workStatus").isJsonPrimitive()) {

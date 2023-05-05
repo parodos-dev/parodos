@@ -28,7 +28,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-
 @Slf4j
 public class PrebuiltWorkFlow extends BaseIntegrationTest {
 
@@ -92,8 +91,7 @@ public class PrebuiltWorkFlow extends BaseIntegrationTest {
 
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = SdkUtils.waitWorkflowStatusAsync(workflowApi,
 				workFlowResponseDTO.getWorkFlowExecutionId());
-		assertEquals(WorkFlowResponseDTO.WorkStatusEnum.COMPLETED,
-				WorkFlowResponseDTO.WorkStatusEnum.valueOf(workFlowStatusResponseDTO.getStatus()));
+		assertEquals(WorkFlowResponseDTO.WorkStatusEnum.COMPLETED, workFlowStatusResponseDTO.getStatus());
 		log.info("workflow finished successfully with response: {}", workFlowResponseDTO);
 		log.info("******** PreBuilt Sequence Flow Completed ********");
 	}

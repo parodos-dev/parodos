@@ -13,7 +13,6 @@
 |**startDate** | **String** |  |  [optional] |
 |**workFlowExecutionId** | **UUID** |  |  [optional] |
 |**workFlowName** | **String** |  |  [optional] |
-|**workFlowOptions** | [**WorkFlowOptions**](WorkFlowOptions.md) |  |  [optional] |
 |**workStatus** | [**WorkStatusEnum**](#WorkStatusEnum) |  |  [optional] |
 
 

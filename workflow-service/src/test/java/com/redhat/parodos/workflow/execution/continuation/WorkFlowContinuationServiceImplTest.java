@@ -100,8 +100,8 @@ class WorkFlowContinuationServiceImplTest {
 
 		// then
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
-		verify(this.workFlowExecutor, times(1)).executeAsync(
-				eq(workFlowExecution.getProjectId()), eq(TEST_WORKFLOW), any(), any());
+		verify(this.workFlowExecutor, times(1)).executeAsync(eq(workFlowExecution.getProjectId()), eq(TEST_WORKFLOW),
+				any(), any());
 	}
 
 	@Test
@@ -125,8 +125,8 @@ class WorkFlowContinuationServiceImplTest {
 
 		// then
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
-		verify(this.workFlowExecutor, times(1)).executeAsync(
-				eq(workFlowExecution.getProjectId()), eq(TEST_WORKFLOW), any(), any());
+		verify(this.workFlowExecutor, times(1)).executeAsync(eq(workFlowExecution.getProjectId()), eq(TEST_WORKFLOW),
+				any(), any());
 	}
 
 	@Test
@@ -144,7 +144,8 @@ class WorkFlowContinuationServiceImplTest {
 
 		when(this.workFlowTaskRepository.findByWorkFlowExecutionId(wfExecution.getId()))
 				.thenReturn(List.of(workFlowTaskExecution));
-		doThrow(new RuntimeException("JsonParseException")).when(workFlowExecutor).executeAsync(any(),any(), any(), any());
+		doThrow(new RuntimeException("JsonParseException")).when(workFlowExecutor).executeAsync(any(), any(), any(),
+				any());
 
 		// when
 		Exception exception = assertThrows(RuntimeException.class, () -> this.service.workFlowRunAfterStartup());

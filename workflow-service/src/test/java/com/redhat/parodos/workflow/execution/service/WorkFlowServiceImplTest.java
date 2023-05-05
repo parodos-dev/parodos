@@ -7,18 +7,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-<<<<<<< HEAD
-=======
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.nullable;
-
->>>>>>> 0b7997af (Execute main workflow asynchronously)
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
 import com.redhat.parodos.project.service.ProjectService;
 import com.redhat.parodos.workflow.WorkFlowDelegate;
@@ -61,7 +49,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.server.ResponseStatusException;
 
-<<<<<<< HEAD
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -76,8 +63,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-=======
->>>>>>> 0b7997af (Execute main workflow asynchronously)
 @ExtendWith(SpringExtension.class)
 class WorkFlowServiceImplTest {
 
@@ -135,27 +120,14 @@ class WorkFlowServiceImplTest {
 		Work work = mock(Work.class);
 		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow().named("test").execute(work).build();
 
-<<<<<<< HEAD
 		when(work.execute(any())).thenReturn(new DefaultWorkReport(WorkStatus.COMPLETED, new WorkContext() {
 			{
 				put("foo", "bar");
 			}
 		}));
-		when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
+		when(this.workFlowDelegate.getWorkFlowExecutionByName(TEST_WORKFLOW_NAME)).thenReturn(workFlow);
 		when(this.workFlowDelegate.initWorkFlowContext(any(), any())).thenReturn(new WorkContext());
 		when(this.workFlowDefinitionRepository.findFirstByName(any()))
-=======
-		Mockito.when(work.execute(Mockito.any()))
-				.thenReturn(new DefaultWorkReport(WorkStatus.COMPLETED, new WorkContext() {
-					{
-						put("foo", "bar");
-					}
-				}));
-		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName(TEST_WORKFLOW_NAME)).thenReturn(workFlow);
-		Mockito.when(this.workFlowDelegate.initWorkFlowContext(Mockito.any(), Mockito.any()))
-				.thenReturn(new WorkContext());
-		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(Mockito.any()))
->>>>>>> 0b7997af (Execute main workflow asynchronously)
 				.thenReturn(this.sampleWorkflowDefinition("test"));
 
 		// when
@@ -208,24 +180,17 @@ class WorkFlowServiceImplTest {
 		}));
 		when(this.workFlowDefinitionRepository.findFirstByName(any()))
 				.thenReturn(this.sampleWorkflowDefinition("test"));
-<<<<<<< HEAD
 		when(this.workFlowWorkRepository.findFirstByWorkDefinitionId(any())).thenReturn(null);
 		when(this.workFlowDelegate.initWorkFlowContext(any(), any())).thenReturn(new WorkContext());
-		when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
-
-=======
-		Mockito.when(this.workFlowWorkRepository.findFirstByWorkDefinitionId(Mockito.any())).thenReturn(null);
-		Mockito.when(this.workFlowDelegate.initWorkFlowContext(Mockito.any(), Mockito.any()))
-				.thenReturn(new WorkContext());
-		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName(TEST_WORKFLOW_NAME)).thenReturn(workFlow);
-		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().status(WorkFlowStatus.IN_PROGRESS).build();
+		when(this.workFlowDelegate.getWorkFlowExecutionByName(TEST_WORKFLOW_NAME)).thenReturn(workFlow);
+		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().status(WorkStatus.IN_PROGRESS).build();
 		workFlowExecution.setId(UUID.randomUUID());
-		Mockito.when(this.workFlowRepository.save(Mockito.any())).thenReturn(workFlowExecution);
+		when(this.workFlowRepository.save(any())).thenReturn(workFlowExecution);
 		WorkFlowDefinitionResponseDTO workFlowDefinitionResponseDTO = WorkFlowDefinitionResponseDTO.builder()
 				.name(TEST_WORKFLOW_NAME).works(List.of()).build();
-		Mockito.when(this.workFlowDefinitionService.getWorkFlowDefinitionByName(TEST_WORKFLOW_NAME))
+		when(this.workFlowDefinitionService.getWorkFlowDefinitionByName(TEST_WORKFLOW_NAME))
 				.thenReturn(workFlowDefinitionResponseDTO);
->>>>>>> 0b7997af (Execute main workflow asynchronously)
+
 		// when
 		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId(UUID.randomUUID())
 				.works(List.of()).workFlowName(TEST_WORKFLOW_NAME).build());
@@ -251,12 +216,7 @@ class WorkFlowServiceImplTest {
 				.thenReturn(this.sampleWorkflowDefinition("test"));
 		when(this.workFlowWorkRepository.findFirstByWorkDefinitionId(any()))
 				.thenReturn(WorkFlowWorkDefinition.builder().build());
-
-<<<<<<< HEAD
-		when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
-=======
-		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName(TEST_WORKFLOW_NAME)).thenReturn(workFlow);
->>>>>>> 0b7997af (Execute main workflow asynchronously)
+		when(this.workFlowDelegate.getWorkFlowExecutionByName(TEST_WORKFLOW_NAME)).thenReturn(workFlow);
 
 		// when
 		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId(UUID.randomUUID())
@@ -279,13 +239,8 @@ class WorkFlowServiceImplTest {
 		// given
 		Work work = mock(Work.class);
 		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow().named("test").execute(work).build();
-<<<<<<< HEAD
 		when(this.workFlowDefinitionRepository.findFirstByName(any())).thenReturn(null);
-		when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
-=======
-		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(Mockito.any())).thenReturn(null);
-		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName(TEST_WORKFLOW_NAME)).thenReturn(workFlow);
->>>>>>> 0b7997af (Execute main workflow asynchronously)
+		when(this.workFlowDelegate.getWorkFlowExecutionByName(TEST_WORKFLOW_NAME)).thenReturn(workFlow);
 
 		// when
 		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId(UUID.randomUUID())

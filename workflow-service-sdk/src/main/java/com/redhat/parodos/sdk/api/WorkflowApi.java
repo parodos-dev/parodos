@@ -87,8 +87,8 @@ public class WorkflowApi {
 	 * <td>Response Headers</td>
 	 * </tr>
 	 * <tr>
-	 * <td>200</td>
-	 * <td>Succeeded</td>
+	 * <td>202</td>
+	 * <td>Accepted</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -175,8 +175,8 @@ public class WorkflowApi {
 	 * <td>Response Headers</td>
 	 * </tr>
 	 * <tr>
-	 * <td>200</td>
-	 * <td>Succeeded</td>
+	 * <td>202</td>
+	 * <td>Accepted</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -210,8 +210,8 @@ public class WorkflowApi {
 	 * <td>Response Headers</td>
 	 * </tr>
 	 * <tr>
-	 * <td>200</td>
-	 * <td>Succeeded</td>
+	 * <td>202</td>
+	 * <td>Accepted</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -249,8 +249,8 @@ public class WorkflowApi {
 	 * <td>Response Headers</td>
 	 * </tr>
 	 * <tr>
-	 * <td>200</td>
-	 * <td>Succeeded</td>
+	 * <td>202</td>
+	 * <td>Accepted</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
