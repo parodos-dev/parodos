@@ -50,13 +50,13 @@ public class PatternDetector {
 	 *
 	 */
 	public static DetectionResults detect(WorkContext context) {
-		if (PatternDetectionWorkContextDelegate.validateAndIntializeContext(context)) {
+		if (PatternDetectionWorkContextDelegate.getInstance().validateAndIntializeContext(context)) {
 			// @formatter:off
 			WorkFlow workflow = ParallelFlow
 						.Builder
 						.aNewParallelFlow()
-						.execute(PatternDetectionWorkContextDelegate.getDesiredPatternsArray(context))
-						.with(PatternDetectionWorkContextDelegate.getScanningThreadPool(context) != null ? PatternDetectionWorkContextDelegate.getScanningThreadPool(context) : ScanningThreadPool.getThreadPoolExecutor())
+						.execute(PatternDetectionWorkContextDelegate.getInstance().getDesiredPatternsArray(context))
+						.with(PatternDetectionWorkContextDelegate.getInstance().getScanningThreadPool(context) != null ? PatternDetectionWorkContextDelegate.getInstance().getScanningThreadPool(context) : ScanningThreadPool.getThreadPoolExecutor())
 						.build();
 			// @formatter:on
 			return new DetectionResults.Builder(context, workflow).build();

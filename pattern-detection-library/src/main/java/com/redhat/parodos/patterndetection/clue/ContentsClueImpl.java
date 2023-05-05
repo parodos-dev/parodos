@@ -15,24 +15,16 @@
  */
 package com.redhat.parodos.patterndetection.clue;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-import com.redhat.parodos.patterndetection.clue.client.ContentInputStreamClientConfiguration;
-import com.redhat.parodos.patterndetection.clue.delegate.ContentsDelegate;
 import com.redhat.parodos.patterndetection.context.PatternDetectionWorkContextDelegate;
 import com.redhat.parodos.patterndetection.exceptions.PatternDetectionConfigurationException;
-import com.redhat.parodos.patterndetection.exceptions.PatternDetectionRuntimeException;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  *
@@ -42,152 +34,36 @@ import lombok.extern.slf4j.Slf4j;
  * @author Luke Shannon (Github: lshannon)
  *
  */
-@Slf4j
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class ContentsClueImpl extends AbstractClue {
 
 	Pattern targetPattern;
-
+	ContentsClueImplFileDelegate contentsClueImplFileDelegate;
+	ContentsClueImplContentClientDelegate contentsClueImplContentClientDelegate;
+	ContentsClueImpInputStreamDelegate contentsClueImpInputStreamDelegate;
+	
+	public ContentsClueImpl() {
+		super();
+		contentsClueImplFileDelegate = new ContentsClueImplFileDelegate(this);
+		contentsClueImplContentClientDelegate = new ContentsClueImplContentClientDelegate(this);
+		contentsClueImpInputStreamDelegate = new ContentsClueImpInputStreamDelegate(this);
+	}
+	
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		if (continueToRunIfDetected || !PatternDetectionWorkContextDelegate.isThisClueDetected(this, workContext)) {
+		if (continueToRunIfDetected || !PatternDetectionWorkContextDelegate.getInstance().isThisClueDetected(this, workContext)) {
 			processContent(workContext);
 		}
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
-	private void processContent(WorkContext workContext) {
-		getContentClientConfigurations(workContext);
-		getInputStreamWrappers(workContext);
-		getFilesToScan(workContext);
+	void processContent(WorkContext workContext) {
+		contentsClueImplContentClientDelegate.getContentClientConfigurations(workContext);
+		contentsClueImpInputStreamDelegate.getInputStreamWrappers(workContext);
+		contentsClueImplFileDelegate.getFilesToScan(workContext);
 	}
 
-	/*
-	 * Get Files to scan (local) and process their content
-	 */
-	private void getFilesToScan(WorkContext workContext) {
-		List<File> filesToScan = PatternDetectionWorkContextDelegate.getFilesToScan(workContext);
-		if (continueToRunIfDetected || !PatternDetectionWorkContextDelegate.isThisClueDetected(this, workContext)) {
-			if (filesToScan != null) {
-				filesToScan.stream().forEach(thisFile -> {
-					try {
-						extractFileContent(workContext, thisFile);
-					} catch (IOException e) {
-						log.error("Unable to execute Scan of {} clue on File: {}", this.name,
-								thisFile.getAbsolutePath(), e);
-						throw new PatternDetectionRuntimeException(
-								"Error getting content from files on local File system", e);
-					}
-				});
-			}
-		}
-	}
-
-	/*
-	 * Get the InputStream wrappers from the WorkContext and process their content
-	 */
-	private void getInputStreamWrappers(WorkContext workContext) {
-		List<InputStreamWrapper> inputStreamWrappers = PatternDetectionWorkContextDelegate
-				.getInputStreamWrappers(workContext);
-		if (inputStreamWrappers != null) {
-			inputStreamWrappers.stream().forEach(inputStreamWrapper -> {
-				try {
-					if (continueToRunIfDetected
-							|| !PatternDetectionWorkContextDelegate.isThisClueDetected(this, workContext)) {
-						extractInputStreamContent(workContext, inputStreamWrapper);
-					}
-				} catch (IOException e) {
-					log.error("Unable to execute Detection of {} clue on File: {}", inputStreamWrapper.getFileName(),
-							e);
-					throw new PatternDetectionRuntimeException("Error getting content using a InputStreamWrapper", e);
-				}
-			});
-		}
-	}
-
-	/*
-	 * Get the ContentClient Configurations from the WorkContext and get each client
-	 * to obtain its content
-	 */
-	private void getContentClientConfigurations(WorkContext workContext) {
-		List<ContentInputStreamClientConfiguration> contentClientsAndPaths = PatternDetectionWorkContextDelegate
-				.getContentClientsAndPaths(workContext);
-		if (contentClientsAndPaths != null) {
-			contentClientsAndPaths.stream().forEach(inputStreamClient -> {
-				try {
-					if (continueToRunIfDetected
-							|| !PatternDetectionWorkContextDelegate.isThisClueDetected(this, workContext)) {
-						processInputsForStreamContentWithClient(workContext, inputStreamClient);
-					}
-				} catch (IOException e) {
-					log.error("Unable to execute Detection using ContentStreamClient {} ", inputStreamClient.getName(),
-							e);
-					throw new PatternDetectionRuntimeException("Error getting content using a ContentStreamClient", e);
-				}
-			});
-		}
-	}
-
-	/*
-	 * Process a list of files using the supplied ContentInputStreamClient
-	 */
-	private void processInputsForStreamContentWithClient(WorkContext workContext,
-			ContentInputStreamClientConfiguration inputStreamClientConfig) throws IOException {
-		for (String path : inputStreamClientConfig.getPathsToProcessForContent()) {
-			if (continueToRunIfDetected || !PatternDetectionWorkContextDelegate.isThisClueDetected(this, workContext)) {
-				File file = new File(path);
-				if (nameMatchingDelegate.isThisATargetFileExtension(file.getName())) {
-					List<String> fileContent;
-					try (InputStream stream = inputStreamClientConfig.getContentClient().getContentIfRequired(path,
-							inputStreamClientConfig.getParametersForClient())) {
-						if (stream != null) {
-							fileContent = ContentsDelegate.inputStreamToList(stream);
-							processContentsForMatch(workContext, file.getName(), fileContent);
-						}
-					}
-				}
-			}
-		}
-
-	}
-
-	/*
-	 * Process an InputStreamWrapper for content
-	 */
-	private void extractInputStreamContent(WorkContext workContext, InputStreamWrapper inputStreamWrapper)
-			throws IOException {
-		List<String> fileContent;
-		if (nameMatchingDelegate.isThisATargetFileExtension(inputStreamWrapper.getFileName())) {
-			fileContent = ContentsDelegate.inputStreamToList(inputStreamWrapper.getInputStream());
-			processContentsForMatch(workContext, inputStreamWrapper.getFileName(), fileContent);
-		}
-
-	}
-
-	/*
-	 * Process a file reference on the file system for content
-	 */
-	private void extractFileContent(WorkContext workContext, File thisFile) throws IOException {
-		List<String> fileContent;
-		if (nameMatchingDelegate.isThisATargetFileExtension(thisFile.getAbsolutePath())) {
-			fileContent = ContentsDelegate.fileContentsToList(thisFile);
-			processContentsForMatch(workContext, thisFile.getAbsolutePath(), fileContent);
-		}
-	}
-
-	/*
-	 * Process the List of strings obtained from a file source for the target
-	 * pattern
-	 */
-	private void processContentsForMatch(WorkContext workContext, String fileName, List<String> fileContent) {
-		for (String line : fileContent) {
-			if (!line.isEmpty() && targetPattern.matcher(line.trim()).matches() && continueToRunIfDetected
-					|| !PatternDetectionWorkContextDelegate.isThisClueDetected(this, workContext)) {
-				PatternDetectionWorkContextDelegate.markClueAsDetected(this, fileName, workContext);
-			}
-		}
-	}
 
 	/**
 	 * Provides a Builder for creating a ContentsClue and its associated members

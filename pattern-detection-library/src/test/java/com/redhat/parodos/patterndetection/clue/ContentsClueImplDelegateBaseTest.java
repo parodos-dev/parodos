@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-class ContentsClueImplTest {
+class ContentsClueImplDelegateBaseTest {
 
 	@Test
-	void testExecute() {
+	void test() {
 		fail("Not yet implemented");
 	}
 

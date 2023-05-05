@@ -85,10 +85,10 @@ public class DetectionResults {
 		public Builder(WorkContext context, WorkFlow workflow) {
 			startTime = new Date();
 			report = workflow.execute(context);
-			PatternDetectionWorkContextDelegate.processResultsAfterScan(report.getWorkContext());
-			detectedClues = PatternDetectionWorkContextDelegate.getDetectedCluesFromContext(context);
-			detectedPatterns = PatternDetectionWorkContextDelegate.getDetectedPatternsDuringScan(context);
-			allPatternsWhereDetected = PatternDetectionWorkContextDelegate.areAllPatternsDetected(report);
+			PatternDetectionWorkContextDelegate.getInstance().processResultsAfterScan(report.getWorkContext());
+			detectedClues = PatternDetectionWorkContextDelegate.getInstance().getDetectedCluesFromContext(context);
+			detectedPatterns = PatternDetectionWorkContextDelegate.getInstance().getDetectedPatternsDuringScan(context);
+			allPatternsWhereDetected = PatternDetectionWorkContextDelegate.getInstance().areAllPatternsDetected(report);
 		}
 
 		public DetectionResults build() {

@@ -1,13 +1,13 @@
-package com.redhat.parodos.patterndetection.clue;
+package com.redhat.parodos.patterndetection.clue.delegate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-class ContentsClueImplTest {
+class NameMatchingDelegateTest {
 
 	@Test
-	void testExecute() {
+	void test() {
 		fail("Not yet implemented");
 	}
 
