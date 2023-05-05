@@ -7,21 +7,29 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
+import com.google.common.base.Strings;
+import com.redhat.parodos.sdk.api.LoginApi;
 import com.redhat.parodos.sdk.api.ProjectApi;
 import com.redhat.parodos.sdk.api.WorkflowApi;
 import com.redhat.parodos.sdk.invoker.ApiCallback;
 import com.redhat.parodos.sdk.invoker.ApiClient;
 import com.redhat.parodos.sdk.invoker.ApiException;
+import com.redhat.parodos.sdk.invoker.ApiResponse;
+import com.redhat.parodos.sdk.invoker.Configuration;
 import com.redhat.parodos.sdk.model.ProjectRequestDTO;
 import com.redhat.parodos.sdk.model.ProjectResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
+import com.redhat.parodos.workflow.utils.CredUtils;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.core.env.MissingRequiredPropertiesException;
 
 /***
  * A utility class to ease the writing of new examples.
@@ -31,6 +39,66 @@ import lombok.extern.slf4j.Slf4j;
 public abstract class SdkUtils {
 
 	private SdkUtils() {
+	}
+
+	/**
+	 * Creates and configures the APIClient using the configuration properties available
+	 * in `application.yml`
+	 * @return the ApiClient
+	 */
+	public static ApiClient getParodosAPiClient() throws ApiException, MissingRequiredPropertiesException {
+		ApiClient apiClient = Configuration.getDefaultApiClient();
+		CustomPropertiesReader reader = new CustomPropertiesReader();
+		String serverIp = reader.getServerIp();
+		String serverPort = reader.getServerPort();
+
+		if (Strings.isNullOrEmpty(serverIp) || Strings.isNullOrEmpty(serverPort)) {
+			throw new MissingRequiredPropertiesException();
+		}
+
+		int port = Integer.parseInt(serverPort);
+		if (port <= 0 && port > 65535) {
+			throw new IllegalArgumentException("serverPort must be > 0 && <= 65535");
+		}
+
+		String basePath = "http://" + serverIp + ":" + serverPort;
+		log.info("serverIp is: {}, serverPort is {}. Set BasePath to {}", serverIp, serverPort, basePath);
+
+		apiClient.setBasePath(basePath);
+		apiClient.addDefaultHeader("Authorization", "Basic " + CredUtils.getBase64Creds("test", "test"));
+
+		// Need to execute a GET method to get JSessionId and CSRF Token
+		LoginApi loginApi = new LoginApi(apiClient);
+		ApiResponse<Void> loginResponse = loginApi.loginWithHttpInfo();
+		Map<String, List<String>> headers = loginResponse.getHeaders();
+		List<String> cookieHeaders = headers.get("Set-Cookie");
+		String xsrfToken = null;
+		String JSessionID = null;
+		if (cookieHeaders != null) {
+			xsrfToken = getCookieValue(cookieHeaders, xsrfToken, "XSRF-TOKEN");
+			JSessionID = getCookieValue(cookieHeaders, JSessionID, "JSESSIONID");
+		}
+
+		log.debug("Found X-CSRF-TOKEN: {} and JSessionID: {}", xsrfToken, JSessionID);
+		if (xsrfToken != null) {
+			apiClient.addDefaultHeader("X-XSRF-TOKEN", xsrfToken);
+			apiClient.addDefaultCookie("JSESSIONID", JSessionID);
+			apiClient.addDefaultCookie("XSRF-TOKEN", xsrfToken);
+		}
+		return apiClient;
+	}
+
+	@Nullable
+	private static String getCookieValue(List<String> cookieHeaders, String xsrfToken, String anObject) {
+		for (String cookieHeader : cookieHeaders) {
+			xsrfToken = Stream.of(cookieHeader.split(";")).map(cookie -> cookie.trim().split("="))
+					.filter(parts -> parts.length == 2 && parts[0].equals(anObject)).findFirst().map(parts -> parts[1])
+					.orElse(null);
+			if (xsrfToken != null) {
+				break;
+			}
+		}
+		return xsrfToken;
 	}
 
 	/**
