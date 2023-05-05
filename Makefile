@@ -177,11 +177,11 @@ update-version: ## update release version
 	find . -type f | xargs sed -i 's/$(VERSION)/${RELEASE_VERSION}/g'
 
 bump-version: ## update post-release version and update commit message
-	find . -type f | xargs sed -i 's/$(RELEASE_VERSION)/${NEXT_VERSION}/g'
+	find . -type f | xargs sed -i 's/1.0.11-SNAPSHOT/1.0.11-SNAPSHOT/g'
 
 bump-git-commit: ## adds all files and bumps the version
 	git add -u .
-	git commit -m 'Version bump to ${NEXT_VERSION}'
+	git commit -m 'Version bump to 1.0.11-SNAPSHOT'
 
 git-release: ## adds all release files and commits
 	git add -u .
@@ -192,7 +192,6 @@ git-tag: ## tag commit and prepare for image release
 	git tag -a $(TAG) -m "$(TAG)"
 	$(eval TAG=$(TAG))
 
-release-all: ARGS = $(FAST_BUILD_ARGS)
 release-all: clean update-version release git-release git-tag build-images tag-images push-images bump-version install bump-git-commit
 
 ##@ Run
