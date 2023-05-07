@@ -32,11 +32,10 @@ public class WorkFlowPropertiesAspect {
 		WorkFlowProperties properties = signature.getMethod().getAnnotation(WorkFlowProperties.class);
 
 		Object result = joinPoint.proceed();
-		if (!(result instanceof WorkFlow)) {
+		if (!(result instanceof WorkFlow workFlow)) {
 			return result;
 		}
 
-		WorkFlow workFlow = (WorkFlow) result;
 		return setPropertiesForWorkflow(workFlow, properties);
 	}
 

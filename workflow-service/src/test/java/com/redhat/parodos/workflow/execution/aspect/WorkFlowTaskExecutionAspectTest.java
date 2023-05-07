@@ -57,9 +57,9 @@ class WorkFlowTaskExecutionAspectTest {
 	@Mock
 	private WorkFlowSchedulerServiceImpl workFlowSchedulerService;
 
-	private WorkFlowRepository workFlowRepository = mock(WorkFlowRepository.class);
+	private final WorkFlowRepository workFlowRepository = mock(WorkFlowRepository.class);
 
-	private WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository = mock(
+	private final WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository = mock(
 			WorkFlowTaskDefinitionRepository.class);
 
 	@BeforeEach

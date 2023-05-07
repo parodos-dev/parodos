@@ -48,7 +48,7 @@ class WorkFlowDelegateTest {
 	@Mock
 	private BeanWorkFlowRegistryImpl beanWorkFlowRegistry;
 
-	private WorkFlowDelegate workFlowDelegate = new WorkFlowDelegate(beanWorkFlowRegistry);
+	private final WorkFlowDelegate workFlowDelegate = new WorkFlowDelegate(beanWorkFlowRegistry);
 
 	private static final UUID TEST_PROJECT_ID = UUID.randomUUID();
 
@@ -70,7 +70,7 @@ class WorkFlowDelegateTest {
 
 	private static final String TEST_TASK_ARG_VALUE = "test-task-value";
 
-	private WorkFlowRequestDTO workFlowRequestDTO = WorkFlowRequestDTO.builder().projectId(TEST_PROJECT_ID)
+	private final WorkFlowRequestDTO workFlowRequestDTO = WorkFlowRequestDTO.builder().projectId(TEST_PROJECT_ID)
 			.workFlowName(TEST_WORKFLOW_NAME)
 			.arguments(List.of(WorkFlowRequestDTO.WorkRequestDTO.ArgumentRequestDTO.builder().key(TEST_WORKFLOW_ARG_KEY)
 					.value(TEST_WORKFLOW_ARG_VALUE).build()))

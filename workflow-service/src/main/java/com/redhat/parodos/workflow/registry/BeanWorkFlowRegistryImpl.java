@@ -139,8 +139,7 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry {
 	private Pair<WorkFlowType, Map<String, Object>> getWorkFlowTypeDetails(String workFlowBeanName,
 			List<Class<? extends Annotation>> workFlowTypeAnnotations) {
 		BeanDefinition beanDefinition = beanFactory.getBeanDefinition(workFlowBeanName);
-		if (beanDefinition.getSource() instanceof AnnotatedTypeMetadata) {
-			AnnotatedTypeMetadata metadata = (AnnotatedTypeMetadata) beanDefinition.getSource();
+		if (beanDefinition.getSource() instanceof AnnotatedTypeMetadata metadata) {
 			return workFlowTypeAnnotations.stream()
 					.filter(clazz -> metadata.getAnnotationAttributes(clazz.getName()) != null).findFirst()
 					.map(clazz -> Pair.of(WorkFlowType.valueOf(clazz.getSimpleName().toUpperCase()),

@@ -48,8 +48,8 @@ class WorkFlowVersionServiceImplTest {
 	@Test
 	public void testGetHashDifferentValue() {
 		// given
-		String foo = new String("foo");
-		String bar = new String("bar");
+		String foo = "foo";
+		String bar = "bar";
 
 		// when
 		assertDoesNotThrow(() -> {
