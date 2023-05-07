@@ -1,17 +1,19 @@
 package com.redhat.parodos.user.repository;
 
-import javax.persistence.PersistenceException;
 import java.util.UUID;
+
+import javax.persistence.PersistenceException;
+
+import com.redhat.parodos.repository.RepositoryTestBase;
+import com.redhat.parodos.user.entity.User;
+import org.junit.jupiter.api.Test;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import com.redhat.parodos.repository.RepositoryTestBase;
-import com.redhat.parodos.user.entity.User;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 class UserRepositoryTest extends RepositoryTestBase {
 

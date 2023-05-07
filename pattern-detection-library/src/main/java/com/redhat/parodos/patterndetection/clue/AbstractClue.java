@@ -16,6 +16,7 @@
 package com.redhat.parodos.patterndetection.clue;
 
 import java.util.UUID;
+
 import com.redhat.parodos.patterndetection.clue.delegate.NameMatchingDelegate;
 import com.redhat.parodos.patterndetection.context.WorkContextDelegate;
 import lombok.Data;

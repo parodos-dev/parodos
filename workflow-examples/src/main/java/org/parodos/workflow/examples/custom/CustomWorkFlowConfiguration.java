@@ -15,6 +15,8 @@
  */
 package org.parodos.workflow.examples.custom;
 
+import java.util.List;
+
 import com.redhat.parodos.workflow.annotation.Checker;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
 import com.redhat.parodos.workflow.annotation.Parameter;
@@ -24,11 +26,10 @@ import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import org.parodos.workflow.examples.custom.task.CustomWorkFlowTask;
 import org.parodos.workflow.examples.custom.task.SimpleWorkFlowCheckerTask;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.List;
 
 /**
  * Very simple workflow configurations in different package from Parodos main class

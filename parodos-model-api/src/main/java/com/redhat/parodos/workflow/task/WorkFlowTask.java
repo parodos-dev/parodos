@@ -15,15 +15,15 @@
  */
 package com.redhat.parodos.workflow.task;
 
-import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
-import com.redhat.parodos.workflow.parameter.WorkParameter;
-import com.redhat.parodos.workflows.work.Work;
-import lombok.NonNull;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.redhat.parodos.workflow.parameter.WorkParameter;
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
+import com.redhat.parodos.workflows.work.Work;
+import lombok.NonNull;
 
 /**
  * Basic Contract for Work in the Infrastructure Service

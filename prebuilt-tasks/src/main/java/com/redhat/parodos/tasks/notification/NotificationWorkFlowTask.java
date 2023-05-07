@@ -1,29 +1,30 @@
 package com.redhat.parodos.tasks.notification;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import com.redhat.parodos.notification.sdk.api.ApiClient;
 import com.redhat.parodos.notification.sdk.api.ApiException;
 import com.redhat.parodos.notification.sdk.api.Configuration;
 import com.redhat.parodos.notification.sdk.api.NotificationMessageApi;
 import com.redhat.parodos.notification.sdk.model.NotificationMessageCreateRequestDTO;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
-import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
-import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
+import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import org.springframework.http.HttpHeaders;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.CollectionUtils;
 
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Arrays;
+import org.springframework.http.HttpHeaders;
+import org.springframework.util.CollectionUtils;
 
 @Slf4j
 public class NotificationWorkFlowTask extends BaseWorkFlowTask {

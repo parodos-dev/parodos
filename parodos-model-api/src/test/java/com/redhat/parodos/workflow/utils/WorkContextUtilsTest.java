@@ -3,11 +3,11 @@ package com.redhat.parodos.workflow.utils;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflows.work.WorkContext;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class WorkContextUtilsTest {
 

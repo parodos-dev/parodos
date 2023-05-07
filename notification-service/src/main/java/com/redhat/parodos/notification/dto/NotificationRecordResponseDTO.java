@@ -21,11 +21,11 @@ import java.util.UUID;
 
 import com.redhat.parodos.notification.jpa.entity.NotificationMessage;
 import com.redhat.parodos.notification.jpa.entity.NotificationRecord;
-import org.springframework.hateoas.RepresentationModel;
-import org.springframework.hateoas.server.core.Relation;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 /**
  * Notification record response DTO

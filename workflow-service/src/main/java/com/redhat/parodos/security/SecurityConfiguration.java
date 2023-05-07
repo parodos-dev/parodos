@@ -17,6 +17,7 @@ package com.redhat.parodos.security;
 
 import com.redhat.parodos.config.properties.LdapConnectionProperties;
 import com.redhat.parodos.config.properties.SecurityProperties;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -2,10 +2,11 @@ package com.redhat.parodos.tasks.tibco;
 
 import java.util.LinkedList;
 import java.util.List;
-import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
-import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
+
 import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
+import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;

@@ -15,13 +15,14 @@
  */
 package com.redhat.parodos.workflow.definition.dto.converter;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.workflow.definition.dto.WorkDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
-import java.util.List;
-import java.util.stream.Collectors;
 import com.redhat.parodos.workflow.exceptions.WorkflowDefinitionException;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;

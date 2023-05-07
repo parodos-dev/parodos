@@ -1,5 +1,10 @@
 package com.redhat.parodos.tasks.kubeapi;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
@@ -17,11 +22,6 @@ import io.kubernetes.client.util.generic.dynamic.DynamicKubernetesObject;
 import io.kubernetes.client.util.generic.dynamic.Dynamics;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * KubeapiWorkFlowTask A task for get/create/update Kubernetes resource User provides

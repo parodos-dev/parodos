@@ -3,11 +3,6 @@ package com.redhat.parodos.user.service;
 import java.util.Optional;
 import java.util.UUID;
 
-import static java.lang.String.format;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import com.redhat.parodos.user.dto.UserResponseDTO;
 import com.redhat.parodos.user.entity.User;
 import com.redhat.parodos.user.repository.UserRepository;
@@ -15,6 +10,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
+
+import static java.lang.String.format;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UserServiceImplTest {
 

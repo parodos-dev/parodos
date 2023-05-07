@@ -15,7 +15,7 @@
  */
 package com.redhat.parodos.examples.ocponboarding.task;
 
-import static java.util.Objects.isNull;
+import java.util.List;
 
 import com.redhat.parodos.examples.ocponboarding.task.dto.email.MessageRequestDTO;
 import com.redhat.parodos.examples.utils.RestUtils;
@@ -26,10 +26,12 @@ import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+
+import static java.util.Objects.isNull;
 
 /**
  * An example of a task that send a Jira ticket email notification

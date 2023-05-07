@@ -1,5 +1,7 @@
 package com.redhat.parodos.workflow.execution.aspect;
 
+import java.io.IOException;
+
 import com.redhat.parodos.workflow.annotation.WorkFlowProperties;
 import com.redhat.parodos.workflow.version.WorkFlowVersionServiceImpl;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
@@ -9,12 +11,11 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 import org.springframework.core.env.Environment;
-
-import java.io.IOException;
+import org.springframework.stereotype.Component;
 
 @Aspect
 @Component

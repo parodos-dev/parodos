@@ -23,12 +23,11 @@
  */
 package com.redhat.parodos.workflows.workflow;
 
-import org.junit.Test;
-import org.mockito.Mockito;
-
 import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReportPredicate;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 public class RepeatFlowTest {
 

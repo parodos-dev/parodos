@@ -15,10 +15,10 @@
  */
 package com.redhat.parodos.notification.security;
 
+import lombok.Data;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
-
-import lombok.Data;
 
 @ConfigurationProperties(prefix = "spring.ldap.connection")
 @ConfigurationPropertiesScan

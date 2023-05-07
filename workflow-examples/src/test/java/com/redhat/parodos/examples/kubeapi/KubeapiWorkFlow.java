@@ -1,5 +1,10 @@
 package com.redhat.parodos.examples.kubeapi;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.List;
+
 import com.redhat.parodos.sdk.api.WorkflowApi;
 import com.redhat.parodos.sdk.api.WorkflowDefinitionApi;
 import com.redhat.parodos.sdk.invoker.ApiClient;
@@ -12,12 +17,8 @@ import com.redhat.parodos.sdk.model.WorkFlowResponseDTO;
 import com.redhat.parodos.sdk.model.WorkRequestDTO;
 import com.redhat.parodos.workflow.utils.CredUtils;
 import org.junit.Test;
-import org.springframework.http.HttpHeaders;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.List;
+import org.springframework.http.HttpHeaders;
 
 import static com.redhat.parodos.sdkutils.SdkUtils.getProjectAsync;
 import static org.junit.Assert.assertEquals;

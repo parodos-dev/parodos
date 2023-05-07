@@ -15,6 +15,8 @@
  */
 package com.redhat.parodos.workflow;
 
+import java.util.Optional;
+
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.dto.WorkDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
@@ -24,10 +26,9 @@ import com.redhat.parodos.workflow.registry.BeanWorkFlowRegistryImpl;
 import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
+
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-
-import java.util.Optional;
 
 /**
  * Provides functionality that is common to any WorkFlow composition in Parodos

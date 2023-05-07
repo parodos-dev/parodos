@@ -29,9 +29,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
-import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.work.WorkContext;
+import com.redhat.parodos.workflows.work.WorkReport;
 
 /**
  * A parallel flow executes a set of work units in parallel. A {@link ParallelFlow}

@@ -2,10 +2,11 @@ package com.redhat.parodos.examples.base;
 
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Before;
-import org.mockito.Mockito;
+
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
+import org.junit.Before;
+import org.mockito.Mockito;
 
 public abstract class BaseInfrastructureWorkFlowTaskTest {
 

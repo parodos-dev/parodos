@@ -15,11 +15,11 @@
  */
 package com.redhat.parodos.examples.ocponboarding.task.dto.jira;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.List;
 
 @Builder
 @Data

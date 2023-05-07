@@ -15,6 +15,13 @@
  */
 package com.redhat.parodos.project.service;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import javax.persistence.EntityExistsException;
+
 import com.redhat.parodos.project.dto.ProjectRequestDTO;
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
 import com.redhat.parodos.project.entity.Project;
@@ -24,15 +31,10 @@ import com.redhat.parodos.user.service.UserService;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import org.modelmapper.ModelMapper;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import javax.persistence.EntityExistsException;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Project service implementation

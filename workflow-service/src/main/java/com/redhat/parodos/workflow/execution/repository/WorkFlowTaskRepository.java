@@ -15,9 +15,11 @@
  */
 package com.redhat.parodos.workflow.execution.repository;
 
-import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import java.util.List;
 import java.util.UUID;
+
+import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

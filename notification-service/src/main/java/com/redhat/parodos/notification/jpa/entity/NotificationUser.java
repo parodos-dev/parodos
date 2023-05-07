@@ -15,10 +15,8 @@
  */
 package com.redhat.parodos.notification.jpa.entity;
 
-import com.redhat.parodos.notification.jpa.entity.base.AbstractEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -29,8 +27,11 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
+
+import com.redhat.parodos.notification.jpa.entity.base.AbstractEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 /**
  * Represents a user in the system, not definitive owner, can create a record per user

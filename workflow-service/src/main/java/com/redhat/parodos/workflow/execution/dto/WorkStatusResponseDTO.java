@@ -15,6 +15,8 @@
  */
 package com.redhat.parodos.workflow.execution.dto;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.redhat.parodos.workflow.enums.ParodosWorkStatus;
@@ -24,8 +26,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 /**
  * Workflow response dto

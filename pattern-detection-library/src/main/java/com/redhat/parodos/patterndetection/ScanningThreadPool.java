@@ -18,8 +18,8 @@ package com.redhat.parodos.patterndetection;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ThreadPoolExecutor.AbortPolicy;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Provides access to the ThreadPool executor for all Scans to share.

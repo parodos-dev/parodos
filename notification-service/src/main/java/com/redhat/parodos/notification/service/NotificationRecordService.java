@@ -15,13 +15,15 @@
  */
 package com.redhat.parodos.notification.service;
 
+import java.util.List;
+import java.util.UUID;
+
 import com.redhat.parodos.notification.enums.Operation;
 import com.redhat.parodos.notification.enums.State;
 import com.redhat.parodos.notification.jpa.entity.NotificationMessage;
 import com.redhat.parodos.notification.jpa.entity.NotificationRecord;
 import com.redhat.parodos.notification.jpa.entity.NotificationUser;
-import java.util.List;
-import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

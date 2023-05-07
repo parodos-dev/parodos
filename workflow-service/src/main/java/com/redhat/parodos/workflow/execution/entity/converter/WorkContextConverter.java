@@ -15,14 +15,15 @@
  */
 package com.redhat.parodos.workflow.execution.entity.converter;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
-import com.redhat.parodos.workflows.work.WorkContext;
+import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
-import java.util.Map;
-import java.util.Set;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
+import com.redhat.parodos.workflows.work.WorkContext;
 
 /**
  * Converts WorkContext into values that can be persisted into a DB column

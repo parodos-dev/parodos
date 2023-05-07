@@ -15,11 +15,13 @@
  */
 package com.redhat.parodos.notification.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.redhat.parodos.notification.jpa.entity.NotificationUser;
 import com.redhat.parodos.notification.jpa.repository.NotificationUserRepository;
 import com.redhat.parodos.notification.service.NotificationUserService;
-import java.util.ArrayList;
-import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

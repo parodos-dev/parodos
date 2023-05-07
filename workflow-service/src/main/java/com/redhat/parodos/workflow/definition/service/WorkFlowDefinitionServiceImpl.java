@@ -15,6 +15,16 @@
  */
 package com.redhat.parodos.workflow.definition.service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.redhat.parodos.common.AbstractEntity;
 import com.redhat.parodos.workflow.definition.dto.WorkDefinitionResponseDTO;
@@ -40,17 +50,8 @@ import com.redhat.parodos.workflows.workflow.WorkFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlowPropertiesMetadata;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.CopyOnWriteArrayList;
+import org.springframework.stereotype.Service;
 
 /**
  * workflow definition service implementation

@@ -1,16 +1,16 @@
 package com.redhat.parodos.notification.dto;
 
-import com.redhat.parodos.notification.jpa.entity.NotificationMessage;
-import com.redhat.parodos.notification.jpa.entity.NotificationRecord;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import com.redhat.parodos.notification.jpa.entity.NotificationMessage;
+import com.redhat.parodos.notification.jpa.entity.NotificationRecord;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class NotificationRecordResponseDTOTest {
 

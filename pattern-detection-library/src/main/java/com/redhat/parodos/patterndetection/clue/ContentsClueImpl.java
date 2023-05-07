@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+
 import com.redhat.parodos.patterndetection.clue.delegate.FileContentsDelegate;
 import com.redhat.parodos.patterndetection.exceptions.PatternDetectionConfigurationException;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;

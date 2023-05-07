@@ -15,13 +15,13 @@
  */
 package com.redhat.parodos.workflow.parameter;
 
+import java.util.List;
+import java.util.Map;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Workflow parameter type

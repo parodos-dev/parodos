@@ -17,13 +17,15 @@ package com.redhat.parodos.notification.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.redhat.parodos.notification.dto.NotificationMessageCreateRequestDTO;
+import com.redhat.parodos.notification.jpa.NotificationsDataCreator;
 import org.junit.jupiter.api.BeforeEach;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import com.redhat.parodos.notification.dto.NotificationMessageCreateRequestDTO;
-import com.redhat.parodos.notification.jpa.NotificationsDataCreator;
 
 /**
  * @author Richard Wang (Github: RichardW98)

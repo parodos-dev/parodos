@@ -15,7 +15,8 @@
  */
 package com.redhat.parodos.notification.jpa.entity;
 
-import com.redhat.parodos.notification.jpa.entity.base.AbstractEntity;
+import java.time.Instant;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -23,8 +24,8 @@ import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.time.Instant;
-import java.util.List;
+
+import com.redhat.parodos.notification.jpa.entity.base.AbstractEntity;
 
 /**
  * The message associated with a notification. Want to ensure that the potentially large

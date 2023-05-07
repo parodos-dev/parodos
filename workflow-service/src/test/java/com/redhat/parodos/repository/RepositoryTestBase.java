@@ -2,6 +2,7 @@ package com.redhat.parodos.repository;
 
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

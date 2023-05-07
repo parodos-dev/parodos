@@ -12,17 +12,17 @@
 
 package com.redhat.parodos.sdk.api;
 
+import java.util.List;
+import java.util.UUID;
+
 import com.redhat.parodos.sdk.invoker.ApiException;
 import com.redhat.parodos.sdk.model.WorkFlowCheckerTaskRequestDTO;
 import com.redhat.parodos.sdk.model.WorkFlowContextResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
 import com.redhat.parodos.sdk.model.WorkFlowResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
-import org.junit.Test;
 import org.junit.Ignore;
-
-import java.util.List;
-import java.util.UUID;
+import org.junit.Test;
 
 /**
  * API tests for WorkflowApi

@@ -23,13 +23,12 @@
  */
 package com.redhat.parodos.workflows.workflow;
 
-import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkStatus;
+import org.assertj.core.api.Assertions;
+import org.junit.Before;
+import org.junit.Test;
 
 public class ParallelFlowReportTest {
 

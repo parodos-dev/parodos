@@ -15,7 +15,8 @@
  */
 package com.redhat.parodos.notification.jpa.entity;
 
-import com.redhat.parodos.notification.jpa.entity.base.AbstractEntity;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,8 +24,8 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
+
+import com.redhat.parodos.notification.jpa.entity.base.AbstractEntity;
 
 /**
  * Users belong to zero or more groups.

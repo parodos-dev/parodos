@@ -1,15 +1,16 @@
 package com.redhat.parodos.project.repository;
 
+import java.util.List;
+import java.util.UUID;
+
+import javax.persistence.PersistenceException;
+
 import com.redhat.parodos.project.entity.Project;
 import com.redhat.parodos.repository.RepositoryTestBase;
 import com.redhat.parodos.user.entity.User;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
-import javax.persistence.PersistenceException;
-import java.util.List;
-import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;

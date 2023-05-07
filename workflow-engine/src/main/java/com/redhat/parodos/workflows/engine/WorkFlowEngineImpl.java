@@ -23,11 +23,11 @@
  */
 package com.redhat.parodos.workflows.engine;
 
+import com.redhat.parodos.workflows.work.WorkContext;
+import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.redhat.parodos.workflows.work.WorkContext;
-import com.redhat.parodos.workflows.work.WorkReport;
 
 class WorkFlowEngineImpl implements WorkFlowEngine {
 

@@ -15,30 +15,38 @@
  */
 package com.redhat.parodos.workflow.definition.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.redhat.parodos.common.AbstractEntity;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+
+import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
+import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowPropertiesDefinition;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowWorkDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowCheckerMappingDefinitionRepository;
+import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
+import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
 import com.redhat.parodos.workflow.enums.WorkFlowProcessingType;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
-import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
-import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
-import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
-import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
-import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
-import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
 import com.redhat.parodos.workflow.enums.WorkType;
 import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
+import com.redhat.parodos.workflow.task.WorkFlowTask;
 import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import com.redhat.parodos.workflows.workflow.WorkFlowPropertiesMetadata;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
-
-import com.redhat.parodos.workflow.task.WorkFlowTask;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
+import org.modelmapper.ModelMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,18 +55,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import org.modelmapper.ModelMapper;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
 
 /**
  * unit test for WorkFlowDefinitionService

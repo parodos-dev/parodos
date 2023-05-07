@@ -18,6 +18,7 @@ package com.redhat.parodos.patterndetection.clue.delegate;
 import java.io.File;
 import java.util.Optional;
 import java.util.regex.Pattern;
+
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 

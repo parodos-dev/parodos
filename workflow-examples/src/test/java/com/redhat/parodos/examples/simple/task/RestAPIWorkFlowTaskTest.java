@@ -1,29 +1,29 @@
 package com.redhat.parodos.examples.simple.task;
 
+import java.util.List;
+
+import com.redhat.parodos.examples.base.BaseInfrastructureWorkFlowTaskTest;
+import com.redhat.parodos.examples.utils.RestUtils;
+import com.redhat.parodos.workflow.exception.MissingParameterException;
+import com.redhat.parodos.workflow.parameter.WorkParameter;
+import com.redhat.parodos.workflow.parameter.WorkParameterType;
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
+import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
+import com.redhat.parodos.workflows.work.WorkContext;
+import com.redhat.parodos.workflows.work.WorkReport;
+import com.redhat.parodos.workflows.work.WorkStatus;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+
+import org.springframework.http.ResponseEntity;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
-
-import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
-import org.springframework.http.ResponseEntity;
-
-import com.redhat.parodos.examples.base.BaseInfrastructureWorkFlowTaskTest;
-import com.redhat.parodos.examples.utils.RestUtils;
-import com.redhat.parodos.workflow.exception.MissingParameterException;
-import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
-import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
-import com.redhat.parodos.workflow.parameter.WorkParameter;
-import com.redhat.parodos.workflow.parameter.WorkParameterType;
-import com.redhat.parodos.workflows.work.WorkContext;
-import com.redhat.parodos.workflows.work.WorkReport;
-import com.redhat.parodos.workflows.work.WorkStatus;
 
 /**
  * Rest API WorkFlow Task execution test

@@ -15,6 +15,9 @@
  */
 package com.redhat.parodos.examples.complex.task;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflow.option.WorkFlowOptions;
@@ -26,9 +29,6 @@ import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Simple Assessment to determine if an Onboarding Workflow is appropriate. It returns a

@@ -15,11 +15,12 @@
  */
 package com.redhat.parodos.workflow.definition.repository;
 
-import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import java.util.List;
 import java.util.UUID;
 
+import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

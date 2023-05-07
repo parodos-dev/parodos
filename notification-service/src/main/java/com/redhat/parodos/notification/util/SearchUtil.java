@@ -1,10 +1,10 @@
 package com.redhat.parodos.notification.util;
 
-import static java.util.Objects.isNull;
-
 import com.redhat.parodos.notification.enums.SearchCriteria;
 import com.redhat.parodos.notification.enums.State;
 import com.redhat.parodos.notification.exceptions.SearchByStateAndTermNotSupportedException;
+
+import static java.util.Objects.isNull;
 
 /**
  * Notification records search util

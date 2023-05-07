@@ -15,15 +15,16 @@
  */
 package com.redhat.parodos.config;
 
-import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
 import com.redhat.parodos.project.entity.Project;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.dto.converter.WorkFlowTaskDefinitionDTOConverter;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * Model mapper configuration

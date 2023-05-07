@@ -1,9 +1,9 @@
 package com.redhat.parodos.tasks.kubeapi;
 
+import java.io.IOException;
+
 import io.kubernetes.client.openapi.ApiException;
 import io.kubernetes.client.util.generic.dynamic.DynamicKubernetesObject;
-
-import java.io.IOException;
 
 interface KubernetesApi {
 

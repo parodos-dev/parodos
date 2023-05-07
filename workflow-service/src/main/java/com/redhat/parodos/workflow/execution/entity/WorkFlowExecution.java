@@ -15,8 +15,11 @@
  */
 package com.redhat.parodos.workflow.execution.entity;
 
-import com.redhat.parodos.common.AbstractEntity;
-import com.redhat.parodos.workflow.enums.WorkFlowStatus;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,10 +28,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+
+import com.redhat.parodos.common.AbstractEntity;
+import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

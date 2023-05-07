@@ -15,13 +15,10 @@
  */
 package com.redhat.parodos.security;
 
-import org.springframework.security.core.Authentication;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.ldap.userdetails.LdapUserDetailsImpl;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import org.springframework.stereotype.Component;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Utility Method for assessing the Username and Accesstoken fron the authenticated

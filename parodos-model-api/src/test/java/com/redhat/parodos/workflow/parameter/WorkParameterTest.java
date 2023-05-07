@@ -1,8 +1,8 @@
 package com.redhat.parodos.workflow.parameter;
 
-import junit.framework.TestCase;
-
 import java.util.Map;
+
+import junit.framework.TestCase;
 
 public class WorkParameterTest extends TestCase {
 

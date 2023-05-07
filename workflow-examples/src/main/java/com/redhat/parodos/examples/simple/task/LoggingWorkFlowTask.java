@@ -18,18 +18,17 @@ package com.redhat.parodos.examples.simple.task;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.stereotype.Component;
-
-import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
-import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
+import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.stereotype.Component;
 
 /**
  * logging task execution

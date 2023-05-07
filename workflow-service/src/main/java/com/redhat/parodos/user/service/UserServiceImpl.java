@@ -15,16 +15,17 @@
  */
 package com.redhat.parodos.user.service;
 
+import java.util.Optional;
+import java.util.UUID;
+
 import com.redhat.parodos.user.dto.UserResponseDTO;
 import com.redhat.parodos.user.entity.User;
 import com.redhat.parodos.user.repository.UserRepository;
 import org.modelmapper.ModelMapper;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.Optional;
-import java.util.UUID;
 
 /**
  * User service implementation

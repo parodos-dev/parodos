@@ -15,13 +15,14 @@
  */
 package com.redhat.parodos.common;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.UUID;
+
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.Version;
-import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Base class for persisting and Entity

@@ -15,11 +15,11 @@
  */
 package com.redhat.parodos.project.service;
 
-import com.redhat.parodos.project.dto.ProjectRequestDTO;
-import com.redhat.parodos.project.dto.ProjectResponseDTO;
-
 import java.util.List;
 import java.util.UUID;
+
+import com.redhat.parodos.project.dto.ProjectRequestDTO;
+import com.redhat.parodos.project.dto.ProjectResponseDTO;
 
 /**
  * Project service

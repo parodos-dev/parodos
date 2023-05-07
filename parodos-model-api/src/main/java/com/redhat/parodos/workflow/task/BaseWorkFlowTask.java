@@ -15,16 +15,17 @@
  */
 package com.redhat.parodos.workflow.task;
 
-import com.redhat.parodos.workflow.exception.MissingParameterException;
-import com.redhat.parodos.workflow.utils.WorkContextUtils;
-import com.redhat.parodos.workflows.work.WorkContext;
-import com.redhat.parodos.workflows.workflow.WorkFlow;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.redhat.parodos.workflow.exception.MissingParameterException;
+import com.redhat.parodos.workflow.utils.WorkContextUtils;
+import com.redhat.parodos.workflows.work.WorkContext;
+import com.redhat.parodos.workflows.workflow.WorkFlow;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.BeanNameAware;
 
 /**

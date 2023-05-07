@@ -1,9 +1,9 @@
 package com.redhat.parodos.examples.complex.parameter;
 
+import java.util.List;
+
 import com.redhat.parodos.workflow.parameter.WorkParameterValueRequest;
 import org.junit.Test;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
