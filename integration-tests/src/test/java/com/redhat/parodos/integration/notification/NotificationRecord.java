@@ -1,4 +1,4 @@
-package com.redhat.parodos.notification.integration;
+package com.redhat.parodos.integration.notification;
 
 import java.io.IOException;
 import java.util.Arrays;
