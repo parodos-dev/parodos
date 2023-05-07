@@ -107,7 +107,7 @@ public abstract class AbstractClue implements Clue {
 			instance.setName(name);
 			instance.setNameMatchingDelegate(getNameMatchingDelegate());
 			instance.setContinueToRunIfDetected(continueToRunIfDetected);
-			return (S) instance;
+			return instance;
 		}
 
 	}
