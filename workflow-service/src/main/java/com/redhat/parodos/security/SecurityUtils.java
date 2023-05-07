@@ -29,7 +29,7 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 
 @Slf4j
-public class SecurityUtils {
+public abstract class SecurityUtils {
 
 	private SecurityUtils() {
 	}

@@ -33,7 +33,7 @@ import lombok.NonNull;
  * @author Richard Wang (Github: richardW98)
  */
 
-public class WorkContextUtils {
+public abstract class WorkContextUtils {
 
 	private WorkContextUtils() {
 	}

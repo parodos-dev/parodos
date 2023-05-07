@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
  * RestUtils is a utility class. All its methods must be declared as static so they can't
  * be overridden.
  */
-public final class RestUtils {
+public abstract class RestUtils {
 
 	/**
 	 * The constructor is private so it'll prevent instantiation.
