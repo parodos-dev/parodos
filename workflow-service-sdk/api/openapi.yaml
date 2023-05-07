@@ -1146,9 +1146,9 @@ components:
           enum:
           - FAILED
           - COMPLETED
-          - PENDING
           - IN_PROGRESS
           - REJECTED
+          - PENDING
           type: string
         type:
           enum:
