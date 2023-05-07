@@ -28,7 +28,10 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @Slf4j
-public final class SdkUtils {
+public abstract class SdkUtils {
+
+	private SdkUtils() {
+	}
 
 	/**
 	 * Executes a @see FuncExecutor. Waits at most 60 seconds for a successful result of

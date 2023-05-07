@@ -2,7 +2,10 @@ package com.redhat.parodos.workflow.utils;
 
 import java.util.Base64;
 
-public class CredUtils {
+public abstract class CredUtils {
+
+	private CredUtils() {
+	}
 
 	/**
 	 * Generates a Base64 encoding of username:password string
