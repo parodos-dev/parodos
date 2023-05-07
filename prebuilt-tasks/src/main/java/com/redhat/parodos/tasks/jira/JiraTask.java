@@ -18,6 +18,7 @@ import com.atlassian.jira.rest.client.api.domain.input.IssueInput;
 import com.atlassian.jira.rest.client.api.domain.input.IssueInputBuilder;
 import com.atlassian.jira.rest.client.api.domain.input.TransitionInput;
 import com.atlassian.jira.rest.client.internal.async.AsynchronousJiraRestClientFactory;
+import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
@@ -30,9 +31,6 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import static com.redhat.parodos.workflow.context.WorkContextDelegate.getOptionalValueFromRequestParams;
-import static com.redhat.parodos.workflow.context.WorkContextDelegate.getRequiredValueFromRequestParams;
 
 /**
  * JiraTask can create/retrieve/update/delete a jira task depending on the fields passed
@@ -79,20 +77,21 @@ public class JiraTask extends BaseWorkFlowTask {
 			/// by flow authors (for security reasons, it prevents the invoker
 			// changing the server URL and the token)
 			try {
-				var serverUrl = getRequiredValueFromRequestParams(workContext, "serverURL");
-				var bearerToken = getOptionalValueFromRequestParams(workContext, "bearerToken", null);
+				var serverUrl = WorkContextDelegate.getRequiredValueFromRequestParams(workContext, "serverURL");
+				var bearerToken = WorkContextDelegate.getOptionalValueFromRequestParams(workContext, "bearerToken",
+						null);
 				this.jiraClient = new JiraClient(URI.create(serverUrl), bearerToken);
 			}
 			catch (MissingParameterException e) {
 				return new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
 			}
 		}
-		var id = getOptionalValueFromRequestParams(workContext, "id", "");
-		var summary = getOptionalValueFromRequestParams(workContext, "summary", "");
-		var project = getOptionalValueFromRequestParams(workContext, "project", "");
-		var status = getOptionalValueFromRequestParams(workContext, "status", "");
-		var description = getOptionalValueFromRequestParams(workContext, "description", "");
-		var comment = getOptionalValueFromRequestParams(workContext, "comment", "");
+		var id = WorkContextDelegate.getOptionalValueFromRequestParams(workContext, "id", "");
+		var summary = WorkContextDelegate.getOptionalValueFromRequestParams(workContext, "summary", "");
+		var project = WorkContextDelegate.getOptionalValueFromRequestParams(workContext, "project", "");
+		var status = WorkContextDelegate.getOptionalValueFromRequestParams(workContext, "status", "");
+		var description = WorkContextDelegate.getOptionalValueFromRequestParams(workContext, "description", "");
+		var comment = WorkContextDelegate.getOptionalValueFromRequestParams(workContext, "comment", "");
 
 		if (id.isBlank()) {
 			try {

@@ -11,8 +11,6 @@ import com.redhat.parodos.workflow.execution.scheduler.WorkFlowSchedulerServiceI
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 import com.redhat.parodos.workflows.work.WorkContext;
 
-import static com.redhat.parodos.workflow.execution.aspect.WorkFlowExecutionFactory.getMainWorkFlowExecutionId;
-
 public class ContinuedWorkFlowExecutionInterceptor extends WorkFlowExecutionInterceptor {
 
 	private WorkFlowExecution mainWorkFlowExecution;
@@ -27,7 +25,8 @@ public class ContinuedWorkFlowExecutionInterceptor extends WorkFlowExecutionInte
 
 	@Override
 	protected WorkFlowExecution doPreWorkFlowExecution() {
-		this.mainWorkFlowExecution = workFlowRepository.findById(getMainWorkFlowExecutionId(workContext))
+		this.mainWorkFlowExecution = workFlowRepository
+				.findById(WorkFlowExecutionFactory.getMainWorkFlowExecutionId(workContext))
 				.orElseThrow(() -> new WorkflowExecutionNotFoundException(
 						"mainWorkFlow not found for sub-workflow: " + workFlowDefinition.getName()));
 

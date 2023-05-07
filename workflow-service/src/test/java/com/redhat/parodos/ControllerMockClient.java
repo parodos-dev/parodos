@@ -6,9 +6,7 @@ import lombok.Setter;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 public abstract class ControllerMockClient {
 
@@ -39,19 +37,19 @@ public abstract class ControllerMockClient {
 	}
 
 	public MockHttpServletRequestBuilder getRequestWithValidCredentials(String path) {
-		return get(path).headers(this.headersWithValidCredentials());
+		return MockMvcRequestBuilders.get(path).headers(this.headersWithValidCredentials());
 	}
 
 	public MockHttpServletRequestBuilder postRequestWithValidCredentials(String path) {
-		return post(path).headers(this.headersWithValidCredentials());
+		return MockMvcRequestBuilders.post(path).headers(this.headersWithValidCredentials());
 	}
 
 	public MockHttpServletRequestBuilder getRequestWithInValidCredentials(String path) {
-		return get(path).headers(this.headersWithInValidCredentials());
+		return MockMvcRequestBuilders.get(path).headers(this.headersWithInValidCredentials());
 	}
 
 	public MockHttpServletRequestBuilder postRequestWithInValidCredentials(String path) {
-		return post(path).headers(this.headersWithInValidCredentials());
+		return MockMvcRequestBuilders.post(path).headers(this.headersWithInValidCredentials());
 	}
 
 	public String invalidCredentials() {

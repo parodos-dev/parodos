@@ -1,10 +1,10 @@
 package com.redhat.parodos.notification.util;
 
+import java.util.Objects;
+
 import com.redhat.parodos.notification.enums.SearchCriteria;
 import com.redhat.parodos.notification.enums.State;
 import com.redhat.parodos.notification.exceptions.SearchByStateAndTermNotSupportedException;
-
-import static java.util.Objects.isNull;
 
 /**
  * Notification records search util
@@ -14,8 +14,8 @@ import static java.util.Objects.isNull;
 public class SearchUtil {
 
 	public static SearchCriteria getSearchCriteria(State state, String searchTerm) {
-		boolean isStateUnset = isNull(state);
-		boolean isSearchTermUnset = isNull(searchTerm) || searchTerm.isEmpty();
+		boolean isStateUnset = Objects.isNull(state);
+		boolean isSearchTermUnset = Objects.isNull(searchTerm) || searchTerm.isEmpty();
 
 		if (isStateUnset && isSearchTermUnset) {
 			return SearchCriteria.BY_USERNAME;
