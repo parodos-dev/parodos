@@ -15,14 +15,13 @@
  */
 package com.redhat.parodos.workflows.common.context;
 
-import static java.util.UUID.randomUUID;
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
-
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflows.work.WorkContext;
+import org.junit.Test;
+
+import static java.util.UUID.randomUUID;
+import static org.junit.Assert.assertEquals;
 
 public class WorkContextDelegateTest {
 

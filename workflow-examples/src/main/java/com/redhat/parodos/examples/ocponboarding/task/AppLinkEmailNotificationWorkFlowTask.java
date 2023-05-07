@@ -15,7 +15,11 @@
  */
 package com.redhat.parodos.examples.ocponboarding.task;
 
-import static java.util.Objects.isNull;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.redhat.parodos.examples.ocponboarding.task.dto.email.MessageRequestDTO;
 import com.redhat.parodos.examples.utils.RestUtils;
@@ -26,17 +30,15 @@ import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+
+import static java.util.Objects.isNull;
 
 /**
  * An example of a task that send an app link email notification

@@ -15,20 +15,21 @@
  */
 package com.redhat.parodos.examples.ocponboarding.task.assessment;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflow.option.WorkFlowOptions;
-import com.redhat.parodos.workflow.task.assessment.BaseAssessmentTask;
-import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
+import com.redhat.parodos.workflow.task.assessment.BaseAssessmentTask;
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import java.util.Collections;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 /**

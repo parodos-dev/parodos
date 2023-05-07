@@ -1,12 +1,12 @@
 package com.redhat.parodos.examples.ocponboarding.task.dto.notification;
 
+import java.io.Serializable;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
-import java.util.List;
 
 /**
  * request DTO of notification service

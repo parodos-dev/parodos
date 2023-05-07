@@ -12,11 +12,10 @@
 
 package com.redhat.parodos.notification.sdk.api;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-
 import java.io.IOException;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import okio.Buffer;
 import okio.BufferedSink;
 import okio.ForwardingSink;

@@ -18,6 +18,7 @@ package com.redhat.parodos.notification.controller;
 import com.redhat.parodos.notification.dto.NotificationMessageCreateRequestDTO;
 import com.redhat.parodos.notification.service.NotificationMessageService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;

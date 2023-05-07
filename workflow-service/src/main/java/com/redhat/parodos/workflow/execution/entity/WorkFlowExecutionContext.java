@@ -15,6 +15,12 @@
  */
 package com.redhat.parodos.workflow.execution.entity;
 
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+
 import com.redhat.parodos.common.AbstractEntity;
 import com.redhat.parodos.workflow.execution.entity.converter.WorkContextConverter;
 import com.redhat.parodos.workflows.work.WorkContext;
@@ -23,12 +29,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 
 /**
  * WorkFlow Context Entity

@@ -15,7 +15,9 @@
  */
 package com.redhat.parodos.notification.service.impl;
 
-import com.redhat.parodos.notification.util.SecurityUtil;
+import java.time.Instant;
+import java.util.List;
+
 import com.redhat.parodos.notification.dto.NotificationMessageCreateRequestDTO;
 import com.redhat.parodos.notification.jpa.entity.NotificationMessage;
 import com.redhat.parodos.notification.jpa.entity.NotificationUser;
@@ -23,8 +25,8 @@ import com.redhat.parodos.notification.jpa.repository.NotificationMessageReposit
 import com.redhat.parodos.notification.service.NotificationMessageService;
 import com.redhat.parodos.notification.service.NotificationRecordService;
 import com.redhat.parodos.notification.service.NotificationUserService;
-import java.time.Instant;
-import java.util.List;
+import com.redhat.parodos.notification.util.SecurityUtil;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -26,7 +26,11 @@ package com.redhat.parodos.workflows.workflow;
 import java.util.Arrays;
 import java.util.List;
 
-import com.redhat.parodos.workflows.work.*;
+import com.redhat.parodos.workflows.work.DefaultWorkReport;
+import com.redhat.parodos.workflows.work.Work;
+import com.redhat.parodos.workflows.work.WorkContext;
+import com.redhat.parodos.workflows.work.WorkReport;
+import com.redhat.parodos.workflows.work.WorkStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;

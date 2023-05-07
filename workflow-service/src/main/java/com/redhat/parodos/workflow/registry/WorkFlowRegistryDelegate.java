@@ -1,13 +1,14 @@
 package com.redhat.parodos.workflow.registry;
 
-import com.redhat.parodos.workflow.parameter.WorkParameter;
-import com.redhat.parodos.workflow.parameter.WorkParameterType;
-import lombok.NonNull;
-import org.springframework.core.annotation.AnnotationAttributes;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import com.redhat.parodos.workflow.parameter.WorkParameter;
+import com.redhat.parodos.workflow.parameter.WorkParameterType;
+import lombok.NonNull;
+
+import org.springframework.core.annotation.AnnotationAttributes;
 
 public class WorkFlowRegistryDelegate {
 

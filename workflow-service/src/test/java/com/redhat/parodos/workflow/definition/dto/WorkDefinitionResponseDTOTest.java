@@ -1,5 +1,8 @@
 package com.redhat.parodos.workflow.definition.dto;
 
+import java.util.List;
+import java.util.UUID;
+
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowWorkDefinition;
@@ -8,9 +11,6 @@ import com.redhat.parodos.workflow.enums.WorkType;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

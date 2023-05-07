@@ -17,9 +17,10 @@ package com.redhat.parodos.workflow.definition.repository;
 
 import java.util.UUID;
 
-import com.redhat.parodos.workflow.enums.WorkFlowType;
-import org.springframework.data.jpa.repository.JpaRepository;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
+import com.redhat.parodos.workflow.enums.WorkFlowType;
+
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * workflow task definition repository

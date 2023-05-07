@@ -1,8 +1,9 @@
 package com.redhat.parodos.notification.config;
 
+import lombok.Data;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
-import lombok.Data;
 
 @ConfigurationProperties(prefix = "spring.security")
 @ConfigurationPropertiesScan

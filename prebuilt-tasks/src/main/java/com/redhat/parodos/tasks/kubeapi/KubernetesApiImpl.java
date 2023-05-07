@@ -1,14 +1,14 @@
 package com.redhat.parodos.tasks.kubeapi;
 
+import java.io.IOException;
+import java.io.StringReader;
+
 import io.kubernetes.client.openapi.ApiClient;
 import io.kubernetes.client.openapi.ApiException;
 import io.kubernetes.client.util.ClientBuilder;
 import io.kubernetes.client.util.KubeConfig;
 import io.kubernetes.client.util.generic.dynamic.DynamicKubernetesApi;
 import io.kubernetes.client.util.generic.dynamic.DynamicKubernetesObject;
-
-import java.io.IOException;
-import java.io.StringReader;
 
 class KubernetesApiImpl implements KubernetesApi {
 

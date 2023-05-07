@@ -16,6 +16,7 @@
 package com.redhat.parodos.patterndetection;
 
 import java.util.Date;
+
 import com.redhat.parodos.patterndetection.context.WorkContextDelegate;
 import com.redhat.parodos.patterndetection.exceptions.PatternDetectionConfigurationException;
 import com.redhat.parodos.patterndetection.pattern.Pattern;

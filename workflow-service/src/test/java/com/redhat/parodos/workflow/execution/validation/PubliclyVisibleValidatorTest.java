@@ -2,13 +2,13 @@ package com.redhat.parodos.workflow.execution.validation;
 
 import javax.validation.ConstraintValidatorContext;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 public class PubliclyVisibleValidatorTest {
 

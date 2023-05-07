@@ -18,6 +18,7 @@ package com.redhat.parodos.patterndetection.clue;
 import java.io.File;
 import java.util.Set;
 import java.util.regex.Pattern;
+
 import com.redhat.parodos.patterndetection.clue.delegate.FileContentsDelegate;
 import com.redhat.parodos.patterndetection.exceptions.ClueConfigurationException;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;

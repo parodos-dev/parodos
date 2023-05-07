@@ -15,12 +15,12 @@
  */
 package com.redhat.parodos.examples.complex.parameter;
 
-import com.redhat.parodos.workflow.parameter.WorkParameterValueRequest;
-import com.redhat.parodos.workflow.parameter.WorkParameterValueProvider;
-import com.redhat.parodos.workflow.parameter.WorkParameterValueResponse;
-
 import java.util.Collections;
 import java.util.List;
+
+import com.redhat.parodos.workflow.parameter.WorkParameterValueProvider;
+import com.redhat.parodos.workflow.parameter.WorkParameterValueRequest;
+import com.redhat.parodos.workflow.parameter.WorkParameterValueResponse;
 
 /**
  * Complex Workflow Parameter Value Provider

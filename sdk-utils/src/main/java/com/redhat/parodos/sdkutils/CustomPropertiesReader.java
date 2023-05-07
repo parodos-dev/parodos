@@ -1,13 +1,14 @@
 package com.redhat.parodos.sdkutils;
 
+import java.util.Properties;
+
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.core.env.StandardEnvironment;
 import org.springframework.core.io.ClassPathResource;
-
-import java.util.Properties;
 
 /**
  * @author Gloria Ciavarrini (Github: gciavarrini)

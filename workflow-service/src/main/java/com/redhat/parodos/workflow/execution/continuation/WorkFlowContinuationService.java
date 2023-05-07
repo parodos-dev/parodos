@@ -15,8 +15,9 @@
  */
 package com.redhat.parodos.workflow.execution.continuation;
 
-import com.redhat.parodos.workflows.work.WorkContext;
 import java.util.UUID;
+
+import com.redhat.parodos.workflows.work.WorkContext;
 
 /**
  * When the application starts up it will run any workflows in Progress @see

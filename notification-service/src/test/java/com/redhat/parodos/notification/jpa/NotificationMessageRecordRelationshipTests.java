@@ -17,11 +17,11 @@ package com.redhat.parodos.notification.jpa;
 
 import java.util.List;
 
+import com.redhat.parodos.notification.controller.AbstractNotificationsIntegrationTest;
 import com.redhat.parodos.notification.jpa.entity.NotificationMessage;
 import com.redhat.parodos.notification.jpa.entity.NotificationRecord;
 import com.redhat.parodos.notification.jpa.repository.NotificationMessageRepository;
 import com.redhat.parodos.notification.jpa.repository.NotificationRecordRepository;
-import com.redhat.parodos.notification.controller.AbstractNotificationsIntegrationTest;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;

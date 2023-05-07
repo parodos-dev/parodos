@@ -15,11 +15,12 @@
  */
 package com.redhat.parodos.workflow.definition.repository;
 
+import java.util.UUID;
+
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
-import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * workflow checker definition repository

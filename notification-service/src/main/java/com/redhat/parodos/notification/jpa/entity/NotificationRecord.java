@@ -17,6 +17,7 @@ package com.redhat.parodos.notification.jpa.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -27,6 +28,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
 import com.redhat.parodos.notification.jpa.entity.base.AbstractEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

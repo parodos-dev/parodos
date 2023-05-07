@@ -15,6 +15,8 @@
  */
 package com.redhat.parodos.examples.ocponboarding.task;
 
+import java.util.Collections;
+
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
@@ -37,7 +39,6 @@ import io.fabric8.openshift.api.model.RouteBuilder;
 import io.fabric8.openshift.api.model.RoutePortBuilder;
 import io.fabric8.openshift.api.model.RouteTargetReferenceBuilder;
 import io.fabric8.openshift.client.OpenShiftClient;
-import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

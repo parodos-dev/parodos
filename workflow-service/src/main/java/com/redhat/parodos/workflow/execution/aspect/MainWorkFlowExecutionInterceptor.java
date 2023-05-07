@@ -1,7 +1,5 @@
 package com.redhat.parodos.workflow.execution.aspect;
 
-import static com.redhat.parodos.workflow.execution.aspect.WorkFlowExecutionFactory.getMainWorkFlowExecutionId;
-
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.exceptions.WorkflowExecutionNotFoundException;
 import com.redhat.parodos.workflow.execution.continuation.WorkFlowContinuationServiceImpl;
@@ -10,6 +8,8 @@ import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.scheduler.WorkFlowSchedulerServiceImpl;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 import com.redhat.parodos.workflows.work.WorkContext;
+
+import static com.redhat.parodos.workflow.execution.aspect.WorkFlowExecutionFactory.getMainWorkFlowExecutionId;
 
 public class MainWorkFlowExecutionInterceptor extends WorkFlowExecutionInterceptor {
 

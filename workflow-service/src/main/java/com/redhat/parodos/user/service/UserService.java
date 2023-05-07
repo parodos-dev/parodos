@@ -15,9 +15,10 @@
  */
 package com.redhat.parodos.user.service;
 
+import java.util.UUID;
+
 import com.redhat.parodos.user.dto.UserResponseDTO;
 import com.redhat.parodos.user.entity.User;
-import java.util.UUID;
 
 /**
  * User service

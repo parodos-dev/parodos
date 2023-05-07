@@ -3,16 +3,17 @@ package com.redhat.parodos.workflow.execution.scheduler;
 import java.util.UUID;
 import java.util.concurrent.ScheduledFuture;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-
 import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class WorkFlowSchedulerServiceImplTest {
 

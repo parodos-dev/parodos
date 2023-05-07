@@ -1,5 +1,8 @@
 package com.redhat.parodos.notification.service;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.redhat.parodos.notification.dto.NotificationMessageCreateRequestDTO;
 import com.redhat.parodos.notification.jpa.entity.NotificationMessage;
 import com.redhat.parodos.notification.jpa.entity.NotificationUser;
@@ -8,11 +11,6 @@ import com.redhat.parodos.notification.service.impl.NotificationMessageServiceIm
 import com.redhat.parodos.notification.util.SecurityUtil;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
-import java.util.Collections;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class NotificationMessageServiceTest {
 

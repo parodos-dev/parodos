@@ -15,6 +15,10 @@
  */
 package com.redhat.parodos.workflow;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
@@ -27,11 +31,8 @@ import com.redhat.parodos.workflows.work.WorkContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

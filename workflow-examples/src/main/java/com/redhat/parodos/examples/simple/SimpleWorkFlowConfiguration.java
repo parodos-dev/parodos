@@ -15,6 +15,8 @@
  */
 package com.redhat.parodos.examples.simple;
 
+import java.util.concurrent.Executors;
+
 import com.redhat.parodos.examples.simple.task.LoggingWorkFlowTask;
 import com.redhat.parodos.examples.simple.task.RestAPIWorkFlowTask;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
@@ -23,10 +25,8 @@ import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import com.redhat.parodos.workflows.workflow.ParallelFlow;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
-
-import java.util.concurrent.Executors;
-
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

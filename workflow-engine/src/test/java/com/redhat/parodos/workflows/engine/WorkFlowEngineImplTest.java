@@ -23,21 +23,11 @@
  */
 package com.redhat.parodos.workflows.engine;
 
-import static com.redhat.parodos.workflows.engine.WorkFlowEngineBuilder.aNewWorkFlowEngine;
-import static com.redhat.parodos.workflows.work.WorkReportPredicate.COMPLETED;
-import static com.redhat.parodos.workflows.workflow.ConditionalFlow.Builder.aNewConditionalFlow;
-import static com.redhat.parodos.workflows.workflow.ParallelFlow.Builder.aNewParallelFlow;
-import static com.redhat.parodos.workflows.workflow.RepeatFlow.Builder.aNewRepeatFlow;
-import static com.redhat.parodos.workflows.workflow.SequentialFlow.Builder.aNewSequentialFlow;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.junit.Test;
-import org.mockito.Mockito;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.work.WorkContext;
@@ -48,6 +38,16 @@ import com.redhat.parodos.workflows.workflow.ParallelFlow;
 import com.redhat.parodos.workflows.workflow.RepeatFlow;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
+import org.junit.Test;
+import org.mockito.Mockito;
+
+import static com.redhat.parodos.workflows.engine.WorkFlowEngineBuilder.aNewWorkFlowEngine;
+import static com.redhat.parodos.workflows.work.WorkReportPredicate.COMPLETED;
+import static com.redhat.parodos.workflows.workflow.ConditionalFlow.Builder.aNewConditionalFlow;
+import static com.redhat.parodos.workflows.workflow.ParallelFlow.Builder.aNewParallelFlow;
+import static com.redhat.parodos.workflows.workflow.RepeatFlow.Builder.aNewRepeatFlow;
+import static com.redhat.parodos.workflows.workflow.SequentialFlow.Builder.aNewSequentialFlow;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class WorkFlowEngineImplTest {
 

@@ -1,6 +1,15 @@
 package com.redhat.parodos.sdkutils;
 
-import com.google.common.base.Strings;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import javax.annotation.Nullable;
+
 import com.redhat.parodos.sdk.api.ProjectApi;
 import com.redhat.parodos.sdk.api.WorkflowApi;
 import com.redhat.parodos.sdk.invoker.ApiCallback;
@@ -13,17 +22,6 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.env.MissingRequiredPropertiesException;
-
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.Stream;
 
 /***
  * A utility class to ease the writing of new examples.

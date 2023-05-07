@@ -3,10 +3,6 @@ package com.redhat.parodos.workflow.execution.repository;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import com.redhat.parodos.project.entity.Project;
 import com.redhat.parodos.repository.RepositoryTestBase;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
@@ -15,6 +11,10 @@ import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionContext;
 import com.redhat.parodos.workflows.work.WorkContext;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class WorkFlowRepositoryTest extends RepositoryTestBase {
 

@@ -1,17 +1,16 @@
 package com.redhat.parodos.examples;
 
+import java.io.IOException;
+
 import com.redhat.parodos.tasks.kubeapi.KubeapiWorkFlowTask;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 
 /**
  *

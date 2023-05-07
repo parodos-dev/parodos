@@ -1,10 +1,11 @@
 package com.redhat.parodos.examples.base;
 
+import java.util.List;
+
 import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflow.task.assessment.BaseAssessmentTask;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskType;
 import org.junit.Before;
-import java.util.List;
 
 public abstract class BaseAssessmentTaskTest {
 

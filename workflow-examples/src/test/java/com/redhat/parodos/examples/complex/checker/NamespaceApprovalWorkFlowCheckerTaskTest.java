@@ -1,17 +1,17 @@
 package com.redhat.parodos.examples.complex.checker;
 
+import java.util.List;
+
 import com.redhat.parodos.examples.base.BaseWorkFlowCheckerTaskTest;
+import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.task.checker.BaseWorkFlowCheckerTask;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
-import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

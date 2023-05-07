@@ -15,11 +15,11 @@
  */
 package com.redhat.parodos.notification.util;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.ldap.userdetails.LdapUserDetailsImpl;
 import org.springframework.stereotype.Component;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Utility method to get the Username from the Authenticated Session

@@ -3,10 +3,6 @@ package com.redhat.parodos.examples.escalation;
 import java.util.Arrays;
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
 import com.redhat.parodos.examples.escalation.checker.SimpleTaskOneChecker;
 import com.redhat.parodos.examples.escalation.task.SimpleTaskOne;
 import com.redhat.parodos.examples.escalation.task.SimpleTaskOneEscalator;
@@ -16,6 +12,10 @@ import com.redhat.parodos.workflow.annotation.Escalation;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
+
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
  *

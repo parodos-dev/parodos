@@ -9,7 +9,7 @@ import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +19,12 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @DirtiesContext
@@ -37,7 +43,7 @@ class WorkFlowDefinitionControllerTest extends ControllerMockClient {
 		// given
 		WorkFlowDefinitionResponseDTO WFDefFoo = createSampleWorkFlowDefinition("workflow-foo");
 		WorkFlowDefinitionResponseDTO WFDefBar = createSampleWorkFlowDefinition("workflow-bar");
-		Mockito.when(workFlowDefinitionService.getWorkFlowDefinitions()).thenReturn(List.of(WFDefFoo, WFDefBar));
+		when(workFlowDefinitionService.getWorkFlowDefinitions()).thenReturn(List.of(WFDefFoo, WFDefBar));
 
 		// when
 		this.mockMvc.perform(this.getRequestWithValidCredentials("/api/v1/workflowdefinitions"))
@@ -54,7 +60,7 @@ class WorkFlowDefinitionControllerTest extends ControllerMockClient {
 				.andExpect(MockMvcResultMatchers.jsonPath("$[1].name", Matchers.is(WFDefBar.getName())));
 
 		// then
-		Mockito.verify(this.workFlowDefinitionService, Mockito.times(1)).getWorkFlowDefinitions();
+		verify(this.workFlowDefinitionService, times(1)).getWorkFlowDefinitions();
 	}
 
 	@Test
@@ -63,14 +69,14 @@ class WorkFlowDefinitionControllerTest extends ControllerMockClient {
 		this.mockMvc.perform(this.getRequestWithInValidCredentials("/api/v1/workflowdefinitions"))
 				.andExpect(MockMvcResultMatchers.status().isUnauthorized());
 		// then
-		Mockito.verify(this.workFlowDefinitionService, Mockito.never()).getWorkFlowDefinitions();
+		verify(this.workFlowDefinitionService, never()).getWorkFlowDefinitions();
 	}
 
 	@Test
 	public void getWorkFlowDefinitionByIdWithValidData() throws Exception {
 		// given
 		WorkFlowDefinitionResponseDTO WFDef = createSampleWorkFlowDefinition("workflow-foo");
-		Mockito.when(workFlowDefinitionService.getWorkFlowDefinitionById(WFDef.getId())).thenReturn(WFDef);
+		when(workFlowDefinitionService.getWorkFlowDefinitionById(WFDef.getId())).thenReturn(WFDef);
 
 		// when
 		this.mockMvc
@@ -86,13 +92,13 @@ class WorkFlowDefinitionControllerTest extends ControllerMockClient {
 						Matchers.is("param1")));
 
 		// then
-		Mockito.verify(this.workFlowDefinitionService, Mockito.times(1)).getWorkFlowDefinitionById(WFDef.getId());
+		verify(this.workFlowDefinitionService, times(1)).getWorkFlowDefinitionById(WFDef.getId());
 	}
 
 	@Test
 	public void getWorkFlowDefinitionByIdWithInValidData() throws Exception {
 		// given
-		Mockito.when(workFlowDefinitionService.getWorkFlowDefinitionById(Mockito.any())).thenReturn(null);
+		when(workFlowDefinitionService.getWorkFlowDefinitionById(any())).thenReturn(null);
 
 		// when
 		this.mockMvc
@@ -101,7 +107,7 @@ class WorkFlowDefinitionControllerTest extends ControllerMockClient {
 				.andExpect(MockMvcResultMatchers.status().isNotFound());
 
 		// then
-		Mockito.verify(this.workFlowDefinitionService, Mockito.times(1)).getWorkFlowDefinitionById(Mockito.any());
+		verify(this.workFlowDefinitionService, times(1)).getWorkFlowDefinitionById(any());
 	}
 
 	@Test
@@ -113,7 +119,7 @@ class WorkFlowDefinitionControllerTest extends ControllerMockClient {
 				.andExpect(MockMvcResultMatchers.status().isUnauthorized());
 
 		// then
-		Mockito.verify(this.workFlowDefinitionService, Mockito.never()).getWorkFlowDefinitionById(Mockito.any());
+		verify(this.workFlowDefinitionService, never()).getWorkFlowDefinitionById(any());
 	}
 
 	private WorkFlowDefinitionResponseDTO createSampleWorkFlowDefinition(String name) {

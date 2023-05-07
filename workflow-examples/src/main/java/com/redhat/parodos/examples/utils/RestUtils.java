@@ -1,12 +1,13 @@
 package com.redhat.parodos.examples.utils;
 
+import java.net.URI;
+import java.util.Base64;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-import java.net.URI;
-import java.util.Base64;
 
 /**
  * RestUtils is a utility class. All its methods must be declared as static so they can't

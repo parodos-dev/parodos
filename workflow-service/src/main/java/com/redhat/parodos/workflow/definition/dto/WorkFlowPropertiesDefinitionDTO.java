@@ -2,7 +2,6 @@ package com.redhat.parodos.workflow.definition.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowPropertiesDefinition;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

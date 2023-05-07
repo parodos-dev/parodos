@@ -15,11 +15,12 @@
  */
 package com.redhat.parodos.project.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import java.util.Date;
 
 import com.redhat.parodos.common.AbstractEntity;
 import com.redhat.parodos.user.entity.User;

@@ -15,6 +15,10 @@
  */
 package com.redhat.parodos.examples.ocponboarding.checker;
 
+import java.util.List;
+
+import com.redhat.parodos.examples.ocponboarding.task.dto.jira.GetJiraTicketResponseDto;
+import com.redhat.parodos.examples.ocponboarding.task.dto.jira.GetJiraTicketResponseValue;
 import com.redhat.parodos.examples.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.checker.BaseWorkFlowCheckerTask;
@@ -23,11 +27,9 @@ import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import com.redhat.parodos.examples.ocponboarding.task.dto.jira.GetJiraTicketResponseDto;
-import com.redhat.parodos.examples.ocponboarding.task.dto.jira.GetJiraTicketResponseValue;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 

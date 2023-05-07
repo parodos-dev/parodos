@@ -1,11 +1,11 @@
 package com.redhat.parodos.workflow.util;
 
-import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
-import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

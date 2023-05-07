@@ -15,6 +15,12 @@
  */
 package com.redhat.parodos.examples.ocponboarding.task;
 
+import java.util.List;
+import java.util.Objects;
+
+import com.redhat.parodos.examples.ocponboarding.task.dto.jira.CreateJiraTicketRequestDto;
+import com.redhat.parodos.examples.ocponboarding.task.dto.jira.CreateJiraTicketResponseDto;
+import com.redhat.parodos.examples.ocponboarding.task.dto.jira.RequestFieldValues;
 import com.redhat.parodos.examples.utils.RestUtils;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
@@ -22,12 +28,8 @@ import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import com.redhat.parodos.examples.ocponboarding.task.dto.jira.CreateJiraTicketRequestDto;
-import com.redhat.parodos.examples.ocponboarding.task.dto.jira.RequestFieldValues;
-import com.redhat.parodos.examples.ocponboarding.task.dto.jira.CreateJiraTicketResponseDto;
-import java.util.List;
-import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.ResponseEntity;
 
 /**

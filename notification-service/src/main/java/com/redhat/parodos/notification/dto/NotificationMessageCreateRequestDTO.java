@@ -15,9 +15,9 @@
  */
 package com.redhat.parodos.notification.dto;
 
-import lombok.Data;
-
 import java.util.List;
+
+import lombok.Data;
 
 /**
  * Notification message create request DTO

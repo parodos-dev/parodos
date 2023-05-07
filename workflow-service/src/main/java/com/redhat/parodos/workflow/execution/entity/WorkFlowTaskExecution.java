@@ -15,12 +15,14 @@
  */
 package com.redhat.parodos.workflow.execution.entity;
 
-import com.redhat.parodos.common.AbstractEntity;
-import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
-import javax.persistence.Column;
-import javax.persistence.Entity;
 import java.util.Date;
 import java.util.UUID;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
+import com.redhat.parodos.common.AbstractEntity;
+import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -15,13 +15,8 @@
  */
 package com.redhat.parodos.patterndetection;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.io.File;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+
 import com.redhat.parodos.patterndetection.clue.ContentsClueImpl;
 import com.redhat.parodos.patterndetection.clue.NameClueImpl;
 import com.redhat.parodos.patterndetection.context.WorkContextDelegate;
@@ -30,6 +25,12 @@ import com.redhat.parodos.patterndetection.pattern.BasicPatternImpl;
 import com.redhat.parodos.patterndetection.pattern.Pattern;
 import com.redhat.parodos.patterndetection.results.DetectionResults;
 import com.redhat.parodos.workflows.work.WorkContext;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /*
  *

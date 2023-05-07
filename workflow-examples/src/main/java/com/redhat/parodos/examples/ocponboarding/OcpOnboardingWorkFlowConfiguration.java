@@ -15,6 +15,9 @@
  */
 package com.redhat.parodos.examples.ocponboarding;
 
+import java.util.Date;
+import java.util.List;
+
 import com.redhat.parodos.examples.ocponboarding.checker.JiraTicketApprovalWorkFlowCheckerTask;
 import com.redhat.parodos.examples.ocponboarding.escalation.JiraTicketApprovalEscalationWorkFlowTask;
 import com.redhat.parodos.examples.ocponboarding.task.AppLinkEmailNotificationWorkFlowTask;
@@ -33,8 +36,7 @@ import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
-import java.util.Date;
-import java.util.List;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

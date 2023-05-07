@@ -1,8 +1,9 @@
 package com.redhat.parodos.workflow.execution.aspect;
 
+import java.util.List;
+
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
-import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.enums.WorkFlowStatus;
@@ -10,24 +11,18 @@ import com.redhat.parodos.workflow.execution.continuation.WorkFlowContinuationSe
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
-import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.work.WorkContext;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.List;
-import java.util.UUID;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static com.redhat.parodos.workflow.execution.aspect.WorkFlowExecutionAspectTest.getSampleWorkFlowDefinition;
 import static com.redhat.parodos.workflow.execution.aspect.WorkFlowExecutionAspectTest.getSampleWorkFlowExecution;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)

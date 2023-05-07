@@ -26,12 +26,11 @@ package com.redhat.parodos.workflows.workflow;
 import java.util.Arrays;
 import java.util.List;
 
+import com.redhat.parodos.workflows.work.Work;
+import com.redhat.parodos.workflows.work.WorkContext;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import com.redhat.parodos.workflows.work.Work;
-import com.redhat.parodos.workflows.work.WorkContext;
 
 public class ParallelFlowTest {
 

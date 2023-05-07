@@ -1,5 +1,9 @@
 package com.redhat.parodos.notification.integration;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
 import com.redhat.parodos.notification.sdk.api.*;
 import com.redhat.parodos.notification.sdk.model.NotificationMessageCreateRequestDTO;
 import com.redhat.parodos.notification.sdk.model.NotificationRecordResponseDTO;
@@ -9,11 +13,8 @@ import com.redhat.parodos.workflow.utils.CredUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.http.HttpHeaders;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+import org.springframework.http.HttpHeaders;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;

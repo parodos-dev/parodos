@@ -15,8 +15,9 @@
  */
 package com.redhat.parodos.notification.service;
 
-import com.redhat.parodos.notification.jpa.entity.NotificationUser;
 import java.util.List;
+
+import com.redhat.parodos.notification.jpa.entity.NotificationUser;
 
 /**
  * @author Richard Wang (Github: RichardW98)

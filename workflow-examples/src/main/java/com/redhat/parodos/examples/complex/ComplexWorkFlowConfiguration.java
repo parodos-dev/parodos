@@ -1,5 +1,8 @@
 package com.redhat.parodos.examples.complex;
 
+import java.util.Arrays;
+import java.util.concurrent.Executors;
+
 import com.redhat.parodos.examples.complex.checker.NamespaceApprovalWorkFlowCheckerTask;
 import com.redhat.parodos.examples.complex.checker.SslCertificationApprovalWorkFlowCheckerTask;
 import com.redhat.parodos.examples.complex.parameter.ComplexWorkParameterValueProvider;
@@ -16,17 +19,15 @@ import com.redhat.parodos.workflow.annotation.Infrastructure;
 import com.redhat.parodos.workflow.annotation.Parameter;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
-import com.redhat.parodos.workflow.parameter.WorkParameterValueProvider;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
+import com.redhat.parodos.workflow.parameter.WorkParameterValueProvider;
 import com.redhat.parodos.workflows.workflow.ParallelFlow;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.Arrays;
-import java.util.concurrent.Executors;
 
 @Configuration
 public class ComplexWorkFlowConfiguration {
