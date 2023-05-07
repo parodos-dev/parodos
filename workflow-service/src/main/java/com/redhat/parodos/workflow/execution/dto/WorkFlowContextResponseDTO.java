@@ -35,7 +35,7 @@ public class WorkFlowContextResponseDTO {
 
 	private UUID workFlowExecutionId;
 
-	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private WorkFlowOptionsResponseDTO workFlowOptions;
 
 }
