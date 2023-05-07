@@ -48,6 +48,7 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class WorkDefinitionResponseDTO {
 
 	private UUID id;
@@ -56,19 +57,14 @@ public class WorkDefinitionResponseDTO {
 
 	private String workType;
 
-	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private WorkFlowProcessingType processingType;
 
-	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private String author;
 
-	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private List<WorkDefinitionResponseDTO> works;
 
-	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private Map<String, Map<String, Object>> parameters;
 
-	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private List<WorkFlowTaskOutput> outputs;
 
 	@JsonIgnore

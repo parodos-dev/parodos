@@ -46,7 +46,7 @@ public class WorkStatusResponseDTO {
 
 	private ParodosWorkStatus status;
 
-	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private List<WorkStatusResponseDTO> works;
 
 	@JsonIgnore
