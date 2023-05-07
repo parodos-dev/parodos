@@ -5,7 +5,6 @@ import java.util.UUID;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
-import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.execution.continuation.WorkFlowContinuationServiceImpl;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.scheduler.WorkFlowSchedulerServiceImpl;
@@ -86,7 +85,7 @@ public class CheckerWorkFlowPostInterceptor implements WorkFlowPostInterceptor {
 				log.info("Stop rejected workflow checker: {} schedule", workFlow.getName());
 				workFlowSchedulerService.stop(projectId, workFlow);
 
-				mainWorkFlowExecution.setStatus(WorkFlowStatus.FAILED);
+				mainWorkFlowExecution.setStatus(WorkStatus.FAILED);
 				workFlowService.updateWorkFlow(mainWorkFlowExecution);
 			}
 			return;

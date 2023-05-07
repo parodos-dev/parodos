@@ -13,17 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow.enums;
+package com.redhat.parodos.workflow.execution.entity.converter;
+
+import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
+
+import com.redhat.parodos.workflows.work.WorkStatus;
 
 /**
- * The status of a @see WorkFlow once it has started/completed execution
+ * Converts WorkFlow status into values that can be persisted into a DB column
  *
- * @author Luke Shannon (Github: lshannon)
- * @author Richard Wang (Github: richardw98)
+ * @author Richard Wang (Github: RichardW98)
  * @author Annel Ketcha (Github: anludke)
  */
-public enum WorkFlowStatus {
 
-	FAILED, IN_PROGRESS, COMPLETED, PENDING, REJECTED;
+@Converter(autoApply = true)
+public class WorkStatusConverter implements AttributeConverter<WorkStatus, String> {
+
+	@Override
+	public String convertToDatabaseColumn(WorkStatus status) {
+		return status.name();
+	}
+
+	@Override
+	public WorkStatus convertToEntityAttribute(String dbData) {
+		return WorkStatus.valueOf(dbData);
+	}
 
 }

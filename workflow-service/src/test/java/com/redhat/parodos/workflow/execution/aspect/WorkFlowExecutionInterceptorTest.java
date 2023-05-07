@@ -5,7 +5,6 @@ import java.util.UUID;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
-import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.execution.continuation.WorkFlowContinuationServiceImpl;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
@@ -104,7 +103,7 @@ public class WorkFlowExecutionInterceptorTest {
 		WorkReport result = interceptor.handlePostWorkFlowExecution(report, workFlow);
 
 		// then
-		verify(workFlowService, times(0)).saveWorkFlow(any(UUID.class), any(UUID.class), eq(WorkFlowStatus.IN_PROGRESS),
+		verify(workFlowService, times(0)).saveWorkFlow(any(UUID.class), any(UUID.class), eq(WorkStatus.IN_PROGRESS),
 				any(), anyString());
 		verify(workFlowSchedulerService, times(1)).schedule(any(), any(), any(WorkContext.class), any());
 
@@ -132,7 +131,7 @@ public class WorkFlowExecutionInterceptorTest {
 		WorkReport result = interceptor.handlePostWorkFlowExecution(report, workFlow);
 
 		// then
-		verify(workFlowService, times(0)).saveWorkFlow(any(UUID.class), any(UUID.class), eq(WorkFlowStatus.IN_PROGRESS),
+		verify(workFlowService, times(0)).saveWorkFlow(any(UUID.class), any(UUID.class), eq(WorkStatus.IN_PROGRESS),
 				any(), anyString());
 		verify(workFlowSchedulerService, times(1)).stop(any(), any(WorkFlow.class));
 		verify(workFlowContinuationServiceImpl, times(1)).continueWorkFlow(any(UUID.class), anyString(),

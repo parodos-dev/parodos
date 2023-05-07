@@ -6,10 +6,10 @@ import java.util.UUID;
 import com.redhat.parodos.project.entity.Project;
 import com.redhat.parodos.repository.RepositoryTestBase;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
-import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionContext;
 import com.redhat.parodos.workflows.work.WorkContext;
+import com.redhat.parodos.workflows.work.WorkStatus;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,7 +36,7 @@ public class WorkFlowRepositoryTest extends RepositoryTestBase {
 	public void testSave() {
 		// given
 		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder()
-				.workFlowDefinitionId(createWorkFlowDefinition().getId()).status(WorkFlowStatus.IN_PROGRESS)
+				.workFlowDefinitionId(createWorkFlowDefinition().getId()).status(WorkStatus.IN_PROGRESS)
 				.projectId(createProject().getId()).build();
 		List<WorkFlowExecution> workFlowExecutions = workFlowRepository.findAll();
 		assertTrue(workFlowExecutions.isEmpty());
@@ -50,7 +50,7 @@ public class WorkFlowRepositoryTest extends RepositoryTestBase {
 		assertNotNull(flowExecution.getId());
 		assertEquals(workFlowExecution.getWorkFlowDefinitionId(), flowExecution.getWorkFlowDefinitionId());
 		assertEquals(workFlowExecution.getProjectId(), flowExecution.getProjectId());
-		assertEquals(WorkFlowStatus.IN_PROGRESS, flowExecution.getStatus());
+		assertEquals(WorkStatus.IN_PROGRESS, flowExecution.getStatus());
 	}
 
 	@Test
@@ -87,7 +87,7 @@ public class WorkFlowRepositoryTest extends RepositoryTestBase {
 		// given
 		WorkFlowExecution mainWorkFlowExecution = createWorkFlowExecution();
 		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder()
-				.workFlowDefinitionId(createWorkFlowDefinition().getId()).status(WorkFlowStatus.IN_PROGRESS)
+				.workFlowDefinitionId(createWorkFlowDefinition().getId()).status(WorkStatus.IN_PROGRESS)
 				.projectId(createProject().getId()).mainWorkFlowExecution(mainWorkFlowExecution).build();
 		workFlowExecution = workFlowRepository.save(workFlowExecution);
 
@@ -106,13 +106,13 @@ public class WorkFlowRepositoryTest extends RepositoryTestBase {
 		// given
 		WorkFlowExecution mainWorkFlowExecution = createWorkFlowExecution();
 		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder()
-				.workFlowDefinitionId(createWorkFlowDefinition().getId()).status(WorkFlowStatus.IN_PROGRESS)
+				.workFlowDefinitionId(createWorkFlowDefinition().getId()).status(WorkStatus.IN_PROGRESS)
 				.projectId(createProject().getId()).mainWorkFlowExecution(mainWorkFlowExecution).build();
 		workFlowRepository.save(workFlowExecution);
 
 		// when
 		List<WorkFlowExecution> workFlowExecutions = workFlowRepository
-				.findByStatusInAndIsMain(List.of(WorkFlowStatus.IN_PROGRESS));
+				.findByStatusInAndIsMain(List.of(WorkStatus.IN_PROGRESS));
 
 		// then
 		assertNotNull(workFlowExecutions);
@@ -133,7 +133,7 @@ public class WorkFlowRepositoryTest extends RepositoryTestBase {
 
 	private WorkFlowExecution createWorkFlowExecution() {
 		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder()
-				.workFlowDefinitionId(createWorkFlowDefinition().getId()).status(WorkFlowStatus.IN_PROGRESS)
+				.workFlowDefinitionId(createWorkFlowDefinition().getId()).status(WorkStatus.IN_PROGRESS)
 				.projectId(createProject().getId()).build();
 		return entityManager.persist(workFlowExecution);
 	}

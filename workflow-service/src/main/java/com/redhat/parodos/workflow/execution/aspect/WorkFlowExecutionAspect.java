@@ -17,7 +17,6 @@ package com.redhat.parodos.workflow.execution.aspect;
 
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
-import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.scheduler.WorkFlowSchedulerServiceImpl;
@@ -87,7 +86,7 @@ public class WorkFlowExecutionAspect {
 				.createExecutionHandler(workFlowDefinition, workContext);
 		WorkFlowExecution workFlowExecution = executionHandler.handlePreWorkFlowExecution();
 
-		if (workFlowExecution.getStatus().equals(WorkFlowStatus.COMPLETED)) {
+		if (workFlowExecution.getStatus().equals(WorkStatus.COMPLETED)) {
 			// skip the workflow if it is already successful
 			if (workFlowDefinition.getType().equals(WorkFlowType.CHECKER)) {
 				workFlowSchedulerService.stop(workFlowExecution.getProjectId(),

@@ -19,7 +19,6 @@ import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepos
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
 import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
-import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.enums.WorkType;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowContextResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
@@ -251,7 +250,7 @@ class WorkFlowServiceImplTest {
 		// given
 		UUID id = UUID.randomUUID();
 
-		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().status(WorkFlowStatus.COMPLETED).build();
+		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().status(WorkStatus.COMPLETED).build();
 		workFlowExecution.setId(id);
 		when(this.workFlowRepository.findById(id)).thenReturn(Optional.of(workFlowExecution));
 
@@ -269,7 +268,7 @@ class WorkFlowServiceImplTest {
 		// given
 		UUID id = UUID.randomUUID();
 
-		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().status(WorkFlowStatus.COMPLETED).build();
+		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().status(WorkStatus.COMPLETED).build();
 		workFlowExecution.setId(id);
 		when(this.workFlowRepository.findById(id)).thenReturn(Optional.empty());
 
@@ -285,16 +284,16 @@ class WorkFlowServiceImplTest {
 		UUID projectId = UUID.randomUUID();
 		UUID workflowDefID = UUID.randomUUID();
 
-		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().status(WorkFlowStatus.COMPLETED).build();
+		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().status(WorkStatus.COMPLETED).build();
 		workFlowExecution.setId(UUID.randomUUID());
 
-		WorkFlowExecution mainWorkFlowExecution = WorkFlowExecution.builder().status(WorkFlowStatus.COMPLETED).build();
+		WorkFlowExecution mainWorkFlowExecution = WorkFlowExecution.builder().status(WorkStatus.COMPLETED).build();
 		mainWorkFlowExecution.setId(UUID.randomUUID());
 
 		when(this.workFlowRepository.save(any())).thenReturn(workFlowExecution);
 
 		// when
-		WorkFlowExecution res = this.workFlowService.saveWorkFlow(projectId, workflowDefID, WorkFlowStatus.COMPLETED,
+		WorkFlowExecution res = this.workFlowService.saveWorkFlow(projectId, workflowDefID, WorkStatus.COMPLETED,
 				mainWorkFlowExecution, "{}");
 
 		// then
@@ -313,7 +312,7 @@ class WorkFlowServiceImplTest {
 		UUID projectId = UUID.randomUUID();
 		UUID workflowDefID = UUID.randomUUID();
 
-		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().status(WorkFlowStatus.COMPLETED)
+		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().status(WorkStatus.COMPLETED)
 				.projectId(projectId).workFlowDefinitionId(workflowDefID).build();
 		workFlowExecution.setId(UUID.randomUUID());
 		when(this.workFlowRepository.save(any())).thenReturn(workFlowExecution);
@@ -453,7 +452,7 @@ class WorkFlowServiceImplTest {
 	}
 
 	@Test
-	void testGetWorkFlowStatusWithValidData() {
+	void testGetWorkStatusWithValidData() {
 		String WORKFLOW_NAME = "testWorkFlow";
 		UUID workFlowExecutionId = UUID.randomUUID();
 		UUID workFlowDefinitionId = UUID.randomUUID();
@@ -465,7 +464,7 @@ class WorkFlowServiceImplTest {
 		workFlowDefinition.setId(workFlowDefinitionId);
 
 		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().workFlowDefinitionId(workFlowDefinitionId)
-				.status(WorkFlowStatus.IN_PROGRESS).build();
+				.status(WorkStatus.IN_PROGRESS).build();
 		workFlowExecution.setId(workFlowExecutionId);
 
 		// subWorkflow1
@@ -478,7 +477,7 @@ class WorkFlowServiceImplTest {
 		subWorkFlow1Definition.setId(testSubWorkFlow1DefinitionId);
 		// subWorkflow1Execution
 		WorkFlowExecution subWorkFlow1Execution = WorkFlowExecution.builder().projectId(UUID.randomUUID())
-				.status(WorkFlowStatus.IN_PROGRESS).workFlowDefinitionId(testSubWorkFlow1DefinitionId)
+				.status(WorkStatus.IN_PROGRESS).workFlowDefinitionId(testSubWorkFlow1DefinitionId)
 				.mainWorkFlowExecution(workFlowExecution).build();
 		subWorkFlow1Execution.setId(testSubWorkFlow1ExecutionId);
 
@@ -557,13 +556,13 @@ class WorkFlowServiceImplTest {
 		assertNotNull(workFlowStatusResponseDTO);
 		assertEquals(workFlowExecution.getId(), workFlowStatusResponseDTO.getWorkFlowExecutionId());
 		assertEquals(workFlowStatusResponseDTO.getWorkFlowName(), workFlowDefinition.getName());
-		assertEquals(workFlowStatusResponseDTO.getStatus(), WorkFlowStatus.IN_PROGRESS.name());
+		assertEquals(workFlowStatusResponseDTO.getStatus(), WorkStatus.IN_PROGRESS.name());
 		assertEquals(workFlowStatusResponseDTO.getWorks().size(), 2);
 
 		// subWorkflow1
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getType(), WorkType.WORKFLOW);
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getName(), subWorkFlow1Definition.getName());
-		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getStatus().name(), WorkFlowStatus.PENDING.name());
+		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getStatus().name(), WorkStatus.PENDING.name());
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getWorks().size(), 1);
 
 		// subWorkflow1Task1
@@ -571,7 +570,7 @@ class WorkFlowServiceImplTest {
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getWorks().get(0).getName(),
 				subWorkFlow1Task1Definition.getName());
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getWorks().get(0).getStatus().name(),
-				WorkFlowStatus.PENDING.name());
+				WorkStatus.PENDING.name());
 		assertNull(workFlowStatusResponseDTO.getWorks().get(0).getWorks().get(0).getWorks());
 
 		// workflowTask1
@@ -657,7 +656,7 @@ class WorkFlowServiceImplTest {
 		workFlowDefinition.setId(workFlowDefinitionId);
 
 		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().workFlowDefinitionId(workFlowDefinitionId)
-				.status(WorkFlowStatus.IN_PROGRESS).build();
+				.status(WorkStatus.IN_PROGRESS).build();
 		workFlowExecution.setId(workFlowExecutionId);
 
 		// subWorkflow1
@@ -733,19 +732,19 @@ class WorkFlowServiceImplTest {
 		assertNotNull(workFlowStatusResponseDTO);
 		assertEquals(workFlowExecution.getId(), workFlowStatusResponseDTO.getWorkFlowExecutionId());
 		assertEquals(workFlowStatusResponseDTO.getWorkFlowName(), workFlowDefinition.getName());
-		assertEquals(workFlowStatusResponseDTO.getStatus(), WorkFlowStatus.IN_PROGRESS.name());
+		assertEquals(workFlowStatusResponseDTO.getStatus(), WorkStatus.IN_PROGRESS.name());
 		assertEquals(workFlowStatusResponseDTO.getWorks().size(), 2);
 
 		// sub workflow 1
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getType(), WorkType.WORKFLOW);
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getName(), subWorkFlow1Definition.getName());
-		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getStatus().name(), WorkFlowStatus.PENDING.name());
+		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getStatus(), WorkStatus.PENDING);
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getWorks().size(), 0);
 
 		// workflow task 1
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(1).getType(), WorkType.TASK);
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(1).getName(), workFlowTask1Definition.getName());
-		assertEquals(workFlowStatusResponseDTO.getWorks().get(1).getStatus().name(), WorkStatus.COMPLETED.name());
+		assertEquals(workFlowStatusResponseDTO.getWorks().get(1).getStatus(), WorkStatus.COMPLETED);
 		assertNull(workFlowStatusResponseDTO.getWorks().get(1).getWorks());
 	}
 
@@ -762,7 +761,7 @@ class WorkFlowServiceImplTest {
 
 		// when
 		// main workflow execution
-		WorkFlowExecution mainWorkFlowExecution = WorkFlowExecution.builder().status(WorkFlowStatus.FAILED)
+		WorkFlowExecution mainWorkFlowExecution = WorkFlowExecution.builder().status(WorkStatus.FAILED)
 				.projectId(projectId).workFlowDefinitionId(UUID.randomUUID()).build();
 		mainWorkFlowExecution.setId(workFlowExecutionId);
 		when(this.workFlowRepository.findById(eq(workFlowExecutionId))).thenReturn(Optional.of(mainWorkFlowExecution));
@@ -778,7 +777,7 @@ class WorkFlowServiceImplTest {
 				.thenReturn(workFlowCheckerTaskDefinition);
 
 		// workflow checker task execution
-		WorkFlowExecution workFlowCheckerExecution = WorkFlowExecution.builder().status(WorkFlowStatus.IN_PROGRESS)
+		WorkFlowExecution workFlowCheckerExecution = WorkFlowExecution.builder().status(WorkStatus.IN_PROGRESS)
 				.projectId(projectId).workFlowDefinitionId(workFlowCheckerDefinitionId).build();
 		workFlowCheckerExecution.setId(UUID.randomUUID());
 		when(this.workFlowRepository.findByMainWorkFlowExecution(any())).thenReturn(List.of(workFlowCheckerExecution));
@@ -830,7 +829,7 @@ class WorkFlowServiceImplTest {
 
 		// when
 		when(this.workFlowRepository.findById(eq(workFlowExecutionId)))
-				.thenReturn(Optional.of(WorkFlowExecution.builder().status(WorkFlowStatus.FAILED)
+				.thenReturn(Optional.of(WorkFlowExecution.builder().status(WorkStatus.FAILED)
 						.projectId(UUID.randomUUID()).workFlowDefinitionId(UUID.randomUUID()).build()));
 
 		when(this.workFlowTaskDefinitionRepository.findFirstByNameAndWorkFlowDefinitionType(any(), any()))
@@ -911,7 +910,7 @@ class WorkFlowServiceImplTest {
 		UUID workflowExecutionId = UUID.randomUUID();
 		WorkFlowDefinition workFlowDefinition = sampleWorkflowDefinition(workName);
 		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().projectId(projectId)
-				.status(WorkFlowStatus.COMPLETED).workFlowDefinitionId(workFlowDefinition.getId()).build();
+				.status(WorkStatus.COMPLETED).workFlowDefinitionId(workFlowDefinition.getId()).build();
 		workFlowExecution.setId(workflowExecutionId);
 		List<WorkStatusResponseDTO> workStatusResponseDTOList = List
 				.of(WorkStatusResponseDTO.builder().name(workName).status(WorkStatus.COMPLETED).build());
@@ -934,10 +933,10 @@ class WorkFlowServiceImplTest {
 		UUID workflowExecution1Id = UUID.randomUUID();
 		UUID workflowExecution2Id = UUID.randomUUID();
 		WorkFlowExecution workFlowExecution1 = WorkFlowExecution.builder().projectId(project1Id)
-				.status(WorkFlowStatus.COMPLETED).build();
+				.status(WorkStatus.COMPLETED).build();
 		workFlowExecution1.setId(workflowExecution1Id);
 		WorkFlowExecution workFlowExecution2 = WorkFlowExecution.builder().projectId(project2Id)
-				.status(WorkFlowStatus.FAILED).build();
+				.status(WorkStatus.FAILED).build();
 		workFlowExecution2.setId(workflowExecution2Id);
 
 		when(workFlowRepository.findAllByProjectId(project1Id)).thenReturn(List.of(workFlowExecution1));
