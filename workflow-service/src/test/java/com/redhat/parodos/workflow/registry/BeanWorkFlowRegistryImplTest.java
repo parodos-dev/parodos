@@ -9,7 +9,6 @@ import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -18,6 +17,7 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 class BeanWorkFlowRegistryImplTest {
 
@@ -35,8 +35,8 @@ class BeanWorkFlowRegistryImplTest {
 
 	@BeforeEach
 	public void initEach() {
-		this.beanFactory = Mockito.mock(ConfigurableListableBeanFactory.class);
-		this.workFlowDefinitionService = Mockito.mock(WorkFlowDefinitionServiceImpl.class);
+		this.beanFactory = mock(ConfigurableListableBeanFactory.class);
+		this.workFlowDefinitionService = mock(WorkFlowDefinitionServiceImpl.class);
 	}
 
 	@Test
@@ -47,23 +47,21 @@ class BeanWorkFlowRegistryImplTest {
 		registry.postInit();
 
 		// then
-		Mockito.verify(this.beanFactory, Mockito.times(0)).getDependenciesForBean(Mockito.any());
-		Mockito.verify(this.workFlowDefinitionService, Mockito.times(0)).save(Mockito.any(), Mockito.any(),
-				Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
+		verify(this.beanFactory, times(0)).getDependenciesForBean(any());
+		verify(this.workFlowDefinitionService, times(0)).save(any(), any(), any(), any(), any(), any());
 	}
 
 	@Test
 	void TestRegistryWithValidWorkflows() {
 		// given
-		Work work = Mockito.mock(Work.class);
+		Work work = mock(Work.class);
 		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow().named(TEST).execute(work).build();
 
-		Mockito.when(this.beanFactory.getDependenciesForBean(Mockito.any()))
-				.thenReturn(new String[] { FOO_DEPENDENCY });
-		AnnotatedTypeMetadata bean = Mockito.mock(AnnotatedTypeMetadata.class);
-		BeanDefinition beanDefinition = Mockito.mock(BeanDefinition.class);
-		Mockito.when(beanDefinition.getSource()).thenReturn(bean);
-		Mockito.when(this.beanFactory.getBeanDefinition(Mockito.any())).thenReturn(beanDefinition);
+		when(this.beanFactory.getDependenciesForBean(any())).thenReturn(new String[] { FOO_DEPENDENCY });
+		AnnotatedTypeMetadata bean = mock(AnnotatedTypeMetadata.class);
+		BeanDefinition beanDefinition = mock(BeanDefinition.class);
+		when(beanDefinition.getSource()).thenReturn(bean);
+		when(this.beanFactory.getBeanDefinition(any())).thenReturn(beanDefinition);
 
 		// when
 		BeanWorkFlowRegistryImpl registry = new BeanWorkFlowRegistryImpl(this.beanFactory, new HashMap<>() {
@@ -75,11 +73,10 @@ class BeanWorkFlowRegistryImplTest {
 		registry.postInit();
 
 		// then
-		Mockito.verify(this.beanFactory, Mockito.times(1)).getDependenciesForBean(Mockito.any());
+		verify(this.beanFactory, times(1)).getDependenciesForBean(any());
 
-		Mockito.verify(this.workFlowDefinitionService, Mockito.times(1)).save(Mockito.eq(TEST),
-				Mockito.eq(WorkFlowType.ASSESSMENT), Mockito.any(), Mockito.anyList(), Mockito.anyList(),
-				Mockito.eq(WorkFlowProcessingType.SEQUENTIAL));
+		verify(this.workFlowDefinitionService, times(1)).save(eq(TEST), eq(WorkFlowType.ASSESSMENT), any(), anyList(),
+				anyList(), eq(WorkFlowProcessingType.SEQUENTIAL));
 
 		assertEquals(registry.getWorkFlowByName(TEST), workFlow);
 	}
@@ -87,18 +84,16 @@ class BeanWorkFlowRegistryImplTest {
 	@Test
 	void TestRegistryWithValidWorkflowTasks() {
 		// given
-		Work work = Mockito.mock(Work.class);
+		Work work = mock(Work.class);
 		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow().named(TEST).execute(work).build();
 
-		Mockito.when(this.beanFactory.getDependenciesForBean(Mockito.eq(TEST)))
-				.thenReturn(new String[] { FOO_DEPENDENCY });
-		AnnotatedTypeMetadata bean = Mockito.mock(AnnotatedTypeMetadata.class);
-		BeanDefinition beanDefinition = Mockito.mock(BeanDefinition.class);
-		Mockito.when(beanDefinition.getSource()).thenReturn(bean);
-		Mockito.when(this.beanFactory.getBeanDefinition(Mockito.any())).thenReturn(beanDefinition);
+		when(this.beanFactory.getDependenciesForBean(eq(TEST))).thenReturn(new String[] { FOO_DEPENDENCY });
+		AnnotatedTypeMetadata bean = mock(AnnotatedTypeMetadata.class);
+		BeanDefinition beanDefinition = mock(BeanDefinition.class);
+		when(beanDefinition.getSource()).thenReturn(bean);
+		when(this.beanFactory.getBeanDefinition(any())).thenReturn(beanDefinition);
 
-		Mockito.when(this.beanFactory.getDependenciesForBean(Mockito.eq(TEST_TASK)))
-				.thenReturn(new String[] { TASK_DEPENDENCY });
+		when(this.beanFactory.getDependenciesForBean(eq(TEST_TASK))).thenReturn(new String[] { TASK_DEPENDENCY });
 
 		// when
 		BeanWorkFlowRegistryImpl registry = new BeanWorkFlowRegistryImpl(this.beanFactory, new HashMap<>() {
@@ -109,13 +104,11 @@ class BeanWorkFlowRegistryImplTest {
 		registry.postInit();
 
 		// then
-		Mockito.verify(this.beanFactory, Mockito.times(1)).getDependenciesForBean(Mockito.any());
-		Mockito.verify(this.workFlowDefinitionService, Mockito.times(1)).save(Mockito.eq("test"),
-				Mockito.eq(WorkFlowType.ASSESSMENT), Mockito.any(), Mockito.anyList(), Mockito.anyList(),
-				Mockito.eq(WorkFlowProcessingType.SEQUENTIAL));
+		verify(this.beanFactory, times(1)).getDependenciesForBean(any());
+		verify(this.workFlowDefinitionService, times(1)).save(eq("test"), eq(WorkFlowType.ASSESSMENT), any(), anyList(),
+				anyList(), eq(WorkFlowProcessingType.SEQUENTIAL));
 
-		Mockito.verify(this.workFlowDefinitionService, Mockito.times(0)).saveWorkFlowChecker(Mockito.eq(TEST_TASK),
-				Mockito.eq(TASK_DEPENDENCY), Mockito.any());
+		verify(this.workFlowDefinitionService, times(0)).saveWorkFlowChecker(eq(TEST_TASK), eq(TASK_DEPENDENCY), any());
 	}
 
 	@SuppressWarnings("serial")
@@ -123,14 +116,13 @@ class BeanWorkFlowRegistryImplTest {
 	void TestThatBeanIsAnnotatedTypeMetadata() {
 
 		// given
-		Work work = Mockito.mock(Work.class);
+		Work work = mock(Work.class);
 		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow().named(TEST).execute(work).build();
 
-		Mockito.when(this.beanFactory.getDependenciesForBean(Mockito.eq(TEST)))
-				.thenReturn(new String[] { FOO_DEPENDENCY });
+		when(this.beanFactory.getDependenciesForBean(eq(TEST))).thenReturn(new String[] { FOO_DEPENDENCY });
 
-		BeanDefinition beanDefinition = Mockito.mock(BeanDefinition.class);
-		Mockito.when(this.beanFactory.getBeanDefinition(Mockito.any())).thenReturn(beanDefinition);
+		BeanDefinition beanDefinition = mock(BeanDefinition.class);
+		when(this.beanFactory.getBeanDefinition(any())).thenReturn(beanDefinition);
 
 		// when
 		BeanWorkFlowRegistryImpl registry = new BeanWorkFlowRegistryImpl(this.beanFactory, new HashMap<>() {
@@ -143,9 +135,8 @@ class BeanWorkFlowRegistryImplTest {
 		// then
 		assertNotNull(exception);
 
-		Mockito.verify(this.beanFactory, Mockito.times(1)).getDependenciesForBean(Mockito.any());
-		Mockito.verify(this.workFlowDefinitionService, Mockito.times(0)).save(Mockito.any(), Mockito.any(),
-				Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
+		verify(this.beanFactory, times(1)).getDependenciesForBean(any());
+		verify(this.workFlowDefinitionService, times(0)).save(any(), any(), any(), any(), any(), any());
 		assertEquals(registry.getWorkFlowByName(TEST), workFlow);
 	}
 

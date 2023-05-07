@@ -20,7 +20,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -29,6 +28,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -87,15 +88,15 @@ public class WorkFlowExecutionInterceptorTest {
 	@Test
 	public void testHandleIncompletePostWorkFlowExecution() {
 		// given
-		WorkReport report = Mockito.mock(WorkReport.class);
+		WorkReport report = mock(WorkReport.class);
 		when(report.getStatus()).thenReturn(WorkStatus.IN_PROGRESS);
 
-		WorkFlow workFlow = Mockito.mock(WorkFlow.class);
+		WorkFlow workFlow = mock(WorkFlow.class);
 		when(workFlow.getName()).thenReturn("TestWorkFlow");
 
 		when(workFlowDefinition.getType()).thenReturn(WorkFlowType.CHECKER);
 		when(workFlowDefinition.getCheckerWorkFlowDefinition())
-				.thenReturn(Mockito.mock(WorkFlowCheckerMappingDefinition.class));
+				.thenReturn(mock(WorkFlowCheckerMappingDefinition.class));
 
 		// when
 		WorkFlowExecution workFlowExecution = interceptor.handlePreWorkFlowExecution();
@@ -103,10 +104,9 @@ public class WorkFlowExecutionInterceptorTest {
 		WorkReport result = interceptor.handlePostWorkFlowExecution(report, workFlow);
 
 		// then
-		verify(workFlowService, Mockito.times(0)).saveWorkFlow(any(UUID.class), any(UUID.class),
-				eq(WorkFlowStatus.IN_PROGRESS), any(), anyString());
-		verify(workFlowSchedulerService, Mockito.times(1)).schedule(Mockito.any(), Mockito.any(),
-				Mockito.any(WorkContext.class), Mockito.any());
+		verify(workFlowService, times(0)).saveWorkFlow(any(UUID.class), any(UUID.class), eq(WorkFlowStatus.IN_PROGRESS),
+				any(), anyString());
+		verify(workFlowSchedulerService, times(1)).schedule(any(), any(), any(WorkContext.class), any());
 
 		assertEquals(result.getStatus(), report.getStatus());
 	}
@@ -114,16 +114,16 @@ public class WorkFlowExecutionInterceptorTest {
 	@Test
 	public void testHandleCompletePostWorkFlowExecution() {
 		// given
-		WorkReport report = Mockito.mock(WorkReport.class);
+		WorkReport report = mock(WorkReport.class);
 		when(report.getStatus()).thenReturn(WorkStatus.COMPLETED);
 		when(workContext.get(WorkContextDelegate.buildKey(WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION,
 				WorkContextDelegate.Resource.NAME))).thenReturn("TestWorkFlow");
-		WorkFlow workFlow = Mockito.mock(WorkFlow.class);
+		WorkFlow workFlow = mock(WorkFlow.class);
 		when(workFlow.getName()).thenReturn("TestWorkFlow");
 
 		when(workFlowDefinition.getType()).thenReturn(WorkFlowType.CHECKER);
 		when(workFlowDefinition.getCheckerWorkFlowDefinition())
-				.thenReturn(Mockito.mock(WorkFlowCheckerMappingDefinition.class));
+				.thenReturn(mock(WorkFlowCheckerMappingDefinition.class));
 		when(mainWorkFlowExecution.getId()).thenReturn(UUID.randomUUID());
 
 		// when
@@ -132,11 +132,11 @@ public class WorkFlowExecutionInterceptorTest {
 		WorkReport result = interceptor.handlePostWorkFlowExecution(report, workFlow);
 
 		// then
-		verify(workFlowService, Mockito.times(0)).saveWorkFlow(any(UUID.class), any(UUID.class),
-				eq(WorkFlowStatus.IN_PROGRESS), any(), anyString());
-		verify(workFlowSchedulerService, Mockito.times(1)).stop(Mockito.any(), Mockito.any(WorkFlow.class));
-		verify(workFlowContinuationServiceImpl, Mockito.times(1)).continueWorkFlow(Mockito.any(UUID.class),
-				Mockito.anyString(), Mockito.any(WorkContext.class), Mockito.any(UUID.class));
+		verify(workFlowService, times(0)).saveWorkFlow(any(UUID.class), any(UUID.class), eq(WorkFlowStatus.IN_PROGRESS),
+				any(), anyString());
+		verify(workFlowSchedulerService, times(1)).stop(any(), any(WorkFlow.class));
+		verify(workFlowContinuationServiceImpl, times(1)).continueWorkFlow(any(UUID.class), anyString(),
+				any(WorkContext.class), any(UUID.class));
 		assertEquals(result.getStatus(), report.getStatus());
 	}
 

@@ -12,18 +12,18 @@ import io.kubernetes.client.openapi.ApiException;
 import io.kubernetes.client.util.generic.dynamic.DynamicKubernetesObject;
 import io.kubernetes.client.util.generic.dynamic.Dynamics;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class KubeapiWorkFlowTaskTest {
 
-	private final static KubernetesApi api = Mockito.mock(KubernetesApi.class);
+	private final static KubernetesApi api = mock(KubernetesApi.class);
 
 	private final static KubeapiWorkFlowTask task = new KubeapiWorkFlowTask(api, "Test");
 

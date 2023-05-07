@@ -6,7 +6,8 @@ import java.util.List;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import org.junit.Before;
-import org.mockito.Mockito;
+
+import static org.mockito.Mockito.mock;
 
 public abstract class BaseInfrastructureWorkFlowTaskTest {
 
@@ -27,8 +28,8 @@ public abstract class BaseInfrastructureWorkFlowTaskTest {
 	protected abstract BaseInfrastructureWorkFlowTask getConcretePersonImplementation();
 
 	public List<WorkFlow> getWorkFlowCheckers() {
-		WorkFlow testWorkflow1 = Mockito.mock(WorkFlow.class);
-		WorkFlow testWorkflow2 = Mockito.mock(WorkFlow.class);
+		WorkFlow testWorkflow1 = mock(WorkFlow.class);
+		WorkFlow testWorkflow2 = mock(WorkFlow.class);
 		return Arrays.asList(testWorkflow1, testWorkflow2);
 	}
 

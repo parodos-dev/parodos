@@ -34,11 +34,15 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
-import org.mockito.Mockito;
+
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 
 public class SequentialFlowTest {
 
-	private final WorkContext workContext = Mockito.mock(WorkContext.class);
+	private final WorkContext workContext = mock(WorkContext.class);
 
 	private final WorkReport completedWorkReport = new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 
@@ -50,8 +54,7 @@ public class SequentialFlowTest {
 
 	@Before
 	public void initWorks() {
-		works = new Work[] { Mockito.mock(Work.class), Mockito.mock(Work.class), Mockito.mock(Work.class),
-				Mockito.mock(Work.class) };
+		works = new Work[] { mock(Work.class), mock(Work.class), mock(Work.class), mock(Work.class) };
 	}
 
 	@Test
@@ -136,20 +139,20 @@ public class SequentialFlowTest {
 			if (failureWork == i) {
 				report = errReport;
 			}
-			Mockito.when(works[i].execute(workContext)).thenReturn(report);
+			when(works[i].execute(workContext)).thenReturn(report);
 			int count = i + 1;
-			Mockito.when(works[i].getName()).thenReturn("work#" + count);
+			when(works[i].getName()).thenReturn("work#" + count);
 		}
 	}
 
 	private void validateWorks(Work[] works, int failureWork) {
-		InOrder inOrder = Mockito.inOrder(works);
+		InOrder inOrder = inOrder(works);
 		for (int i = 0; i < works.length; i++) {
 			int runCount = 1;
 			if (failureWork >= 0 && failureWork < i) {
 				runCount = 0;
 			}
-			inOrder.verify(works[i], Mockito.times(runCount)).execute(workContext);
+			inOrder.verify(works[i], times(runCount)).execute(workContext);
 		}
 	}
 

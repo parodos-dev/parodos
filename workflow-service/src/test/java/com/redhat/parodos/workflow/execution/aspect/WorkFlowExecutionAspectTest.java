@@ -27,7 +27,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -35,6 +34,13 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 class WorkFlowExecutionAspectTest {
@@ -76,18 +82,17 @@ class WorkFlowExecutionAspectTest {
 
 	@BeforeEach
 	public void initEach() {
-		this.workFlowService = Mockito.mock(WorkFlowServiceImpl.class);
-		this.workFlowSchedulerService = Mockito.mock(WorkFlowSchedulerServiceImpl.class);
-		this.workFlowDefinitionRepository = Mockito.mock(WorkFlowDefinitionRepository.class);
+		this.workFlowService = mock(WorkFlowServiceImpl.class);
+		this.workFlowSchedulerService = mock(WorkFlowSchedulerServiceImpl.class);
+		this.workFlowDefinitionRepository = mock(WorkFlowDefinitionRepository.class);
 		WorkFlowExecutionFactory workFlowExecutionFactory = new WorkFlowExecutionFactory(workFlowService,
 				workFlowRepository, workFlowSchedulerService, workFlowContinuationService);
-		WorkFlow workflow = Mockito.mock(WorkFlow.class);
-		WorkFlowDelegate workFlowDelegate = Mockito.mock(WorkFlowDelegate.class);
+		WorkFlow workflow = mock(WorkFlow.class);
+		WorkFlowDelegate workFlowDelegate = mock(WorkFlowDelegate.class);
 		this.workFlowExecutionAspect = new WorkFlowExecutionAspect(this.workFlowSchedulerService,
 				this.workFlowDefinitionRepository, workFlowExecutionFactory);
-		Mockito.when(workFlowDelegate.getWorkFlowExecutionByName(Mockito.any()))
-				.thenReturn(Mockito.mock(WorkFlow.class));
-		Mockito.when(workflow.getName()).thenReturn(TEST);
+		when(workFlowDelegate.getWorkFlowExecutionByName(any())).thenReturn(mock(WorkFlow.class));
+		when(workflow.getName()).thenReturn(TEST);
 	}
 
 	@Test
@@ -105,23 +110,20 @@ class WorkFlowExecutionAspectTest {
 
 		WorkFlowDefinition workFlowDefinition = getSampleWorkFlowDefinition(TEST);
 		WorkFlowExecution workFlowExecution = getSampleWorkFlowExecution();
-		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(Mockito.any())).thenReturn(workFlowDefinition);
-		Mockito.when(this.workFlowService.saveWorkFlow(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(),
-				Mockito.any())).thenReturn(workFlowExecution);
+		when(this.workFlowDefinitionRepository.findFirstByName(any())).thenReturn(workFlowDefinition);
+		when(this.workFlowService.saveWorkFlow(any(), any(), any(), any(), any())).thenReturn(workFlowExecution);
 
-		ProceedingJoinPoint proceedingJoinPoint = Mockito.mock(ProceedingJoinPoint.class);
-		WorkFlow workFlow = Mockito.mock(WorkFlow.class);
-		Mockito.when(proceedingJoinPoint.getTarget()).thenReturn(workFlow);
-		Mockito.when(workFlow.getName()).thenReturn(TEST_WORK_FLOW);
+		ProceedingJoinPoint proceedingJoinPoint = mock(ProceedingJoinPoint.class);
+		WorkFlow workFlow = mock(WorkFlow.class);
+		when(proceedingJoinPoint.getTarget()).thenReturn(workFlow);
+		when(workFlow.getName()).thenReturn(TEST_WORK_FLOW);
 		assertDoesNotThrow(() -> {
-			Mockito.when(proceedingJoinPoint.proceed())
-					.thenReturn(new DefaultWorkReport(WorkStatus.COMPLETED, workContext));
+			when(proceedingJoinPoint.proceed()).thenReturn(new DefaultWorkReport(WorkStatus.COMPLETED, workContext));
 		});
-		Mockito.when(workFlowRepository.findFirstByWorkFlowDefinitionIdAndMainWorkFlowExecution(Mockito.any(),
-				Mockito.any())).thenReturn(workFlowExecution);
-		Mockito.when(workFlowRepository.findById(Mockito.any())).thenReturn(Optional.of(workFlowExecution));
-		Mockito.doNothing().when(workFlowContinuationService).continueWorkFlow(Mockito.any(), Mockito.any(),
-				Mockito.any(), Mockito.any());
+		when(workFlowRepository.findFirstByWorkFlowDefinitionIdAndMainWorkFlowExecution(any(), any()))
+				.thenReturn(workFlowExecution);
+		when(workFlowRepository.findById(any())).thenReturn(Optional.of(workFlowExecution));
+		doNothing().when(workFlowContinuationService).continueWorkFlow(any(), any(), any(), any());
 		// when
 		WorkReport workReport = this.workFlowExecutionAspect.executeAroundAdvice(proceedingJoinPoint, workContext);
 
@@ -130,9 +132,8 @@ class WorkFlowExecutionAspectTest {
 		assertEquals(workReport.getStatus().toString(), COMPLETED);
 		assertEquals(workReport.getWorkContext().get(WORKFLOW_DEFINITION_NAME), TEST_WORK_FLOW);
 		assertEquals(workReport.getWorkContext().get(PROJECT_ID), projectID);
-		Mockito.verify(this.workFlowSchedulerService, Mockito.times(1)).stop(Mockito.any(), Mockito.any());
-		Mockito.verify(this.workFlowService, Mockito.times(1))
-				.updateWorkFlow(Mockito.argThat(w -> w.getStatus().toString().equals(COMPLETED)));
+		verify(this.workFlowSchedulerService, times(1)).stop(any(), any());
+		verify(this.workFlowService, times(1)).updateWorkFlow(argThat(w -> w.getStatus().toString().equals(COMPLETED)));
 	}
 
 	@Test
@@ -152,22 +153,19 @@ class WorkFlowExecutionAspectTest {
 				.workFlowDefinition(WorkFlowDefinition.builder().build()).build();
 		WorkFlowDefinition workFlowDefinition = getSampleWorkFlowDefinition(TEST);
 		WorkFlowExecution workFlowExecution = getSampleWorkFlowExecution();
-		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(Mockito.any())).thenReturn(workFlowDefinition);
-		Mockito.when(this.workFlowService.saveWorkFlow(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(),
-				Mockito.any())).thenReturn(workFlowExecution);
-		Mockito.when(workFlowWorkRepository.findFirstByWorkDefinitionId(Mockito.any()))
-				.thenReturn(workFlowWorkDefinition);
-		ProceedingJoinPoint proceedingJoinPoint = Mockito.mock(ProceedingJoinPoint.class);
-		WorkFlow workFlow = Mockito.mock(WorkFlow.class);
-		Mockito.when(proceedingJoinPoint.getTarget()).thenReturn(workFlow);
-		Mockito.when(workFlow.getName()).thenReturn(TEST_WORK_FLOW);
+		when(this.workFlowDefinitionRepository.findFirstByName(any())).thenReturn(workFlowDefinition);
+		when(this.workFlowService.saveWorkFlow(any(), any(), any(), any(), any())).thenReturn(workFlowExecution);
+		when(workFlowWorkRepository.findFirstByWorkDefinitionId(any())).thenReturn(workFlowWorkDefinition);
+		ProceedingJoinPoint proceedingJoinPoint = mock(ProceedingJoinPoint.class);
+		WorkFlow workFlow = mock(WorkFlow.class);
+		when(proceedingJoinPoint.getTarget()).thenReturn(workFlow);
+		when(workFlow.getName()).thenReturn(TEST_WORK_FLOW);
 		assertDoesNotThrow(() -> {
-			Mockito.when(proceedingJoinPoint.proceed())
-					.thenReturn(new DefaultWorkReport(WorkStatus.FAILED, workContext));
+			when(proceedingJoinPoint.proceed()).thenReturn(new DefaultWorkReport(WorkStatus.FAILED, workContext));
 		});
-		Mockito.when(workFlowRepository.findFirstByWorkFlowDefinitionIdAndMainWorkFlowExecution(Mockito.any(),
-				Mockito.any())).thenReturn(workFlowExecution);
-		Mockito.when(workFlowRepository.findById(Mockito.any())).thenReturn(Optional.of(workFlowExecution));
+		when(workFlowRepository.findFirstByWorkFlowDefinitionIdAndMainWorkFlowExecution(any(), any()))
+				.thenReturn(workFlowExecution);
+		when(workFlowRepository.findById(any())).thenReturn(Optional.of(workFlowExecution));
 
 		// when
 		WorkReport workReport = this.workFlowExecutionAspect.executeAroundAdvice(proceedingJoinPoint, workContext);
@@ -178,10 +176,8 @@ class WorkFlowExecutionAspectTest {
 		assertEquals(workReport.getWorkContext().get(WORKFLOW_DEFINITION_NAME), TEST_WORK_FLOW);
 		assertNull(workReport.getWorkContext().get(WORKFLOW_DEFINITION_ID));
 		assertEquals(workReport.getWorkContext().get(PROJECT_ID), projectID);
-		Mockito.verify(this.workFlowSchedulerService, Mockito.times(1)).schedule(Mockito.any(), Mockito.any(),
-				Mockito.any(), Mockito.any());
-		Mockito.verify(this.workFlowService, Mockito.times(1))
-				.updateWorkFlow(Mockito.argThat(w -> w.getStatus().toString().equals(FAILED)));
+		verify(this.workFlowSchedulerService, times(1)).schedule(any(), any(), any(), any());
+		verify(this.workFlowService, times(1)).updateWorkFlow(argThat(w -> w.getStatus().toString().equals(FAILED)));
 	}
 
 	static WorkFlowExecution getSampleWorkFlowExecution() {

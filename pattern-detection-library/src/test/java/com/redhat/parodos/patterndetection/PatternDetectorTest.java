@@ -25,11 +25,11 @@ import com.redhat.parodos.patterndetection.pattern.BasicPatternImpl;
 import com.redhat.parodos.patterndetection.pattern.Pattern;
 import com.redhat.parodos.patterndetection.results.DetectionResults;
 import com.redhat.parodos.workflows.work.WorkContext;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /*
@@ -68,7 +68,7 @@ class PatternDetectorTest {
 	@Test
 	void testDetect_failNoConfig_missingConfigurationError() {
 		WorkContext context = new WorkContext();
-		Assertions.assertThrows(PatternDetectionConfigurationException.class, () -> {
+		assertThrows(PatternDetectionConfigurationException.class, () -> {
 			PatternDetector.detect(context, null);
 		});
 	}
@@ -79,7 +79,7 @@ class PatternDetectorTest {
 	 */
 	@Test
 	void testDetect_failNull_missingConfigurationError() {
-		Assertions.assertThrows(PatternDetectionConfigurationException.class, () -> {
+		assertThrows(PatternDetectionConfigurationException.class, () -> {
 			PatternDetector.detect(null, null);
 		});
 	}

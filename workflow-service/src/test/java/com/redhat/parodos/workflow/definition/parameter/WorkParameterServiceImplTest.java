@@ -14,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -22,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 class WorkParameterServiceImplTest {
@@ -68,19 +68,19 @@ class WorkParameterServiceImplTest {
 		List<WorkParameterValueResponse> workParameterValueResponses = getSampleParameterValueResponses();
 		workParameterValueRequestDTOs = getSampleParameterValueRequestDTOs();
 		workParameterValueResponseDTOs = getSampleParameterValueResponseDTOs();
-		Mockito.when(workParameterValueProvider.getValuesForWorkflow(anyString(), eq(workParameterValueRequests)))
+		when(workParameterValueProvider.getValuesForWorkflow(anyString(), eq(workParameterValueRequests)))
 				.thenReturn(workParameterValueResponses);
 	}
 
 	@Test
 	void updateValue_when_dataProviderIsFound_then_returnModifiedOptions() {
-		Mockito.when(workFlowDefinitionService.getWorkParametersByWorkName(TEST_WORK))
+		when(workFlowDefinitionService.getWorkParametersByWorkName(TEST_WORK))
 				.thenReturn(Map.of(TEST_RESPONSE_KEY, "test-value"));
-		Mockito.when(workFlowDefinitionService.getParentWorkFlowByWorkName(TEST_WORK))
+		when(workFlowDefinitionService.getParentWorkFlowByWorkName(TEST_WORK))
 				.thenReturn(WorkFlowDefinition.builder().name(SUB_WORKFLOW_NAME).build());
-		Mockito.when(workFlowDefinitionService.getParentWorkFlowByWorkName(SUB_WORKFLOW_NAME))
+		when(workFlowDefinitionService.getParentWorkFlowByWorkName(SUB_WORKFLOW_NAME))
 				.thenReturn(WorkFlowDefinition.builder().name(WORKFLOW_NAME).build());
-		Mockito.when(workFlowDefinitionService.getParentWorkFlowByWorkName(WORKFLOW_NAME)).thenReturn(null);
+		when(workFlowDefinitionService.getParentWorkFlowByWorkName(WORKFLOW_NAME)).thenReturn(null);
 		assertEquals(workParameterValueResponseDTOs,
 				workFlowParameterService.getValues(WORKFLOW_NAME, DATA_PROVIDER_NAME, workParameterValueRequestDTOs));
 	}
@@ -94,7 +94,7 @@ class WorkParameterServiceImplTest {
 
 	@Test
 	void updateValue_when_workIsNotFound_then_returnEmptyList() {
-		Mockito.when(workFlowDefinitionService.getWorkParametersByWorkName(anyString())).thenReturn(null);
+		when(workFlowDefinitionService.getWorkParametersByWorkName(anyString())).thenReturn(null);
 		assertThat(
 				workFlowParameterService.getValues(WORKFLOW_NAME, INVALID_DATA_PROVIDER, workParameterValueRequestDTOs))
 						.isEmpty();
@@ -102,7 +102,7 @@ class WorkParameterServiceImplTest {
 
 	@Test
 	void updateValue_when_parameterIsNotFound_then_returnEmptyList() {
-		Mockito.when(workFlowDefinitionService.getWorkParametersByWorkName(anyString()))
+		when(workFlowDefinitionService.getWorkParametersByWorkName(anyString()))
 				.thenReturn(Map.of(TEST_INVALID_RESPONSE_KEY, "test-value"));
 		assertThat(
 				workFlowParameterService.getValues(WORKFLOW_NAME, INVALID_DATA_PROVIDER, workParameterValueRequestDTOs))

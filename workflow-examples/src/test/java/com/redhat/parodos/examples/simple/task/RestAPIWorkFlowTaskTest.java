@@ -15,14 +15,16 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 
 import org.springframework.http.ResponseEntity;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.spy;
 
 /**
@@ -47,10 +49,10 @@ public class RestAPIWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 		this.restAPIWorkflowTask = spy((RestAPIWorkFlowTask) getConcretePersonImplementation());
 
 		try {
-			doReturn(valueUrl).when(this.restAPIWorkflowTask).getRequiredParameterValue(Mockito.any(WorkContext.class),
+			doReturn(valueUrl).when(this.restAPIWorkflowTask).getRequiredParameterValue(any(WorkContext.class),
 					eq(URL_KEY));
-			doReturn(valuePayload).when(this.restAPIWorkflowTask)
-					.getRequiredParameterValue(Mockito.any(WorkContext.class), eq(PAYLOAD_KEY));
+			doReturn(valuePayload).when(this.restAPIWorkflowTask).getRequiredParameterValue(any(WorkContext.class),
+					eq(PAYLOAD_KEY));
 
 		}
 		catch (MissingParameterException e) {
@@ -66,8 +68,8 @@ public class RestAPIWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 	@Test
 	public void executeSuccess() {
 		// given
-		WorkContext workContext = Mockito.mock(WorkContext.class);
-		try (MockedStatic<RestUtils> restUtilsMockedStatic = Mockito.mockStatic(RestUtils.class)) {
+		WorkContext workContext = mock(WorkContext.class);
+		try (MockedStatic<RestUtils> restUtilsMockedStatic = mockStatic(RestUtils.class)) {
 			restUtilsMockedStatic.when(() -> RestUtils.executeGet(eq(valueUrl)))
 					.thenReturn(ResponseEntity.ok().build());
 			// when
@@ -81,9 +83,9 @@ public class RestAPIWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 	@Test
 	public void executeFail() {
 		// given
-		WorkContext workContext = Mockito.mock(WorkContext.class);
+		WorkContext workContext = mock(WorkContext.class);
 
-		try (MockedStatic<RestUtils> restUtilsMockedStatic = Mockito.mockStatic(RestUtils.class)) {
+		try (MockedStatic<RestUtils> restUtilsMockedStatic = mockStatic(RestUtils.class)) {
 			restUtilsMockedStatic.when(() -> RestUtils.executePost(eq(valueUrl), eq(valuePayload)))
 					.thenReturn(ResponseEntity.badRequest().build());
 

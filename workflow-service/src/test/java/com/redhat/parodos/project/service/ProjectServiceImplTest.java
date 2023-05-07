@@ -20,7 +20,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 
 import org.springframework.security.test.context.support.WithMockUser;
@@ -34,6 +33,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.nullable;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 class ProjectServiceImplTest {
@@ -48,9 +51,9 @@ class ProjectServiceImplTest {
 
 	@BeforeEach
 	public void initEach() {
-		this.projectRepository = Mockito.mock(ProjectRepository.class);
-		this.workFlowRepository = Mockito.mock(WorkFlowRepository.class);
-		this.userService = Mockito.mock(UserService.class);
+		this.projectRepository = mock(ProjectRepository.class);
+		this.workFlowRepository = mock(WorkFlowRepository.class);
+		this.userService = mock(UserService.class);
 		this.projectService = new ProjectServiceImpl(this.projectRepository, this.workFlowRepository, userService,
 				new ModelMapper());
 	}
@@ -66,7 +69,7 @@ class ProjectServiceImplTest {
 	public void testFindProjectByIdWithValidData() {
 		// given
 		Project project = getSampleProject("test");
-		Mockito.when(this.projectRepository.findById(project.getId())).thenReturn(Optional.of(project));
+		when(this.projectRepository.findById(project.getId())).thenReturn(Optional.of(project));
 
 		// when
 		ProjectResponseDTO res = this.projectService.getProjectById(project.getId());
@@ -81,7 +84,7 @@ class ProjectServiceImplTest {
 		String username = "test-user";
 		// given
 		Project project = getSampleProject("test");
-		Mockito.when(this.projectRepository.findByIdAndUserUsername(project.getId(), username))
+		when(this.projectRepository.findByIdAndUserUsername(project.getId(), username))
 				.thenReturn(Optional.of(project));
 
 		// when
@@ -96,7 +99,7 @@ class ProjectServiceImplTest {
 	public void testFindProjectByIdWithInvalidData() {
 		// given
 		Project project = getSampleProject("test");
-		Mockito.when(this.projectRepository.findById(project.getId())).thenReturn(Optional.empty());
+		when(this.projectRepository.findById(project.getId())).thenReturn(Optional.empty());
 
 		// when
 		assertThrows(ResponseStatusException.class, () -> this.projectService.getProjectById(project.getId()),
@@ -123,15 +126,15 @@ class ProjectServiceImplTest {
 				.status(WorkFlowStatus.COMPLETED).mainWorkFlowExecution(null).build();
 
 		// given
-		Mockito.when(this.workFlowRepository
+		when(this.workFlowRepository
 				.findFirstByProjectIdAndMainWorkFlowExecutionIsNullOrderByStartDateDesc(eq(projectIdOne)))
-				.thenReturn(null);
+						.thenReturn(null);
 
-		Mockito.when(this.workFlowRepository
+		when(this.workFlowRepository
 				.findFirstByProjectIdAndMainWorkFlowExecutionIsNullOrderByStartDateDesc(eq(projectIdTwo)))
-				.thenReturn(workFlowExecution);
+						.thenReturn(workFlowExecution);
 
-		Mockito.when(this.projectRepository.findAll()).thenReturn(Arrays.asList(projectOne, projectTwo));
+		when(this.projectRepository.findAll()).thenReturn(Arrays.asList(projectOne, projectTwo));
 
 		// when
 		List<ProjectResponseDTO> res = this.projectService.getProjects();
@@ -148,7 +151,7 @@ class ProjectServiceImplTest {
 	@Test
 	public void testGetProjectsWithInvalidData() {
 		// given
-		Mockito.when(this.projectRepository.findAll()).thenReturn(new ArrayList<Project>());
+		when(this.projectRepository.findAll()).thenReturn(new ArrayList<Project>());
 
 		// when
 		List<ProjectResponseDTO> res = this.projectService.getProjects();
@@ -163,8 +166,8 @@ class ProjectServiceImplTest {
 	public void testSaveWithValidData() {
 		// given
 		Project project = getSampleProject("test");
-		Mockito.when(this.projectRepository.save(any(Project.class))).thenReturn(project);
-		Mockito.when(userService.getUserEntityByUsername(nullable(String.class)))
+		when(this.projectRepository.save(any(Project.class))).thenReturn(project);
+		when(userService.getUserEntityByUsername(nullable(String.class)))
 				.thenReturn(User.builder().username("test-user").build());
 		ProjectRequestDTO projectDTO = ProjectRequestDTO.builder().name("dto").description("dto description").build();
 
@@ -173,7 +176,7 @@ class ProjectServiceImplTest {
 
 		// then
 		ArgumentCaptor<Project> argument = ArgumentCaptor.forClass(Project.class);
-		Mockito.verify(this.projectRepository, Mockito.times(1)).save(argument.capture());
+		verify(this.projectRepository, times(1)).save(argument.capture());
 
 		assertEquals(argument.getValue().getDescription(), "dto description");
 		assertEquals(argument.getValue().getName(), "dto");

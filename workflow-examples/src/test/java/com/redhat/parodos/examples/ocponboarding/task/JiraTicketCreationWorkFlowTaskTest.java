@@ -17,7 +17,6 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +24,8 @@ import org.springframework.http.ResponseEntity;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.spy;
 
 /**
@@ -72,17 +73,16 @@ public class JiraTicketCreationWorkFlowTaskTest extends BaseInfrastructureWorkFl
 	@Test
 	public void executeSuccess() {
 		// given
-		WorkContext workContext = Mockito.mock(WorkContext.class);
+		WorkContext workContext = mock(WorkContext.class);
 
-		try (MockedStatic<RestUtils> restUtilsMockedStatic = Mockito.mockStatic(RestUtils.class)) {
+		try (MockedStatic<RestUtils> restUtilsMockedStatic = mockStatic(RestUtils.class)) {
 			restUtilsMockedStatic.when(
 					() -> RestUtils.executePost(any(String.class), any(), any(String.class), any(String.class), any()))
 					.thenReturn(new ResponseEntity<>(CreateJiraTicketResponseDto.builder().issueId(ISSUE_ID_TEST)
 							.issueKey(ISSUE_KEY_TEST).links(Map.of(WEB_LINK_KEY, WEB_LINK_VALUE)).build(),
 							HttpStatus.OK));
 
-			try (MockedStatic<WorkContextUtils> workContextUtilsMockedStatic = Mockito
-					.mockStatic(WorkContextUtils.class)) {
+			try (MockedStatic<WorkContextUtils> workContextUtilsMockedStatic = mockStatic(WorkContextUtils.class)) {
 				workContextUtilsMockedStatic
 						.when(() -> WorkContextUtils.getAllParameters(any(WorkContext.class), any(String.class)))
 						.thenReturn(Map.of(NAMESPACE_PARAMETER_KEY, NAMESPACE_PARAMETER_VALUE));
@@ -100,9 +100,9 @@ public class JiraTicketCreationWorkFlowTaskTest extends BaseInfrastructureWorkFl
 	@Test
 	public void executeFail() {
 		// given
-		WorkContext workContext = Mockito.mock(WorkContext.class);
+		WorkContext workContext = mock(WorkContext.class);
 
-		try (MockedStatic<RestUtils> restUtilsMockedStatic = Mockito.mockStatic(RestUtils.class)) {
+		try (MockedStatic<RestUtils> restUtilsMockedStatic = mockStatic(RestUtils.class)) {
 			restUtilsMockedStatic.when(
 					() -> RestUtils.executePost(any(String.class), any(), any(String.class), any(String.class), any()))
 					.thenReturn(new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR));

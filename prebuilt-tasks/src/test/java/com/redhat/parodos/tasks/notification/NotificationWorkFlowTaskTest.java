@@ -15,10 +15,11 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class NotificationWorkFlowTaskTest {
@@ -31,7 +32,7 @@ public class NotificationWorkFlowTaskTest {
 
 	@Before
 	public void setUp() {
-		apiInstanceMock = Mockito.mock(NotificationMessageApi.class);
+		apiInstanceMock = mock(NotificationMessageApi.class);
 		underTest = new NotificationWorkFlowTask("http://localhost:8080", apiInstanceMock);
 		underTest.setBeanName("notificationWorkFlowTask");
 		ctx = new WorkContext();
@@ -48,7 +49,7 @@ public class NotificationWorkFlowTaskTest {
 		WorkReport result = underTest.execute(ctx);
 
 		assertEquals(WorkStatus.COMPLETED, result.getStatus());
-		verify(apiInstanceMock, Mockito.times(1)).create(dto);
+		verify(apiInstanceMock, times(1)).create(dto);
 	}
 
 	@Test
@@ -65,7 +66,7 @@ public class NotificationWorkFlowTaskTest {
 
 		assertEquals(WorkStatus.FAILED, result.getStatus());
 		assertEquals(ApiException.class, result.getError().getClass());
-		verify(apiInstanceMock, Mockito.times(1)).create(dto);
+		verify(apiInstanceMock, times(1)).create(dto);
 	}
 
 	@Test
@@ -80,7 +81,7 @@ public class NotificationWorkFlowTaskTest {
 
 		assertEquals(WorkStatus.FAILED, result.getStatus());
 		assertEquals(MissingParameterException.class, result.getError().getClass());
-		verify(apiInstanceMock, Mockito.times(0)).create(dto);
+		verify(apiInstanceMock, times(0)).create(dto);
 	}
 
 	@Test
@@ -95,7 +96,7 @@ public class NotificationWorkFlowTaskTest {
 
 		assertEquals(WorkStatus.FAILED, result.getStatus());
 		assertEquals(MissingParameterException.class, result.getError().getClass());
-		verify(apiInstanceMock, Mockito.times(0)).create(dto);
+		verify(apiInstanceMock, times(0)).create(dto);
 	}
 
 	@Test
@@ -109,7 +110,7 @@ public class NotificationWorkFlowTaskTest {
 
 		assertEquals(WorkStatus.FAILED, result.getStatus());
 		assertEquals(MissingParameterException.class, result.getError().getClass());
-		verify(apiInstanceMock, Mockito.times(0)).create(dto);
+		verify(apiInstanceMock, times(0)).create(dto);
 	}
 
 	@Test
@@ -122,7 +123,7 @@ public class NotificationWorkFlowTaskTest {
 		WorkReport result = underTest.execute(ctx);
 
 		assertEquals(WorkStatus.COMPLETED, result.getStatus());
-		verify(apiInstanceMock, Mockito.times(1)).create(dto);
+		verify(apiInstanceMock, times(1)).create(dto);
 	}
 
 	@Test
@@ -135,7 +136,7 @@ public class NotificationWorkFlowTaskTest {
 		WorkReport result = underTest.execute(ctx);
 
 		assertEquals(WorkStatus.COMPLETED, result.getStatus());
-		verify(apiInstanceMock, Mockito.times(1)).create(dto);
+		verify(apiInstanceMock, times(1)).create(dto);
 	}
 
 	@Test
@@ -149,7 +150,7 @@ public class NotificationWorkFlowTaskTest {
 
 		assertEquals(WorkStatus.FAILED, result.getStatus());
 		assertEquals(MissingParameterException.class, result.getError().getClass());
-		verify(apiInstanceMock, Mockito.times(0)).create(dto);
+		verify(apiInstanceMock, times(0)).create(dto);
 	}
 
 	private NotificationMessageCreateRequestDTO buildNotificationMessageCreateRequestDTO(String type, String body,

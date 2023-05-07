@@ -46,7 +46,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 
 import org.springframework.security.test.context.support.WithMockUser;
@@ -61,6 +60,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.nullable;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 class WorkFlowServiceImplTest {
@@ -91,16 +95,16 @@ class WorkFlowServiceImplTest {
 
 	@BeforeEach
 	void initEach() {
-		this.workFlowDelegate = Mockito.mock(WorkFlowDelegate.class);
-		this.workFlowServiceDelegate = Mockito.mock(WorkFlowServiceDelegate.class);
-		this.workFlowRepository = Mockito.mock(WorkFlowRepository.class);
-		this.workFlowDefinitionRepository = Mockito.mock(WorkFlowDefinitionRepository.class);
-		this.workFlowTaskDefinitionRepository = Mockito.mock(WorkFlowTaskDefinitionRepository.class);
-		this.workFlowTaskRepository = Mockito.mock(WorkFlowTaskRepository.class);
-		this.workFlowWorkRepository = Mockito.mock(WorkFlowWorkRepository.class);
-		this.workFlowDefinitionService = Mockito.mock(WorkFlowDefinitionServiceImpl.class);
+		this.workFlowDelegate = mock(WorkFlowDelegate.class);
+		this.workFlowServiceDelegate = mock(WorkFlowServiceDelegate.class);
+		this.workFlowRepository = mock(WorkFlowRepository.class);
+		this.workFlowDefinitionRepository = mock(WorkFlowDefinitionRepository.class);
+		this.workFlowTaskDefinitionRepository = mock(WorkFlowTaskDefinitionRepository.class);
+		this.workFlowTaskRepository = mock(WorkFlowTaskRepository.class);
+		this.workFlowWorkRepository = mock(WorkFlowWorkRepository.class);
+		this.workFlowDefinitionService = mock(WorkFlowDefinitionServiceImpl.class);
 		this.metricRegistry = new SimpleMeterRegistry();
-		this.projectService = Mockito.mock(ProjectService.class);
+		this.projectService = mock(ProjectService.class);
 		this.modelMapper = new ModelMapper();
 
 		this.workFlowService = new WorkFlowServiceImpl(this.workFlowDelegate, this.workFlowServiceDelegate,
@@ -112,19 +116,17 @@ class WorkFlowServiceImplTest {
 	@Test
 	void executeTestWithValidData() {
 		// given
-		Work work = Mockito.mock(Work.class);
+		Work work = mock(Work.class);
 		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow().named("test").execute(work).build();
 
-		Mockito.when(work.execute(Mockito.any()))
-				.thenReturn(new DefaultWorkReport(WorkStatus.COMPLETED, new WorkContext() {
-					{
-						put("foo", "bar");
-					}
-				}));
-		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
-		Mockito.when(this.workFlowDelegate.initWorkFlowContext(Mockito.any(), Mockito.any()))
-				.thenReturn(new WorkContext());
-		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(Mockito.any()))
+		when(work.execute(any())).thenReturn(new DefaultWorkReport(WorkStatus.COMPLETED, new WorkContext() {
+			{
+				put("foo", "bar");
+			}
+		}));
+		when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
+		when(this.workFlowDelegate.initWorkFlowContext(any(), any())).thenReturn(new WorkContext());
+		when(this.workFlowDefinitionRepository.findFirstByName(any()))
 				.thenReturn(this.sampleWorkflowDefinition("test"));
 
 		// when
@@ -138,15 +140,15 @@ class WorkFlowServiceImplTest {
 		assertNotNull(report.getWorkContext());
 		assertEquals(report.getWorkContext().get("foo"), "bar");
 
-		Mockito.verify(this.workFlowDelegate, Mockito.times(1)).getWorkFlowExecutionByName(Mockito.any());
-		Mockito.verify(work, Mockito.times(1)).execute(Mockito.any());
+		verify(this.workFlowDelegate, times(1)).getWorkFlowExecutionByName(any());
+		verify(work, times(1)).execute(any());
 
 	}
 
 	@Test
 	void executeTestWithNoValidWorkflow() {
 		// given
-		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName(Mockito.any())).thenReturn(null);
+		when(this.workFlowDelegate.getWorkFlowExecutionByName(any())).thenReturn(null);
 
 		// when
 		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId(UUID.randomUUID())
@@ -158,28 +160,26 @@ class WorkFlowServiceImplTest {
 
 		assertNotNull(report.getWorkContext());
 
-		Mockito.verify(this.workFlowDelegate, Mockito.times(1)).getWorkFlowExecutionByName(Mockito.any());
-		Mockito.verify(this.workFlowDelegate, Mockito.times(0)).initWorkFlowContext(Mockito.any(), Mockito.any());
-		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(0)).findFirstByName(Mockito.any());
+		verify(this.workFlowDelegate, times(1)).getWorkFlowExecutionByName(any());
+		verify(this.workFlowDelegate, times(0)).initWorkFlowContext(any(), any());
+		verify(this.workFlowDefinitionRepository, times(0)).findFirstByName(any());
 	}
 
 	@Test
 	void executeWithDTOWithValidData() {
 		// given
-		Work work = Mockito.mock(Work.class);
+		Work work = mock(Work.class);
 		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow().named("test").execute(work).build();
-		Mockito.when(work.execute(Mockito.any()))
-				.thenReturn(new DefaultWorkReport(WorkStatus.COMPLETED, new WorkContext() {
-					{
-						put("foo", "bar");
-					}
-				}));
-		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(Mockito.any()))
+		when(work.execute(any())).thenReturn(new DefaultWorkReport(WorkStatus.COMPLETED, new WorkContext() {
+			{
+				put("foo", "bar");
+			}
+		}));
+		when(this.workFlowDefinitionRepository.findFirstByName(any()))
 				.thenReturn(this.sampleWorkflowDefinition("test"));
-		Mockito.when(this.workFlowWorkRepository.findFirstByWorkDefinitionId(Mockito.any())).thenReturn(null);
-		Mockito.when(this.workFlowDelegate.initWorkFlowContext(Mockito.any(), Mockito.any()))
-				.thenReturn(new WorkContext());
-		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
+		when(this.workFlowWorkRepository.findFirstByWorkDefinitionId(any())).thenReturn(null);
+		when(this.workFlowDelegate.initWorkFlowContext(any(), any())).thenReturn(new WorkContext());
+		when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
 
 		// when
 		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId(UUID.randomUUID())
@@ -191,22 +191,22 @@ class WorkFlowServiceImplTest {
 
 		assertNotNull(report.getWorkContext());
 
-		Mockito.verify(this.workFlowDelegate, Mockito.times(2)).getWorkFlowExecutionByName(Mockito.any());
-		Mockito.verify(this.workFlowDelegate, Mockito.times(1)).initWorkFlowContext(Mockito.any(), Mockito.any());
-		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).findFirstByName(Mockito.any());
+		verify(this.workFlowDelegate, times(2)).getWorkFlowExecutionByName(any());
+		verify(this.workFlowDelegate, times(1)).initWorkFlowContext(any(), any());
+		verify(this.workFlowDefinitionRepository, times(1)).findFirstByName(any());
 	}
 
 	@Test
 	void executeWithDTOWithNoMainWorkFlow() {
 		// given
-		Work work = Mockito.mock(Work.class);
+		Work work = mock(Work.class);
 		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow().named("test").execute(work).build();
-		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(Mockito.any()))
+		when(this.workFlowDefinitionRepository.findFirstByName(any()))
 				.thenReturn(this.sampleWorkflowDefinition("test"));
-		Mockito.when(this.workFlowWorkRepository.findFirstByWorkDefinitionId(Mockito.any()))
+		when(this.workFlowWorkRepository.findFirstByWorkDefinitionId(any()))
 				.thenReturn(WorkFlowWorkDefinition.builder().build());
 
-		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
+		when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
 
 		// when
 		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId(UUID.randomUUID())
@@ -218,18 +218,18 @@ class WorkFlowServiceImplTest {
 
 		assertNotNull(report.getWorkContext());
 
-		Mockito.verify(this.workFlowDelegate, Mockito.times(1)).getWorkFlowExecutionByName(Mockito.any());
-		Mockito.verify(this.workFlowDelegate, Mockito.times(0)).initWorkFlowContext(Mockito.any(), Mockito.any());
-		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).findFirstByName(Mockito.any());
+		verify(this.workFlowDelegate, times(1)).getWorkFlowExecutionByName(any());
+		verify(this.workFlowDelegate, times(0)).initWorkFlowContext(any(), any());
+		verify(this.workFlowDefinitionRepository, times(1)).findFirstByName(any());
 	}
 
 	@Test
 	void executeWithDTOWithNoWorkFlowDefinition() {
 		// given
-		Work work = Mockito.mock(Work.class);
+		Work work = mock(Work.class);
 		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow().named("test").execute(work).build();
-		Mockito.when(this.workFlowDefinitionRepository.findFirstByName(Mockito.any())).thenReturn(null);
-		Mockito.when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
+		when(this.workFlowDefinitionRepository.findFirstByName(any())).thenReturn(null);
+		when(this.workFlowDelegate.getWorkFlowExecutionByName("test-workflow")).thenReturn(workFlow);
 
 		// when
 		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId(UUID.randomUUID())
@@ -241,10 +241,10 @@ class WorkFlowServiceImplTest {
 
 		assertNotNull(report.getWorkContext());
 
-		Mockito.verify(this.workFlowDelegate, Mockito.times(1)).getWorkFlowExecutionByName(Mockito.any());
-		Mockito.verify(this.workFlowDelegate, Mockito.never()).initWorkFlowContext(Mockito.any(), Mockito.any());
-		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).findFirstByName(Mockito.any());
-		Mockito.verify(this.workFlowWorkRepository, Mockito.never()).findFirstByWorkDefinitionId(Mockito.any());
+		verify(this.workFlowDelegate, times(1)).getWorkFlowExecutionByName(any());
+		verify(this.workFlowDelegate, never()).initWorkFlowContext(any(), any());
+		verify(this.workFlowDefinitionRepository, times(1)).findFirstByName(any());
+		verify(this.workFlowWorkRepository, never()).findFirstByWorkDefinitionId(any());
 	}
 
 	@Test
@@ -254,7 +254,7 @@ class WorkFlowServiceImplTest {
 
 		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().status(WorkFlowStatus.COMPLETED).build();
 		workFlowExecution.setId(id);
-		Mockito.when(this.workFlowRepository.findById(id)).thenReturn(Optional.of(workFlowExecution));
+		when(this.workFlowRepository.findById(id)).thenReturn(Optional.of(workFlowExecution));
 
 		// when
 		WorkFlowExecution res = this.workFlowService.getWorkFlowById(id);
@@ -272,7 +272,7 @@ class WorkFlowServiceImplTest {
 
 		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().status(WorkFlowStatus.COMPLETED).build();
 		workFlowExecution.setId(id);
-		Mockito.when(this.workFlowRepository.findById(id)).thenReturn(Optional.empty());
+		when(this.workFlowRepository.findById(id)).thenReturn(Optional.empty());
 
 		// when
 		WorkFlowExecution res = this.workFlowService.getWorkFlowById(id);
@@ -292,7 +292,7 @@ class WorkFlowServiceImplTest {
 		WorkFlowExecution mainWorkFlowExecution = WorkFlowExecution.builder().status(WorkFlowStatus.COMPLETED).build();
 		mainWorkFlowExecution.setId(UUID.randomUUID());
 
-		Mockito.when(this.workFlowRepository.save(Mockito.any())).thenReturn(workFlowExecution);
+		when(this.workFlowRepository.save(any())).thenReturn(workFlowExecution);
 
 		// when
 		WorkFlowExecution res = this.workFlowService.saveWorkFlow(projectId, workflowDefID, WorkFlowStatus.COMPLETED,
@@ -302,7 +302,7 @@ class WorkFlowServiceImplTest {
 		assertNotNull(res);
 
 		ArgumentCaptor<WorkFlowExecution> argument = ArgumentCaptor.forClass(WorkFlowExecution.class);
-		Mockito.verify(this.workFlowRepository, Mockito.times(1)).save(argument.capture());
+		verify(this.workFlowRepository, times(1)).save(argument.capture());
 		assertEquals(argument.getValue().getStatus().toString(), "COMPLETED");
 		assertEquals(argument.getValue().getProjectId().toString(), projectId.toString());
 		assertEquals(argument.getValue().getWorkFlowDefinitionId().toString(), workflowDefID.toString());
@@ -317,7 +317,7 @@ class WorkFlowServiceImplTest {
 		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().status(WorkFlowStatus.COMPLETED)
 				.projectId(projectId).workFlowDefinitionId(workflowDefID).build();
 		workFlowExecution.setId(UUID.randomUUID());
-		Mockito.when(this.workFlowRepository.save(Mockito.any())).thenReturn(workFlowExecution);
+		when(this.workFlowRepository.save(any())).thenReturn(workFlowExecution);
 
 		// when
 		WorkFlowExecution res = this.workFlowService.updateWorkFlow(workFlowExecution);
@@ -326,7 +326,7 @@ class WorkFlowServiceImplTest {
 		assertNotNull(res);
 
 		ArgumentCaptor<WorkFlowExecution> argument = ArgumentCaptor.forClass(WorkFlowExecution.class);
-		Mockito.verify(this.workFlowRepository, Mockito.times(1)).save(argument.capture());
+		verify(this.workFlowRepository, times(1)).save(argument.capture());
 		assertEquals(argument.getValue().getStatus().toString(), "COMPLETED");
 		assertEquals(argument.getValue().getProjectId().toString(), projectId.toString());
 		assertEquals(argument.getValue().getWorkFlowDefinitionId().toString(), workflowDefID.toString());
@@ -351,7 +351,7 @@ class WorkFlowServiceImplTest {
 				.workFlowExecutionId(wfExecutionID).build();
 		workFlowTaskExecution.setId(UUID.randomUUID());
 
-		Mockito.when(this.workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(wfExecutionID,
+		when(this.workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(wfExecutionID,
 				wfTaskDefID)).thenReturn(List.of(workFlowTaskExecution));
 		// when
 
@@ -371,14 +371,14 @@ class WorkFlowServiceImplTest {
 		// given
 		UUID wfTaskDefID = UUID.randomUUID();
 		UUID wfExecutionID = UUID.randomUUID();
-		Mockito.when(this.workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(wfExecutionID,
+		when(this.workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(wfExecutionID,
 				wfTaskDefID)).thenReturn(null);
 
 		// when
 		WorkFlowTaskExecution res = this.workFlowService.getWorkFlowTask(wfExecutionID, wfTaskDefID);
 		// then
 		assertNull(res);
-		Mockito.verify(this.workFlowTaskRepository, Mockito.times(1))
+		verify(this.workFlowTaskRepository, times(1))
 				.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(wfExecutionID, wfTaskDefID);
 	}
 
@@ -387,14 +387,14 @@ class WorkFlowServiceImplTest {
 		// given
 		UUID wfTaskDefID = UUID.randomUUID();
 		UUID wfExecutionID = UUID.randomUUID();
-		Mockito.when(this.workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(wfExecutionID,
+		when(this.workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(wfExecutionID,
 				wfTaskDefID)).thenReturn(new LinkedList<>());
 
 		// when
 		WorkFlowTaskExecution res = this.workFlowService.getWorkFlowTask(wfExecutionID, wfTaskDefID);
 		// then
 		assertNull(res);
-		Mockito.verify(this.workFlowTaskRepository, Mockito.times(1))
+		verify(this.workFlowTaskRepository, times(1))
 				.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(wfExecutionID, wfTaskDefID);
 	}
 
@@ -409,7 +409,7 @@ class WorkFlowServiceImplTest {
 				.workFlowExecutionId(wfExecutionID).build();
 		workFlowTaskExecution.setId(UUID.randomUUID());
 
-		Mockito.when(this.workFlowTaskRepository.save(Mockito.any())).thenReturn(workFlowTaskExecution);
+		when(this.workFlowTaskRepository.save(any())).thenReturn(workFlowTaskExecution);
 		// when
 		WorkFlowTaskExecution res = this.workFlowService.saveWorkFlowTask("arguments", wfTaskDefID, wfExecutionID,
 				WorkFlowTaskStatus.COMPLETED);
@@ -418,7 +418,7 @@ class WorkFlowServiceImplTest {
 		assertNotNull(res);
 
 		ArgumentCaptor<WorkFlowTaskExecution> argument = ArgumentCaptor.forClass(WorkFlowTaskExecution.class);
-		Mockito.verify(this.workFlowTaskRepository, Mockito.times(1)).save(argument.capture());
+		verify(this.workFlowTaskRepository, times(1)).save(argument.capture());
 		assertEquals(argument.getValue().getStatus().toString(), "COMPLETED");
 		assertEquals(argument.getValue().getWorkFlowExecutionId().toString(), wfExecutionID.toString());
 		assertEquals(argument.getValue().getWorkFlowTaskDefinitionId().toString(), wfTaskDefID.toString());
@@ -437,7 +437,7 @@ class WorkFlowServiceImplTest {
 				.workFlowExecutionId(wfExecutionID).build();
 		workFlowTaskExecution.setId(UUID.randomUUID());
 
-		Mockito.when(this.workFlowTaskRepository.save(Mockito.any())).thenReturn(workFlowTaskExecution);
+		when(this.workFlowTaskRepository.save(any())).thenReturn(workFlowTaskExecution);
 		// when
 		WorkFlowTaskExecution res = this.workFlowService.updateWorkFlowTask(workFlowTaskExecution);
 
@@ -445,7 +445,7 @@ class WorkFlowServiceImplTest {
 		assertNotNull(res);
 
 		ArgumentCaptor<WorkFlowTaskExecution> argument = ArgumentCaptor.forClass(WorkFlowTaskExecution.class);
-		Mockito.verify(this.workFlowTaskRepository, Mockito.times(1)).save(argument.capture());
+		verify(this.workFlowTaskRepository, times(1)).save(argument.capture());
 		assertEquals(argument.getValue().getStatus().toString(), "COMPLETED");
 		assertEquals(argument.getValue().getWorkFlowExecutionId().toString(), wfExecutionID.toString());
 		assertEquals(argument.getValue().getWorkFlowTaskDefinitionId().toString(), wfTaskDefID.toString());
@@ -517,33 +517,31 @@ class WorkFlowServiceImplTest {
 		workFlowDefinition.setWorkFlowTaskDefinitions(List.of(workFlowTask1Definition));
 
 		// when
-		Mockito.when(this.workFlowDefinitionRepository.findById(eq(workFlowDefinitionId)))
+		when(this.workFlowDefinitionRepository.findById(eq(workFlowDefinitionId)))
 				.thenReturn(Optional.of(workFlowDefinition));
 
-		Mockito.when(this.workFlowRepository.findById(eq(workFlowExecutionId)))
-				.thenReturn(Optional.of(workFlowExecution));
+		when(this.workFlowRepository.findById(eq(workFlowExecutionId))).thenReturn(Optional.of(workFlowExecution));
 
-		Mockito.when(this.workFlowDefinitionRepository.findById(eq(testSubWorkFlow1DefinitionId)))
+		when(this.workFlowDefinitionRepository.findById(eq(testSubWorkFlow1DefinitionId)))
 				.thenReturn(Optional.of(subWorkFlow1Definition));
 
-		Mockito.when(this.workFlowRepository.findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(
-				eq(workFlowExecution), eq(testSubWorkFlow1DefinitionId))).thenReturn(subWorkFlow1Execution);
+		when(this.workFlowRepository.findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(eq(workFlowExecution),
+				eq(testSubWorkFlow1DefinitionId))).thenReturn(subWorkFlow1Execution);
 
-		Mockito.when(this.workFlowTaskDefinitionRepository.findById(eq(subWorkFlow1Task1DefinitionId)))
+		when(this.workFlowTaskDefinitionRepository.findById(eq(subWorkFlow1Task1DefinitionId)))
 				.thenReturn(Optional.of(subWorkFlow1Task1Definition));
 
-		Mockito.when(this.workFlowTaskDefinitionRepository.findById(eq(workFlowTask1DefinitionId)))
+		when(this.workFlowTaskDefinitionRepository.findById(eq(workFlowTask1DefinitionId)))
 				.thenReturn(Optional.of(workFlowTask1Definition));
 
-		Mockito.when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(
+		when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(
 				eq(testSubWorkFlow1ExecutionId), eq(subWorkFlow1Task1DefinitionId)))
-				.thenReturn(List.of(subWorkFlow1Task1Execution));
+						.thenReturn(List.of(subWorkFlow1Task1Execution));
 
-		Mockito.when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(
-				eq(workFlowExecutionId), eq(workFlowTask1DefinitionId))).thenReturn(List.of(workFlowTask1Execution));
+		when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(eq(workFlowExecutionId),
+				eq(workFlowTask1DefinitionId))).thenReturn(List.of(workFlowTask1Execution));
 
-		Mockito.when(
-				this.workFlowServiceDelegate.getWorkFlowAndWorksStatus(eq(workFlowExecution), eq(workFlowDefinition)))
+		when(this.workFlowServiceDelegate.getWorkFlowAndWorksStatus(eq(workFlowExecution), eq(workFlowDefinition)))
 				.thenReturn(List.of(
 						WorkStatusResponseDTO.builder().name(SUB_WORKFLOW_1_NAME).type(WorkType.WORKFLOW)
 								.status(com.redhat.parodos.workflow.enums.ParodosWorkStatus.PENDING)
@@ -592,15 +590,14 @@ class WorkFlowServiceImplTest {
 		UUID workFlowExecutionId = UUID.randomUUID();
 
 		// when
-		Mockito.when(this.workFlowRepository.findById(eq(workFlowExecutionId))).thenReturn(Optional.empty());
+		when(this.workFlowRepository.findById(eq(workFlowExecutionId))).thenReturn(Optional.empty());
 
 		assertThrows(ResponseStatusException.class, () -> {
 			this.workFlowService.getWorkFlowStatus(workFlowExecutionId);
 		});
 
-		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findById(any());
-		Mockito.verify(this.workFlowWorkRepository, Mockito.never())
-				.findByWorkFlowDefinitionIdOrderByCreateDateAsc(any());
+		verify(this.workFlowRepository, times(1)).findById(any());
+		verify(this.workFlowWorkRepository, never()).findByWorkFlowDefinitionIdOrderByCreateDateAsc(any());
 	}
 
 	@Test
@@ -608,22 +605,20 @@ class WorkFlowServiceImplTest {
 		// workflow (main)
 		UUID workFlowExecutionId = UUID.randomUUID();
 		UUID workFlowDefinitionId = UUID.randomUUID();
-		WorkFlowExecution workFlowExecution = Mockito.mock(WorkFlowExecution.class);
+		WorkFlowExecution workFlowExecution = mock(WorkFlowExecution.class);
 
 		// when
-		Mockito.when(this.workFlowRepository.findById(eq(workFlowExecutionId)))
-				.thenReturn(Optional.of(workFlowExecution));
+		when(this.workFlowRepository.findById(eq(workFlowExecutionId))).thenReturn(Optional.of(workFlowExecution));
 
-		Mockito.when(this.workFlowDefinitionRepository.findById(eq(workFlowDefinitionId))).thenReturn(Optional.empty());
+		when(this.workFlowDefinitionRepository.findById(eq(workFlowDefinitionId))).thenReturn(Optional.empty());
 
 		assertThrows(ResponseStatusException.class, () -> {
 			this.workFlowService.getWorkFlowStatus(workFlowExecutionId);
 		});
 
-		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findById(any());
-		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).findById(any());
-		Mockito.verify(this.workFlowServiceDelegate, Mockito.never()).getWorkFlowAndWorksStatus(eq(workFlowExecution),
-				Mockito.any());
+		verify(this.workFlowRepository, times(1)).findById(any());
+		verify(this.workFlowDefinitionRepository, times(1)).findById(any());
+		verify(this.workFlowServiceDelegate, never()).getWorkFlowAndWorksStatus(eq(workFlowExecution), any());
 	}
 
 	@Test
@@ -631,25 +626,24 @@ class WorkFlowServiceImplTest {
 		// workflow
 		UUID workFlowExecutionId = UUID.randomUUID();
 		UUID workFlowDefinitionId = UUID.randomUUID();
-		WorkFlowExecution workFlowExecution = Mockito.mock(WorkFlowExecution.class);
-		WorkFlowDefinition workFlowDefinition = Mockito.mock(WorkFlowDefinition.class);
+		WorkFlowExecution workFlowExecution = mock(WorkFlowExecution.class);
+		WorkFlowDefinition workFlowDefinition = mock(WorkFlowDefinition.class);
 
 		// when
-		Mockito.when(this.workFlowRepository.findById(eq(workFlowExecutionId)))
-				.thenReturn(Optional.of(workFlowExecution));
+		when(this.workFlowRepository.findById(eq(workFlowExecutionId))).thenReturn(Optional.of(workFlowExecution));
 
-		Mockito.when(this.workFlowDefinitionRepository.findById(eq(workFlowDefinitionId)))
+		when(this.workFlowDefinitionRepository.findById(eq(workFlowDefinitionId)))
 				.thenReturn(Optional.of(workFlowDefinition));
 
-		Mockito.when(workFlowExecution.getMainWorkFlowExecution()).thenReturn(null);
+		when(workFlowExecution.getMainWorkFlowExecution()).thenReturn(null);
 
 		assertThrows(ResponseStatusException.class, () -> {
 			this.workFlowService.getWorkFlowStatus(workFlowExecutionId);
 		});
 
-		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findById(any());
-		Mockito.verify(this.workFlowDefinitionRepository, Mockito.times(1)).findById(any());
-		Mockito.verify(this.workFlowServiceDelegate, Mockito.never()).getWorkFlowAndWorksStatus(eq(workFlowExecution),
+		verify(this.workFlowRepository, times(1)).findById(any());
+		verify(this.workFlowDefinitionRepository, times(1)).findById(any());
+		verify(this.workFlowServiceDelegate, never()).getWorkFlowAndWorksStatus(eq(workFlowExecution),
 				eq(workFlowDefinition));
 	}
 
@@ -703,32 +697,30 @@ class WorkFlowServiceImplTest {
 		workFlowDefinition.setWorkFlowTaskDefinitions(List.of(workFlowTask1Definition));
 
 		// when
-		Mockito.when(this.workFlowDefinitionRepository.findById(eq(workFlowDefinitionId)))
+		when(this.workFlowDefinitionRepository.findById(eq(workFlowDefinitionId)))
 				.thenReturn(Optional.of(workFlowDefinition));
 
-		Mockito.when(this.workFlowRepository.findById(eq(workFlowExecutionId)))
-				.thenReturn(Optional.of(workFlowExecution));
+		when(this.workFlowRepository.findById(eq(workFlowExecutionId))).thenReturn(Optional.of(workFlowExecution));
 
-		Mockito.when(this.workFlowDefinitionRepository.findById(eq(subWorkFlow1DefinitionId)))
+		when(this.workFlowDefinitionRepository.findById(eq(subWorkFlow1DefinitionId)))
 				.thenReturn(Optional.of(subWorkFlow1Definition));
 
-		Mockito.when(this.workFlowRepository.findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(
-				eq(workFlowExecution), eq(subWorkFlow1DefinitionId))).thenReturn(null);
+		when(this.workFlowRepository.findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(eq(workFlowExecution),
+				eq(subWorkFlow1DefinitionId))).thenReturn(null);
 
-		Mockito.when(this.workFlowTaskDefinitionRepository.findById(eq(subWorkFlow1Task1DefinitionId)))
+		when(this.workFlowTaskDefinitionRepository.findById(eq(subWorkFlow1Task1DefinitionId)))
 				.thenReturn(Optional.of(subWorkFlow1Task1Definition));
 
-		Mockito.when(this.workFlowTaskDefinitionRepository.findById(eq(workFlowTask1DefinitionId)))
+		when(this.workFlowTaskDefinitionRepository.findById(eq(workFlowTask1DefinitionId)))
 				.thenReturn(Optional.of(workFlowTask1Definition));
 
-		Mockito.when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(
-				eq(subWorkFlow1ExecutionId), eq(subWorkFlow1Task1DefinitionId))).thenReturn(List.of());
+		when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(eq(subWorkFlow1ExecutionId),
+				eq(subWorkFlow1Task1DefinitionId))).thenReturn(List.of());
 
-		Mockito.when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(
-				eq(workFlowExecutionId), eq(workFlowTask1DefinitionId))).thenReturn(List.of());
+		when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(eq(workFlowExecutionId),
+				eq(workFlowTask1DefinitionId))).thenReturn(List.of());
 
-		Mockito.when(
-				this.workFlowServiceDelegate.getWorkFlowAndWorksStatus(eq(workFlowExecution), eq(workFlowDefinition)))
+		when(this.workFlowServiceDelegate.getWorkFlowAndWorksStatus(eq(workFlowExecution), eq(workFlowDefinition)))
 				.thenReturn(List.of(
 						WorkStatusResponseDTO.builder().name(SUB_WORKFLOW_1_NAME).type(WorkType.WORKFLOW)
 								.status(com.redhat.parodos.workflow.enums.ParodosWorkStatus.PENDING)
@@ -777,8 +769,7 @@ class WorkFlowServiceImplTest {
 		WorkFlowExecution mainWorkFlowExecution = WorkFlowExecution.builder().status(WorkFlowStatus.FAILED)
 				.projectId(projectId).workFlowDefinitionId(UUID.randomUUID()).build();
 		mainWorkFlowExecution.setId(workFlowExecutionId);
-		Mockito.when(this.workFlowRepository.findById(eq(workFlowExecutionId)))
-				.thenReturn(Optional.of(mainWorkFlowExecution));
+		when(this.workFlowRepository.findById(eq(workFlowExecutionId))).thenReturn(Optional.of(mainWorkFlowExecution));
 
 		// workflow checker definition
 		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(workFlowCheckerName).build();
@@ -787,29 +778,28 @@ class WorkFlowServiceImplTest {
 		WorkFlowTaskDefinition workFlowCheckerTaskDefinition = WorkFlowTaskDefinition.builder()
 				.workFlowDefinition(workFlowDefinition).name(workFlowCheckerTaskName).build();
 		workFlowCheckerTaskDefinition.setId(UUID.randomUUID());
-		Mockito.when(this.workFlowTaskDefinitionRepository.findFirstByNameAndWorkFlowDefinitionType(Mockito.any(),
-				Mockito.any())).thenReturn(workFlowCheckerTaskDefinition);
+		when(this.workFlowTaskDefinitionRepository.findFirstByNameAndWorkFlowDefinitionType(any(), any()))
+				.thenReturn(workFlowCheckerTaskDefinition);
 
 		// workflow checker task execution
 		WorkFlowExecution workFlowCheckerExecution = WorkFlowExecution.builder().status(WorkFlowStatus.IN_PROGRESS)
 				.projectId(projectId).workFlowDefinitionId(workFlowCheckerDefinitionId).build();
 		workFlowCheckerExecution.setId(UUID.randomUUID());
-		Mockito.when(this.workFlowRepository.findByMainWorkFlowExecution(Mockito.any()))
-				.thenReturn(List.of(workFlowCheckerExecution));
+		when(this.workFlowRepository.findByMainWorkFlowExecution(any())).thenReturn(List.of(workFlowCheckerExecution));
 
 		WorkFlowTaskExecution workFlowTaskExecution = WorkFlowTaskExecution.builder().arguments("test").results("res")
 				.status(WorkFlowTaskStatus.FAILED).workFlowTaskDefinitionId(workFlowCheckerTaskDefinition.getId())
 				.workFlowExecutionId(workFlowCheckerExecution.getId()).build();
 		workFlowTaskExecution.setId(UUID.randomUUID());
-		Mockito.when(this.workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(Mockito.any(),
-				Mockito.any())).thenReturn(List.of(workFlowTaskExecution));
+		when(this.workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(any(), any()))
+				.thenReturn(List.of(workFlowTaskExecution));
 
 		this.workFlowService.updateWorkFlowCheckerTaskStatus(workFlowExecutionId, workFlowCheckerTaskName,
 				WorkFlowTaskStatus.COMPLETED);
 
 		// then
 		ArgumentCaptor<WorkFlowTaskExecution> argument = ArgumentCaptor.forClass(WorkFlowTaskExecution.class);
-		Mockito.verify(this.workFlowTaskRepository, Mockito.times(1)).save(argument.capture());
+		verify(this.workFlowTaskRepository, times(1)).save(argument.capture());
 		assertEquals(argument.getValue().getWorkFlowTaskDefinitionId(), workFlowCheckerTaskDefinition.getId());
 		assertEquals(argument.getValue().getWorkFlowExecutionId(), workFlowCheckerExecution.getId());
 		assertEquals(argument.getValue().getStatus(), WorkFlowTaskStatus.COMPLETED);
@@ -824,14 +814,14 @@ class WorkFlowServiceImplTest {
 		String workFlowCheckerTaskName = "testWorkFlowTask";
 
 		// when
-		Mockito.when(this.workFlowRepository.findById(eq(workFlowExecutionId))).thenReturn(Optional.empty());
+		when(this.workFlowRepository.findById(eq(workFlowExecutionId))).thenReturn(Optional.empty());
 
 		assertThrows(ResponseStatusException.class, () -> {
 			this.workFlowService.updateWorkFlowCheckerTaskStatus(workFlowExecutionId, workFlowCheckerTaskName,
 					WorkFlowTaskStatus.COMPLETED);
 		});
 
-		Mockito.verify(this.workFlowTaskRepository, Mockito.times(0)).save(any());
+		verify(this.workFlowTaskRepository, times(0)).save(any());
 	}
 
 	@Test
@@ -843,11 +833,11 @@ class WorkFlowServiceImplTest {
 		String workFlowCheckerTaskName = "testWorkFlowTask";
 
 		// when
-		Mockito.when(this.workFlowRepository.findById(eq(workFlowExecutionId)))
+		when(this.workFlowRepository.findById(eq(workFlowExecutionId)))
 				.thenReturn(Optional.of(WorkFlowExecution.builder().status(WorkFlowStatus.FAILED)
 						.projectId(UUID.randomUUID()).workFlowDefinitionId(UUID.randomUUID()).build()));
 
-		Mockito.when(this.workFlowTaskDefinitionRepository.findFirstByNameAndWorkFlowDefinitionType(any(), any()))
+		when(this.workFlowTaskDefinitionRepository.findFirstByNameAndWorkFlowDefinitionType(any(), any()))
 				.thenReturn(null);
 
 		// then
@@ -856,7 +846,7 @@ class WorkFlowServiceImplTest {
 					WorkFlowTaskStatus.COMPLETED);
 		});
 
-		Mockito.verify(this.workFlowTaskRepository, Mockito.never()).save(any());
+		verify(this.workFlowTaskRepository, never()).save(any());
 
 	}
 
@@ -864,25 +854,24 @@ class WorkFlowServiceImplTest {
 	public void testGetWorkflowParametersWithWorkflowOptions() {
 		// given
 		UUID workFlowExecutionId = UUID.randomUUID();
-		WorkFlowExecution workFlowExecution = Mockito.mock(WorkFlowExecution.class);
-		Mockito.when(workFlowExecution.getId()).thenReturn(workFlowExecutionId);
-		WorkFlowExecutionContext executionContext = Mockito.mock(WorkFlowExecutionContext.class);
-		Mockito.when(workFlowExecution.getWorkFlowExecutionContext()).thenReturn(executionContext);
+		WorkFlowExecution workFlowExecution = mock(WorkFlowExecution.class);
+		when(workFlowExecution.getId()).thenReturn(workFlowExecutionId);
+		WorkFlowExecutionContext executionContext = mock(WorkFlowExecutionContext.class);
+		when(workFlowExecution.getWorkFlowExecutionContext()).thenReturn(executionContext);
 		WorkContext workContext = new WorkContext();
 		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
 				WorkContextDelegate.Resource.WORKFLOW_OPTIONS,
 				Map.of("newOptions", List.of(new WorkFlowOption.Builder("test-id", "test-workflow").build())));
-		Mockito.when(executionContext.getWorkContext()).thenReturn(workContext);
+		when(executionContext.getWorkContext()).thenReturn(workContext);
 
-		Mockito.when(this.workFlowRepository.findById(eq(workFlowExecutionId)))
-				.thenReturn(Optional.of(workFlowExecution));
+		when(this.workFlowRepository.findById(eq(workFlowExecutionId))).thenReturn(Optional.of(workFlowExecution));
 
 		// when
 		WorkFlowContextResponseDTO workflowParameters = this.workFlowService.getWorkflowParameters(workFlowExecutionId,
 				List.of(WorkContextDelegate.Resource.WORKFLOW_OPTIONS));
 
 		// then
-		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findById(any());
+		verify(this.workFlowRepository, times(1)).findById(any());
 		assertNotNull(workflowParameters);
 		assertNotNull(workflowParameters.getWorkFlowOptions());
 		assertEquals(workFlowExecutionId, workflowParameters.getWorkFlowExecutionId());
@@ -898,21 +887,20 @@ class WorkFlowServiceImplTest {
 	public void testGetWorkflowParametersWithoutWorkflowOptions() {
 		// given
 		UUID workFlowExecutionId = UUID.randomUUID();
-		WorkFlowExecution workFlowExecution = Mockito.mock(WorkFlowExecution.class);
-		Mockito.when(workFlowExecution.getId()).thenReturn(workFlowExecutionId);
-		WorkFlowExecutionContext executionContext = Mockito.mock(WorkFlowExecutionContext.class);
-		Mockito.when(workFlowExecution.getWorkFlowExecutionContext()).thenReturn(executionContext);
-		Mockito.when(executionContext.getWorkContext()).thenReturn(new WorkContext());
+		WorkFlowExecution workFlowExecution = mock(WorkFlowExecution.class);
+		when(workFlowExecution.getId()).thenReturn(workFlowExecutionId);
+		WorkFlowExecutionContext executionContext = mock(WorkFlowExecutionContext.class);
+		when(workFlowExecution.getWorkFlowExecutionContext()).thenReturn(executionContext);
+		when(executionContext.getWorkContext()).thenReturn(new WorkContext());
 
-		Mockito.when(this.workFlowRepository.findById(eq(workFlowExecutionId)))
-				.thenReturn(Optional.of(workFlowExecution));
+		when(this.workFlowRepository.findById(eq(workFlowExecutionId))).thenReturn(Optional.of(workFlowExecution));
 
 		// when
 		WorkFlowContextResponseDTO workflowParameters = this.workFlowService.getWorkflowParameters(workFlowExecutionId,
 				List.of(WorkContextDelegate.Resource.WORKFLOW_OPTIONS));
 
 		// then
-		Mockito.verify(this.workFlowRepository, Mockito.times(1)).findById(any());
+		verify(this.workFlowRepository, times(1)).findById(any());
 		assertNotNull(workflowParameters);
 		assertNotNull(workflowParameters.getWorkFlowOptions());
 		assertEquals(workFlowExecutionId, workflowParameters.getWorkFlowExecutionId());
@@ -931,10 +919,10 @@ class WorkFlowServiceImplTest {
 		workFlowExecution.setId(workflowExecutionId);
 		List<WorkStatusResponseDTO> workStatusResponseDTOList = List
 				.of(WorkStatusResponseDTO.builder().name(workName).status(ParodosWorkStatus.COMPLETED).build());
-		Mockito.when(workFlowRepository.findAllByProjectId(projectId)).thenReturn(List.of(workFlowExecution));
-		Mockito.when(projectService.getProjectByIdAndUsername(eq(projectId), nullable(String.class)))
+		when(workFlowRepository.findAllByProjectId(projectId)).thenReturn(List.of(workFlowExecution));
+		when(projectService.getProjectByIdAndUsername(eq(projectId), nullable(String.class)))
 				.thenReturn(ProjectResponseDTO.builder().id(projectId).name("test-project").build());
-		Mockito.when(workFlowDefinitionService.getWorkFlowDefinitionById(any()))
+		when(workFlowDefinitionService.getWorkFlowDefinitionById(any()))
 				.thenReturn(WorkFlowDefinitionResponseDTO.builder().name("test").build());
 
 		assertThat(workFlowService.getWorkFlowsByProjectId(projectId)).hasSize(1).extracting("workStatus")
@@ -956,12 +944,12 @@ class WorkFlowServiceImplTest {
 				.status(WorkFlowStatus.FAILED).build();
 		workFlowExecution2.setId(workflowExecution2Id);
 
-		Mockito.when(workFlowRepository.findAllByProjectId(project1Id)).thenReturn(List.of(workFlowExecution1));
-		Mockito.when(workFlowRepository.findAllByProjectId(project2Id)).thenReturn(List.of(workFlowExecution2));
-		Mockito.when(projectService.findProjectsByUserName(nullable(String.class)))
+		when(workFlowRepository.findAllByProjectId(project1Id)).thenReturn(List.of(workFlowExecution1));
+		when(workFlowRepository.findAllByProjectId(project2Id)).thenReturn(List.of(workFlowExecution2));
+		when(projectService.findProjectsByUserName(nullable(String.class)))
 				.thenReturn(List.of(ProjectResponseDTO.builder().id(project1Id).name("test-project1").build(),
 						ProjectResponseDTO.builder().id(project2Id).name("test-project2").build()));
-		Mockito.when(workFlowDefinitionService.getWorkFlowDefinitionById(any()))
+		when(workFlowDefinitionService.getWorkFlowDefinitionById(any()))
 				.thenReturn(WorkFlowDefinitionResponseDTO.builder().name("test").build());
 
 		assertThat(workFlowService.getWorkFlows()).hasSize(2).extracting("workStatus").contains(WorkStatus.COMPLETED,
@@ -972,7 +960,7 @@ class WorkFlowServiceImplTest {
 	void getWorkFlowsByProjectId_when_projectIsNotFound_then_returnException() {
 		UUID projectId = UUID.randomUUID();
 
-		Mockito.when(projectService.getProjectById(projectId)).thenReturn(null);
+		when(projectService.getProjectById(projectId)).thenReturn(null);
 
 		assertThrows(RuntimeException.class, () -> workFlowService.getWorkFlowsByProjectId(projectId));
 	}

@@ -16,7 +16,6 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -29,8 +28,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 /**
  * Secure API Get Test Task execution test
@@ -54,12 +57,12 @@ public class SecureAPIGetTestTaskTest extends BaseInfrastructureWorkFlowTaskTest
 	public void setUp() {
 		this.secureAPIGetTestTask = spy((SecureAPIGetTestTask) getConcretePersonImplementation());
 		try {
-			doReturn(testUrl).when(this.secureAPIGetTestTask).getRequiredParameterValue(Mockito.any(WorkContext.class),
+			doReturn(testUrl).when(this.secureAPIGetTestTask).getRequiredParameterValue(any(WorkContext.class),
 					eq(SECURED_URL));
-			doReturn(testUsername).when(this.secureAPIGetTestTask)
-					.getRequiredParameterValue(Mockito.any(WorkContext.class), eq(USERNAME));
-			doReturn(testPassword).when(this.secureAPIGetTestTask)
-					.getRequiredParameterValue(Mockito.any(WorkContext.class), eq(PASSWORD));
+			doReturn(testUsername).when(this.secureAPIGetTestTask).getRequiredParameterValue(any(WorkContext.class),
+					eq(USERNAME));
+			doReturn(testPassword).when(this.secureAPIGetTestTask).getRequiredParameterValue(any(WorkContext.class),
+					eq(PASSWORD));
 		}
 		catch (MissingParameterException e) {
 			throw new RuntimeException(e);
@@ -74,8 +77,8 @@ public class SecureAPIGetTestTaskTest extends BaseInfrastructureWorkFlowTaskTest
 	@Test
 	public void executeSuccess() {
 		// given
-		WorkContext workContext = Mockito.mock(WorkContext.class);
-		try (MockedStatic<RestUtils> restUtilsMockedStatic = Mockito.mockStatic(RestUtils.class)) {
+		WorkContext workContext = mock(WorkContext.class);
+		try (MockedStatic<RestUtils> restUtilsMockedStatic = mockStatic(RestUtils.class)) {
 			restUtilsMockedStatic.when(() -> RestUtils.restExchange(eq(testUrl), eq(testUsername), eq(testPassword)))
 					.thenReturn(new ResponseEntity<>("body", HttpStatus.OK));
 
@@ -85,16 +88,16 @@ public class SecureAPIGetTestTaskTest extends BaseInfrastructureWorkFlowTaskTest
 			// then
 			assertNull(secureAPIGetTestTask.getWorkFlowCheckers());
 			assertEquals(WorkStatus.COMPLETED, workReport.getStatus());
-			Mockito.verifyNoInteractions(workContext);
+			verifyNoInteractions(workContext);
 		}
 	}
 
 	@Test
 	public void executeFail() {
 		// given
-		WorkContext workContext = Mockito.mock(WorkContext.class);
+		WorkContext workContext = mock(WorkContext.class);
 
-		try (MockedStatic<RestUtils> restUtilsMockedStatic = Mockito.mockStatic(RestUtils.class)) {
+		try (MockedStatic<RestUtils> restUtilsMockedStatic = mockStatic(RestUtils.class)) {
 
 			restUtilsMockedStatic.when(() -> RestUtils.restExchange(eq(testUrl), eq(testUsername), eq(testPassword)))
 					.thenReturn(new ResponseEntity<>("body", HttpStatus.BAD_REQUEST));
@@ -104,7 +107,7 @@ public class SecureAPIGetTestTaskTest extends BaseInfrastructureWorkFlowTaskTest
 			// then
 			assertNull(secureAPIGetTestTask.getWorkFlowCheckers());
 			assertEquals(WorkStatus.FAILED, workReport.getStatus());
-			Mockito.verifyNoInteractions(workContext);
+			verifyNoInteractions(workContext);
 		}
 	}
 
