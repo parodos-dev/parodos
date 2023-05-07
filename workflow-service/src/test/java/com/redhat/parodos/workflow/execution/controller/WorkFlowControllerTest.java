@@ -118,7 +118,7 @@ class WorkFlowControllerTest extends ControllerMockClient {
 		// when
 		this.mockMvc
 				.perform(this.getRequestWithInValidCredentials(
-						String.format("/api/v1/workflows/%s/status", UUID.randomUUID().toString())))
+						String.format("/api/v1/workflows/%s/status", UUID.randomUUID())))
 				.andExpect(MockMvcResultMatchers.status().isUnauthorized());
 	}
 
@@ -235,7 +235,7 @@ class WorkFlowControllerTest extends ControllerMockClient {
 		// when
 		this.mockMvc
 				.perform(this.getRequestWithValidCredentials(
-						String.format("/api/v1/workflows/%s/status", UUID.randomUUID().toString())))
+						String.format("/api/v1/workflows/%s/status", UUID.randomUUID())))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
