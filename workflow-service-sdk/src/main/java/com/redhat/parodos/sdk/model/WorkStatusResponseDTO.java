@@ -51,11 +51,11 @@ public class WorkStatusResponseDTO {
 
 		COMPLETED("COMPLETED"),
 
-		PENDING("PENDING"),
-
 		IN_PROGRESS("IN_PROGRESS"),
 
-		REJECTED("REJECTED");
+		REJECTED("REJECTED"),
+
+		PENDING("PENDING");
 
 		private String value;
 
