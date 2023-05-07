@@ -32,7 +32,7 @@ public class WorkFlowOptionsTest {
 	public void verifyInfraOptions() {
 		WorkFlowOptions options = new WorkFlowOptions.Builder().addNewOption(option).build();
 
-		assertTrue(options.getNewOptions().size() == 1);
+		assertEquals(1, options.getNewOptions().size());
 		assertEquals(option, options.getNewOptions().get(0));
 		assertFalse(options.isOptionsAvailable());
 	}
@@ -42,10 +42,10 @@ public class WorkFlowOptionsTest {
 		WorkFlowOptions options = new WorkFlowOptions.Builder().addNewOption(option).addContinuationOption(option)
 				.addMigrationOption(option).addUpgradeOption(option).build();
 
-		assertTrue(options.getContinuationOptions().size() == 1);
-		assertTrue(options.getMigrationOptions().size() == 1);
-		assertTrue(options.getNewOptions().size() == 1);
-		assertTrue(options.getUpgradeOptions().size() == 1);
+		assertEquals(1, options.getContinuationOptions().size());
+		assertEquals(1, options.getMigrationOptions().size());
+		assertEquals(1, options.getNewOptions().size());
+		assertEquals(1, options.getUpgradeOptions().size());
 		assertTrue(options.isOptionsAvailable());
 	}
 
@@ -53,12 +53,12 @@ public class WorkFlowOptionsTest {
 	public void verifyContinuation() {
 		WorkFlowOptions options = new WorkFlowOptions.Builder().build();
 
-		assertTrue(options.getContinuationOptions().size() == 0);
+		assertEquals(0, options.getContinuationOptions().size());
 		assertFalse(options.hasIncompleteWorkFlow());
 
 		options.addContinuationOption(option);
 
-		assertTrue(options.getContinuationOptions().size() == 1);
+		assertEquals(1, options.getContinuationOptions().size());
 		assertTrue(options.hasIncompleteWorkFlow());
 	}
 
@@ -66,33 +66,33 @@ public class WorkFlowOptionsTest {
 	public void verifyMigration() {
 		WorkFlowOptions options = new WorkFlowOptions.Builder().build();
 
-		assertTrue(options.getMigrationOptions().size() == 0);
+		assertEquals(0, options.getMigrationOptions().size());
 
 		options.addMigrationOption(option);
 
-		assertTrue(options.getMigrationOptions().size() == 1);
+		assertEquals(1, options.getMigrationOptions().size());
 	}
 
 	@Test
 	public void verifyUpgrade() {
 		WorkFlowOptions options = new WorkFlowOptions.Builder().build();
 
-		assertTrue(options.getUpgradeOptions().size() == 0);
+		assertEquals(0, options.getUpgradeOptions().size());
 
 		options.addUpgradeOption(option);
 
-		assertTrue(options.getUpgradeOptions().size() == 1);
+		assertEquals(1, options.getUpgradeOptions().size());
 	}
 
 	@Test
 	public void verifyOtherOptions() {
 		WorkFlowOptions options = new WorkFlowOptions.Builder().build();
 
-		assertTrue(options.getOtherOptions().size() == 0);
+		assertEquals(0, options.getOtherOptions().size());
 
 		options.addOtherOption(option);
 
-		assertTrue(options.getOtherOptions().size() == 1);
+		assertEquals(1, options.getOtherOptions().size());
 	}
 
 	@Test
@@ -103,7 +103,7 @@ public class WorkFlowOptionsTest {
 
 		options.addNewInfrastrutureOption(option);
 
-		assertTrue(options.getNewOptions().size() == 1);
+		assertEquals(1, options.getNewOptions().size());
 	}
 
 	@Test

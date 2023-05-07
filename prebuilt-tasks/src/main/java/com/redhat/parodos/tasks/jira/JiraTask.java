@@ -145,7 +145,7 @@ public class JiraTask extends BaseWorkFlowTask {
 	private JiraIssue createIssue(JiraIssue issue) throws Exception {
 		try {
 			JSONObject jsonObject = jiraClient.create(issue.project, issue.summary, issue.description);
-			return new JiraIssue(jsonObject.getString("id").toString(), null, null, null, null, null);
+			return new JiraIssue(jsonObject.getString("id"), null, null, null, null, null);
 		}
 		catch (Exception e) {
 			throw new Exception(e);

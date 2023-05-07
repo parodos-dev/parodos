@@ -61,7 +61,7 @@ public class WorkContextDelegate {
 				&& context.get(WorkFlowConstants.START_FILE.toString()) == null) {
 			log.error(
 					"No target destination to scan defined. Ensure the WorkContext contains an {} entry of type String, or an {} entry of type String",
-					WorkFlowConstants.START_DIRECTORY.toString(), WorkFlowConstants.START_FILE.toString());
+					WorkFlowConstants.START_DIRECTORY, WorkFlowConstants.START_FILE);
 			return false;
 		}
 		for (Pattern pattern : getDesiredPatterns(context)) {
@@ -207,7 +207,7 @@ public class WorkContextDelegate {
 		}
 		catch (IOException e) {
 			log.error("Unable to get the folders and files to process. Start Directory: {}",
-					(String) context.get(WorkFlowConstants.START_DIRECTORY.toString()), e);
+					context.get(WorkFlowConstants.START_DIRECTORY.toString()), e);
 		}
 		context.put(WorkFlowConstants.FILES_TO_SCAN.toString(), fileList);
 		context.put(WorkFlowConstants.FOLDERS_TO_SCAN.toString(), directoryList);
@@ -254,7 +254,7 @@ public class WorkContextDelegate {
 	 */
 	private boolean processNeedOneOfClues(Pattern pattern, WorkContext context) {
 		for (Clue oneOfClue : pattern.getOnlyOneIsRequiredClues()) {
-			if (isThisClueDetected((Clue) oneOfClue, context)) {
+			if (isThisClueDetected(oneOfClue, context)) {
 				return true;
 			}
 		}
@@ -270,7 +270,7 @@ public class WorkContextDelegate {
 		long numberToFind = pattern.getAllAreRequiredClues().size();
 		long numberFound = 0;
 		for (Clue clue : pattern.getAllAreRequiredClues()) {
-			if (isThisClueDetected((Clue) clue, context)) {
+			if (isThisClueDetected(clue, context)) {
 				numberFound++;
 			}
 		}

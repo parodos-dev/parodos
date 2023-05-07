@@ -19,7 +19,7 @@ public class TibjmsImpl implements Tibjms {
 			factory.setSSLTrustedCertificate(caFile);
 		}
 		try (Connection connection = factory.createConnection(username, password);
-				Session session = connection.createSession(javax.jms.Session.AUTO_ACKNOWLEDGE);) {
+				Session session = connection.createSession(javax.jms.Session.AUTO_ACKNOWLEDGE)) {
 			Destination destination = session.createTopic(topic);
 			MessageProducer producer = session.createProducer(destination);
 			TextMessage textMessage = session.createTextMessage(message);
