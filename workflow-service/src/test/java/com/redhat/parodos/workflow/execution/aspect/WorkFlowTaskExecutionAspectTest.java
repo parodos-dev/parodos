@@ -23,11 +23,16 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class WorkFlowTaskExecutionAspectTest {
 
@@ -52,20 +57,19 @@ class WorkFlowTaskExecutionAspectTest {
 	@Mock
 	private WorkFlowSchedulerServiceImpl workFlowSchedulerService;
 
-	private WorkFlowRepository workFlowRepository = Mockito.mock(WorkFlowRepository.class);
+	private WorkFlowRepository workFlowRepository = mock(WorkFlowRepository.class);
 
-	private WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository = Mockito
-			.mock(WorkFlowTaskDefinitionRepository.class);
+	private WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository = mock(
+			WorkFlowTaskDefinitionRepository.class);
 
 	@BeforeEach
 	public void setUp() {
-		this.workFlowService = Mockito.mock(WorkFlowServiceImpl.class);
+		this.workFlowService = mock(WorkFlowServiceImpl.class);
 		this.workFlowTaskExecutionAspect = new WorkFlowTaskExecutionAspect(workFlowRepository,
 				workFlowTaskDefinitionRepository, workFlowService, workFlowSchedulerService);
-		WorkFlowTaskDefinition workFlowTaskDefinition = Mockito.mock(WorkFlowTaskDefinition.class);
-		Mockito.when(workFlowTaskDefinition.getId()).thenReturn(UUID.randomUUID());
-		Mockito.when(workFlowTaskDefinitionRepository.findFirstByName(Mockito.any()))
-				.thenReturn(workFlowTaskDefinition);
+		WorkFlowTaskDefinition workFlowTaskDefinition = mock(WorkFlowTaskDefinition.class);
+		when(workFlowTaskDefinition.getId()).thenReturn(UUID.randomUUID());
+		when(workFlowTaskDefinitionRepository.findFirstByName(any())).thenReturn(workFlowTaskDefinition);
 	}
 
 	@Test
@@ -75,19 +79,17 @@ class WorkFlowTaskExecutionAspectTest {
 		WorkContext workContext = getSampleWorkContext(projectID, TEST_TASK);
 		WorkFlowTask workFlowTask = getSampleWorkFlowTask(TEST_TASK);
 
-		ProceedingJoinPoint proceedingJoinPoint = Mockito.mock(ProceedingJoinPoint.class);
-		Mockito.when(proceedingJoinPoint.getTarget()).thenReturn(workFlowTask);
+		ProceedingJoinPoint proceedingJoinPoint = mock(ProceedingJoinPoint.class);
+		when(proceedingJoinPoint.getTarget()).thenReturn(workFlowTask);
 		assertDoesNotThrow(() -> {
-			Mockito.when(proceedingJoinPoint.proceed())
-					.thenReturn(new DefaultWorkReport(WorkStatus.COMPLETED, workContext));
+			when(proceedingJoinPoint.proceed()).thenReturn(new DefaultWorkReport(WorkStatus.COMPLETED, workContext));
 		});
 
 		WorkFlowExecution workFlowExecution = getSampleWorkFlowExecution();
-		Mockito.when(workFlowRepository.findById(Mockito.any())).thenReturn(Optional.of(workFlowExecution));
-		Mockito.when(workFlowTaskDefinitionRepository.findFirstByName(Mockito.anyString()))
+		when(workFlowRepository.findById(any())).thenReturn(Optional.of(workFlowExecution));
+		when(workFlowTaskDefinitionRepository.findFirstByName(anyString()))
 				.thenReturn(getSampleWorkFlowTaskDefinition(TEST_TASK));
-		Mockito.when(workFlowService.saveWorkFlowTask(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
-				.thenReturn(getSampleWorkFlowTaskExecution());
+		when(workFlowService.saveWorkFlowTask(any(), any(), any(), any())).thenReturn(getSampleWorkFlowTaskExecution());
 
 		// when
 		WorkReport report = this.workFlowTaskExecutionAspect.executeAroundAdviceTask(proceedingJoinPoint, workContext);
@@ -102,8 +104,7 @@ class WorkFlowTaskExecutionAspectTest {
 				workContext.get(WORKFLOW_TASK_EXECUTION_TESTTASK_ARGUMENTS));
 		assertEquals(report.getWorkContext().get(PROJECT_ID), projectID);
 
-		Mockito.verify(this.workFlowService, Mockito.times(1)).saveWorkFlowTask(Mockito.any(), Mockito.any(),
-				Mockito.any(), Mockito.any());
+		verify(this.workFlowService, times(1)).saveWorkFlowTask(any(), any(), any(), any());
 	}
 
 	@Test
@@ -113,22 +114,19 @@ class WorkFlowTaskExecutionAspectTest {
 		WorkContext workContext = getSampleWorkContext(projectID, TEST_TASK);
 		WorkFlowTask workFlowTask = getSampleWorkFlowTask(TEST_TASK);
 
-		ProceedingJoinPoint proceedingJoinPoint = Mockito.mock(ProceedingJoinPoint.class);
-		Mockito.when(proceedingJoinPoint.getTarget()).thenReturn(workFlowTask);
+		ProceedingJoinPoint proceedingJoinPoint = mock(ProceedingJoinPoint.class);
+		when(proceedingJoinPoint.getTarget()).thenReturn(workFlowTask);
 		assertDoesNotThrow(() -> {
-			Mockito.when(proceedingJoinPoint.proceed())
-					.thenReturn(new DefaultWorkReport(WorkStatus.COMPLETED, workContext));
+			when(proceedingJoinPoint.proceed()).thenReturn(new DefaultWorkReport(WorkStatus.COMPLETED, workContext));
 		});
 
-		Mockito.when(this.workFlowService.getWorkFlowTask(Mockito.any(), Mockito.any()))
-				.thenReturn(getSampleWorkFlowTaskExecution());
+		when(this.workFlowService.getWorkFlowTask(any(), any())).thenReturn(getSampleWorkFlowTaskExecution());
 
 		WorkFlowExecution workFlowExecution = getSampleWorkFlowExecution();
-		Mockito.when(workFlowRepository.findById(Mockito.any())).thenReturn(Optional.of(workFlowExecution));
-		Mockito.when(workFlowTaskDefinitionRepository.findFirstByName(Mockito.anyString()))
+		when(workFlowRepository.findById(any())).thenReturn(Optional.of(workFlowExecution));
+		when(workFlowTaskDefinitionRepository.findFirstByName(anyString()))
 				.thenReturn(getSampleWorkFlowTaskDefinition(TEST_TASK));
-		Mockito.when(workFlowService.saveWorkFlowTask(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
-				.thenReturn(getSampleWorkFlowTaskExecution());
+		when(workFlowService.saveWorkFlowTask(any(), any(), any(), any())).thenReturn(getSampleWorkFlowTaskExecution());
 
 		// when
 		WorkReport report = this.workFlowTaskExecutionAspect.executeAroundAdviceTask(proceedingJoinPoint, workContext);
@@ -143,7 +141,7 @@ class WorkFlowTaskExecutionAspectTest {
 				workContext.get(WORKFLOW_TASK_EXECUTION_TESTTASK_ARGUMENTS));
 		assertEquals(report.getWorkContext().get(PROJECT_ID), projectID);
 
-		Mockito.verify(this.workFlowService, Mockito.times(1)).updateWorkFlowTask(Mockito.any());
+		verify(this.workFlowService, times(1)).updateWorkFlowTask(any());
 	}
 
 	WorkContext getSampleWorkContext(UUID projectID, String taskName) {
@@ -159,8 +157,8 @@ class WorkFlowTaskExecutionAspectTest {
 	}
 
 	WorkFlowTask getSampleWorkFlowTask(String taskName) {
-		WorkFlowTask workFlowTask = Mockito.mock(WorkFlowTask.class);
-		Mockito.when(workFlowTask.getName()).thenReturn(taskName);
+		WorkFlowTask workFlowTask = mock(WorkFlowTask.class);
+		when(workFlowTask.getName()).thenReturn(taskName);
 		return workFlowTask;
 	}
 

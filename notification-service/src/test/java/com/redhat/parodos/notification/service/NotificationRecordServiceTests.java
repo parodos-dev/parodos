@@ -33,7 +33,6 @@ import com.redhat.parodos.notification.jpa.repository.NotificationUserRepository
 import com.redhat.parodos.notification.service.impl.NotificationRecordServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -45,6 +44,12 @@ import org.springframework.web.server.ResponseStatusException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Nir Argaman (Github: nirarg)
@@ -62,91 +67,90 @@ public class NotificationRecordServiceTests {
 
 	@BeforeEach
 	void initNotificationRecordServiceImpl() {
-		this.notificationRecordRepository = Mockito.mock(NotificationRecordRepository.class);
-		this.notificationUserRepository = Mockito.mock(NotificationUserRepository.class);
+		this.notificationRecordRepository = mock(NotificationRecordRepository.class);
+		this.notificationUserRepository = mock(NotificationUserRepository.class);
 		this.notificationRecordServiceImpl = new NotificationRecordServiceImpl(notificationRecordRepository,
 				notificationUserRepository);
 	}
 
 	@Test
 	void createNotificationRecords() {
-		NotificationMessage notificationMessage = Mockito.mock(NotificationMessage.class);
-		NotificationUser notificationUser = Mockito.mock(NotificationUser.class);
+		NotificationMessage notificationMessage = mock(NotificationMessage.class);
+		NotificationUser notificationUser = mock(NotificationUser.class);
 		List<NotificationUser> records = Collections.singletonList(notificationUser);
-		NotificationRecord notificationRecord = Mockito.mock(NotificationRecord.class);
-		Mockito.when(this.notificationRecordRepository.save(any())).thenReturn(notificationRecord);
+		NotificationRecord notificationRecord = mock(NotificationRecord.class);
+		when(this.notificationRecordRepository.save(any())).thenReturn(notificationRecord);
 		this.notificationRecordServiceImpl.createNotificationRecords(records, notificationMessage);
-		Mockito.verify(this.notificationRecordRepository, Mockito.times(1)).save(any());
-		Mockito.verify(notificationUser, Mockito.times(1)).addNotificationRecord(notificationRecord);
-		Mockito.verify(this.notificationUserRepository, Mockito.times(1)).save(notificationUser);
+		verify(this.notificationRecordRepository, times(1)).save(any());
+		verify(notificationUser, times(1)).addNotificationRecord(notificationRecord);
+		verify(this.notificationUserRepository, times(1)).save(notificationUser);
 	}
 
 	@Test
 	void getNotificationRecords() {
 		String userName = "test-user";
 		String searchTerm = "searchTerm";
-		Pageable pageable = Mockito.mock(Pageable.class);
+		Pageable pageable = mock(Pageable.class);
 		Optional<NotificationUser> emptyOptional = Optional.empty();
-		NotificationUser notificationUser = Mockito.mock(NotificationUser.class);
+		NotificationUser notificationUser = mock(NotificationUser.class);
 		Optional<NotificationUser> validOptional = Optional.of(notificationUser);
-		NotificationRecord notificationRecord = Mockito.mock(NotificationRecord.class);
+		NotificationRecord notificationRecord = mock(NotificationRecord.class);
 		List<NotificationRecord> records = Collections.singletonList(notificationRecord);
 		Page<NotificationRecord> expectedResult = new PageImpl<>(records);
 
 		// Notification User doesn't exist
-		Mockito.when(this.notificationUserRepository.findByUsername(userName)).thenReturn(emptyOptional);
+		when(this.notificationUserRepository.findByUsername(userName)).thenReturn(emptyOptional);
 		Exception exception = assertThrows(ResponseStatusException.class, () -> {
 			this.notificationRecordServiceImpl.getNotificationRecords(pageable, userName, State.UNREAD, searchTerm);
 		});
 
 		// Notification User exists, state and searchTerm empty
-		Mockito.when(this.notificationUserRepository.findByUsername(userName)).thenReturn(validOptional);
-		Mockito.when(this.notificationRecordRepository.findByNotificationUserListContaining(notificationUser, pageable))
+		when(this.notificationUserRepository.findByUsername(userName)).thenReturn(validOptional);
+		when(this.notificationRecordRepository.findByNotificationUserListContaining(notificationUser, pageable))
 				.thenReturn(expectedResult);
 		Page<NotificationRecord> result = this.notificationRecordServiceImpl.getNotificationRecords(pageable, userName,
 				null, null);
 		assertEquals(expectedResult, result);
-		Mockito.verify(this.notificationRecordRepository, Mockito.times(1))
-				.findByNotificationUserListContaining(notificationUser, pageable);
+		verify(this.notificationRecordRepository, times(1)).findByNotificationUserListContaining(notificationUser,
+				pageable);
 
-		Mockito.reset(this.notificationRecordRepository);
+		reset(this.notificationRecordRepository);
 
 		// Notification User exists, state UNREAD and searchTerm empty
-		Mockito.when(this.notificationUserRepository.findByUsername(userName)).thenReturn(validOptional);
-		Mockito.when(this.notificationRecordRepository
-				.findByReadFalseAndNotificationUserListContaining(notificationUser, pageable))
-				.thenReturn(expectedResult);
+		when(this.notificationUserRepository.findByUsername(userName)).thenReturn(validOptional);
+		when(this.notificationRecordRepository.findByReadFalseAndNotificationUserListContaining(notificationUser,
+				pageable)).thenReturn(expectedResult);
 		result = this.notificationRecordServiceImpl.getNotificationRecords(pageable, userName, State.UNREAD, null);
 		assertEquals(expectedResult, result);
-		Mockito.verify(this.notificationRecordRepository, Mockito.times(1))
+		verify(this.notificationRecordRepository, times(1))
 				.findByReadFalseAndNotificationUserListContaining(notificationUser, pageable);
 
-		Mockito.reset(this.notificationRecordRepository);
+		reset(this.notificationRecordRepository);
 
 		// Notification User exists, state ARCHIVED and searchTerm empty
-		Mockito.when(this.notificationUserRepository.findByUsername(userName)).thenReturn(validOptional);
-		Mockito.when(this.notificationRecordRepository.findByFolderAndNotificationUserListContaining("archive",
+		when(this.notificationUserRepository.findByUsername(userName)).thenReturn(validOptional);
+		when(this.notificationRecordRepository.findByFolderAndNotificationUserListContaining("archive",
 				notificationUser, pageable)).thenReturn(expectedResult);
 		result = this.notificationRecordServiceImpl.getNotificationRecords(pageable, userName, State.ARCHIVED, "");
 		assertEquals(expectedResult, result);
-		Mockito.verify(this.notificationRecordRepository, Mockito.times(1))
-				.findByFolderAndNotificationUserListContaining("archive", notificationUser, pageable);
+		verify(this.notificationRecordRepository, times(1)).findByFolderAndNotificationUserListContaining("archive",
+				notificationUser, pageable);
 
-		Mockito.reset(this.notificationRecordRepository);
+		reset(this.notificationRecordRepository);
 
 		// Notification User exists, state empty and searchTerm valid
-		Mockito.when(this.notificationUserRepository.findByUsername(userName)).thenReturn(validOptional);
-		Mockito.when(this.notificationRecordRepository.search(notificationUser, searchTerm.toLowerCase(), pageable))
+		when(this.notificationUserRepository.findByUsername(userName)).thenReturn(validOptional);
+		when(this.notificationRecordRepository.search(notificationUser, searchTerm.toLowerCase(), pageable))
 				.thenReturn(expectedResult);
 		result = this.notificationRecordServiceImpl.getNotificationRecords(pageable, userName, null, searchTerm);
 		assertEquals(expectedResult, result);
-		Mockito.verify(this.notificationRecordRepository, Mockito.times(1)).search(notificationUser,
-				searchTerm.toLowerCase(), pageable);
+		verify(this.notificationRecordRepository, times(1)).search(notificationUser, searchTerm.toLowerCase(),
+				pageable);
 
-		Mockito.reset(this.notificationRecordRepository);
+		reset(this.notificationRecordRepository);
 
 		// Notification User exists, state and searchTerm valid - exception expected
-		Mockito.when(this.notificationUserRepository.findByUsername(userName)).thenReturn(validOptional);
+		when(this.notificationUserRepository.findByUsername(userName)).thenReturn(validOptional);
 		exception = assertThrows(SearchByStateAndTermNotSupportedException.class, () -> {
 			this.notificationRecordServiceImpl.getNotificationRecords(pageable, userName, State.UNREAD, searchTerm);
 		});
@@ -160,19 +164,19 @@ public class NotificationRecordServiceTests {
 		for (State state : State.values()) {
 			if (State.UNREAD.equals(state)) {
 				// Test Notification User exists with 2 records
-				NotificationUser notificationUser = Mockito.mock(NotificationUser.class);
-				NotificationRecord notificationRecord = Mockito.mock(NotificationRecord.class);
+				NotificationUser notificationUser = mock(NotificationUser.class);
+				NotificationRecord notificationRecord = mock(NotificationRecord.class);
 				Optional<NotificationUser> validOptional = Optional.of(notificationUser);
-				Mockito.when(this.notificationUserRepository.findByUsername(userName)).thenReturn(validOptional);
-				Mockito.when(this.notificationRecordRepository
+				when(this.notificationUserRepository.findByUsername(userName)).thenReturn(validOptional);
+				when(this.notificationRecordRepository
 						.countDistinctByReadFalseAndNotificationUserListContaining(notificationUser)).thenReturn(2);
 				List<NotificationRecord> records = Collections.singletonList(notificationRecord);
-				Mockito.when(notificationUser.getNotificationRecordList()).thenReturn(records);
+				when(notificationUser.getNotificationRecordList()).thenReturn(records);
 				assertEquals(2, this.notificationRecordServiceImpl.countNotificationRecords(userName, state));
 
 				// Test Notification User doesn't exist
 				Optional<NotificationUser> emptyOptional = Optional.empty();
-				Mockito.when(this.notificationUserRepository.findByUsername(userName)).thenReturn(emptyOptional);
+				when(this.notificationUserRepository.findByUsername(userName)).thenReturn(emptyOptional);
 				assertEquals(0, this.notificationRecordServiceImpl.countNotificationRecords(userName, state));
 			}
 			else {
@@ -189,13 +193,13 @@ public class NotificationRecordServiceTests {
 	void updateNotificationStatus() {
 		UUID uuid = UUID.randomUUID();
 		Optional<NotificationRecord> emptyOptional = Optional.empty();
-		NotificationRecord notificationRecord = Mockito.mock(NotificationRecord.class);
+		NotificationRecord notificationRecord = mock(NotificationRecord.class);
 		Optional<NotificationRecord> validOptional = Optional.of(notificationRecord);
 
 		// Test each one of the operations when the record doesn't exist, exception is
 		// expected
 		for (Operation operation : Operation.values()) {
-			Mockito.when(this.notificationRecordRepository.findById(uuid)).thenReturn(emptyOptional);
+			when(this.notificationRecordRepository.findById(uuid)).thenReturn(emptyOptional);
 			Exception exception = assertThrows(NotificationRecordNotFoundException.class, () -> {
 				this.notificationRecordServiceImpl.updateNotificationStatus(uuid, operation);
 			});
@@ -203,17 +207,17 @@ public class NotificationRecordServiceTests {
 		}
 
 		// Test READ operation and record exists
-		Mockito.when(this.notificationRecordRepository.findById(uuid)).thenReturn(validOptional);
-		Mockito.when(this.notificationRecordRepository.save(notificationRecord)).thenReturn(notificationRecord);
+		when(this.notificationRecordRepository.findById(uuid)).thenReturn(validOptional);
+		when(this.notificationRecordRepository.save(notificationRecord)).thenReturn(notificationRecord);
 		NotificationRecord result = this.notificationRecordServiceImpl.updateNotificationStatus(uuid, Operation.READ);
-		Mockito.verify(notificationRecord, Mockito.times(1)).setRead(true);
+		verify(notificationRecord, times(1)).setRead(true);
 		assertEquals(notificationRecord, result);
 
 		// Test ARCHIVE operation and record exists
-		Mockito.when(this.notificationRecordRepository.findById(uuid)).thenReturn(validOptional);
-		Mockito.when(this.notificationRecordRepository.save(notificationRecord)).thenReturn(notificationRecord);
+		when(this.notificationRecordRepository.findById(uuid)).thenReturn(validOptional);
+		when(this.notificationRecordRepository.save(notificationRecord)).thenReturn(notificationRecord);
 		result = this.notificationRecordServiceImpl.updateNotificationStatus(uuid, Operation.ARCHIVE);
-		Mockito.verify(notificationRecord, Mockito.times(1)).setFolder("archive");
+		verify(notificationRecord, times(1)).setFolder("archive");
 		assertEquals(notificationRecord, result);
 	}
 
@@ -223,14 +227,14 @@ public class NotificationRecordServiceTests {
 
 		// Delete success
 		this.notificationRecordServiceImpl.deleteNotificationRecord(uuid);
-		Mockito.verify(this.notificationRecordRepository, Mockito.times(1)).deleteById(uuid);
+		verify(this.notificationRecordRepository, times(1)).deleteById(uuid);
 
-		Mockito.reset(this.notificationRecordRepository);
+		reset(this.notificationRecordRepository);
 
 		// Delete failure
-		Mockito.doThrow(RuntimeException.class).when(this.notificationRecordRepository).deleteById(uuid);
+		doThrow(RuntimeException.class).when(this.notificationRecordRepository).deleteById(uuid);
 		this.notificationRecordServiceImpl.deleteNotificationRecord(uuid);
-		Mockito.verify(this.notificationRecordRepository, Mockito.times(1)).deleteById(uuid);
+		verify(this.notificationRecordRepository, times(1)).deleteById(uuid);
 	}
 
 }

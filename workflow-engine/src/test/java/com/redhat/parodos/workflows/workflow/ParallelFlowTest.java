@@ -28,19 +28,21 @@ import java.util.List;
 
 import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.work.WorkContext;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import org.mockito.Mockito;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class ParallelFlowTest {
 
 	@Test
 	public void testExecute() {
 		// given
-		Work work1 = Mockito.mock(Work.class);
-		Work work2 = Mockito.mock(Work.class);
-		WorkContext workContext = Mockito.mock(WorkContext.class);
-		ParallelFlowExecutor parallelFlowExecutor = Mockito.mock(ParallelFlowExecutor.class);
+		Work work1 = mock(Work.class);
+		Work work2 = mock(Work.class);
+		WorkContext workContext = mock(WorkContext.class);
+		ParallelFlowExecutor parallelFlowExecutor = mock(ParallelFlowExecutor.class);
 		List<Work> works = Arrays.asList(work1, work2);
 		ParallelFlow parallelFlow = new ParallelFlow("pf", works, parallelFlowExecutor);
 
@@ -48,8 +50,8 @@ public class ParallelFlowTest {
 		ParallelFlowReport parallelFlowReport = parallelFlow.execute(workContext);
 
 		// then
-		Assertions.assertThat(parallelFlowReport).isNotNull();
-		Mockito.verify(parallelFlowExecutor).executeInParallel(works, workContext);
+		assertThat(parallelFlowReport).isNotNull();
+		verify(parallelFlowExecutor).executeInParallel(works, workContext);
 	}
 
 }

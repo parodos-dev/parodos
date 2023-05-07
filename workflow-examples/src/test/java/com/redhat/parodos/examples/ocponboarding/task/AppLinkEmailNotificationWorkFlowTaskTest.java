@@ -14,7 +14,6 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,10 @@ import org.springframework.http.ResponseEntity;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.spy;
 
 /**
@@ -48,7 +50,7 @@ public class AppLinkEmailNotificationWorkFlowTaskTest extends BaseInfrastructure
 				(AppLinkEmailNotificationWorkFlowTask) getConcretePersonImplementation());
 		try {
 			doReturn(APP_LINK_TEST).when(this.appLinkEmailNotificationWorkFlowTask)
-					.getRequiredParameterValue(Mockito.any(WorkContext.class), eq(APP_LINK_PARAMETER_NAME));
+					.getRequiredParameterValue(any(WorkContext.class), eq(APP_LINK_PARAMETER_NAME));
 		}
 		catch (MissingParameterException e) {
 			throw new RuntimeException(e);
@@ -63,10 +65,9 @@ public class AppLinkEmailNotificationWorkFlowTaskTest extends BaseInfrastructure
 	@Test
 	public void executeSuccess() {
 		// given
-		WorkContext workContext = Mockito.mock(WorkContext.class);
-		try (MockedStatic<RestUtils> restUtilsMockedStatic = Mockito.mockStatic(RestUtils.class)) {
-			restUtilsMockedStatic
-					.when(() -> RestUtils.executePost(eq(MAIL_SERVICE_URL_TEST), Mockito.any(HttpEntity.class)))
+		WorkContext workContext = mock(WorkContext.class);
+		try (MockedStatic<RestUtils> restUtilsMockedStatic = mockStatic(RestUtils.class)) {
+			restUtilsMockedStatic.when(() -> RestUtils.executePost(eq(MAIL_SERVICE_URL_TEST), any(HttpEntity.class)))
 					.thenReturn(ResponseEntity.ok("Mail Sent"));
 
 			// when
@@ -80,10 +81,9 @@ public class AppLinkEmailNotificationWorkFlowTaskTest extends BaseInfrastructure
 	@Test
 	public void executeFail() {
 		// given
-		WorkContext workContext = Mockito.mock(WorkContext.class);
-		try (MockedStatic<RestUtils> restUtilsMockedStatic = Mockito.mockStatic(RestUtils.class)) {
-			restUtilsMockedStatic
-					.when(() -> RestUtils.executePost(eq(MAIL_SERVICE_URL_TEST), Mockito.any(HttpEntity.class)))
+		WorkContext workContext = mock(WorkContext.class);
+		try (MockedStatic<RestUtils> restUtilsMockedStatic = mockStatic(RestUtils.class)) {
+			restUtilsMockedStatic.when(() -> RestUtils.executePost(eq(MAIL_SERVICE_URL_TEST), any(HttpEntity.class)))
 					.thenReturn(ResponseEntity.internalServerError().build());
 
 			// when

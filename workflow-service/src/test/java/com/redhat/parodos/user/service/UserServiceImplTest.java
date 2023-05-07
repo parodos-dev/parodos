@@ -8,13 +8,17 @@ import com.redhat.parodos.user.entity.User;
 import com.redhat.parodos.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 
 import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class UserServiceImplTest {
 
@@ -24,7 +28,7 @@ class UserServiceImplTest {
 
 	@BeforeEach
 	public void initEach() {
-		this.userRepository = Mockito.mock(UserRepository.class);
+		this.userRepository = mock(UserRepository.class);
 		this.service = new UserServiceImpl(this.userRepository, new ModelMapper());
 	}
 
@@ -32,7 +36,7 @@ class UserServiceImplTest {
 	void saveTestWithValidData() {
 		// given
 		User user = getSampleUser();
-		Mockito.when(this.userRepository.save(Mockito.any(User.class))).thenReturn(user);
+		when(this.userRepository.save(any(User.class))).thenReturn(user);
 
 		// when
 		UserResponseDTO res = this.service.save(user);
@@ -43,14 +47,14 @@ class UserServiceImplTest {
 		assertEquals(res.getUsername(), user.getUsername());
 		assertEquals(res.getEmail(), user.getEmail());
 
-		Mockito.verify(this.userRepository, Mockito.times(1)).save(Mockito.any());
+		verify(this.userRepository, times(1)).save(any());
 	}
 
 	@Test
 	void GetUserByIdWithValidData() {
 		// given
 		User user = getSampleUser();
-		Mockito.when(this.userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+		when(this.userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
 		// when
 		UserResponseDTO res = this.service.getUserById(user.getId());
@@ -60,14 +64,14 @@ class UserServiceImplTest {
 		assertEquals(res.getId(), user.getId());
 		assertEquals(res.getUsername(), user.getUsername());
 		assertEquals(res.getEmail(), user.getEmail());
-		Mockito.verify(this.userRepository, Mockito.times(1)).findById(Mockito.any());
+		verify(this.userRepository, times(1)).findById(any());
 	}
 
 	@Test
 	void GetUserByIdWithInvalidData() {
 		// given
 		User user = getSampleUser();
-		Mockito.when(this.userRepository.findById(user.getId())).thenReturn(Optional.empty());
+		when(this.userRepository.findById(user.getId())).thenReturn(Optional.empty());
 
 		// when
 		Exception exception = assertThrows(RuntimeException.class, () -> this.service.getUserById(user.getId()));
@@ -75,14 +79,14 @@ class UserServiceImplTest {
 		// then
 		assertNotNull(exception);
 		assertEquals(exception.getMessage(), format("User with id: %s not found", user.getId()));
-		Mockito.verify(this.userRepository, Mockito.times(1)).findById(Mockito.any());
+		verify(this.userRepository, times(1)).findById(any());
 	}
 
 	@Test
 	void GetUserByNameWithValidData() {
 		// given
 		User user = getSampleUser();
-		Mockito.when(this.userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+		when(this.userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
 
 		// when
 		UserResponseDTO res = this.service.getUserByUsername(user.getUsername());
@@ -92,18 +96,18 @@ class UserServiceImplTest {
 		assertEquals(user.getId(), res.getId());
 		assertEquals(user.getUsername(), res.getUsername());
 		assertEquals(user.getEmail(), res.getEmail());
-		Mockito.verify(this.userRepository, Mockito.times(1)).findByUsername(Mockito.any());
+		verify(this.userRepository, times(1)).findByUsername(any());
 	}
 
 	@Test
 	void GetUserByNameWithInvalidData() {
 		// given
 		User user = getSampleUser();
-		Mockito.when(this.userRepository.findByUsername(user.getUsername())).thenReturn(Optional.empty());
+		when(this.userRepository.findByUsername(user.getUsername())).thenReturn(Optional.empty());
 
 		// then
 		assertThrows(RuntimeException.class, () -> this.service.getUserByUsername(user.getUsername()));
-		Mockito.verify(this.userRepository, Mockito.times(1)).findByUsername(Mockito.any());
+		verify(this.userRepository, times(1)).findByUsername(any());
 	}
 
 	private User getSampleUser() {

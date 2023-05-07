@@ -21,7 +21,6 @@ import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -37,8 +36,15 @@ import org.springframework.web.server.ResponseStatusException;
 
 import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @DirtiesContext
@@ -58,7 +64,7 @@ class WorkFlowControllerTest extends ControllerMockClient {
 		this.mockMvc.perform(this.getRequestWithInValidCredentials("/api/v1/workflows"))
 				.andExpect(MockMvcResultMatchers.status().isUnauthorized());
 		// then
-		Mockito.verify(this.workFlowService, Mockito.never()).execute(Mockito.any());
+		verify(this.workFlowService, never()).execute(any());
 	}
 
 	@Test
@@ -71,11 +77,11 @@ class WorkFlowControllerTest extends ControllerMockClient {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = objectMapper.writeValueAsString(workFlowRequestDTO);
 
-		WorkReport report = Mockito.mock(WorkReport.class);
+		WorkReport report = mock(WorkReport.class);
 		WorkContext workContext = new WorkContext();
 		workContext.put("WORKFLOW_EXECUTION_ID", UUID.randomUUID().toString());
-		Mockito.when(report.getWorkContext()).thenReturn(workContext);
-		Mockito.when(this.workFlowService.execute(Mockito.any())).thenReturn(report);
+		when(report.getWorkContext()).thenReturn(workContext);
+		when(this.workFlowService.execute(any())).thenReturn(report);
 
 		// when
 		this.mockMvc.perform(this.postRequestWithValidCredentials("/api/v1/workflows").content(json))
@@ -85,7 +91,7 @@ class WorkFlowControllerTest extends ControllerMockClient {
 						Matchers.is(workContext.get("WORKFLOW_EXECUTION_ID"))));
 
 		// then
-		Mockito.verify(this.workFlowService, Mockito.times(1)).execute(Mockito.any());
+		verify(this.workFlowService, times(1)).execute(any());
 	}
 
 	@Test
@@ -97,14 +103,14 @@ class WorkFlowControllerTest extends ControllerMockClient {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = objectMapper.writeValueAsString(workFlowRequestDTO);
 
-		Mockito.when(this.workFlowService.execute(Mockito.any())).thenReturn(null);
+		when(this.workFlowService.execute(any())).thenReturn(null);
 
 		// when
 		this.mockMvc.perform(this.postRequestWithValidCredentials("/api/v1/workflows").content(json))
 				.andExpect(MockMvcResultMatchers.status().isInternalServerError());
 
 		// then
-		Mockito.verify(this.workFlowService, Mockito.times(1)).execute(Mockito.any());
+		verify(this.workFlowService, times(1)).execute(any());
 	}
 
 	@Test
@@ -137,7 +143,7 @@ class WorkFlowControllerTest extends ControllerMockClient {
 						WorkStatusResponseDTO.builder().name(testWorkFlowTask1).status(ParodosWorkStatus.COMPLETED)
 								.type(WorkType.TASK).build()))
 				.build();
-		Mockito.when(workFlowService.getWorkFlowStatus(mainWorkFlowExecutionId)).thenReturn(workFlowStatusResponseDTO);
+		when(workFlowService.getWorkFlowStatus(mainWorkFlowExecutionId)).thenReturn(workFlowStatusResponseDTO);
 
 		// when
 		this.mockMvc
@@ -165,7 +171,7 @@ class WorkFlowControllerTest extends ControllerMockClient {
 						Matchers.is(ParodosWorkStatus.COMPLETED.name())));
 
 		// then
-		Mockito.verify(this.workFlowService, Mockito.times(1)).getWorkFlowStatus(mainWorkFlowExecutionId);
+		verify(this.workFlowService, times(1)).getWorkFlowStatus(mainWorkFlowExecutionId);
 	}
 
 	@Test
@@ -175,8 +181,7 @@ class WorkFlowControllerTest extends ControllerMockClient {
 		String workFlowCheckerTaskName = "testWorkflowCheckerTaskName";
 
 		// when
-		doNothing().when(this.workFlowService).updateWorkFlowCheckerTaskStatus(Mockito.any(), Mockito.any(),
-				Mockito.any());
+		doNothing().when(this.workFlowService).updateWorkFlowCheckerTaskStatus(any(), any(), any());
 
 		// then
 		String pathUrl = String.format("/api/v1/workflows/%s/checkers/%s", workFlowExecutionId,
@@ -185,8 +190,7 @@ class WorkFlowControllerTest extends ControllerMockClient {
 		this.mockMvc.perform(this.postRequestWithValidCredentials(pathUrl).content(jsonPayload))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
-		Mockito.verify(this.workFlowService, Mockito.times(1)).updateWorkFlowCheckerTaskStatus(Mockito.any(),
-				Mockito.any(), Mockito.any());
+		verify(this.workFlowService, times(1)).updateWorkFlowCheckerTaskStatus(any(), any(), any());
 	}
 
 	@Test
@@ -197,8 +201,7 @@ class WorkFlowControllerTest extends ControllerMockClient {
 
 		// when
 		doThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST)).when(this.workFlowService)
-				.updateWorkFlowCheckerTaskStatus(Mockito.any(), Mockito.anyString(),
-						Mockito.any(WorkFlowTaskStatus.class));
+				.updateWorkFlowCheckerTaskStatus(any(), anyString(), any(WorkFlowTaskStatus.class));
 
 		// then
 		String pathUrl = String.format("/api/v1/workflows/%s/checkers/%s", workFlowExecutionId,
@@ -216,8 +219,7 @@ class WorkFlowControllerTest extends ControllerMockClient {
 
 		// when
 		doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(this.workFlowService)
-				.updateWorkFlowCheckerTaskStatus(Mockito.any(), Mockito.anyString(),
-						Mockito.any(WorkFlowTaskStatus.class));
+				.updateWorkFlowCheckerTaskStatus(any(), anyString(), any(WorkFlowTaskStatus.class));
 
 		// then
 		String pathUrl = String.format("/api/v1/workflows/%s/checkers/%s", workFlowExecutionId,
@@ -241,8 +243,8 @@ class WorkFlowControllerTest extends ControllerMockClient {
 	void TestGetWorkFlowByProjectIdWithValidData() throws Exception {
 		UUID workFlowExecutionId = UUID.randomUUID();
 		UUID projectId = UUID.randomUUID();
-		Mockito.when(workFlowService.getWorkFlowsByProjectId(projectId)).thenReturn(List.of(WorkFlowResponseDTO
-				.builder().workFlowExecutionId(workFlowExecutionId).workStatus(WorkStatus.COMPLETED).build()));
+		when(workFlowService.getWorkFlowsByProjectId(projectId)).thenReturn(List.of(WorkFlowResponseDTO.builder()
+				.workFlowExecutionId(workFlowExecutionId).workStatus(WorkStatus.COMPLETED).build()));
 		// when
 		this.mockMvc
 				.perform(this.getRequestWithValidCredentials("/api/v1/workflows").param("projectId",

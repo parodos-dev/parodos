@@ -11,11 +11,12 @@ import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 
 /**
  * Namespace Approval WorkFlow Checker Task execution test
@@ -29,8 +30,8 @@ public class NamespaceApprovalWorkFlowCheckerTaskTest extends BaseWorkFlowChecke
 
 	@Before
 	public void setUp() {
-		namespaceApprovalWorkFlowCheckerTask = Mockito
-				.spy((NamespaceApprovalWorkFlowCheckerTask) getConcretePersonImplementation());
+		namespaceApprovalWorkFlowCheckerTask = spy(
+				(NamespaceApprovalWorkFlowCheckerTask) getConcretePersonImplementation());
 	}
 
 	@Override
@@ -41,7 +42,7 @@ public class NamespaceApprovalWorkFlowCheckerTaskTest extends BaseWorkFlowChecke
 	@Test
 	public void checkWorkFlowStatus() {
 		// given
-		WorkContext workContext = Mockito.mock(WorkContext.class);
+		WorkContext workContext = mock(WorkContext.class);
 
 		// when
 		WorkReport workReport = namespaceApprovalWorkFlowCheckerTask.checkWorkFlowStatus(workContext);

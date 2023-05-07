@@ -13,11 +13,12 @@ import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 
 /**
  * Onboarding Assessment Task execution test
@@ -38,7 +39,7 @@ public class OnboardingAssessmentTaskTest extends BaseAssessmentTaskTest {
 		workflowOption = new WorkFlowOption.Builder("identifier", "workflowName")
 				.setDescription("a test workflow option").displayName("WorkflowOption_A").addToDetails("Other details")
 				.build();
-		onboardingAssessmentTask = Mockito.spy((OnboardingAssessmentTask) getConcretePersonImplementation());
+		onboardingAssessmentTask = spy((OnboardingAssessmentTask) getConcretePersonImplementation());
 	}
 
 	@Override
@@ -49,7 +50,7 @@ public class OnboardingAssessmentTaskTest extends BaseAssessmentTaskTest {
 	@Test
 	public void execute() {
 		// given
-		WorkContext workContext = Mockito.mock(WorkContext.class);
+		WorkContext workContext = mock(WorkContext.class);
 		WorkReport workReport = onboardingAssessmentTask.execute(workContext);
 
 		// then

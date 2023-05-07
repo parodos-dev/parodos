@@ -7,7 +7,6 @@ import com.redhat.parodos.workflows.workflow.WorkFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlowPropertiesMetadata;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 
 import org.springframework.core.env.Environment;
 
@@ -15,17 +14,18 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.*;
 
 class WorkFlowPropertiesAspectTest {
 
 	@Test
 	public void testWorkFlowPropertiesAspectWithValidData() {
 		// given
-		WorkFlow workflow = Mockito.mock(WorkFlow.class);
-		WorkFlowProperties properties = Mockito.mock(WorkFlowProperties.class);
-		Mockito.when(properties.version()).thenReturn("1.0.0");
-		Environment env = Mockito.mock(Environment.class);
-		Mockito.when(env.resolvePlaceholders(Mockito.anyString())).thenReturn("1.0.0");
+		WorkFlow workflow = mock(WorkFlow.class);
+		WorkFlowProperties properties = mock(WorkFlowProperties.class);
+		when(properties.version()).thenReturn("1.0.0");
+		Environment env = mock(Environment.class);
+		when(env.resolvePlaceholders(anyString())).thenReturn("1.0.0");
 
 		// when
 		WorkFlowPropertiesAspect aspect = new WorkFlowPropertiesAspect();
@@ -38,19 +38,19 @@ class WorkFlowPropertiesAspectTest {
 
 		// then
 		ArgumentCaptor<WorkFlowPropertiesMetadata> argument = ArgumentCaptor.forClass(WorkFlowPropertiesMetadata.class);
-		Mockito.verify(workflow, Mockito.times(1)).setProperties(argument.capture());
+		verify(workflow, times(1)).setProperties(argument.capture());
 		assertEquals(argument.getValue().getVersion(), "1.0.0");
-		Mockito.verify(env, Mockito.times(1)).resolvePlaceholders("1.0.0");
+		verify(env, times(1)).resolvePlaceholders("1.0.0");
 	}
 
 	@Test
 	public void testWorkFlowPropertiesAspectWithValidEnvData() {
 		// given
-		WorkFlow workflow = Mockito.mock(WorkFlow.class);
-		WorkFlowProperties properties = Mockito.mock(WorkFlowProperties.class);
-		Mockito.when(properties.version()).thenReturn("${git.commit.id}");
-		Environment env = Mockito.mock(Environment.class);
-		Mockito.when(env.resolvePlaceholders(Mockito.anyString())).thenReturn("1.0.0");
+		WorkFlow workflow = mock(WorkFlow.class);
+		WorkFlowProperties properties = mock(WorkFlowProperties.class);
+		when(properties.version()).thenReturn("${git.commit.id}");
+		Environment env = mock(Environment.class);
+		when(env.resolvePlaceholders(anyString())).thenReturn("1.0.0");
 
 		// when
 		WorkFlowPropertiesAspect aspect = new WorkFlowPropertiesAspect();
@@ -63,19 +63,19 @@ class WorkFlowPropertiesAspectTest {
 
 		// then
 		ArgumentCaptor<WorkFlowPropertiesMetadata> argument = ArgumentCaptor.forClass(WorkFlowPropertiesMetadata.class);
-		Mockito.verify(workflow, Mockito.times(1)).setProperties(argument.capture());
+		verify(workflow, times(1)).setProperties(argument.capture());
 		assertEquals(argument.getValue().getVersion(), "1.0.0");
-		Mockito.verify(env, Mockito.times(1)).resolvePlaceholders("${git.commit.id}");
+		verify(env, times(1)).resolvePlaceholders("${git.commit.id}");
 	}
 
 	@Test
 	public void testWorkFlowPropertiesAspectWithNoValidData() {
 		// given
-		WorkFlow workflow = Mockito.mock(WorkFlow.class);
-		WorkFlowProperties properties = Mockito.mock(WorkFlowProperties.class);
-		Mockito.when(properties.version()).thenReturn("1.0.0");
-		Environment env = Mockito.mock(Environment.class);
-		Mockito.when(env.resolvePlaceholders(Mockito.anyString())).thenReturn("1.0.0");
+		WorkFlow workflow = mock(WorkFlow.class);
+		WorkFlowProperties properties = mock(WorkFlowProperties.class);
+		when(properties.version()).thenReturn("1.0.0");
+		Environment env = mock(Environment.class);
+		when(env.resolvePlaceholders(anyString())).thenReturn("1.0.0");
 
 		// when
 		WorkFlowPropertiesAspect aspect = new WorkFlowPropertiesAspect();
@@ -87,21 +87,21 @@ class WorkFlowPropertiesAspectTest {
 		});
 
 		// then
-		Mockito.verify(workflow, Mockito.times(0)).setProperties(Mockito.any());
+		verify(workflow, times(0)).setProperties(any());
 	}
 
 	@Test
 	public void testWorkFlowPropertiesAspectWithNoValidVersion() {
 		// given
 
-		Work work = Mockito.mock(Work.class);
+		Work work = mock(Work.class);
 		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow().named("test").execute(work).build();
 		workFlow.setProperties(WorkFlowPropertiesMetadata.builder().version("1.0.0").build());
 
-		WorkFlowProperties properties = Mockito.mock(WorkFlowProperties.class);
-		Mockito.when(properties.version()).thenReturn("1.0.0");
-		Environment env = Mockito.mock(Environment.class);
-		Mockito.when(env.resolvePlaceholders(Mockito.anyString())).thenReturn("");
+		WorkFlowProperties properties = mock(WorkFlowProperties.class);
+		when(properties.version()).thenReturn("1.0.0");
+		Environment env = mock(Environment.class);
+		when(env.resolvePlaceholders(anyString())).thenReturn("");
 
 		// when
 		WorkFlowPropertiesAspect aspect = new WorkFlowPropertiesAspect();

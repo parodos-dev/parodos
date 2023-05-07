@@ -8,16 +8,17 @@ import java.util.UUID;
 import com.redhat.parodos.notification.jpa.entity.NotificationMessage;
 import com.redhat.parodos.notification.jpa.entity.NotificationRecord;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class NotificationRecordResponseDTOTest {
 
 	@Test
 	void toModel() {
-		NotificationRecord entity = Mockito.mock(NotificationRecord.class);
-		NotificationMessage notificationMessage = Mockito.mock(NotificationMessage.class);
+		NotificationRecord entity = mock(NotificationRecord.class);
+		NotificationMessage notificationMessage = mock(NotificationMessage.class);
 
 		String messageBody = "message-body-test";
 		Instant messageCreation = Instant.now();
@@ -29,17 +30,17 @@ class NotificationRecordResponseDTOTest {
 		List<String> tags = Collections.singletonList("tag-test");
 		UUID uuid = UUID.randomUUID();
 
-		Mockito.when(entity.getNotificationMessage()).thenReturn(notificationMessage);
-		Mockito.when(entity.getFolder()).thenReturn(folderName);
-		Mockito.when(entity.isRead()).thenReturn(isRead);
-		Mockito.when(entity.getTags()).thenReturn(tags);
-		Mockito.when(entity.getId()).thenReturn(uuid);
+		when(entity.getNotificationMessage()).thenReturn(notificationMessage);
+		when(entity.getFolder()).thenReturn(folderName);
+		when(entity.isRead()).thenReturn(isRead);
+		when(entity.getTags()).thenReturn(tags);
+		when(entity.getId()).thenReturn(uuid);
 
-		Mockito.when(notificationMessage.getBody()).thenReturn(messageBody);
-		Mockito.when(notificationMessage.getCreatedOn()).thenReturn(messageCreation);
-		Mockito.when(notificationMessage.getFromuser()).thenReturn(messageSender);
-		Mockito.when(notificationMessage.getSubject()).thenReturn(messageSubject);
-		Mockito.when(notificationMessage.getMessageType()).thenReturn(messageType);
+		when(notificationMessage.getBody()).thenReturn(messageBody);
+		when(notificationMessage.getCreatedOn()).thenReturn(messageCreation);
+		when(notificationMessage.getFromuser()).thenReturn(messageSender);
+		when(notificationMessage.getSubject()).thenReturn(messageSubject);
+		when(notificationMessage.getMessageType()).thenReturn(messageType);
 
 		NotificationRecordResponseDTO result = NotificationRecordResponseDTO.toModel(entity);
 

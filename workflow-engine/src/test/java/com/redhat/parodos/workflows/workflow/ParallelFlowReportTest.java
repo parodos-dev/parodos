@@ -26,9 +26,10 @@ package com.redhat.parodos.workflows.workflow;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ParallelFlowReportTest {
 
@@ -63,21 +64,21 @@ public class ParallelFlowReportTest {
 
 	@Test
 	public void testGetStatus() {
-		Assertions.assertThat(completedParallelFlowReport.getStatus()).isEqualTo(WorkStatus.COMPLETED);
-		Assertions.assertThat(failedParallelFlowReport.getStatus()).isEqualTo(WorkStatus.FAILED);
-		Assertions.assertThat(progressParallelFlowReport.getStatus()).isEqualTo(WorkStatus.IN_PROGRESS);
+		assertThat(completedParallelFlowReport.getStatus()).isEqualTo(WorkStatus.COMPLETED);
+		assertThat(failedParallelFlowReport.getStatus()).isEqualTo(WorkStatus.FAILED);
+		assertThat(progressParallelFlowReport.getStatus()).isEqualTo(WorkStatus.IN_PROGRESS);
 	}
 
 	@Test
 	public void testGetError() {
-		Assertions.assertThat(failedParallelFlowReport.getError()).isEqualTo(exception);
+		assertThat(failedParallelFlowReport.getError()).isEqualTo(exception);
 	}
 
 	@Test
 	public void testGetReports() {
-		Assertions.assertThat(completedParallelFlowReport.getReports()).hasSize(2);
-		Assertions.assertThat(failedParallelFlowReport.getReports()).hasSize(3);
-		Assertions.assertThat(progressParallelFlowReport.getReports()).hasSize(4);
+		assertThat(completedParallelFlowReport.getReports()).hasSize(2);
+		assertThat(failedParallelFlowReport.getReports()).hasSize(3);
+		assertThat(progressParallelFlowReport.getReports()).hasSize(4);
 	}
 
 }

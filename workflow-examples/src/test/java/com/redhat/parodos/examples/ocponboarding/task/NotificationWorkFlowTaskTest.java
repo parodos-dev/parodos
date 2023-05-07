@@ -14,7 +14,6 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -25,6 +24,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.spy;
 
 /**
@@ -51,11 +52,11 @@ public class NotificationWorkFlowTaskTest extends BaseInfrastructureWorkFlowTask
 		this.notificationWorkFlowTask = spy((NotificationWorkFlowTask) getConcretePersonImplementation());
 		try {
 			doReturn(JIRA_TICKET_URL_WORKFLOW_TASK_PARAMETER_VALUE_TEST).when(this.notificationWorkFlowTask)
-					.getRequiredParameterValue(Mockito.any(WorkContext.class),
+					.getRequiredParameterValue(any(WorkContext.class),
 							eq(JIRA_TICKET_URL_WORKFLOW_TASK_PARAMETER_NAME_TEST));
 
 			doReturn(OCP_APP_LINK_WORKFLOW_TASK_PARAMETER_VALUE_TEST).when(this.notificationWorkFlowTask)
-					.getRequiredParameterValue(Mockito.any(WorkContext.class),
+					.getRequiredParameterValue(any(WorkContext.class),
 							eq(OCP_APP_LINK_WORKFLOW_TASK_PARAMETER_NAME_TEST));
 		}
 		catch (MissingParameterException e) {
@@ -70,8 +71,8 @@ public class NotificationWorkFlowTaskTest extends BaseInfrastructureWorkFlowTask
 
 	@Test
 	public void executeSuccess() {
-		WorkContext workContext = Mockito.mock(WorkContext.class);
-		try (MockedStatic<RestUtils> restUtilsMockedStatic = Mockito.mockStatic(RestUtils.class)) {
+		WorkContext workContext = mock(WorkContext.class);
+		try (MockedStatic<RestUtils> restUtilsMockedStatic = mockStatic(RestUtils.class)) {
 			restUtilsMockedStatic.when(() -> RestUtils.getRequestWithHeaders(any(NotificationRequest.class),
 					any(String.class), any(String.class)))
 					.thenReturn(new HttpEntity<>(NotificationRequest.builder().build()));
@@ -89,8 +90,8 @@ public class NotificationWorkFlowTaskTest extends BaseInfrastructureWorkFlowTask
 
 	@Test
 	public void executeFail() {
-		WorkContext workContext = Mockito.mock(WorkContext.class);
-		try (MockedStatic<RestUtils> restUtilsMockedStatic = Mockito.mockStatic(RestUtils.class)) {
+		WorkContext workContext = mock(WorkContext.class);
+		try (MockedStatic<RestUtils> restUtilsMockedStatic = mockStatic(RestUtils.class)) {
 			restUtilsMockedStatic.when(() -> RestUtils.getRequestWithHeaders(any(NotificationRequest.class),
 					any(String.class), any(String.class)))
 					.thenReturn(new HttpEntity<>(NotificationRequest.builder().build()));

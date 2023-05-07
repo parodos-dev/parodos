@@ -25,11 +25,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.nullable;
+import static org.mockito.Mockito.when;
 
 public class WorkFlowServiceDelegateTest {
 
@@ -47,11 +50,11 @@ public class WorkFlowServiceDelegateTest {
 
 	@BeforeEach
 	void initEach() {
-		this.workFlowRepository = Mockito.mock(WorkFlowRepository.class);
-		this.workFlowDefinitionRepository = Mockito.mock(WorkFlowDefinitionRepository.class);
-		this.workFlowTaskDefinitionRepository = Mockito.mock(WorkFlowTaskDefinitionRepository.class);
-		this.workFlowTaskRepository = Mockito.mock(WorkFlowTaskRepository.class);
-		this.workFlowWorkRepository = Mockito.mock(WorkFlowWorkRepository.class);
+		this.workFlowRepository = mock(WorkFlowRepository.class);
+		this.workFlowDefinitionRepository = mock(WorkFlowDefinitionRepository.class);
+		this.workFlowTaskDefinitionRepository = mock(WorkFlowTaskDefinitionRepository.class);
+		this.workFlowTaskRepository = mock(WorkFlowTaskRepository.class);
+		this.workFlowWorkRepository = mock(WorkFlowWorkRepository.class);
 
 		this.workFlowServiceDelegate = new WorkFlowServiceDelegate(this.workFlowDefinitionRepository,
 				this.workFlowTaskDefinitionRepository, this.workFlowRepository, this.workFlowTaskRepository,
@@ -139,34 +142,31 @@ public class WorkFlowServiceDelegateTest {
 				.workFlowDefinition(testSubWorkFlowDefinition1).build();
 		subWorkFlowWorkDefinition1.setId(UUID.randomUUID());
 
-		Mockito.when(this.workFlowWorkRepository
-				.findByWorkFlowDefinitionIdOrderByCreateDateAsc(Mockito.eq(workFlowDefinitionId)))
+		when(this.workFlowWorkRepository.findByWorkFlowDefinitionIdOrderByCreateDateAsc(eq(workFlowDefinitionId)))
 				.thenReturn(List.of(mainWorkFlowWorkDefinition1, mainWorkFlowWorkDefinition2));
 
-		Mockito.when(this.workFlowDefinitionRepository.findById(Mockito.eq(testSubWorkFlowDefinitionId1)))
+		when(this.workFlowDefinitionRepository.findById(eq(testSubWorkFlowDefinitionId1)))
 				.thenReturn(Optional.of(testSubWorkFlowDefinition1));
 
-		Mockito.when(this.workFlowRepository.findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(
-				Mockito.eq(workFlowExecution), Mockito.eq(testSubWorkFlowDefinitionId1)))
-				.thenReturn(testSubWorkFlowExecution1);
+		when(this.workFlowRepository.findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(eq(workFlowExecution),
+				eq(testSubWorkFlowDefinitionId1))).thenReturn(testSubWorkFlowExecution1);
 
-		Mockito.when(this.workFlowTaskDefinitionRepository.findById(Mockito.eq(testSubWorkFlowTaskDefinitionId1)))
+		when(this.workFlowTaskDefinitionRepository.findById(eq(testSubWorkFlowTaskDefinitionId1)))
 				.thenReturn(Optional.of(testSubWorkFlowTaskDefinition1));
 
-		Mockito.when(this.workFlowTaskDefinitionRepository.findById(Mockito.eq(testWorkFlowTaskDefinitionId1)))
+		when(this.workFlowTaskDefinitionRepository.findById(eq(testWorkFlowTaskDefinitionId1)))
 				.thenReturn(Optional.of(testWorkFlowTaskDefinition1));
 
-		Mockito.when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(
-				Mockito.eq(testSubWorkFlowExecutionId1), Mockito.eq(testSubWorkFlowTaskDefinitionId1)))
-				.thenReturn(List.of(testSubWorkFlowTaskExecution1));
+		when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(
+				eq(testSubWorkFlowExecutionId1), eq(testSubWorkFlowTaskDefinitionId1)))
+						.thenReturn(List.of(testSubWorkFlowTaskExecution1));
 
-		Mockito.when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(
-				Mockito.eq(workFlowExecutionId), Mockito.eq(testWorkFlowTaskDefinitionId1)))
-				.thenReturn(List.of(testWorkFlowTaskExecution1));
+		when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(eq(workFlowExecutionId),
+				eq(testWorkFlowTaskDefinitionId1))).thenReturn(List.of(testWorkFlowTaskExecution1));
 
-		Mockito.when(this.workFlowWorkRepository
-				.findByWorkFlowDefinitionIdOrderByCreateDateAsc(Mockito.eq(testSubWorkFlowDefinitionId1)))
-				.thenReturn(List.of(subWorkFlowWorkDefinition1));
+		when(this.workFlowWorkRepository
+				.findByWorkFlowDefinitionIdOrderByCreateDateAsc(eq(testSubWorkFlowDefinitionId1)))
+						.thenReturn(List.of(subWorkFlowWorkDefinition1));
 
 		// then
 		List<WorkStatusResponseDTO> workStatusResponseDTOs = this.workFlowServiceDelegate
@@ -256,37 +256,32 @@ public class WorkFlowServiceDelegateTest {
 			setupMasterWorkflow();
 			setupCheckerMapping();
 
-			Mockito.when(
-					workFlowWorkRepository.findByWorkFlowDefinitionIdOrderByCreateDateAsc(masterWorkFlowDefinitionId))
+			when(workFlowWorkRepository.findByWorkFlowDefinitionIdOrderByCreateDateAsc(masterWorkFlowDefinitionId))
 					.thenReturn(List.of(masterWorkflowWorkDefinition, checkerWorkflowWorkDefinition));
 
 			// master
-			Mockito.when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(
-					masterWorkFlowExecutionId, subWorkFlowTaskDefinitionId))
-					.thenReturn(List.of(masterWorkFlowTaskExecution));
+			when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(masterWorkFlowExecutionId,
+					subWorkFlowTaskDefinitionId)).thenReturn(List.of(masterWorkFlowTaskExecution));
 
-			Mockito.when(workFlowTaskDefinitionRepository.findById(subWorkFlowTaskDefinitionId))
+			when(workFlowTaskDefinitionRepository.findById(subWorkFlowTaskDefinitionId))
 					.thenReturn(Optional.of(masterWorkFlowTaskDefinition));
 
-			Mockito.when(
-					workFlowWorkRepository.findByWorkFlowDefinitionIdOrderByCreateDateAsc(masterWorkFlowDefinitionId))
+			when(workFlowWorkRepository.findByWorkFlowDefinitionIdOrderByCreateDateAsc(masterWorkFlowDefinitionId))
 					.thenReturn(List.of(masterWorkflowWorkDefinition));
 
 			// checker
-			Mockito.when(workFlowTaskDefinitionRepository.findById(checkerWorkFlowTaskDefinitionId))
+			when(workFlowTaskDefinitionRepository.findById(checkerWorkFlowTaskDefinitionId))
 					.thenReturn(Optional.of(checkerWorkFlowTaskDefinition));
 
-			Mockito.when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(
-					masterWorkFlowExecutionId, checkerWorkFlowTaskDefinitionId))
-					.thenReturn(List.of(checkerWorkFlowTaskExecution));
+			when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(masterWorkFlowExecutionId,
+					checkerWorkFlowTaskDefinitionId)).thenReturn(List.of(checkerWorkFlowTaskExecution));
 
-			Mockito.when(
-					workFlowWorkRepository.findByWorkFlowDefinitionIdOrderByCreateDateAsc(checkerWorkFlowDefinitionId))
+			when(workFlowWorkRepository.findByWorkFlowDefinitionIdOrderByCreateDateAsc(checkerWorkFlowDefinitionId))
 					.thenReturn(List.of(checkerWorkflowWorkDefinition));
 
-			Mockito.when(workFlowRepository.findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(
-					Mockito.nullable(WorkFlowExecution.class), Mockito.eq(checkerWorkFlowDefinitionId)))
-					.thenReturn(checkerWorkflowExecution);
+			when(workFlowRepository.findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(
+					nullable(WorkFlowExecution.class), eq(checkerWorkFlowDefinitionId)))
+							.thenReturn(checkerWorkflowExecution);
 		}
 
 		@Test

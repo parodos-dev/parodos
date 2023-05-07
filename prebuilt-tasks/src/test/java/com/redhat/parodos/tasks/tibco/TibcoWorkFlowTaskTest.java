@@ -11,11 +11,11 @@ import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -33,7 +33,7 @@ public class TibcoWorkFlowTaskTest {
 
 	private final static String message = "test message";
 
-	private final static Tibjms tibjms = Mockito.mock(Tibjms.class);
+	private final static Tibjms tibjms = mock(Tibjms.class);
 
 	private final static TibcoWorkFlowTask task = new TibcoWorkFlowTask(tibjms, url, caFile, username, passowrd);
 

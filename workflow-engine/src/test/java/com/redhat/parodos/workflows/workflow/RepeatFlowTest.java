@@ -27,15 +27,18 @@ import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReportPredicate;
 import org.junit.Test;
-import org.mockito.Mockito;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class RepeatFlowTest {
 
 	@Test
 	public void testRepeatUntil() {
 		// given
-		Work work = Mockito.mock(Work.class);
-		WorkContext workContext = Mockito.mock(WorkContext.class);
+		Work work = mock(Work.class);
+		WorkContext workContext = mock(WorkContext.class);
 		WorkReportPredicate predicate = WorkReportPredicate.ALWAYS_FALSE;
 		RepeatFlow repeatFlow = RepeatFlow.Builder.aNewRepeatFlow().repeat(work).until(predicate).build();
 
@@ -43,21 +46,21 @@ public class RepeatFlowTest {
 		repeatFlow.execute(workContext);
 
 		// then
-		Mockito.verify(work, Mockito.times(1)).execute(workContext);
+		verify(work, times(1)).execute(workContext);
 	}
 
 	@Test
 	public void testRepeatTimes() {
 		// given
-		Work work = Mockito.mock(Work.class);
-		WorkContext workContext = Mockito.mock(WorkContext.class);
+		Work work = mock(Work.class);
+		WorkContext workContext = mock(WorkContext.class);
 		RepeatFlow repeatFlow = RepeatFlow.Builder.aNewRepeatFlow().repeat(work).times(3).build();
 
 		// when
 		repeatFlow.execute(workContext);
 
 		// then
-		Mockito.verify(work, Mockito.times(3)).execute(workContext);
+		verify(work, times(3)).execute(workContext);
 	}
 
 }

@@ -33,9 +33,10 @@ import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import org.mockito.Mockito;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 public class ParallelFlowExecutorTest {
 
@@ -46,7 +47,7 @@ public class ParallelFlowExecutorTest {
 		ExecutorService executorService = Executors.newFixedThreadPool(2);
 		HelloWorldWork work1 = new HelloWorldWork("work1", WorkStatus.COMPLETED);
 		HelloWorldWork work2 = new HelloWorldWork("work2", WorkStatus.FAILED);
-		WorkContext workContext = Mockito.mock(WorkContext.class);
+		WorkContext workContext = mock(WorkContext.class);
 		ParallelFlowExecutor parallelFlowExecutor = new ParallelFlowExecutor(executorService);
 
 		// when
@@ -54,9 +55,9 @@ public class ParallelFlowExecutorTest {
 		executorService.shutdown();
 
 		// then
-		Assertions.assertThat(workReports).hasSize(2);
-		Assertions.assertThat(work1.isExecuted()).isTrue();
-		Assertions.assertThat(work2.isExecuted()).isTrue();
+		assertThat(workReports).hasSize(2);
+		assertThat(work1.isExecuted()).isTrue();
+		assertThat(work2.isExecuted()).isTrue();
 	}
 
 	static class HelloWorldWork implements Work {
