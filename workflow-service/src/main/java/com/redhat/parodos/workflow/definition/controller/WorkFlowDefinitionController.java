@@ -16,6 +16,7 @@
 package com.redhat.parodos.workflow.definition.controller;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
@@ -42,8 +43,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import static java.util.Objects.isNull;
 
 /**
  * Workflow definition controller
@@ -79,7 +78,7 @@ public class WorkFlowDefinitionController {
 	@GetMapping
 	public ResponseEntity<List<WorkFlowDefinitionResponseDTO>> getWorkFlowDefinitions(
 			@RequestParam(required = false) String name) {
-		if (isNull(name) || name.isEmpty()) {
+		if (Objects.isNull(name) || name.isEmpty()) {
 			return ResponseEntity.ok(workFlowDefinitionService.getWorkFlowDefinitions());
 		}
 		return ResponseEntity.ok(List.of(workFlowDefinitionService.getWorkFlowDefinitionByName(name)));

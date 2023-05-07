@@ -20,8 +20,6 @@ import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.extern.slf4j.Slf4j;
 
-import static com.redhat.parodos.workflow.execution.aspect.WorkFlowExecutionFactory.isMainWorkFlow;
-
 @Slf4j
 public class AssessmentInfrastructureWorkFlowPostInterceptor implements WorkFlowPostInterceptor {
 
@@ -50,7 +48,7 @@ public class AssessmentInfrastructureWorkFlowPostInterceptor implements WorkFlow
 
 	public WorkReport handlePostWorkFlowExecution() {
 		WorkReport report = null;
-		if (isMainWorkFlow(workFlowDefinition, workContext)) {
+		if (WorkFlowExecutionFactory.isMainWorkFlow(workFlowDefinition, workContext)) {
 			workFlowExecution.setWorkFlowExecutionContext(Optional
 					.ofNullable(workFlowExecution.getWorkFlowExecutionContext()).map(workFlowExecutionContext -> {
 						workFlowExecutionContext.setWorkContext(workContext);

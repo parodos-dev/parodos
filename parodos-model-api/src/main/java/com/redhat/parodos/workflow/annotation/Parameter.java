@@ -15,6 +15,7 @@
  */
 package com.redhat.parodos.workflow.annotation;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -22,14 +23,12 @@ import java.lang.annotation.Target;
 
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
 
-import static java.lang.annotation.ElementType.METHOD;
-
 /**
  * Parameter annotation
  *
  * @author Annel Ketcha (Github: anludke)
  */
-@Target(METHOD)
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface Parameter {

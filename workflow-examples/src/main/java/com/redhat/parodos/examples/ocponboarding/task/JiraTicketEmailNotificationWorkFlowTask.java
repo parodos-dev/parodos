@@ -16,6 +16,7 @@
 package com.redhat.parodos.examples.ocponboarding.task;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.redhat.parodos.examples.ocponboarding.task.dto.email.MessageRequestDTO;
 import com.redhat.parodos.examples.utils.RestUtils;
@@ -30,8 +31,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
-
-import static java.util.Objects.isNull;
 
 /**
  * An example of a task that send a Jira ticket email notification
@@ -88,8 +87,8 @@ public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureW
 			log.error("Error occurred when submitting message: {}", e.getMessage());
 		}
 
-		if (!isNull(responseEntity) && responseEntity.getStatusCode().is2xxSuccessful()
-				&& !isNull(responseEntity.getBody()) && responseEntity.getBody().contains("Mail Sent")) {
+		if (!Objects.isNull(responseEntity) && responseEntity.getStatusCode().is2xxSuccessful()
+				&& !Objects.isNull(responseEntity.getBody()) && responseEntity.getBody().contains("Mail Sent")) {
 			log.info("JiraTicketEmailNotificationWorkFlowTask completed!");
 			return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 		}

@@ -19,6 +19,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -67,8 +68,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import static java.util.Objects.isNull;
 
 /**
  * Workflow execution service implementation
@@ -307,7 +306,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		// get workflow checker task definition
 		WorkFlowTaskDefinition workFlowTaskDefinition = workFlowTaskDefinitionRepository
 				.findFirstByNameAndWorkFlowDefinitionType(workFlowTaskName, WorkFlowType.CHECKER);
-		if (isNull(workFlowTaskDefinition)) {
+		if (Objects.isNull(workFlowTaskDefinition)) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
 					String.format("workflow checker task name: %s not found!", workFlowTaskName));
 		}
