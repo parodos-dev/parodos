@@ -19,7 +19,6 @@ import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepos
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
 import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
-import com.redhat.parodos.workflow.enums.ParodosWorkStatus;
 import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.enums.WorkType;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowContextResponseDTO;
@@ -544,13 +543,12 @@ class WorkFlowServiceImplTest {
 		when(this.workFlowServiceDelegate.getWorkFlowAndWorksStatus(eq(workFlowExecution), eq(workFlowDefinition)))
 				.thenReturn(List.of(
 						WorkStatusResponseDTO.builder().name(SUB_WORKFLOW_1_NAME).type(WorkType.WORKFLOW)
-								.status(com.redhat.parodos.workflow.enums.ParodosWorkStatus.PENDING)
+								.status(WorkStatus.PENDING)
 								.works(List.of(WorkStatusResponseDTO.builder().name(SUB_WORKFLOW_1_TASK_1_NAME)
-										.type(WorkType.TASK)
-										.status(com.redhat.parodos.workflow.enums.ParodosWorkStatus.PENDING).build()))
+										.type(WorkType.TASK).status(WorkStatus.PENDING).build()))
 								.workExecution(subWorkFlow1Execution).numberOfWorks(1).build(),
 						WorkStatusResponseDTO.builder().name(WORKFLOW_TASK_1_NAME).type(WorkType.TASK)
-								.status(com.redhat.parodos.workflow.enums.ParodosWorkStatus.COMPLETED).build()));
+								.status(WorkStatus.COMPLETED).build()));
 		// then
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = this.workFlowService
 				.getWorkFlowStatus(workFlowExecutionId);
@@ -723,10 +721,9 @@ class WorkFlowServiceImplTest {
 		when(this.workFlowServiceDelegate.getWorkFlowAndWorksStatus(eq(workFlowExecution), eq(workFlowDefinition)))
 				.thenReturn(List.of(
 						WorkStatusResponseDTO.builder().name(SUB_WORKFLOW_1_NAME).type(WorkType.WORKFLOW)
-								.status(com.redhat.parodos.workflow.enums.ParodosWorkStatus.PENDING)
-								.works(Collections.emptyList()).numberOfWorks(1).build(),
+								.status(WorkStatus.PENDING).works(Collections.emptyList()).numberOfWorks(1).build(),
 						WorkStatusResponseDTO.builder().name(WORKFLOW_TASK_1_NAME).type(WorkType.TASK)
-								.status(com.redhat.parodos.workflow.enums.ParodosWorkStatus.COMPLETED).build()));
+								.status(WorkStatus.COMPLETED).build()));
 
 		// then
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = this.workFlowService
@@ -748,8 +745,7 @@ class WorkFlowServiceImplTest {
 		// workflow task 1
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(1).getType(), WorkType.TASK);
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(1).getName(), workFlowTask1Definition.getName());
-		assertEquals(workFlowStatusResponseDTO.getWorks().get(1).getStatus().name(),
-				com.redhat.parodos.workflow.enums.ParodosWorkStatus.COMPLETED.name());
+		assertEquals(workFlowStatusResponseDTO.getWorks().get(1).getStatus().name(), WorkStatus.COMPLETED.name());
 		assertNull(workFlowStatusResponseDTO.getWorks().get(1).getWorks());
 	}
 
@@ -918,7 +914,7 @@ class WorkFlowServiceImplTest {
 				.status(WorkFlowStatus.COMPLETED).workFlowDefinitionId(workFlowDefinition.getId()).build();
 		workFlowExecution.setId(workflowExecutionId);
 		List<WorkStatusResponseDTO> workStatusResponseDTOList = List
-				.of(WorkStatusResponseDTO.builder().name(workName).status(ParodosWorkStatus.COMPLETED).build());
+				.of(WorkStatusResponseDTO.builder().name(workName).status(WorkStatus.COMPLETED).build());
 		when(workFlowRepository.findAllByProjectId(projectId)).thenReturn(List.of(workFlowExecution));
 		when(projectService.getProjectByIdAndUsername(eq(projectId), nullable(String.class)))
 				.thenReturn(ProjectResponseDTO.builder().id(projectId).name("test-project").build());

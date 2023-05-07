@@ -12,7 +12,6 @@ import com.redhat.parodos.workflow.definition.entity.WorkFlowWorkDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
-import com.redhat.parodos.workflow.enums.ParodosWorkStatus;
 import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.enums.WorkType;
 import com.redhat.parodos.workflow.execution.dto.WorkStatusResponseDTO;
@@ -21,6 +20,7 @@ import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
+import com.redhat.parodos.workflows.work.WorkStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -179,20 +179,20 @@ public class WorkFlowServiceDelegateTest {
 		// sub workflow 1
 		assertEquals(workStatusResponseDTOs.get(0).getType(), WorkType.WORKFLOW);
 		assertEquals(workStatusResponseDTOs.get(0).getName(), testSubWorkFlowDefinition1.getName());
-		assertEquals(workStatusResponseDTOs.get(0).getStatus(), ParodosWorkStatus.IN_PROGRESS);
+		assertEquals(workStatusResponseDTOs.get(0).getStatus(), WorkStatus.IN_PROGRESS);
 		assertEquals(workStatusResponseDTOs.get(0).getWorks().size(), 1);
 
 		// sub workflow 1 task 1
 		assertEquals(workStatusResponseDTOs.get(0).getWorks().get(0).getType(), WorkType.TASK);
 		assertEquals(workStatusResponseDTOs.get(0).getWorks().get(0).getName(),
 				testSubWorkFlowTaskDefinition1.getName());
-		assertEquals(workStatusResponseDTOs.get(0).getWorks().get(0).getStatus(), ParodosWorkStatus.IN_PROGRESS);
+		assertEquals(workStatusResponseDTOs.get(0).getWorks().get(0).getStatus(), WorkStatus.IN_PROGRESS);
 		assertNull(workStatusResponseDTOs.get(0).getWorks().get(0).getWorks());
 
 		// workflow task 1
 		assertEquals(workStatusResponseDTOs.get(1).getType(), WorkType.TASK);
 		assertEquals(workStatusResponseDTOs.get(1).getName(), testWorkFlowTaskDefinition1.getName());
-		assertEquals(workStatusResponseDTOs.get(1).getStatus(), ParodosWorkStatus.COMPLETED);
+		assertEquals(workStatusResponseDTOs.get(1).getStatus(), WorkStatus.COMPLETED);
 		assertNull(workStatusResponseDTOs.get(1).getWorks());
 	}
 
@@ -299,7 +299,7 @@ public class WorkFlowServiceDelegateTest {
 			// sub task
 			assertEquals(WorkType.TASK, workStatusResponseDTOs.get(0).getType());
 			assertEquals(workStatusResponseDTOs.get(0).getName(), masterWorkFlowTaskDefinition.getName());
-			assertEquals(ParodosWorkStatus.IN_PROGRESS, workStatusResponseDTOs.get(0).getStatus());
+			assertEquals(WorkStatus.IN_PROGRESS, workStatusResponseDTOs.get(0).getStatus());
 			assertNull(workStatusResponseDTOs.get(0).getWorks());
 		}
 
@@ -318,7 +318,7 @@ public class WorkFlowServiceDelegateTest {
 			// sub task
 			assertEquals(WorkType.TASK, workStatusResponseDTOs.get(0).getType());
 			assertEquals(workStatusResponseDTOs.get(0).getName(), masterWorkFlowTaskDefinition.getName());
-			assertEquals(ParodosWorkStatus.COMPLETED, workStatusResponseDTOs.get(0).getStatus());
+			assertEquals(WorkStatus.COMPLETED, workStatusResponseDTOs.get(0).getStatus());
 			assertNull(workStatusResponseDTOs.get(0).getWorks());
 		}
 
@@ -337,7 +337,7 @@ public class WorkFlowServiceDelegateTest {
 			// sub task
 			assertEquals(WorkType.TASK, workStatusResponseDTOs.get(0).getType());
 			assertEquals(workStatusResponseDTOs.get(0).getName(), masterWorkFlowTaskDefinition.getName());
-			assertEquals(ParodosWorkStatus.REJECTED, workStatusResponseDTOs.get(0).getStatus());
+			assertEquals(WorkStatus.REJECTED, workStatusResponseDTOs.get(0).getStatus());
 			assertNull(workStatusResponseDTOs.get(0).getWorks());
 		}
 

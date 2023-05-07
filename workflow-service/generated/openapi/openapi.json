@@ -874,7 +874,7 @@
           },
           "status" : {
             "type" : "string",
-            "enum" : [ "FAILED", "COMPLETED", "PENDING", "IN_PROGRESS", "REJECTED" ]
+            "enum" : [ "FAILED", "COMPLETED", "IN_PROGRESS", "REJECTED", "PENDING" ]
           },
           "type" : {
             "type" : "string",
