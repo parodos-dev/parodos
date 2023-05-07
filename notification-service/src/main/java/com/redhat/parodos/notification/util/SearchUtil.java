@@ -11,7 +11,10 @@ import com.redhat.parodos.notification.exceptions.SearchByStateAndTermNotSupport
  *
  * @author Annel Ketcha (Github: anludke)
  */
-public class SearchUtil {
+public abstract class SearchUtil {
+
+	private SearchUtil() {
+	}
 
 	public static SearchCriteria getSearchCriteria(State state, String searchTerm) {
 		boolean isStateUnset = Objects.isNull(state);
