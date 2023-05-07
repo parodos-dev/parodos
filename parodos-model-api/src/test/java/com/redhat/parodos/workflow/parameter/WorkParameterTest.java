@@ -2,9 +2,12 @@ package com.redhat.parodos.workflow.parameter;
 
 import java.util.Map;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
-public class WorkParameterTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+public class WorkParameterTest {
 
 	private static final String VALUE_PROVIDER_NAME = "valueProviderName";
 
@@ -12,6 +15,7 @@ public class WorkParameterTest extends TestCase {
 
 	String description = "key description";
 
+	@Test
 	public void testGetAsJsonSchemaWithValidData() {
 
 		// given
@@ -29,6 +33,7 @@ public class WorkParameterTest extends TestCase {
 		assertEquals(result.get("required"), true);
 	}
 
+	@Test
 	public void testGetAsJsonSchemaWithoutType() {
 		// given
 		WorkParameter parameters = WorkParameter.builder().key(key).description(description).build();
