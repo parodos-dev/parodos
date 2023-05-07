@@ -20,10 +20,10 @@ import java.util.UUID;
 
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
-import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflows.work.WorkContext;
+import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -62,7 +62,7 @@ public class WorkFlowContinuationServiceImpl implements WorkFlowContinuationServ
 	public void workFlowRunAfterStartup() {
 		log.info("Looking up all IN PROGRESS workflows for ");
 		List<WorkFlowExecution> workFlowExecutions = workFlowRepository
-				.findByStatusInAndIsMain(List.of(WorkFlowStatus.IN_PROGRESS, WorkFlowStatus.PENDING));
+				.findByStatusInAndIsMain(List.of(WorkStatus.IN_PROGRESS, WorkStatus.PENDING));
 		log.info("Number of IN PROGRESS or PENDING main workflows is : {}", workFlowExecutions.size());
 		workFlowExecutions.forEach(workFlowExecution -> {
 			WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository

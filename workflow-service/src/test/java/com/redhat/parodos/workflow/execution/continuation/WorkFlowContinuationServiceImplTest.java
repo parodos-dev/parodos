@@ -8,7 +8,6 @@ import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
-import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionContext;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
@@ -16,13 +15,20 @@ import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
 import com.redhat.parodos.workflows.work.WorkContext;
+import com.redhat.parodos.workflows.work.WorkStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class WorkFlowContinuationServiceImplTest {
 
@@ -30,7 +36,7 @@ class WorkFlowContinuationServiceImplTest {
 
 	private static final String TEST_WORKFLOW_TASK = "testWorkFlowTask";
 
-	private final List<WorkFlowStatus> workFlowStatuses = List.of(WorkFlowStatus.IN_PROGRESS, WorkFlowStatus.PENDING);
+	private final List<WorkStatus> workFlowStatuses = List.of(WorkStatus.IN_PROGRESS, WorkStatus.PENDING);
 
 	private WorkFlowDefinitionRepository workFlowDefinitionRepository;
 
@@ -71,7 +77,7 @@ class WorkFlowContinuationServiceImplTest {
 	@Test
 	void workFlowCompleteInProgress() {
 		// given
-		WorkFlowExecution workFlowExecution = this.sampleWorkFlowExecution(WorkFlowStatus.IN_PROGRESS);
+		WorkFlowExecution workFlowExecution = this.sampleWorkFlowExecution(WorkStatus.IN_PROGRESS);
 		when(this.workFlowRepository.findByStatusInAndIsMain(workFlowStatuses)).thenReturn(List.of(workFlowExecution));
 		when(this.workFlowDefinitionRepository.findById(any())).thenReturn(Optional.of(sampleWorkFlowDefinition()));
 		// when
@@ -86,7 +92,7 @@ class WorkFlowContinuationServiceImplTest {
 	@Test
 	void workFlowCompletePending() {
 		// given
-		WorkFlowExecution workFlowExecution = this.sampleWorkFlowExecution(WorkFlowStatus.PENDING);
+		WorkFlowExecution workFlowExecution = this.sampleWorkFlowExecution(WorkStatus.PENDING);
 		when(this.workFlowRepository.findByStatusInAndIsMain(workFlowStatuses)).thenReturn(List.of(workFlowExecution));
 		when(this.workFlowDefinitionRepository.findById(any())).thenReturn(Optional.of(sampleWorkFlowDefinition()));
 		// when
@@ -101,7 +107,7 @@ class WorkFlowContinuationServiceImplTest {
 	@Test
 	void workFlowCompleteWithTaskExecutions() {
 		// given
-		WorkFlowExecution workFlowExecution = this.sampleWorkFlowExecution(WorkFlowStatus.IN_PROGRESS);
+		WorkFlowExecution workFlowExecution = this.sampleWorkFlowExecution(WorkStatus.IN_PROGRESS);
 		when(this.workFlowRepository.findByStatusInAndIsMain(workFlowStatuses)).thenReturn(List.of(workFlowExecution));
 		when(this.workFlowDefinitionRepository.findById(any())).thenReturn(Optional.of(sampleWorkFlowDefinition()));
 		WorkFlowTaskDefinition workFlowTaskDefinition = sampleWorkFlowTaskDefinition();
@@ -127,7 +133,7 @@ class WorkFlowContinuationServiceImplTest {
 	@Test
 	void workFlowCompleteWithInvalidJson() {
 		// given
-		WorkFlowExecution wfExecution = this.sampleWorkFlowExecution(WorkFlowStatus.IN_PROGRESS);
+		WorkFlowExecution wfExecution = this.sampleWorkFlowExecution(WorkStatus.IN_PROGRESS);
 		when(this.workFlowRepository.findByStatusInAndIsMain(workFlowStatuses)).thenReturn(List.of(wfExecution));
 		when(this.workFlowDefinitionRepository.findById(any())).thenReturn(Optional.of(sampleWorkFlowDefinition()));
 		WorkFlowTaskDefinition wfTaskDef = sampleWorkFlowTaskDefinition();
@@ -153,9 +159,9 @@ class WorkFlowContinuationServiceImplTest {
 		verify(this.asyncWorkFlowContinuer, times(1)).executeAsync(any(), any(), any(), any());
 	}
 
-	private WorkFlowExecution sampleWorkFlowExecution(WorkFlowStatus workFlowStatus) {
+	private WorkFlowExecution sampleWorkFlowExecution(WorkStatus workStatus) {
 		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().projectId(UUID.randomUUID())
-				.status(workFlowStatus).build();
+				.status(workStatus).build();
 		workFlowExecution.setId(UUID.randomUUID());
 		workFlowExecution.setArguments("{\"test\": \"test\"}");
 		workFlowExecution.setWorkFlowExecutionContext(WorkFlowExecutionContext.builder()

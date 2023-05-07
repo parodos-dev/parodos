@@ -12,7 +12,6 @@ import com.redhat.parodos.workflow.definition.entity.WorkFlowWorkDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
-import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.enums.WorkType;
 import com.redhat.parodos.workflow.execution.dto.WorkStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
@@ -74,7 +73,7 @@ public class WorkFlowServiceDelegateTest {
 		workFlowDefinition.setId(workFlowDefinitionId);
 
 		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().workFlowDefinitionId(workFlowDefinitionId)
-				.status(WorkFlowStatus.IN_PROGRESS).build();
+				.status(WorkStatus.IN_PROGRESS).build();
 		workFlowExecution.setId(workFlowExecutionId);
 
 		// sub workflow 1
@@ -87,7 +86,7 @@ public class WorkFlowServiceDelegateTest {
 		testSubWorkFlowDefinition1.setId(testSubWorkFlowDefinitionId1);
 		// sub workflow execution 1
 		WorkFlowExecution testSubWorkFlowExecution1 = WorkFlowExecution.builder().projectId(projectId)
-				.status(WorkFlowStatus.IN_PROGRESS).workFlowDefinitionId(testSubWorkFlowDefinitionId1)
+				.status(WorkStatus.IN_PROGRESS).workFlowDefinitionId(testSubWorkFlowDefinitionId1)
 				.mainWorkFlowExecution(workFlowExecution).build();
 		testSubWorkFlowExecution1.setId(testSubWorkFlowExecutionId1);
 
@@ -286,7 +285,7 @@ public class WorkFlowServiceDelegateTest {
 
 		@Test
 		void testGetWorkFlowWorksStatusWithChecker_when_checkerIsFailed_then_taskShouldBeInProgress() {
-			checkerWorkflowExecution.setStatus(WorkFlowStatus.FAILED);
+			checkerWorkflowExecution.setStatus(WorkStatus.FAILED);
 
 			// then
 			List<WorkStatusResponseDTO> workStatusResponseDTOs = workFlowServiceDelegate
@@ -305,7 +304,7 @@ public class WorkFlowServiceDelegateTest {
 
 		@Test
 		void testGetWorkFlowWorksStatusWithChecker_when_checkerIsCompleted_then_taskShouldBeCompleted() {
-			checkerWorkflowExecution.setStatus(WorkFlowStatus.COMPLETED);
+			checkerWorkflowExecution.setStatus(WorkStatus.COMPLETED);
 
 			// then
 			List<WorkStatusResponseDTO> workStatusResponseDTOs = workFlowServiceDelegate
@@ -324,7 +323,7 @@ public class WorkFlowServiceDelegateTest {
 
 		@Test
 		void testGetWorkFlowWorksStatusWithChecker_when_checkerIsRejected_then_taskShouldBeRejected() {
-			checkerWorkflowExecution.setStatus(WorkFlowStatus.REJECTED);
+			checkerWorkflowExecution.setStatus(WorkStatus.REJECTED);
 
 			// then
 			List<WorkStatusResponseDTO> workStatusResponseDTOs = workFlowServiceDelegate
@@ -366,7 +365,7 @@ public class WorkFlowServiceDelegateTest {
 			checkerWorkflowDefinition.setId(checkerWorkFlowDefinitionId);
 			// workflow execution
 			checkerWorkflowExecution = WorkFlowExecution.builder().workFlowDefinitionId(checkerWorkFlowDefinitionId)
-					.status(WorkFlowStatus.FAILED).build();
+					.status(WorkStatus.FAILED).build();
 			checkerWorkflowExecution.setId(checkerWorkFlowExecutionId);
 
 			// workflowWork
@@ -385,7 +384,7 @@ public class WorkFlowServiceDelegateTest {
 			masterWorkflowDefinition.setId(masterWorkFlowDefinitionId);
 
 			masterWorkflowExecution = WorkFlowExecution.builder().workFlowDefinitionId(masterWorkFlowDefinitionId)
-					.projectId(projectId).status(WorkFlowStatus.IN_PROGRESS).build();
+					.projectId(projectId).status(WorkStatus.IN_PROGRESS).build();
 			masterWorkflowExecution.setId(masterWorkFlowExecutionId);
 
 			// sub task

@@ -29,7 +29,6 @@ import com.redhat.parodos.workflow.definition.entity.WorkFlowWorkDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
-import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.enums.WorkType;
 import com.redhat.parodos.workflow.execution.dto.WorkStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
@@ -99,7 +98,7 @@ public class WorkFlowServiceDelegate {
 		// build workflow status DTO
 		workStatusResponseDTOList.add(WorkStatusResponseDTO.builder().name(workFlowDefinition.getName())
 				.type(WorkType.WORKFLOW)
-				.status(WorkFlowStatus.IN_PROGRESS.equals(workFlowExecution.getStatus()) ? WorkStatus.PENDING
+				.status(WorkStatus.IN_PROGRESS.equals(workFlowExecution.getStatus()) ? WorkStatus.PENDING
 						: WorkStatus.valueOf(workFlowExecution.getStatus().name()))
 				.workExecution(workFlowExecution).numberOfWorks(workFlowDefinition.getNumberOfWorks())
 				.works(new ArrayList<>()).build());
@@ -190,7 +189,7 @@ public class WorkFlowServiceDelegate {
 								workFlowTaskDefinition
 										.getWorkFlowCheckerMappingDefinition().getCheckWorkFlow().getId()))
 						.map(WorkFlowExecution::getStatus)
-						.map(checkerStatus -> WorkFlowStatus.FAILED.equals(checkerStatus) ? WorkStatus.IN_PROGRESS
+						.map(checkerStatus -> WorkStatus.FAILED.equals(checkerStatus) ? WorkStatus.IN_PROGRESS
 								: WorkStatus.valueOf(checkerStatus.name()))
 						.orElse(WorkStatus.COMPLETED.equals(workStatus) ? WorkStatus.IN_PROGRESS : workStatus);
 			}

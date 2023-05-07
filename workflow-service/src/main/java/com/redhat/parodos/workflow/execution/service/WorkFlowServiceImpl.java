@@ -36,7 +36,6 @@ import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepos
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowWorkRepository;
 import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionService;
-import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.exceptions.WorkflowPersistenceFailedException;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowContextResponseDTO;
@@ -118,7 +117,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		this.projectService = projectService;
 	}
 
-	private void statusCounterWithStatus(WorkFlowStatus status) {
+	private void statusCounterWithStatus(WorkStatus status) {
 		if (status == null) {
 			return;
 		}
@@ -161,12 +160,12 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	}
 
 	@Override
-	public WorkFlowExecution saveWorkFlow(UUID projectId, UUID workFlowDefinitionId, WorkFlowStatus workFlowStatus,
+	public WorkFlowExecution saveWorkFlow(UUID projectId, UUID workFlowDefinitionId, WorkStatus workStatus,
 			WorkFlowExecution mainWorkFlowExecution, String arguments) {
 		try {
-			this.statusCounterWithStatus(workFlowStatus);
+			this.statusCounterWithStatus(workStatus);
 			return workFlowRepository.save(WorkFlowExecution.builder().workFlowDefinitionId(workFlowDefinitionId)
-					.projectId(projectId).status(workFlowStatus).startDate(new Date()).arguments(arguments)
+					.projectId(projectId).status(workStatus).startDate(new Date()).arguments(arguments)
 					.mainWorkFlowExecution(mainWorkFlowExecution).build());
 		}
 		catch (DataAccessException | IllegalArgumentException e) {

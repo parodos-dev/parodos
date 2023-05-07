@@ -6,12 +6,12 @@ import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
-import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.execution.continuation.WorkFlowContinuationServiceImpl;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 import com.redhat.parodos.workflows.work.WorkContext;
+import com.redhat.parodos.workflows.work.WorkStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -74,21 +74,21 @@ class AssessmentInfrastructureWorkFlowPostInterceptorTest {
 	@Test
 	public void checkerRejectedTest() {
 		// given
-		checkerExecution.setStatus(WorkFlowStatus.REJECTED);
+		checkerExecution.setStatus(WorkStatus.REJECTED);
 		// when
 		underTest.handlePostWorkFlowExecution();
 		// then
-		assertThat(workFlowExecution.getStatus()).isEqualTo(WorkFlowStatus.FAILED);
+		assertThat(workFlowExecution.getStatus()).isEqualTo(WorkStatus.FAILED);
 	}
 
 	@Test
 	public void checkerFailedTest() {
 		// given
-		checkerExecution.setStatus(WorkFlowStatus.FAILED);
+		checkerExecution.setStatus(WorkStatus.FAILED);
 		// when
 		underTest.handlePostWorkFlowExecution();
 		// then
-		assertThat(workFlowExecution.getStatus()).isEqualTo(WorkFlowStatus.IN_PROGRESS);
+		assertThat(workFlowExecution.getStatus()).isEqualTo(WorkStatus.IN_PROGRESS);
 	}
 
 }

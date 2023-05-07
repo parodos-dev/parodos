@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
-import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.execution.continuation.WorkFlowContinuationServiceImpl;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
@@ -51,7 +50,7 @@ public abstract class WorkFlowExecutionInterceptor implements WorkFlowIntercepto
 				WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
 						workFlowDefinition.getName(), WorkContextDelegate.Resource.ARGUMENTS));
 		UUID projectId = WorkContextUtils.getProjectId(workContext);
-		return workFlowService.saveWorkFlow(projectId, workFlowDefinition.getId(), WorkFlowStatus.IN_PROGRESS,
+		return workFlowService.saveWorkFlow(projectId, workFlowDefinition.getId(), WorkStatus.IN_PROGRESS,
 				mainWorkFlowExecution, arguments);
 	}
 
@@ -68,7 +67,7 @@ public abstract class WorkFlowExecutionInterceptor implements WorkFlowIntercepto
 
 	public WorkReport handlePostWorkFlowExecution(WorkReport report, WorkFlow workFlow) {
 		// update workflow execution entity
-		workFlowExecution.setStatus(WorkFlowStatus.valueOf(report.getStatus().name()));
+		workFlowExecution.setStatus(WorkStatus.valueOf(report.getStatus().name()));
 		workFlowExecution.setEndDate(new Date());
 
 		WorkFlowPostInterceptor postExecutor = createPostExecutor(workFlow, report.getStatus());

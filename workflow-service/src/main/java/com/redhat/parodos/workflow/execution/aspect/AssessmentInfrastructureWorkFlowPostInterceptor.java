@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
-import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionContext;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
@@ -57,7 +56,7 @@ public class AssessmentInfrastructureWorkFlowPostInterceptor implements WorkFlow
 							.workContext(workContext).build()));
 		}
 
-		if (workFlowExecution.getStatus() == WorkFlowStatus.FAILED) {
+		if (workFlowExecution.getStatus() == WorkStatus.FAILED) {
 			workFlowService.updateWorkFlow(workFlowExecution);
 			return null;
 		}
@@ -75,17 +74,17 @@ public class AssessmentInfrastructureWorkFlowPostInterceptor implements WorkFlow
 				.collect(Collectors.toList());
 
 		for (WorkFlowExecution checkerExecution : checkerExecutions)
-			if (checkerExecution != null && checkerExecution.getStatus() == WorkFlowStatus.REJECTED) {
+			if (checkerExecution != null && checkerExecution.getStatus() == WorkStatus.REJECTED) {
 				log.info("fail workflow: {} because it has declined checker(s)", workFlowDefinition.getName());
-				workFlowExecution.setStatus(WorkFlowStatus.FAILED);
+				workFlowExecution.setStatus(WorkStatus.FAILED);
 				report = new DefaultWorkReport(WorkStatus.FAILED, workContext);
 				break;
 			}
-			else if (checkerExecution == null || checkerExecution.getStatus() == WorkFlowStatus.FAILED) {
+			else if (checkerExecution == null || checkerExecution.getStatus() == WorkStatus.FAILED) {
 				log.info("workflow: {} has a pending/running checker: {}", workFlowDefinition.getName(),
 						checkerExecution == null ? "checker is pending"
 								: checkerExecution.getWorkFlowDefinitionId().toString());
-				workFlowExecution.setStatus(WorkFlowStatus.IN_PROGRESS);
+				workFlowExecution.setStatus(WorkStatus.IN_PROGRESS);
 				report = new DefaultWorkReport(WorkStatus.IN_PROGRESS, workContext);
 			}
 

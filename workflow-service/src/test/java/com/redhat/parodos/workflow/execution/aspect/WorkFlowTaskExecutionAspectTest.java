@@ -6,7 +6,6 @@ import java.util.UUID;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowTaskDefinitionRepository;
-import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
@@ -166,7 +165,7 @@ class WorkFlowTaskExecutionAspectTest {
 		return new WorkFlowExecution() {
 			{
 				setId(UUID.randomUUID());
-				setStatus(WorkFlowStatus.IN_PROGRESS);
+				setStatus(WorkStatus.IN_PROGRESS);
 				setProjectId(UUID.randomUUID());
 			}
 		};

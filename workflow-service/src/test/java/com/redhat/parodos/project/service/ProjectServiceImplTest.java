@@ -13,9 +13,9 @@ import com.redhat.parodos.project.entity.Project;
 import com.redhat.parodos.project.repository.ProjectRepository;
 import com.redhat.parodos.user.entity.User;
 import com.redhat.parodos.user.service.UserService;
-import com.redhat.parodos.workflow.enums.WorkFlowStatus;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
+import com.redhat.parodos.workflows.work.WorkStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -123,7 +123,7 @@ class ProjectServiceImplTest {
 		projectTwo.setId(projectIdTwo);
 
 		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().projectId(projectIdTwo)
-				.status(WorkFlowStatus.COMPLETED).mainWorkFlowExecution(null).build();
+				.status(WorkStatus.COMPLETED).mainWorkFlowExecution(null).build();
 
 		// given
 		when(this.workFlowRepository
