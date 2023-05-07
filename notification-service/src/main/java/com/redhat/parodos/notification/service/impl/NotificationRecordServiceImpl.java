@@ -16,6 +16,7 @@
 package com.redhat.parodos.notification.service.impl;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -101,14 +102,12 @@ public class NotificationRecordServiceImpl implements NotificationRecordService 
 
 	@Override
 	public int countNotificationRecords(String username, State state) {
-		switch (state) {
-			case UNREAD:
-				return this.notificationUserRepository.findByUsername(username)
-						.map(notificationRecordRepository::countDistinctByReadFalseAndNotificationUserListContaining)
-						.orElse(0);
-			default:
-				throw new UnsupportedStateException(String.format("State %s is not supported", state));
+		if (Objects.requireNonNull(state) == State.UNREAD) {
+			return this.notificationUserRepository.findByUsername(username)
+					.map(notificationRecordRepository::countDistinctByReadFalseAndNotificationUserListContaining)
+					.orElse(0);
 		}
+		throw new UnsupportedStateException(String.format("State %s is not supported", state));
 	}
 
 	@Override

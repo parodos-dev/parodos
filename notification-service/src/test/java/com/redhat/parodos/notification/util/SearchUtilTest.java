@@ -12,16 +12,15 @@ class SearchUtilTest {
 
 	@Test
 	void getSearchCriteria() {
-		SearchUtil searchUtil = new SearchUtil();
-		assertEquals(SearchCriteria.BY_USERNAME, searchUtil.getSearchCriteria(null, null));
-		assertEquals(SearchCriteria.BY_USERNAME, searchUtil.getSearchCriteria(null, ""));
-		assertEquals(SearchCriteria.BY_USERNAME_AND_STATE_UNREAD, searchUtil.getSearchCriteria(State.UNREAD, null));
-		assertEquals(SearchCriteria.BY_USERNAME_AND_STATE_ARCHIVED, searchUtil.getSearchCriteria(State.ARCHIVED, ""));
-		assertEquals(SearchCriteria.BY_USERNAME_AND_SEARCH_TERM, searchUtil.getSearchCriteria(null, "test"));
+		assertEquals(SearchCriteria.BY_USERNAME, SearchUtil.getSearchCriteria(null, null));
+		assertEquals(SearchCriteria.BY_USERNAME, SearchUtil.getSearchCriteria(null, ""));
+		assertEquals(SearchCriteria.BY_USERNAME_AND_STATE_UNREAD, SearchUtil.getSearchCriteria(State.UNREAD, null));
+		assertEquals(SearchCriteria.BY_USERNAME_AND_STATE_ARCHIVED, SearchUtil.getSearchCriteria(State.ARCHIVED, ""));
+		assertEquals(SearchCriteria.BY_USERNAME_AND_SEARCH_TERM, SearchUtil.getSearchCriteria(null, "test"));
 		Exception exception = assertThrows(SearchByStateAndTermNotSupportedException.class, () -> {
-			searchUtil.getSearchCriteria(State.UNREAD, "test");
+			SearchUtil.getSearchCriteria(State.UNREAD, "test");
 		});
-		assertEquals(String.format("Search by state and search term combined not supported"), exception.getMessage());
+		assertEquals("Search by state and search term combined not supported", exception.getMessage());
 	}
 
 }
