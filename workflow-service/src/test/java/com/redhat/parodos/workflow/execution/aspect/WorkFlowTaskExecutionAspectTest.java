@@ -13,7 +13,6 @@ import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.scheduler.WorkFlowSchedulerServiceImpl;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
-import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -190,7 +189,7 @@ class WorkFlowTaskExecutionAspectTest {
 		return new WorkFlowTaskExecution() {
 			{
 				setId(UUID.randomUUID());
-				setStatus(WorkFlowTaskStatus.FAILED);
+				setStatus(WorkStatus.FAILED);
 				setWorkFlowExecutionId(getSampleWorkFlowExecution().getId());
 				setWorkFlowTaskDefinitionId(getSampleWorkFlowTaskDefinition(TEST_TASK).getId());
 			}

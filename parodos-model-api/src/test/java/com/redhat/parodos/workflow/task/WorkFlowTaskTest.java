@@ -24,7 +24,6 @@ import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
-import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -80,7 +79,6 @@ public class WorkFlowTaskTest {
 
 		assertTrue(task.isExecuted());
 		assertEquals(WorkStatus.COMPLETED, report.getStatus());
-		assertEquals(WorkFlowTaskStatus.COMPLETED, WorkFlowTaskStatus.valueOf(report.getStatus().name()));
 	}
 
 	@Test

@@ -31,7 +31,6 @@ import com.redhat.parodos.workflow.execution.scheduler.WorkFlowSchedulerServiceI
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
-import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
 import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
@@ -121,10 +120,10 @@ public class WorkFlowTaskExecutionAspect {
                             WorkContextDelegate.Resource.ARGUMENTS)),
                     workFlowTaskDefinition.getId(),
                     workFlowExecution.getId(),
-                    WorkFlowTaskStatus.IN_PROGRESS);
+					WorkStatus.IN_PROGRESS);
             // @formatter:on
 		}
-		else if (!WorkFlowTaskStatus.FAILED.equals(workFlowTaskExecution.getStatus())) {
+		else if (WorkStatus.FAILED != workFlowTaskExecution.getStatus()) {
 			// fail the task if it's processed by other thread
 			// skip the task if it's already successful/rejected
 			log.info("skipping task: {} with status {}", workFlowTaskName, workFlowTaskExecution.getStatus().name());
@@ -143,7 +142,7 @@ public class WorkFlowTaskExecutionAspect {
 		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
 				workFlowTaskName, WorkContextDelegate.Resource.STATUS, report.getStatus().name());
 
-		workFlowTaskExecution.setStatus(WorkFlowTaskStatus.valueOf(report.getStatus().name()));
+		workFlowTaskExecution.setStatus(report.getStatus());
 		workFlowTaskExecution.setLastUpdateDate(new Date());
 		workFlowService.updateWorkFlowTask(workFlowTaskExecution);
 

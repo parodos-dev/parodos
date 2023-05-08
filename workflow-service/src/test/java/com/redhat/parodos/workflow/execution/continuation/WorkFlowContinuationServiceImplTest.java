@@ -13,7 +13,6 @@ import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionContext;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
-import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import org.junit.jupiter.api.BeforeEach;
@@ -113,9 +112,8 @@ class WorkFlowContinuationServiceImplTest {
 		WorkFlowTaskDefinition workFlowTaskDefinition = sampleWorkFlowTaskDefinition();
 		when(this.workFlowTaskDefinitionRepository.findById(any())).thenReturn(Optional.of(workFlowTaskDefinition));
 		WorkFlowTaskExecution workFlowTaskExecution = WorkFlowTaskExecution.builder().arguments("{\"test\": \"test\"}")
-				.results("res").status(WorkFlowTaskStatus.COMPLETED)
-				.workFlowTaskDefinitionId(workFlowTaskDefinition.getId()).workFlowExecutionId(workFlowExecution.getId())
-				.build();
+				.results("res").status(WorkStatus.COMPLETED).workFlowTaskDefinitionId(workFlowTaskDefinition.getId())
+				.workFlowExecutionId(workFlowExecution.getId()).build();
 		workFlowTaskExecution.setId(UUID.randomUUID());
 
 		when(this.workFlowTaskRepository.findByWorkFlowExecutionId(workFlowExecution.getId()))
@@ -139,7 +137,7 @@ class WorkFlowContinuationServiceImplTest {
 		WorkFlowTaskDefinition wfTaskDef = sampleWorkFlowTaskDefinition();
 		when(this.workFlowTaskDefinitionRepository.findById(any())).thenReturn(Optional.of(wfTaskDef));
 		WorkFlowTaskExecution workFlowTaskExecution = WorkFlowTaskExecution.builder().arguments("invalid")
-				.results("res").status(WorkFlowTaskStatus.FAILED).workFlowTaskDefinitionId(wfTaskDef.getId())
+				.results("res").status(WorkStatus.FAILED).workFlowTaskDefinitionId(wfTaskDef.getId())
 				.workFlowExecutionId(wfExecution.getId()).build();
 		workFlowTaskExecution.setId(UUID.randomUUID());
 

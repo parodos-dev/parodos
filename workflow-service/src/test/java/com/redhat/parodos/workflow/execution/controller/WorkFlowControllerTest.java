@@ -13,7 +13,6 @@ import com.redhat.parodos.workflow.execution.dto.WorkFlowResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
-import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
@@ -198,7 +197,7 @@ class WorkFlowControllerTest extends ControllerMockClient {
 
 		// when
 		doThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST)).when(this.workFlowService)
-				.updateWorkFlowCheckerTaskStatus(any(), anyString(), any(WorkFlowTaskStatus.class));
+				.updateWorkFlowCheckerTaskStatus(any(), anyString(), any(WorkStatus.class));
 
 		// then
 		String pathUrl = String.format("/api/v1/workflows/%s/checkers/%s", workFlowExecutionId,
@@ -216,7 +215,7 @@ class WorkFlowControllerTest extends ControllerMockClient {
 
 		// when
 		doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(this.workFlowService)
-				.updateWorkFlowCheckerTaskStatus(any(), anyString(), any(WorkFlowTaskStatus.class));
+				.updateWorkFlowCheckerTaskStatus(any(), anyString(), any(WorkStatus.class));
 
 		// then
 		String pathUrl = String.format("/api/v1/workflows/%s/checkers/%s", workFlowExecutionId,
@@ -255,7 +254,7 @@ class WorkFlowControllerTest extends ControllerMockClient {
 	private String getWorkFlowCheckerTaskRequestDTOJsonPayload() throws JsonProcessingException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		WorkFlowCheckerTaskRequestDTO workFlowCheckerTaskRequestDTO = WorkFlowCheckerTaskRequestDTO.builder()
-				.status(WorkFlowTaskStatus.COMPLETED).build();
+				.status(WorkStatus.COMPLETED).build();
 		return objectMapper.writeValueAsString(workFlowCheckerTaskRequestDTO);
 	}
 

@@ -22,7 +22,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import com.redhat.parodos.common.AbstractEntity;
-import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
+import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -54,7 +54,7 @@ public class WorkFlowTaskExecution extends AbstractEntity {
 
 	private String results;
 
-	private WorkFlowTaskStatus status;
+	private WorkStatus status;
 
 	@Column(updatable = false)
 	private Date startDate;
