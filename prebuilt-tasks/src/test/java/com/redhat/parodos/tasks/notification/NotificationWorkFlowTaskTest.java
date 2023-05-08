@@ -154,7 +154,7 @@ public class NotificationWorkFlowTaskTest {
 	}
 
 	private NotificationMessageCreateRequestDTO buildNotificationMessageCreateRequestDTO(String type, String body,
-			String subject, List<String> usernames, List<String> groupnames
+			String subject, List<String> usernames, List<String> groupNames
 
 	) {
 		NotificationMessageCreateRequestDTO notificationMessageCreateRequestDTO = new NotificationMessageCreateRequestDTO();
@@ -163,7 +163,7 @@ public class NotificationWorkFlowTaskTest {
 		notificationMessageCreateRequestDTO.body(body);
 		notificationMessageCreateRequestDTO.subject(subject);
 		notificationMessageCreateRequestDTO.usernames(usernames);
-		notificationMessageCreateRequestDTO.groupnames(groupnames);
+		notificationMessageCreateRequestDTO.groupNames(groupNames);
 
 		return notificationMessageCreateRequestDTO;
 	}
@@ -175,7 +175,7 @@ public class NotificationWorkFlowTaskTest {
 		putInMap(map, "body", dto.getBody());
 		putInMap(map, "subject", dto.getSubject());
 		putInMap(map, "userNames", listToString(dto.getUsernames()));
-		putInMap(map, "groupNames", listToString(dto.getGroupnames()));
+		putInMap(map, "groupNames", listToString(dto.getGroupNames()));
 
 		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION, underTest.getName(),
 				WorkContextDelegate.Resource.ARGUMENTS, map);

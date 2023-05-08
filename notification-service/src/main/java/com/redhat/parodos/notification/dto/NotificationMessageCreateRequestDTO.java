@@ -31,7 +31,7 @@ public class NotificationMessageCreateRequestDTO {
 
 	private List<String> usernames;
 
-	private List<String> groupnames;
+	private List<String> groupNames;
 
 	private String subject;
 
@@ -41,7 +41,7 @@ public class NotificationMessageCreateRequestDTO {
 
 	@Override
 	public String toString() {
-		return "NotificationMessageCreateRequestDTO{" + "usernames=" + usernames + ", groupnames=" + groupnames
+		return "NotificationMessageCreateRequestDTO{" + "usernames=" + usernames + ", groupNames=" + groupNames
 				+ ", subject='" + subject + '\'' + ", messageType='" + messageType + '\'' + ", body='" + body + '\''
 				+ '}';
 	}

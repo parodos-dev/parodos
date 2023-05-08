@@ -90,7 +90,7 @@ public class NotificationWorkFlowTask extends BaseWorkFlowTask {
 				throw new MissingParameterException("User Names or Group Names must be provided");
 			}
 			notificationMessageCreateRequestDTO.usernames(userNames);
-			notificationMessageCreateRequestDTO.groupnames(groupNames);
+			notificationMessageCreateRequestDTO.groupNames(groupNames);
 		}
 		catch (MissingParameterException e) {
 			log.error("Exception when trying to get required parameter:", e);

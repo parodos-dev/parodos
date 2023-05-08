@@ -27,14 +27,14 @@
             <column name="object_version" type="bigint"/>
         </createTable>
 
-        <createTable tableName="notification_message_groupnames">
+        <createTable tableName="notification_message_group_names">
             <column name="notification_message_id" type="${uuidType}">
                 <constraints nullable="false"
-                             foreignKeyName="fk_notification_message_groupnames_notification_message_id"
+                             foreignKeyName="fk_notification_message_group_names_notification_message_id"
                              referencedTableName="notification_message"
                              referencedColumnNames="id"/>
             </column>
-            <column name="groupnames" type="varchar(255)"/>
+            <column name="group_names" type="varchar(255)"/>
         </createTable>
 
         <createTable tableName="notification_message_usernames">

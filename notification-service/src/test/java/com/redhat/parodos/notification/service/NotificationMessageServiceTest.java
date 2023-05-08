@@ -37,7 +37,7 @@ class NotificationMessageServiceTest {
 		when(notificationMessageCreateRequestDTO.getBody()).thenReturn("test-body");
 		when(notificationMessageCreateRequestDTO.getSubject()).thenReturn("test-subject");
 		when(notificationMessageCreateRequestDTO.getUsernames()).thenReturn(usernames);
-		when(notificationMessageCreateRequestDTO.getGroupnames())
+		when(notificationMessageCreateRequestDTO.getGroupNames())
 				.thenReturn(Collections.singletonList("test-group-name"));
 		when(securityUtil.getUsername()).thenReturn("test-from-username");
 		when(notificationMessageRepository.save(any())).thenReturn(savedNotificationMessage);
@@ -51,7 +51,7 @@ class NotificationMessageServiceTest {
 		verify(notificationMessageCreateRequestDTO, times(1)).getBody();
 		verify(notificationMessageCreateRequestDTO, times(1)).getSubject();
 		verify(notificationMessageCreateRequestDTO, times(2)).getUsernames();
-		verify(notificationMessageCreateRequestDTO, times(1)).getGroupnames();
+		verify(notificationMessageCreateRequestDTO, times(1)).getGroupNames();
 		verify(securityUtil, times(1)).getUsername();
 		verify(notificationMessageRepository, times(1)).save(any());
 		verify(notificationUserService, times(1)).findUsers(usernames);

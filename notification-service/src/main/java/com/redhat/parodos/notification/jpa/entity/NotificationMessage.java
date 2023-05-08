@@ -50,7 +50,7 @@ public class NotificationMessage extends AbstractEntity {
 	 * Groups that the message will be delivered to
 	 */
 	@ElementCollection
-	private List<String> groupnames;
+	private List<String> groupNames;
 
 	@OneToOne(mappedBy = "notificationMessage")
 	private NotificationRecord notificationRecord;
@@ -81,12 +81,12 @@ public class NotificationMessage extends AbstractEntity {
 		this.usernames = usernames;
 	}
 
-	public List<String> getGroupnames() {
-		return groupnames;
+	public List<String> getGroupNames() {
+		return groupNames;
 	}
 
-	public void setGroupnames(List<String> groupnames) {
-		this.groupnames = groupnames;
+	public void setGroupNames(List<String> groupNames) {
+		this.groupNames = groupNames;
 	}
 
 	public NotificationRecord getNotificationsRecord() {
@@ -139,7 +139,7 @@ public class NotificationMessage extends AbstractEntity {
 
 	@Override
 	public String toString() {
-		return "NotificationMessage{" + "usernames=" + usernames + ", groupnames=" + groupnames
+		return "NotificationMessage{" + "usernames=" + usernames + ", groupNames=" + groupNames
 				+ ", notificationRecord=" + notificationRecord + ", subject='" + subject + '\'' + ", createdOn="
 				+ createdOn + ", messageType='" + messageType + '\'' + ", body='" + body + '\'' + ", from='" + fromuser
 				+ '\'' + '}';

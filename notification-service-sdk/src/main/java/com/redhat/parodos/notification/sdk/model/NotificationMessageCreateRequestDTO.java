@@ -42,10 +42,10 @@ public class NotificationMessageCreateRequestDTO {
 	@SerializedName(SERIALIZED_NAME_BODY)
 	private String body;
 
-	public static final String SERIALIZED_NAME_GROUPNAMES = "groupnames";
+	public static final String SERIALIZED_NAME_GROUP_NAMES = "groupNames";
 
-	@SerializedName(SERIALIZED_NAME_GROUPNAMES)
-	private List<String> groupnames = new ArrayList<>();
+	@SerializedName(SERIALIZED_NAME_GROUP_NAMES)
+	private List<String> groupNames = new ArrayList<>();
 
 	public static final String SERIALIZED_NAME_MESSAGE_TYPE = "messageType";
 
@@ -85,32 +85,32 @@ public class NotificationMessageCreateRequestDTO {
 		this.body = body;
 	}
 
-	public NotificationMessageCreateRequestDTO groupnames(List<String> groupnames) {
+	public NotificationMessageCreateRequestDTO groupNames(List<String> groupNames) {
 
-		this.groupnames = groupnames;
+		this.groupNames = groupNames;
 		return this;
 	}
 
-	public NotificationMessageCreateRequestDTO addGroupnamesItem(String groupnamesItem) {
-		if (this.groupnames == null) {
-			this.groupnames = new ArrayList<>();
+	public NotificationMessageCreateRequestDTO addGroupNamesItem(String groupNamesItem) {
+		if (this.groupNames == null) {
+			this.groupNames = new ArrayList<>();
 		}
-		this.groupnames.add(groupnamesItem);
+		this.groupNames.add(groupNamesItem);
 		return this;
 	}
 
 	/**
-	 * Get groupnames
-	 * @return groupnames
+	 * Get groupNames
+	 * @return groupNames
 	 **/
 	@javax.annotation.Nullable
 
-	public List<String> getGroupnames() {
-		return groupnames;
+	public List<String> getGroupNames() {
+		return groupNames;
 	}
 
-	public void setGroupnames(List<String> groupnames) {
-		this.groupnames = groupnames;
+	public void setGroupNames(List<String> groupNames) {
+		this.groupNames = groupNames;
 	}
 
 	public NotificationMessageCreateRequestDTO messageType(String messageType) {
@@ -191,7 +191,7 @@ public class NotificationMessageCreateRequestDTO {
 		}
 		NotificationMessageCreateRequestDTO notificationMessageCreateRequestDTO = (NotificationMessageCreateRequestDTO) o;
 		return Objects.equals(this.body, notificationMessageCreateRequestDTO.body)
-				&& Objects.equals(this.groupnames, notificationMessageCreateRequestDTO.groupnames)
+				&& Objects.equals(this.groupNames, notificationMessageCreateRequestDTO.groupNames)
 				&& Objects.equals(this.messageType, notificationMessageCreateRequestDTO.messageType)
 				&& Objects.equals(this.subject, notificationMessageCreateRequestDTO.subject)
 				&& Objects.equals(this.usernames, notificationMessageCreateRequestDTO.usernames);
@@ -199,7 +199,7 @@ public class NotificationMessageCreateRequestDTO {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(body, groupnames, messageType, subject, usernames);
+		return Objects.hash(body, groupNames, messageType, subject, usernames);
 	}
 
 	@Override
@@ -207,7 +207,7 @@ public class NotificationMessageCreateRequestDTO {
 		StringBuilder sb = new StringBuilder();
 		sb.append("class NotificationMessageCreateRequestDTO {\n");
 		sb.append("    body: ").append(toIndentedString(body)).append("\n");
-		sb.append("    groupnames: ").append(toIndentedString(groupnames)).append("\n");
+		sb.append("    groupNames: ").append(toIndentedString(groupNames)).append("\n");
 		sb.append("    messageType: ").append(toIndentedString(messageType)).append("\n");
 		sb.append("    subject: ").append(toIndentedString(subject)).append("\n");
 		sb.append("    usernames: ").append(toIndentedString(usernames)).append("\n");
@@ -234,7 +234,7 @@ public class NotificationMessageCreateRequestDTO {
 		// a set of all properties/fields (JSON key names)
 		openapiFields = new HashSet<String>();
 		openapiFields.add("body");
-		openapiFields.add("groupnames");
+		openapiFields.add("groupNames");
 		openapiFields.add("messageType");
 		openapiFields.add("subject");
 		openapiFields.add("usernames");
@@ -281,10 +281,10 @@ public class NotificationMessageCreateRequestDTO {
 							jsonObj.get("body").toString()));
 		}
 		// ensure the optional json data is an array if present
-		if (jsonObj.get("groupnames") != null && !jsonObj.get("groupnames").isJsonArray()) {
+		if (jsonObj.get("groupNames") != null && !jsonObj.get("groupNames").isJsonArray()) {
 			throw new IllegalArgumentException(
-					String.format("Expected the field `groupnames` to be an array in the JSON string but got `%s`",
-							jsonObj.get("groupnames").toString()));
+					String.format("Expected the field `groupNames` to be an array in the JSON string but got `%s`",
+							jsonObj.get("groupNames").toString()));
 		}
 		if ((jsonObj.get("messageType") != null && !jsonObj.get("messageType").isJsonNull())
 				&& !jsonObj.get("messageType").isJsonPrimitive()) {
