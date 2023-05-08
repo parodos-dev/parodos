@@ -180,10 +180,61 @@ public class WorkDefinitionResponseDTO {
 	@SerializedName(SERIALIZED_NAME_PROCESSING_TYPE)
 	private ProcessingTypeEnum processingType;
 
+	/**
+	 * Gets or Sets workType
+	 */
+	@JsonAdapter(WorkTypeEnum.Adapter.class)
+	public enum WorkTypeEnum {
+
+		TASK("TASK"),
+
+		WORKFLOW("WORKFLOW");
+
+		private String value;
+
+		WorkTypeEnum(String value) {
+			this.value = value;
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		@Override
+		public String toString() {
+			return String.valueOf(value);
+		}
+
+		public static WorkTypeEnum fromValue(String value) {
+			for (WorkTypeEnum b : WorkTypeEnum.values()) {
+				if (b.value.equals(value)) {
+					return b;
+				}
+			}
+			throw new IllegalArgumentException("Unexpected value '" + value + "'");
+		}
+
+		public static class Adapter extends TypeAdapter<WorkTypeEnum> {
+
+			@Override
+			public void write(final JsonWriter jsonWriter, final WorkTypeEnum enumeration) throws IOException {
+				jsonWriter.value(enumeration.getValue());
+			}
+
+			@Override
+			public WorkTypeEnum read(final JsonReader jsonReader) throws IOException {
+				String value = jsonReader.nextString();
+				return WorkTypeEnum.fromValue(value);
+			}
+
+		}
+
+	}
+
 	public static final String SERIALIZED_NAME_WORK_TYPE = "workType";
 
 	@SerializedName(SERIALIZED_NAME_WORK_TYPE)
-	private String workType;
+	private WorkTypeEnum workType;
 
 	public static final String SERIALIZED_NAME_WORKS = "works";
 
@@ -329,7 +380,7 @@ public class WorkDefinitionResponseDTO {
 		this.processingType = processingType;
 	}
 
-	public WorkDefinitionResponseDTO workType(String workType) {
+	public WorkDefinitionResponseDTO workType(WorkTypeEnum workType) {
 
 		this.workType = workType;
 		return this;
@@ -341,11 +392,11 @@ public class WorkDefinitionResponseDTO {
 	 **/
 	@javax.annotation.Nullable
 
-	public String getWorkType() {
+	public WorkTypeEnum getWorkType() {
 		return workType;
 	}
 
-	public void setWorkType(String workType) {
+	public void setWorkType(WorkTypeEnum workType) {
 		this.workType = workType;
 	}
 

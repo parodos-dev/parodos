@@ -8,8 +8,17 @@
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
 |**arguments** | [**List&lt;ArgumentRequestDTO&gt;**](ArgumentRequestDTO.md) |  |  [optional] |
-|**type** | **String** |  |  [optional] |
+|**type** | [**TypeEnum**](#TypeEnum) |  |  [optional] |
 |**workName** | **String** |  |  [optional] |
+
+
+
+## Enum: TypeEnum
+
+| Name | Value |
+|---- | -----|
+| TASK | &quot;TASK&quot; |
+| WORKFLOW | &quot;WORKFLOW&quot; |
 
 
 
