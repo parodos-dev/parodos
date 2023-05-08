@@ -27,6 +27,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
@@ -39,10 +40,67 @@ import com.redhat.parodos.sdk.invoker.JSON;
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowStatusResponseDTO {
 
+	/**
+	 * Gets or Sets status
+	 */
+	@JsonAdapter(StatusEnum.Adapter.class)
+	public enum StatusEnum {
+
+		FAILED("FAILED"),
+
+		COMPLETED("COMPLETED"),
+
+		IN_PROGRESS("IN_PROGRESS"),
+
+		REJECTED("REJECTED"),
+
+		PENDING("PENDING");
+
+		private String value;
+
+		StatusEnum(String value) {
+			this.value = value;
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		@Override
+		public String toString() {
+			return String.valueOf(value);
+		}
+
+		public static StatusEnum fromValue(String value) {
+			for (StatusEnum b : StatusEnum.values()) {
+				if (b.value.equals(value)) {
+					return b;
+				}
+			}
+			throw new IllegalArgumentException("Unexpected value '" + value + "'");
+		}
+
+		public static class Adapter extends TypeAdapter<StatusEnum> {
+
+			@Override
+			public void write(final JsonWriter jsonWriter, final StatusEnum enumeration) throws IOException {
+				jsonWriter.value(enumeration.getValue());
+			}
+
+			@Override
+			public StatusEnum read(final JsonReader jsonReader) throws IOException {
+				String value = jsonReader.nextString();
+				return StatusEnum.fromValue(value);
+			}
+
+		}
+
+	}
+
 	public static final String SERIALIZED_NAME_STATUS = "status";
 
 	@SerializedName(SERIALIZED_NAME_STATUS)
-	private String status;
+	private StatusEnum status;
 
 	public static final String SERIALIZED_NAME_WORK_FLOW_EXECUTION_ID = "workFlowExecutionId";
 
@@ -62,7 +120,7 @@ public class WorkFlowStatusResponseDTO {
 	public WorkFlowStatusResponseDTO() {
 	}
 
-	public WorkFlowStatusResponseDTO status(String status) {
+	public WorkFlowStatusResponseDTO status(StatusEnum status) {
 
 		this.status = status;
 		return this;
@@ -74,11 +132,11 @@ public class WorkFlowStatusResponseDTO {
 	 **/
 	@javax.annotation.Nullable
 
-	public String getStatus() {
+	public StatusEnum getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(StatusEnum status) {
 		this.status = status;
 	}
 
