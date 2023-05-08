@@ -428,7 +428,7 @@ components:
         - null
         author: author
         name: name
-        workType: workType
+        workType: TASK
         id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         parameters:
           key:
@@ -463,6 +463,9 @@ components:
           - OTHER
           type: string
         workType:
+          enum:
+          - TASK
+          - WORKFLOW
           type: string
         works:
           items:
@@ -589,7 +592,7 @@ components:
           - null
           author: author
           name: name
-          workType: workType
+          workType: TASK
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           parameters:
             key:
@@ -603,7 +606,7 @@ components:
           - null
           author: author
           name: name
-          workType: workType
+          workType: TASK
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           parameters:
             key:
@@ -914,14 +917,14 @@ components:
             key: key
           - value: value
             key: key
-          type: type
+          type: TASK
           workName: workName
         - arguments:
           - value: value
             key: key
           - value: value
             key: key
-          type: type
+          type: TASK
           workName: workName
         arguments:
         - value: value
@@ -1128,7 +1131,7 @@ components:
           key: key
         - value: value
           key: key
-        type: type
+        type: TASK
         workName: workName
       properties:
         arguments:
@@ -1136,6 +1139,9 @@ components:
             $ref: '#/components/schemas/ArgumentRequestDTO'
           type: array
         type:
+          enum:
+          - TASK
+          - WORKFLOW
           type: string
         workName:
           type: string

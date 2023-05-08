@@ -13,7 +13,7 @@
 |**outputs** | [**List&lt;OutputsEnum&gt;**](#List&lt;OutputsEnum&gt;) |  |  [optional] |
 |**parameters** | **Map&lt;String, Map&lt;String, Object&gt;&gt;** |  |  [optional] |
 |**processingType** | [**ProcessingTypeEnum**](#ProcessingTypeEnum) |  |  [optional] |
-|**workType** | **String** |  |  [optional] |
+|**workType** | [**WorkTypeEnum**](#WorkTypeEnum) |  |  [optional] |
 |**works** | [**List&lt;WorkDefinitionResponseDTO&gt;**](WorkDefinitionResponseDTO.md) |  |  [optional] |
 
 
@@ -36,6 +36,15 @@
 | SEQUENTIAL | &quot;SEQUENTIAL&quot; |
 | PARALLEL | &quot;PARALLEL&quot; |
 | OTHER | &quot;OTHER&quot; |
+
+
+
+## Enum: WorkTypeEnum
+
+| Name | Value |
+|---- | -----|
+| TASK | &quot;TASK&quot; |
+| WORKFLOW | &quot;WORKFLOW&quot; |
 
 
 
