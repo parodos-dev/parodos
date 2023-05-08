@@ -15,7 +15,7 @@
  */
 package com.redhat.parodos.workflow.execution.dto;
 
-import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
+import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,6 +33,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WorkFlowCheckerTaskRequestDTO {
 
-	WorkFlowTaskStatus status;
+	WorkStatus status;
 
 }

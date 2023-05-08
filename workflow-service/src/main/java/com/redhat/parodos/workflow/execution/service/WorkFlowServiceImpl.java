@@ -49,7 +49,6 @@ import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
-import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
 import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.engine.WorkFlowEngineBuilder;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
@@ -269,7 +268,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
 	@Override
 	public WorkFlowTaskExecution saveWorkFlowTask(String arguments, UUID workFlowTaskDefinitionId,
-			UUID workFlowExecutionId, WorkFlowTaskStatus workFlowTaskStatus) {
+			UUID workFlowExecutionId, WorkStatus workFlowTaskStatus) {
 		try {
 			return workFlowTaskRepository.save(WorkFlowTaskExecution.builder().workFlowExecutionId(workFlowExecutionId)
 					.workFlowTaskDefinitionId(workFlowTaskDefinitionId).arguments(arguments).status(workFlowTaskStatus)
@@ -296,7 +295,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
 	@Override
 	public void updateWorkFlowCheckerTaskStatus(UUID workFlowExecutionId, String workFlowTaskName,
-			WorkFlowTaskStatus workFlowTaskStatus) {
+			WorkStatus workFlowTaskStatus) {
 		// get main workflow associated to the execution id
 		WorkFlowExecution mainWorkFlowExecution = workFlowRepository.findById(workFlowExecutionId).orElseThrow(() -> {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,

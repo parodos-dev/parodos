@@ -18,7 +18,6 @@ import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
-import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -102,7 +101,7 @@ public class WorkFlowServiceDelegateTest {
 		testSubWorkFlowDefinition1.setWorkFlowTaskDefinitions(List.of(testSubWorkFlowTaskDefinition1));
 		// sub workflow 1 task execution 1
 		WorkFlowTaskExecution testSubWorkFlowTaskExecution1 = WorkFlowTaskExecution.builder()
-				.status(WorkFlowTaskStatus.IN_PROGRESS).workFlowExecutionId(testSubWorkFlowExecutionId1)
+				.status(WorkStatus.IN_PROGRESS).workFlowExecutionId(testSubWorkFlowExecutionId1)
 				.workFlowTaskDefinitionId(testSubWorkFlowTaskDefinitionId1).build();
 		testSubWorkFlowTaskExecution1.setId(testSubWorkFlowTaskExecutionId1);
 
@@ -115,9 +114,9 @@ public class WorkFlowServiceDelegateTest {
 				.name(TEST_WORKFLOW_TASK_NAME_1).build();
 		testWorkFlowTaskDefinition1.setId(testWorkFlowTaskDefinitionId1);
 		// workflow task execution 2
-		WorkFlowTaskExecution testWorkFlowTaskExecution1 = WorkFlowTaskExecution.builder()
-				.status(WorkFlowTaskStatus.COMPLETED).workFlowExecutionId(workFlowExecutionId)
-				.workFlowTaskDefinitionId(testWorkFlowTaskDefinitionId1).build();
+		WorkFlowTaskExecution testWorkFlowTaskExecution1 = WorkFlowTaskExecution.builder().status(WorkStatus.COMPLETED)
+				.workFlowExecutionId(workFlowExecutionId).workFlowTaskDefinitionId(testWorkFlowTaskDefinitionId1)
+				.build();
 		testWorkFlowTaskExecution1.setId(testWorkFlowTaskExecutionId1);
 		// link workflow task definition 2 to main workFlow
 		workFlowDefinition.setWorkFlowTaskDefinitions(List.of(testWorkFlowTaskDefinition1));
@@ -394,7 +393,7 @@ public class WorkFlowServiceDelegateTest {
 			// link sub task to master
 			masterWorkflowDefinition.setWorkFlowTaskDefinitions(List.of(masterWorkFlowTaskDefinition));
 			// sub task execution
-			masterWorkFlowTaskExecution = WorkFlowTaskExecution.builder().status(WorkFlowTaskStatus.IN_PROGRESS)
+			masterWorkFlowTaskExecution = WorkFlowTaskExecution.builder().status(WorkStatus.IN_PROGRESS)
 					.workFlowExecutionId(masterWorkFlowExecutionId)
 					.workFlowTaskDefinitionId(subWorkFlowTaskDefinitionId).build();
 			masterWorkFlowTaskExecution.setId(subWorkFlowTaskExecutionId);

@@ -565,7 +565,7 @@
         "properties" : {
           "status" : {
             "type" : "string",
-            "enum" : [ "FAILED", "COMPLETED", "IN_PROGRESS", "PENDING", "REJECTED" ]
+            "enum" : [ "FAILED", "COMPLETED", "IN_PROGRESS", "REJECTED", "PENDING" ]
           }
         }
       },

@@ -25,7 +25,6 @@ import com.redhat.parodos.workflow.execution.dto.WorkFlowResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
-import com.redhat.parodos.workflow.task.enums.WorkFlowTaskStatus;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 
@@ -58,11 +57,11 @@ public interface WorkFlowService {
 	WorkFlowTaskExecution getWorkFlowTask(UUID workFlowExecutionId, UUID workFlowTaskDefinitionId);
 
 	WorkFlowTaskExecution saveWorkFlowTask(String arguments, UUID workFlowTaskDefinitionId, UUID workFlowExecutionId,
-			WorkFlowTaskStatus workFlowTaskStatus);
+			WorkStatus workFlowTaskStatus);
 
 	WorkFlowTaskExecution updateWorkFlowTask(WorkFlowTaskExecution workFlowTaskExecution);
 
 	void updateWorkFlowCheckerTaskStatus(UUID workFlowExecutionId, String workFlowTaskName,
-			WorkFlowTaskStatus workFlowTaskStatus);
+			WorkStatus workFlowTaskStatus);
 
 }
