@@ -136,10 +136,65 @@ public class WorkFlowDefinitionResponseDTO {
 	@SerializedName(SERIALIZED_NAME_PROPERTIES)
 	private WorkFlowPropertiesDefinitionDTO properties;
 
+	/**
+	 * Gets or Sets type
+	 */
+	@JsonAdapter(TypeEnum.Adapter.class)
+	public enum TypeEnum {
+
+		ASSESSMENT("ASSESSMENT"),
+
+		CHECKER("CHECKER"),
+
+		INFRASTRUCTURE("INFRASTRUCTURE"),
+
+		ESCALATION("ESCALATION");
+
+		private String value;
+
+		TypeEnum(String value) {
+			this.value = value;
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		@Override
+		public String toString() {
+			return String.valueOf(value);
+		}
+
+		public static TypeEnum fromValue(String value) {
+			for (TypeEnum b : TypeEnum.values()) {
+				if (b.value.equals(value)) {
+					return b;
+				}
+			}
+			throw new IllegalArgumentException("Unexpected value '" + value + "'");
+		}
+
+		public static class Adapter extends TypeAdapter<TypeEnum> {
+
+			@Override
+			public void write(final JsonWriter jsonWriter, final TypeEnum enumeration) throws IOException {
+				jsonWriter.value(enumeration.getValue());
+			}
+
+			@Override
+			public TypeEnum read(final JsonReader jsonReader) throws IOException {
+				String value = jsonReader.nextString();
+				return TypeEnum.fromValue(value);
+			}
+
+		}
+
+	}
+
 	public static final String SERIALIZED_NAME_TYPE = "type";
 
 	@SerializedName(SERIALIZED_NAME_TYPE)
-	private String type;
+	private TypeEnum type;
 
 	public static final String SERIALIZED_NAME_WORKS = "works";
 
@@ -317,7 +372,7 @@ public class WorkFlowDefinitionResponseDTO {
 		this.properties = properties;
 	}
 
-	public WorkFlowDefinitionResponseDTO type(String type) {
+	public WorkFlowDefinitionResponseDTO type(TypeEnum type) {
 
 		this.type = type;
 		return this;
@@ -329,11 +384,11 @@ public class WorkFlowDefinitionResponseDTO {
 	 **/
 	@javax.annotation.Nullable
 
-	public String getType() {
+	public TypeEnum getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(TypeEnum type) {
 		this.type = type;
 	}
 
