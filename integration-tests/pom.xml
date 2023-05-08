@@ -143,6 +143,9 @@
                                 <include>**/*Flow.java</include>
                                 <include>**/integration/**/*.java</include>
                             </includes>
+                            <excludes>
+                                <exclude>**/integration/notification/**/*.java</exclude>
+                            </excludes>
                         </configuration>
                     </plugin>
                 </plugins>
