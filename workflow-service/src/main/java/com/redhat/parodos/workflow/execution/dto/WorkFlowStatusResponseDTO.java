@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -41,7 +42,7 @@ public class WorkFlowStatusResponseDTO {
 
 	private String workFlowName;
 
-	private String status;
+	private WorkStatus status;
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private List<WorkStatusResponseDTO> works;

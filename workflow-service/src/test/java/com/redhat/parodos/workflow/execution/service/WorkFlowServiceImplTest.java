@@ -556,28 +556,26 @@ class WorkFlowServiceImplTest {
 		assertNotNull(workFlowStatusResponseDTO);
 		assertEquals(workFlowExecution.getId(), workFlowStatusResponseDTO.getWorkFlowExecutionId());
 		assertEquals(workFlowStatusResponseDTO.getWorkFlowName(), workFlowDefinition.getName());
-		assertEquals(workFlowStatusResponseDTO.getStatus(), WorkStatus.IN_PROGRESS.name());
+		assertEquals(workFlowStatusResponseDTO.getStatus(), WorkStatus.IN_PROGRESS);
 		assertEquals(workFlowStatusResponseDTO.getWorks().size(), 2);
 
 		// subWorkflow1
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getType(), WorkType.WORKFLOW);
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getName(), subWorkFlow1Definition.getName());
-		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getStatus().name(), WorkStatus.PENDING.name());
+		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getStatus(), WorkStatus.PENDING);
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getWorks().size(), 1);
 
 		// subWorkflow1Task1
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getWorks().get(0).getType(), WorkType.TASK);
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getWorks().get(0).getName(),
 				subWorkFlow1Task1Definition.getName());
-		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getWorks().get(0).getStatus().name(),
-				WorkStatus.PENDING.name());
+		assertEquals(workFlowStatusResponseDTO.getWorks().get(0).getWorks().get(0).getStatus(), WorkStatus.PENDING);
 		assertNull(workFlowStatusResponseDTO.getWorks().get(0).getWorks().get(0).getWorks());
 
 		// workflowTask1
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(1).getType(), WorkType.TASK);
 		assertEquals(workFlowStatusResponseDTO.getWorks().get(1).getName(), workFlowTask1Definition.getName());
-		assertEquals(workFlowStatusResponseDTO.getWorks().get(1).getStatus().name(),
-				WorkFlowTaskStatus.COMPLETED.name());
+		assertEquals(workFlowStatusResponseDTO.getWorks().get(1).getStatus(), WorkStatus.COMPLETED);
 		assertNull(workFlowStatusResponseDTO.getWorks().get(1).getWorks());
 	}
 
@@ -732,7 +730,7 @@ class WorkFlowServiceImplTest {
 		assertNotNull(workFlowStatusResponseDTO);
 		assertEquals(workFlowExecution.getId(), workFlowStatusResponseDTO.getWorkFlowExecutionId());
 		assertEquals(workFlowStatusResponseDTO.getWorkFlowName(), workFlowDefinition.getName());
-		assertEquals(workFlowStatusResponseDTO.getStatus(), WorkStatus.IN_PROGRESS.name());
+		assertEquals(workFlowStatusResponseDTO.getStatus(), WorkStatus.IN_PROGRESS);
 		assertEquals(workFlowStatusResponseDTO.getWorks().size(), 2);
 
 		// sub workflow 1
