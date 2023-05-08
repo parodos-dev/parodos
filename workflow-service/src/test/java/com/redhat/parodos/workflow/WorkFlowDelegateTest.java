@@ -77,11 +77,11 @@ class WorkFlowDelegateTest {
 			.works(List.of(WorkFlowRequestDTO.WorkRequestDTO.builder().workName(TEST_SUB_WORKFLOW_NAME)
 					.arguments(List.of(WorkFlowRequestDTO.WorkRequestDTO.ArgumentRequestDTO.builder()
 							.key(TEST_SUB_WORKFLOW_ARG_KEY).value(TEST_SUB_WORKFLOW_ARG_VALUE).build()))
-					.type(WorkType.WORKFLOW.name())
+					.type(WorkType.WORKFLOW)
 					.works(List.of(WorkFlowRequestDTO.WorkRequestDTO.builder().workName(TEST_TASK_NAME)
 							.arguments(List.of(WorkFlowRequestDTO.WorkRequestDTO.ArgumentRequestDTO.builder()
 									.key(TEST_TASK_ARG_KEY).value(TEST_TASK_ARG_VALUE).build()))
-							.type(WorkType.TASK.name()).build()))
+							.type(WorkType.TASK).build()))
 					.build()))
 			.build();
 
@@ -112,12 +112,13 @@ class WorkFlowDelegateTest {
 	}
 
 	private WorkFlowDefinitionResponseDTO sampleWorkflowDefinitionResponse() {
-		return WorkFlowDefinitionResponseDTO.builder().name(TEST_WORKFLOW_NAME)
-				.works(List
-						.of(WorkDefinitionResponseDTO.builder().name(TEST_SUB_WORKFLOW_NAME)
-								.workType(WorkType.WORKFLOW.name()).works(List.of(WorkDefinitionResponseDTO.builder()
-										.name(TEST_TASK_NAME).workType(WorkType.TASK.name()).build()))
-								.build()))
+		return WorkFlowDefinitionResponseDTO
+				.builder().name(
+						TEST_WORKFLOW_NAME)
+				.works(List.of(WorkDefinitionResponseDTO.builder().name(TEST_SUB_WORKFLOW_NAME)
+						.workType(WorkType.WORKFLOW).works(List.of(WorkDefinitionResponseDTO.builder()
+								.name(TEST_TASK_NAME).workType(WorkType.TASK).build()))
+						.build()))
 				.build();
 	}
 

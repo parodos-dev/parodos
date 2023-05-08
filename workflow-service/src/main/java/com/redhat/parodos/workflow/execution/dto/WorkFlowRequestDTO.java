@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.redhat.parodos.workflow.enums.WorkType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -60,7 +61,7 @@ public class WorkFlowRequestDTO {
 
 		List<ArgumentRequestDTO> arguments;
 
-		String type;
+		WorkType type;
 
 		// recursive works
 		List<WorkRequestDTO> works;

@@ -69,9 +69,8 @@ public class WorkFlowDelegate {
 
 		Optional.ofNullable(workRequestDTO).filter(dto -> !CollectionUtils.isEmpty(dto.getArguments()))
 				.ifPresent(dto -> WorkContextDelegate.write(workContext,
-						WorkType.WORKFLOW.name().equalsIgnoreCase(dto.getType())
-								? WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION
-								: WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
+						(WorkType.WORKFLOW == dto.getType() ? WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION
+								: WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION),
 						workRequestDTO.getWorkName(), WorkContextDelegate.Resource.ARGUMENTS,
 						WorkFlowDTOUtil.convertArgumentListToMap(workRequestDTO.getArguments())));
 

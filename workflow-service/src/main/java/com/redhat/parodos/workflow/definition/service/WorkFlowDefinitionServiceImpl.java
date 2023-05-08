@@ -299,8 +299,8 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 		Map<String, Integer> workFlowWorksStartIndex = new HashMap<>();
 
 		// add workflow
-		workDefinitionResponseDTOs.add(
-				WorkDefinitionResponseDTO.builder().id(workFlowDefinition.getId()).workType(WorkType.WORKFLOW.name())
+		workDefinitionResponseDTOs
+				.add(WorkDefinitionResponseDTO.builder().id(workFlowDefinition.getId()).workType(WorkType.WORKFLOW)
 						.name(workFlowDefinition.getName()).parameterFromString(workFlowDefinition.getParameters())
 						.processingType(workFlowDefinition.getProcessingType()).works(new ArrayList<>())
 						.numberOfWorkUnits(workFlowWorkDefinitions.size()).build());
@@ -313,8 +313,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 		// this responseSize is like this because we modify the size of the
 		// workDefinitionResponseDTO
 		for (int i = 1; i < workDefinitionResponseDTOs.size(); i++) {
-			if (workDefinitionResponseDTOs.get(i).getWorkType().equalsIgnoreCase(WorkType.WORKFLOW.name())) {
-
+			if (workDefinitionResponseDTOs.get(i).getWorkType() == WorkType.WORKFLOW) {
 				workFlowWorksStartIndex.put(workDefinitionResponseDTOs.get(i).getName(),
 						workDefinitionResponseDTOs.size());
 
@@ -326,7 +325,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 		}
 
 		for (int j = workDefinitionResponseDTOs.size() - 1; j >= 0; j--) {
-			if (workDefinitionResponseDTOs.get(j).getWorkType().equalsIgnoreCase(WorkType.WORKFLOW.name())) {
+			if (workDefinitionResponseDTOs.get(j).getWorkType() == WorkType.WORKFLOW) {
 				List<WorkDefinitionResponseDTO> tmpList = new ArrayList<>();
 				for (int k = workFlowWorksStartIndex.get(workDefinitionResponseDTOs.get(j)
 						.getName()); k < workFlowWorksStartIndex.get(workDefinitionResponseDTOs.get(j).getName())
