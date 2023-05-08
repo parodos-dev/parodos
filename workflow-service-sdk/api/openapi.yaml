@@ -615,7 +615,7 @@ components:
         author: author
         name: name
         id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        type: type
+        type: ASSESSMENT
         parameters:
           key:
             key: "{}"
@@ -651,6 +651,11 @@ components:
         properties:
           $ref: '#/components/schemas/WorkFlowPropertiesDefinitionDTO'
         type:
+          enum:
+          - ASSESSMENT
+          - CHECKER
+          - INFRASTRUCTURE
+          - ESCALATION
           type: string
         works:
           items:
