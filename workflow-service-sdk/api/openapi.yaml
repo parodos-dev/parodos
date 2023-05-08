@@ -1075,9 +1075,15 @@ components:
           type: TASK
           status: FAILED
         workFlowExecutionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        status: status
+        status: FAILED
       properties:
         status:
+          enum:
+          - FAILED
+          - COMPLETED
+          - IN_PROGRESS
+          - REJECTED
+          - PENDING
           type: string
         workFlowExecutionId:
           format: uuid
