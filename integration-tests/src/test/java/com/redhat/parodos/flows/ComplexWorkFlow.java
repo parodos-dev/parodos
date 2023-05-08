@@ -3,11 +3,10 @@ package com.redhat.parodos.flows;
 import java.util.Arrays;
 import java.util.List;
 
+import com.redhat.parodos.flows.base.BaseIntegrationTest;
 import com.redhat.parodos.sdk.api.WorkflowApi;
 import com.redhat.parodos.sdk.api.WorkflowDefinitionApi;
-import com.redhat.parodos.sdk.invoker.ApiClient;
 import com.redhat.parodos.sdk.invoker.ApiException;
-import com.redhat.parodos.sdk.invoker.Configuration;
 import com.redhat.parodos.sdk.model.ArgumentRequestDTO;
 import com.redhat.parodos.sdk.model.ProjectResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
@@ -15,12 +14,8 @@ import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
 import com.redhat.parodos.sdk.model.WorkFlowResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.sdk.model.WorkRequestDTO;
-import com.redhat.parodos.workflow.utils.CredUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Before;
 import org.junit.Test;
-
-import org.springframework.http.HttpHeaders;
 
 import static com.redhat.parodos.sdkutils.SdkUtils.getProjectAsync;
 import static com.redhat.parodos.sdkutils.SdkUtils.waitWorkflowStatusAsync;
@@ -33,19 +28,11 @@ import static org.junit.Assert.fail;
  * @author Gloria Ciavarrini (Github: gciavarrini)
  */
 @Slf4j
-public class ComplexWorkFlow {
+public class ComplexWorkFlow extends BaseIntegrationTest {
 
 	private static final String projectName = "project-1";
 
 	private static final String projectDescription = "an example project";
-
-	private ApiClient apiClient;
-
-	@Before
-	public void setUp() {
-		apiClient = Configuration.getDefaultApiClient();
-		apiClient.addDefaultHeader(HttpHeaders.AUTHORIZATION, "Basic " + CredUtils.getBase64Creds("test", "test"));
-	}
 
 	@Test
 	public void runComplexWorkFlow() throws ApiException, InterruptedException {
