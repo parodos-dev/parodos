@@ -223,7 +223,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 				.getWorkFlowAndWorksStatus(workFlowExecution, workFlowDefinition);
 
 		return WorkFlowStatusResponseDTO.builder().workFlowExecutionId(workFlowExecution.getId())
-				.workFlowName(workFlowDefinition.getName()).status(workFlowExecution.getStatus().name())
+				.workFlowName(workFlowDefinition.getName()).status(workFlowExecution.getStatus())
 				.works(workFlowWorksStatusResponseDTOs).build();
 	}
 
