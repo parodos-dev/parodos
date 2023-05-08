@@ -75,5 +75,5 @@ workflow-service-sdk/.travis.yml
 ##############################
 ## Nofication Service SDK Generated files
 ##############################
-notification-service-sdk/.openapi-generator/FILES
+notification-service-sdk/.openapi-generator
 
