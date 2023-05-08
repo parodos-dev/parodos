@@ -1,3 +1,5 @@
+[![Main push](https://github.com/parodos-dev/parodos/actions/workflows/push.yml/badge.svg?branch=main)](https://github.com/parodos-dev/parodos/actions/workflows/push.yml)
+
 # What Is Parodos?
 
 Parodos is a Java toolkit to help enterprise's with a legacy footprint build internal developer platforms (IDP) that
