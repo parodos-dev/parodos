@@ -619,7 +619,8 @@
             "$ref" : "#/components/schemas/WorkFlowPropertiesDefinitionDTO"
           },
           "type" : {
-            "type" : "string"
+            "type" : "string",
+            "enum" : [ "ASSESSMENT", "CHECKER", "INFRASTRUCTURE", "ESCALATION" ]
           },
           "works" : {
             "type" : "array",
