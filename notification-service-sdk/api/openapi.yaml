@@ -223,10 +223,10 @@ components:
       type: object
     NotificationMessageCreateRequestDTO:
       example:
+        groupNames:
+        - groupNames
+        - groupNames
         messageType: messageType
-        groupnames:
-        - groupnames
-        - groupnames
         subject: subject
         usernames:
         - usernames
@@ -235,7 +235,7 @@ components:
       properties:
         body:
           type: string
-        groupnames:
+        groupNames:
           items:
             type: string
           type: array

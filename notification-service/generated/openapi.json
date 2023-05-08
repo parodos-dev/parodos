@@ -273,7 +273,7 @@
           "body" : {
             "type" : "string"
           },
-          "groupnames" : {
+          "groupNames" : {
             "type" : "array",
             "items" : {
               "type" : "string"

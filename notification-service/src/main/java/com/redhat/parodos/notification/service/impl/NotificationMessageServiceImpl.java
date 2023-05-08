@@ -72,7 +72,7 @@ public class NotificationMessageServiceImpl implements NotificationMessageServic
 		notificationMessage.setBody(notificationMessageCreateRequestDTO.getBody());
 		notificationMessage.setSubject(notificationMessageCreateRequestDTO.getSubject());
 		notificationMessage.setUsernames(notificationMessageCreateRequestDTO.getUsernames());
-		notificationMessage.setGroupnames(notificationMessageCreateRequestDTO.getGroupnames());
+		notificationMessage.setGroupNames(notificationMessageCreateRequestDTO.getGroupNames());
 		notificationMessage.setFromuser(securityUtil.getUsername());
 		return notificationMessage;
 	}
