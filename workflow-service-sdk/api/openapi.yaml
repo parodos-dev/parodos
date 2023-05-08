@@ -481,8 +481,8 @@ components:
           - FAILED
           - COMPLETED
           - IN_PROGRESS
-          - PENDING
           - REJECTED
+          - PENDING
           type: string
       type: object
     WorkFlowContextResponseDTO:
