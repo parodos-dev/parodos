@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.enums.WorkFlowProcessingType;
+import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,7 +50,7 @@ public class WorkFlowDefinitionResponseDTO {
 
 	private String name;
 
-	private String type;
+	private WorkFlowType type;
 
 	private WorkFlowProcessingType processingType;
 
@@ -88,8 +89,8 @@ public class WorkFlowDefinitionResponseDTO {
 				.properties(WorkFlowPropertiesDefinitionDTO.fromEntity(workFlowDefinition.getProperties()))
 				.parameterFromString(workFlowDefinition.getParameters()).author(workFlowDefinition.getAuthor())
 				.createDate(workFlowDefinition.getCreateDate()).modifyDate(workFlowDefinition.getModifyDate())
-				.type(workFlowDefinition.getType().toString()).processingType(workFlowDefinition.getProcessingType())
-				.works(works).build();
+				.type(workFlowDefinition.getType()).processingType(workFlowDefinition.getProcessingType()).works(works)
+				.build();
 	}
 
 }
