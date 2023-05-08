@@ -32,7 +32,7 @@ class WorkDefinitionResponseDTOTest {
 
 		// then
 		assertEquals(id, result.getId());
-		assertEquals(result.getWorkType(), WorkType.TASK.name());
+		assertEquals(WorkType.TASK, result.getWorkType());
 		assertEquals(result.getName(), "foo");
 
 		assertEquals(result.getParameters().size(), 1);
@@ -61,7 +61,7 @@ class WorkDefinitionResponseDTOTest {
 
 		// then
 		assertEquals(id, result.getId());
-		assertEquals(result.getWorkType(), WorkType.WORKFLOW.name());
+		assertEquals(result.getWorkType(), WorkType.WORKFLOW);
 		assertEquals(result.getName(), "foo");
 
 		assertEquals(result.getParameters().size(), 1);

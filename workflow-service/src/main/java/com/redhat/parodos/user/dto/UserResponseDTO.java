@@ -18,6 +18,8 @@ package com.redhat.parodos.user.dto;
 import java.util.Date;
 import java.util.UUID;
 
+import javax.validation.constraints.Email;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,6 +43,7 @@ public class UserResponseDTO {
 
 	private String lastName;
 
+	@Email
 	private String email;
 
 	private Date createDate;

@@ -55,7 +55,7 @@ public class WorkDefinitionResponseDTO {
 
 	private String name;
 
-	private String workType;
+	private WorkType workType;
 
 	private WorkFlowProcessingType processingType;
 
@@ -86,13 +86,13 @@ public class WorkDefinitionResponseDTO {
 
 	public static WorkDefinitionResponseDTO fromWorkFlowDefinitionEntity(WorkFlowDefinition wd,
 			List<WorkFlowWorkDefinition> dependencies) {
-		return WorkDefinitionResponseDTO.builder().id(wd.getId()).workType(WorkType.WORKFLOW.name()).name(wd.getName())
+		return WorkDefinitionResponseDTO.builder().id(wd.getId()).workType(WorkType.WORKFLOW).name(wd.getName())
 				.parameterFromString(wd.getParameters()).processingType(wd.getProcessingType()).works(new ArrayList<>())
 				.numberOfWorkUnits(dependencies.size()).build();
 	}
 
 	public static WorkDefinitionResponseDTO fromWorkFlowTaskDefinition(WorkFlowTaskDefinition wdt) {
-		return WorkDefinitionResponseDTO.builder().id(wdt.getId()).workType(WorkType.TASK.name()).name(wdt.getName())
+		return WorkDefinitionResponseDTO.builder().id(wdt.getId()).workType(WorkType.TASK).name(wdt.getName())
 				.parameterFromString(wdt.getParameters())
 				.outputs(WorkFlowDTOUtil.readStringAsObject(wdt.getOutputs(), new TypeReference<>() {
 				}, List.of())).build();

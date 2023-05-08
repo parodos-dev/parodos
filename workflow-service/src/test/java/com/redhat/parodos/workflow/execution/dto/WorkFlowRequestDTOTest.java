@@ -15,7 +15,6 @@
  */
 package com.redhat.parodos.workflow.execution.dto;
 
-import java.util.Arrays;
 import java.util.List;
 
 import com.redhat.parodos.workflow.enums.WorkType;
@@ -58,12 +57,12 @@ class WorkFlowRequestDTOTest {
 		assertNull(subWorkflow.findFirstWorkByName("test"));
 
 		assertThat(subWorkflow).isNotNull().satisfies(work -> {
-			assertEquals(WorkType.WORKFLOW.name(), work.getType());
+			assertEquals(WorkType.WORKFLOW, work.getType());
 			assertEquals(0, work.getArguments().size());
 		});
 
 		assertThat(task).isNotNull().satisfies(work -> {
-			assertEquals(WorkType.TASK.name(), work.getType());
+			assertEquals(WorkType.TASK, work.getType());
 			assertEquals(1, work.getArguments().size());
 		});
 	}
@@ -73,18 +72,18 @@ class WorkFlowRequestDTOTest {
 				.arguments(List.of(WorkFlowRequestDTO.WorkRequestDTO.ArgumentRequestDTO.builder()
 						.key(MAIN_WORKFLOW_PARAM_1_KEY).value(MAIN_WORKFLOW_PARAM_1_VALUE).build()))
 				.works(List
-						.of(getSimpleWorkRequestDTO(TEST_WORKFLOW, WorkType.WORKFLOW.name(), List.of(),
-								getSimpleWorkRequestDTO(TEST_WORK_TASK, WorkType.TASK.name(),
+						.of(getSimpleWorkRequestDTO(TEST_WORKFLOW, WorkType.WORKFLOW, List.of(),
+								getSimpleWorkRequestDTO(TEST_WORK_TASK, WorkType.TASK,
 										List.of(WorkFlowRequestDTO.WorkRequestDTO.ArgumentRequestDTO.builder()
 												.key(WORK_PARAM_TASK_KEY).value(WORK_PARAM_TASK_VALUE).build())))))
 				.build();
 	}
 
-	private WorkFlowRequestDTO.WorkRequestDTO getSimpleWorkRequestDTO(String workName, String type,
+	private WorkFlowRequestDTO.WorkRequestDTO getSimpleWorkRequestDTO(String workName, WorkType type,
 			List<WorkFlowRequestDTO.WorkRequestDTO.ArgumentRequestDTO> arguments,
 			WorkFlowRequestDTO.WorkRequestDTO... works) {
 		return WorkFlowRequestDTO.WorkRequestDTO.builder().workName(workName).arguments(arguments).type(type)
-				.works(WorkType.WORKFLOW.name().equals(type) ? Arrays.asList(works) : null).build();
+				.works((WorkType.WORKFLOW == type ? List.of(works) : null)).build();
 	}
 
 }

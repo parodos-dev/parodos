@@ -549,7 +549,8 @@
             "enum" : [ "SEQUENTIAL", "PARALLEL", "OTHER" ]
           },
           "workType" : {
-            "type" : "string"
+            "type" : "string",
+            "enum" : [ "TASK", "WORKFLOW" ]
           },
           "works" : {
             "type" : "array",
@@ -860,7 +861,8 @@
             }
           },
           "type" : {
-            "type" : "string"
+            "type" : "string",
+            "enum" : [ "TASK", "WORKFLOW" ]
           },
           "workName" : {
             "type" : "string"

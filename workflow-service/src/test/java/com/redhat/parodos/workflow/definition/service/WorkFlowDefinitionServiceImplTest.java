@@ -54,7 +54,11 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * unit test for WorkFlowDefinitionService
@@ -246,7 +250,7 @@ class WorkFlowDefinitionServiceImplTest {
 
 		assertEquals(result.getWorks().size(), 1);
 		assertEquals(result.getWorks().get(0).getName(), "SubWorkFlow");
-		assertEquals(result.getWorks().get(0).getWorkType(), WorkType.WORKFLOW.toString());
+		assertEquals(result.getWorks().get(0).getWorkType(), WorkType.WORKFLOW);
 	}
 
 	@Test
