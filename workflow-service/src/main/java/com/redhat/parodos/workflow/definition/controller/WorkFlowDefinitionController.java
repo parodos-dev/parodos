@@ -110,7 +110,8 @@ public class WorkFlowDefinitionController {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Succeeded",
 					content = { @Content(mediaType = "application/json",
-							schema = @Schema(allOf = WorkParameterValueResponseDTO.class)) }),
+							array = @ArraySchema(
+									schema = @Schema(implementation = WorkParameterValueResponseDTO.class))) }),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content) })
 	@PostMapping("/{workflowDefinitionName}/parameters/update/{valueProviderName}")

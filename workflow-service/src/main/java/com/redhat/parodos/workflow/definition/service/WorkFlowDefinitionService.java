@@ -37,9 +37,8 @@ import com.redhat.parodos.workflows.workflow.WorkFlowPropertiesMetadata;
 public interface WorkFlowDefinitionService {
 
 	WorkFlowDefinitionResponseDTO save(String workFlowName, WorkFlowType workFlowType,
-			WorkFlowPropertiesMetadata workFlowPropertiesMetadata, List<WorkParameter> workParameters,
-
-			List<Work> works, WorkFlowProcessingType workFlowProcessingType);
+			WorkFlowPropertiesMetadata workFlowPropertiesMetadata, List<WorkParameter> workParameters, List<Work> works,
+			WorkFlowProcessingType workFlowProcessingType, String rollbackWorkflowName);
 
 	WorkFlowDefinitionResponseDTO getWorkFlowDefinitionByName(String name);
 

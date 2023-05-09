@@ -13,24 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.workflow.execution.continuation;
+package com.redhat.parodos.examples.rollback.task;
 
-import java.util.UUID;
-
+import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
+import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
+import com.redhat.parodos.workflows.work.WorkReport;
+import com.redhat.parodos.workflows.work.WorkStatus;
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.stereotype.Component;
 
 /**
- * When the application starts up it will run any workflows in Progress @see
- * Status.IN_PROGRESS
+ * sample failed task execution
  *
+ * @author Luke Shannon (Github: lshannon)
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
-public interface WorkFlowContinuationService {
 
-	void workFlowRunAfterStartup();
+@Slf4j
+@Component
+public class SimpleFailedWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
-	void continueWorkFlow(UUID projectId, String workflowName, WorkContext workContext, UUID executionId,
-			String rollbackWorkflowName);
+	@Override
+	public WorkReport execute(WorkContext workContext) {
+		return new DefaultWorkReport(WorkStatus.FAILED, workContext);
+	}
 
 }

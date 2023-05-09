@@ -37,6 +37,7 @@ import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -123,12 +124,14 @@ public class WorkFlowController {
 	}
 
 	@Operation(summary = "Returns workflows by project id")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Succeeded",
-					content = { @Content(mediaType = "application/json",
-							schema = @Schema(allOf = WorkFlowStatusResponseDTO.class)) }),
-			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
-			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content) })
+	@ApiResponses(
+			value = {
+					@ApiResponse(responseCode = "200", description = "Succeeded",
+							content = { @Content(mediaType = "application/json",
+									array = @ArraySchema(
+											schema = @Schema(implementation = WorkFlowResponseDTO.class))) }),
+					@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+					@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content) })
 	@GetMapping()
 	public ResponseEntity<List<WorkFlowResponseDTO>> getStatusByProjectId(
 			@RequestParam(value = "projectId", required = false) UUID projectId) {

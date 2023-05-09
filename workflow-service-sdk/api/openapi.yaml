@@ -262,7 +262,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/updateParameter_200_response'
+                items:
+                  $ref: '#/components/schemas/WorkParameterValueResponseDTO'
+                type: array
           description: Succeeded
         "401":
           description: Unauthorized
@@ -290,7 +292,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/getStatusByProjectId_200_response'
+                items:
+                  $ref: '#/components/schemas/WorkFlowResponseDTO'
+                type: array
           description: Succeeded
         "401":
           description: Unauthorized
@@ -708,6 +712,7 @@ components:
     WorkFlowDefinitionResponseDTO:
       example:
         processingType: SEQUENTIAL
+        rollbackWorkflow: rollbackWorkflow
         works:
         - outputs:
           - EXCEPTION
@@ -776,6 +781,8 @@ components:
           type: string
         properties:
           $ref: '#/components/schemas/WorkFlowPropertiesDefinitionDTO'
+        rollbackWorkflow:
+          type: string
         type:
           enum:
           - ASSESSMENT
@@ -1050,6 +1057,13 @@ components:
           type: string
       type: object
     WorkParameterValueResponseDTO:
+      example:
+        options:
+        - options
+        - options
+        propertyPath: propertyPath
+        value: value
+        key: key
       properties:
         key:
           type: string
@@ -1113,10 +1127,4 @@ components:
             $ref: '#/components/schemas/WorkStatusResponseDTO'
           type: array
       type: object
-    updateParameter_200_response:
-      allOf:
-      - $ref: '#/components/schemas/WorkParameterValueResponseDTO'
-    getStatusByProjectId_200_response:
-      allOf:
-      - $ref: '#/components/schemas/WorkFlowStatusResponseDTO'
 

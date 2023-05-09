@@ -49,6 +49,7 @@ import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlowPropertiesMetadata;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 
 import org.springframework.stereotype.Service;
@@ -99,7 +100,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 	@Override
 	public WorkFlowDefinitionResponseDTO save(String workFlowName, WorkFlowType workFlowType,
 			WorkFlowPropertiesMetadata properties, List<WorkParameter> workParameters, List<Work> works,
-			WorkFlowProcessingType workFlowProcessingType) {
+			WorkFlowProcessingType workFlowProcessingType, String rollbackWorkflowName) {
 
 		String stringifyParameters = WorkFlowDTOUtil.writeObjectValueAsString(convertWorkParameters(workParameters));
 
@@ -121,6 +122,10 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 		workFlowDefinition.setProperties(propertiesDefinition);
 		workFlowDefinition.setProcessingType(workFlowProcessingType);
 		workFlowDefinition.setNumberOfWorks(works.size());
+		if (!StringUtils.isEmpty(rollbackWorkflowName)) {
+			workFlowDefinition
+					.setRollbackWorkFlowDefinition(workFlowDefinitionRepository.findFirstByName(rollbackWorkflowName));
+		}
 
 		workFlowDefinition = workFlowDefinitionRepository.save(workFlowDefinition);
 
@@ -343,6 +348,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 	public void cleanAllDefinitionMappings() {
 		workFlowCheckerMappingDefinitionRepository.deleteAll();
 		workFlowWorkRepository.deleteAll();
+		workFlowDefinitionRepository.deleteAllFromRollbackMapping();
 	}
 
 }

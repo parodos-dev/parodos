@@ -25,12 +25,15 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.redhat.parodos.common.AbstractEntity;
 import com.redhat.parodos.workflow.enums.WorkFlowProcessingType;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
+import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -95,6 +98,15 @@ public class WorkFlowDefinition extends AbstractEntity {
 	@OneToOne(mappedBy = "checkWorkFlow", cascade = CascadeType.ALL)
 	private WorkFlowCheckerMappingDefinition checkerWorkFlowDefinition;
 
+	@OneToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.EAGER)
+	@JoinTable(name = "prds_workflow_rollback_mapping", joinColumns = @JoinColumn(name = "workflow_definition_id"),
+			inverseJoinColumns = @JoinColumn(name = "workflow_rollback_definition_id"))
+	private WorkFlowDefinition rollbackWorkFlowDefinition;
+
 	private String commitId;
+
+	@OneToMany(mappedBy = "workFlowDefinition", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@Builder.Default
+	private List<WorkFlowExecution> workFlowExecutions = new ArrayList<>();
 
 }

@@ -30,6 +30,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.redhat.parodos.common.AbstractEntity;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -59,8 +60,9 @@ public class WorkFlowExecution extends AbstractEntity {
 
 	private Date endDate;
 
-	@Column(name = "workflow_definition_id")
-	private UUID workFlowDefinitionId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "workflow_definition_id")
+	private WorkFlowDefinition workFlowDefinition;
 
 	@Column(name = "project_id")
 	private UUID projectId;

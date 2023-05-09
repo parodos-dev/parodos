@@ -10,8 +10,10 @@ import org.springframework.scheduling.annotation.Async;
 public interface WorkFlowExecutor {
 
 	@Async
-	void executeAsync(UUID projectId, String workflowName, WorkContext workContext, UUID executionId);
+	void executeAsync(UUID projectId, String workflowName, WorkContext workContext, UUID executionId,
+			String rollbackWorkflowName);
 
-	WorkReport execute(UUID projectId, String workflowName, WorkContext workContext, UUID executionId);
+	WorkReport execute(UUID projectId, String workflowName, WorkContext workContext, UUID executionId,
+			String rollbackWorkflowName);
 
 }

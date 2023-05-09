@@ -1,6 +1,7 @@
 package com.redhat.parodos.workflow.registry;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
 import com.redhat.parodos.workflow.enums.WorkFlowProcessingType;
@@ -48,7 +49,7 @@ class BeanWorkFlowRegistryImplTest {
 
 		// then
 		verify(this.beanFactory, times(0)).getDependenciesForBean(any());
-		verify(this.workFlowDefinitionService, times(0)).save(any(), any(), any(), any(), any(), any());
+		verify(this.workFlowDefinitionService, times(0)).save(any(), any(), any(), any(), any(), any(), any());
 	}
 
 	@Test
@@ -76,7 +77,7 @@ class BeanWorkFlowRegistryImplTest {
 		verify(this.beanFactory, times(1)).getDependenciesForBean(any());
 
 		verify(this.workFlowDefinitionService, times(1)).save(eq(TEST), eq(WorkFlowType.ASSESSMENT), any(), anyList(),
-				anyList(), eq(WorkFlowProcessingType.SEQUENTIAL));
+				anyList(), eq(WorkFlowProcessingType.SEQUENTIAL), nullable(String.class));
 
 		assertEquals(registry.getWorkFlowByName(TEST), workFlow);
 	}
@@ -92,7 +93,7 @@ class BeanWorkFlowRegistryImplTest {
 		BeanDefinition beanDefinition = mock(BeanDefinition.class);
 		when(beanDefinition.getSource()).thenReturn(bean);
 		when(this.beanFactory.getBeanDefinition(any())).thenReturn(beanDefinition);
-
+		when(bean.getAnnotationAttributes(any())).thenReturn(Map.of());
 		when(this.beanFactory.getDependenciesForBean(eq(TEST_TASK))).thenReturn(new String[] { TASK_DEPENDENCY });
 
 		// when
@@ -106,7 +107,7 @@ class BeanWorkFlowRegistryImplTest {
 		// then
 		verify(this.beanFactory, times(1)).getDependenciesForBean(any());
 		verify(this.workFlowDefinitionService, times(1)).save(eq("test"), eq(WorkFlowType.ASSESSMENT), any(), anyList(),
-				anyList(), eq(WorkFlowProcessingType.SEQUENTIAL));
+				anyList(), eq(WorkFlowProcessingType.SEQUENTIAL), nullable(String.class));
 
 		verify(this.workFlowDefinitionService, times(0)).saveWorkFlowChecker(eq(TEST_TASK), eq(TASK_DEPENDENCY), any());
 	}
@@ -135,8 +136,7 @@ class BeanWorkFlowRegistryImplTest {
 		// then
 		assertNotNull(exception);
 
-		verify(this.beanFactory, times(1)).getDependenciesForBean(any());
-		verify(this.workFlowDefinitionService, times(0)).save(any(), any(), any(), any(), any(), any());
+		verify(this.workFlowDefinitionService, times(0)).save(any(), any(), any(), any(), any(), any(), any());
 		assertEquals(registry.getWorkFlowByName(TEST), workFlow);
 	}
 

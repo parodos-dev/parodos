@@ -16,7 +16,9 @@
 package com.redhat.parodos.workflow.registry;
 
 import java.lang.annotation.Annotation;
+import java.util.AbstractMap;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +62,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry {
 
+	// constants
+	private static final String ROLLBACK_WORKFLOW = "rollbackWorkflow";
+
+	private static final String PARAMETERS = "parameters";
+
 	// Spring will populate this through classpath scanning when the Context starts up
 	private final ConfigurableListableBeanFactory beanFactory;
 
@@ -89,8 +96,8 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry {
 	@PostConstruct
 	void postInit() {
 		workFlowDefinitionService.cleanAllDefinitionMappings();
-		workFlows.forEach(this::saveWorkFlow);
-		saveChecker(workFlowTasks);
+		saveWorkFlow();
+		saveChecker();
 		log.info("workflow definitions are loaded in database");
 	}
 
@@ -99,19 +106,31 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry {
 		return workFlows.get(workFlowName);
 	}
 
-	private void saveWorkFlow(String workFlowBeanName, WorkFlow workFlowBean) {
-		// extract work units
-		List<Work> works = getWorks(workFlowBeanName);
-		// get workflow type and parameters from annotation
-		Pair<WorkFlowType, Map<String, Object>> workFlowTypeDetailsPair = getWorkFlowTypeDetails(workFlowBeanName,
-				List.of(Assessment.class, Checker.class, Infrastructure.class, Escalation.class));
-		// workflow type
-		WorkFlowType workFlowType = workFlowTypeDetailsPair.getFirst();
-		// workflow parameters from annotation attributes
-		List<WorkParameter> workParameters = WorkFlowRegistryDelegate
-				.getWorkParameters((AnnotationAttributes[]) workFlowTypeDetailsPair.getSecond().get("parameters"));
-		workFlowDefinitionService.save(workFlowBeanName, workFlowType, workFlowBean.getProperties(), workParameters,
-				works, getWorkFlowProcessingType(workFlowBean));
+	private void saveWorkFlow() {
+		workFlows.keySet().stream()
+				.map(workFlowName -> new AbstractMap.SimpleEntry<>(workFlowName,
+						getWorkFlowTypeDetails(workFlowName,
+								List.of(Assessment.class, Checker.class, Infrastructure.class, Escalation.class))))
+				// sort to ensure main workflows to be saved after rollback workflows
+				.sorted(Comparator.comparing(e -> String.valueOf(e.getValue().getSecond().get(ROLLBACK_WORKFLOW)),
+						Comparator.naturalOrder()))
+				.forEachOrdered(workFlowAnnotationEntry -> {
+					// extract work units
+					List<Work> works = getWorks(workFlowAnnotationEntry.getKey());
+					// get workflow type and parameters from annotation
+					Pair<WorkFlowType, Map<String, Object>> workFlowTypeDetailsPair = workFlowAnnotationEntry
+							.getValue();
+					// workflow type
+					WorkFlowType workFlowType = workFlowTypeDetailsPair.getFirst();
+					// workflow parameters from annotation attributes
+					List<WorkParameter> workParameters = WorkFlowRegistryDelegate.getWorkParameters(
+							(AnnotationAttributes[]) workFlowTypeDetailsPair.getSecond().get(PARAMETERS));
+					String rollbackWorkflowName = (String) workFlowTypeDetailsPair.getSecond().get(ROLLBACK_WORKFLOW);
+					workFlowDefinitionService.save(workFlowAnnotationEntry.getKey(), workFlowType,
+							workFlows.get(workFlowAnnotationEntry.getKey()).getProperties(), workParameters, works,
+							getWorkFlowProcessingType(workFlows.get(workFlowAnnotationEntry.getKey())),
+							rollbackWorkflowName);
+				});
 	}
 
 	private List<Work> getWorks(String workFlowName) {
@@ -120,7 +139,7 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry {
 				.map(dependency -> beanFactory.getBean(dependency, Work.class)).toList();
 	}
 
-	private void saveChecker(Map<String, WorkFlowTask> workFlowTasks) {
+	private void saveChecker() {
 		workFlowTasks.forEach((name, value) -> Arrays.stream(beanFactory.getDependenciesForBean(name))
 				.filter(dependency -> isBeanInstanceOf(beanFactory, dependency, WorkFlow.class)).findFirst()
 				.ifPresent(dependency -> {

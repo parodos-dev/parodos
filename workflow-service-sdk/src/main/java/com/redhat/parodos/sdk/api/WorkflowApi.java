@@ -26,7 +26,6 @@ import com.redhat.parodos.sdk.invoker.ApiException;
 import com.redhat.parodos.sdk.invoker.ApiResponse;
 import com.redhat.parodos.sdk.invoker.Configuration;
 import com.redhat.parodos.sdk.invoker.Pair;
-import com.redhat.parodos.sdk.model.GetStatusByProjectId200Response;
 import com.redhat.parodos.sdk.model.WorkFlowCheckerTaskRequestDTO;
 import com.redhat.parodos.sdk.model.WorkFlowContextResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
@@ -566,7 +565,7 @@ public class WorkflowApi {
 	/**
 	 * Returns workflows by project id
 	 * @param projectId (optional)
-	 * @return GetStatusByProjectId200Response
+	 * @return List&lt;WorkFlowResponseDTO&gt;
 	 * @throws ApiException If fail to call the API, e.g. server error or cannot
 	 * deserialize the response body
 	 * @http.response.details
@@ -593,15 +592,15 @@ public class WorkflowApi {
 	 * </tr>
 	 * </table>
 	 */
-	public GetStatusByProjectId200Response getStatusByProjectId(UUID projectId) throws ApiException {
-		ApiResponse<GetStatusByProjectId200Response> localVarResp = getStatusByProjectIdWithHttpInfo(projectId);
+	public List<WorkFlowResponseDTO> getStatusByProjectId(UUID projectId) throws ApiException {
+		ApiResponse<List<WorkFlowResponseDTO>> localVarResp = getStatusByProjectIdWithHttpInfo(projectId);
 		return localVarResp.getData();
 	}
 
 	/**
 	 * Returns workflows by project id
 	 * @param projectId (optional)
-	 * @return ApiResponse&lt;GetStatusByProjectId200Response&gt;
+	 * @return ApiResponse&lt;List&lt;WorkFlowResponseDTO&gt;&gt;
 	 * @throws ApiException If fail to call the API, e.g. server error or cannot
 	 * deserialize the response body
 	 * @http.response.details
@@ -628,10 +627,9 @@ public class WorkflowApi {
 	 * </tr>
 	 * </table>
 	 */
-	public ApiResponse<GetStatusByProjectId200Response> getStatusByProjectIdWithHttpInfo(UUID projectId)
-			throws ApiException {
+	public ApiResponse<List<WorkFlowResponseDTO>> getStatusByProjectIdWithHttpInfo(UUID projectId) throws ApiException {
 		okhttp3.Call localVarCall = getStatusByProjectIdValidateBeforeCall(projectId, null);
-		Type localVarReturnType = new TypeToken<GetStatusByProjectId200Response>() {
+		Type localVarReturnType = new TypeToken<List<WorkFlowResponseDTO>>() {
 		}.getType();
 		return localVarApiClient.execute(localVarCall, localVarReturnType);
 	}
@@ -668,10 +666,10 @@ public class WorkflowApi {
 	 * </table>
 	 */
 	public okhttp3.Call getStatusByProjectIdAsync(UUID projectId,
-			final ApiCallback<GetStatusByProjectId200Response> _callback) throws ApiException {
+			final ApiCallback<List<WorkFlowResponseDTO>> _callback) throws ApiException {
 
 		okhttp3.Call localVarCall = getStatusByProjectIdValidateBeforeCall(projectId, _callback);
-		Type localVarReturnType = new TypeToken<GetStatusByProjectId200Response>() {
+		Type localVarReturnType = new TypeToken<List<WorkFlowResponseDTO>>() {
 		}.getType();
 		localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
 		return localVarCall;
