@@ -60,13 +60,13 @@ public class WorkFlowDefinitionResponseDTO {
 
 	private Date modifyDate;
 
-	@JsonInclude(JsonInclude.Include.NON_NULL)
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private Map<String, Map<String, Object>> parameters;
 
-	@JsonInclude(JsonInclude.Include.NON_NULL)
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private WorkFlowPropertiesDefinitionDTO properties;
 
-	@JsonInclude(JsonInclude.Include.NON_NULL)
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private List<WorkDefinitionResponseDTO> works;
 
 	public static class WorkFlowDefinitionResponseDTOBuilder {
