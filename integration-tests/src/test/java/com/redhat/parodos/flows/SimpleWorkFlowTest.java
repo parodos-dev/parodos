@@ -33,7 +33,7 @@ import static org.junit.Assert.assertTrue;
  * @author Gloria Ciavarrini (Github: gciavarrini)
  */
 @Slf4j
-public class SimpleWorkFlow extends BaseIntegrationTest {
+public class SimpleWorkFlowTest extends BaseIntegrationTest {
 
 	private static final String projectName = "project-1";
 

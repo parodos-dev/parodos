@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Slf4j
-public class NotificationRecord {
+public class NotificationRecordTest {
 
 	private static final String BASE_PATH = "http://localhost:8081";
 

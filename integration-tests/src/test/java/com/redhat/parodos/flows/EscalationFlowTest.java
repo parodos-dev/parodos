@@ -19,7 +19,7 @@ import static org.junit.Assert.assertNotNull;
  * @author Gloria Ciavarrini (Github: gciavarrini)
  */
 @Slf4j
-public class EscalationFlow extends BaseIntegrationTest {
+public class EscalationFlowTest extends BaseIntegrationTest {
 
 	private static final String projectName = "project-1";
 
