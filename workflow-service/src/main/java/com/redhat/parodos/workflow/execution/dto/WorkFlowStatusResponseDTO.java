@@ -44,7 +44,7 @@ public class WorkFlowStatusResponseDTO {
 
 	private WorkStatus status;
 
-	@JsonInclude(JsonInclude.Include.NON_NULL)
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private List<WorkStatusResponseDTO> works;
 
 }
