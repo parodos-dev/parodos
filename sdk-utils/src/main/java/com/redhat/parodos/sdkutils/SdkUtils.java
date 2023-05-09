@@ -24,7 +24,6 @@ import com.redhat.parodos.sdk.model.ProjectRequestDTO;
 import com.redhat.parodos.sdk.model.ProjectResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.workflow.utils.CredUtils;
-import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -208,7 +207,7 @@ public abstract class SdkUtils {
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = waitAsyncResponse(new FuncExecutor<>() {
 			@Override
 			public boolean check(WorkFlowStatusResponseDTO result) {
-				return result.getStatus().equals(WorkStatus.IN_PROGRESS.toString());
+				return !result.getStatus().equals(WorkFlowStatusResponseDTO.StatusEnum.COMPLETED);
 			}
 
 			@Override
