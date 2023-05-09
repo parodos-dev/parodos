@@ -7,8 +7,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.ControllerMockClient;
 import com.redhat.parodos.project.dto.ProjectRequestDTO;
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
+import com.redhat.parodos.project.dto.ProjectUserRoleResponseDTO;
+import com.redhat.parodos.project.dto.UserRoleRequestDTO;
 import com.redhat.parodos.project.service.ProjectServiceImpl;
 import org.hamcrest.Matchers;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,6 +150,41 @@ public class ProjectControllerTest extends ControllerMockClient {
 		// Then
 		verify(projectService, never()).getProjectById(any());
 
+	}
+
+	@Test
+	public void testUpdateUserRolesToProject() throws Exception {
+		List<UserRoleRequestDTO> userRoleRequestDTOList = List
+				.of(UserRoleRequestDTO.builder().username("test-user").build());
+		ProjectUserRoleResponseDTO projectUserRoleResponseDTO = ProjectUserRoleResponseDTO.builder()
+				.projectName("test-project").build();
+		when(projectService.updateUserRolesToProject(any(), any())).thenReturn(projectUserRoleResponseDTO);
+
+		// When
+		mockMvc.perform(
+				this.postRequestWithValidCredentials(String.format("/api/v1/projects/%s/users", UUID.randomUUID()))
+						.content(JSONObject.valueToString(userRoleRequestDTOList)))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$").value(projectUserRoleResponseDTO));
+		// Then
+		verify(projectService, times(1)).updateUserRolesToProject(any(), any());
+	}
+
+	@Test
+	public void testRemoveUsersFromProject() throws Exception {
+		List<String> users = List.of("test-user");
+		ProjectUserRoleResponseDTO projectUserRoleResponseDTO = ProjectUserRoleResponseDTO.builder()
+				.projectName("test-project").build();
+		when(projectService.removeUsersFromProject(any(), any())).thenReturn(projectUserRoleResponseDTO);
+
+		// When
+		mockMvc.perform(
+				this.deleteRequestWithValidCredentials(String.format("/api/v1/projects/%s/users", UUID.randomUUID()))
+						.content(JSONObject.valueToString(users)))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$").value(projectUserRoleResponseDTO));
+		// Then
+		verify(projectService, times(1)).removeUsersFromProject(any(), any());
 	}
 
 	ProjectResponseDTO createSampleProject(String name) {

@@ -13,26 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.user.repository;
+package com.redhat.parodos.project.dto;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-import com.redhat.parodos.user.entity.User;
-
-import org.springframework.data.jpa.repository.JpaRepository;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
- * User repository
+ * project user role response DTO
  *
  * @author Annel Ketcha (Github: anludke)
  */
 
-public interface UserRepository extends JpaRepository<User, UUID> {
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ProjectUserRoleResponseDTO {
 
-	Optional<User> findByUsername(String username);
+	private UUID id;
 
-	List<User> findAllByUsernameIn(List<String> usernames);
+	private String projectName;
+
+	private List<UserRoleResponseDTO> userResponseDTOList;
 
 }

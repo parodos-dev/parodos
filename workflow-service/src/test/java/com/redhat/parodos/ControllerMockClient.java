@@ -44,6 +44,10 @@ public abstract class ControllerMockClient {
 		return MockMvcRequestBuilders.post(path).headers(this.headersWithValidCredentials());
 	}
 
+	public MockHttpServletRequestBuilder deleteRequestWithValidCredentials(String path) {
+		return MockMvcRequestBuilders.delete(path).headers(this.headersWithValidCredentials());
+	}
+
 	public MockHttpServletRequestBuilder getRequestWithInValidCredentials(String path) {
 		return MockMvcRequestBuilders.get(path).headers(this.headersWithInValidCredentials());
 	}

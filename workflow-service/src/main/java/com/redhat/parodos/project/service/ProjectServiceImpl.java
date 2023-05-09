@@ -17,13 +17,20 @@ package com.redhat.parodos.project.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 
+import com.redhat.parodos.common.AbstractEntity;
 import com.redhat.parodos.project.dto.ProjectRequestDTO;
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
+import com.redhat.parodos.project.dto.ProjectUserRoleResponseDTO;
+import com.redhat.parodos.project.dto.UserRoleRequestDTO;
+import com.redhat.parodos.project.dto.UserRoleResponseDTO;
 import com.redhat.parodos.project.entity.Project;
 import com.redhat.parodos.project.entity.ProjectUserRole;
 import com.redhat.parodos.project.entity.Role;
@@ -37,7 +44,10 @@ import org.modelmapper.ModelMapper;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
+import static java.util.stream.Collectors.groupingBy;
 
 /**
  * Project service implementation
@@ -116,6 +126,60 @@ public class ProjectServiceImpl implements ProjectService {
 		User user = userService.getUserEntityByUsername(username);
 		return projectUserRoleRepository.findByUserId(user.getId()).stream()
 				.map(projectUserRole -> modelMapper.map(projectUserRole, ProjectResponseDTO.class)).toList();
+	}
+
+	@Transactional
+	public ProjectUserRoleResponseDTO updateUserRolesToProject(UUID id, List<UserRoleRequestDTO> userRoleRequestDTOs) {
+		Project project = projectRepository.findById(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "project not found"));
+
+		Set<ProjectUserRole> projectUserRoles = userRoleRequestDTOs.stream()
+				.map(userRoleRequestDTO -> userRoleRequestDTO.getRoles().stream()
+						.map(role -> Map.entry(userService.getUserEntityByUsername(userRoleRequestDTO.getUsername()),
+								roleRepository.findByNameIgnoreCase(role.name())))
+						.collect(Collectors.toSet()))
+				.flatMap(Set::stream)
+				.filter(userRoleMap -> userRoleMap.getKey() != null && userRoleMap.getValue().isPresent())
+				.map(userRoleMap -> ProjectUserRole.builder()
+						.id(ProjectUserRole.Id.builder().projectId(project.getId()).userId(userRoleMap.getKey().getId())
+								.roleId(userRoleMap.getValue().get().getId()).build())
+						.project(project).user(userRoleMap.getKey()).role(userRoleMap.getValue().get()).build())
+				.collect(Collectors.toSet());
+
+		projectUserRoleRepository.deleteAllByIdProjectIdAndIdUserIdIn(project.getId(),
+				projectUserRoles.stream().map(projectUserRole -> projectUserRole.getUser().getId()).toList());
+		project.setProjectUserRoles(projectUserRoles);
+		projectUserRoleRepository.saveAll(projectUserRoles);
+		return getProjectUserRoleResponseDTOFromProject(project);
+	}
+
+	@Transactional
+	@Override
+	public ProjectUserRoleResponseDTO removeUsersFromProject(UUID id, List<String> usernames) {
+		Project project = projectRepository.findById(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "project not found"));
+
+		projectUserRoleRepository.deleteAllByIdProjectIdAndIdUserIdIn(project.getId(),
+				userService.findAllUserEntitiesByUsernameIn(usernames).stream().map(AbstractEntity::getId).toList());
+		project.getProjectUserRoles()
+				.removeIf(projectUserRole -> usernames.contains(projectUserRole.getUser().getUsername()));
+		return getProjectUserRoleResponseDTOFromProject(project);
+	}
+
+	private ProjectUserRoleResponseDTO getProjectUserRoleResponseDTOFromProject(Project project) {
+		return ProjectUserRoleResponseDTO.builder().id(project.getId()).projectName(project.getName())
+				.userResponseDTOList(project.getProjectUserRoles().stream()
+						.collect(groupingBy(projectUserRole -> projectUserRole.getUser().getUsername())).entrySet()
+						.stream()
+						.map(projectUserRoleEntry -> UserRoleResponseDTO.builder()
+								.username(projectUserRoleEntry.getKey())
+								.roles(projectUserRoleEntry.getValue().stream()
+										.map(projectUserRole -> com.redhat.parodos.project.enums.Role
+												.valueOf(projectUserRole.getRole().getName().toUpperCase()))
+										.collect(Collectors.toSet()))
+								.build())
+						.toList())
+				.build();
 	}
 
 }
