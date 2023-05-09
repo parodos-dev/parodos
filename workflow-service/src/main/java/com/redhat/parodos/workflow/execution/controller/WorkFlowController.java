@@ -35,6 +35,7 @@ import com.redhat.parodos.workflow.execution.service.WorkFlowService;
 import com.redhat.parodos.workflow.execution.validation.PubliclyVisible;
 import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.WorkReport;
+import com.redhat.parodos.workflows.work.WorkStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -84,7 +85,7 @@ public class WorkFlowController {
 	@PostMapping
 	public ResponseEntity<WorkFlowResponseDTO> execute(@RequestBody @Valid WorkFlowRequestDTO workFlowRequestDTO) {
 		WorkReport workReport = workFlowService.execute(workFlowRequestDTO);
-		if (workReport == null) {
+		if (workReport.getStatus() == WorkStatus.FAILED) {
 			return ResponseEntity.status(500).build();
 		}
 		return ResponseEntity.ok(WorkFlowResponseDTO.builder()
