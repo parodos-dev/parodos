@@ -17,6 +17,7 @@ package com.redhat.parodos.notification.dto;
 
 import java.util.List;
 
+import com.redhat.parodos.notification.validation.ValidNotificationMessageUserOrGroup;
 import lombok.Data;
 
 /**
@@ -26,6 +27,7 @@ import lombok.Data;
  * @author Annel Ketcha (Github: anludke)
  */
 
+@ValidNotificationMessageUserOrGroup
 @Data
 public class NotificationMessageCreateRequestDTO {
 

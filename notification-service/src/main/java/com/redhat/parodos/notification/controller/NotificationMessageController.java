@@ -15,11 +15,14 @@
  */
 package com.redhat.parodos.notification.controller;
 
+import javax.validation.Valid;
+
 import com.redhat.parodos.notification.dto.NotificationMessageCreateRequestDTO;
 import com.redhat.parodos.notification.service.NotificationMessageService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,6 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/messages")
 @CrossOrigin(origins = "*")
+@Validated
 @Tag(name = "Notification Message", description = "Operations about notification message in the system")
 public class NotificationMessageController {
 
@@ -48,7 +52,7 @@ public class NotificationMessageController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public void create(@RequestBody NotificationMessageCreateRequestDTO messageCreateRequest) {
+	public void create(@RequestBody @Valid NotificationMessageCreateRequestDTO messageCreateRequest) {
 		this.notificationMessageService.createNotificationMessage(messageCreateRequest);
 	}
 
