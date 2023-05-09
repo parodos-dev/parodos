@@ -18,11 +18,11 @@ Fixes #
 - [ ] Integration tests
 - [ ] CI
 - [ ] Documentation
-- [ ] Auto generated SDK code
+- [ ] Auto-generated SDK code
 
 **Impacted services**
 - [ ] Workflow Service
-- [ ] Notifivcation Service
+- [ ] Notification Service
 
 **Checklist**
 - [ ] Subject and description added to both, commit and PR.
