@@ -190,17 +190,7 @@ public abstract class SdkUtils {
 	 * @throws ApiException If the API method invocation fails
 	 */
 	public static void waitProjectStart(ProjectApi projectApi) throws InterruptedException, ApiException {
-		List<ProjectResponseDTO> projectResponseDTOS = waitAsyncResponse(new FuncExecutor<>() {
-			@Override
-			public boolean check(List<ProjectResponseDTO> result) {
-				return result == null;
-			}
-
-			@Override
-			public void execute(@NonNull ApiCallback<List<ProjectResponseDTO>> callback) throws ApiException {
-				projectApi.getProjectsAsync(callback);
-			}
-		});
+		waitAsyncResponse((FuncExecutor<List<ProjectResponseDTO>>) callback -> projectApi.getProjectsAsync(callback));
 	}
 
 	/**
