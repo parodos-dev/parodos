@@ -35,9 +35,8 @@ public class WorkFlowRepositoryTest extends RepositoryTestBase {
 	@Test
 	public void testSave() {
 		// given
-		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder()
-				.workFlowDefinitionId(createWorkFlowDefinition().getId()).status(WorkStatus.IN_PROGRESS)
-				.projectId(createProject().getId()).build();
+		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().workFlowDefinition(createWorkFlowDefinition())
+				.status(WorkStatus.IN_PROGRESS).projectId(createProject().getId()).build();
 		List<WorkFlowExecution> workFlowExecutions = workFlowRepository.findAll();
 		assertTrue(workFlowExecutions.isEmpty());
 
@@ -48,7 +47,7 @@ public class WorkFlowRepositoryTest extends RepositoryTestBase {
 		flowExecution = workFlowRepository.getById(workFlowExecution.getId());
 		assertNotNull(flowExecution);
 		assertNotNull(flowExecution.getId());
-		assertEquals(workFlowExecution.getWorkFlowDefinitionId(), flowExecution.getWorkFlowDefinitionId());
+		assertEquals(workFlowExecution.getWorkFlowDefinition(), flowExecution.getWorkFlowDefinition());
 		assertEquals(workFlowExecution.getProjectId(), flowExecution.getProjectId());
 		assertEquals(WorkStatus.IN_PROGRESS, flowExecution.getStatus());
 	}
@@ -86,9 +85,9 @@ public class WorkFlowRepositoryTest extends RepositoryTestBase {
 	public void testFindByMainWorkFlowExecution() {
 		// given
 		WorkFlowExecution mainWorkFlowExecution = createWorkFlowExecution();
-		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder()
-				.workFlowDefinitionId(createWorkFlowDefinition().getId()).status(WorkStatus.IN_PROGRESS)
-				.projectId(createProject().getId()).mainWorkFlowExecution(mainWorkFlowExecution).build();
+		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().workFlowDefinition(createWorkFlowDefinition())
+				.status(WorkStatus.IN_PROGRESS).projectId(createProject().getId())
+				.mainWorkFlowExecution(mainWorkFlowExecution).build();
 		workFlowExecution = workFlowRepository.save(workFlowExecution);
 
 		// when
@@ -105,9 +104,9 @@ public class WorkFlowRepositoryTest extends RepositoryTestBase {
 	public void testFindByStatusInAndIsMain() {
 		// given
 		WorkFlowExecution mainWorkFlowExecution = createWorkFlowExecution();
-		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder()
-				.workFlowDefinitionId(createWorkFlowDefinition().getId()).status(WorkStatus.IN_PROGRESS)
-				.projectId(createProject().getId()).mainWorkFlowExecution(mainWorkFlowExecution).build();
+		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().workFlowDefinition(createWorkFlowDefinition())
+				.status(WorkStatus.IN_PROGRESS).projectId(createProject().getId())
+				.mainWorkFlowExecution(mainWorkFlowExecution).build();
 		workFlowRepository.save(workFlowExecution);
 
 		// when
@@ -132,9 +131,8 @@ public class WorkFlowRepositoryTest extends RepositoryTestBase {
 	}
 
 	private WorkFlowExecution createWorkFlowExecution() {
-		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder()
-				.workFlowDefinitionId(createWorkFlowDefinition().getId()).status(WorkStatus.IN_PROGRESS)
-				.projectId(createProject().getId()).build();
+		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().workFlowDefinition(createWorkFlowDefinition())
+				.status(WorkStatus.IN_PROGRESS).projectId(createProject().getId()).build();
 		return entityManager.persist(workFlowExecution);
 	}
 

@@ -24,6 +24,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.eq;
@@ -103,8 +104,8 @@ public class WorkFlowExecutionInterceptorTest {
 		WorkReport result = interceptor.handlePostWorkFlowExecution(report, workFlow);
 
 		// then
-		verify(workFlowService, times(0)).saveWorkFlow(any(UUID.class), any(UUID.class), eq(WorkStatus.IN_PROGRESS),
-				any(), anyString());
+		verify(workFlowService, times(0)).saveWorkFlow(any(UUID.class), any(), eq(WorkStatus.IN_PROGRESS), any(),
+				anyString());
 		verify(workFlowSchedulerService, times(1)).schedule(any(), any(), any(WorkContext.class), any());
 
 		assertEquals(result.getStatus(), report.getStatus());
@@ -124,6 +125,7 @@ public class WorkFlowExecutionInterceptorTest {
 		when(workFlowDefinition.getCheckerWorkFlowDefinition())
 				.thenReturn(mock(WorkFlowCheckerMappingDefinition.class));
 		when(mainWorkFlowExecution.getId()).thenReturn(UUID.randomUUID());
+		when(mainWorkFlowExecution.getWorkFlowDefinition()).thenReturn(workFlowDefinition);
 
 		// when
 		WorkFlowExecution workFlowExecution = interceptor.handlePreWorkFlowExecution();
@@ -131,11 +133,11 @@ public class WorkFlowExecutionInterceptorTest {
 		WorkReport result = interceptor.handlePostWorkFlowExecution(report, workFlow);
 
 		// then
-		verify(workFlowService, times(0)).saveWorkFlow(any(UUID.class), any(UUID.class), eq(WorkStatus.IN_PROGRESS),
-				any(), anyString());
+		verify(workFlowService, times(0)).saveWorkFlow(any(UUID.class), any(), eq(WorkStatus.IN_PROGRESS), any(),
+				anyString());
 		verify(workFlowSchedulerService, times(1)).stop(any(), any(WorkFlow.class));
 		verify(workFlowContinuationServiceImpl, times(1)).continueWorkFlow(any(UUID.class), anyString(),
-				any(WorkContext.class), any(UUID.class));
+				any(WorkContext.class), any(UUID.class), nullable(String.class));
 		assertEquals(result.getStatus(), report.getStatus());
 	}
 

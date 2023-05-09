@@ -208,7 +208,7 @@ public abstract class SdkUtils {
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = waitAsyncResponse(new FuncExecutor<>() {
 			@Override
 			public boolean check(WorkFlowStatusResponseDTO result) {
-				return !result.getStatus().equals(WorkStatus.COMPLETED.toString());
+				return result.getStatus().equals(WorkStatus.IN_PROGRESS.toString());
 			}
 
 			@Override

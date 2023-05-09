@@ -128,7 +128,7 @@ public class WorkFlowServiceDelegate {
 
 		// get workflow's works definition to find each status
 		List<WorkFlowWorkDefinition> workFlowWorksDefinitions = workFlowWorkRepository
-				.findByWorkFlowDefinitionIdOrderByCreateDateAsc(workFlowExecution.getWorkFlowDefinitionId());
+				.findByWorkFlowDefinitionIdOrderByCreateDateAsc(workFlowExecution.getWorkFlowDefinition().getId());
 
 		workFlowWorksDefinitions.forEach(workFlowWorkDefinition -> {
 			if (workFlowWorkDefinition.getWorkDefinitionType().equals(WorkType.WORKFLOW))

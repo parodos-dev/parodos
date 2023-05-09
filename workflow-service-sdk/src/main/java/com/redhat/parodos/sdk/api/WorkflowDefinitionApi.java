@@ -26,9 +26,9 @@ import com.redhat.parodos.sdk.invoker.ApiException;
 import com.redhat.parodos.sdk.invoker.ApiResponse;
 import com.redhat.parodos.sdk.invoker.Configuration;
 import com.redhat.parodos.sdk.invoker.Pair;
-import com.redhat.parodos.sdk.model.UpdateParameter200Response;
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.sdk.model.WorkParameterValueRequestDTO;
+import com.redhat.parodos.sdk.model.WorkParameterValueResponseDTO;
 
 public class WorkflowDefinitionApi {
 
@@ -589,7 +589,7 @@ public class WorkflowDefinitionApi {
 	 * &#39;valueProviderName&#39; in [GET
 	 * /getWorkFlowDefinitions](#/Workflow%20Definition/getWorkFlowDefinitions) (required)
 	 * @param workParameterValueRequestDTO (required)
-	 * @return UpdateParameter200Response
+	 * @return List&lt;WorkParameterValueResponseDTO&gt;
 	 * @throws ApiException If fail to call the API, e.g. server error or cannot
 	 * deserialize the response body
 	 * @http.response.details
@@ -616,10 +616,10 @@ public class WorkflowDefinitionApi {
 	 * </tr>
 	 * </table>
 	 */
-	public UpdateParameter200Response updateParameter(String workflowDefinitionName, String valueProviderName,
+	public List<WorkParameterValueResponseDTO> updateParameter(String workflowDefinitionName, String valueProviderName,
 			List<WorkParameterValueRequestDTO> workParameterValueRequestDTO) throws ApiException {
-		ApiResponse<UpdateParameter200Response> localVarResp = updateParameterWithHttpInfo(workflowDefinitionName,
-				valueProviderName, workParameterValueRequestDTO);
+		ApiResponse<List<WorkParameterValueResponseDTO>> localVarResp = updateParameterWithHttpInfo(
+				workflowDefinitionName, valueProviderName, workParameterValueRequestDTO);
 		return localVarResp.getData();
 	}
 
@@ -630,7 +630,7 @@ public class WorkflowDefinitionApi {
 	 * &#39;valueProviderName&#39; in [GET
 	 * /getWorkFlowDefinitions](#/Workflow%20Definition/getWorkFlowDefinitions) (required)
 	 * @param workParameterValueRequestDTO (required)
-	 * @return ApiResponse&lt;UpdateParameter200Response&gt;
+	 * @return ApiResponse&lt;List&lt;WorkParameterValueResponseDTO&gt;&gt;
 	 * @throws ApiException If fail to call the API, e.g. server error or cannot
 	 * deserialize the response body
 	 * @http.response.details
@@ -657,12 +657,12 @@ public class WorkflowDefinitionApi {
 	 * </tr>
 	 * </table>
 	 */
-	public ApiResponse<UpdateParameter200Response> updateParameterWithHttpInfo(String workflowDefinitionName,
+	public ApiResponse<List<WorkParameterValueResponseDTO>> updateParameterWithHttpInfo(String workflowDefinitionName,
 			String valueProviderName, List<WorkParameterValueRequestDTO> workParameterValueRequestDTO)
 			throws ApiException {
 		okhttp3.Call localVarCall = updateParameterValidateBeforeCall(workflowDefinitionName, valueProviderName,
 				workParameterValueRequestDTO, null);
-		Type localVarReturnType = new TypeToken<UpdateParameter200Response>() {
+		Type localVarReturnType = new TypeToken<List<WorkParameterValueResponseDTO>>() {
 		}.getType();
 		return localVarApiClient.execute(localVarCall, localVarReturnType);
 	}
@@ -704,11 +704,11 @@ public class WorkflowDefinitionApi {
 	 */
 	public okhttp3.Call updateParameterAsync(String workflowDefinitionName, String valueProviderName,
 			List<WorkParameterValueRequestDTO> workParameterValueRequestDTO,
-			final ApiCallback<UpdateParameter200Response> _callback) throws ApiException {
+			final ApiCallback<List<WorkParameterValueResponseDTO>> _callback) throws ApiException {
 
 		okhttp3.Call localVarCall = updateParameterValidateBeforeCall(workflowDefinitionName, valueProviderName,
 				workParameterValueRequestDTO, _callback);
-		Type localVarReturnType = new TypeToken<UpdateParameter200Response>() {
+		Type localVarReturnType = new TypeToken<List<WorkParameterValueResponseDTO>>() {
 		}.getType();
 		localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
 		return localVarCall;

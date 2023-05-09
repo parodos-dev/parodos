@@ -120,7 +120,7 @@ class WorkFlowDefinitionServiceImplTest {
 		// when
 		WorkFlowDefinitionResponseDTO workFlowDefinitionResponseDTO = this.workFlowDefinitionService.save(workFlowName,
 				WorkFlowType.ASSESSMENT, properties, Collections.emptyList(), List.of(workFlowTask),
-				WorkFlowProcessingType.SEQUENTIAL);
+				WorkFlowProcessingType.SEQUENTIAL, null);
 
 		// then
 		assertNotNull(workFlowDefinitionResponseDTO);
@@ -162,7 +162,7 @@ class WorkFlowDefinitionServiceImplTest {
 		// when
 		WorkFlowDefinitionResponseDTO workFlowDefinitionResponseDTO = this.workFlowDefinitionService.save(workFlowName,
 				WorkFlowType.ASSESSMENT, null, Collections.emptyList(), List.of(workFlowTask),
-				WorkFlowProcessingType.SEQUENTIAL);
+				WorkFlowProcessingType.SEQUENTIAL, null);
 
 		// then
 		assertNotNull(workFlowDefinitionResponseDTO);

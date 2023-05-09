@@ -71,7 +71,7 @@ public class AssessmentInfrastructureWorkFlowPostInterceptor implements WorkFlow
 		List<WorkFlowExecution> checkerExecutions = workFlowCheckerMappingDefinitions.stream().map(
 				workFlowCheckerDefinition -> workFlowRepository.findFirstByWorkFlowDefinitionIdAndMainWorkFlowExecution(
 						workFlowCheckerDefinition.getCheckWorkFlow().getId(), mainWorkFlowExecution))
-				.collect(Collectors.toList());
+				.toList();
 
 		for (WorkFlowExecution checkerExecution : checkerExecutions)
 			if (checkerExecution != null && checkerExecution.getStatus() == WorkStatus.REJECTED) {
@@ -81,9 +81,10 @@ public class AssessmentInfrastructureWorkFlowPostInterceptor implements WorkFlow
 				break;
 			}
 			else if (checkerExecution == null || checkerExecution.getStatus() == WorkStatus.FAILED) {
-				log.info("workflow: {} has a pending/running checker: {}", workFlowDefinition.getName(),
-						checkerExecution == null ? "checker is pending"
-								: checkerExecution.getWorkFlowDefinitionId().toString());
+				log.info("workflow: {} has a pending/running checker: {} in execution: {}",
+						workFlowDefinition.getName(), checkerExecution == null ? "checker is pending"
+								: checkerExecution.getWorkFlowDefinition().getName(),
+						mainWorkFlowExecution.getId());
 				workFlowExecution.setStatus(WorkStatus.IN_PROGRESS);
 				report = new DefaultWorkReport(WorkStatus.IN_PROGRESS, workContext);
 			}

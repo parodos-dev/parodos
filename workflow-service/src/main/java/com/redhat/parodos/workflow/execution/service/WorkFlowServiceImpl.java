@@ -130,25 +130,27 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	@Override
 	public WorkReport execute(WorkFlowRequestDTO workFlowRequestDTO) {
 		String workflowName = workFlowRequestDTO.getWorkFlowName();
-		WorkFlow workFlow = workFlowDelegate.getWorkFlowExecutionByName(workflowName);
+		WorkFlow workFlow = workFlowDelegate.getWorkFlowByName(workflowName);
 		String validationFailedMsg = validateWorkflow(workflowName, workFlow);
 		if (validationFailedMsg != null) {
 			return new DefaultWorkReport(WorkStatus.FAILED, new WorkContext(), new Throwable(validationFailedMsg));
 		}
 
-		WorkFlowDefinitionResponseDTO workFlowDefinition = workFlowDefinitionService
+		WorkFlowDefinitionResponseDTO workFlowDefinitionResponseDTO = workFlowDefinitionService
 				.getWorkFlowDefinitionByName(workflowName);
-		WorkContext workContext = workFlowDelegate.initWorkFlowContext(workFlowRequestDTO, workFlowDefinition);
+		WorkContext workContext = workFlowDelegate.initWorkFlowContext(workFlowRequestDTO,
+				workFlowDefinitionResponseDTO);
 
 		// save workflow execution
 		String arguments = WorkFlowDTOUtil.writeObjectValueAsString(
 				WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-						workFlowDefinition.getName(), WorkContextDelegate.Resource.ARGUMENTS));
+						workFlowDefinitionResponseDTO.getName(), WorkContextDelegate.Resource.ARGUMENTS));
 		UUID projectId = workFlowRequestDTO.getProjectId();
-		WorkFlowExecution workFlowExecution = saveWorkFlow(projectId, workFlowDefinition.getId(),
-				WorkStatus.IN_PROGRESS, null, arguments);
+		WorkFlowExecution workFlowExecution = saveWorkFlow(projectId,
+				workFlowDefinitionRepository.findFirstByName(workflowName), WorkStatus.IN_PROGRESS, null, arguments);
 		WorkContextUtils.setMainExecutionId(workContext, workFlowExecution.getId());
-		workFlowExecutor.executeAsync(projectId, workflowName, workContext, workFlowExecution.getId());
+		workFlowExecutor.executeAsync(projectId, workflowName, workContext, workFlowExecution.getId(),
+				workFlowDefinitionResponseDTO.getRollbackWorkflow());
 		return new DefaultWorkReport(WorkStatus.IN_PROGRESS, workContext, null);
 	}
 
@@ -158,17 +160,17 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	}
 
 	@Override
-	public WorkFlowExecution saveWorkFlow(UUID projectId, UUID workFlowDefinitionId, WorkStatus workStatus,
+	public WorkFlowExecution saveWorkFlow(UUID projectId, WorkFlowDefinition workFlowDefinition, WorkStatus workStatus,
 			WorkFlowExecution mainWorkFlowExecution, String arguments) {
 		try {
 			this.statusCounterWithStatus(workStatus);
-			return workFlowRepository.save(WorkFlowExecution.builder().workFlowDefinitionId(workFlowDefinitionId)
+			return workFlowRepository.save(WorkFlowExecution.builder().workFlowDefinition(workFlowDefinition)
 					.projectId(projectId).status(workStatus).startDate(new Date()).arguments(arguments)
 					.mainWorkFlowExecution(mainWorkFlowExecution).build());
 		}
 		catch (DataAccessException | IllegalArgumentException e) {
 			log.error("failing persist workflow execution for: {} in main workflow execution: {}. error Message: {}",
-					workFlowDefinitionId, mainWorkFlowExecution.getId(), e.getMessage());
+					workFlowDefinition.getId(), mainWorkFlowExecution.getId(), e.getMessage());
 			throw new WorkflowPersistenceFailedException(e.getMessage());
 		}
 	}
@@ -206,8 +208,8 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 					String.format("workflow execution id: %s not found!", workFlowExecutionId));
 		});
 
-		WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository
-				.findById(workFlowExecution.getWorkFlowDefinitionId()).orElseThrow(() -> {
+		WorkFlowDefinition workFlowDefinition = Optional.ofNullable(workFlowExecution.getWorkFlowDefinition())
+				.orElseThrow(() -> {
 					throw new ResponseStatusException(HttpStatus.NOT_FOUND,
 							String.format("workflow definition id: %s not found!", workFlowExecution.getId()));
 				});
@@ -313,7 +315,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		List<WorkFlowExecution> workFlowExecutions = workFlowRepository
 				.findByMainWorkFlowExecution(mainWorkFlowExecution);
 		WorkFlowExecution workFlowCheckerExecution = workFlowExecutions.stream()
-				.filter(workFlowExecution -> workFlowExecution.getWorkFlowDefinitionId()
+				.filter(workFlowExecution -> workFlowExecution.getWorkFlowDefinition().getId()
 						.equals(workFlowTaskDefinition.getWorkFlowDefinition().getId()))
 				.max(Comparator.comparing(WorkFlowExecution::getStartDate)).orElseThrow(() -> {
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String
@@ -366,8 +368,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	private WorkFlowResponseDTO buildWorkflowResponseDTO(WorkFlowExecution workflowExecution) {
 		return WorkFlowResponseDTO.builder().workFlowExecutionId(workflowExecution.getId())
 				.projectId(workflowExecution.getProjectId())
-				.workFlowName(workFlowDefinitionService
-						.getWorkFlowDefinitionById(workflowExecution.getWorkFlowDefinitionId()).getName())
+				.workFlowName(workflowExecution.getWorkFlowDefinition().getName())
 				.workStatus(WorkStatus.valueOf(workflowExecution.getStatus().name()))
 				.startDate(Optional.ofNullable(workflowExecution.getStartDate()).map(Date::toString).orElse(null))
 				.endDate(Optional.ofNullable(workflowExecution.getEndDate()).map(Date::toString).orElse(null))

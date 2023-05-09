@@ -1,5 +1,6 @@
 package com.redhat.parodos.workflow.execution.aspect;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
@@ -104,7 +105,9 @@ public class CheckerWorkFlowPostInterceptor implements WorkFlowPostInterceptor {
 		 */
 		if (workFlowService.findRunningChecker(mainWorkFlowExecution).isEmpty())
 			workFlowContinuationServiceImpl.continueWorkFlow(projectId, mainWorkFlowName, workContext,
-					mainWorkFlowExecution.getId());
+					mainWorkFlowExecution.getId(),
+					Optional.ofNullable(mainWorkFlowExecution.getWorkFlowDefinition().getRollbackWorkFlowDefinition())
+							.map(WorkFlowDefinition::getName).orElse(null));
 	}
 
 }

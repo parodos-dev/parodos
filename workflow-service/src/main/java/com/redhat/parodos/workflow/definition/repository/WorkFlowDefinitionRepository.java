@@ -22,6 +22,9 @@ import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * workflow definition repository
@@ -34,5 +37,10 @@ public interface WorkFlowDefinitionRepository extends JpaRepository<WorkFlowDefi
 	WorkFlowDefinition findFirstByName(String name);
 
 	List<WorkFlowDefinition> findByTypeIsNot(WorkFlowType type);
+
+	@Query(value = "delete from prds_workflow_rollback_mapping", nativeQuery = true)
+	@Modifying
+	@Transactional
+	void deleteAllFromRollbackMapping();
 
 }

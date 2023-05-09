@@ -90,7 +90,7 @@ class WorkFlowExecutionAspectTest {
 		WorkFlowDelegate workFlowDelegate = mock(WorkFlowDelegate.class);
 		this.workFlowExecutionAspect = new WorkFlowExecutionAspect(this.workFlowSchedulerService,
 				this.workFlowDefinitionRepository, workFlowExecutionFactory);
-		when(workFlowDelegate.getWorkFlowExecutionByName(any())).thenReturn(mock(WorkFlow.class));
+		when(workFlowDelegate.getWorkFlowByName(any())).thenReturn(mock(WorkFlow.class));
 		when(workflow.getName()).thenReturn(TEST);
 	}
 
@@ -122,7 +122,7 @@ class WorkFlowExecutionAspectTest {
 		when(workFlowRepository.findFirstByWorkFlowDefinitionIdAndMainWorkFlowExecution(any(), any()))
 				.thenReturn(workFlowExecution);
 		when(workFlowRepository.findById(any())).thenReturn(Optional.of(workFlowExecution));
-		doNothing().when(workFlowContinuationService).continueWorkFlow(any(), any(), any(), any());
+		doNothing().when(workFlowContinuationService).continueWorkFlow(any(), any(), any(), any(), any());
 		// when
 		WorkReport workReport = this.workFlowExecutionAspect.executeAroundAdvice(proceedingJoinPoint, workContext);
 
@@ -183,7 +183,7 @@ class WorkFlowExecutionAspectTest {
 		return new WorkFlowExecution() {
 			{
 				setId(UUID.randomUUID());
-				setWorkFlowDefinitionId(UUID.randomUUID());
+				setWorkFlowDefinition(WorkFlowDefinition.builder().build());
 				setStatus(WorkStatus.IN_PROGRESS);
 				setProjectId(UUID.randomUUID());
 			}

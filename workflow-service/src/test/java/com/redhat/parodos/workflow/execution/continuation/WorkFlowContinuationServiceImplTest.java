@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.eq;
@@ -57,8 +58,7 @@ class WorkFlowContinuationServiceImplTest {
 		this.workFlowRepository = mock(WorkFlowRepository.class);
 		this.workFlowTaskRepository = mock(WorkFlowTaskRepository.class);
 		this.workFlowExecutor = mock(WorkFlowExecutor.class);
-		this.service = new WorkFlowContinuationServiceImpl(this.workFlowDefinitionRepository, this.workFlowRepository,
-				this.workFlowExecutor);
+		this.service = new WorkFlowContinuationServiceImpl(this.workFlowRepository, this.workFlowExecutor);
 	}
 
 	@Test
@@ -71,7 +71,7 @@ class WorkFlowContinuationServiceImplTest {
 
 		// then
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
-		verify(this.workFlowExecutor, times(0)).executeAsync(any(), any(), any(), any());
+		verify(this.workFlowExecutor, times(0)).executeAsync(any(), any(), any(), any(), any());
 	}
 
 	@Test
@@ -86,7 +86,7 @@ class WorkFlowContinuationServiceImplTest {
 		// then
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
 		verify(this.workFlowExecutor, times(1)).executeAsync(eq(workFlowExecution.getProjectId()), eq(TEST_WORKFLOW),
-				any(), any());
+				any(), any(), nullable(String.class));
 	}
 
 	@Test
@@ -101,7 +101,7 @@ class WorkFlowContinuationServiceImplTest {
 		// then
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
 		verify(this.workFlowExecutor, times(1)).executeAsync(eq(workFlowExecution.getProjectId()), eq(TEST_WORKFLOW),
-				any(), any());
+				any(), any(), nullable(String.class));
 	}
 
 	@Test
@@ -126,7 +126,7 @@ class WorkFlowContinuationServiceImplTest {
 		// then
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
 		verify(this.workFlowExecutor, times(1)).executeAsync(eq(workFlowExecution.getProjectId()), eq(TEST_WORKFLOW),
-				any(), any());
+				any(), any(), nullable(String.class));
 	}
 
 	@Test
@@ -145,7 +145,7 @@ class WorkFlowContinuationServiceImplTest {
 		when(this.workFlowTaskRepository.findByWorkFlowExecutionId(wfExecution.getId()))
 				.thenReturn(List.of(workFlowTaskExecution));
 		doThrow(new RuntimeException("JsonParseException")).when(workFlowExecutor).executeAsync(any(), any(), any(),
-				any());
+				any(), any());
 
 		// when
 		Exception exception = assertThrows(RuntimeException.class, () -> this.service.workFlowRunAfterStartup());
@@ -155,7 +155,7 @@ class WorkFlowContinuationServiceImplTest {
 		assertTrue(exception.getMessage().contains("JsonParseException"));
 
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
-		verify(this.workFlowExecutor, times(1)).executeAsync(any(), any(), any(), any());
+		verify(this.workFlowExecutor, times(1)).executeAsync(any(), any(), any(), any(), any());
 
 	}
 
@@ -166,6 +166,7 @@ class WorkFlowContinuationServiceImplTest {
 		workFlowExecution.setArguments("{\"test\": \"test\"}");
 		workFlowExecution.setWorkFlowExecutionContext(WorkFlowExecutionContext.builder()
 				.mainWorkFlowExecution(workFlowExecution).workContext(new WorkContext()).build());
+		workFlowExecution.setWorkFlowDefinition(sampleWorkFlowDefinition());
 		return workFlowExecution;
 	}
 

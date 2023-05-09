@@ -137,7 +137,7 @@ No authorization required
 
 <a name="getStatusByProjectId"></a>
 # **getStatusByProjectId**
-> GetStatusByProjectId200Response getStatusByProjectId(projectId)
+> List&lt;WorkFlowResponseDTO&gt; getStatusByProjectId(projectId)
 
 Returns workflows by project id
 
@@ -158,7 +158,7 @@ public class Example {
     WorkflowApi apiInstance = new WorkflowApi(defaultClient);
     UUID projectId = UUID.randomUUID(); // UUID | 
     try {
-      GetStatusByProjectId200Response result = apiInstance.getStatusByProjectId(projectId);
+      List<WorkFlowResponseDTO> result = apiInstance.getStatusByProjectId(projectId);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling WorkflowApi#getStatusByProjectId");
@@ -179,7 +179,7 @@ public class Example {
 
 ### Return type
 
-[**GetStatusByProjectId200Response**](GetStatusByProjectId200Response.md)
+[**List&lt;WorkFlowResponseDTO&gt;**](WorkFlowResponseDTO.md)
 
 ### Authorization
 

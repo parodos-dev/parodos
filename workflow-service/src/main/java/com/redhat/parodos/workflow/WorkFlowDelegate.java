@@ -82,7 +82,7 @@ public class WorkFlowDelegate {
 							work, workDefinitionResponseDTO.getName()));
 	}
 
-	public WorkFlow getWorkFlowExecutionByName(String workFlowName) {
+	public WorkFlow getWorkFlowByName(String workFlowName) {
 		return beanWorkFlowRegistry.getWorkFlowByName(workFlowName);
 	}
 

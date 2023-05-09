@@ -18,6 +18,7 @@ package com.redhat.parodos.workflow.definition.dto;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -69,6 +70,9 @@ public class WorkFlowDefinitionResponseDTO {
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private List<WorkDefinitionResponseDTO> works;
 
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private String rollbackWorkflow;
+
 	public static class WorkFlowDefinitionResponseDTOBuilder {
 
 		public WorkFlowDefinitionResponseDTOBuilder parameterFromString(String parameters) {
@@ -90,6 +94,8 @@ public class WorkFlowDefinitionResponseDTO {
 				.parameterFromString(workFlowDefinition.getParameters()).author(workFlowDefinition.getAuthor())
 				.createDate(workFlowDefinition.getCreateDate()).modifyDate(workFlowDefinition.getModifyDate())
 				.type(workFlowDefinition.getType()).processingType(workFlowDefinition.getProcessingType()).works(works)
+				.rollbackWorkflow(Optional.ofNullable(workFlowDefinition.getRollbackWorkFlowDefinition())
+						.map(WorkFlowDefinition::getName).orElse(null))
 				.build();
 	}
 

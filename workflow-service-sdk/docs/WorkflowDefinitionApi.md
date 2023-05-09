@@ -135,7 +135,7 @@ No authorization required
 
 <a name="updateParameter"></a>
 # **updateParameter**
-> UpdateParameter200Response updateParameter(workflowDefinitionName, valueProviderName, workParameterValueRequestDTO)
+> List&lt;WorkParameterValueResponseDTO&gt; updateParameter(workflowDefinitionName, valueProviderName, workParameterValueRequestDTO)
 
 Returns updated parameter value
 
@@ -158,7 +158,7 @@ public class Example {
     String valueProviderName = "complexWorkFlowValueProvider"; // String | valueProvider Name. It can be referenced to 'valueProviderName' in [GET /getWorkFlowDefinitions](#/Workflow%20Definition/getWorkFlowDefinitions)
     List<WorkParameterValueRequestDTO> workParameterValueRequestDTO = Arrays.asList(); // List<WorkParameterValueRequestDTO> | 
     try {
-      UpdateParameter200Response result = apiInstance.updateParameter(workflowDefinitionName, valueProviderName, workParameterValueRequestDTO);
+      List<WorkParameterValueResponseDTO> result = apiInstance.updateParameter(workflowDefinitionName, valueProviderName, workParameterValueRequestDTO);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling WorkflowDefinitionApi#updateParameter");
@@ -181,7 +181,7 @@ public class Example {
 
 ### Return type
 
-[**UpdateParameter200Response**](UpdateParameter200Response.md)
+[**List&lt;WorkParameterValueResponseDTO&gt;**](WorkParameterValueResponseDTO.md)
 
 ### Authorization
 

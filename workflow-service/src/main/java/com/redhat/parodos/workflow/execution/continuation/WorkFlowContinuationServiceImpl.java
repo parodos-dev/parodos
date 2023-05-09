@@ -16,10 +16,10 @@
 package com.redhat.parodos.workflow.execution.continuation;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
-import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.service.WorkFlowExecutor;
@@ -42,15 +42,11 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class WorkFlowContinuationServiceImpl implements WorkFlowContinuationService {
 
-	private final WorkFlowDefinitionRepository workFlowDefinitionRepository;
-
 	private final WorkFlowRepository workFlowRepository;
 
 	private final WorkFlowExecutor workFlowExecutor;
 
-	public WorkFlowContinuationServiceImpl(WorkFlowDefinitionRepository workFlowDefinitionRepository,
-			WorkFlowRepository workFlowRepository, WorkFlowExecutor workFlowExecutor) {
-		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
+	public WorkFlowContinuationServiceImpl(WorkFlowRepository workFlowRepository, WorkFlowExecutor workFlowExecutor) {
 		this.workFlowRepository = workFlowRepository;
 		this.workFlowExecutor = workFlowExecutor;
 	}
@@ -66,19 +62,22 @@ public class WorkFlowContinuationServiceImpl implements WorkFlowContinuationServ
 				.findByStatusInAndIsMain(List.of(WorkStatus.IN_PROGRESS, WorkStatus.PENDING));
 		log.info("Number of IN PROGRESS or PENDING main workflows is : {}", workFlowExecutions.size());
 		workFlowExecutions.forEach(workFlowExecution -> {
-			WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository
-					.findById(workFlowExecution.getWorkFlowDefinitionId()).get();
+			WorkFlowDefinition workFlowDefinition = workFlowExecution.getWorkFlowDefinition();
 
 			// continue with the same execution id
 			continueWorkFlow(workFlowExecution.getProjectId(), workFlowDefinition.getName(),
-					workFlowExecution.getWorkFlowExecutionContext().getWorkContext(), workFlowExecution.getId());
+					workFlowExecution.getWorkFlowExecutionContext().getWorkContext(), workFlowExecution.getId(),
+					Optional.ofNullable(workFlowDefinition.getRollbackWorkFlowDefinition())
+							.map(WorkFlowDefinition::getName).orElse(null));
 
 			// TODO: continue 'FAILED' Checkers in this main workflow execution
 		});
 	}
 
-	public void continueWorkFlow(UUID projectId, String workflowName, WorkContext workContext, UUID executionId) {
-		workFlowExecutor.executeAsync(projectId, workflowName, workContext, executionId);
+	@Override
+	public void continueWorkFlow(UUID projectId, String workflowName, WorkContext workContext, UUID executionId,
+			String rollbackWorkflowName) {
+		workFlowExecutor.executeAsync(projectId, workflowName, workContext, executionId, rollbackWorkflowName);
 	}
 
 }

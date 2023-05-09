@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowContextResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowResponseDTO;
@@ -40,7 +41,7 @@ public interface WorkFlowService {
 
 	WorkFlowExecution getWorkFlowById(UUID workFlowExecutionId);
 
-	WorkFlowExecution saveWorkFlow(UUID projectId, UUID workFlowDefinitionId, WorkStatus workStatus,
+	WorkFlowExecution saveWorkFlow(UUID projectId, WorkFlowDefinition workFlowDefinition, WorkStatus workStatus,
 			WorkFlowExecution mainWorkFlowExecution, String arguments);
 
 	WorkFlowExecution updateWorkFlow(WorkFlowExecution workFlowExecution);

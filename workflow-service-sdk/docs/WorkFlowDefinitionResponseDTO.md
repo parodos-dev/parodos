@@ -15,6 +15,7 @@
 |**parameters** | **Map&lt;String, Map&lt;String, Object&gt;&gt;** |  |  [optional] |
 |**processingType** | [**ProcessingTypeEnum**](#ProcessingTypeEnum) |  |  [optional] |
 |**properties** | [**WorkFlowPropertiesDefinitionDTO**](WorkFlowPropertiesDefinitionDTO.md) |  |  [optional] |
+|**rollbackWorkflow** | **String** |  |  [optional] |
 |**type** | [**TypeEnum**](#TypeEnum) |  |  [optional] |
 |**works** | [**List&lt;WorkDefinitionResponseDTO&gt;**](WorkDefinitionResponseDTO.md) |  |  [optional] |
 

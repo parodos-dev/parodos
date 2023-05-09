@@ -71,7 +71,7 @@ public class WorkFlowServiceDelegateTest {
 				.build();
 		workFlowDefinition.setId(workFlowDefinitionId);
 
-		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().workFlowDefinitionId(workFlowDefinitionId)
+		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().workFlowDefinition(workFlowDefinition)
 				.status(WorkStatus.IN_PROGRESS).build();
 		workFlowExecution.setId(workFlowExecutionId);
 
@@ -85,7 +85,7 @@ public class WorkFlowServiceDelegateTest {
 		testSubWorkFlowDefinition1.setId(testSubWorkFlowDefinitionId1);
 		// sub workflow execution 1
 		WorkFlowExecution testSubWorkFlowExecution1 = WorkFlowExecution.builder().projectId(projectId)
-				.status(WorkStatus.IN_PROGRESS).workFlowDefinitionId(testSubWorkFlowDefinitionId1)
+				.status(WorkStatus.IN_PROGRESS).workFlowDefinition(testSubWorkFlowDefinition1)
 				.mainWorkFlowExecution(workFlowExecution).build();
 		testSubWorkFlowExecution1.setId(testSubWorkFlowExecutionId1);
 
@@ -363,7 +363,7 @@ public class WorkFlowServiceDelegateTest {
 					.workFlowTaskDefinitions(List.of(checkerWorkFlowTaskDefinition)).build();
 			checkerWorkflowDefinition.setId(checkerWorkFlowDefinitionId);
 			// workflow execution
-			checkerWorkflowExecution = WorkFlowExecution.builder().workFlowDefinitionId(checkerWorkFlowDefinitionId)
+			checkerWorkflowExecution = WorkFlowExecution.builder().workFlowDefinition(checkerWorkflowDefinition)
 					.status(WorkStatus.FAILED).build();
 			checkerWorkflowExecution.setId(checkerWorkFlowExecutionId);
 
@@ -382,7 +382,7 @@ public class WorkFlowServiceDelegateTest {
 			masterWorkflowDefinition = WorkFlowDefinition.builder().name(workFlowName).numberOfWorks(1).build();
 			masterWorkflowDefinition.setId(masterWorkFlowDefinitionId);
 
-			masterWorkflowExecution = WorkFlowExecution.builder().workFlowDefinitionId(masterWorkFlowDefinitionId)
+			masterWorkflowExecution = WorkFlowExecution.builder().workFlowDefinition(masterWorkflowDefinition)
 					.projectId(projectId).status(WorkStatus.IN_PROGRESS).build();
 			masterWorkflowExecution.setId(masterWorkFlowExecutionId);
 

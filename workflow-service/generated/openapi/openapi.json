@@ -332,9 +332,10 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "allOf" : [ {
+                  "type" : "array",
+                  "items" : {
                     "$ref" : "#/components/schemas/WorkParameterValueResponseDTO"
-                  } ]
+                  }
                 }
               }
             },
@@ -368,9 +369,10 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "allOf" : [ {
-                    "$ref" : "#/components/schemas/WorkFlowStatusResponseDTO"
-                  } ]
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/WorkFlowResponseDTO"
+                  }
                 }
               }
             },
@@ -752,6 +754,9 @@
           },
           "properties" : {
             "$ref" : "#/components/schemas/WorkFlowPropertiesDefinitionDTO"
+          },
+          "rollbackWorkflow" : {
+            "type" : "string"
           },
           "type" : {
             "type" : "string",
