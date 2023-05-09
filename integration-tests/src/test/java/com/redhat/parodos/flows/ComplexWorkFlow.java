@@ -20,6 +20,7 @@ import com.redhat.parodos.sdkutils.SdkUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
+import static com.redhat.parodos.sdkutils.SdkUtils.waitWorkflowStatusAsync;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -58,8 +59,9 @@ public class ComplexWorkFlow extends BaseIntegrationTest {
 		log.info("workflow submitted successfully with response: {}", workFlowResponseDTO);
 
 		// wait till assessment workflow is completed
-		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = SdkUtils.waitWorkflowStatusAsync(workflowApi,
+		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = waitWorkflowStatusAsync(workflowApi,
 				workFlowResponseDTO.getWorkFlowExecutionId());
+		assertNotNull(workFlowStatusResponseDTO);
 		if (workFlowStatusResponseDTO.getStatus() != WorkFlowStatusResponseDTO.StatusEnum.COMPLETED) {
 			fail("There is no valid INFRASTRUCTURE_OPTION");
 		}
@@ -109,8 +111,7 @@ public class ComplexWorkFlow extends BaseIntegrationTest {
 		assertEquals(workFlowResponseDTO.getWorkStatus(), WorkStatusEnum.IN_PROGRESS);
 		log.info("Onboarding workflow execution id: {}", workFlowResponseDTO.getWorkFlowExecutionId());
 
-		workFlowStatusResponseDTO = SdkUtils.waitWorkflowStatusAsync(workflowApi,
-				workFlowResponseDTO.getWorkFlowExecutionId());
+		workFlowStatusResponseDTO = waitWorkflowStatusAsync(workflowApi, workFlowResponseDTO.getWorkFlowExecutionId());
 
 		assertNotNull(workFlowStatusResponseDTO);
 		assertNotNull(workFlowStatusResponseDTO.getWorkFlowExecutionId());

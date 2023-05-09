@@ -106,9 +106,10 @@ public class SimpleWorkFlow extends BaseIntegrationTest {
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = SdkUtils.waitWorkflowStatusAsync(workflowApi,
 				workFlowResponseDTO.getWorkFlowExecutionId());
 
+		assertNotNull(workFlowStatusResponseDTO);
 		assertNotNull(workFlowStatusResponseDTO.getWorkFlowExecutionId());
 		assertNotNull(workFlowStatusResponseDTO.getStatus());
-		assertEquals(WorkStatusEnum.COMPLETED, workFlowStatusResponseDTO.getStatus());
+		assertEquals(WorkFlowStatusResponseDTO.StatusEnum.COMPLETED, workFlowStatusResponseDTO.getStatus());
 		log.info("workflow finished successfully with response: {}", workFlowResponseDTO);
 		log.info("******** Simple Sequence Flow Completed ********");
 	}
