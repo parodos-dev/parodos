@@ -115,6 +115,8 @@ Class | Method | HTTP request | Description
 *ProjectApi* | [**createProject**](docs/ProjectApi.md#createProject) | **POST** /api/v1/projects | Creates a new project
 *ProjectApi* | [**getProjectById**](docs/ProjectApi.md#getProjectById) | **GET** /api/v1/projects/{id} | Returns information about a specified project
 *ProjectApi* | [**getProjects**](docs/ProjectApi.md#getProjects) | **GET** /api/v1/projects | Returns a list of project
+*ProjectApi* | [**removeUsersFromProject**](docs/ProjectApi.md#removeUsersFromProject) | **DELETE** /api/v1/projects/{id}/users | Remove users from project
+*ProjectApi* | [**updateUserRolesToProject**](docs/ProjectApi.md#updateUserRolesToProject) | **POST** /api/v1/projects/{id}/users | Update user roles in project
 *WorkflowApi* | [**execute**](docs/WorkflowApi.md#execute) | **POST** /api/v1/workflows | Executes a workflow
 *WorkflowApi* | [**getStatus**](docs/WorkflowApi.md#getStatus) | **GET** /api/v1/workflows/{workFlowExecutionId}/status | Returns a workflow status
 *WorkflowApi* | [**getStatusByProjectId**](docs/WorkflowApi.md#getStatusByProjectId) | **GET** /api/v1/workflows | Returns workflows by project id
@@ -131,7 +133,10 @@ Class | Method | HTTP request | Description
  - [GetStatusByProjectId200Response](docs/GetStatusByProjectId200Response.md)
  - [ProjectRequestDTO](docs/ProjectRequestDTO.md)
  - [ProjectResponseDTO](docs/ProjectResponseDTO.md)
+ - [ProjectUserRoleResponseDTO](docs/ProjectUserRoleResponseDTO.md)
  - [UpdateParameter200Response](docs/UpdateParameter200Response.md)
+ - [UserRoleRequestDTO](docs/UserRoleRequestDTO.md)
+ - [UserRoleResponseDTO](docs/UserRoleResponseDTO.md)
  - [WorkDefinitionResponseDTO](docs/WorkDefinitionResponseDTO.md)
  - [WorkFlowCheckerTaskRequestDTO](docs/WorkFlowCheckerTaskRequestDTO.md)
  - [WorkFlowContextResponseDTO](docs/WorkFlowContextResponseDTO.md)

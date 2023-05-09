@@ -20,6 +20,8 @@ import java.util.UUID;
 
 import com.redhat.parodos.project.dto.ProjectRequestDTO;
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
+import com.redhat.parodos.project.dto.ProjectUserRoleResponseDTO;
+import com.redhat.parodos.project.dto.UserRoleRequestDTO;
 
 /**
  * Project service
@@ -37,5 +39,9 @@ public interface ProjectService {
 	List<ProjectResponseDTO> getProjectsByUsername(String username);
 
 	List<ProjectResponseDTO> getProjectByIdAndUsername(UUID id, String username);
+
+	ProjectUserRoleResponseDTO updateUserRolesToProject(UUID id, List<UserRoleRequestDTO> userRoleRequestDTOs);
+
+	ProjectUserRoleResponseDTO removeUsersFromProject(UUID id, List<String> usernames);
 
 }

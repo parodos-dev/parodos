@@ -2,6 +2,7 @@ package com.redhat.parodos.project.service;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -9,6 +10,8 @@ import java.util.UUID;
 import com.redhat.parodos.config.ModelMapperConfig;
 import com.redhat.parodos.project.dto.ProjectRequestDTO;
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
+import com.redhat.parodos.project.dto.ProjectUserRoleResponseDTO;
+import com.redhat.parodos.project.dto.UserRoleRequestDTO;
 import com.redhat.parodos.project.entity.Project;
 import com.redhat.parodos.project.entity.ProjectUserRole;
 import com.redhat.parodos.project.entity.Role;
@@ -29,10 +32,12 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.server.ResponseStatusException;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -199,6 +204,62 @@ class ProjectServiceImplTest {
 		assertEquals(projectArgumentCaptor.getValue().getName(), TEST_PROJECT_NAME);
 		assertNotNull(projectResponseDTO);
 		assertEquals(projectResponseDTO.getId(), project.getId());
+	}
+
+	@Test
+	void testUpdateUserRolesToProject() {
+		// given
+		User user = getUser(TEST_USER_ID, TEST_USERNAME);
+		Role role = getRole(TEST_ROLE_OWNER_NAME);
+		Project project = getProject(TEST_PROJECT_NAME, TEST_PROJECT_DESCRIPTION);
+		ProjectUserRole projectUserRole = ProjectUserRole.builder().project(project).user(user).role(role).build();
+
+		// when
+		when(projectRepository.findById(any())).thenReturn(Optional.of(project));
+		when(userService.getUserEntityByUsername(anyString())).thenReturn(user);
+		when(roleRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.of(role));
+		when(projectUserRoleRepository.deleteAllByIdProjectIdAndIdUserIdIn(any(), any()))
+				.thenReturn(List.of(projectUserRole));
+		when(projectUserRoleRepository.saveAll(any())).thenReturn(List.of(projectUserRole));
+
+		ProjectUserRoleResponseDTO projectUserRoleResponseDTO = projectService.updateUserRolesToProject(project.getId(),
+				List.of(UserRoleRequestDTO.builder().roles(List.of(com.redhat.parodos.project.enums.Role.OWNER))
+						.username(user.getUsername()).build()));
+
+		assertEquals(project.getName(), projectUserRoleResponseDTO.getProjectName());
+		assertThat(projectUserRoleResponseDTO.getUserResponseDTOList()).hasSize(1)
+				.satisfies(dto -> assertEquals(com.redhat.parodos.project.enums.Role.valueOf(role.getName()),
+						dto.get(0).getRoles().toArray()[0]));
+
+	}
+
+	@Test
+	void testRemoveUsersFromProject() {
+		// given
+		String testUser = "TEST_USER_2";
+		User user = getUser(TEST_USER_ID, TEST_USERNAME);
+		User user2 = getUser(TEST_USER_ID, testUser);
+		Role role = getRole(TEST_ROLE_OWNER_NAME);
+		Project project = getProject(TEST_PROJECT_NAME, TEST_PROJECT_DESCRIPTION);
+		ProjectUserRole projectUserRole = ProjectUserRole.builder().project(project).user(user).role(role).build();
+		ProjectUserRole projectUserRole2 = ProjectUserRole.builder().project(project).user(user2).role(role).build();
+		project.setProjectUserRoles(new HashSet<>(List.of(projectUserRole, projectUserRole2)));
+
+		// when
+		when(projectRepository.findById(any())).thenReturn(Optional.of(project));
+		when(projectUserRoleRepository.deleteAllByIdProjectIdAndIdUserIdIn(any(), any()))
+				.thenReturn(List.of(projectUserRole));
+
+		ProjectUserRoleResponseDTO projectUserRoleResponseDTO = projectService.removeUsersFromProject(project.getId(),
+				List.of(TEST_USERNAME));
+
+		assertEquals(project.getName(), projectUserRoleResponseDTO.getProjectName());
+		assertThat(projectUserRoleResponseDTO.getUserResponseDTOList()).hasSize(1).satisfies(dto -> {
+			assertEquals(com.redhat.parodos.project.enums.Role.valueOf(role.getName()),
+					dto.get(0).getRoles().toArray()[0]);
+			assertEquals(testUser, dto.get(0).getUsername());
+		});
+
 	}
 
 	private Project getProject(String name, String description) {

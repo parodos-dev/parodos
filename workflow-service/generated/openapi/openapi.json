@@ -130,6 +130,98 @@
         "tags" : [ "Project" ]
       }
     },
+    "/api/v1/projects/{id}/users" : {
+      "delete" : {
+        "operationId" : "removeUsersFromProject",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "array",
+                "items" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProjectUserRoleResponseDTO"
+                }
+              }
+            },
+            "description" : "Succeeded"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not found"
+          }
+        },
+        "summary" : "Remove users from project",
+        "tags" : [ "Project" ]
+      },
+      "post" : {
+        "operationId" : "updateUserRolesToProject",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/components/schemas/UserRoleRequestDTO"
+                }
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProjectUserRoleResponseDTO"
+                }
+              }
+            },
+            "description" : "Succeeded"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not found"
+          }
+        },
+        "summary" : "Update user roles in project",
+        "tags" : [ "Project" ]
+      }
+    },
     "/api/v1/workflowdefinitions" : {
       "get" : {
         "operationId" : "getWorkFlowDefinitions",
@@ -505,6 +597,55 @@
             "format" : "date-time"
           },
           "name" : {
+            "type" : "string"
+          }
+        }
+      },
+      "ProjectUserRoleResponseDTO" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "projectName" : {
+            "type" : "string"
+          },
+          "userResponseDTOList" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/UserRoleResponseDTO"
+            }
+          }
+        }
+      },
+      "UserRoleRequestDTO" : {
+        "type" : "object",
+        "properties" : {
+          "roles" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "enum" : [ "OWNER", "DEVELOPER", "ADMIN" ]
+            }
+          },
+          "username" : {
+            "type" : "string"
+          }
+        }
+      },
+      "UserRoleResponseDTO" : {
+        "type" : "object",
+        "properties" : {
+          "roles" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "enum" : [ "OWNER", "DEVELOPER", "ADMIN" ]
+            }
+          },
+          "username" : {
             "type" : "string"
           }
         }

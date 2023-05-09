@@ -23,6 +23,8 @@ import javax.validation.Valid;
 
 import com.redhat.parodos.project.dto.ProjectRequestDTO;
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
+import com.redhat.parodos.project.dto.ProjectUserRoleResponseDTO;
+import com.redhat.parodos.project.dto.UserRoleRequestDTO;
 import com.redhat.parodos.project.service.ProjectServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -34,6 +36,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -102,6 +105,35 @@ public class ProjectController {
 			return ResponseEntity.notFound().build();
 		}
 		return ResponseEntity.ok(projectResponseDTO);
+	}
+
+	@Operation(summary = "Update user roles in project")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Succeeded",
+					content = { @Content(mediaType = "application/json",
+							schema = @Schema(implementation = ProjectUserRoleResponseDTO.class)) }),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Not found", content = @Content) })
+	@PostMapping("/{id}/users")
+	public ResponseEntity<ProjectUserRoleResponseDTO> updateUserRolesToProject(@PathVariable UUID id,
+			@RequestBody List<UserRoleRequestDTO> userRoleRequestDTOs) {
+		ProjectUserRoleResponseDTO projectResponseDTO = projectService.updateUserRolesToProject(id,
+				userRoleRequestDTOs);
+		return ResponseEntity.ok(projectResponseDTO);
+	}
+
+	@Operation(summary = "Remove users from project")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Succeeded",
+					content = { @Content(mediaType = "application/json",
+							schema = @Schema(implementation = ProjectUserRoleResponseDTO.class)) }),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Not found", content = @Content) })
+	@DeleteMapping("/{id}/users")
+	public ResponseEntity<ProjectUserRoleResponseDTO> removeUsersFromProject(@PathVariable UUID id,
+			@RequestBody List<String> usernames) {
+		ProjectUserRoleResponseDTO projectUserRoleResponseDTO = projectService.removeUsersFromProject(id, usernames);
+		return ResponseEntity.ok(projectUserRoleResponseDTO);
 	}
 
 }

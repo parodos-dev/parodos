@@ -13,4 +13,6 @@ public interface ProjectUserRoleRepository extends JpaRepository<ProjectUserRole
 
 	List<ProjectUserRole> findByUserId(UUID userId);
 
+	List<ProjectUserRole> deleteAllByIdProjectIdAndIdUserIdIn(UUID projectId, List<UUID> userIds);
+
 }

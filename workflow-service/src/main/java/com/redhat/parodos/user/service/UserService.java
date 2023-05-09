@@ -15,6 +15,7 @@
  */
 package com.redhat.parodos.user.service;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.redhat.parodos.user.dto.UserResponseDTO;
@@ -35,5 +36,7 @@ public interface UserService {
 	UserResponseDTO getUserByUsername(String username);
 
 	User getUserEntityByUsername(String username);
+
+	List<User> findAllUserEntitiesByUsernameIn(List<String> usernames);
 
 }

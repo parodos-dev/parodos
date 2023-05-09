@@ -15,6 +15,7 @@
  */
 package com.redhat.parodos.user.service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -70,6 +71,11 @@ public class UserServiceImpl implements UserService {
 	public User getUserEntityByUsername(String username) {
 		return userRepository.findByUsername(username).stream().findFirst().orElseThrow(
 				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user " + username + " is not found"));
+	}
+
+	@Override
+	public List<User> findAllUserEntitiesByUsernameIn(List<String> usernames) {
+		return userRepository.findAllByUsernameIn(usernames);
 	}
 
 }

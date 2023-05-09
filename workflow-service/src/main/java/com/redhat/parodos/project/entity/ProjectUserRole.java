@@ -3,6 +3,7 @@ package com.redhat.parodos.project.entity;
 import java.io.Serializable;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
@@ -29,7 +30,7 @@ public class ProjectUserRole {
 	@EmbeddedId
 	private Id id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST })
 	@JoinColumn(name = "project_id", nullable = false, insertable = false, updatable = false)
 	private Project project;
 
