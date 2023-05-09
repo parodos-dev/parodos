@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+
+<!DOCTYPE module PUBLIC
+        "-//Checkstyle//DTD Checkstyle Configuration 1.2//EN"
+        "https://checkstyle.org/dtds/configuration_1_2.dtd">
+
+<module name="Checker">
+    <module name="TreeWalker">
+
+        <!-- No if/else/do/for/while without braces -->
+        <module name="NeedBraces"/>
+
+        <!-- No empty blocks -->
+        <module name="EmptyBlock"/>
+
+        <!-- Disallow unnecessary instantiation of Boolean, String -->
+        <module name="IllegalInstantiation">
+            <!-- property name="classes" value="java.lang.Boolean, java.lang.String"/ -->
+            <property name="classes" value="java.lang.Boolean"/>
+        </module>
+
+        <!--  Import should be explicit, really needed and only from pure java packages -->
+        <module name="AvoidStarImport" />
+        <module name="UnusedImports" />
+        <module name="IllegalImport" />
+    </module>
+</module>
