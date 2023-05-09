@@ -877,10 +877,16 @@ components:
       example:
         workFlowName: workFlowName
         works:
-        - name: name
+        - works:
+          - null
+          - null
+          name: name
           type: TASK
           status: FAILED
-        - name: name
+        - works:
+          - null
+          - null
+          name: name
           type: TASK
           status: FAILED
         workFlowExecutionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
@@ -954,6 +960,9 @@ components:
       type: object
     WorkStatusResponseDTO:
       example:
+        works:
+        - null
+        - null
         name: name
         type: TASK
         status: FAILED
@@ -973,6 +982,10 @@ components:
           - TASK
           - WORKFLOW
           type: string
+        works:
+          items:
+            $ref: '#/components/schemas/WorkStatusResponseDTO'
+          type: array
       type: object
     updateParameter_200_response:
       allOf:
