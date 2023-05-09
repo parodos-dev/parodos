@@ -13,12 +13,15 @@
 package com.redhat.parodos.sdk.model;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.TypeAdapter;
@@ -159,6 +162,11 @@ public class WorkStatusResponseDTO {
 	@SerializedName(SERIALIZED_NAME_TYPE)
 	private TypeEnum type;
 
+	public static final String SERIALIZED_NAME_WORKS = "works";
+
+	@SerializedName(SERIALIZED_NAME_WORKS)
+	private List<WorkStatusResponseDTO> works = new ArrayList<>();
+
 	public WorkStatusResponseDTO() {
 	}
 
@@ -222,6 +230,34 @@ public class WorkStatusResponseDTO {
 		this.type = type;
 	}
 
+	public WorkStatusResponseDTO works(List<WorkStatusResponseDTO> works) {
+
+		this.works = works;
+		return this;
+	}
+
+	public WorkStatusResponseDTO addWorksItem(WorkStatusResponseDTO worksItem) {
+		if (this.works == null) {
+			this.works = new ArrayList<>();
+		}
+		this.works.add(worksItem);
+		return this;
+	}
+
+	/**
+	 * Get works
+	 * @return works
+	 **/
+	@javax.annotation.Nullable
+
+	public List<WorkStatusResponseDTO> getWorks() {
+		return works;
+	}
+
+	public void setWorks(List<WorkStatusResponseDTO> works) {
+		this.works = works;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -233,12 +269,13 @@ public class WorkStatusResponseDTO {
 		WorkStatusResponseDTO workStatusResponseDTO = (WorkStatusResponseDTO) o;
 		return Objects.equals(this.name, workStatusResponseDTO.name)
 				&& Objects.equals(this.status, workStatusResponseDTO.status)
-				&& Objects.equals(this.type, workStatusResponseDTO.type);
+				&& Objects.equals(this.type, workStatusResponseDTO.type)
+				&& Objects.equals(this.works, workStatusResponseDTO.works);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(name, status, type);
+		return Objects.hash(name, status, type, works);
 	}
 
 	@Override
@@ -248,6 +285,7 @@ public class WorkStatusResponseDTO {
 		sb.append("    name: ").append(toIndentedString(name)).append("\n");
 		sb.append("    status: ").append(toIndentedString(status)).append("\n");
 		sb.append("    type: ").append(toIndentedString(type)).append("\n");
+		sb.append("    works: ").append(toIndentedString(works)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}
@@ -273,6 +311,7 @@ public class WorkStatusResponseDTO {
 		openapiFields.add("name");
 		openapiFields.add("status");
 		openapiFields.add("type");
+		openapiFields.add("works");
 
 		// a set of required properties/fields (JSON key names)
 		openapiRequiredFields = new HashSet<String>();
@@ -322,6 +361,23 @@ public class WorkStatusResponseDTO {
 			throw new IllegalArgumentException(
 					String.format("Expected the field `type` to be a primitive type in the JSON string but got `%s`",
 							jsonObj.get("type").toString()));
+		}
+		if (jsonObj.get("works") != null && !jsonObj.get("works").isJsonNull()) {
+			JsonArray jsonArrayworks = jsonObj.getAsJsonArray("works");
+			if (jsonArrayworks != null) {
+				// ensure the json data is an array
+				if (!jsonObj.get("works").isJsonArray()) {
+					throw new IllegalArgumentException(
+							String.format("Expected the field `works` to be an array in the JSON string but got `%s`",
+									jsonObj.get("works").toString()));
+				}
+
+				// validate the optional field `works` (array)
+				for (int i = 0; i < jsonArrayworks.size(); i++) {
+					WorkStatusResponseDTO.validateJsonObject(jsonArrayworks.get(i).getAsJsonObject());
+				}
+				;
+			}
 		}
 	}
 
