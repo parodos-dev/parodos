@@ -30,7 +30,7 @@ import static org.junit.Assert.fail;
  * @author Gloria Ciavarrini (Github: gciavarrini)
  */
 @Slf4j
-public class ComplexWorkFlow extends BaseIntegrationTest {
+public class ComplexWorkFlowTest extends BaseIntegrationTest {
 
 	private static final String projectName = "project-1";
 
