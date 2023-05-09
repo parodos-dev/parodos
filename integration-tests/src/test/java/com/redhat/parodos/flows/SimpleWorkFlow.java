@@ -18,7 +18,6 @@ import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.sdk.model.WorkRequestDTO;
 import com.redhat.parodos.sdkutils.SdkUtils;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
-import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.enums.WorkType;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -61,7 +60,8 @@ public class SimpleWorkFlow extends BaseIntegrationTest {
 				simpleSequentialWorkFlowDefinition.getName());
 		assertEquals(WorkFlowDefinitionResponseDTO.ProcessingTypeEnum.SEQUENTIAL,
 				simpleSequentialWorkFlowDefinition.getProcessingType());
-		assertEquals(WorkFlowType.INFRASTRUCTURE.toString(), simpleSequentialWorkFlowDefinition.getType());
+		assertEquals(WorkFlowDefinitionResponseDTO.TypeEnum.INFRASTRUCTURE,
+				simpleSequentialWorkFlowDefinition.getType());
 
 		assertNotNull(simpleSequentialWorkFlowDefinition.getWorks());
 		assertEquals(2, simpleSequentialWorkFlowDefinition.getWorks().size());

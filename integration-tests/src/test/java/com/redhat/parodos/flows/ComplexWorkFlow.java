@@ -114,7 +114,7 @@ public class ComplexWorkFlow extends BaseIntegrationTest {
 
 		assertNotNull(workFlowStatusResponseDTO);
 		assertNotNull(workFlowStatusResponseDTO.getWorkFlowExecutionId());
-		assertEquals(WorkStatusEnum.COMPLETED, workFlowStatusResponseDTO.getStatus());
+		assertEquals(WorkFlowStatusResponseDTO.StatusEnum.COMPLETED, workFlowStatusResponseDTO.getStatus());
 		log.info("Onboarding workflow execution completed with status {}", workFlowStatusResponseDTO.getStatus());
 	}
 

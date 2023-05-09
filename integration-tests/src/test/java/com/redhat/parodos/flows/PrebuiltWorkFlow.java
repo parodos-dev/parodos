@@ -9,6 +9,7 @@ import com.redhat.parodos.sdk.api.WorkflowDefinitionApi;
 import com.redhat.parodos.sdk.invoker.ApiException;
 import com.redhat.parodos.sdk.model.ArgumentRequestDTO;
 import com.redhat.parodos.sdk.model.ProjectResponseDTO;
+import com.redhat.parodos.sdk.model.WorkDefinitionResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
 import com.redhat.parodos.sdk.model.WorkFlowResponseDTO;
@@ -16,8 +17,6 @@ import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.sdk.model.WorkRequestDTO;
 import com.redhat.parodos.sdkutils.SdkUtils;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
-import com.redhat.parodos.workflow.enums.WorkFlowType;
-import com.redhat.parodos.workflow.enums.WorkType;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -29,7 +28,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @Slf4j
-public class PrebuiltWorkFlow extends BaseIntegrationTest {
+public class PrebuiltWorkFlowTest extends BaseIntegrationTest {
 
 	private static final String projectName = "project-1";
 
@@ -57,12 +56,13 @@ public class PrebuiltWorkFlow extends BaseIntegrationTest {
 		assertEquals(workFlowName, prebuiltWorkFlowDefinition.getName());
 		assertEquals(WorkFlowDefinitionResponseDTO.ProcessingTypeEnum.SEQUENTIAL,
 				prebuiltWorkFlowDefinition.getProcessingType());
-		assertEquals(WorkFlowType.INFRASTRUCTURE.toString(), prebuiltWorkFlowDefinition.getType());
+		assertEquals(WorkFlowDefinitionResponseDTO.TypeEnum.INFRASTRUCTURE, prebuiltWorkFlowDefinition.getType());
 
 		assertNotNull(prebuiltWorkFlowDefinition.getWorks());
 		assertEquals(1, prebuiltWorkFlowDefinition.getWorks().size());
 		assertEquals("notificationTask", prebuiltWorkFlowDefinition.getWorks().get(0).getName());
-		assertEquals(WorkType.TASK.toString(), prebuiltWorkFlowDefinition.getWorks().get(0).getWorkType());
+		assertEquals(WorkDefinitionResponseDTO.WorkTypeEnum.TASK,
+				prebuiltWorkFlowDefinition.getWorks().get(0).getWorkType());
 		assertTrue(CollectionUtils.isEmpty(prebuiltWorkFlowDefinition.getWorks().get(0).getWorks()));
 		assertNull(prebuiltWorkFlowDefinition.getWorks().get(0).getProcessingType());
 		assertNotNull(prebuiltWorkFlowDefinition.getWorks().get(0).getParameters());
@@ -91,6 +91,7 @@ public class PrebuiltWorkFlow extends BaseIntegrationTest {
 
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = SdkUtils.waitWorkflowStatusAsync(workflowApi,
 				workFlowResponseDTO.getWorkFlowExecutionId());
+		assertNotNull(workFlowStatusResponseDTO);
 		assertEquals(WorkFlowResponseDTO.WorkStatusEnum.COMPLETED, workFlowStatusResponseDTO.getStatus());
 		log.info("workflow finished successfully with response: {}", workFlowResponseDTO);
 		log.info("******** PreBuilt Sequence Flow Completed ********");
