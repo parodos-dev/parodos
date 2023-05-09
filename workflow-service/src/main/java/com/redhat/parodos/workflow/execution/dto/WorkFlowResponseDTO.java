@@ -44,7 +44,6 @@ public class WorkFlowResponseDTO {
 
 	private String workFlowName;
 
-	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private WorkStatus workStatus;
 
 	private String startDate;
