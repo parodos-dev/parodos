@@ -191,7 +191,7 @@ jobs:
           kubectl get pods --all-namespaces
 
       - name: Maven Build
-        run: mvn -Dmaven.test.skip=true clean install
+        run: mvn -Dmaven.test.skip=true install
 
       - name: Run integration tests
         run: |
