@@ -19,6 +19,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.redhat.parodos.workflow.enums.WorkType;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflows.work.WorkStatus;
@@ -46,6 +47,7 @@ public class WorkStatusResponseDTO {
 
 	private WorkStatus status;
 
+	@JsonProperty("works")
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private List<WorkStatusResponseDTO> works;
 

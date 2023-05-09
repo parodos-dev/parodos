@@ -839,6 +839,12 @@
           "type" : {
             "type" : "string",
             "enum" : [ "TASK", "WORKFLOW" ]
+          },
+          "works" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/WorkStatusResponseDTO"
+            }
           }
         }
       }
