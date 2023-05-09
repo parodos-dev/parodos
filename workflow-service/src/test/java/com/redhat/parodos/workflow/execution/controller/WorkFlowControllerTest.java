@@ -13,6 +13,7 @@ import com.redhat.parodos.workflow.execution.dto.WorkFlowResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
+import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
@@ -78,6 +79,7 @@ class WorkFlowControllerTest extends ControllerMockClient {
 		WorkContext workContext = new WorkContext();
 		workContext.put("WORKFLOW_EXECUTION_ID", UUID.randomUUID().toString());
 		when(report.getWorkContext()).thenReturn(workContext);
+		when(report.getStatus()).thenReturn(WorkStatus.IN_PROGRESS);
 		when(this.workFlowService.execute(any())).thenReturn(report);
 
 		// when
@@ -100,7 +102,8 @@ class WorkFlowControllerTest extends ControllerMockClient {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = objectMapper.writeValueAsString(workFlowRequestDTO);
 
-		when(this.workFlowService.execute(any())).thenReturn(null);
+		WorkReport workReport = new DefaultWorkReport(WorkStatus.FAILED, new WorkContext(), new Throwable());
+		when(this.workFlowService.execute(any())).thenReturn(workReport);
 
 		// when
 		this.mockMvc.perform(this.postRequestWithValidCredentials("/api/v1/workflows").content(json))
