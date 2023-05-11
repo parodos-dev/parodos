@@ -54,6 +54,13 @@ public class OcpOnboardingWorkFlowConfiguration {
 	}
 
 	@Bean
+	WorkFlowOption move2kube() {
+		return new WorkFlowOption.Builder("move2kube", "move2KubeWorkFlow_INFRASTRUCTURE_WORKFLOW")
+				.addToDetails("Transform the application into a Kubernetes application.").displayName("move2kube")
+				.setDescription("Transform application using move2kube").build();
+	}
+
+	@Bean
 	WorkFlowOption badRepoOption() {
 		return new WorkFlowOption.Builder("badRepoOption",
 				"simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
@@ -74,8 +81,10 @@ public class OcpOnboardingWorkFlowConfiguration {
 	OnboardingOcpAssessmentTask onboardingAssessmentTask(
 			@Qualifier("onboardingOcpOption") WorkFlowOption onboardingOcpOption,
 			@Qualifier("badRepoOption") WorkFlowOption badRepoOption,
-			@Qualifier("notSupportOption") WorkFlowOption notSupportOption) {
-		return new OnboardingOcpAssessmentTask(List.of(onboardingOcpOption, badRepoOption, notSupportOption));
+			@Qualifier("notSupportOption") WorkFlowOption notSupportOption,
+			@Qualifier("move2kube") WorkFlowOption move2kube) {
+		return new OnboardingOcpAssessmentTask(
+				List.of(onboardingOcpOption, badRepoOption, notSupportOption, move2kube));
 	}
 
 	// A Workflow designed to execute and return WorkflowOption(s) that can be executed

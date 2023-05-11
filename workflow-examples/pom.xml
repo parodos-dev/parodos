@@ -22,6 +22,7 @@
     <properties>
         <freemarker.version>2.3.30</freemarker.version>
         <fabric8.version>6.5.1</fabric8.version>
+        <move2kube.version>v1.0.3</move2kube.version>
     </properties>
     <dependencies>
         <dependency>
@@ -42,6 +43,11 @@
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
             <version>${freemarker.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>dev.parodos</groupId>
+            <artifactId>move2kube</artifactId>
+            <version>${move2kube.version}</version>
         </dependency>
         <dependency>
             <groupId>dev.parodos</groupId>
@@ -109,6 +115,28 @@
             <artifactId>sdk-utils</artifactId>
             <scope>test</scope>
             <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>2.0.9</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito2</artifactId>
+            <version>2.0.9</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
