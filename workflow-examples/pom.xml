@@ -102,8 +102,8 @@
         <dependency>
             <groupId>dev.parodos</groupId>
             <artifactId>sdk-utils</artifactId>
-            <version>${revision}</version>
             <scope>test</scope>
+            <version>${revision}</version>
         </dependency>
     </dependencies>
     <build>
