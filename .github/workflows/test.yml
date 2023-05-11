@@ -196,7 +196,7 @@ jobs:
       - name: Run integration tests
         run: |
           export SERVERIP=$(kubectl get nodes kind-control-plane -o json  |  jq -r '[.status.addresses[] | select(.type=="InternalIP")] | .[0].address')
-          SERVER_IP="${SERVERIP}" SERVERPORT=80 mvn verify -pl integration-tests -P integration-test
+          SERVER_IP="${SERVERIP}" SERVER_PORT=80 mvn verify -pl integration-tests -P integration-test
 
       - name: Collect logs
         if: ${{ failure() }}

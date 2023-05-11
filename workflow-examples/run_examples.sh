@@ -9,9 +9,9 @@
 
 set -e
 
-SERVERIP=${SERVERIP:-127.0.0.1}
-SERVERPORT=${SERVERPORT:-8080}
-export TARGET_URL="http://${SERVERIP}:${SERVERPORT}"
+SERVER_IP=${SERVER_IP:-127.0.0.1}
+SERVER_PORT=${SERVER_PORT:-8080}
+export TARGET_URL="http://${SERVER_IP}:${SERVER_PORT}"
 
 echo "Starting example with '${TARGET_URL}' server"
 
