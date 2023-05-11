@@ -396,8 +396,6 @@ components:
         description: description
         id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         createDate: 2000-01-23T04:56:07.000+00:00
-        status: status
-        username: username
       properties:
         createDate:
           format: date-time
@@ -411,10 +409,6 @@ components:
           format: date-time
           type: string
         name:
-          type: string
-        status:
-          type: string
-        username:
           type: string
       type: object
     WorkDefinitionResponseDTO:

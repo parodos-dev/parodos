@@ -12,8 +12,6 @@
 |**id** | **UUID** |  |  [optional] |
 |**modifyDate** | **Date** |  |  [optional] |
 |**name** | **String** |  |  [optional] |
-|**status** | **String** |  |  [optional] |
-|**username** | **String** |  |  [optional] |
 
 
 

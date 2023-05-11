@@ -229,8 +229,9 @@ public abstract class SdkUtils {
 	@Nullable
 	public static ProjectResponseDTO getProjectByNameAndDescription(List<ProjectResponseDTO> projects,
 			String projectName, String projectDescription) {
-		return projects.stream().filter(prj -> projectName.equals(prj.getName())
-				&& projectDescription.equals(prj.getDescription()) && prj.getUsername() == null && prj.getId() != null)
+		return projects
+				.stream().filter(prj -> projectName.equals(prj.getName())
+						&& projectDescription.equals(prj.getDescription()) && prj.getId() != null)
 				.findAny().orElse(null);
 	}
 
