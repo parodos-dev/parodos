@@ -12,12 +12,12 @@
 
 package com.redhat.parodos.notification.sdk.api.auth;
 
-import com.redhat.parodos.notification.sdk.api.Pair;
-import com.redhat.parodos.notification.sdk.api.ApiException;
-
 import java.net.URI;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
+
+import com.redhat.parodos.notification.sdk.api.ApiException;
+import com.redhat.parodos.notification.sdk.api.Pair;
 
 public interface Authentication {
 

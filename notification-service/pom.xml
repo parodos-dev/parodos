@@ -195,7 +195,6 @@
                     <execution>
                         <configuration>
                             <jvmArguments>-Dspring-boot.run.profiles=local</jvmArguments>
-                            <fork>true</fork>
                         </configuration>
                         <id>pre-openapi-json-gen</id>
                         <goals>
@@ -204,9 +203,6 @@
                         <phase>process-classes</phase>
                     </execution>
                     <execution>
-                        <configuration>
-                            <fork>true</fork>
-                        </configuration>
                         <id>post-openapi-json-gen</id>
                         <goals>
                             <goal>stop</goal>

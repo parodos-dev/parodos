@@ -12,10 +12,8 @@
 
 package com.redhat.parodos.notification.sdk.api;
 
-import java.util.Map;
 import java.util.List;
-
-import javax.ws.rs.core.GenericType;
+import java.util.Map;
 
 /**
  * <p>

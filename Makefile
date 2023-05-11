@@ -181,7 +181,7 @@ bump-version: ## update post-release version and update commit message
 
 bump-git-commit: ## adds all files and bumps the version
 	git add -u .
-	git commit -m 'Version bump to 1.0.11'
+	git commit -m 'Version bump to $(NEXT_VERSION)'
 
 git-release: ## adds all release files and commits
 	git add -u .
