@@ -62,16 +62,6 @@ public class ProjectResponseDTO {
 	@SerializedName(SERIALIZED_NAME_NAME)
 	private String name;
 
-	public static final String SERIALIZED_NAME_STATUS = "status";
-
-	@SerializedName(SERIALIZED_NAME_STATUS)
-	private String status;
-
-	public static final String SERIALIZED_NAME_USERNAME = "username";
-
-	@SerializedName(SERIALIZED_NAME_USERNAME)
-	private String username;
-
 	public ProjectResponseDTO() {
 	}
 
@@ -175,46 +165,6 @@ public class ProjectResponseDTO {
 		this.name = name;
 	}
 
-	public ProjectResponseDTO status(String status) {
-
-		this.status = status;
-		return this;
-	}
-
-	/**
-	 * Get status
-	 * @return status
-	 **/
-	@javax.annotation.Nullable
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public ProjectResponseDTO username(String username) {
-
-		this.username = username;
-		return this;
-	}
-
-	/**
-	 * Get username
-	 * @return username
-	 **/
-	@javax.annotation.Nullable
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -228,14 +178,12 @@ public class ProjectResponseDTO {
 				&& Objects.equals(this.description, projectResponseDTO.description)
 				&& Objects.equals(this.id, projectResponseDTO.id)
 				&& Objects.equals(this.modifyDate, projectResponseDTO.modifyDate)
-				&& Objects.equals(this.name, projectResponseDTO.name)
-				&& Objects.equals(this.status, projectResponseDTO.status)
-				&& Objects.equals(this.username, projectResponseDTO.username);
+				&& Objects.equals(this.name, projectResponseDTO.name);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(createDate, description, id, modifyDate, name, status, username);
+		return Objects.hash(createDate, description, id, modifyDate, name);
 	}
 
 	@Override
@@ -247,8 +195,6 @@ public class ProjectResponseDTO {
 		sb.append("    id: ").append(toIndentedString(id)).append("\n");
 		sb.append("    modifyDate: ").append(toIndentedString(modifyDate)).append("\n");
 		sb.append("    name: ").append(toIndentedString(name)).append("\n");
-		sb.append("    status: ").append(toIndentedString(status)).append("\n");
-		sb.append("    username: ").append(toIndentedString(username)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}
@@ -276,8 +222,6 @@ public class ProjectResponseDTO {
 		openapiFields.add("id");
 		openapiFields.add("modifyDate");
 		openapiFields.add("name");
-		openapiFields.add("status");
-		openapiFields.add("username");
 
 		// a set of required properties/fields (JSON key names)
 		openapiRequiredFields = new HashSet<String>();
@@ -325,18 +269,6 @@ public class ProjectResponseDTO {
 			throw new IllegalArgumentException(
 					String.format("Expected the field `name` to be a primitive type in the JSON string but got `%s`",
 							jsonObj.get("name").toString()));
-		}
-		if ((jsonObj.get("status") != null && !jsonObj.get("status").isJsonNull())
-				&& !jsonObj.get("status").isJsonPrimitive()) {
-			throw new IllegalArgumentException(
-					String.format("Expected the field `status` to be a primitive type in the JSON string but got `%s`",
-							jsonObj.get("status").toString()));
-		}
-		if ((jsonObj.get("username") != null && !jsonObj.get("username").isJsonNull())
-				&& !jsonObj.get("username").isJsonPrimitive()) {
-			throw new IllegalArgumentException(String.format(
-					"Expected the field `username` to be a primitive type in the JSON string but got `%s`",
-					jsonObj.get("username").toString()));
 		}
 	}
 

@@ -15,16 +15,18 @@
  */
 package com.redhat.parodos.user.entity;
 
-import com.nimbusds.jose.shaded.json.annotate.JsonIgnore;
-import com.redhat.parodos.common.AbstractEntity;
-import com.redhat.parodos.project.entity.ProjectUserRole;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+
+import com.nimbusds.jose.shaded.json.annotate.JsonIgnore;
+import com.redhat.parodos.common.AbstractEntity;
+import com.redhat.parodos.project.entity.ProjectUserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
