@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 
-import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
@@ -44,12 +43,12 @@ public class GitCloneTask extends BaseWorkFlowTask {
 		String gitBranch = null;
 
 		try {
-			gitUri = WorkContextDelegate.getRequiredValueFromRequestParams(workContext, GitUtils.getUri());
-			gitBranch = WorkContextDelegate.getOptionalValueFromRequestParams(workContext, GitUtils.getBranch(),
-					"main");
+			gitUri = this.getRequiredParameterValue(workContext, GitUtils.getUri());
+			gitBranch = this.getOptionalParameterValue(workContext, GitUtils.getBranch(), GitUtils.getDefaultBranch());
 			destination = cloneRepo(gitUri, gitBranch);
 		}
 		catch (MissingParameterException e) {
+			log.debug("Something failed with the parameters: {}", e.getMessage());
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
 		}
 		catch (TransportException e) {
@@ -63,10 +62,10 @@ public class GitCloneTask extends BaseWorkFlowTask {
 					new Exception("Remote repository " + gitUri + " is not available"));
 		}
 		catch (IOException | GitAPIException e) {
+			log.debug("Cannot clone repository: {} {}", gitUri, e.getMessage());
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext,
 					new Exception("cannot clone repository, error: " + e.getMessage()));
 		}
-
 		workContext.put(GitUtils.getContextUri(), gitUri);
 		workContext.put(GitUtils.getContextDestination(), destination);
 		workContext.put(GitUtils.getContextBranch(), gitBranch);

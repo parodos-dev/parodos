@@ -36,9 +36,13 @@ public class GitArchiveTask extends BaseWorkFlowTask {
 				.optional(true).description("path where the git repo is located").build());
 	}
 
+	public String getRepoPath(WorkContext workContext) {
+		return GitUtils.getRepoPath(workContext);
+	}
+
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		String path = GitUtils.getRepoPath(workContext);
+		String path = getRepoPath(workContext);
 		if (Strings.isNullOrEmpty(path)) {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext,
 					new IllegalArgumentException("The path parameter cannot be null or empty"));
@@ -51,13 +55,13 @@ public class GitArchiveTask extends BaseWorkFlowTask {
 		}
 		catch (FileNotFoundException | GitAPIException e) {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext,
-					new Exception("Cannot archive the repository:" + e));
+					new Exception("Cannot archive the repository: %s".formatted(e.getMessage())));
 		}
 		catch (IOException e) {
 			// This is the catch for Repository clone call or archive, we don't really
 			// know.
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext,
-					new Exception("No repository at " + path + " Error:" + e.getMessage()));
+					new Exception("No repository at '%s' Error: %s".formatted(path, e.getMessage())));
 		}
 		catch (Exception e) {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext,
@@ -73,12 +77,11 @@ public class GitArchiveTask extends BaseWorkFlowTask {
 	}
 
 	private Repository getRepo(String path) throws IOException {
-		Path gitDir = Paths.get(path);
+		Path gitDir = Paths.get(path + "/.git");
 		return new FileRepositoryBuilder().setGitDir(gitDir.toFile()).build();
 	}
 
 	private Path archive(Repository repo) throws FileNotFoundException, IOException, GitAPIException {
-
 		// Create a Git instance
 		Git git = new Git(repo);
 		ArchiveCommand.registerFormat("zip", new ZipFormat());
@@ -86,9 +89,8 @@ public class GitArchiveTask extends BaseWorkFlowTask {
 		// Create a ZipFormat instance
 		String tmpdir = Files.createTempDir().getAbsolutePath();
 		Path zipFile = Paths.get(tmpdir + "/output.zip");
-
 		try (FileOutputStream out = new FileOutputStream(zipFile.toAbsolutePath().toString())) {
-			git.archive().setTree(repo.resolve("HEAD")).setFormat("zip").setOutputStream(out).call();
+			git.archive().setTree(repo.resolve("HEAD")).setPrefix("src/").setFormat("zip").setOutputStream(out).call();
 		}
 		finally {
 			git.close();

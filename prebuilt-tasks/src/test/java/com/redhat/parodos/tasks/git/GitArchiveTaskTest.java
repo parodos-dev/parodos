@@ -60,7 +60,7 @@ public class GitArchiveTaskTest {
 		// given
 		createSingleFileInRepo();
 		WorkContext workContext = new WorkContext();
-		workContext.put("path", this.repository.getDirectory().toString());
+		workContext.put("path", tempDir.toString());
 
 		// when
 		var result = this.gitArchiveTask.execute(workContext);
@@ -76,7 +76,7 @@ public class GitArchiveTaskTest {
 		// given
 		createSingleFileInRepo();
 		WorkContext workContext = new WorkContext();
-		workContext.put("gitDestination", this.repository.getDirectory().toString());
+		workContext.put("gitDestination", tempDir.toString());
 
 		// when
 		var result = this.gitArchiveTask.execute(workContext);
