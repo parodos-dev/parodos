@@ -19,6 +19,7 @@ data:
   DATASOURCE_USERNAME: "parodos"
   DATASOURCE_PASSWORD: "parodos"
   SPRING_PROFILES_ACTIVE: "dev"
+  NOTIFICATION_SERVER_ADDRESS: "notification-service.default.svc.cluster.local"
 ---
 apiVersion: v1
 kind: ConfigMap
