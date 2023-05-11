@@ -2,6 +2,7 @@ package com.redhat.parodos.sdkutils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
@@ -44,17 +45,16 @@ public abstract class SdkUtils {
 
 	/**
 	 * Creates and configures the APIClient using the configuration properties available
-	 * in `application.yml`
+	 * in `sdk-config.yml`
 	 * @return the ApiClient
 	 */
 	public static ApiClient getParodosAPiClient() throws ApiException, MissingRequiredPropertiesException {
 		ApiClient apiClient = Configuration.getDefaultApiClient();
-		CustomPropertiesReader reader = new CustomPropertiesReader();
-		serverIp = reader.getServerIp();
-		String serverPort = reader.getServerPort();
+		serverIp = Optional.ofNullable(System.getenv("SERVER_IP")).orElse("localhost");
+		String serverPort = Optional.ofNullable(System.getenv("SERVER_PORT")).orElse("8080");
 
 		if (Strings.isNullOrEmpty(serverIp) || Strings.isNullOrEmpty(serverPort)) {
-			throw new MissingRequiredPropertiesException();
+			throw new IllegalArgumentException("SERVER_IP and SERVER_PORT must be set");
 		}
 
 		int port = Integer.parseInt(serverPort);
@@ -339,4 +339,5 @@ public abstract class SdkUtils {
 	public static String getServerIp() {
 		return serverIp;
 	}
+
 }
