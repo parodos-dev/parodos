@@ -16,7 +16,7 @@
 package com.redhat.parodos.config;
 
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
-import com.redhat.parodos.project.entity.Project;
+import com.redhat.parodos.project.entity.ProjectUserRole;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.dto.converter.WorkFlowTaskDefinitionDTOConverter;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
@@ -36,10 +36,10 @@ import org.springframework.context.annotation.Configuration;
 public class ModelMapperConfig {
 
 	@Bean
-	ModelMapper modelMapper() {
+	public ModelMapper modelMapper() {
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setAmbiguityIgnored(true);
-		addProjectUserMapping(modelMapper);
+		addProjectUserRoleMapping(modelMapper);
 		addWorkFlowDefinitionResponseDTOMapping(modelMapper);
 		return modelMapper;
 	}
@@ -53,10 +53,14 @@ public class ModelMapperConfig {
 		modelMapper.addMappings(workFlowDefinitionResponseDTOMap);
 	}
 
-	private void addProjectUserMapping(ModelMapper modelMapper) {
-		PropertyMap<Project, ProjectResponseDTO> projectUserResponseDTOTypeMap = new PropertyMap<Project, ProjectResponseDTO>() {
+	private void addProjectUserRoleMapping(ModelMapper modelMapper) {
+		PropertyMap<ProjectUserRole, ProjectResponseDTO> projectUserResponseDTOTypeMap = new PropertyMap<>() {
 			protected void configure() {
-				map().setUsername(source.getUser().getUsername());
+				map().setId(source.getProject().getId());
+				map().setName(source.getProject().getName());
+				map().setDescription(source.getProject().getDescription());
+				map().setCreateDate(source.getProject().getCreateDate());
+				map().setModifyDate(source.getProject().getModifyDate());
 			}
 		};
 		modelMapper.addMappings(projectUserResponseDTOTypeMap);

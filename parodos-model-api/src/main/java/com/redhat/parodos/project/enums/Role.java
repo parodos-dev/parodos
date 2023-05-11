@@ -13,22 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.project.repository;
-
-import java.util.Optional;
-import java.util.UUID;
-
-import com.redhat.parodos.project.entity.Project;
-
-import org.springframework.data.jpa.repository.JpaRepository;
+package com.redhat.parodos.project.enums;
 
 /**
- * Project repository
+ * Role that can have in a project
  *
  * @author Annel Ketcha (Github: anludke)
  */
-public interface ProjectRepository extends JpaRepository<Project, UUID> {
+public enum Role {
 
-	Optional<Project> findByNameIgnoreCase(String name);
+	OWNER, DEVELOPER, ADMIN
 
 }

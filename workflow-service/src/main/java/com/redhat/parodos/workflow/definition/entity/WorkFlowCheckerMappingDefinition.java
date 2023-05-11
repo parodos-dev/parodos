@@ -40,7 +40,7 @@ import lombok.Setter;
  * @author Annel Ketcha (Github: anludke)
  */
 
-@Entity(name = "workflow_checker_definition")
+@Entity(name = "prds_workflow_checker_definition")
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor

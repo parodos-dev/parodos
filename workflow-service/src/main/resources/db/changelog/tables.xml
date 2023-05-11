@@ -6,7 +6,7 @@
 
     <changeSet id="1" author="luke" runAlways="false" runOnChange="true">
         <!-- User Table -->
-        <createTable tableName="users">
+        <createTable tableName="prds_user">
             <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -25,7 +25,7 @@
         </createTable>
 
         <!-- Project Table -->
-        <createTable tableName="project">
+        <createTable tableName="prds_project">
             <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -35,29 +35,40 @@
             <column name="description" type="varchar(255)"/>
             <column name="create_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="modify_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
-            <column name="created_by_user_id" type="${uuidType}">
-                <constraints nullable="true" foreignKeyName="fk_project_user" references="users(id)"/>
-            </column>
             <column name="object_version" type="bigint"/>
         </createTable>
 
-        <!-- User and Project Table -->
-        <createTable tableName="user_project">
+        <!-- Role Table -->
+        <createTable tableName="prds_role">
             <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="user_id" type="${uuidType}">
-                <constraints nullable="false" foreignKeyName="fk_user_project_user" references="user(id)"/>
+            <column name="name" type="varchar(255)">
+                <constraints unique="true" nullable="false"/>
             </column>
+            <column name="description" type="varchar(255)"/>
+            <column name="create_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="modify_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="object_version" type="bigint"/>
+        </createTable>
+
+        <!-- Project User Role Table -->
+        <createTable tableName="prds_project_user_role">
             <column name="project_id" type="${uuidType}">
-                <constraints nullable="false" foreignKeyName="fk_user_project_project" references="project(id)"/>
+                <constraints nullable="false" foreignKeyName="fk_user_project_project" references="prds_project(id)"/>
+            </column>
+            <column name="user_id" type="${uuidType}">
+                <constraints nullable="false" foreignKeyName="fk_user_project_user" references="prds_user(id)"/>
+            </column>
+            <column name="role_id" type="${uuidType}">
+                <constraints nullable="false" foreignKeyName="fk_user_project_role" references="prds_role(id)"/>
             </column>
             <column name="create_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="object_version" type="bigint"/>
         </createTable>
 
         <!-- Workflow Definition Table -->
-        <createTable tableName="workflow_definition">
+        <createTable tableName="prds_workflow_definition">
             <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -77,7 +88,7 @@
         </createTable>
 
         <!-- Workflow Task Definition Table -->
-        <createTable tableName="workflow_task_definition">
+        <createTable tableName="prds_workflow_task_definition">
             <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -90,14 +101,14 @@
             <column name="modify_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="workflow_definition_id" type="${uuidType}">
                 <constraints nullable="false" foreignKeyName="fk_workflow_task_definition_workflow_definition"
-                             references="workflow_definition(id)"/>
+                             references="prds_workflow_definition(id)"/>
             </column>
             <column name="commit_id" type="varchar(255)"/>
             <column name="object_version" type="bigint"/>
         </createTable>
 
         <!-- Workflow Definition Chain Table -->
-        <createTable tableName="workflow_work_definition">
+        <createTable tableName="prds_workflow_work_definition">
             <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -105,14 +116,14 @@
             <column name="work_definition_type" type="varchar(255)"/>
             <column name="workflow_definition_id" type="uuid">
                 <constraints nullable="true" foreignKeyName="fk_workflow_work_unit_workflow_definition"
-                             references="workflow_definition(id)"/>
+                             references="prds_workflow_definition(id)"/>
             </column>
             <column name="create_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="object_version" type="bigint"/>
         </createTable>
 
         <!-- Workflow Execution Table -->
-        <createTable tableName="workflow_execution">
+        <createTable tableName="prds_workflow_execution">
             <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -122,30 +133,30 @@
             <column name="arguments" type="varchar(4000)"/>
             <column name="workflow_definition_id" type="${uuidType}">
                 <constraints nullable="false" foreignKeyName="fk_workflow_execution_workflow_definition"
-                             references="workflow_definition(id)"/>
+                             references="prds_workflow_definition(id)"/>
             </column>
             <column name="main_workflow_execution_id" type="${uuidType}">
                 <constraints nullable="true" foreignKeyName="fk_workflow_execution_main_workflow_execution_id"
-                             references="workflow_execution(id)"/>
+                             references="prds_workflow_execution(id)"/>
             </column>
             <column name="project_id" type="${uuidType}">
-                <constraints nullable="false" foreignKeyName="fk_workflow_execution_project" references="project(id)"/>
+                <constraints nullable="false" foreignKeyName="fk_workflow_execution_project" references="prds_project(id)"/>
             </column>
             <column name="object_version" type="bigint"/>
         </createTable>
 
         <!-- Workflow Task Execution Table -->
-        <createTable tableName="workflow_task_execution">
+        <createTable tableName="prds_workflow_task_execution">
             <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="workflow_execution_id" type="${uuidType}">
                 <constraints nullable="false" foreignKeyName="fk_workflow_task_execution_workflow_execution"
-                             references="workflow_execution(id)"/>
+                             references="prds_workflow_execution(id)"/>
             </column>
             <column name="workflow_task_definition_id" type="${uuidType}">
                 <constraints nullable="false" foreignKeyName="fk_workflow_task_execution_workflow_task_definition"
-                             references="workflow_task_definition(id)"/>
+                             references="prds_workflow_task_definition(id)"/>
             </column>
             <column name="arguments" type="varchar(4000)"/>
             <column name="results" type="varchar(4000)"/>
@@ -157,20 +168,20 @@
         </createTable>
 
         <!-- WorkFlow Context Table -->
-        <createTable tableName="workflow_execution_context">
+        <createTable tableName="prds_workflow_execution_context">
             <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="workflow_execution_id" type="${uuidType}">
                 <constraints nullable="false" foreignKeyName="fk_workflow_execution_context_workflow_execution"
-                             references="workflow_execution(id)"/>
+                             references="prds_workflow_execution(id)"/>
             </column>
             <column name="work_context" type="longtext"/>
             <column name="object_version" type="bigint"/>
         </createTable>
 
         <!-- Workflow Checker Table -->
-        <createTable tableName="workflow_checker_definition">
+        <createTable tableName="prds_workflow_checker_definition">
             <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -179,20 +190,20 @@
                 <constraints unique="true"
                              nullable="false"
                              foreignKeyName="fk_workflow_checker_definition_checker_workflow_definition_id"
-                             references="workflow_definition(id)"/>
+                             references="prds_workflow_definition(id)"/>
             </column>
             <column name="cron_expression" type="varchar(255)"/>
         </createTable>
 
         <!-- Workflow Checker join Table -->
-        <createTable tableName="workflow_task_checker_definition_mapping">
+        <createTable tableName="prds_workflow_task_checker_definition_mapping">
             <column name="workflow_task_definition_id" type="${uuidType}">
                 <constraints nullable="false" foreignKeyName="fk_workflow_task_checker_definition_mapping_workflow_task_definition_id"
-                             referencedTableName="workflow_task_definition" referencedColumnNames="id"/>
+                             referencedTableName="prds_workflow_task_definition" referencedColumnNames="id"/>
             </column>
             <column name="workflow_checker_definition_id" type="${uuidType}">
                 <constraints nullable="false" foreignKeyName="fk_workflow_task_checker_definition_mapping_workflow_checker_definition_id"
-                             referencedTableName="workflow_checker_definition" referencedColumnNames="id"/>
+                             referencedTableName="prds_workflow_checker_definition" referencedColumnNames="id"/>
             </column>
         </createTable>
     </changeSet>
