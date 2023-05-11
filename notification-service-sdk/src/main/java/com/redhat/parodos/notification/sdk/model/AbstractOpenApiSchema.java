@@ -12,9 +12,10 @@
 
 package com.redhat.parodos.notification.sdk.model;
 
-import java.util.Map;
+import com.redhat.parodos.notification.sdk.api.ApiException;
 import java.util.Objects;
-
+import java.lang.reflect.Type;
+import java.util.Map;
 import javax.ws.rs.core.GenericType;
 
 //import com.fasterxml.jackson.annotation.JsonValue;

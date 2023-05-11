@@ -12,8 +12,10 @@
 
 package com.redhat.parodos.sdk.invoker;
 
-import java.util.List;
 import java.util.Map;
+import java.util.List;
+
+import javax.ws.rs.core.GenericType;
 
 /**
  * <p>

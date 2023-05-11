@@ -12,6 +12,16 @@
 
 package com.redhat.parodos.sdk.invoker;
 
+import okhttp3.*;
+import okhttp3.internal.http.HttpMethod;
+import okhttp3.internal.tls.OkHostnameVerifier;
+import okhttp3.logging.HttpLoggingInterceptor;
+import okhttp3.logging.HttpLoggingInterceptor.Level;
+import okio.Buffer;
+import okio.BufferedSink;
+import okio.Okio;
+
+import javax.net.ssl.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,25 +40,19 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.net.ssl.*;
-
-import com.redhat.parodos.sdk.invoker.auth.ApiKeyAuth;
 import com.redhat.parodos.sdk.invoker.auth.Authentication;
 import com.redhat.parodos.sdk.invoker.auth.HttpBasicAuth;
-import okhttp3.*;
-import okhttp3.internal.http.HttpMethod;
-import okhttp3.internal.tls.OkHostnameVerifier;
-import okhttp3.logging.HttpLoggingInterceptor;
-import okhttp3.logging.HttpLoggingInterceptor.Level;
-import okio.Buffer;
-import okio.BufferedSink;
-import okio.Okio;
+import com.redhat.parodos.sdk.invoker.auth.HttpBearerAuth;
+import com.redhat.parodos.sdk.invoker.auth.ApiKeyAuth;
 
 /**
  * <p>
@@ -143,7 +147,7 @@ public class ApiClient {
 		json = new JSON();
 
 		// Set default User-Agent.
-		setUserAgent("OpenAPI-Generator/1.0.11-SNAPSHOT/java");
+		setUserAgent("OpenAPI-Generator/1.0.11/java");
 
 		authentications = new HashMap<String, Authentication>();
 	}
