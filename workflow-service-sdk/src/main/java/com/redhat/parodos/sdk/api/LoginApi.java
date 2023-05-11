@@ -12,17 +12,25 @@
 
 package com.redhat.parodos.sdk.api;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.redhat.parodos.sdk.invoker.ApiCallback;
 import com.redhat.parodos.sdk.invoker.ApiClient;
 import com.redhat.parodos.sdk.invoker.ApiException;
 import com.redhat.parodos.sdk.invoker.ApiResponse;
 import com.redhat.parodos.sdk.invoker.Configuration;
 import com.redhat.parodos.sdk.invoker.Pair;
+import com.redhat.parodos.sdk.invoker.ProgressRequestBody;
+import com.redhat.parodos.sdk.invoker.ProgressResponseBody;
+
+import com.google.gson.reflect.TypeToken;
+
+import java.io.IOException;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.ws.rs.core.GenericType;
 
 public class LoginApi {
 

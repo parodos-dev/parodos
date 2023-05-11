@@ -12,12 +12,27 @@
 
 package com.redhat.parodos.notification.sdk.api;
 
+import com.redhat.parodos.notification.sdk.api.ApiCallback;
+import com.redhat.parodos.notification.sdk.api.ApiClient;
+import com.redhat.parodos.notification.sdk.api.ApiException;
+import com.redhat.parodos.notification.sdk.api.ApiResponse;
+import com.redhat.parodos.notification.sdk.api.Configuration;
+import com.redhat.parodos.notification.sdk.api.Pair;
+import com.redhat.parodos.notification.sdk.api.ProgressRequestBody;
+import com.redhat.parodos.notification.sdk.api.ProgressResponseBody;
+
+import com.google.gson.reflect.TypeToken;
+
+import java.io.IOException;
+
+import com.redhat.parodos.notification.sdk.model.NotificationMessageCreateRequestDTO;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.redhat.parodos.notification.sdk.model.NotificationMessageCreateRequestDTO;
+import javax.ws.rs.core.GenericType;
 
 public class NotificationMessageApi {
 
