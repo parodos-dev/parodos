@@ -12,13 +12,13 @@
 
 package com.redhat.parodos.notification.sdk.api;
 
+import java.io.IOException;
+
 import okhttp3.*;
 import okio.Buffer;
 import okio.BufferedSink;
 import okio.GzipSink;
 import okio.Okio;
-
-import java.io.IOException;
 
 /**
  * Encodes request bodies using gzip.
