@@ -227,3 +227,6 @@ run-postgres: # Run a sample postgres instance
 stop-postgres:
 	$(DOCKER) rm -f parodos-postgres
 
+format-files:
+	mvn spring-javaformat:apply
+	mvn impsort:sort
