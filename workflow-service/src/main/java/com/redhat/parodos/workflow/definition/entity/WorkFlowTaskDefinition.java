@@ -39,7 +39,7 @@ import lombok.Setter;
  * @author Annel Ketcha (Github: anludke)
  */
 
-@Entity(name = "workflow_task_definition")
+@Entity(name = "prds_workflow_task_definition")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -66,7 +66,7 @@ public class WorkFlowTaskDefinition extends AbstractEntity {
 	private WorkFlowDefinition workFlowDefinition;
 
 	@ManyToOne(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
-	@JoinTable(name = "workflow_task_checker_definition_mapping",
+	@JoinTable(name = "prds_workflow_task_checker_definition_mapping",
 			joinColumns = @JoinColumn(name = "workflow_task_definition_id"),
 			inverseJoinColumns = @JoinColumn(name = "workflow_checker_definition_id"))
 	private WorkFlowCheckerMappingDefinition workFlowCheckerMappingDefinition;

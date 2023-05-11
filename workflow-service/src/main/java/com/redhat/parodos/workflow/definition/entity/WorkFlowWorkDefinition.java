@@ -40,7 +40,7 @@ import lombok.Setter;
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
-@Entity(name = "workflow_work_definition")
+@Entity(name = "prds_workflow_work_definition")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

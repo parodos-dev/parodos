@@ -5,8 +5,8 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <changeSet id="1" author="luke" runAlways="false" runOnChange="true">
-        <!-- insert to User Table -->
-        <insert tableName="users">
+        <!-- insert to prds_user table -->
+        <insert tableName="prds_user">
             <column name="username" value="test"/>
             <column name="password" value="$2a$04$Bq4K2efcqJe8Ofe4ZUB8Aej7FN.DlnVna9OjRD1mKNx8cYhaTsF8G"/>
             <column name="authority" value="ROLE_ADMIN"/>
@@ -15,6 +15,23 @@
             <column name="last_name" value="test"/>
             <column name="email" value="test"/>
             <column name="object_version" value="0"/>
+        </insert>
+
+        <!-- insert to prds_role table -->
+        <insert tableName="prds_role">
+            <column name="name" value="Owner"/>
+            <column name="description" value="Owner of the project"/>
+            <column name="object_version" value="1"/>
+        </insert>
+        <insert tableName="prds_role">
+            <column name="name" value="Developer"/>
+            <column name="description" value="Developer in the project"/>
+            <column name="object_version" value="1"/>
+        </insert>
+        <insert tableName="prds_role">
+            <column name="name" value="Admin"/>
+            <column name="description" value="Admin of the project"/>
+            <column name="object_version" value="1"/>
         </insert>
     </changeSet>
 </databaseChangeLog>

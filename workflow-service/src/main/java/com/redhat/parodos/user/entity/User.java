@@ -15,19 +15,13 @@
  */
 package com.redhat.parodos.user.entity;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import com.nimbusds.jose.shaded.json.annotate.JsonIgnore;
 import com.redhat.parodos.common.AbstractEntity;
-import com.redhat.parodos.project.entity.Project;
+import com.redhat.parodos.project.entity.ProjectUserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,7 +34,7 @@ import lombok.Setter;
  * @author Annel Ketcha (Github: anludke)
  */
 
-@Entity(name = "users")
+@Entity(name = "prds_user")
 @Builder
 @Getter
 @Setter
@@ -69,8 +63,7 @@ public class User extends AbstractEntity {
 
 	private Date modifyDate;
 
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@Builder.Default
-	private List<Project> projects = new ArrayList<>();
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+	private Set<ProjectUserRole> projectUserRoles = new HashSet<>();
 
 }

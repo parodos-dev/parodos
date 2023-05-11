@@ -44,13 +44,13 @@ public interface WorkFlowRepository extends JpaRepository<WorkFlowExecution, UUI
 	WorkFlowExecution findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(WorkFlowExecution mainWorkFlowExecution,
 			UUID workFlowDefinitionId);
 
-	@Query("SELECT w FROM workflow_execution w WHERE w.status IN :statuses AND w.mainWorkFlowExecution IS NULL")
+	@Query("SELECT w FROM prds_workflow_execution w WHERE w.status IN :statuses AND w.mainWorkFlowExecution IS NULL")
 	List<WorkFlowExecution> findByStatusInAndIsMain(@Param("statuses") List<WorkStatus> statuses);
 
-	@Query("SELECT w FROM workflow_execution w WHERE w.status = com.redhat.parodos.workflows.work.WorkStatus.FAILED and w.mainWorkFlowExecution.id = :mainWorkflowId and EXISTS (SELECT f.type FROM workflow_definition f WHERE f.id = w.workFlowDefinitionId AND f.type = com.redhat.parodos.workflow.enums.WorkFlowType.CHECKER)")
+	@Query("SELECT w FROM prds_workflow_execution w WHERE w.status = com.redhat.parodos.workflows.work.WorkStatus.FAILED and w.mainWorkFlowExecution.id = :mainWorkflowId and EXISTS (SELECT f.type FROM prds_workflow_definition f WHERE f.id = w.workFlowDefinitionId AND f.type = com.redhat.parodos.workflow.enums.WorkFlowType.CHECKER)")
 	List<WorkFlowExecution> findRunningCheckersById(@Param("mainWorkflowId") UUID mainWorkflowId);
 
-	@Query("SELECT w FROM workflow_execution w WHERE w.mainWorkFlowExecution.id = :mainWorkflowId and EXISTS (SELECT f.type FROM workflow_definition f WHERE f.id = w.workFlowDefinitionId AND f.type = com.redhat.parodos.workflow.enums.WorkFlowType.CHECKER)")
+	@Query("SELECT w FROM prds_workflow_execution w WHERE w.mainWorkFlowExecution.id = :mainWorkflowId and EXISTS (SELECT f.type FROM prds_workflow_definition f WHERE f.id = w.workFlowDefinitionId AND f.type = com.redhat.parodos.workflow.enums.WorkFlowType.CHECKER)")
 	List<WorkFlowExecution> findCheckers(@Param("mainWorkflowId") UUID mainWorkflowId);
 
 	WorkFlowExecution findFirstByProjectIdAndMainWorkFlowExecutionIsNullOrderByStartDateDesc(UUID projectId);

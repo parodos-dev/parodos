@@ -34,8 +34,8 @@ public interface ProjectService {
 
 	List<ProjectResponseDTO> getProjects();
 
-	List<ProjectResponseDTO> findProjectsByUserName(String userName);
+	List<ProjectResponseDTO> getProjectsByUsername(String username);
 
-	ProjectResponseDTO getProjectByIdAndUsername(UUID id, String username);
+	List<ProjectResponseDTO> getProjectByIdAndUsername(UUID id, String username);
 
 }

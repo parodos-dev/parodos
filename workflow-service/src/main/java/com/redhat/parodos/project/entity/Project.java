@@ -16,14 +16,15 @@
 package com.redhat.parodos.project.entity;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 
 import com.redhat.parodos.common.AbstractEntity;
-import com.redhat.parodos.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,7 +37,7 @@ import lombok.Setter;
  * @author Annel Ketcha (Github: anludke)
  */
 
-@Entity(name = "project")
+@Entity(name = "prds_project")
 @Getter
 @Setter
 @Builder
@@ -54,8 +55,7 @@ public class Project extends AbstractEntity {
 
 	private Date modifyDate;
 
-	@ManyToOne(optional = true)
-	@JoinColumn(name = "user_id")
-	private User user;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "project")
+	private Set<ProjectUserRole> projectUserRoles = new HashSet<>();
 
 }

@@ -36,7 +36,7 @@ import lombok.Setter;
  * @author Annel Ketcha (Github: anludke)
  */
 
-@Entity(name = "workflow_task_execution")
+@Entity(name = "prds_workflow_task_execution")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

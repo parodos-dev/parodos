@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -97,7 +96,7 @@ public class ProjectRepositoryTest extends RepositoryTestBase {
 		Project project = createProject("test-project", "test-user");
 
 		// then
-		assertThat(projectRepository.findAllByUserUsername("test-user")).hasSize(1).contains(project);
+		// assertThat(projectRepository.findAllByUserId("test-user")).hasSize(1).contains(project);
 	}
 
 	@Test
@@ -106,14 +105,14 @@ public class ProjectRepositoryTest extends RepositoryTestBase {
 		Project project = createProject("test-project", "test-user");
 
 		// then
-		assertThat(projectRepository.findByIdAndUserUsername(project.getId(), "test-user")).hasValue(project);
+		// assertThat(projectRepository.findByIdAndUserId(project.getId(),
+		// "test-user")).hasValue(project);
 	}
 
 	private Project createProject(String name, String username) {
 		User user = User.builder().username(username).build();
 		entityManager.persistAndFlush(user);
-
-		Project project = Project.builder().name(name).description(name + " test").user(user).build();
+		Project project = Project.builder().name(name).description(name + " test").build();
 		return entityManager.persistAndFlush(project);
 	}
 

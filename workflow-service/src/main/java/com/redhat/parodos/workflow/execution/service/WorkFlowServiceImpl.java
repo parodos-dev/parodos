@@ -61,7 +61,6 @@ import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
-import org.modelmapper.ModelMapper;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -106,7 +105,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 			WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository, WorkFlowRepository workFlowRepository,
 			WorkFlowTaskRepository workFlowTaskRepository, WorkFlowWorkRepository workFlowWorkRepository,
 			WorkFlowDefinitionService workFlowDefinitionService, MeterRegistry metricRegistry,
-			ProjectService projectService, ModelMapper modelMapper, WorkFlowExecutor workFlowExecutor) {
+			ProjectService projectService, WorkFlowExecutor workFlowExecutor) {
 		this.workFlowDelegate = workFlowDelegate;
 		this.workFlowServiceDelegate = workFlowServiceDelegate;
 		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
@@ -182,7 +181,9 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
 	@Override
 	public List<WorkFlowResponseDTO> getWorkFlowsByProjectId(UUID projectId) {
-		ProjectResponseDTO project = projectService.getProjectByIdAndUsername(projectId, SecurityUtils.getUsername());
+		// TODO: To address in FLPATH-368
+		ProjectResponseDTO project = projectService.getProjectByIdAndUsername(projectId, SecurityUtils.getUsername())
+				.get(0);
 		return workFlowRepository.findAllByProjectId(project.getId()).stream()
 				.filter(workFlowExecution -> workFlowExecution.getMainWorkFlowExecution() == null)
 				.map(this::buildWorkflowResponseDTO).toList();
@@ -190,7 +191,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
 	@Override
 	public List<WorkFlowResponseDTO> getWorkFlows() {
-		List<ProjectResponseDTO> projects = projectService.findProjectsByUserName(SecurityUtils.getUsername());
+		List<ProjectResponseDTO> projects = projectService.getProjectsByUsername(SecurityUtils.getUsername());
 		return projects.stream()
 				.flatMap(project -> workFlowRepository.findAllByProjectId(project.getId()).stream()
 						.filter(workFlowExecution -> workFlowExecution.getMainWorkFlowExecution() == null)

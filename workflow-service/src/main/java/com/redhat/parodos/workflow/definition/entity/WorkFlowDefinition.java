@@ -48,7 +48,7 @@ import org.hibernate.annotations.TypeDef;
  * @author Annel Ketcha (Github: anludke)
  */
 
-@Entity(name = "workflow_definition")
+@Entity(name = "prds_workflow_definition")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

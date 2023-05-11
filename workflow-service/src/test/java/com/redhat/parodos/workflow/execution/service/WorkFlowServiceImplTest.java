@@ -111,7 +111,7 @@ class WorkFlowServiceImplTest {
 		this.workFlowService = new WorkFlowServiceImpl(this.workFlowDelegate, this.workFlowServiceDelegate,
 				this.workFlowDefinitionRepository, this.workFlowTaskDefinitionRepository, this.workFlowRepository,
 				this.workFlowTaskRepository, this.workFlowWorkRepository, this.workFlowDefinitionService,
-				this.metricRegistry, this.projectService, this.modelMapper, workFlowExecutor);
+				this.metricRegistry, this.projectService, workFlowExecutor);
 	}
 
 	@Test
@@ -926,7 +926,7 @@ class WorkFlowServiceImplTest {
 				.of(WorkStatusResponseDTO.builder().name(workName).status(WorkStatus.COMPLETED).build());
 		when(workFlowRepository.findAllByProjectId(projectId)).thenReturn(List.of(workFlowExecution));
 		when(projectService.getProjectByIdAndUsername(eq(projectId), nullable(String.class)))
-				.thenReturn(ProjectResponseDTO.builder().id(projectId).name("test-project").build());
+				.thenReturn(List.of(ProjectResponseDTO.builder().id(projectId).name("test-project").build()));
 		when(workFlowDefinitionService.getWorkFlowDefinitionById(any()))
 				.thenReturn(WorkFlowDefinitionResponseDTO.builder().name("test").build());
 
@@ -951,7 +951,7 @@ class WorkFlowServiceImplTest {
 
 		when(workFlowRepository.findAllByProjectId(project1Id)).thenReturn(List.of(workFlowExecution1));
 		when(workFlowRepository.findAllByProjectId(project2Id)).thenReturn(List.of(workFlowExecution2));
-		when(projectService.findProjectsByUserName(nullable(String.class)))
+		when(projectService.getProjectsByUsername(nullable(String.class)))
 				.thenReturn(List.of(ProjectResponseDTO.builder().id(project1Id).name("test-project1").build(),
 						ProjectResponseDTO.builder().id(project2Id).name("test-project2").build()));
 		when(workFlowDefinitionService.getWorkFlowDefinitionById(any()))
