@@ -82,6 +82,10 @@ public class WorkFlowExecutionAspect {
 
 		/* get workflow definition entity */
 		WorkFlowDefinition workFlowDefinition = this.workFlowDefinitionRepository.findFirstByName(workflowName);
+		if (workFlowDefinition == null) {
+			return new DefaultWorkReport(WorkStatus.FAILED, workContext, new Exception("Cannot find workflow '"+ workflowName + "'"));
+		}
+
 		WorkFlowExecutionInterceptor executionHandler = workFlowExecutionFactory
 				.createExecutionHandler(workFlowDefinition, workContext);
 		WorkFlowExecution workFlowExecution = executionHandler.handlePreWorkFlowExecution();
