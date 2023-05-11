@@ -137,6 +137,27 @@ class WorkFlowExecutionAspectTest {
 	}
 
 	@Test
+	void ExecuteAroundAdviceWithInProgressWorkFlowTestWithoutWorkFlowDefinition() {
+		// given
+		WorkContext workContext = new WorkContext();
+		when(this.workFlowDefinitionRepository.findFirstByName(any())).thenReturn(null);
+		ProceedingJoinPoint proceedingJoinPoint = mock(ProceedingJoinPoint.class);
+		WorkFlow workFlow = mock(WorkFlow.class);
+		when(proceedingJoinPoint.getTarget()).thenReturn(workFlow);
+		when(workFlow.getName()).thenReturn(TEST_WORK_FLOW);
+
+
+		// when
+		WorkReport workReport = this.workFlowExecutionAspect.executeAroundAdvice(proceedingJoinPoint, workContext);
+
+		// then
+		assertNotNull(workReport);
+		assertEquals(workReport.getStatus().toString(), FAILED);
+		assertNotNull(workReport.getError());
+		verify(this.workFlowDefinitionRepository, times(1)).findFirstByName(TEST_WORK_FLOW);
+	}
+
+	@Test
 	void ExecuteAroundAdviceWithInProgressWorkFlowTest() {
 		// given
 		UUID projectID = UUID.randomUUID();
