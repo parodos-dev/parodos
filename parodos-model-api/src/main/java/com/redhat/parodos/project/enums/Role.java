@@ -16,7 +16,7 @@
 package com.redhat.parodos.project.enums;
 
 /**
- * Role that can have in a project
+ * Role that a user can have in a project
  *
  * @author Annel Ketcha (Github: anludke)
  */
