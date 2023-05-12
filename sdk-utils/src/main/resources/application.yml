@@ -1,3 +1,0 @@
-app:
-  serverport: ${SERVERPORT:8080}
-  serverip: ${SERVERIP:localhost}
