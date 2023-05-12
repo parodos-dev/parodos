@@ -92,7 +92,7 @@ public class PrebuiltWorkFlowTest extends BaseIntegrationTest {
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = SdkUtils.waitWorkflowStatusAsync(workflowApi,
 				workFlowResponseDTO.getWorkFlowExecutionId());
 		assertNotNull(workFlowStatusResponseDTO);
-		assertEquals(WorkFlowResponseDTO.WorkStatusEnum.COMPLETED, workFlowStatusResponseDTO.getStatus());
+		assertEquals(WorkFlowStatusResponseDTO.StatusEnum.COMPLETED, workFlowStatusResponseDTO.getStatus());
 		log.info("workflow finished successfully with response: {}", workFlowResponseDTO);
 		log.info("******** PreBuilt Sequence Flow Completed ********");
 	}
