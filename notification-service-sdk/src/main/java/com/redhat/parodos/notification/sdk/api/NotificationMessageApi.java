@@ -77,6 +77,11 @@ public class NotificationMessageApi {
 	 * <td>Created</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call createCall(NotificationMessageCreateRequestDTO notificationMessageCreateRequestDTO,
@@ -107,7 +112,7 @@ public class NotificationMessageApi {
 		Map<String, String> localVarCookieParams = new HashMap<String, String>();
 		Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-		final String[] localVarAccepts = {};
+		final String[] localVarAccepts = { "*/*" };
 		final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
 		if (localVarAccept != null) {
 			localVarHeaderParams.put("Accept", localVarAccept);
@@ -155,6 +160,11 @@ public class NotificationMessageApi {
 	 * <td>Created</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public void create(NotificationMessageCreateRequestDTO notificationMessageCreateRequestDTO) throws ApiException {
@@ -176,6 +186,11 @@ public class NotificationMessageApi {
 	 * <tr>
 	 * <td>201</td>
 	 * <td>Created</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -203,6 +218,11 @@ public class NotificationMessageApi {
 	 * <tr>
 	 * <td>201</td>
 	 * <td>Created</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>

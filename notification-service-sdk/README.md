@@ -121,11 +121,11 @@ Class | Method | HTTP request | Description
 
 ## Documentation for Models
 
+ - [ErrorMessageDTO](docs/ErrorMessageDTO.md)
  - [Link](docs/Link.md)
  - [NotificationMessageCreateRequestDTO](docs/NotificationMessageCreateRequestDTO.md)
  - [NotificationRecordResponseDTO](docs/NotificationRecordResponseDTO.md)
  - [PageNotificationRecordResponseDTO](docs/PageNotificationRecordResponseDTO.md)
- - [Pageable](docs/Pageable.md)
  - [PageableObject](docs/PageableObject.md)
  - [Sort](docs/Sort.md)
 

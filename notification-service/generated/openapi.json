@@ -33,6 +33,16 @@
         "responses" : {
           "201" : {
             "description" : "Created"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
           }
         },
         "tags" : [ "Notification Message" ]
@@ -42,11 +52,35 @@
       "get" : {
         "operationId" : "getNotifications",
         "parameters" : [ {
+          "description" : "Zero-based page index (0..N)",
           "in" : "query",
-          "name" : "pageable",
-          "required" : true,
+          "name" : "page",
+          "required" : false,
           "schema" : {
-            "$ref" : "#/components/schemas/Pageable"
+            "minimum" : 0,
+            "type" : "integer",
+            "default" : 0
+          }
+        }, {
+          "description" : "The size of the page to be returned",
+          "in" : "query",
+          "name" : "size",
+          "required" : false,
+          "schema" : {
+            "minimum" : 1,
+            "type" : "integer",
+            "default" : 100
+          }
+        }, {
+          "description" : "Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+          "in" : "query",
+          "name" : "sort",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
           }
         }, {
           "in" : "query",
@@ -74,6 +108,16 @@
               }
             },
             "description" : "Successfully retrieved page of notifications"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad request"
           },
           "401" : {
             "content" : {
@@ -124,6 +168,16 @@
             },
             "description" : "Successfully retrieved the amount of notifications"
           },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
           "401" : {
             "content" : {
               "*/*" : {
@@ -167,6 +221,16 @@
           "200" : {
             "description" : "Successfully retrieved the amount of notifications"
           },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
           "401" : {
             "description" : "Unauthorized"
           },
@@ -207,6 +271,16 @@
             },
             "description" : "Succeeded"
           },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
           "401" : {
             "content" : {
               "*/*" : {
@@ -235,6 +309,21 @@
   },
   "components" : {
     "schemas" : {
+      "ErrorMessageDTO" : {
+        "type" : "object",
+        "properties" : {
+          "date" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "message" : {
+            "type" : "string"
+          }
+        }
+      },
       "Link" : {
         "type" : "object",
         "properties" : {
@@ -379,27 +468,6 @@
           "totalPages" : {
             "type" : "integer",
             "format" : "int32"
-          }
-        }
-      },
-      "Pageable" : {
-        "type" : "object",
-        "properties" : {
-          "page" : {
-            "minimum" : 0,
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "size" : {
-            "minimum" : 1,
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "sort" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
-            }
           }
         }
       },

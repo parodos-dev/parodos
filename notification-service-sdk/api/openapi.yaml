@@ -26,20 +26,50 @@ paths:
       responses:
         "201":
           description: Created
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
       tags:
       - Notification Message
       x-content-type: application/json
-      x-accepts: application/json
+      x-accepts: '*/*'
   /api/v1/notifications:
     get:
       operationId: getNotifications
       parameters:
-      - explode: true
+      - description: Zero-based page index (0..N)
+        explode: true
         in: query
-        name: pageable
-        required: true
+        name: page
+        required: false
         schema:
-          $ref: '#/components/schemas/Pageable'
+          default: 0
+          minimum: 0
+          type: integer
+        style: form
+      - description: The size of the page to be returned
+        explode: true
+        in: query
+        name: size
+        required: false
+        schema:
+          default: 100
+          minimum: 1
+          type: integer
+        style: form
+      - description: "Sorting criteria in the format: property(,asc|desc). Default\
+          \ sort order is ascending. Multiple sort criteria are supported."
+        explode: true
+        in: query
+        name: sort
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
         style: form
       - explode: true
         in: query
@@ -65,6 +95,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/PageNotificationRecordResponseDTO'
           description: Successfully retrieved page of notifications
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad request
         "401":
           content:
             '*/*':
@@ -103,6 +139,12 @@ paths:
                 format: int32
                 type: integer
           description: Successfully retrieved the amount of notifications
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
         "401":
           content:
             '*/*':
@@ -136,6 +178,12 @@ paths:
       responses:
         "200":
           description: Successfully retrieved the amount of notifications
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
         "401":
           description: Unauthorized
         "403":
@@ -143,7 +191,7 @@ paths:
       summary: Delete the specified notification record
       tags:
       - Notification Record
-      x-accepts: application/json
+      x-accepts: '*/*'
     put:
       operationId: updateNotificationStatusById
       parameters:
@@ -172,6 +220,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotificationRecordResponseDTO'
           description: Succeeded
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
         "401":
           content:
             '*/*':
@@ -190,6 +244,16 @@ paths:
       x-accepts: '*/*'
 components:
   schemas:
+    ErrorMessageDTO:
+      properties:
+        date:
+          format: date-time
+          type: string
+        description:
+          type: string
+        message:
+          type: string
+      type: object
     Link:
       example:
         hreflang: hreflang
@@ -423,21 +487,6 @@ components:
         totalPages:
           format: int32
           type: integer
-      type: object
-    Pageable:
-      properties:
-        page:
-          format: int32
-          minimum: 0
-          type: integer
-        size:
-          format: int32
-          minimum: 1
-          type: integer
-        sort:
-          items:
-            type: string
-          type: array
       type: object
     PageableObject:
       example:
