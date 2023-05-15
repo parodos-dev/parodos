@@ -23,15 +23,18 @@ import com.redhat.parodos.notification.enums.State;
 import com.redhat.parodos.notification.jpa.entity.NotificationRecord;
 import com.redhat.parodos.notification.service.NotificationRecordService;
 import com.redhat.parodos.notification.util.SecurityUtil;
+import com.redhat.parodos.notification.validation.AllowedSortFields;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.api.annotations.ParameterObject;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,6 +55,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/notifications")
 @CrossOrigin(origins = "*")
+@Validated
 @Tag(name = "Notification Record", description = "Operations about notification record in the system")
 public class NotificationRecordController {
 
@@ -72,10 +76,13 @@ public class NotificationRecordController {
 	@ApiResponses(
 			value = { @ApiResponse(responseCode = "200", description = "Successfully retrieved page of notifications"),
 					@ApiResponse(responseCode = "401", description = "Unauthorized"),
-					@ApiResponse(responseCode = "403", description = "Forbidden") })
+					@ApiResponse(responseCode = "403", description = "Forbidden"),
+					@ApiResponse(responseCode = "400", description = "Bad request") })
 	@GetMapping
 	public ResponseEntity<Page<NotificationRecordResponseDTO>> getNotifications(
-			@PageableDefault(size = 100) Pageable pageable,
+			@PageableDefault(size = 100) @AllowedSortFields({ "id", "notificationMessage.subject",
+					"notificationMessage.fromuser", "notificationMessage.createdOn",
+					"notificationMessage.messageType" }) @ParameterObject Pageable pageable,
 			@RequestParam(value = "state", required = false) State state,
 			@RequestParam(value = "searchTerm", required = false) String searchTerm) {
 
@@ -83,7 +90,6 @@ public class NotificationRecordController {
 				securityUtil.getUsername(), state, searchTerm);
 		Page<NotificationRecordResponseDTO> notificationsDtoPage = notificationsPage
 				.map(notificationRecord -> NotificationRecordResponseDTO.toModel(notificationRecord));
-
 		return ResponseEntity.ok(notificationsDtoPage);
 	}
 
