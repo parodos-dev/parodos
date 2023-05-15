@@ -179,7 +179,7 @@ jobs:
       - name: Deploy
         run: |
           kubectl kustomize hack/manifests/testing| kubectl apply -f -
-          kubectl wait --timeout=300s --for=condition=Ready pods --all -n default || {
+          kubectl wait --timeout=600s --for=condition=Ready pods --all -n default || {
             echo "Timeout waiting for Parodos services to be ready";
             kubectl get pods --all-namespaces;
             echo "************ workflow-service logs ***************";
