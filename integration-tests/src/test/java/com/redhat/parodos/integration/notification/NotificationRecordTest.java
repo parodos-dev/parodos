@@ -2,6 +2,7 @@ package com.redhat.parodos.integration.notification;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,7 +10,6 @@ import com.redhat.parodos.notification.sdk.api.*;
 import com.redhat.parodos.notification.sdk.model.NotificationMessageCreateRequestDTO;
 import com.redhat.parodos.notification.sdk.model.NotificationRecordResponseDTO;
 import com.redhat.parodos.notification.sdk.model.PageNotificationRecordResponseDTO;
-import com.redhat.parodos.notification.sdk.model.Pageable;
 import com.redhat.parodos.workflow.utils.CredUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
@@ -26,42 +26,50 @@ public class NotificationRecordTest {
 
 	private static final String BASE_PATH = "http://localhost:8081";
 
+	private static final String user = "test";
+
+	private static final String password = "test";
+
 	private NotificationRecordApi recordApiInstance;
 
 	private NotificationMessageApi messageApiInstance;
 
+	private int listNotificationsExpectedCount = 0;
+
+	private int countNotificationsExpectedCount = 0;
+
 	@Before
 	public void setUp() throws IOException {
 		ApiClient apiClient = Configuration.getDefaultApiClient();
-		apiClient.addDefaultHeader(HttpHeaders.AUTHORIZATION, "Basic " + CredUtils.getBase64Creds("test", "test"));
+		apiClient.addDefaultHeader(HttpHeaders.AUTHORIZATION, "Basic " + CredUtils.getBase64Creds(user, password));
 		apiClient.setBasePath(BASE_PATH);
 		recordApiInstance = new NotificationRecordApi(apiClient);
 		messageApiInstance = new NotificationMessageApi(apiClient);
 	}
 
 	@Test
-	public void notificationServiceHappyHappyFlow() {
+	public void notificationServiceHappyFlow() {
 		String testName = "notificationServiceHappyHappyFlow";
 
 		assertDoesNotThrow(() -> {
-			createNotificationMessage(testName, "type0", "body0", "subject0", List.of("test"));
-			createNotificationMessage(testName, "type1", "body1", "subject1", List.of("test"));
-			createNotificationMessage(testName, "type2", "body2", "subject2", List.of("test"));
+			createNotificationMessage(testName, "type0", "body0", "subject0", List.of(user));
+			createNotificationMessage(testName, "type1", "body1", "subject1", List.of(user));
+			createNotificationMessage(testName, "type2", "body2", "subject2", List.of(user));
 			createNotificationMessage(testName, "type3", "body3", "subject3", List.of("test2"));
 
-			countNotificationRecord(testName, 3);
-			PageNotificationRecordResponseDTO notificationsAfterCreation = listNotificationRecord(testName, 3);
+			countNotificationRecord(testName);
+			PageNotificationRecordResponseDTO notificationsAfterCreation = listNotificationRecord(testName, null);
 			NotificationRecordResponseDTO notificationRecord1 = notificationsAfterCreation.getContent().get(0);
 			logTestStep(testName, "Update one Notification Record as \"READ\"");
 			updateNotificationRecord(testName, notificationRecord1.getId(), "READ");
 
-			countNotificationRecord(testName, 2);
-			PageNotificationRecordResponseDTO notificationsAfterUpdate = listNotificationRecord(testName, 3);
+			countNotificationRecord(testName);
+			PageNotificationRecordResponseDTO notificationsAfterUpdate = listNotificationRecord(testName, null);
 			NotificationRecordResponseDTO notificationRecord2 = notificationsAfterUpdate.getContent().get(1);
 			deleteNotificationRecord(testName, notificationRecord2.getId());
 
-			countNotificationRecord(testName, 1);
-			listNotificationRecord(testName, 2);
+			countNotificationRecord(testName);
+			listNotificationRecord(testName, null);
 		});
 	}
 
@@ -73,6 +81,27 @@ public class NotificationRecordTest {
 			createNotificationMessage(testName, "type0", "body0", "subject0", null);
 		});
 		assertEquals(400, e.getCode());
+	}
+
+	@Test
+	public void notificationServiceListInvalidSortErr() {
+		String testName = "notificationServiceListInvalidSortErr";
+
+		ApiException e = assertThrows(ApiException.class, () -> {
+			listNotificationRecord(testName, Arrays.asList(user));
+		});
+		assertEquals(400, e.getCode());
+	}
+
+	@Test
+	public void notificationServiceListAllowedSort() {
+		String testName = "notificationServiceListAllowedSort";
+
+		assertDoesNotThrow(() -> {
+			listNotificationRecord(testName,
+					Arrays.asList("id", "notificationMessage.subject", "notificationMessage.fromuser",
+							"notificationMessage.createdOn", "notificationMessage.messageType"));
+		});
 	}
 
 	@Test
@@ -95,7 +124,7 @@ public class NotificationRecordTest {
 		this.messageApiInstance = new NotificationMessageApi(apiClient);
 
 		ApiException e = assertThrows(ApiException.class, () -> {
-			createNotificationMessage(testName, "type0", "body0", "subject0", List.of("test"));
+			createNotificationMessage(testName, "type0", "body0", "subject0", List.of(user));
 		});
 		assertEquals(401, e.getCode());
 	}
@@ -110,7 +139,7 @@ public class NotificationRecordTest {
 		this.recordApiInstance = new NotificationRecordApi(apiClient);
 
 		ApiException e = assertThrows(ApiException.class, () -> {
-			listNotificationRecord(testName, 0);
+			listNotificationRecord(testName, null);
 		});
 		assertEquals(401, e.getCode());
 	}
@@ -125,7 +154,7 @@ public class NotificationRecordTest {
 		this.recordApiInstance = new NotificationRecordApi(apiClient);
 
 		ApiException e = assertThrows(ApiException.class, () -> {
-			countNotificationRecord(testName, 0);
+			countNotificationRecord(testName);
 		});
 		assertEquals(401, e.getCode());
 	}
@@ -174,38 +203,47 @@ public class NotificationRecordTest {
 		notificationMessageCreateRequestDTO.usernames(usernames);
 
 		this.messageApiInstance.create(notificationMessageCreateRequestDTO);
+
+		if (usernames.contains(user)) {
+			countNotificationsExpectedCount++;
+			listNotificationsExpectedCount++;
+		}
 	}
 
 	private void logTestStep(String testName, String stepDescription) {
 		log.info("############## " + testName + ": " + stepDescription);
 	}
 
-	private void countNotificationRecord(String testName, int notificationRecordsExpectedCount) throws ApiException {
+	private void countNotificationRecord(String testName) throws ApiException {
 		logTestStep(testName, "Count Notification Records for the user");
 		Integer count = this.recordApiInstance.countUnreadNotifications("UNREAD");
 		log.info("Found ", count, "notification records for the user");
-		assertEquals(notificationRecordsExpectedCount, count.intValue());
+		assertEquals(countNotificationsExpectedCount, count.intValue());
 	}
 
-	private PageNotificationRecordResponseDTO listNotificationRecord(String testName,
-			int notificationRecordsExpectedCount) throws ApiException {
+	private PageNotificationRecordResponseDTO listNotificationRecord(String testName, List<String> sort)
+			throws ApiException {
 		logTestStep(testName, "List Notification Records for the user");
-		PageNotificationRecordResponseDTO result = this.recordApiInstance.getNotifications(new Pageable(), null, null);
+		PageNotificationRecordResponseDTO result = this.recordApiInstance.getNotifications(0, 10, sort, null, null);
 		List<NotificationRecordResponseDTO> content = result.getContent();
 		log.info(content.toString());
-		assertEquals(notificationRecordsExpectedCount, content.size());
+		assertEquals(listNotificationsExpectedCount, content.size());
 		return result;
 	}
 
 	private void updateNotificationRecord(String testName, UUID notificationRecordId, String status)
 			throws ApiException {
-		logTestStep(testName, "Update Notification Records for the user");
+
+		logTestStep(testName, "Update one Notification Record as \"" + status + "\"");
 		this.recordApiInstance.updateNotificationStatusById(notificationRecordId, status);
+		countNotificationsExpectedCount--;
 	}
 
 	private void deleteNotificationRecord(String testName, UUID notificationRecordId) throws ApiException {
 		logTestStep(testName, "Delete Notification Record");
 		this.recordApiInstance.deleteNotification(notificationRecordId);
+		countNotificationsExpectedCount--;
+		listNotificationsExpectedCount--;
 	}
 
 }
