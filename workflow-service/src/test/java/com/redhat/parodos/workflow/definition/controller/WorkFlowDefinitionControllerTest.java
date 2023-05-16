@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.redhat.parodos.ControllerMockClient;
+import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 import com.redhat.parodos.workflow.definition.dto.WorkDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
@@ -98,7 +99,7 @@ class WorkFlowDefinitionControllerTest extends ControllerMockClient {
 	@Test
 	public void getWorkFlowDefinitionByIdWithInValidData() throws Exception {
 		// given
-		when(workFlowDefinitionService.getWorkFlowDefinitionById(any())).thenReturn(null);
+		when(workFlowDefinitionService.getWorkFlowDefinitionById(any())).thenThrow(new ResourceNotFoundException(""));
 
 		// when
 		this.mockMvc
@@ -111,7 +112,7 @@ class WorkFlowDefinitionControllerTest extends ControllerMockClient {
 	}
 
 	@Test
-	public void getWorkFlowDefinitionByIdWithInValalidCredentials() throws Exception {
+	public void getWorkFlowDefinitionByIdWithInvalidCredentials() throws Exception {
 		// when
 		this.mockMvc
 				.perform(this.getRequestWithInValidCredentials(
