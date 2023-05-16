@@ -14,7 +14,7 @@ public class BaseIntegrationTest {
 	protected ApiClient apiClient;
 
 	@Before
-	public void setUp() throws ApiException {
+	public void setUp() throws ApiException, InterruptedException {
 		apiClient = getParodosAPiClient();
 	}
 
