@@ -286,9 +286,6 @@ public abstract class SdkUtils {
 	public static ProjectResponseDTO getProjectAsync(ApiClient apiClient, String projectName, String projectDescription)
 			throws InterruptedException, ApiException {
 		ProjectApi projectApi = new ProjectApi(apiClient);
-		log.info("Wait project to be ready on {}", apiClient.getBasePath());
-		waitProjectStart(projectApi);
-		log.info("Project is ✔️ on {}", apiClient.getBasePath());
 
 		ProjectResponseDTO testProject;
 
