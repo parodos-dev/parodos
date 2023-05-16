@@ -168,7 +168,7 @@ public class WorkFlowTaskExecutionAspect {
 			// schedule workflow checker for dynamic run on cron expression
 			List<WorkFlow> checkerWorkFlows = ((BaseWorkFlowTask) proceedingJoinPoint.getTarget())
 					.getWorkFlowCheckers();
-			startCheckerOnSchedule(mainWorkFlowExecution.getProjectId(),
+			startCheckerOnSchedule(mainWorkFlowExecution.getProjectId(), mainWorkFlowExecution.getUser().getId(),
 					workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition().getCheckWorkFlow().getName(),
 					checkerWorkFlows, workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition(), workContext);
 		}
@@ -186,12 +186,12 @@ public class WorkFlowTaskExecutionAspect {
 
 	// Iterate through the all the Checkers in the workflow and start them based on their
 	// schedules
-	private void startCheckerOnSchedule(UUID projectId, String workFlowName, List<WorkFlow> workFlows,
+	private void startCheckerOnSchedule(UUID projectId, UUID userId, String workFlowName, List<WorkFlow> workFlows,
 			WorkFlowCheckerMappingDefinition workFlowCheckerMappingDefinition, WorkContext workContext) {
 		log.info("Schedule workflow checker: {} to run per cron expression: {}", workFlowName,
 				workFlowCheckerMappingDefinition.getCronExpression());
 		for (WorkFlow workFlow : workFlows) {
-			workFlowSchedulerService.schedule(projectId, workFlow, workContext,
+			workFlowSchedulerService.schedule(projectId, userId, workFlow, workContext,
 					workFlowCheckerMappingDefinition.getCronExpression());
 		}
 

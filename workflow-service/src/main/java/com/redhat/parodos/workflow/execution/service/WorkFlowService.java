@@ -41,8 +41,7 @@ public interface WorkFlowService {
 
 	WorkFlowExecution getWorkFlowById(UUID workFlowExecutionId);
 
-	WorkFlowExecution saveWorkFlow(UUID projectId, WorkFlowDefinition workFlowDefinition, WorkStatus workStatus,
-			WorkFlowExecution mainWorkFlowExecution, String arguments);
+	WorkFlowExecution saveWorkFlow(UUID projectId, UUID userId, WorkFlowDefinition workFlowDefinition, WorkStatus workStatus, WorkFlowExecution mainWorkFlowExecution, String arguments);
 
 	WorkFlowExecution updateWorkFlow(WorkFlowExecution workFlowExecution);
 

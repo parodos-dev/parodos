@@ -9,6 +9,8 @@ import java.util.UUID;
 
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
 import com.redhat.parodos.project.service.ProjectService;
+import com.redhat.parodos.user.entity.User;
+import com.redhat.parodos.user.service.UserService;
 import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
@@ -43,7 +45,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.modelmapper.ModelMapper;
+import org.mockito.Mock;
 
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -56,7 +58,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -68,50 +69,49 @@ class WorkFlowServiceImplTest {
 
 	private static final String TEST_WORKFLOW_NAME = "test-workflow";
 
-	private WorkFlowDelegate workFlowDelegate;
-
-	private WorkFlowServiceDelegate workFlowServiceDelegate;
-
-	private WorkFlowDefinitionRepository workFlowDefinitionRepository;
-
-	private WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository;
-
-	private WorkFlowRepository workFlowRepository;
-
-	private WorkFlowTaskRepository workFlowTaskRepository;
-
-	private WorkFlowWorkRepository workFlowWorkRepository;
-
-	private WorkFlowServiceImpl workFlowService;
-
-	private WorkFlowDefinitionServiceImpl workFlowDefinitionService;
-
+	@Mock
 	private ProjectService projectService;
 
-	private MeterRegistry metricRegistry;
+	@Mock
+	private UserService userService;
 
-	private ModelMapper modelMapper;
+	@Mock
+	private WorkFlowDelegate workFlowDelegate;
+
+	@Mock
+	private WorkFlowServiceDelegate workFlowServiceDelegate;
+
+	@Mock
+	private WorkFlowDefinitionRepository workFlowDefinitionRepository;
+
+	@Mock
+	private WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository;
+
+	@Mock
+	private WorkFlowRepository workFlowRepository;
+
+	@Mock
+	private WorkFlowTaskRepository workFlowTaskRepository;
+
+	@Mock
+	private WorkFlowWorkRepository workFlowWorkRepository;
+
+	@Mock
+	private WorkFlowDefinitionServiceImpl workFlowDefinitionService;
+
+	private final MeterRegistry metricRegistry = new SimpleMeterRegistry();
 
 	private WorkFlowExecutor workFlowExecutor;
 
+	private WorkFlowServiceImpl workFlowService;
+
 	@BeforeEach
 	void initEach() {
-		this.workFlowDelegate = mock(WorkFlowDelegate.class);
-		this.workFlowServiceDelegate = mock(WorkFlowServiceDelegate.class);
-		this.workFlowRepository = mock(WorkFlowRepository.class);
-		this.workFlowDefinitionRepository = mock(WorkFlowDefinitionRepository.class);
-		this.workFlowTaskDefinitionRepository = mock(WorkFlowTaskDefinitionRepository.class);
-		this.workFlowTaskRepository = mock(WorkFlowTaskRepository.class);
-		this.workFlowWorkRepository = mock(WorkFlowWorkRepository.class);
-		this.workFlowDefinitionService = mock(WorkFlowDefinitionServiceImpl.class);
-		this.metricRegistry = new SimpleMeterRegistry();
-		this.projectService = mock(ProjectService.class);
-		this.modelMapper = new ModelMapper();
 		this.workFlowExecutor = new WorkFlowExecutorImpl(this.workFlowDelegate, workFlowRepository);
-		this.workFlowService = new WorkFlowServiceImpl(this.workFlowDelegate, this.workFlowServiceDelegate,
+		this.workFlowService = new WorkFlowServiceImpl(this.projectService, this.userService,
+				this.workFlowDefinitionService, this.workFlowDelegate, this.workFlowServiceDelegate,
 				this.workFlowDefinitionRepository, this.workFlowTaskDefinitionRepository, this.workFlowRepository,
-				this.workFlowTaskRepository, this.workFlowWorkRepository, this.workFlowDefinitionService,
-				this.metricRegistry, this.projectService, workFlowExecutor);
+				this.workFlowTaskRepository, this.workFlowWorkRepository, this.metricRegistry, this.workFlowExecutor);
 	}
 
 	@Test
@@ -131,7 +131,7 @@ class WorkFlowServiceImplTest {
 				.thenReturn(this.sampleWorkflowDefinition("test"));
 
 		// when
-		WorkReport report = this.workFlowExecutor.execute(UUID.randomUUID(), TEST_WORKFLOW_NAME, new WorkContext(),
+		WorkReport report = this.workFlowExecutor.execute(UUID.randomUUID(), UUID.randomUUID(), TEST_WORKFLOW_NAME, new WorkContext(),
 				UUID.randomUUID(), null);
 
 		// then
@@ -148,6 +148,7 @@ class WorkFlowServiceImplTest {
 	}
 
 	@Test
+	@WithMockUser(username = "test-user")
 	void executeTestWithNoValidWorkflow() {
 		// given
 		when(this.workFlowDelegate.getWorkFlowByName(any())).thenReturn(null);
@@ -169,8 +170,11 @@ class WorkFlowServiceImplTest {
 	}
 
 	@Test
+	@WithMockUser(username = "test-user")
 	void executeWithDTOWithValidData() {
 		// given
+		User user = User.builder().username("test-user").build();
+		user.setId(UUID.randomUUID());
 		Work work = mock(Work.class);
 		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow().named("test").execute(work).build();
 		when(work.execute(any())).thenReturn(new DefaultWorkReport(WorkStatus.COMPLETED, new WorkContext() {
@@ -183,13 +187,14 @@ class WorkFlowServiceImplTest {
 		when(this.workFlowWorkRepository.findFirstByWorkDefinitionId(any())).thenReturn(null);
 		when(this.workFlowDelegate.initWorkFlowContext(any(), any())).thenReturn(new WorkContext());
 		when(this.workFlowDelegate.getWorkFlowByName(TEST_WORKFLOW_NAME)).thenReturn(workFlow);
-		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().status(WorkStatus.IN_PROGRESS).build();
+		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().status(WorkStatus.IN_PROGRESS).user(user).build();
 		workFlowExecution.setId(UUID.randomUUID());
 		when(this.workFlowRepository.save(any())).thenReturn(workFlowExecution);
 		WorkFlowDefinitionResponseDTO workFlowDefinitionResponseDTO = WorkFlowDefinitionResponseDTO.builder()
 				.name(TEST_WORKFLOW_NAME).works(List.of()).build();
 		when(this.workFlowDefinitionService.getWorkFlowDefinitionByName(TEST_WORKFLOW_NAME))
 				.thenReturn(workFlowDefinitionResponseDTO);
+		when(this.userService.getUserEntityByUsername("test-user")).thenReturn(user);
 
 		// when
 		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId(UUID.randomUUID())
@@ -208,6 +213,7 @@ class WorkFlowServiceImplTest {
 	}
 
 	@Test
+	@WithMockUser(username = "test-user")
 	void executeWithDTOWithNoMainWorkFlow() {
 		// given
 		Work work = mock(Work.class);
@@ -235,6 +241,7 @@ class WorkFlowServiceImplTest {
 	}
 
 	@Test
+	@WithMockUser(username = "test-user")
 	void executeWithDTOWithNoWorkFlowDefinition() {
 		// given
 		Work work = mock(Work.class);
@@ -295,6 +302,7 @@ class WorkFlowServiceImplTest {
 	@Test
 	void testSaveWorkflow() {
 		// given
+		UUID userId = UUID.randomUUID();
 		UUID projectId = UUID.randomUUID();
 		UUID workflowDefID = UUID.randomUUID();
 		WorkFlowDefinition workflowDef = WorkFlowDefinition.builder().build();
@@ -309,7 +317,7 @@ class WorkFlowServiceImplTest {
 		when(this.workFlowRepository.save(any())).thenReturn(workFlowExecution);
 
 		// when
-		WorkFlowExecution res = this.workFlowService.saveWorkFlow(projectId, workflowDef, WorkStatus.COMPLETED,
+		WorkFlowExecution res = this.workFlowService.saveWorkFlow(projectId, userId, workflowDef, WorkStatus.COMPLETED,
 				mainWorkFlowExecution, "{}");
 
 		// then
@@ -919,16 +927,19 @@ class WorkFlowServiceImplTest {
 	void getWorkFlowsByProjectId_when_projectIsFound_then_returnWorkFlowStatus() {
 		String workName = "test-workflow";
 		UUID projectId = UUID.randomUUID();
+		UUID userId = UUID.randomUUID();
+		User user = User.builder().username("test-user").build();
+		user.setId(userId);
 		UUID workflowExecutionId = UUID.randomUUID();
 		WorkFlowDefinition workFlowDefinition = sampleWorkflowDefinition(workName);
-		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().projectId(projectId)
+		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().projectId(projectId).user(user)
 				.status(WorkStatus.COMPLETED).workFlowDefinition(workFlowDefinition).build();
 		workFlowExecution.setId(workflowExecutionId);
-		List<WorkStatusResponseDTO> workStatusResponseDTOList = List
-				.of(WorkStatusResponseDTO.builder().name(workName).status(WorkStatus.COMPLETED).build());
+
 		when(workFlowRepository.findAllByProjectId(projectId)).thenReturn(List.of(workFlowExecution));
-		when(projectService.getProjectByIdAndUsername(eq(projectId), nullable(String.class)))
+		when(projectService.getProjectByIdAndUserId(eq(projectId), eq(userId)))
 				.thenReturn(List.of(ProjectResponseDTO.builder().id(projectId).name("test-project").build()));
+		when(userService.getUserEntityByUsername("test-user")).thenReturn(user);
 		when(workFlowDefinitionService.getWorkFlowDefinitionById(any()))
 				.thenReturn(WorkFlowDefinitionResponseDTO.builder().name("test").build());
 
@@ -939,23 +950,27 @@ class WorkFlowServiceImplTest {
 	@Test
 	@WithMockUser(username = "test-user")
 	void getWorkFlows_when_projectIsFound_then_returnWorkFlowStatus() {
-		String workName = "test-workflow";
+		UUID userId = UUID.randomUUID();
+		User user = User.builder().username("test-user").build();
+		user.setId(userId);
 		UUID project1Id = UUID.randomUUID();
 		UUID project2Id = UUID.randomUUID();
 		UUID workflowExecution1Id = UUID.randomUUID();
 		UUID workflowExecution2Id = UUID.randomUUID();
-		WorkFlowExecution workFlowExecution1 = WorkFlowExecution.builder().projectId(project1Id)
+
+		WorkFlowExecution workFlowExecution1 = WorkFlowExecution.builder().projectId(project1Id).user(user)
 				.workFlowDefinition(WorkFlowDefinition.builder().build()).status(WorkStatus.COMPLETED).build();
 		workFlowExecution1.setId(workflowExecution1Id);
-		WorkFlowExecution workFlowExecution2 = WorkFlowExecution.builder().projectId(project2Id)
+		WorkFlowExecution workFlowExecution2 = WorkFlowExecution.builder().projectId(project2Id).user(user)
 				.workFlowDefinition(WorkFlowDefinition.builder().build()).status(WorkStatus.FAILED).build();
 		workFlowExecution2.setId(workflowExecution2Id);
 
 		when(workFlowRepository.findAllByProjectId(project1Id)).thenReturn(List.of(workFlowExecution1));
 		when(workFlowRepository.findAllByProjectId(project2Id)).thenReturn(List.of(workFlowExecution2));
-		when(projectService.getProjectsByUsername(nullable(String.class)))
+		when(projectService.getProjectsByUserId(userId))
 				.thenReturn(List.of(ProjectResponseDTO.builder().id(project1Id).name("test-project1").build(),
 						ProjectResponseDTO.builder().id(project2Id).name("test-project2").build()));
+		when(userService.getUserEntityByUsername("test-user")).thenReturn(user);
 		when(workFlowDefinitionService.getWorkFlowDefinitionById(any()))
 				.thenReturn(WorkFlowDefinitionResponseDTO.builder().name("test").build());
 

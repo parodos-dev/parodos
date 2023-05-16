@@ -36,9 +36,9 @@ public interface ProjectService {
 
 	List<ProjectResponseDTO> getProjects();
 
-	List<ProjectResponseDTO> getProjectsByUsername(String username);
+	List<ProjectResponseDTO> getProjectsByUserId(UUID userId);
 
-	List<ProjectResponseDTO> getProjectByIdAndUsername(UUID id, String username);
+	List<ProjectResponseDTO> getProjectByIdAndUserId(UUID projectId, UUID userId);
 
 	ProjectUserRoleResponseDTO updateUserRolesToProject(UUID id, List<UserRoleRequestDTO> userRoleRequestDTOs);
 

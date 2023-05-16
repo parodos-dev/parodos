@@ -22,6 +22,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 
+import com.redhat.parodos.workflow.execution.scheduler.model.ScheduledTaskKey;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import lombok.extern.slf4j.Slf4j;
@@ -43,40 +44,45 @@ public class WorkFlowSchedulerServiceImpl implements WorkFlowSchedulerService {
 
 	private final TaskScheduler taskScheduler;
 
-	private final Map<UUID, Map<String, ScheduledFuture<?>>> hm = new ConcurrentHashMap<>();
+	private final Map<ScheduledTaskKey, Map<String, ScheduledFuture<?>>> hm = new ConcurrentHashMap<>();
 
 	public WorkFlowSchedulerServiceImpl(TaskScheduler taskScheduler) {
 		this.taskScheduler = taskScheduler;
 	}
 
 	@Override
-	public void schedule(UUID projectId, WorkFlow workFlow, WorkContext workContext, String cronExpression) {
-		hm.computeIfAbsent(projectId, key -> new HashMap<>());
-		if (!hm.get(projectId).containsKey(workFlow.getName())) {
-			log.info("Scheduling workflow: {} for project: {} to be executed following cron expression: {}",
-					workFlow.getName(), projectId, cronExpression);
+	public void schedule(UUID projectId, UUID userId, WorkFlow workFlow, WorkContext workContext,
+			String cronExpression) {
+		hm.computeIfAbsent(new ScheduledTaskKey(projectId, userId), key -> new HashMap<>());
+		if (!hm.get(new ScheduledTaskKey(projectId, userId)).containsKey(workFlow.getName())) {
+			log.info(
+					"Scheduling workflow: {} for project: {} and user: {} to be executed following cron expression: {}",
+					workFlow.getName(), projectId, userId, cronExpression);
 			ScheduledFuture<?> scheduledTask = taskScheduler.schedule(() -> workFlow.execute(workContext),
 					new CronTrigger(cronExpression, TimeZone.getTimeZone(TimeZone.getDefault().getID())));
-			hm.get(projectId).put(workFlow.getName(), scheduledTask);
+			hm.get(new ScheduledTaskKey(projectId, userId)).put(workFlow.getName(), scheduledTask);
 		}
 		else {
-			log.info("Workflow: {} is already scheduled for project: {}!", workFlow.getName(), projectId);
+			log.info("Workflow: {} is already scheduled for project: {} and user: {}!", workFlow.getName(), projectId,
+					userId);
 		}
 	}
 
 	@Override
-	public boolean stop(UUID projectId, WorkFlow workFlow) {
-		if (hm.containsKey(projectId) && hm.get(projectId).containsKey(workFlow.getName())) {
-			log.info("Stopping workflow: {} for project: {}", workFlow.getName(), projectId);
-			boolean stopped = hm.get(projectId).get(workFlow.getName()).cancel(false);
+	public boolean stop(UUID projectId, UUID userId, WorkFlow workFlow) {
+		if (hm.containsKey(new ScheduledTaskKey(projectId, userId))
+				&& hm.get(new ScheduledTaskKey(projectId, userId)).containsKey(workFlow.getName())) {
+			log.info("Stopping workflow: {} for project: {} and user: {}", workFlow.getName(), projectId, userId);
+			boolean stopped = hm.get(new ScheduledTaskKey(projectId, userId)).get(workFlow.getName()).cancel(false);
 			if (stopped) {
-				hm.get(projectId).remove(workFlow.getName());
-				if (hm.get(projectId).isEmpty())
-					hm.remove(projectId);
+				hm.get(new ScheduledTaskKey(projectId, userId)).remove(workFlow.getName());
+				if (hm.get(new ScheduledTaskKey(projectId, userId)).isEmpty())
+					hm.remove(new ScheduledTaskKey(projectId, userId));
 			}
 			return stopped;
 		}
-		log.info("Workflow: {} has not been scheduled for project: {}!", workFlow.getName(), projectId);
+		log.info("Workflow: {} has not been scheduled for project: {} and user: {}!", workFlow.getName(), projectId,
+				userId);
 		return false;
 	}
 

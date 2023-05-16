@@ -114,8 +114,8 @@ class ProjectServiceImplTest {
 		when(this.projectUserRoleRepository.findByProjectIdAndUserId(project.getId(), TEST_USER_ID))
 				.thenReturn(List.of(projectUserRole));
 
-		List<ProjectResponseDTO> projectResponseDTOs = this.projectService.getProjectByIdAndUsername(project.getId(),
-				TEST_USERNAME);
+		List<ProjectResponseDTO> projectResponseDTOs = this.projectService.getProjectByIdAndUserId(project.getId(),
+				TEST_USER_ID);
 
 		// then
 		assertNotNull(projectResponseDTOs);

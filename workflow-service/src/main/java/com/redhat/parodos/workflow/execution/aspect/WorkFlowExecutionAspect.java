@@ -89,7 +89,7 @@ public class WorkFlowExecutionAspect {
 		if (workFlowExecution.getStatus().equals(WorkStatus.COMPLETED)) {
 			// skip the workflow if it is already successful
 			if (workFlowDefinition.getType().equals(WorkFlowType.CHECKER)) {
-				workFlowSchedulerService.stop(workFlowExecution.getProjectId(),
+				workFlowSchedulerService.stop(workFlowExecution.getProjectId(), workFlowExecution.getUser().getId(),
 						(WorkFlow) proceedingJoinPoint.getTarget());
 			}
 			log.info("skipping workflow: {} is already completed", workFlowDefinition.getName());

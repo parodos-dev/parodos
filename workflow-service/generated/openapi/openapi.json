@@ -866,10 +866,10 @@
       "WorkFlowResponseDTO" : {
         "type" : "object",
         "properties" : {
-          "createUser" : {
+          "endDate" : {
             "type" : "string"
           },
-          "endDate" : {
+          "executeBy" : {
             "type" : "string"
           },
           "projectId" : {

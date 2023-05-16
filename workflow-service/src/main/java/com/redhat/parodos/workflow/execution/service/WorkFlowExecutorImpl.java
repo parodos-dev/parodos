@@ -29,17 +29,17 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor {
 	}
 
 	@Override
-	public void executeAsync(UUID projectId, String workflowName, WorkContext workContext, UUID executionId,
+	public void executeAsync(UUID projectId, UUID userId, String workflowName, WorkContext workContext, UUID executionId,
 			String rollbackWorkflowName) {
-		execute(projectId, workflowName, workContext, executionId, rollbackWorkflowName);
+		execute(projectId, userId, workflowName, workContext, executionId, rollbackWorkflowName);
 	}
 
 	@Override
-	public WorkReport execute(UUID projectId, String workflowName, WorkContext workContext, UUID executionId,
+	public WorkReport execute(UUID projectId, UUID userId, String workflowName, WorkContext workContext, UUID executionId,
 			String rollbackWorkflowName) {
 		WorkFlow workFlow = workFlowDelegate.getWorkFlowByName(workflowName);
 		log.info("execute workFlow {}", workflowName);
-		WorkContextUtils.updateWorkContextPartially(workContext, projectId, workflowName, executionId);
+		WorkContextUtils.updateWorkContextPartially(workContext, projectId, userId, workflowName, executionId);
 		WorkReport report = WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(workFlow, workContext);
 		// need to use the status from db to avoid of repetitive execution on rollback
 		if (workFlowRepository.findById(executionId).map(execution -> execution.getStatus() == WorkStatus.FAILED)
@@ -55,5 +55,4 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor {
 		}
 		return report;
 	}
-
 }

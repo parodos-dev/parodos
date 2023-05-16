@@ -37,6 +37,8 @@ public interface UserService {
 
 	User getUserEntityByUsername(String username);
 
+	User getUserEntityById(UUID id);
+
 	List<User> findAllUserEntitiesByUsernameIn(List<String> usernames);
 
 }

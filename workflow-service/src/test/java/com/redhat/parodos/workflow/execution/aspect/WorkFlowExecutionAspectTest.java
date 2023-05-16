@@ -3,6 +3,7 @@ package com.redhat.parodos.workflow.execution.aspect;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.redhat.parodos.user.entity.User;
 import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
@@ -110,7 +111,7 @@ class WorkFlowExecutionAspectTest {
 		WorkFlowDefinition workFlowDefinition = getSampleWorkFlowDefinition(TEST);
 		WorkFlowExecution workFlowExecution = getSampleWorkFlowExecution();
 		when(this.workFlowDefinitionRepository.findFirstByName(any())).thenReturn(workFlowDefinition);
-		when(this.workFlowService.saveWorkFlow(any(), any(), any(), any(), any())).thenReturn(workFlowExecution);
+		when(this.workFlowService.saveWorkFlow(any(), any(), any(), any(), any(), any())).thenReturn(workFlowExecution);
 
 		ProceedingJoinPoint proceedingJoinPoint = mock(ProceedingJoinPoint.class);
 		WorkFlow workFlow = mock(WorkFlow.class);
@@ -131,7 +132,7 @@ class WorkFlowExecutionAspectTest {
 		assertEquals(workReport.getStatus().toString(), COMPLETED);
 		assertEquals(workReport.getWorkContext().get(WORKFLOW_DEFINITION_NAME), TEST_WORK_FLOW);
 		assertEquals(workReport.getWorkContext().get(PROJECT_ID), projectID);
-		verify(this.workFlowSchedulerService, times(1)).stop(any(), any());
+		verify(this.workFlowSchedulerService, times(1)).stop(any(), any(), any());
 		verify(this.workFlowService, times(1)).updateWorkFlow(argThat(w -> w.getStatus().toString().equals(COMPLETED)));
 	}
 
@@ -153,7 +154,7 @@ class WorkFlowExecutionAspectTest {
 		WorkFlowDefinition workFlowDefinition = getSampleWorkFlowDefinition(TEST);
 		WorkFlowExecution workFlowExecution = getSampleWorkFlowExecution();
 		when(this.workFlowDefinitionRepository.findFirstByName(any())).thenReturn(workFlowDefinition);
-		when(this.workFlowService.saveWorkFlow(any(), any(), any(), any(), any())).thenReturn(workFlowExecution);
+		when(this.workFlowService.saveWorkFlow(any(), any(), any(), any(), any(), any())).thenReturn(workFlowExecution);
 		when(workFlowWorkRepository.findFirstByWorkDefinitionId(any())).thenReturn(workFlowWorkDefinition);
 		ProceedingJoinPoint proceedingJoinPoint = mock(ProceedingJoinPoint.class);
 		WorkFlow workFlow = mock(WorkFlow.class);
@@ -175,17 +176,20 @@ class WorkFlowExecutionAspectTest {
 		assertEquals(workReport.getWorkContext().get(WORKFLOW_DEFINITION_NAME), TEST_WORK_FLOW);
 		assertNull(workReport.getWorkContext().get(WORKFLOW_DEFINITION_ID));
 		assertEquals(workReport.getWorkContext().get(PROJECT_ID), projectID);
-		verify(this.workFlowSchedulerService, times(1)).schedule(any(), any(), any(), any());
+		verify(this.workFlowSchedulerService, times(1)).schedule(any(), any(), any(), any(), any());
 		verify(this.workFlowService, times(1)).updateWorkFlow(argThat(w -> w.getStatus().toString().equals(FAILED)));
 	}
 
 	static WorkFlowExecution getSampleWorkFlowExecution() {
+		User user = User.builder().build();
+		user.setId(UUID.randomUUID());
 		return new WorkFlowExecution() {
 			{
 				setId(UUID.randomUUID());
 				setWorkFlowDefinition(WorkFlowDefinition.builder().build());
 				setStatus(WorkStatus.IN_PROGRESS);
 				setProjectId(UUID.randomUUID());
+				setUser(user);
 			}
 		};
 	}

@@ -19,14 +19,12 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import com.nimbusds.jose.shaded.json.annotate.JsonIgnore;
 import com.redhat.parodos.common.AbstractEntity;
 import com.redhat.parodos.project.entity.ProjectUserRole;
+import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -70,5 +68,8 @@ public class User extends AbstractEntity {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	private Set<ProjectUserRole> projectUserRoles = new HashSet<>();
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+	private Set<WorkFlowExecution> workFlowExecution = new HashSet<>();
 
 }

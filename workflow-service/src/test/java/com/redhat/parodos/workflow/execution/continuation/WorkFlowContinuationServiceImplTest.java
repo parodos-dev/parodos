@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.redhat.parodos.user.entity.User;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
@@ -71,7 +72,7 @@ class WorkFlowContinuationServiceImplTest {
 
 		// then
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
-		verify(this.workFlowExecutor, times(0)).executeAsync(any(), any(), any(), any(), any());
+		verify(this.workFlowExecutor, times(0)).executeAsync(any(), any(), any(), any(), any(), any());
 	}
 
 	@Test
@@ -85,7 +86,7 @@ class WorkFlowContinuationServiceImplTest {
 
 		// then
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
-		verify(this.workFlowExecutor, times(1)).executeAsync(eq(workFlowExecution.getProjectId()), eq(TEST_WORKFLOW),
+		verify(this.workFlowExecutor, times(1)).executeAsync(eq(workFlowExecution.getProjectId()), eq(workFlowExecution.getUser().getId()), eq(TEST_WORKFLOW),
 				any(), any(), nullable(String.class));
 	}
 
@@ -95,12 +96,13 @@ class WorkFlowContinuationServiceImplTest {
 		WorkFlowExecution workFlowExecution = this.sampleWorkFlowExecution(WorkStatus.PENDING);
 		when(this.workFlowRepository.findByStatusInAndIsMain(workFlowStatuses)).thenReturn(List.of(workFlowExecution));
 		when(this.workFlowDefinitionRepository.findById(any())).thenReturn(Optional.of(sampleWorkFlowDefinition()));
+
 		// when
 		this.service.workFlowRunAfterStartup();
 
 		// then
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
-		verify(this.workFlowExecutor, times(1)).executeAsync(eq(workFlowExecution.getProjectId()), eq(TEST_WORKFLOW),
+		verify(this.workFlowExecutor, times(1)).executeAsync(eq(workFlowExecution.getProjectId()), eq(workFlowExecution.getUser().getId()), eq(TEST_WORKFLOW),
 				any(), any(), nullable(String.class));
 	}
 
@@ -125,7 +127,7 @@ class WorkFlowContinuationServiceImplTest {
 
 		// then
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
-		verify(this.workFlowExecutor, times(1)).executeAsync(eq(workFlowExecution.getProjectId()), eq(TEST_WORKFLOW),
+		verify(this.workFlowExecutor, times(1)).executeAsync(eq(workFlowExecution.getProjectId()), eq(workFlowExecution.getUser().getId()), eq(TEST_WORKFLOW),
 				any(), any(), nullable(String.class));
 	}
 
@@ -145,7 +147,7 @@ class WorkFlowContinuationServiceImplTest {
 		when(this.workFlowTaskRepository.findByWorkFlowExecutionId(wfExecution.getId()))
 				.thenReturn(List.of(workFlowTaskExecution));
 		doThrow(new RuntimeException("JsonParseException")).when(workFlowExecutor).executeAsync(any(), any(), any(),
-				any(), any());
+				any(), any(), any());
 
 		// when
 		Exception exception = assertThrows(RuntimeException.class, () -> this.service.workFlowRunAfterStartup());
@@ -155,12 +157,14 @@ class WorkFlowContinuationServiceImplTest {
 		assertTrue(exception.getMessage().contains("JsonParseException"));
 
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
-		verify(this.workFlowExecutor, times(1)).executeAsync(any(), any(), any(), any(), any());
+		verify(this.workFlowExecutor, times(1)).executeAsync(any(), any(), any(), any(), any(), any());
 
 	}
 
 	private WorkFlowExecution sampleWorkFlowExecution(WorkStatus workStatus) {
-		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().projectId(UUID.randomUUID())
+		User user = User.builder().username("test-user").build();
+		user.setId(UUID.randomUUID());
+		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().projectId(UUID.randomUUID()).user(user)
 				.status(workStatus).build();
 		workFlowExecution.setId(UUID.randomUUID());
 		workFlowExecution.setArguments("{\"test\": \"test\"}");

@@ -2,6 +2,7 @@ package com.redhat.parodos.workflow.execution.aspect;
 
 import java.util.UUID;
 
+import com.redhat.parodos.user.entity.User;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
@@ -36,6 +37,12 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 public class WorkFlowExecutionInterceptorTest {
 
+	private static final UUID TEST_USER_ID = UUID.randomUUID();
+
+	private static final String TEST_USERNAME = "test-username";
+
+	private static final String TEST_WORKFLOW_NAME = "test-workflow-name";
+
 	private WorkFlowExecutionInterceptor interceptor;
 
 	@Mock
@@ -63,8 +70,10 @@ public class WorkFlowExecutionInterceptorTest {
 
 	@BeforeEach
 	public void setUp() {
+		User user = createUser(TEST_USER_ID, TEST_USERNAME);
 		expectedWorkFlowExecution = new WorkFlowExecution();
 		expectedWorkFlowExecution.setProjectId(UUID.randomUUID());
+		expectedWorkFlowExecution.setUser(user);
 		interceptor = new WorkFlowExecutionInterceptor(workFlowDefinition, workContext, workFlowService,
 				workFlowRepository, workFlowSchedulerService, workFlowContinuationServiceImpl) {
 			@Override
@@ -92,7 +101,7 @@ public class WorkFlowExecutionInterceptorTest {
 		when(report.getStatus()).thenReturn(WorkStatus.IN_PROGRESS);
 
 		WorkFlow workFlow = mock(WorkFlow.class);
-		when(workFlow.getName()).thenReturn("TestWorkFlow");
+		when(workFlow.getName()).thenReturn(TEST_WORKFLOW_NAME);
 
 		when(workFlowDefinition.getType()).thenReturn(WorkFlowType.CHECKER);
 		when(workFlowDefinition.getCheckerWorkFlowDefinition())
@@ -104,9 +113,9 @@ public class WorkFlowExecutionInterceptorTest {
 		WorkReport result = interceptor.handlePostWorkFlowExecution(report, workFlow);
 
 		// then
-		verify(workFlowService, times(0)).saveWorkFlow(any(UUID.class), any(), eq(WorkStatus.IN_PROGRESS), any(),
-				anyString());
-		verify(workFlowSchedulerService, times(1)).schedule(any(), any(), any(WorkContext.class), any());
+		verify(workFlowService, times(0)).saveWorkFlow(any(UUID.class), any(UUID.class), any(),
+				eq(WorkStatus.IN_PROGRESS), any(), anyString());
+		verify(workFlowSchedulerService, times(1)).schedule(any(), any(), any(), any(WorkContext.class), any());
 
 		assertEquals(result.getStatus(), report.getStatus());
 	}
@@ -115,30 +124,36 @@ public class WorkFlowExecutionInterceptorTest {
 	public void testHandleCompletePostWorkFlowExecution() {
 		// given
 		WorkReport report = mock(WorkReport.class);
+
+		// when
 		when(report.getStatus()).thenReturn(WorkStatus.COMPLETED);
 		when(workContext.get(WorkContextDelegate.buildKey(WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION,
-				WorkContextDelegate.Resource.NAME))).thenReturn("TestWorkFlow");
+				WorkContextDelegate.Resource.NAME))).thenReturn(TEST_WORKFLOW_NAME);
 		WorkFlow workFlow = mock(WorkFlow.class);
-		when(workFlow.getName()).thenReturn("TestWorkFlow");
-
+		when(workFlow.getName()).thenReturn(TEST_WORKFLOW_NAME);
 		when(workFlowDefinition.getType()).thenReturn(WorkFlowType.CHECKER);
 		when(workFlowDefinition.getCheckerWorkFlowDefinition())
 				.thenReturn(mock(WorkFlowCheckerMappingDefinition.class));
 		when(mainWorkFlowExecution.getId()).thenReturn(UUID.randomUUID());
 		when(mainWorkFlowExecution.getWorkFlowDefinition()).thenReturn(workFlowDefinition);
 
-		// when
 		WorkFlowExecution workFlowExecution = interceptor.handlePreWorkFlowExecution();
 		assertNotNull(workFlowExecution);
 		WorkReport result = interceptor.handlePostWorkFlowExecution(report, workFlow);
 
 		// then
-		verify(workFlowService, times(0)).saveWorkFlow(any(UUID.class), any(), eq(WorkStatus.IN_PROGRESS), any(),
+		verify(workFlowService, times(0)).saveWorkFlow(any(UUID.class), any(UUID.class), any(), eq(WorkStatus.IN_PROGRESS), any(),
 				anyString());
-		verify(workFlowSchedulerService, times(1)).stop(any(), any(WorkFlow.class));
-		verify(workFlowContinuationServiceImpl, times(1)).continueWorkFlow(any(UUID.class), anyString(),
+		verify(workFlowSchedulerService, times(1)).stop(any(), any(), any(WorkFlow.class));
+		verify(workFlowContinuationServiceImpl, times(1)).continueWorkFlow(any(UUID.class), any(UUID.class), anyString(),
 				any(WorkContext.class), any(UUID.class), nullable(String.class));
 		assertEquals(result.getStatus(), report.getStatus());
+	}
+
+	private User createUser(UUID userId, String username) {
+		User user = User.builder().username(username).build();
+		user.setId(userId);
+		return user;
 	}
 
 }

@@ -31,6 +31,7 @@ import javax.persistence.OneToOne;
 
 import com.redhat.parodos.common.AbstractEntity;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
+import com.redhat.parodos.user.entity.User;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -78,5 +79,9 @@ public class WorkFlowExecution extends AbstractEntity {
 
 	@OneToOne(mappedBy = "mainWorkFlowExecution", cascade = { CascadeType.ALL }, orphanRemoval = true)
 	private WorkFlowExecutionContext workFlowExecutionContext;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
+	private User user;
 
 }
