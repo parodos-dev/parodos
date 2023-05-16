@@ -30,8 +30,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.redhat.parodos.common.AbstractEntity;
-import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.user.entity.User;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

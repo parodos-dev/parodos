@@ -977,15 +977,15 @@ components:
       example:
         workStatus: FAILED
         workFlowName: workFlowName
+        executeBy: executeBy
         endDate: endDate
         workFlowExecutionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        createUser: createUser
         projectId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         startDate: startDate
       properties:
-        createUser:
-          type: string
         endDate:
+          type: string
+        executeBy:
           type: string
         projectId:
           format: uuid

@@ -7,8 +7,8 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**createUser** | **String** |  |  [optional] |
 |**endDate** | **String** |  |  [optional] |
+|**executeBy** | **String** |  |  [optional] |
 |**projectId** | **UUID** |  |  [optional] |
 |**startDate** | **String** |  |  [optional] |
 |**workFlowExecutionId** | **UUID** |  |  [optional] |

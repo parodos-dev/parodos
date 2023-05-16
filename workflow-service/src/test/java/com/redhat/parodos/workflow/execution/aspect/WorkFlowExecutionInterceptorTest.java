@@ -142,11 +142,11 @@ public class WorkFlowExecutionInterceptorTest {
 		WorkReport result = interceptor.handlePostWorkFlowExecution(report, workFlow);
 
 		// then
-		verify(workFlowService, times(0)).saveWorkFlow(any(UUID.class), any(UUID.class), any(), eq(WorkStatus.IN_PROGRESS), any(),
-				anyString());
+		verify(workFlowService, times(0)).saveWorkFlow(any(UUID.class), any(UUID.class), any(),
+				eq(WorkStatus.IN_PROGRESS), any(), anyString());
 		verify(workFlowSchedulerService, times(1)).stop(any(), any(), any(WorkFlow.class));
-		verify(workFlowContinuationServiceImpl, times(1)).continueWorkFlow(any(UUID.class), any(UUID.class), anyString(),
-				any(WorkContext.class), any(UUID.class), nullable(String.class));
+		verify(workFlowContinuationServiceImpl, times(1)).continueWorkFlow(any(UUID.class), any(UUID.class),
+				anyString(), any(WorkContext.class), any(UUID.class), nullable(String.class));
 		assertEquals(result.getStatus(), report.getStatus());
 	}
 

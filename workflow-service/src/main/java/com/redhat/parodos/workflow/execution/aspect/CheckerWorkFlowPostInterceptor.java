@@ -110,4 +110,5 @@ public class CheckerWorkFlowPostInterceptor implements WorkFlowPostInterceptor {
 					Optional.ofNullable(mainWorkFlowExecution.getWorkFlowDefinition().getRollbackWorkFlowDefinition())
 							.map(WorkFlowDefinition::getName).orElse(null));
 	}
+
 }
