@@ -26,6 +26,7 @@ import java.util.UUID;
 
 import javax.annotation.PreDestroy;
 
+import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
 import com.redhat.parodos.project.service.ProjectService;
 import com.redhat.parodos.security.SecurityUtils;
@@ -214,13 +215,13 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	@Override
 	public WorkFlowStatusResponseDTO getWorkFlowStatus(UUID workFlowExecutionId) {
 		WorkFlowExecution workFlowExecution = workFlowRepository.findById(workFlowExecutionId).orElseThrow(() -> {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+			throw new ResourceNotFoundException(
 					String.format("workflow execution id: %s not found!", workFlowExecutionId));
 		});
 
 		WorkFlowDefinition workFlowDefinition = Optional.ofNullable(workFlowExecution.getWorkFlowDefinition())
 				.orElseThrow(() -> {
-					throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					throw new ResourceNotFoundException(
 							String.format("workflow definition id: %s not found!", workFlowExecution.getId()));
 				});
 
@@ -243,7 +244,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	public WorkFlowContextResponseDTO getWorkflowParameters(UUID workFlowExecutionId,
 			List<WorkContextDelegate.Resource> params) {
 		WorkFlowExecution workFlowExecution = workFlowRepository.findById(workFlowExecutionId).orElseThrow(() -> {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+			throw new ResourceNotFoundException(
 					String.format("workflow execution id: %s not found!", workFlowExecutionId));
 		});
 		Map options = Map.of();
@@ -311,14 +312,14 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 			WorkStatus workFlowTaskStatus) {
 		// get main workflow associated to the execution id
 		WorkFlowExecution mainWorkFlowExecution = workFlowRepository.findById(workFlowExecutionId).orElseThrow(() -> {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+			throw new ResourceNotFoundException(
 					String.format("workflow execution id: %s not found!", workFlowExecutionId));
 		});
 		// get workflow checker task definition
 		WorkFlowTaskDefinition workFlowTaskDefinition = workFlowTaskDefinitionRepository
 				.findFirstByNameAndWorkFlowDefinitionType(workFlowTaskName, WorkFlowType.CHECKER);
 		if (Objects.isNull(workFlowTaskDefinition)) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+			throw new ResourceNotFoundException(
 					String.format("workflow checker task name: %s not found!", workFlowTaskName));
 		}
 		// find workflow checker execution associated to the checker task

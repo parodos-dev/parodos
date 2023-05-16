@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
 import com.redhat.parodos.project.service.ProjectService;
 import com.redhat.parodos.user.entity.User;
@@ -49,7 +50,6 @@ import org.mockito.Mock;
 
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.web.server.ResponseStatusException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -613,7 +613,7 @@ class WorkFlowServiceImplTest {
 		// when
 		when(this.workFlowRepository.findById(eq(workFlowExecutionId))).thenReturn(Optional.empty());
 
-		assertThrows(ResponseStatusException.class, () -> {
+		assertThrows(ResourceNotFoundException.class, () -> {
 			this.workFlowService.getWorkFlowStatus(workFlowExecutionId);
 		});
 
@@ -633,7 +633,7 @@ class WorkFlowServiceImplTest {
 
 		when(this.workFlowDefinitionRepository.findById(eq(workFlowDefinitionId))).thenReturn(Optional.empty());
 
-		assertThrows(ResponseStatusException.class, () -> {
+		assertThrows(ResourceNotFoundException.class, () -> {
 			this.workFlowService.getWorkFlowStatus(workFlowExecutionId);
 		});
 
@@ -657,7 +657,7 @@ class WorkFlowServiceImplTest {
 
 		when(workFlowExecution.getMainWorkFlowExecution()).thenReturn(null);
 
-		assertThrows(ResponseStatusException.class, () -> {
+		assertThrows(ResourceNotFoundException.class, () -> {
 			this.workFlowService.getWorkFlowStatus(workFlowExecutionId);
 		});
 
@@ -832,7 +832,7 @@ class WorkFlowServiceImplTest {
 		// when
 		when(this.workFlowRepository.findById(eq(workFlowExecutionId))).thenReturn(Optional.empty());
 
-		assertThrows(ResponseStatusException.class, () -> {
+		assertThrows(ResourceNotFoundException.class, () -> {
 			this.workFlowService.updateWorkFlowCheckerTaskStatus(workFlowExecutionId, workFlowCheckerTaskName,
 					WorkStatus.COMPLETED);
 		});
@@ -857,7 +857,7 @@ class WorkFlowServiceImplTest {
 				.thenReturn(null);
 
 		// then
-		assertThrows(ResponseStatusException.class, () -> {
+		assertThrows(ResourceNotFoundException.class, () -> {
 			this.workFlowService.updateWorkFlowCheckerTaskStatus(workFlowExecutionId, workFlowCheckerTaskName,
 					WorkStatus.COMPLETED);
 		});
