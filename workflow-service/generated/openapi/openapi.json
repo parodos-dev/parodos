@@ -30,6 +30,16 @@
           "200" : {
             "description" : "Succeeded"
           },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
           "401" : {
             "description" : "Unauthorized"
           },
@@ -64,6 +74,16 @@
               }
             },
             "description" : "Succeeded"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
           },
           "401" : {
             "description" : "Unauthorized"
@@ -108,6 +128,16 @@
             },
             "description" : "Created"
           },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
           "401" : {
             "description" : "Unauthorized"
           },
@@ -148,6 +178,16 @@
               }
             },
             "description" : "Succeeded"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
           },
           "401" : {
             "description" : "Unauthorized"
@@ -197,6 +237,16 @@
             },
             "description" : "Succeeded"
           },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
           "401" : {
             "description" : "Unauthorized"
           },
@@ -243,6 +293,16 @@
             },
             "description" : "Succeeded"
           },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
           "401" : {
             "description" : "Unauthorized"
           },
@@ -279,6 +339,16 @@
               }
             },
             "description" : "Succeeded"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
           },
           "401" : {
             "description" : "Unauthorized"
@@ -323,6 +393,16 @@
               }
             },
             "description" : "Succeeded"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
           },
           "401" : {
             "description" : "Unauthorized"
@@ -385,6 +465,16 @@
             },
             "description" : "Succeeded"
           },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
           "401" : {
             "description" : "Unauthorized"
           },
@@ -432,6 +522,16 @@
             },
             "description" : "Succeeded"
           },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
           "401" : {
             "description" : "Unauthorized"
           },
@@ -474,6 +574,16 @@
               }
             },
             "description" : "Accepted"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
           },
           "401" : {
             "description" : "Unauthorized"
@@ -536,6 +646,16 @@
             },
             "description" : "Succeeded"
           },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
           "401" : {
             "description" : "Unauthorized"
           },
@@ -585,6 +705,16 @@
             },
             "description" : "Succeeded"
           },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
           "401" : {
             "description" : "Unauthorized"
           },
@@ -628,6 +758,16 @@
               }
             },
             "description" : "Succeeded"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
           },
           "401" : {
             "description" : "Unauthorized"
