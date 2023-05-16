@@ -65,17 +65,17 @@ public class WorkFlowContinuationServiceImpl implements WorkFlowContinuationServ
 			WorkFlowDefinition workFlowDefinition = workFlowExecution.getWorkFlowDefinition();
 
 			// continue with the same execution id
-			continueWorkFlow(workFlowExecution.getProjectId(), workFlowExecution.getUser().getId(), workFlowDefinition.getName(),
-					workFlowExecution.getWorkFlowExecutionContext().getWorkContext(), workFlowExecution.getId(),
-					Optional.ofNullable(workFlowDefinition.getRollbackWorkFlowDefinition())
+			continueWorkFlow(workFlowExecution.getProjectId(), workFlowExecution.getUser().getId(),
+					workFlowDefinition.getName(), workFlowExecution.getWorkFlowExecutionContext().getWorkContext(),
+					workFlowExecution.getId(), Optional.ofNullable(workFlowDefinition.getRollbackWorkFlowDefinition())
 							.map(WorkFlowDefinition::getName).orElse(null));
 			// TODO: continue 'FAILED' Checkers in this main workflow execution
 		});
 	}
 
 	@Override
-	public void continueWorkFlow(UUID projectId, UUID userId, String workflowName, WorkContext workContext, UUID executionId,
-			String rollbackWorkflowName) {
+	public void continueWorkFlow(UUID projectId, UUID userId, String workflowName, WorkContext workContext,
+			UUID executionId, String rollbackWorkflowName) {
 		workFlowExecutor.executeAsync(projectId, userId, workflowName, workContext, executionId, rollbackWorkflowName);
 	}
 

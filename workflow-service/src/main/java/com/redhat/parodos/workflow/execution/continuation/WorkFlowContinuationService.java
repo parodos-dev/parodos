@@ -27,8 +27,10 @@ import com.redhat.parodos.workflows.work.WorkContext;
  * @author Annel Ketcha (Github: anludke)
  */
 public interface WorkFlowContinuationService {
+
 	void workFlowRunAfterStartup();
 
 	void continueWorkFlow(UUID projectId, UUID userId, String workflowName, WorkContext workContext, UUID executionId,
 			String rollbackWorkflowName);
+
 }

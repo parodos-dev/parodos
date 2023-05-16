@@ -131,8 +131,8 @@ class WorkFlowServiceImplTest {
 				.thenReturn(this.sampleWorkflowDefinition("test"));
 
 		// when
-		WorkReport report = this.workFlowExecutor.execute(UUID.randomUUID(), UUID.randomUUID(), TEST_WORKFLOW_NAME, new WorkContext(),
-				UUID.randomUUID(), null);
+		WorkReport report = this.workFlowExecutor.execute(UUID.randomUUID(), UUID.randomUUID(), TEST_WORKFLOW_NAME,
+				new WorkContext(), UUID.randomUUID(), null);
 
 		// then
 		assertNotNull(report);
@@ -187,7 +187,8 @@ class WorkFlowServiceImplTest {
 		when(this.workFlowWorkRepository.findFirstByWorkDefinitionId(any())).thenReturn(null);
 		when(this.workFlowDelegate.initWorkFlowContext(any(), any())).thenReturn(new WorkContext());
 		when(this.workFlowDelegate.getWorkFlowByName(TEST_WORKFLOW_NAME)).thenReturn(workFlow);
-		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().status(WorkStatus.IN_PROGRESS).user(user).build();
+		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().status(WorkStatus.IN_PROGRESS).user(user)
+				.build();
 		workFlowExecution.setId(UUID.randomUUID());
 		when(this.workFlowRepository.save(any())).thenReturn(workFlowExecution);
 		WorkFlowDefinitionResponseDTO workFlowDefinitionResponseDTO = WorkFlowDefinitionResponseDTO.builder()

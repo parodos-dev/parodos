@@ -37,15 +37,15 @@ import com.redhat.parodos.sdk.invoker.JSON;
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowResponseDTO {
 
-	public static final String SERIALIZED_NAME_CREATE_USER = "createUser";
-
-	@SerializedName(SERIALIZED_NAME_CREATE_USER)
-	private String createUser;
-
 	public static final String SERIALIZED_NAME_END_DATE = "endDate";
 
 	@SerializedName(SERIALIZED_NAME_END_DATE)
 	private String endDate;
+
+	public static final String SERIALIZED_NAME_EXECUTE_BY = "executeBy";
+
+	@SerializedName(SERIALIZED_NAME_EXECUTE_BY)
+	private String executeBy;
 
 	public static final String SERIALIZED_NAME_PROJECT_ID = "projectId";
 
@@ -132,26 +132,6 @@ public class WorkFlowResponseDTO {
 	public WorkFlowResponseDTO() {
 	}
 
-	public WorkFlowResponseDTO createUser(String createUser) {
-
-		this.createUser = createUser;
-		return this;
-	}
-
-	/**
-	 * Get createUser
-	 * @return createUser
-	 **/
-	@javax.annotation.Nullable
-
-	public String getCreateUser() {
-		return createUser;
-	}
-
-	public void setCreateUser(String createUser) {
-		this.createUser = createUser;
-	}
-
 	public WorkFlowResponseDTO endDate(String endDate) {
 
 		this.endDate = endDate;
@@ -170,6 +150,26 @@ public class WorkFlowResponseDTO {
 
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
+	}
+
+	public WorkFlowResponseDTO executeBy(String executeBy) {
+
+		this.executeBy = executeBy;
+		return this;
+	}
+
+	/**
+	 * Get executeBy
+	 * @return executeBy
+	 **/
+	@javax.annotation.Nullable
+
+	public String getExecuteBy() {
+		return executeBy;
+	}
+
+	public void setExecuteBy(String executeBy) {
+		this.executeBy = executeBy;
 	}
 
 	public WorkFlowResponseDTO projectId(UUID projectId) {
@@ -281,8 +281,8 @@ public class WorkFlowResponseDTO {
 			return false;
 		}
 		WorkFlowResponseDTO workFlowResponseDTO = (WorkFlowResponseDTO) o;
-		return Objects.equals(this.createUser, workFlowResponseDTO.createUser)
-				&& Objects.equals(this.endDate, workFlowResponseDTO.endDate)
+		return Objects.equals(this.endDate, workFlowResponseDTO.endDate)
+				&& Objects.equals(this.executeBy, workFlowResponseDTO.executeBy)
 				&& Objects.equals(this.projectId, workFlowResponseDTO.projectId)
 				&& Objects.equals(this.startDate, workFlowResponseDTO.startDate)
 				&& Objects.equals(this.workFlowExecutionId, workFlowResponseDTO.workFlowExecutionId)
@@ -292,15 +292,15 @@ public class WorkFlowResponseDTO {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(createUser, endDate, projectId, startDate, workFlowExecutionId, workFlowName, workStatus);
+		return Objects.hash(endDate, executeBy, projectId, startDate, workFlowExecutionId, workFlowName, workStatus);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("class WorkFlowResponseDTO {\n");
-		sb.append("    createUser: ").append(toIndentedString(createUser)).append("\n");
 		sb.append("    endDate: ").append(toIndentedString(endDate)).append("\n");
+		sb.append("    executeBy: ").append(toIndentedString(executeBy)).append("\n");
 		sb.append("    projectId: ").append(toIndentedString(projectId)).append("\n");
 		sb.append("    startDate: ").append(toIndentedString(startDate)).append("\n");
 		sb.append("    workFlowExecutionId: ").append(toIndentedString(workFlowExecutionId)).append("\n");
@@ -328,8 +328,8 @@ public class WorkFlowResponseDTO {
 	static {
 		// a set of all properties/fields (JSON key names)
 		openapiFields = new HashSet<String>();
-		openapiFields.add("createUser");
 		openapiFields.add("endDate");
+		openapiFields.add("executeBy");
 		openapiFields.add("projectId");
 		openapiFields.add("startDate");
 		openapiFields.add("workFlowExecutionId");
@@ -366,17 +366,17 @@ public class WorkFlowResponseDTO {
 						entry.getKey(), jsonObj.toString()));
 			}
 		}
-		if ((jsonObj.get("createUser") != null && !jsonObj.get("createUser").isJsonNull())
-				&& !jsonObj.get("createUser").isJsonPrimitive()) {
-			throw new IllegalArgumentException(String.format(
-					"Expected the field `createUser` to be a primitive type in the JSON string but got `%s`",
-					jsonObj.get("createUser").toString()));
-		}
 		if ((jsonObj.get("endDate") != null && !jsonObj.get("endDate").isJsonNull())
 				&& !jsonObj.get("endDate").isJsonPrimitive()) {
 			throw new IllegalArgumentException(
 					String.format("Expected the field `endDate` to be a primitive type in the JSON string but got `%s`",
 							jsonObj.get("endDate").toString()));
+		}
+		if ((jsonObj.get("executeBy") != null && !jsonObj.get("executeBy").isJsonNull())
+				&& !jsonObj.get("executeBy").isJsonPrimitive()) {
+			throw new IllegalArgumentException(String.format(
+					"Expected the field `executeBy` to be a primitive type in the JSON string but got `%s`",
+					jsonObj.get("executeBy").toString()));
 		}
 		if ((jsonObj.get("projectId") != null && !jsonObj.get("projectId").isJsonNull())
 				&& !jsonObj.get("projectId").isJsonPrimitive()) {

@@ -123,7 +123,7 @@ class WorkFlowExecutionAspectTest {
 		when(workFlowRepository.findFirstByWorkFlowDefinitionIdAndMainWorkFlowExecution(any(), any()))
 				.thenReturn(workFlowExecution);
 		when(workFlowRepository.findById(any())).thenReturn(Optional.of(workFlowExecution));
-		doNothing().when(workFlowContinuationService).continueWorkFlow(any(), any(), any(), any(), any());
+		doNothing().when(workFlowContinuationService).continueWorkFlow(any(), any(), any(), any(), any(), any());
 		// when
 		WorkReport workReport = this.workFlowExecutionAspect.executeAroundAdvice(proceedingJoinPoint, workContext);
 

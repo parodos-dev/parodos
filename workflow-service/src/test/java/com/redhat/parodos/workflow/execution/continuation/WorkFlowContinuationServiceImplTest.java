@@ -86,8 +86,8 @@ class WorkFlowContinuationServiceImplTest {
 
 		// then
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
-		verify(this.workFlowExecutor, times(1)).executeAsync(eq(workFlowExecution.getProjectId()), eq(workFlowExecution.getUser().getId()), eq(TEST_WORKFLOW),
-				any(), any(), nullable(String.class));
+		verify(this.workFlowExecutor, times(1)).executeAsync(eq(workFlowExecution.getProjectId()),
+				eq(workFlowExecution.getUser().getId()), eq(TEST_WORKFLOW), any(), any(), nullable(String.class));
 	}
 
 	@Test
@@ -102,8 +102,8 @@ class WorkFlowContinuationServiceImplTest {
 
 		// then
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
-		verify(this.workFlowExecutor, times(1)).executeAsync(eq(workFlowExecution.getProjectId()), eq(workFlowExecution.getUser().getId()), eq(TEST_WORKFLOW),
-				any(), any(), nullable(String.class));
+		verify(this.workFlowExecutor, times(1)).executeAsync(eq(workFlowExecution.getProjectId()),
+				eq(workFlowExecution.getUser().getId()), eq(TEST_WORKFLOW), any(), any(), nullable(String.class));
 	}
 
 	@Test
@@ -127,8 +127,8 @@ class WorkFlowContinuationServiceImplTest {
 
 		// then
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
-		verify(this.workFlowExecutor, times(1)).executeAsync(eq(workFlowExecution.getProjectId()), eq(workFlowExecution.getUser().getId()), eq(TEST_WORKFLOW),
-				any(), any(), nullable(String.class));
+		verify(this.workFlowExecutor, times(1)).executeAsync(eq(workFlowExecution.getProjectId()),
+				eq(workFlowExecution.getUser().getId()), eq(TEST_WORKFLOW), any(), any(), nullable(String.class));
 	}
 
 	@Test
