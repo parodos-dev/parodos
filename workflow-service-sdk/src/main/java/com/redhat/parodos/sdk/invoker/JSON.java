@@ -88,6 +88,8 @@ public class JSON {
 		gsonBuilder.registerTypeAdapterFactory(
 				new com.redhat.parodos.sdk.model.ArgumentRequestDTO.CustomTypeAdapterFactory());
 		gsonBuilder.registerTypeAdapterFactory(
+				new com.redhat.parodos.sdk.model.ErrorMessageDTO.CustomTypeAdapterFactory());
+		gsonBuilder.registerTypeAdapterFactory(
 				new com.redhat.parodos.sdk.model.ProjectRequestDTO.CustomTypeAdapterFactory());
 		gsonBuilder.registerTypeAdapterFactory(
 				new com.redhat.parodos.sdk.model.ProjectResponseDTO.CustomTypeAdapterFactory());

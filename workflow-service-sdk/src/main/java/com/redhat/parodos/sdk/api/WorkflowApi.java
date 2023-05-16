@@ -100,6 +100,11 @@ public class WorkflowApi {
 	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call executeCall(WorkFlowRequestDTO workFlowRequestDTO, final ApiCallback _callback)
@@ -130,7 +135,7 @@ public class WorkflowApi {
 		Map<String, String> localVarCookieParams = new HashMap<String, String>();
 		Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-		final String[] localVarAccepts = { "application/json" };
+		final String[] localVarAccepts = { "application/json", "*/*" };
 		final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
 		if (localVarAccept != null) {
 			localVarHeaderParams.put("Accept", localVarAccept);
@@ -188,6 +193,11 @@ public class WorkflowApi {
 	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public WorkFlowResponseDTO execute(WorkFlowRequestDTO workFlowRequestDTO) throws ApiException {
@@ -221,6 +231,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>403</td>
 	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -260,6 +275,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>403</td>
 	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -302,6 +322,11 @@ public class WorkflowApi {
 	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call getStatusCall(UUID workFlowExecutionId, final ApiCallback _callback) throws ApiException {
@@ -332,7 +357,7 @@ public class WorkflowApi {
 		Map<String, String> localVarCookieParams = new HashMap<String, String>();
 		Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-		final String[] localVarAccepts = { "application/json" };
+		final String[] localVarAccepts = { "application/json", "*/*" };
 		final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
 		if (localVarAccept != null) {
 			localVarHeaderParams.put("Accept", localVarAccept);
@@ -391,6 +416,11 @@ public class WorkflowApi {
 	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public WorkFlowStatusResponseDTO getStatus(UUID workFlowExecutionId) throws ApiException {
@@ -424,6 +454,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>403</td>
 	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -462,6 +497,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>403</td>
 	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -504,6 +544,11 @@ public class WorkflowApi {
 	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call getStatusByProjectIdCall(UUID projectId, final ApiCallback _callback) throws ApiException {
@@ -537,7 +582,7 @@ public class WorkflowApi {
 			localVarQueryParams.addAll(localVarApiClient.parameterToPair("projectId", projectId));
 		}
 
-		final String[] localVarAccepts = { "application/json" };
+		final String[] localVarAccepts = { "application/json", "*/*" };
 		final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
 		if (localVarAccept != null) {
 			localVarHeaderParams.put("Accept", localVarAccept);
@@ -590,6 +635,11 @@ public class WorkflowApi {
 	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public List<WorkFlowResponseDTO> getStatusByProjectId(UUID projectId) throws ApiException {
@@ -623,6 +673,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>403</td>
 	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -661,6 +716,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>403</td>
 	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -704,6 +764,11 @@ public class WorkflowApi {
 	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call getWorkflowParametersCall(UUID workFlowExecutionId, List<String> param,
@@ -739,7 +804,7 @@ public class WorkflowApi {
 			localVarCollectionQueryParams.addAll(localVarApiClient.parameterToPairs("multi", "param", param));
 		}
 
-		final String[] localVarAccepts = { "application/json" };
+		final String[] localVarAccepts = { "application/json", "*/*" };
 		final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
 		if (localVarAccept != null) {
 			localVarHeaderParams.put("Accept", localVarAccept);
@@ -804,6 +869,11 @@ public class WorkflowApi {
 	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public WorkFlowContextResponseDTO getWorkflowParameters(UUID workFlowExecutionId, List<String> param)
@@ -840,6 +910,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>403</td>
 	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -880,6 +955,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>403</td>
 	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>

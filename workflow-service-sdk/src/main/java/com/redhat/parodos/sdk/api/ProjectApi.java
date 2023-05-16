@@ -94,6 +94,11 @@ public class ProjectApi {
 	 * <td>Unauthorized</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call createProjectCall(ProjectRequestDTO projectRequestDTO, final ApiCallback _callback)
@@ -124,7 +129,7 @@ public class ProjectApi {
 		Map<String, String> localVarCookieParams = new HashMap<String, String>();
 		Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-		final String[] localVarAccepts = { "application/json" };
+		final String[] localVarAccepts = { "application/json", "*/*" };
 		final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
 		if (localVarAccept != null) {
 			localVarHeaderParams.put("Accept", localVarAccept);
@@ -178,6 +183,11 @@ public class ProjectApi {
 	 * <td>Unauthorized</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public ProjectResponseDTO createProject(ProjectRequestDTO projectRequestDTO) throws ApiException {
@@ -206,6 +216,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -240,6 +255,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -481,6 +501,11 @@ public class ProjectApi {
 	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call getProjectsCall(final ApiCallback _callback) throws ApiException {
@@ -510,7 +535,7 @@ public class ProjectApi {
 		Map<String, String> localVarCookieParams = new HashMap<String, String>();
 		Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-		final String[] localVarAccepts = { "application/json" };
+		final String[] localVarAccepts = { "application/json", "*/*" };
 		final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
 		if (localVarAccept != null) {
 			localVarHeaderParams.put("Accept", localVarAccept);
@@ -561,6 +586,11 @@ public class ProjectApi {
 	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public List<ProjectResponseDTO> getProjects() throws ApiException {
@@ -593,6 +623,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>403</td>
 	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -630,6 +665,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>403</td>
 	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>

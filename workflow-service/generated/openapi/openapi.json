@@ -32,6 +32,16 @@
           },
           "401" : {
             "description" : "Unauthorized"
+          },
+          "404" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Not Found"
           }
         },
         "summary" : "Login",
@@ -60,6 +70,16 @@
           },
           "403" : {
             "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Not Found"
           }
         },
         "summary" : "Returns a list of project",
@@ -90,6 +110,16 @@
           },
           "401" : {
             "description" : "Unauthorized"
+          },
+          "404" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Not Found"
           }
         },
         "summary" : "Creates a new project",
@@ -123,6 +153,7 @@
             "description" : "Unauthorized"
           },
           "404" : {
+            "content" : { },
             "description" : "Not found"
           }
         },
@@ -170,6 +201,7 @@
             "description" : "Unauthorized"
           },
           "404" : {
+            "content" : { },
             "description" : "Not found"
           }
         },
@@ -215,6 +247,7 @@
             "description" : "Unauthorized"
           },
           "404" : {
+            "content" : { },
             "description" : "Not found"
           }
         },
@@ -252,6 +285,16 @@
           },
           "403" : {
             "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Not Found"
           }
         },
         "summary" : "Returns a list of workflow definition",
@@ -285,6 +328,7 @@
             "description" : "Unauthorized"
           },
           "404" : {
+            "content" : { },
             "description" : "Not found"
           }
         },
@@ -346,6 +390,16 @@
           },
           "403" : {
             "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Not Found"
           }
         },
         "summary" : "Returns updated parameter value",
@@ -383,6 +437,16 @@
           },
           "403" : {
             "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Not Found"
           }
         },
         "summary" : "Returns workflows by project id",
@@ -416,6 +480,16 @@
           },
           "403" : {
             "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Not Found"
           }
         },
         "summary" : "Executes a workflow",
@@ -469,6 +543,7 @@
             "description" : "Forbidden"
           },
           "404" : {
+            "content" : { },
             "description" : "Not found"
           }
         },
@@ -515,6 +590,16 @@
           },
           "403" : {
             "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Not Found"
           }
         },
         "summary" : "Returns workflow context parameters",
@@ -549,6 +634,16 @@
           },
           "403" : {
             "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Not Found"
           }
         },
         "summary" : "Returns a workflow status",
@@ -566,6 +661,25 @@
           },
           "value" : {
             "type" : "string"
+          }
+        }
+      },
+      "ErrorMessageDTO" : {
+        "type" : "object",
+        "properties" : {
+          "date" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "integer",
+            "format" : "int32"
           }
         }
       },

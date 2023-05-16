@@ -130,6 +130,7 @@ Class | Method | HTTP request | Description
 ## Documentation for Models
 
  - [ArgumentRequestDTO](docs/ArgumentRequestDTO.md)
+ - [ErrorMessageDTO](docs/ErrorMessageDTO.md)
  - [ProjectRequestDTO](docs/ProjectRequestDTO.md)
  - [ProjectResponseDTO](docs/ProjectResponseDTO.md)
  - [ProjectUserRoleResponseDTO](docs/ProjectUserRoleResponseDTO.md)
