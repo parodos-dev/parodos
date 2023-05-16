@@ -48,7 +48,8 @@ public abstract class SdkUtils {
 	 * in `sdk-config.yml`
 	 * @return the ApiClient
 	 */
-	public static ApiClient getParodosAPiClient() throws ApiException, MissingRequiredPropertiesException {
+	public static ApiClient getParodosAPiClient()
+			throws ApiException, MissingRequiredPropertiesException, InterruptedException {
 		ApiClient apiClient = Configuration.getDefaultApiClient();
 		serverIp = Optional.ofNullable(System.getenv("SERVER_IP")).orElse("localhost");
 		String serverPort = Optional.ofNullable(System.getenv("SERVER_PORT")).orElse("8080");
@@ -67,7 +68,7 @@ public abstract class SdkUtils {
 
 		apiClient.setBasePath(basePath);
 		apiClient.addDefaultHeader("Authorization", "Basic " + CredUtils.getBase64Creds("test", "test"));
-
+		waitProjectStart(new ProjectApi(apiClient));
 		// Need to execute a GET method to get JSessionId and CSRF Token
 		LoginApi loginApi = new LoginApi(apiClient);
 		ApiResponse<Void> loginResponse = loginApi.loginWithHttpInfo();
