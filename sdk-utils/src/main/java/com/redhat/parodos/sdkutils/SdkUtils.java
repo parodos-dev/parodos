@@ -133,7 +133,7 @@ public abstract class SdkUtils {
 
 			@Override
 			public void onSuccess(T result, int statusCode, Map<String, List<String>> responseHeaders) {
-				if (f.check(result)) {
+				if (f.check(result, statusCode)) {
 					try {
 						f.execute(this);
 					}
@@ -192,8 +192,18 @@ public abstract class SdkUtils {
 	 * @throws InterruptedException If the async call reaches the waiting timeout
 	 * @throws ApiException If the API method invocation fails
 	 */
-	public static void waitProjectStart(ProjectApi projectApi) throws InterruptedException, ApiException {
-		waitAsyncResponse((FuncExecutor<List<ProjectResponseDTO>>) callback -> projectApi.getProjectsAsync(callback));
+	public static void waitProjectStart(ProjectApi projectApi) throws ApiException, InterruptedException {
+		waitAsyncResponse(new FuncExecutor<List<ProjectResponseDTO>>() {
+			@Override
+			public boolean check(List<ProjectResponseDTO> result, int statusCode) {
+				return statusCode != 200;
+			}
+
+			@Override
+			public void execute(@NonNull ApiCallback<List<ProjectResponseDTO>> callback) throws ApiException {
+				projectApi.getProjectsAsync(callback);
+			}
+		});
 	}
 
 	/**
@@ -208,9 +218,10 @@ public abstract class SdkUtils {
 	 */
 	public static WorkFlowStatusResponseDTO waitWorkflowStatusAsync(WorkflowApi workflowApi, UUID workFlowExecutionId)
 			throws InterruptedException, ApiException {
+
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = waitAsyncResponse(new FuncExecutor<>() {
 			@Override
-			public boolean check(WorkFlowStatusResponseDTO result) {
+			public boolean check(WorkFlowStatusResponseDTO result, int statusCode) {
 				return !result.getStatus().equals(WorkFlowStatusResponseDTO.StatusEnum.COMPLETED);
 			}
 
@@ -264,7 +275,7 @@ public abstract class SdkUtils {
 		 * @return {true} if it is necessary to continue monitoring the result, {false}
 		 * when it's possible to stop the monitoring.
 		 */
-		default boolean check(T result) {
+		default boolean check(T result, int statusCode) {
 			return true;
 		}
 
@@ -284,7 +295,7 @@ public abstract class SdkUtils {
 	 * @throws ApiException If the API methods invocations fail
 	 */
 	public static ProjectResponseDTO getProjectAsync(ApiClient apiClient, String projectName, String projectDescription)
-			throws InterruptedException, ApiException {
+			throws ApiException {
 		ProjectApi projectApi = new ProjectApi(apiClient);
 
 		ProjectResponseDTO testProject;
@@ -321,7 +332,6 @@ public abstract class SdkUtils {
 
 		// ASSERT PROJECT "testProject" IS PRESENT
 		projects = projectApi.getProjects();
-		log.debug("PROJECTS: {}", projects);
 
 		if (projects.isEmpty()) {
 			throw new ApiException("Project has not been created.");
