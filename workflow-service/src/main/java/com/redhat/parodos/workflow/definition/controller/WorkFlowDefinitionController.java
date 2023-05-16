@@ -96,9 +96,6 @@ public class WorkFlowDefinitionController {
 	@GetMapping("/{id}")
 	public ResponseEntity<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitionById(@PathVariable UUID id) {
 		WorkFlowDefinitionResponseDTO response = workFlowDefinitionService.getWorkFlowDefinitionById(id);
-		if (response == null) {
-			return ResponseEntity.notFound().build();
-		}
 		return ResponseEntity.ok(response);
 	}
 

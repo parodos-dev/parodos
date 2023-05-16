@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
@@ -202,7 +203,7 @@ class WorkFlowDefinitionServiceImplTest {
 		when(this.workFlowDefinitionRepository.findById(any())).thenReturn(Optional.empty());
 
 		// when
-		Exception exception = assertThrows(RuntimeException.class, () -> {
+		Exception exception = assertThrows(ResourceNotFoundException.class, () -> {
 			this.workFlowDefinitionService.getWorkFlowDefinitionById(uuid);
 		});
 
@@ -283,7 +284,7 @@ class WorkFlowDefinitionServiceImplTest {
 		// given
 		when(this.workFlowDefinitionRepository.findFirstByName(any())).thenReturn(null);
 
-		Exception exception = assertThrows(RuntimeException.class, () -> {
+		Exception exception = assertThrows(ResourceNotFoundException.class, () -> {
 			this.workFlowDefinitionService.getWorkFlowDefinitionByName(TEST);
 		});
 
