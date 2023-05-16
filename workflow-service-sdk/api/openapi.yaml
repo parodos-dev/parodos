@@ -25,6 +25,12 @@ paths:
       responses:
         "200":
           description: Succeeded
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
         "401":
           description: Unauthorized
         "404":
@@ -49,6 +55,12 @@ paths:
                   $ref: '#/components/schemas/ProjectResponseDTO'
                 type: array
           description: Succeeded
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
         "401":
           description: Unauthorized
         "403":
@@ -78,6 +90,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProjectResponseDTO'
           description: Created
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
         "401":
           description: Unauthorized
         "404":
@@ -110,6 +128,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProjectResponseDTO'
           description: Succeeded
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
         "401":
           description: Unauthorized
         "404":
@@ -146,6 +170,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProjectUserRoleResponseDTO'
           description: Succeeded
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
         "401":
           description: Unauthorized
         "404":
@@ -182,6 +212,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProjectUserRoleResponseDTO'
           description: Succeeded
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
         "401":
           description: Unauthorized
         "404":
@@ -212,6 +248,12 @@ paths:
                   $ref: '#/components/schemas/WorkFlowDefinitionResponseDTO'
                 type: array
           description: Succeeded
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
         "401":
           description: Unauthorized
         "403":
@@ -245,6 +287,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/WorkFlowDefinitionResponseDTO'
           description: Succeeded
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
         "401":
           description: Unauthorized
         "404":
@@ -294,6 +342,12 @@ paths:
                   $ref: '#/components/schemas/WorkParameterValueResponseDTO'
                 type: array
           description: Succeeded
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
         "401":
           description: Unauthorized
         "403":
@@ -330,6 +384,12 @@ paths:
                   $ref: '#/components/schemas/WorkFlowResponseDTO'
                 type: array
           description: Succeeded
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
         "401":
           description: Unauthorized
         "403":
@@ -359,6 +419,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/WorkFlowResponseDTO'
           description: Accepted
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
         "401":
           description: Unauthorized
         "403":
@@ -406,6 +472,12 @@ paths:
               schema:
                 type: string
           description: Succeeded
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
         "401":
           description: Unauthorized
         "403":
@@ -454,6 +526,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/WorkFlowContextResponseDTO'
           description: Succeeded
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
         "401":
           description: Unauthorized
         "403":
@@ -487,6 +565,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/WorkFlowStatusResponseDTO'
           description: Succeeded
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
         "401":
           description: Unauthorized
         "403":

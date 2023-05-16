@@ -91,6 +91,11 @@ public class WorkflowApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
 	 * <td>-</td>
@@ -184,6 +189,11 @@ public class WorkflowApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
 	 * <td>-</td>
@@ -221,6 +231,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>202</td>
 	 * <td>Accepted</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -268,6 +283,11 @@ public class WorkflowApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
 	 * <td>-</td>
@@ -310,6 +330,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>200</td>
 	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -407,6 +432,11 @@ public class WorkflowApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
 	 * <td>-</td>
@@ -444,6 +474,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>200</td>
 	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -490,6 +525,11 @@ public class WorkflowApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
 	 * <td>-</td>
@@ -532,6 +572,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>200</td>
 	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -626,6 +671,11 @@ public class WorkflowApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
 	 * <td>-</td>
@@ -663,6 +713,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>200</td>
 	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -709,6 +764,11 @@ public class WorkflowApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
 	 * <td>-</td>
@@ -752,6 +812,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>200</td>
 	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -860,6 +925,11 @@ public class WorkflowApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
 	 * <td>-</td>
@@ -900,6 +970,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>200</td>
 	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -948,6 +1023,11 @@ public class WorkflowApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
 	 * <td>-</td>
@@ -992,6 +1072,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>200</td>
 	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -1044,7 +1129,7 @@ public class WorkflowApi {
 		Map<String, String> localVarCookieParams = new HashMap<String, String>();
 		Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-		final String[] localVarAccepts = { "application/json" };
+		final String[] localVarAccepts = { "application/json", "*/*" };
 		final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
 		if (localVarAccept != null) {
 			localVarHeaderParams.put("Accept", localVarAccept);
@@ -1110,6 +1195,11 @@ public class WorkflowApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
 	 * <td>-</td>
@@ -1151,6 +1241,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>200</td>
 	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -1199,6 +1294,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>200</td>
 	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>

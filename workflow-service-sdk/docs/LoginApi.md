@@ -61,6 +61,7 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Succeeded |  -  |
+| **400** | Bad Request |  -  |
 | **401** | Unauthorized |  -  |
 | **404** | Not Found |  -  |
 

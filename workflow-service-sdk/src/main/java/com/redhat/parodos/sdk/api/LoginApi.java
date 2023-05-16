@@ -82,6 +82,11 @@ public class LoginApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
 	 * <td>-</td>
@@ -161,6 +166,11 @@ public class LoginApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
 	 * <td>-</td>
@@ -191,6 +201,11 @@ public class LoginApi {
 	 * <tr>
 	 * <td>200</td>
 	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -226,6 +241,11 @@ public class LoginApi {
 	 * <tr>
 	 * <td>200</td>
 	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
