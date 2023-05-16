@@ -26,6 +26,7 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 
 import com.redhat.parodos.common.AbstractEntity;
+import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 import com.redhat.parodos.project.dto.ProjectRequestDTO;
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
 import com.redhat.parodos.project.dto.ProjectUserRoleResponseDTO;
@@ -42,10 +43,8 @@ import com.redhat.parodos.user.entity.User;
 import com.redhat.parodos.user.service.UserService;
 import org.modelmapper.ModelMapper;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import static java.util.stream.Collectors.groupingBy;
 
@@ -102,9 +101,10 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Override
 	public ProjectResponseDTO getProjectById(UUID id) {
-		return modelMapper
-				.map(projectRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-						String.format("Project with id: %s not found", id))), ProjectResponseDTO.class);
+		return modelMapper.map(
+				projectRepository.findById(id).orElseThrow(
+						() -> new ResourceNotFoundException(String.format("Project with id: %s not found", id))),
+				ProjectResponseDTO.class);
 	}
 
 	@Override
@@ -129,7 +129,7 @@ public class ProjectServiceImpl implements ProjectService {
 	@Transactional
 	public ProjectUserRoleResponseDTO updateUserRolesToProject(UUID id, List<UserRoleRequestDTO> userRoleRequestDTOs) {
 		Project project = projectRepository.findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "project not found"));
+				.orElseThrow(() -> new ResourceNotFoundException(String.format("Project with id: %s not found", id)));
 
 		Set<ProjectUserRole> projectUserRoles = userRoleRequestDTOs.stream()
 				.map(userRoleRequestDTO -> userRoleRequestDTO.getRoles().stream()
@@ -155,7 +155,7 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public ProjectUserRoleResponseDTO removeUsersFromProject(UUID id, List<String> usernames) {
 		Project project = projectRepository.findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "project not found"));
+				.orElseThrow(() -> new ResourceNotFoundException(String.format("Project with id: %s not found", id)));
 
 		projectUserRoleRepository.deleteAllByIdProjectIdAndIdUserIdIn(project.getId(),
 				userService.findAllUserEntitiesByUsernameIn(usernames).stream().map(AbstractEntity::getId).toList());

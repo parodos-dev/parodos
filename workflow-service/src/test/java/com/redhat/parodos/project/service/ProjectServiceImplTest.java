@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 import com.redhat.parodos.config.ModelMapperConfig;
 import com.redhat.parodos.project.dto.ProjectRequestDTO;
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
@@ -30,7 +31,6 @@ import org.modelmapper.ModelMapper;
 
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.web.server.ResponseStatusException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -132,7 +132,7 @@ class ProjectServiceImplTest {
 		when(this.projectRepository.findById(project.getId())).thenReturn(Optional.empty());
 
 		// then
-		assertThrows(ResponseStatusException.class, () -> this.projectService.getProjectById(project.getId()),
+		assertThrows(ResourceNotFoundException.class, () -> this.projectService.getProjectById(project.getId()),
 				String.format("404 NOT_FOUND \"Project with id: %s not found\"", project.getId()));
 	}
 
