@@ -86,6 +86,11 @@ public class LoginApi {
 	 * <td>Unauthorized</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call loginCall(final ApiCallback _callback) throws ApiException {
@@ -115,7 +120,7 @@ public class LoginApi {
 		Map<String, String> localVarCookieParams = new HashMap<String, String>();
 		Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-		final String[] localVarAccepts = {};
+		final String[] localVarAccepts = { "*/*" };
 		final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
 		if (localVarAccept != null) {
 			localVarHeaderParams.put("Accept", localVarAccept);
@@ -160,6 +165,11 @@ public class LoginApi {
 	 * <td>Unauthorized</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public void login() throws ApiException {
@@ -186,6 +196,11 @@ public class LoginApi {
 	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -216,6 +231,11 @@ public class LoginApi {
 	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>

@@ -64,7 +64,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: application/json
+ - **Accept**: application/json, */*
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -72,6 +72,7 @@ No authorization required
 | **202** | Accepted |  -  |
 | **401** | Unauthorized |  -  |
 | **403** | Forbidden |  -  |
+| **404** | Not Found |  -  |
 
 <a name="getStatus"></a>
 # **getStatus**
@@ -126,7 +127,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: application/json
+ - **Accept**: application/json, */*
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -134,6 +135,7 @@ No authorization required
 | **200** | Succeeded |  -  |
 | **401** | Unauthorized |  -  |
 | **403** | Forbidden |  -  |
+| **404** | Not Found |  -  |
 
 <a name="getStatusByProjectId"></a>
 # **getStatusByProjectId**
@@ -188,7 +190,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: application/json
+ - **Accept**: application/json, */*
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -196,6 +198,7 @@ No authorization required
 | **200** | Succeeded |  -  |
 | **401** | Unauthorized |  -  |
 | **403** | Forbidden |  -  |
+| **404** | Not Found |  -  |
 
 <a name="getWorkflowParameters"></a>
 # **getWorkflowParameters**
@@ -252,7 +255,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: application/json
+ - **Accept**: application/json, */*
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -260,6 +263,7 @@ No authorization required
 | **200** | Succeeded |  -  |
 | **401** | Unauthorized |  -  |
 | **403** | Forbidden |  -  |
+| **404** | Not Found |  -  |
 
 <a name="updateWorkFlowCheckerTaskStatus"></a>
 # **updateWorkFlowCheckerTaskStatus**

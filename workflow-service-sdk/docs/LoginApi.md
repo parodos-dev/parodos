@@ -55,11 +55,12 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: Not defined
+ - **Accept**: */*
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Succeeded |  -  |
 | **401** | Unauthorized |  -  |
+| **404** | Not Found |  -  |
 

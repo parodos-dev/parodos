@@ -300,6 +300,11 @@ public class WorkflowDefinitionApi {
 	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call getWorkFlowDefinitionsCall(String name, final ApiCallback _callback) throws ApiException {
@@ -333,7 +338,7 @@ public class WorkflowDefinitionApi {
 			localVarQueryParams.addAll(localVarApiClient.parameterToPair("name", name));
 		}
 
-		final String[] localVarAccepts = { "application/json" };
+		final String[] localVarAccepts = { "application/json", "*/*" };
 		final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
 		if (localVarAccept != null) {
 			localVarHeaderParams.put("Accept", localVarAccept);
@@ -386,6 +391,11 @@ public class WorkflowDefinitionApi {
 	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public List<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitions(String name) throws ApiException {
@@ -419,6 +429,11 @@ public class WorkflowDefinitionApi {
 	 * <tr>
 	 * <td>403</td>
 	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -458,6 +473,11 @@ public class WorkflowDefinitionApi {
 	 * <tr>
 	 * <td>403</td>
 	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -504,6 +524,11 @@ public class WorkflowDefinitionApi {
 	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call updateParameterCall(String workflowDefinitionName, String valueProviderName,
@@ -538,7 +563,7 @@ public class WorkflowDefinitionApi {
 		Map<String, String> localVarCookieParams = new HashMap<String, String>();
 		Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-		final String[] localVarAccepts = { "application/json" };
+		final String[] localVarAccepts = { "application/json", "*/*" };
 		final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
 		if (localVarAccept != null) {
 			localVarHeaderParams.put("Accept", localVarAccept);
@@ -614,6 +639,11 @@ public class WorkflowDefinitionApi {
 	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public List<WorkParameterValueResponseDTO> updateParameter(String workflowDefinitionName, String valueProviderName,
@@ -653,6 +683,11 @@ public class WorkflowDefinitionApi {
 	 * <tr>
 	 * <td>403</td>
 	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -698,6 +733,11 @@ public class WorkflowDefinitionApi {
 	 * <tr>
 	 * <td>403</td>
 	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
