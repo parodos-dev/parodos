@@ -35,6 +35,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,6 +54,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @CrossOrigin(origins = "*", maxAge = 1800)
 @RestController
+@Validated
 @RequestMapping("/api/v1/projects")
 @Tag(name = "Project", description = "Operations about project")
 public class ProjectController {
