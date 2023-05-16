@@ -50,6 +50,6 @@ public class WorkFlowResponseDTO {
 
 	private String endDate;
 
-	private String createUser;
+	private String executeBy;
 
 }

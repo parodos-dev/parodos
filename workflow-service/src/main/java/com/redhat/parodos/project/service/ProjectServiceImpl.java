@@ -115,16 +115,14 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public List<ProjectResponseDTO> getProjectByIdAndUsername(UUID id, String username) {
-		User user = userService.getUserEntityByUsername(username);
-		return projectUserRoleRepository.findByProjectIdAndUserId(id, user.getId()).stream()
+	public List<ProjectResponseDTO> getProjectByIdAndUserId(UUID projectId, UUID userId) {
+		return projectUserRoleRepository.findByProjectIdAndUserId(projectId, userId).stream()
 				.map(projectUserRole -> modelMapper.map(projectUserRole, ProjectResponseDTO.class)).toList();
 	}
 
 	@Override
-	public List<ProjectResponseDTO> getProjectsByUsername(String username) {
-		User user = userService.getUserEntityByUsername(username);
-		return projectUserRoleRepository.findByUserId(user.getId()).stream()
+	public List<ProjectResponseDTO> getProjectsByUserId(UUID userId) {
+		return projectUserRoleRepository.findByUserId(userId).stream()
 				.map(projectUserRole -> modelMapper.map(projectUserRole, ProjectResponseDTO.class)).toList();
 	}
 

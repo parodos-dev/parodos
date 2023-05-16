@@ -39,22 +39,45 @@ public abstract class WorkContextUtils {
 	}
 
 	/**
+	 * method to get user id from workContext
+	 * @param workContext work context
+	 * @return user id
+	 */
+	public static UUID getUserId(WorkContext workContext) {
+		Object userId = WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.USER,
+				WorkContextDelegate.Resource.ID);
+		userId = Optional.ofNullable(userId)
+				.orElseThrow(() -> new NoSuchElementException("User id is missing from workContext."));
+		return UUID.fromString(userId.toString());
+	}
+
+	/**
+	 * method to set user id to workContext
+	 * @param workContext work context
+	 * @param userId user id
+	 */
+	public static void setUserId(WorkContext workContext, @NonNull UUID userId) {
+		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.USER, WorkContextDelegate.Resource.ID,
+				userId.toString());
+	}
+
+	/**
 	 * method to get project id from workContext
-	 * @param workContext
+	 * @param workContext work context
 	 * @return project id
 	 */
 	public static UUID getProjectId(WorkContext workContext) {
 		Object projectId = WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.PROJECT,
 				WorkContextDelegate.Resource.ID);
 		projectId = Optional.ofNullable(projectId)
-				.orElseThrow(() -> new NoSuchElementException("Project ID is missing from workContext."));
+				.orElseThrow(() -> new NoSuchElementException("Project id is missing from workContext."));
 		return UUID.fromString(projectId.toString());
 	}
 
 	/**
 	 * method to set project id to workContext
-	 * @param workContext
-	 * @param projectId
+	 * @param workContext work context
+	 * @param projectId project id
 	 */
 	public static void setProjectId(WorkContext workContext, @NonNull UUID projectId) {
 		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.PROJECT, WorkContextDelegate.Resource.ID,
@@ -63,14 +86,14 @@ public abstract class WorkContextUtils {
 
 	/**
 	 * get main workflow execution id from workContext
-	 * @param workContext
+	 * @param workContext work context
 	 * @return main workflow execution id
 	 */
 	public static UUID getMainExecutionId(WorkContext workContext) {
 		Object workflowExecutionId = WorkContextDelegate.read(workContext,
 				WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ID);
 		workflowExecutionId = Optional.ofNullable(workflowExecutionId)
-				.orElseThrow(() -> new NoSuchElementException("Workflow Execution ID is missing from workContext."));
+				.orElseThrow(() -> new NoSuchElementException("Workflow execution id is missing from workContext."));
 		return UUID.fromString(workflowExecutionId.toString());
 	}
 
@@ -81,8 +104,8 @@ public abstract class WorkContextUtils {
 
 	/**
 	 * add a new common parameter to workContext
-	 * @param workContext
-	 * @param key parameter name
+	 * @param workContext work context
+	 * @param key parameter key (name)
 	 * @param value parameter value
 	 */
 	public static void addParameter(WorkContext workContext, String key, String value) {
@@ -99,7 +122,7 @@ public abstract class WorkContextUtils {
 
 	/**
 	 * get all available parameters for a task
-	 * @param workContext
+	 * @param workContext work context
 	 * @param name task name
 	 * @return Map of parameters
 	 */
@@ -137,12 +160,13 @@ public abstract class WorkContextUtils {
 		return map;
 	}
 
-	public static void updateWorkContextPartially(WorkContext workContext, UUID projectId, String workflowName,
-			UUID executionId) {
+	public static void updateWorkContextPartially(WorkContext workContext, UUID projectId, UUID userId,
+			String workflowName, UUID executionId) {
 		if (executionId != null) {
 			setMainExecutionId(workContext, executionId);
 		}
 		WorkContextUtils.setProjectId(workContext, projectId);
+		WorkContextUtils.setUserId(workContext, userId);
 		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION,
 				WorkContextDelegate.Resource.NAME, workflowName);
 	}

@@ -68,7 +68,7 @@ class AssessmentInfrastructureWorkFlowPostInterceptorTest {
 		when(workFlowDefinitionRepository.findFirstByName(any())).thenReturn(workFlowDefinition);
 		when(workFlowRepository.findFirstByWorkFlowDefinitionIdAndMainWorkFlowExecution(any(), any()))
 				.thenReturn(checkerExecution);
-		when(workFlowService.saveWorkFlow(any(), any(), any(), any(), any())).thenReturn(workFlowExecution);
+		when(workFlowService.saveWorkFlow(any(), any(), any(), any(), any(), any())).thenReturn(workFlowExecution);
 
 		underTest = new AssessmentInfrastructureWorkFlowPostInterceptor(workFlowDefinition, workContext,
 				workFlowService, workFlowRepository, workFlowExecution, getSampleWorkFlowExecution());

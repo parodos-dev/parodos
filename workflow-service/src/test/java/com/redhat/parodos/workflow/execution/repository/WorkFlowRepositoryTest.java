@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.redhat.parodos.project.entity.Project;
 import com.redhat.parodos.repository.RepositoryTestBase;
+import com.redhat.parodos.user.entity.User;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionContext;
@@ -86,7 +87,7 @@ public class WorkFlowRepositoryTest extends RepositoryTestBase {
 		// given
 		WorkFlowExecution mainWorkFlowExecution = createWorkFlowExecution();
 		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().workFlowDefinition(createWorkFlowDefinition())
-				.status(WorkStatus.IN_PROGRESS).projectId(createProject().getId())
+				.status(WorkStatus.IN_PROGRESS).projectId(createProject().getId()).user(createUser())
 				.mainWorkFlowExecution(mainWorkFlowExecution).build();
 		workFlowExecution = workFlowRepository.save(workFlowExecution);
 
@@ -105,7 +106,7 @@ public class WorkFlowRepositoryTest extends RepositoryTestBase {
 		// given
 		WorkFlowExecution mainWorkFlowExecution = createWorkFlowExecution();
 		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().workFlowDefinition(createWorkFlowDefinition())
-				.status(WorkStatus.IN_PROGRESS).projectId(createProject().getId())
+				.status(WorkStatus.IN_PROGRESS).projectId(createProject().getId()).user(createUser())
 				.mainWorkFlowExecution(mainWorkFlowExecution).build();
 		workFlowRepository.save(workFlowExecution);
 
@@ -117,6 +118,11 @@ public class WorkFlowRepositoryTest extends RepositoryTestBase {
 		assertNotNull(workFlowExecutions);
 		assertEquals(1, workFlowExecutions.size());
 		assertEquals(mainWorkFlowExecution, workFlowExecutions.get(0));
+	}
+
+	private User createUser() {
+		User user = User.builder().username(UUID.randomUUID().toString()).build();
+		return entityManager.persist(user);
 	}
 
 	private Project createProject() {
@@ -132,7 +138,7 @@ public class WorkFlowRepositoryTest extends RepositoryTestBase {
 
 	private WorkFlowExecution createWorkFlowExecution() {
 		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().workFlowDefinition(createWorkFlowDefinition())
-				.status(WorkStatus.IN_PROGRESS).projectId(createProject().getId()).build();
+				.status(WorkStatus.IN_PROGRESS).projectId(createProject().getId()).user(createUser()).build();
 		return entityManager.persist(workFlowExecution);
 	}
 

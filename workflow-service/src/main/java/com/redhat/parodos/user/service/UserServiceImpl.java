@@ -28,6 +28,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.EntityNotFoundException;
+
 /**
  * User service implementation
  *
@@ -71,6 +73,12 @@ public class UserServiceImpl implements UserService {
 	public User getUserEntityByUsername(String username) {
 		return userRepository.findByUsername(username).stream().findFirst().orElseThrow(
 				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user " + username + " is not found"));
+	}
+
+	@Override
+	public User getUserEntityById(UUID id) {
+		return userRepository.findById(id).orElseThrow(
+				() -> new EntityNotFoundException(String.format("User with id: %s not found", id)));
 	}
 
 	@Override

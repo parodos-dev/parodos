@@ -15,6 +15,7 @@
  */
 package com.redhat.parodos.workflow.execution.service;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -28,6 +29,8 @@ import javax.annotation.PreDestroy;
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
 import com.redhat.parodos.project.service.ProjectService;
 import com.redhat.parodos.security.SecurityUtils;
+import com.redhat.parodos.user.entity.User;
+import com.redhat.parodos.user.service.UserService;
 import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
@@ -96,16 +99,21 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
 	private final WorkFlowDefinitionService workFlowDefinitionService;
 
+	private final UserService userService;
+
 	private final MeterRegistry metricRegistry;
 
 	private final WorkFlowExecutor workFlowExecutor;
 
-	public WorkFlowServiceImpl(WorkFlowDelegate workFlowDelegate, WorkFlowServiceDelegate workFlowServiceDelegate,
-			WorkFlowDefinitionRepository workFlowDefinitionRepository,
+	public WorkFlowServiceImpl(ProjectService projectService, UserService userService,
+			WorkFlowDefinitionService workFlowDefinitionService, WorkFlowDelegate workFlowDelegate,
+			WorkFlowServiceDelegate workFlowServiceDelegate, WorkFlowDefinitionRepository workFlowDefinitionRepository,
 			WorkFlowTaskDefinitionRepository workFlowTaskDefinitionRepository, WorkFlowRepository workFlowRepository,
 			WorkFlowTaskRepository workFlowTaskRepository, WorkFlowWorkRepository workFlowWorkRepository,
-			WorkFlowDefinitionService workFlowDefinitionService, MeterRegistry metricRegistry,
-			ProjectService projectService, WorkFlowExecutor workFlowExecutor) {
+			MeterRegistry metricRegistry, WorkFlowExecutor workFlowExecutor) {
+		this.projectService = projectService;
+		this.userService = userService;
+		this.workFlowDefinitionService = workFlowDefinitionService;
 		this.workFlowDelegate = workFlowDelegate;
 		this.workFlowServiceDelegate = workFlowServiceDelegate;
 		this.workFlowDefinitionRepository = workFlowDefinitionRepository;
@@ -113,9 +121,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		this.workFlowRepository = workFlowRepository;
 		this.workFlowTaskRepository = workFlowTaskRepository;
 		this.workFlowWorkRepository = workFlowWorkRepository;
-		this.workFlowDefinitionService = workFlowDefinitionService;
 		this.metricRegistry = metricRegistry;
-		this.projectService = projectService;
 		this.workFlowExecutor = workFlowExecutor;
 	}
 
@@ -129,6 +135,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
 	@Override
 	public WorkReport execute(WorkFlowRequestDTO workFlowRequestDTO) {
+		User user = userService.getUserEntityByUsername(SecurityUtils.getUsername());
 		String workflowName = workFlowRequestDTO.getWorkFlowName();
 		WorkFlow workFlow = workFlowDelegate.getWorkFlowByName(workflowName);
 		String validationFailedMsg = validateWorkflow(workflowName, workFlow);
@@ -146,10 +153,10 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 				WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
 						workFlowDefinitionResponseDTO.getName(), WorkContextDelegate.Resource.ARGUMENTS));
 		UUID projectId = workFlowRequestDTO.getProjectId();
-		WorkFlowExecution workFlowExecution = saveWorkFlow(projectId,
+		WorkFlowExecution workFlowExecution = saveWorkFlow(projectId, user.getId(),
 				workFlowDefinitionRepository.findFirstByName(workflowName), WorkStatus.IN_PROGRESS, null, arguments);
 		WorkContextUtils.setMainExecutionId(workContext, workFlowExecution.getId());
-		workFlowExecutor.executeAsync(projectId, workflowName, workContext, workFlowExecution.getId(),
+		workFlowExecutor.executeAsync(projectId, user.getId(), workflowName, workContext, workFlowExecution.getId(),
 				workFlowDefinitionResponseDTO.getRollbackWorkflow());
 		return new DefaultWorkReport(WorkStatus.IN_PROGRESS, workContext, null);
 	}
@@ -160,12 +167,12 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	}
 
 	@Override
-	public WorkFlowExecution saveWorkFlow(UUID projectId, WorkFlowDefinition workFlowDefinition, WorkStatus workStatus,
-			WorkFlowExecution mainWorkFlowExecution, String arguments) {
+	public WorkFlowExecution saveWorkFlow(UUID projectId, UUID userId, WorkFlowDefinition workFlowDefinition, WorkStatus workStatus, WorkFlowExecution mainWorkFlowExecution, String arguments) {
+		User user = userService.getUserEntityById(userId);
 		try {
 			this.statusCounterWithStatus(workStatus);
 			return workFlowRepository.save(WorkFlowExecution.builder().workFlowDefinition(workFlowDefinition)
-					.projectId(projectId).status(workStatus).startDate(new Date()).arguments(arguments)
+					.projectId(projectId).user(user).status(workStatus).startDate(new Date()).arguments(arguments)
 					.mainWorkFlowExecution(mainWorkFlowExecution).build());
 		}
 		catch (DataAccessException | IllegalArgumentException e) {
@@ -183,17 +190,19 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
 	@Override
 	public List<WorkFlowResponseDTO> getWorkFlowsByProjectId(UUID projectId) {
-		// TODO: To address in FLPATH-368
-		ProjectResponseDTO project = projectService.getProjectByIdAndUsername(projectId, SecurityUtils.getUsername())
-				.get(0);
-		return workFlowRepository.findAllByProjectId(project.getId()).stream()
-				.filter(workFlowExecution -> workFlowExecution.getMainWorkFlowExecution() == null)
-				.map(this::buildWorkflowResponseDTO).toList();
+		User user = userService.getUserEntityByUsername(SecurityUtils.getUsername());
+		List<ProjectResponseDTO> projects = projectService.getProjectByIdAndUserId(projectId, user.getId());
+		List<WorkFlowResponseDTO> workFlowResponseDTOs = new ArrayList<>();
+		projects.forEach(project -> workFlowResponseDTOs.addAll(workFlowRepository.findAllByProjectId(project.getId())
+				.stream().filter(workFlowExecution -> workFlowExecution.getMainWorkFlowExecution() == null)
+				.map(this::buildWorkflowResponseDTO).toList()));
+		return workFlowResponseDTOs;
 	}
 
 	@Override
 	public List<WorkFlowResponseDTO> getWorkFlows() {
-		List<ProjectResponseDTO> projects = projectService.getProjectsByUsername(SecurityUtils.getUsername());
+		User user = userService.getUserEntityByUsername(SecurityUtils.getUsername());
+		List<ProjectResponseDTO> projects = projectService.getProjectsByUserId(user.getId());
 		return projects.stream()
 				.flatMap(project -> workFlowRepository.findAllByProjectId(project.getId()).stream()
 						.filter(workFlowExecution -> workFlowExecution.getMainWorkFlowExecution() == null)
@@ -372,7 +381,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 				.workStatus(WorkStatus.valueOf(workflowExecution.getStatus().name()))
 				.startDate(Optional.ofNullable(workflowExecution.getStartDate()).map(Date::toString).orElse(null))
 				.endDate(Optional.ofNullable(workflowExecution.getEndDate()).map(Date::toString).orElse(null))
-				.createUser(SecurityUtils.getUsername()).build();
+				.executeBy(workflowExecution.getUser().getUsername()).build();
 	}
 
 }

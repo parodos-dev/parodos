@@ -60,13 +60,14 @@ public class CheckerWorkFlowPostInterceptor implements WorkFlowPostInterceptor {
 		 * cron expression or stop if done
 		 */
 		startOrStopWorkFlowCheckerOnSchedule(workFlow, workFlowDefinition.getCheckerWorkFlowDefinition(), workStatus,
-				workContext, workFlowExecution.getProjectId(), mainWorkFlowExecution);
+				workContext, workFlowExecution.getProjectId(), workFlowExecution.getUser().getId(),
+				mainWorkFlowExecution);
 		return null;
 	}
 
 	private void startOrStopWorkFlowCheckerOnSchedule(WorkFlow workFlow,
 			WorkFlowCheckerMappingDefinition workFlowCheckerMappingDefinition, WorkStatus workStatus,
-			WorkContext workContext, UUID projectId, WorkFlowExecution mainWorkFlowExecution) {
+			WorkContext workContext, UUID projectId, UUID userId, WorkFlowExecution mainWorkFlowExecution) {
 		/*
 		 * if this workflow is a checker, schedule workflow checker for dynamic run on
 		 * cron expression or stop if done
@@ -78,13 +79,13 @@ public class CheckerWorkFlowPostInterceptor implements WorkFlowPostInterceptor {
 			if (workStatus != WorkStatus.REJECTED) {
 				log.info("Schedule workflow checker: {} to run per cron expression: {}", workFlow.getName(),
 						workFlowCheckerMappingDefinition.getCronExpression());
-				workFlowSchedulerService.schedule(projectId, workFlow, workContext,
+				workFlowSchedulerService.schedule(projectId, userId, workFlow, workContext,
 						workFlowCheckerMappingDefinition.getCronExpression());
 
 			}
 			else {
 				log.info("Stop rejected workflow checker: {} schedule", workFlow.getName());
-				workFlowSchedulerService.stop(projectId, workFlow);
+				workFlowSchedulerService.stop(projectId, userId, workFlow);
 
 				mainWorkFlowExecution.setStatus(WorkStatus.FAILED);
 				workFlowService.updateWorkFlow(mainWorkFlowExecution);
@@ -93,7 +94,7 @@ public class CheckerWorkFlowPostInterceptor implements WorkFlowPostInterceptor {
 		}
 
 		log.info("Stop workflow checker: {} schedule", workFlow.getName());
-		workFlowSchedulerService.stop(projectId, workFlow);
+		workFlowSchedulerService.stop(projectId, userId, workFlow);
 
 		String mainWorkFlowName = WorkContextDelegate.read(workContext,
 				WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION, WorkContextDelegate.Resource.NAME).toString();
@@ -104,10 +105,9 @@ public class CheckerWorkFlowPostInterceptor implements WorkFlowPostInterceptor {
 		 * active checkers
 		 */
 		if (workFlowService.findRunningChecker(mainWorkFlowExecution).isEmpty())
-			workFlowContinuationServiceImpl.continueWorkFlow(projectId, mainWorkFlowName, workContext,
+			workFlowContinuationServiceImpl.continueWorkFlow(projectId, userId, mainWorkFlowName, workContext,
 					mainWorkFlowExecution.getId(),
 					Optional.ofNullable(mainWorkFlowExecution.getWorkFlowDefinition().getRollbackWorkFlowDefinition())
 							.map(WorkFlowDefinition::getName).orElse(null));
 	}
-
 }

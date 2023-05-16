@@ -49,7 +49,7 @@ class WorkFlowSchedulerServiceImplTest {
 		when(this.taskScheduler.schedule(any(Runnable.class), any(CronTrigger.class))).thenReturn(null);
 
 		// when
-		this.service.schedule(UUID.randomUUID(), this.workFlow, new WorkContext(), CRON_EXPRESSION);
+		this.service.schedule(UUID.randomUUID(), UUID.randomUUID(), this.workFlow, new WorkContext(), CRON_EXPRESSION);
 
 		// then
 		verify(this.taskScheduler, times(1)).schedule(any(Runnable.class), any(CronTrigger.class));
@@ -58,12 +58,13 @@ class WorkFlowSchedulerServiceImplTest {
 	@Test
 	void workFlowIsNotScheduledTwice() {
 		UUID projectId = UUID.randomUUID();
+		UUID userId = UUID.randomUUID();
 		// given
 		when(this.taskScheduler.schedule(any(Runnable.class), any(CronTrigger.class))).thenReturn(null);
-		this.service.schedule(projectId, this.workFlow, new WorkContext(), CRON_EXPRESSION);
+		this.service.schedule(projectId, userId, this.workFlow, new WorkContext(), CRON_EXPRESSION);
 
 		// when
-		this.service.schedule(projectId, this.workFlow, new WorkContext(), CRON_EXPRESSION);
+		this.service.schedule(projectId, userId, this.workFlow, new WorkContext(), CRON_EXPRESSION);
 
 		// then
 		verify(this.taskScheduler, times(1)).schedule(any(Runnable.class), any(CronTrigger.class));
@@ -73,14 +74,15 @@ class WorkFlowSchedulerServiceImplTest {
 	@Test
 	void workFlowCanBeCancel() {
 		UUID projectId = UUID.randomUUID();
+		UUID userId = UUID.randomUUID();
 		// given
 		var mockScheduledFuture = mock(ScheduledFuture.class);
 		when(mockScheduledFuture.cancel(false)).thenReturn(true);
 		when(this.taskScheduler.schedule(any(Runnable.class), any(CronTrigger.class))).thenReturn(mockScheduledFuture);
-		this.service.schedule(projectId, this.workFlow, new WorkContext(), CRON_EXPRESSION);
+		this.service.schedule(projectId, userId, this.workFlow, new WorkContext(), CRON_EXPRESSION);
 
 		// when
-		this.service.stop(projectId, this.workFlow);
+		this.service.stop(projectId, userId, this.workFlow);
 
 		// then
 		verify(mockScheduledFuture, times(1)).cancel(anyBoolean());
@@ -93,7 +95,7 @@ class WorkFlowSchedulerServiceImplTest {
 		ScheduledFuture mockScheduledFuture = mock(ScheduledFuture.class);
 		when(mockScheduledFuture.cancel(anyBoolean())).thenReturn(true);
 		// when
-		boolean res = this.service.stop(UUID.randomUUID(), this.workFlow);
+		boolean res = this.service.stop(UUID.randomUUID(), UUID.randomUUID(), this.workFlow);
 
 		// then
 		assertFalse(res);

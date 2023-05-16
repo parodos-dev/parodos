@@ -50,8 +50,8 @@ public abstract class WorkFlowExecutionInterceptor implements WorkFlowIntercepto
 				WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
 						workFlowDefinition.getName(), WorkContextDelegate.Resource.ARGUMENTS));
 		UUID projectId = WorkContextUtils.getProjectId(workContext);
-		return workFlowService.saveWorkFlow(projectId, workFlowDefinition, WorkStatus.IN_PROGRESS,
-				mainWorkFlowExecution, arguments);
+		UUID userId = WorkContextUtils.getUserId(workContext);
+		return workFlowService.saveWorkFlow(projectId, userId, workFlowDefinition, WorkStatus.IN_PROGRESS, mainWorkFlowExecution, arguments);
 	}
 
 	protected abstract WorkFlowExecution doPreWorkFlowExecution();
