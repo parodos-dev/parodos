@@ -16,12 +16,8 @@
 package com.redhat.parodos.workflow.execution.controller;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 
@@ -47,7 +43,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -151,16 +146,6 @@ public class WorkFlowController {
 			@NotEmpty @RequestParam List<WorkContextDelegate.@PubliclyVisible Resource> param) {
 		WorkFlowContextResponseDTO responseDTO = workFlowService.getWorkflowParameters(workFlowExecutionId, param);
 		return ResponseEntity.ok(responseDTO);
-	}
-
-	@ExceptionHandler(ConstraintViolationException.class)
-	public ResponseEntity<String> handle(ConstraintViolationException constraintViolationException) {
-		Set<ConstraintViolation<?>> violations = constraintViolationException.getConstraintViolations();
-		String errorMessage = "ConstraintViolationException occurred.";
-		if (!violations.isEmpty()) {
-			errorMessage = violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(", "));
-		}
-		return ResponseEntity.badRequest().body(errorMessage);
 	}
 
 }
