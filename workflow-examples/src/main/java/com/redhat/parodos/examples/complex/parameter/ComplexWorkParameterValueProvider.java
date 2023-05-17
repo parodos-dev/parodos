@@ -38,7 +38,7 @@ public class ComplexWorkParameterValueProvider extends WorkParameterValueProvide
 
 		if (!workParameterValueRequests.isEmpty()
 				&& workParameterValueRequests.get(0).getKey().equalsIgnoreCase("WORKFLOW_SELECT_SAMPLE")
-				&& workParameterValueRequests.get(0).getValue().equalsIgnoreCase("option2"))
+				&& workParameterValueRequests.get(0).getValue().equalsIgnoreCase("option2")) {
 			return List.of(
 					WorkParameterValueResponse.builder().key("WORKFLOW_MULTI_SELECT_SAMPLE")
 							.options(List.of("option5", "option4", "option3")).value("option5")
@@ -46,6 +46,7 @@ public class ComplexWorkParameterValueProvider extends WorkParameterValueProvide
 					WorkParameterValueResponse.builder().key("dynamic-options")
 							.options(List.of("option15", "option14", "option13")).value("option13")
 							.workName("adGroupsWorkFlowTask").build());
+		}
 		return Collections.emptyList();
 	}
 
