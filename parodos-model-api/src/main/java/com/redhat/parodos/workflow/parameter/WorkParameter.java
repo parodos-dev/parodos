@@ -64,14 +64,16 @@ public class WorkParameter {
 		Map<String, Object> properties = type.getAsJsonSchema();
 		properties.put(REQUIRED, !optional);
 		properties.put(DESCRIPTION, description);
-		if (valueProviderName != null && !valueProviderName.isEmpty())
+		if (valueProviderName != null && !valueProviderName.isEmpty()) {
 			properties.put(VALUE_PROVIDER_NAME, valueProviderName);
+		}
 		if (type.isSelect() && selectOptions != null && !selectOptions.isEmpty()) {
 			properties.put(ENUM, selectOptions);
 		}
 
-		if (jsonSchemaOptions != null)
+		if (jsonSchemaOptions != null) {
 			properties.putAll(jsonSchemaOptions);
+		}
 
 		return properties;
 	}
