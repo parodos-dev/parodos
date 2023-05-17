@@ -629,6 +629,7 @@ class WorkFlowServiceImplTest {
 		WorkFlowExecution workFlowExecution = mock(WorkFlowExecution.class);
 
 		// when
+		when(workFlowExecution.getId()).thenReturn(workFlowExecutionId);
 		when(this.workFlowRepository.findById(eq(workFlowExecutionId))).thenReturn(Optional.of(workFlowExecution));
 
 		when(this.workFlowDefinitionRepository.findById(eq(workFlowDefinitionId))).thenReturn(Optional.empty());
@@ -650,6 +651,7 @@ class WorkFlowServiceImplTest {
 		WorkFlowDefinition workFlowDefinition = mock(WorkFlowDefinition.class);
 
 		// when
+		when(workFlowExecution.getId()).thenReturn(workFlowExecutionId);
 		when(this.workFlowRepository.findById(eq(workFlowExecutionId))).thenReturn(Optional.of(workFlowExecution));
 
 		when(this.workFlowDefinitionRepository.findById(eq(workFlowDefinitionId)))

@@ -22,11 +22,11 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
-
 import com.redhat.parodos.common.AbstractEntity;
+import com.redhat.parodos.common.exceptions.IDType;
+import com.redhat.parodos.common.exceptions.ResourceAlreadyExistsException;
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
+import com.redhat.parodos.common.exceptions.ResourceType;
 import com.redhat.parodos.project.dto.ProjectRequestDTO;
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
 import com.redhat.parodos.project.dto.ProjectUserRoleResponseDTO;
@@ -79,13 +79,12 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public ProjectResponseDTO save(ProjectRequestDTO projectRequestDTO) {
 		if (projectRepository.findByNameIgnoreCase(projectRequestDTO.getName()).isPresent()) {
-			throw new EntityExistsException(
-					String.format("Project with name: %s already exists", projectRequestDTO.getName()));
+			throw new ResourceAlreadyExistsException(ResourceType.PROJECT, IDType.NAME, projectRequestDTO.getName());
 		}
 		// get owner role entity
 		String roleOwner = com.redhat.parodos.project.enums.Role.OWNER.name();
 		Role role = roleRepository.findByNameIgnoreCase(roleOwner).orElseThrow(() -> {
-			throw new EntityNotFoundException(String.format("Role with name: %s not found", roleOwner));
+			throw new ResourceNotFoundException(ResourceType.ROLE, IDType.NAME, roleOwner);
 		});
 		// get user entity
 		User user = userService.getUserEntityByUsername(SecurityUtils.getUsername());
@@ -102,8 +101,8 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public ProjectResponseDTO getProjectById(UUID id) {
 		return modelMapper.map(
-				projectRepository.findById(id).orElseThrow(
-						() -> new ResourceNotFoundException(String.format("Project with id: %s not found", id))),
+				projectRepository.findById(id)
+						.orElseThrow(() -> new ResourceNotFoundException(ResourceType.PROJECT, IDType.ID, id)),
 				ProjectResponseDTO.class);
 	}
 
@@ -129,7 +128,7 @@ public class ProjectServiceImpl implements ProjectService {
 	@Transactional
 	public ProjectUserRoleResponseDTO updateUserRolesToProject(UUID id, List<UserRoleRequestDTO> userRoleRequestDTOs) {
 		Project project = projectRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException(String.format("Project with id: %s not found", id)));
+				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.PROJECT, IDType.ID, id));
 
 		Set<ProjectUserRole> projectUserRoles = userRoleRequestDTOs.stream()
 				.map(userRoleRequestDTO -> userRoleRequestDTO.getRoles().stream()
@@ -155,7 +154,7 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public ProjectUserRoleResponseDTO removeUsersFromProject(UUID id, List<String> usernames) {
 		Project project = projectRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException(String.format("Project with id: %s not found", id)));
+				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.PROJECT, IDType.ID, id));
 
 		projectUserRoleRepository.deleteAllByIdProjectIdAndIdUserIdIn(project.getId(),
 				userService.findAllUserEntitiesByUsernameIn(usernames).stream().map(AbstractEntity::getId).toList());

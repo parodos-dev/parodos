@@ -21,14 +21,15 @@ import java.util.UUID;
 
 import javax.persistence.EntityNotFoundException;
 
+import com.redhat.parodos.common.exceptions.IDType;
+import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
+import com.redhat.parodos.common.exceptions.ResourceType;
 import com.redhat.parodos.user.dto.UserResponseDTO;
 import com.redhat.parodos.user.entity.User;
 import com.redhat.parodos.user.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 /**
  * User service implementation
@@ -71,8 +72,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User getUserEntityByUsername(String username) {
-		return userRepository.findByUsername(username).stream().findFirst().orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user " + username + " is not found"));
+		return userRepository.findByUsername(username).stream().findFirst()
+				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER, IDType.NAME, username));
 	}
 
 	@Override
