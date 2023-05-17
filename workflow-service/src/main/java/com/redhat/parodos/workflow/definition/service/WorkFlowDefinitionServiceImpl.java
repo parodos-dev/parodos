@@ -27,7 +27,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.redhat.parodos.common.AbstractEntity;
+import com.redhat.parodos.common.exceptions.IDType;
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
+import com.redhat.parodos.common.exceptions.ResourceType;
 import com.redhat.parodos.workflow.definition.dto.WorkDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
@@ -193,8 +195,8 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 
 	@Override
 	public WorkFlowDefinitionResponseDTO getWorkFlowDefinitionById(UUID id) {
-		WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository.findById(id).orElseThrow(
-				() -> new ResourceNotFoundException(String.format("Workflow definition id %s not found", id)));
+		WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.WORKFLOW_DEFINITION, IDType.ID, id));
 		List<WorkFlowWorkDefinition> workFlowWorkDependencies = workFlowWorkRepository
 				.findByWorkFlowDefinitionIdOrderByCreateDateAsc(workFlowDefinition.getId()).stream()
 				.sorted(Comparator.comparing(WorkFlowWorkDefinition::getCreateDate)).toList();
@@ -206,7 +208,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 	public WorkFlowDefinitionResponseDTO getWorkFlowDefinitionByName(String name) {
 		WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository.findFirstByName(name);
 		if (null == workFlowDefinition) {
-			throw new ResourceNotFoundException(String.format("Workflow definition name %s not found", name));
+			throw new ResourceNotFoundException(ResourceType.WORKFLOW_DEFINITION, IDType.NAME, name);
 		}
 		List<WorkFlowWorkDefinition> workFlowWorkDependencies = workFlowWorkRepository
 				.findByWorkFlowDefinitionIdOrderByCreateDateAsc(workFlowDefinition.getId()).stream()

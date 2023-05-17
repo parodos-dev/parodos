@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
+import com.redhat.parodos.common.exceptions.ResourceAlreadyExistsException;
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 
 import org.springframework.http.HttpStatus;
@@ -31,7 +32,7 @@ public class ControllerExceptionHandler {
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
 	public ErrorMessageDTO constraintViolationException(ConstraintViolationException ex, WebRequest request) {
 		Set<ConstraintViolation<?>> violations = ex.getConstraintViolations();
-		String errorMessage = "Incorrect request parameters.";
+		String errorMessage = "Incorrect request parameters (constraint violation).";
 		if (!violations.isEmpty()) {
 			errorMessage = violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(", "));
 		}
@@ -39,6 +40,13 @@ public class ControllerExceptionHandler {
 		ErrorMessageDTO message = new ErrorMessageDTO(HttpStatus.BAD_REQUEST.value(), new Date(), errorMessage,
 				"Incorrect request parameters");
 		return message;
+	}
+
+	@ExceptionHandler(value = { ResourceAlreadyExistsException.class })
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.CONFLICT)
+	public ErrorMessageDTO resourceAlreadyExistsException(ResourceAlreadyExistsException ex, WebRequest request) {
+		return new ErrorMessageDTO(HttpStatus.CONFLICT.value(), new Date(), ex.getMessage(), "Resource already exists");
 	}
 
 	record ErrorMessageDTO(int status, Date date, String message, String description) {

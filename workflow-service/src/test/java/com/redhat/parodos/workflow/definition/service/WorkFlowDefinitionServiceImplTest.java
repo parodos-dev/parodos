@@ -208,7 +208,7 @@ class WorkFlowDefinitionServiceImplTest {
 		});
 
 		// then
-		assertEquals(exception.getMessage(), String.format("Workflow definition id %s not found", uuid));
+		assertEquals(String.format("Workflow definition with ID: %s not found", uuid), exception.getMessage());
 	}
 
 	@Test

@@ -26,7 +26,9 @@ import java.util.UUID;
 
 import javax.annotation.PreDestroy;
 
+import com.redhat.parodos.common.exceptions.IDType;
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
+import com.redhat.parodos.common.exceptions.ResourceType;
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
 import com.redhat.parodos.project.service.ProjectService;
 import com.redhat.parodos.security.SecurityUtils;
@@ -215,14 +217,13 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	@Override
 	public WorkFlowStatusResponseDTO getWorkFlowStatus(UUID workFlowExecutionId) {
 		WorkFlowExecution workFlowExecution = workFlowRepository.findById(workFlowExecutionId).orElseThrow(() -> {
-			throw new ResourceNotFoundException(
-					String.format("workflow execution id: %s not found!", workFlowExecutionId));
+			throw new ResourceNotFoundException(ResourceType.WORKFLOW_EXECUTION, IDType.ID, workFlowExecutionId);
 		});
 
 		WorkFlowDefinition workFlowDefinition = Optional.ofNullable(workFlowExecution.getWorkFlowDefinition())
 				.orElseThrow(() -> {
-					throw new ResourceNotFoundException(
-							String.format("workflow definition id: %s not found!", workFlowExecution.getId()));
+					throw new ResourceNotFoundException(ResourceType.WORKFLOW_DEFINITION, IDType.ID,
+							workFlowExecution.getId());
 				});
 
 		// check if it is not an inner workflow
@@ -244,8 +245,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	public WorkFlowContextResponseDTO getWorkflowParameters(UUID workFlowExecutionId,
 			List<WorkContextDelegate.Resource> params) {
 		WorkFlowExecution workFlowExecution = workFlowRepository.findById(workFlowExecutionId).orElseThrow(() -> {
-			throw new ResourceNotFoundException(
-					String.format("workflow execution id: %s not found!", workFlowExecutionId));
+			throw new ResourceNotFoundException(ResourceType.WORKFLOW_EXECUTION, IDType.ID, workFlowExecutionId);
 		});
 		Map options = Map.of();
 		if (params.contains(WorkContextDelegate.Resource.WORKFLOW_OPTIONS)) {
@@ -312,8 +312,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 			WorkStatus workFlowTaskStatus) {
 		// get main workflow associated to the execution id
 		WorkFlowExecution mainWorkFlowExecution = workFlowRepository.findById(workFlowExecutionId).orElseThrow(() -> {
-			throw new ResourceNotFoundException(
-					String.format("workflow execution id: %s not found!", workFlowExecutionId));
+			throw new ResourceNotFoundException(ResourceType.WORKFLOW_EXECUTION, IDType.ID, workFlowExecutionId);
 		});
 		// get workflow checker task definition
 		WorkFlowTaskDefinition workFlowTaskDefinition = workFlowTaskDefinitionRepository
