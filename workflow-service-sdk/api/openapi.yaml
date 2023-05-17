@@ -1295,6 +1295,8 @@ components:
           type: string
         workName:
           type: string
+      required:
+      - key
       type: object
     WorkParameterValueResponseDTO:
       example:
