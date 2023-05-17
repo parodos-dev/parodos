@@ -83,9 +83,8 @@ public class ProjectServiceImpl implements ProjectService {
 		}
 		// get owner role entity
 		String roleOwner = com.redhat.parodos.project.enums.Role.OWNER.name();
-		Role role = roleRepository.findByNameIgnoreCase(roleOwner).orElseThrow(() -> {
-			throw new ResourceNotFoundException(ResourceType.ROLE, IDType.NAME, roleOwner);
-		});
+		Role role = roleRepository.findByNameIgnoreCase(roleOwner)
+				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.ROLE, IDType.NAME, roleOwner));
 		// get user entity
 		User user = userService.getUserEntityByUsername(SecurityUtils.getUsername());
 		// create project entity

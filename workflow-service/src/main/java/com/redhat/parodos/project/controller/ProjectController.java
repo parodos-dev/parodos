@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 
 import com.redhat.parodos.project.dto.ProjectRequestDTO;
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
@@ -103,9 +104,6 @@ public class ProjectController {
 	@GetMapping("/{id}")
 	public ResponseEntity<ProjectResponseDTO> getProjectById(@PathVariable UUID id) {
 		ProjectResponseDTO projectResponseDTO = projectService.getProjectById(id);
-		if (projectResponseDTO == null) {
-			return ResponseEntity.notFound().build();
-		}
 		return ResponseEntity.ok(projectResponseDTO);
 	}
 
@@ -133,7 +131,7 @@ public class ProjectController {
 			@ApiResponse(responseCode = "404", description = "Not found", content = @Content) })
 	@DeleteMapping("/{id}/users")
 	public ResponseEntity<ProjectUserRoleResponseDTO> removeUsersFromProject(@PathVariable UUID id,
-			@RequestBody List<String> usernames) {
+			@RequestBody @NotEmpty List<String> usernames) {
 		ProjectUserRoleResponseDTO projectUserRoleResponseDTO = projectService.removeUsersFromProject(id, usernames);
 		return ResponseEntity.ok(projectUserRoleResponseDTO);
 	}
