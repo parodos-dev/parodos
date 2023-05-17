@@ -73,6 +73,7 @@ No authorization required
 | **400** | Bad Request |  -  |
 | **401** | Unauthorized |  -  |
 | **404** | Not Found |  -  |
+| **409** | Conflict |  -  |
 
 <a name="getProjectById"></a>
 # **getProjectById**
@@ -136,6 +137,7 @@ No authorization required
 | **400** | Bad Request |  -  |
 | **401** | Unauthorized |  -  |
 | **404** | Not found |  -  |
+| **409** | Conflict |  -  |
 
 <a name="getProjects"></a>
 # **getProjects**
@@ -196,6 +198,7 @@ No authorization required
 | **401** | Unauthorized |  -  |
 | **403** | Forbidden |  -  |
 | **404** | Not Found |  -  |
+| **409** | Conflict |  -  |
 
 <a name="removeUsersFromProject"></a>
 # **removeUsersFromProject**
@@ -261,6 +264,7 @@ No authorization required
 | **400** | Bad Request |  -  |
 | **401** | Unauthorized |  -  |
 | **404** | Not found |  -  |
+| **409** | Conflict |  -  |
 
 <a name="updateUserRolesToProject"></a>
 # **updateUserRolesToProject**
@@ -326,4 +330,5 @@ No authorization required
 | **400** | Bad Request |  -  |
 | **401** | Unauthorized |  -  |
 | **404** | Not found |  -  |
+| **409** | Conflict |  -  |
 

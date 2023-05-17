@@ -110,6 +110,11 @@ public class WorkflowApi {
 	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call executeCall(WorkFlowRequestDTO workFlowRequestDTO, final ApiCallback _callback)
@@ -208,6 +213,11 @@ public class WorkflowApi {
 	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public WorkFlowResponseDTO execute(WorkFlowRequestDTO workFlowRequestDTO) throws ApiException {
@@ -251,6 +261,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -302,6 +317,11 @@ public class WorkflowApi {
 	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call executeAsync(WorkFlowRequestDTO workFlowRequestDTO,
@@ -350,6 +370,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -451,6 +476,11 @@ public class WorkflowApi {
 	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public WorkFlowStatusResponseDTO getStatus(UUID workFlowExecutionId) throws ApiException {
@@ -494,6 +524,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -544,6 +579,11 @@ public class WorkflowApi {
 	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call getStatusAsync(UUID workFlowExecutionId, final ApiCallback<WorkFlowStatusResponseDTO> _callback)
@@ -592,6 +632,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -690,6 +735,11 @@ public class WorkflowApi {
 	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public List<WorkFlowResponseDTO> getStatusByProjectId(UUID projectId) throws ApiException {
@@ -733,6 +783,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -781,6 +836,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -832,6 +892,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -944,6 +1009,11 @@ public class WorkflowApi {
 	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public WorkFlowContextResponseDTO getWorkflowParameters(UUID workFlowExecutionId, List<String> param)
@@ -990,6 +1060,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -1042,6 +1117,11 @@ public class WorkflowApi {
 	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call getWorkflowParametersAsync(UUID workFlowExecutionId, List<String> param,
@@ -1092,6 +1172,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -1214,6 +1299,11 @@ public class WorkflowApi {
 	 * <td>Not found</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public String updateWorkFlowCheckerTaskStatus(UUID workFlowExecutionId, String workFlowCheckerTaskName,
@@ -1261,6 +1351,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -1314,6 +1409,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>

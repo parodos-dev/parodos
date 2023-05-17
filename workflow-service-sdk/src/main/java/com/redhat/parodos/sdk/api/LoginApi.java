@@ -96,6 +96,11 @@ public class LoginApi {
 	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call loginCall(final ApiCallback _callback) throws ApiException {
@@ -180,6 +185,11 @@ public class LoginApi {
 	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public void login() throws ApiException {
@@ -216,6 +226,11 @@ public class LoginApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -256,6 +271,11 @@ public class LoginApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>

@@ -104,6 +104,11 @@ public class ProjectApi {
 	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call createProjectCall(ProjectRequestDTO projectRequestDTO, final ApiCallback _callback)
@@ -198,6 +203,11 @@ public class ProjectApi {
 	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public ProjectResponseDTO createProject(ProjectRequestDTO projectRequestDTO) throws ApiException {
@@ -236,6 +246,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -282,6 +297,11 @@ public class ProjectApi {
 	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call createProjectAsync(ProjectRequestDTO projectRequestDTO,
@@ -325,6 +345,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -419,6 +444,11 @@ public class ProjectApi {
 	 * <td>Not found</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public ProjectResponseDTO getProjectById(UUID id) throws ApiException {
@@ -457,6 +487,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -500,6 +535,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -549,6 +589,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -641,6 +686,11 @@ public class ProjectApi {
 	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public List<ProjectResponseDTO> getProjects() throws ApiException {
@@ -683,6 +733,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -732,6 +787,11 @@ public class ProjectApi {
 	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call getProjectsAsync(final ApiCallback<List<ProjectResponseDTO>> _callback) throws ApiException {
@@ -775,6 +835,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -878,6 +943,11 @@ public class ProjectApi {
 	 * <td>Not found</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public ProjectUserRoleResponseDTO removeUsersFromProject(UUID id, List<String> requestBody) throws ApiException {
@@ -917,6 +987,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -964,6 +1039,11 @@ public class ProjectApi {
 	 * <td>Not found</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call removeUsersFromProjectAsync(UUID id, List<String> requestBody,
@@ -1008,6 +1088,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -1111,6 +1196,11 @@ public class ProjectApi {
 	 * <td>Not found</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public ProjectUserRoleResponseDTO updateUserRolesToProject(UUID id, List<UserRoleRequestDTO> userRoleRequestDTO)
@@ -1152,6 +1242,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -1197,6 +1292,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>

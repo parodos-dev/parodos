@@ -39,6 +39,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Not Found
+        "409":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Conflict
       summary: Login
       tags:
       - Login
@@ -71,6 +77,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Not Found
+        "409":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Conflict
       summary: Returns a list of project
       tags:
       - Project
@@ -104,6 +116,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Not Found
+        "409":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Conflict
       summary: Creates a new project
       tags:
       - Project
@@ -139,6 +157,12 @@ paths:
         "404":
           content: {}
           description: Not found
+        "409":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Conflict
       summary: Returns information about a specified project
       tags:
       - Project
@@ -181,6 +205,12 @@ paths:
         "404":
           content: {}
           description: Not found
+        "409":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Conflict
       summary: Remove users from project
       tags:
       - Project
@@ -223,6 +253,12 @@ paths:
         "404":
           content: {}
           description: Not found
+        "409":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Conflict
       summary: Update user roles in project
       tags:
       - Project
@@ -264,6 +300,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Not Found
+        "409":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Conflict
       summary: Returns a list of workflow definition
       tags:
       - Workflow Definition
@@ -298,6 +340,12 @@ paths:
         "404":
           content: {}
           description: Not found
+        "409":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Conflict
       summary: Returns information about a workflow definition by id
       tags:
       - Workflow Definition
@@ -358,6 +406,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Not Found
+        "409":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Conflict
       summary: Returns updated parameter value
       tags:
       - Workflow Definition
@@ -400,6 +454,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Not Found
+        "409":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Conflict
       summary: Returns workflows by project id
       tags:
       - Workflow
@@ -435,6 +495,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Not Found
+        "409":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Conflict
       summary: Executes a workflow
       tags:
       - Workflow
@@ -485,6 +551,12 @@ paths:
         "404":
           content: {}
           description: Not found
+        "409":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Conflict
       summary: Updates a workflow checker task status
       tags:
       - Workflow
@@ -542,6 +614,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Not Found
+        "409":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Conflict
       summary: Returns workflow context parameters
       tags:
       - Workflow
@@ -581,6 +659,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Not Found
+        "409":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Conflict
       summary: Returns a workflow status
       tags:
       - Workflow
