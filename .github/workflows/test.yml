@@ -77,7 +77,7 @@ jobs:
           coverage_report_name: Coverage
           coverage_report_title: JaCoCo
           skip_check_run: true
-          minimum_coverage: 66
+          minimum_coverage: 68
           fail_below_threshold: true
           publish_only_summary: true
 
