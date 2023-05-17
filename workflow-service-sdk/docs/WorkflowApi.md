@@ -74,6 +74,7 @@ No authorization required
 | **401** | Unauthorized |  -  |
 | **403** | Forbidden |  -  |
 | **404** | Not Found |  -  |
+| **409** | Conflict |  -  |
 
 <a name="getStatus"></a>
 # **getStatus**
@@ -138,6 +139,7 @@ No authorization required
 | **401** | Unauthorized |  -  |
 | **403** | Forbidden |  -  |
 | **404** | Not Found |  -  |
+| **409** | Conflict |  -  |
 
 <a name="getStatusByProjectId"></a>
 # **getStatusByProjectId**
@@ -202,6 +204,7 @@ No authorization required
 | **401** | Unauthorized |  -  |
 | **403** | Forbidden |  -  |
 | **404** | Not Found |  -  |
+| **409** | Conflict |  -  |
 
 <a name="getWorkflowParameters"></a>
 # **getWorkflowParameters**
@@ -268,6 +271,7 @@ No authorization required
 | **401** | Unauthorized |  -  |
 | **403** | Forbidden |  -  |
 | **404** | Not Found |  -  |
+| **409** | Conflict |  -  |
 
 <a name="updateWorkFlowCheckerTaskStatus"></a>
 # **updateWorkFlowCheckerTaskStatus**
@@ -336,4 +340,5 @@ No authorization required
 | **401** | Unauthorized |  -  |
 | **403** | Forbidden |  -  |
 | **404** | Not found |  -  |
+| **409** | Conflict |  -  |
 

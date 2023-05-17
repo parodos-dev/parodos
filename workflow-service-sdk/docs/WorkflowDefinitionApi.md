@@ -71,6 +71,7 @@ No authorization required
 | **400** | Bad Request |  -  |
 | **401** | Unauthorized |  -  |
 | **404** | Not found |  -  |
+| **409** | Conflict |  -  |
 
 <a name="getWorkFlowDefinitions"></a>
 # **getWorkFlowDefinitions**
@@ -135,6 +136,7 @@ No authorization required
 | **401** | Unauthorized |  -  |
 | **403** | Forbidden |  -  |
 | **404** | Not Found |  -  |
+| **409** | Conflict |  -  |
 
 <a name="updateParameter"></a>
 # **updateParameter**
@@ -203,4 +205,5 @@ No authorization required
 | **401** | Unauthorized |  -  |
 | **403** | Forbidden |  -  |
 | **404** | Not Found |  -  |
+| **409** | Conflict |  -  |
 

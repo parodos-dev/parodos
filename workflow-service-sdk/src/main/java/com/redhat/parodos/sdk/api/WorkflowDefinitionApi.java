@@ -103,6 +103,11 @@ public class WorkflowDefinitionApi {
 	 * <td>Not found</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call getWorkFlowDefinitionByIdCall(UUID id, final ApiCallback _callback) throws ApiException {
@@ -196,6 +201,11 @@ public class WorkflowDefinitionApi {
 	 * <td>Not found</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public WorkFlowDefinitionResponseDTO getWorkFlowDefinitionById(UUID id) throws ApiException {
@@ -234,6 +244,11 @@ public class WorkflowDefinitionApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -278,6 +293,11 @@ public class WorkflowDefinitionApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -328,6 +348,11 @@ public class WorkflowDefinitionApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -426,6 +451,11 @@ public class WorkflowDefinitionApi {
 	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public List<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitions(String name) throws ApiException {
@@ -469,6 +499,11 @@ public class WorkflowDefinitionApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -518,6 +553,11 @@ public class WorkflowDefinitionApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -572,6 +612,11 @@ public class WorkflowDefinitionApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -694,6 +739,11 @@ public class WorkflowDefinitionApi {
 	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public List<WorkParameterValueResponseDTO> updateParameter(String workflowDefinitionName, String valueProviderName,
@@ -743,6 +793,11 @@ public class WorkflowDefinitionApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -798,6 +853,11 @@ public class WorkflowDefinitionApi {
 	 * <tr>
 	 * <td>404</td>
 	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
