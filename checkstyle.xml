@@ -23,5 +23,24 @@
         <module name="AvoidStarImport" />
         <module name="UnusedImports" />
         <module name="IllegalImport" />
+
+        <!-- TODO: Find how to exclude spring application classes and uncomment -->
+        <!-- Check https://checkstyle.org/config_filters.html#SuppressionXpathSingleFilter -->
+        <!-- Utility class should not be instantiated, they must have a private constructor -->
+        <!-- module name="HideUtilityClassConstructor" /-->
+
+        <!-- No System.out.println() statements -->
+        <module name="Regexp">
+            <!-- no sysouts -->
+            <property name="format" value="System\.out\.println"/>
+            <property name="illegalPattern" value="true"/>
+        </module>
+
+        <!-- No trailing whitespace -->
+        <module name="Regexp">
+            <property name="format" value="[ \t]+$"/>
+            <property name="illegalPattern" value="true"/>
+            <property name="message" value="Trailing whitespace"/>
+        </module>
     </module>
 </module>
