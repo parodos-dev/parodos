@@ -83,11 +83,11 @@ public class KubeapiWorkFlowTask extends BaseWorkFlowTask {
 
 		try {
 			// Get the required parameters
-			String kubeconfigJson = getRequiredParameterValue(workContext, "kubeconfig-json");
-			String apiGroup = getRequiredParameterValue(workContext, "api-group");
-			String apiVersion = getRequiredParameterValue(workContext, "api-version");
-			String kindPluralName = getRequiredParameterValue(workContext, "kind-plural-name");
-			operation = getRequiredParameterValue(workContext, "operation");
+			String kubeconfigJson = getRequiredParameterValue("kubeconfig-json");
+			String apiGroup = getRequiredParameterValue("api-group");
+			String apiVersion = getRequiredParameterValue("api-version");
+			String kindPluralName = getRequiredParameterValue("kind-plural-name");
+			operation = getRequiredParameterValue("operation");
 
 			String kubeconfig = new YAMLMapper().writeValueAsString(new ObjectMapper().readTree(kubeconfigJson));
 			OperationType operationType = OperationType.valueOf(operation.toUpperCase());
@@ -114,9 +114,9 @@ public class KubeapiWorkFlowTask extends BaseWorkFlowTask {
 
 	private void get(WorkContext ctx, String kubeconfig, String apiGroup, String apiVersion, String kindPluralName)
 			throws MissingParameterException, ApiException, IOException {
-		String resourceName = getRequiredParameterValue(ctx, "resource-name");
-		String resourceNamespace = getRequiredParameterValue(ctx, "resource-namespace");
-		String workCtxKey = getRequiredParameterValue(ctx, "work-ctx-key");
+		String resourceName = getRequiredParameterValue("resource-name");
+		String resourceNamespace = getRequiredParameterValue("resource-namespace");
+		String workCtxKey = getRequiredParameterValue("work-ctx-key");
 
 		DynamicKubernetesObject obj = api.get(kubeconfig, apiGroup, apiVersion, kindPluralName, resourceNamespace,
 				resourceName);
@@ -126,14 +126,14 @@ public class KubeapiWorkFlowTask extends BaseWorkFlowTask {
 
 	private void create(WorkContext ctx, String kubeconfig, String apiGroup, String apiVersion, String kindPluralName)
 			throws MissingParameterException, ApiException, IOException {
-		String resourceJson = getRequiredParameterValue(ctx, "resource-json");
+		String resourceJson = getRequiredParameterValue("resource-json");
 		DynamicKubernetesObject obj = Dynamics.newFromJson(resourceJson);
 		api.create(kubeconfig, apiGroup, apiVersion, kindPluralName, obj);
 	}
 
 	private void update(WorkContext ctx, String kubeconfig, String apiGroup, String apiVersion, String kindPluralName)
 			throws MissingParameterException, ApiException, IOException {
-		String resourceJson = getRequiredParameterValue(ctx, "resource-json");
+		String resourceJson = getRequiredParameterValue("resource-json");
 		DynamicKubernetesObject newObj = Dynamics.newFromJson(resourceJson);
 		String resourceNamespace = newObj.getMetadata().getNamespace();
 		String resourceName = newObj.getMetadata().getName();

@@ -149,8 +149,8 @@ public class WorkFlowServiceDelegate {
 		WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository
 				.findById(workFlowWorkDefinition.getWorkDefinitionId()).get();
 
-		WorkFlowExecution workExecution = workFlowRepository.findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(
-				workFlowExecution, workFlowWorkDefinition.getWorkDefinitionId());
+		WorkFlowExecution workExecution = workFlowRepository.findFirstByWorkFlowDefinitionIdAndMainWorkFlowExecution(
+				workFlowWorkDefinition.getWorkDefinitionId(), workFlowExecution);
 
 		/*
 		 * the workflow execution might be null when there is pending checker before it
@@ -187,11 +187,10 @@ public class WorkFlowServiceDelegate {
 			workStatus = WorkStatus.valueOf(workFlowTaskExecutionOptional.get().getStatus().name());
 			if (workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition() != null) {
 				workStatus = Optional
-						.ofNullable(workFlowRepository.findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(
+						.ofNullable(workFlowRepository.findFirstByWorkFlowDefinitionIdAndMainWorkFlowExecution(
+								workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition().getCheckWorkFlow().getId(),
 								Optional.ofNullable(workFlowExecution.getMainWorkFlowExecution())
-										.orElse(workFlowExecution),
-								workFlowTaskDefinition
-										.getWorkFlowCheckerMappingDefinition().getCheckWorkFlow().getId()))
+										.orElse(workFlowExecution)))
 						.map(WorkFlowExecution::getStatus)
 						.map(checkerStatus -> WorkStatus.FAILED.equals(checkerStatus) ? WorkStatus.IN_PROGRESS
 								: WorkStatus.valueOf(checkerStatus.name()))

@@ -76,14 +76,14 @@ public class AzureCreateVirtualMachineTask extends BaseInfrastructureWorkFlowTas
 	 */
 	public WorkReport execute(WorkContext context) {
 		try {
-			final String userName = getRequiredParameterValue(context, VM_USER_NAME_KEY);
-			final String sshKey = getRequiredParameterValue(context, VM_SSH_PUBLIC_KEY_KEY);
+			final String userName = getRequiredParameterValue(VM_USER_NAME_KEY);
+			final String sshKey = getRequiredParameterValue(VM_SSH_PUBLIC_KEY_KEY);
 
-			final String azureTenantId = getRequiredParameterValue(context, AZURE_TENANT_ID_KEY);
-			final String azureSubscriptionId = getRequiredParameterValue(context, AZURE_SUBSCRIPTION_ID_KEY);
-			final String azureClientId = getRequiredParameterValue(context, AZURE_CLIENT_ID_KEY);
-			final String azureClientSecret = getRequiredParameterValue(context, AZURE_CLIENT_SECRET_KEY);
-			final String resourcesPrefix = getRequiredParameterValue(context, AZURE_RESOURCES_PREFIX_KEY);
+			final String azureTenantId = getRequiredParameterValue(AZURE_TENANT_ID_KEY);
+			final String azureSubscriptionId = getRequiredParameterValue(AZURE_SUBSCRIPTION_ID_KEY);
+			final String azureClientId = getRequiredParameterValue(AZURE_CLIENT_ID_KEY);
+			final String azureClientSecret = getRequiredParameterValue(AZURE_CLIENT_SECRET_KEY);
+			final String resourcesPrefix = getRequiredParameterValue(AZURE_RESOURCES_PREFIX_KEY);
 
 			this.azureResourceClient.init(azureTenantId, azureClientId, azureClientSecret, azureSubscriptionId);
 

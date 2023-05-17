@@ -51,7 +51,7 @@ public class JiraTicketEmailNotificationWorkFlowTaskTest extends BaseInfrastruct
 
 		try {
 			doReturn(JIRA_TICKET_URL_TEST).when(this.jiraTicketEmailNotificationWorkFlowTask)
-					.getRequiredParameterValue(any(WorkContext.class), eq(ISSUE_LINK_PARAMETER_NAME));
+					.getRequiredParameterValue(eq(ISSUE_LINK_PARAMETER_NAME));
 		}
 		catch (MissingParameterException e) {
 			throw new RuntimeException(e);

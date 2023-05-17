@@ -61,11 +61,11 @@ public class GetApplicationTask extends BaseInfrastructureWorkFlowTask {
 		String applicationName = "";
 		try {
 			if (mtaClient == null) {
-				var serverUrl = getOptionalParameterValue(workContext, "serverURL", null);
-				var bearerToken = getOptionalParameterValue(workContext, "bearerToken", null);
+				var serverUrl = getOptionalParameterValue("serverURL", null);
+				var bearerToken = getOptionalParameterValue("bearerToken", null);
 				mtaClient = new MTAClient(URI.create(serverUrl), bearerToken);
 			}
-			applicationName = getRequiredParameterValue(workContext, "applicationName");
+			applicationName = getRequiredParameterValue("applicationName");
 		}
 		catch (MissingParameterException e) {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
@@ -82,7 +82,7 @@ public class GetApplicationTask extends BaseInfrastructureWorkFlowTask {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext, failure.t());
 		}
 		else if (result instanceof Result.Success<App> success) {
-			addParameter(workContext, "applicationID", String.valueOf(success.value().id()));
+			addParameter("applicationID", String.valueOf(success.value().id()));
 			return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 		}
 		throw new IllegalArgumentException();

@@ -3,6 +3,7 @@ package com.redhat.parodos.tasks.notification;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import com.redhat.parodos.notification.sdk.api.ApiException;
 import com.redhat.parodos.notification.sdk.api.NotificationMessageApi;
@@ -45,7 +46,7 @@ public class NotificationWorkFlowTaskTest {
 				"test-subject", Arrays.asList("test-user-1", "test-user-2"),
 				Arrays.asList("test-group-1", "test-group-2"));
 		putParamsToCtx(dto, ctx);
-
+		underTest.preExecute(ctx);
 		WorkReport result = underTest.execute(ctx);
 
 		assertEquals(WorkStatus.COMPLETED, result.getStatus());
@@ -61,7 +62,7 @@ public class NotificationWorkFlowTaskTest {
 		putParamsToCtx(dto, ctx);
 
 		doThrow(ApiException.class).when(apiInstanceMock).create(dto);
-
+		underTest.preExecute(ctx);
 		WorkReport result = underTest.execute(ctx);
 
 		assertEquals(WorkStatus.FAILED, result.getStatus());
@@ -76,7 +77,7 @@ public class NotificationWorkFlowTaskTest {
 				"test-subject", Arrays.asList("test-user-1", "test-user-2"),
 				Arrays.asList("test-group-1", "test-group-2"));
 		putParamsToCtx(dto, ctx);
-
+		underTest.preExecute(ctx);
 		WorkReport result = underTest.execute(ctx);
 
 		assertEquals(WorkStatus.FAILED, result.getStatus());
@@ -91,7 +92,7 @@ public class NotificationWorkFlowTaskTest {
 				"test-subject", Arrays.asList("test-user-1", "test-user-2"),
 				Arrays.asList("test-group-1", "test-group-2"));
 		putParamsToCtx(dto, ctx);
-
+		underTest.preExecute(ctx);
 		WorkReport result = underTest.execute(ctx);
 
 		assertEquals(WorkStatus.FAILED, result.getStatus());
@@ -105,7 +106,7 @@ public class NotificationWorkFlowTaskTest {
 		NotificationMessageCreateRequestDTO dto = buildNotificationMessageCreateRequestDTO("test-type", "test-body",
 				null, Arrays.asList("test-user-1", "test-user-2"), Arrays.asList("test-group-1", "test-group-2"));
 		putParamsToCtx(dto, ctx);
-
+		underTest.preExecute(ctx);
 		WorkReport result = underTest.execute(ctx);
 
 		assertEquals(WorkStatus.FAILED, result.getStatus());
@@ -119,7 +120,7 @@ public class NotificationWorkFlowTaskTest {
 		NotificationMessageCreateRequestDTO dto = buildNotificationMessageCreateRequestDTO("test-type", "test-body",
 				"test-subject", null, Arrays.asList("test-group-1", "test-group-2"));
 		putParamsToCtx(dto, ctx);
-
+		underTest.preExecute(ctx);
 		WorkReport result = underTest.execute(ctx);
 
 		assertEquals(WorkStatus.COMPLETED, result.getStatus());
@@ -132,7 +133,7 @@ public class NotificationWorkFlowTaskTest {
 		NotificationMessageCreateRequestDTO dto = buildNotificationMessageCreateRequestDTO("test-type", "test-body",
 				"test-subject", Arrays.asList("test-user-1", "test-user-2"), null);
 		putParamsToCtx(dto, ctx);
-
+		underTest.preExecute(ctx);
 		WorkReport result = underTest.execute(ctx);
 
 		assertEquals(WorkStatus.COMPLETED, result.getStatus());
@@ -145,7 +146,7 @@ public class NotificationWorkFlowTaskTest {
 		NotificationMessageCreateRequestDTO dto = buildNotificationMessageCreateRequestDTO("test-type", "test-body",
 				"test-subject", null, null);
 		putParamsToCtx(dto, ctx);
-
+		underTest.preExecute(ctx);
 		WorkReport result = underTest.execute(ctx);
 
 		assertEquals(WorkStatus.FAILED, result.getStatus());
@@ -179,6 +180,9 @@ public class NotificationWorkFlowTaskTest {
 
 		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION, underTest.getName(),
 				WorkContextDelegate.Resource.ARGUMENTS, map);
+
+		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ID, UUID.randomUUID());
 	}
 
 	private void putInMap(HashMap<String, String> map, String key, String value) {

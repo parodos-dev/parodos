@@ -60,11 +60,11 @@ public class CreateApplicationTask extends BaseInfrastructureWorkFlowTask {
 	public WorkReport execute(WorkContext workContext) {
 		String appName, repo;
 		try {
-			appName = getOptionalParameterValue(workContext, "applicationName", "");
-			repo = getRequiredParameterValue(workContext, "repositoryURL");
+			appName = getOptionalParameterValue("applicationName", "");
+			repo = getRequiredParameterValue("repositoryURL");
 			if (mtaClient == null) {
-				var serverUrl = getOptionalParameterValue(workContext, "serverURL", null);
-				var bearerToken = getOptionalParameterValue(workContext, "bearerToken", null);
+				var serverUrl = getOptionalParameterValue("serverURL", null);
+				var bearerToken = getOptionalParameterValue("bearerToken", null);
 				this.mtaClient = new MTAClient(URI.create(serverUrl), bearerToken);
 			}
 		}

@@ -10,6 +10,7 @@ import com.redhat.parodos.examples.utils.RestUtils;
 import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
+import com.redhat.parodos.workflow.task.log.service.WorkFlowLogService;
 import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -20,10 +21,12 @@ import org.mockito.MockedStatic;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.spy;
@@ -62,6 +65,9 @@ public class JiraTicketCreationWorkFlowTaskTest extends BaseInfrastructureWorkFl
 	@Before
 	public void setUp() {
 		this.jiraTicketCreationWorkFlowTask = spy((JiraTicketCreationWorkFlowTask) getConcretePersonImplementation());
+		WorkFlowLogService workFlowLogService = mock(WorkFlowLogService.class);
+		doNothing().when(workFlowLogService).writeLog(any(), any(), any());
+		ReflectionTestUtils.setField(jiraTicketCreationWorkFlowTask, "workFlowLogService", workFlowLogService);
 	}
 
 	@Override
@@ -89,6 +95,7 @@ public class JiraTicketCreationWorkFlowTaskTest extends BaseInfrastructureWorkFl
 
 				workContextUtilsMockedStatic.when(() -> WorkContextUtils.getProjectId(any(WorkContext.class)))
 						.thenReturn(PROJECT_ID_TEST);
+				jiraTicketCreationWorkFlowTask.preExecute(workContext);
 				// when
 				WorkReport workReport = jiraTicketCreationWorkFlowTask.execute(workContext);
 				// then
@@ -101,15 +108,19 @@ public class JiraTicketCreationWorkFlowTaskTest extends BaseInfrastructureWorkFl
 	public void executeFail() {
 		// given
 		WorkContext workContext = mock(WorkContext.class);
-
 		try (MockedStatic<RestUtils> restUtilsMockedStatic = mockStatic(RestUtils.class)) {
 			restUtilsMockedStatic.when(
 					() -> RestUtils.executePost(any(String.class), any(), any(String.class), any(String.class), any()))
 					.thenReturn(new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR));
-			// when
-			WorkReport workReport = jiraTicketCreationWorkFlowTask.execute(workContext);
-			// then
-			assertEquals(WorkStatus.FAILED, workReport.getStatus());
+			try (MockedStatic<WorkContextUtils> workContextUtilsMockedStatic = mockStatic(WorkContextUtils.class)) {
+				workContextUtilsMockedStatic.when(() -> WorkContextUtils.getMainExecutionId(any(WorkContext.class)))
+						.thenReturn(UUID.randomUUID());
+				jiraTicketCreationWorkFlowTask.preExecute(workContext);
+				// when
+				WorkReport workReport = jiraTicketCreationWorkFlowTask.execute(workContext);
+				// then
+				assertEquals(WorkStatus.FAILED, workReport.getStatus());
+			}
 		}
 	}
 

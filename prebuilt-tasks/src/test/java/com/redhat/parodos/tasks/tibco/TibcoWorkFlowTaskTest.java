@@ -1,6 +1,7 @@
 package com.redhat.parodos.tasks.tibco;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import javax.jms.JMSException;
 
@@ -45,6 +46,9 @@ public class TibcoWorkFlowTaskTest {
 	@Test
 	public void executeMissingParameter() {
 		WorkContext ctx = getWorkContext(false);
+		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ID, UUID.randomUUID());
+		task.preExecute(ctx);
 		WorkReport result = task.execute(ctx);
 		assertEquals(WorkStatus.FAILED, result.getStatus());
 		assertEquals(MissingParameterException.class, result.getError().getClass());
@@ -54,6 +58,9 @@ public class TibcoWorkFlowTaskTest {
 	public void executeErrorInTibco() throws JMSException {
 		WorkContext ctx = getWorkContext(true);
 		doThrow(JMSException.class).when(tibjms).sendMessage(any(), any(), any(), any(), any(), any());
+		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ID, UUID.randomUUID());
+		task.preExecute(ctx);
 		WorkReport result = task.execute(ctx);
 		assertEquals(WorkStatus.FAILED, result.getStatus());
 		assertEquals(JMSException.class, result.getError().getClass());
@@ -62,6 +69,9 @@ public class TibcoWorkFlowTaskTest {
 	@Test
 	public void executeSuccess() throws JMSException {
 		WorkContext ctx = getWorkContext(true);
+		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ID, UUID.randomUUID());
+		task.preExecute(ctx);
 		WorkReport result = task.execute(ctx);
 		assertEquals(WorkStatus.COMPLETED, result.getStatus());
 		verify(tibjms, times(1)).sendMessage(url, caFile, username, passowrd, topic, message);

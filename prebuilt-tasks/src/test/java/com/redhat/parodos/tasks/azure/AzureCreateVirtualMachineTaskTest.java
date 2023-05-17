@@ -1,6 +1,7 @@
 package com.redhat.parodos.tasks.azure;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import com.azure.resourcemanager.compute.models.AvailabilitySet;
 import com.azure.resourcemanager.compute.models.VirtualMachine;
@@ -95,7 +96,10 @@ public class AzureCreateVirtualMachineTaskTest {
 		String publicIP = "11.11.11.11";
 		when(virtualMachine.getPrimaryPublicIPAddress()).thenReturn(publicIPAddress);
 		when(publicIPAddress.ipAddress()).thenReturn(publicIP);
+		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ID, UUID.randomUUID());
 
+		underTest.preExecute(ctx);
 		// when
 		WorkReport result = underTest.execute(ctx);
 
@@ -118,7 +122,9 @@ public class AzureCreateVirtualMachineTaskTest {
 		// given
 		String publicIP = "11.11.11.11";
 		when(virtualMachine.getPrimaryPublicIPAddress()).thenReturn(null);
-
+		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ID, UUID.randomUUID());
+		underTest.preExecute(ctx);
 		// when
 		WorkReport result = underTest.execute(ctx);
 
@@ -136,6 +142,9 @@ public class AzureCreateVirtualMachineTaskTest {
 		HashMap<String, String> map = new HashMap<>();
 
 		for (String paramKey : requiredParamsKeys) {
+			WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+					WorkContextDelegate.Resource.ID, UUID.randomUUID());
+			underTest.preExecute(ctx);
 			// when
 			WorkReport result = underTest.execute(ctx);
 

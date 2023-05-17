@@ -21,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
@@ -49,10 +48,8 @@ public class RestAPIWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 		this.restAPIWorkflowTask = spy((RestAPIWorkFlowTask) getConcretePersonImplementation());
 
 		try {
-			doReturn(valueUrl).when(this.restAPIWorkflowTask).getRequiredParameterValue(any(WorkContext.class),
-					eq(URL_KEY));
-			doReturn(valuePayload).when(this.restAPIWorkflowTask).getRequiredParameterValue(any(WorkContext.class),
-					eq(PAYLOAD_KEY));
+			doReturn(valueUrl).when(this.restAPIWorkflowTask).getRequiredParameterValue(eq(URL_KEY));
+			doReturn(valuePayload).when(this.restAPIWorkflowTask).getRequiredParameterValue(eq(PAYLOAD_KEY));
 
 		}
 		catch (MissingParameterException e) {

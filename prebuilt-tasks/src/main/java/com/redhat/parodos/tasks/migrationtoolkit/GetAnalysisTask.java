@@ -62,8 +62,8 @@ public class GetAnalysisTask extends BaseInfrastructureWorkFlowTask {
 	@Override
 	public WorkReport execute(WorkContext workContext) {
 		if (mtaClient == null) {
-			serverUrl = URI.create(getOptionalParameterValue(workContext, "serverURL", null));
-			var bearerToken = getOptionalParameterValue(workContext, "bearerToken", null);
+			serverUrl = URI.create(getOptionalParameterValue("serverURL", null));
+			var bearerToken = getOptionalParameterValue("bearerToken", null);
 			if (serverUrl == null) {
 				log.error(
 						"serverURL is empty. Either pass it while creating the instance of the task or in the context");
@@ -74,7 +74,7 @@ public class GetAnalysisTask extends BaseInfrastructureWorkFlowTask {
 
 		int taskGroupID;
 		try {
-			taskGroupID = Integer.parseInt(getRequiredParameterValue(workContext, "taskGroupID"));
+			taskGroupID = Integer.parseInt(getRequiredParameterValue("taskGroupID"));
 		}
 		catch (MissingParameterException | NumberFormatException e) {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
@@ -95,8 +95,8 @@ public class GetAnalysisTask extends BaseInfrastructureWorkFlowTask {
 					&& success.value().tasks()[0].state().equals("Succeeded")) {
 				String reportURL = String.format("%s/hub/applications/%d/bucket/%s", serverUrl,
 						success.value().tasks()[0].application().id(), success.value().data().output());
-				sendEmail(reportURL, getOptionalParameterValue(workContext, "email", null));
-				addParameter(workContext, "reportURL", reportURL);
+				sendEmail(reportURL, getOptionalParameterValue("email", null));
+				addParameter("reportURL", reportURL);
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 			}
 			else if ("Failed".equals(success.value().state())) {

@@ -81,11 +81,11 @@ public class NotificationWorkFlowTask extends BaseWorkFlowTask {
 		NotificationMessageCreateRequestDTO notificationMessageCreateRequestDTO = new NotificationMessageCreateRequestDTO();
 
 		try {
-			notificationMessageCreateRequestDTO.messageType(getRequiredParameterValue(workContext, "type"));
-			notificationMessageCreateRequestDTO.body(getRequiredParameterValue(workContext, "body"));
-			notificationMessageCreateRequestDTO.subject(getRequiredParameterValue(workContext, "subject"));
-			List<String> userNames = toList(getOptionalParameterValue(workContext, "userNames", null));
-			List<String> groupNames = toList(getOptionalParameterValue(workContext, "groupNames", null));
+			notificationMessageCreateRequestDTO.messageType(getRequiredParameterValue("type"));
+			notificationMessageCreateRequestDTO.body(getRequiredParameterValue("body"));
+			notificationMessageCreateRequestDTO.subject(getRequiredParameterValue("subject"));
+			List<String> userNames = toList(getOptionalParameterValue("userNames", null));
+			List<String> groupNames = toList(getOptionalParameterValue("groupNames", null));
 			if (CollectionUtils.isEmpty(userNames) && CollectionUtils.isEmpty(groupNames)) {
 				throw new MissingParameterException("User Names or Group Names must be provided");
 			}

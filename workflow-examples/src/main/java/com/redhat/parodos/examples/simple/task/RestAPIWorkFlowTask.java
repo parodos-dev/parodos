@@ -48,7 +48,7 @@ public class RestAPIWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	 */
 	public WorkReport execute(WorkContext workContext) {
 		try {
-			String urlString = getRequiredParameterValue(workContext, URL_KEY);
+			String urlString = getRequiredParameterValue(URL_KEY);
 			log.info("Running Task REST API Call: urlString: {}", urlString);
 			ResponseEntity<String> result = RestUtils.executeGet(urlString);
 			if (result.getStatusCode().is2xxSuccessful()) {

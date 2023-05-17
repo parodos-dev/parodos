@@ -12,6 +12,7 @@ import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkStatusResponseDTO;
+import com.redhat.parodos.workflow.execution.service.WorkFlowLogServiceImpl;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
@@ -55,6 +56,9 @@ class WorkFlowControllerTest extends ControllerMockClient {
 
 	@MockBean
 	private WorkFlowServiceImpl workFlowService;
+
+	@MockBean
+	private WorkFlowLogServiceImpl workFlowLogService;
 
 	@Test
 	public void ExecuteWithoutAuth() throws Exception {
@@ -252,6 +256,21 @@ class WorkFlowControllerTest extends ControllerMockClient {
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(1))).andExpect(MockMvcResultMatchers
 						.jsonPath("$[0].workStatus", equalToIgnoringCase(WorkStatus.COMPLETED.name())));
+	}
+
+	@Test
+	void TestGetWorkFlowTaskLogWithValidData() throws Exception {
+		UUID workFlowExecutionId = UUID.randomUUID();
+		String taskName = "test-task";
+		String taskLog = "test-log";
+		when(workFlowLogService.getLog(workFlowExecutionId, taskName)).thenReturn(taskLog);
+		// when
+		this.mockMvc
+				.perform(this.getRequestWithValidCredentials("/api/v1/workflows/" + workFlowExecutionId + "/log")
+						.param("taskName", taskName))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=UTF-8"))
+				.andExpect(MockMvcResultMatchers.content().string(taskLog));
 	}
 
 	private String getWorkFlowCheckerTaskRequestDTOJsonPayload() throws JsonProcessingException {

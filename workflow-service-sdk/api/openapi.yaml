@@ -624,6 +624,58 @@ paths:
       tags:
       - Workflow
       x-accepts: application/json
+  /api/v1/workflows/{workFlowExecutionId}/log:
+    get:
+      operationId: getLog
+      parameters:
+      - explode: false
+        in: path
+        name: workFlowExecutionId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - explode: true
+        in: query
+        name: taskName
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            text/plain:
+              schema:
+                type: string
+          description: Succeeded
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Not Found
+        "409":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Conflict
+      summary: Returns workflow execution log
+      tags:
+      - Workflow
+      x-accepts: "*/*,text/plain"
   /api/v1/workflows/{workFlowExecutionId}/status:
     get:
       operationId: getStatus

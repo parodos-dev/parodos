@@ -23,6 +23,7 @@ import java.util.Map;
 import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflows.work.Work;
+import com.redhat.parodos.workflows.work.WorkContext;
 import lombok.NonNull;
 
 /**
@@ -32,6 +33,12 @@ import lombok.NonNull;
  * @author Richard Wang (Github: richardW98)
  */
 public interface WorkFlowTask extends Work {
+
+	/**
+	 * method runs before @see execute()
+	 * @param workContext
+	 */
+	void preExecute(WorkContext workContext);
 
 	/**
 	 * Parameters required for the Task to execute. These are generally obtained from

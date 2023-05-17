@@ -62,9 +62,9 @@ public class NotificationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	 */
 	public WorkReport execute(WorkContext workContext) {
 		try {
-			String jiraTicketUrl = getRequiredParameterValue(workContext, JIRA_TICKET_URL_WORKFLOW_TASK_PARAMETER_NAME);
+			String jiraTicketUrl = getRequiredParameterValue(JIRA_TICKET_URL_WORKFLOW_TASK_PARAMETER_NAME);
 
-			String ocpAppLink = getRequiredParameterValue(workContext, OCP_APP_LINK_WORKFLOW_TASK_PARAMETER_NAME);
+			String ocpAppLink = getRequiredParameterValue(OCP_APP_LINK_WORKFLOW_TASK_PARAMETER_NAME);
 
 			NotificationRequest request = NotificationRequest.builder().usernames(List.of(NOTIFICATION_USERNAME))
 					.subject(NOTIFICATION_SUBJECT).body(buildMessage(jiraTicketUrl, ocpAppLink)).build();

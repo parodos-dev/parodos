@@ -74,7 +74,7 @@ public class JiraTicketApprovalWorkFlowCheckerTask extends BaseWorkFlowCheckerTa
 		log.info("Start jiraTicketApprovalWorkFlowCheckerTask...");
 		try {
 			String urlString = jiraServiceBaseUrl + "/rest/servicedeskapi/request/";
-			String issueKey = getRequiredParameterValue(workContext, ISSUE_KEY);
+			String issueKey = getRequiredParameterValue(ISSUE_KEY);
 			log.info("Calling: urlString: {} username: {}", urlString, jiraUsername);
 
 			ResponseEntity<GetJiraTicketResponseDto> result = RestUtils.restExchange(urlString + issueKey, jiraUsername,
@@ -96,7 +96,7 @@ public class JiraTicketApprovalWorkFlowCheckerTask extends BaseWorkFlowCheckerTa
 								.orElseThrow(() -> new MissingParameterException(
 										"cluster token is not provided by approver!"))
 								.toString();
-						addParameter(workContext, CLUSTER_TOKEN, clusterToken);
+						addParameter(CLUSTER_TOKEN, clusterToken);
 						return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 					case DECLINED:
 						log.info("request {} is rejected", responseDto.getIssueKey());

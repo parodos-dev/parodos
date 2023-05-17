@@ -12,6 +12,7 @@ import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.scheduler.WorkFlowSchedulerServiceImpl;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
+import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
 import com.redhat.parodos.workflow.task.WorkFlowTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
@@ -75,7 +76,7 @@ class WorkFlowTaskExecutionAspectTest {
 		// given
 		UUID projectID = UUID.randomUUID();
 		WorkContext workContext = getSampleWorkContext(projectID, TEST_TASK);
-		WorkFlowTask workFlowTask = getSampleWorkFlowTask(TEST_TASK);
+		BaseWorkFlowTask workFlowTask = getSampleWorkFlowTask(TEST_TASK);
 
 		ProceedingJoinPoint proceedingJoinPoint = mock(ProceedingJoinPoint.class);
 		when(proceedingJoinPoint.getTarget()).thenReturn(workFlowTask);
@@ -154,8 +155,8 @@ class WorkFlowTaskExecutionAspectTest {
 		};
 	}
 
-	WorkFlowTask getSampleWorkFlowTask(String taskName) {
-		WorkFlowTask workFlowTask = mock(WorkFlowTask.class);
+	BaseWorkFlowTask getSampleWorkFlowTask(String taskName) {
+		BaseWorkFlowTask workFlowTask = mock(BaseWorkFlowTask.class);
 		when(workFlowTask.getName()).thenReturn(taskName);
 		return workFlowTask;
 	}

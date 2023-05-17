@@ -80,7 +80,7 @@ public class AppLinkEmailNotificationWorkFlowTask extends BaseInfrastructureWork
 		Map<String, Object> messageData = new HashMap<>();
 		String appLink;
 		try {
-			appLink = getRequiredParameterValue(workContext, APP_LINK_PARAMETER_NAME);
+			appLink = getRequiredParameterValue(APP_LINK_PARAMETER_NAME);
 			messageData.put("appLink", appLink);
 			log.info("App link is: {}", appLink);
 		}

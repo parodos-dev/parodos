@@ -552,8 +552,8 @@ class WorkFlowServiceImplTest {
 		when(this.workFlowDefinitionRepository.findById(eq(testSubWorkFlow1DefinitionId)))
 				.thenReturn(Optional.of(subWorkFlow1Definition));
 
-		when(this.workFlowRepository.findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(eq(workFlowExecution),
-				eq(testSubWorkFlow1DefinitionId))).thenReturn(subWorkFlow1Execution);
+		when(this.workFlowRepository.findFirstByWorkFlowDefinitionIdAndMainWorkFlowExecution(
+				eq(testSubWorkFlow1DefinitionId), eq(workFlowExecution))).thenReturn(subWorkFlow1Execution);
 
 		when(this.workFlowTaskDefinitionRepository.findById(eq(subWorkFlow1Task1DefinitionId)))
 				.thenReturn(Optional.of(subWorkFlow1Task1Definition));
@@ -728,8 +728,8 @@ class WorkFlowServiceImplTest {
 		when(this.workFlowDefinitionRepository.findById(eq(subWorkFlow1DefinitionId)))
 				.thenReturn(Optional.of(subWorkFlow1Definition));
 
-		when(this.workFlowRepository.findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(eq(workFlowExecution),
-				eq(subWorkFlow1DefinitionId))).thenReturn(null);
+		when(this.workFlowRepository.findFirstByWorkFlowDefinitionIdAndMainWorkFlowExecution(
+				eq(subWorkFlow1DefinitionId), eq(workFlowExecution))).thenReturn(null);
 
 		when(this.workFlowTaskDefinitionRepository.findById(eq(subWorkFlow1Task1DefinitionId)))
 				.thenReturn(Optional.of(subWorkFlow1Task1Definition));

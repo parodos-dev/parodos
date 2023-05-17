@@ -1,5 +1,8 @@
 package com.redhat.parodos.tasks.migrationtoolkit;
 
+import java.util.UUID;
+
+import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -42,6 +45,9 @@ public class GetApplicationTaskTest {
 	@Test
 	@SneakyThrows
 	public void missingMandatoryParams() {
+		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ID, UUID.randomUUID());
+		underTest.preExecute(ctx);
 		WorkReport execute = underTest.execute(ctx);
 
 		assertThat(execute.getError()).isInstanceOf(MissingParameterException.class);
@@ -54,7 +60,9 @@ public class GetApplicationTaskTest {
 	public void failsGettingAppNotFound() {
 		when(mockClient.get(anyString())).thenReturn(new Result.Failure<>(new Exception("not found")));
 		ctx.put("applicationName", APP_NAME);
-
+		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ID, UUID.randomUUID());
+		underTest.preExecute(ctx);
 		WorkReport execute = underTest.execute(ctx);
 
 		assertThat(execute.getError()).isInstanceOf(Exception.class);
@@ -69,7 +77,9 @@ public class GetApplicationTaskTest {
 		when(mockClient.get(anyString()))
 				.thenReturn(new Result.Success<>(new App(APP_ID, APP_NAME, new Repository("git", REPO_URL))));
 		ctx.put("applicationName", APP_NAME);
-
+		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ID, UUID.randomUUID());
+		underTest.preExecute(ctx);
 		WorkReport execute = underTest.execute(ctx);
 
 		assertThat(execute.getError()).isNull();

@@ -69,7 +69,7 @@ public class JiraTicketApprovalEscalationWorkFlowTask extends BaseInfrastructure
 		// jira ticket url to extract from workContext
 		String jiraTicketUrl;
 		try {
-			jiraTicketUrl = getRequiredParameterValue(workContext, ISSUE_LINK);
+			jiraTicketUrl = getRequiredParameterValue(ISSUE_LINK);
 			log.info("Jira ticket url is: {}", jiraTicketUrl);
 		}
 		catch (MissingParameterException e) {

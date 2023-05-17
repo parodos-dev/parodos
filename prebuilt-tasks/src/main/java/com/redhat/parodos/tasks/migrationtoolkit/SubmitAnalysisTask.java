@@ -62,10 +62,10 @@ public class SubmitAnalysisTask extends BaseInfrastructureWorkFlowTask {
 	public WorkReport execute(WorkContext workContext) {
 		int applicationID;
 		try {
-			applicationID = Integer.parseInt(getRequiredParameterValue(workContext, "applicationID"));
+			applicationID = Integer.parseInt(getRequiredParameterValue("applicationID"));
 			if (mtaClient == null) {
-				var serverUrl = getOptionalParameterValue(workContext, "serverURL", null);
-				var bearerToken = getOptionalParameterValue(workContext, "bearerToken", null);
+				var serverUrl = getOptionalParameterValue("serverURL", null);
+				var bearerToken = getOptionalParameterValue("bearerToken", null);
 				this.mtaClient = new MTAClient(URI.create(serverUrl), bearerToken);
 			}
 		}
@@ -84,7 +84,7 @@ public class SubmitAnalysisTask extends BaseInfrastructureWorkFlowTask {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext, failure.t());
 		}
 		else if (result instanceof Result.Success<TaskGroup> success) {
-			addParameter(workContext, "taskGroupID", String.valueOf(success.value().id()));
+			addParameter("taskGroupID", String.valueOf(success.value().id()));
 			return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 		}
 		throw new IllegalArgumentException();
