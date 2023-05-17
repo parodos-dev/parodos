@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.ControllerMockClient;
+import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 import com.redhat.parodos.project.dto.ProjectRequestDTO;
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
 import com.redhat.parodos.project.dto.ProjectUserRoleResponseDTO;
@@ -133,7 +134,7 @@ public class ProjectControllerTest extends ControllerMockClient {
 
 	@Test
 	public void testGetProjectByIdWithInvalidID() throws Exception {
-		when(projectService.getProjectById(any())).thenReturn(null);
+		when(projectService.getProjectById(any())).thenThrow(new ResourceNotFoundException("Project not found"));
 
 		// When
 		mockMvc.perform(this.getRequestWithValidCredentials(String.format("/api/v1/projects/%s", UUID.randomUUID())))
@@ -185,6 +186,22 @@ public class ProjectControllerTest extends ControllerMockClient {
 				.andExpect(MockMvcResultMatchers.jsonPath("$").value(projectUserRoleResponseDTO));
 		// Then
 		verify(projectService, times(1)).removeUsersFromProject(any(), any());
+	}
+
+	@Test
+	public void testRemoveUsersFromProject_WithEmptyUsersList() throws Exception {
+		// Given
+		List<String> users = List.of();
+		ProjectUserRoleResponseDTO projectUserRoleResponseDTO = ProjectUserRoleResponseDTO.builder()
+				.projectName("test-project").build();
+
+		// When
+		mockMvc.perform(
+				this.deleteRequestWithValidCredentials(String.format("/api/v1/projects/%s/users", UUID.randomUUID()))
+						.content(JSONObject.valueToString(users)))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest());
+		// Then
+		verify(projectService, times(0)).removeUsersFromProject(any(), any());
 	}
 
 	ProjectResponseDTO createSampleProject(String name) {
