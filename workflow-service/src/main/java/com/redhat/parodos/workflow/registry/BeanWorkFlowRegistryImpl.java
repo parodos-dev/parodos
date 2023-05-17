@@ -170,10 +170,12 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry {
 
 	private WorkFlowProcessingType getWorkFlowProcessingType(Object workFlowBean) {
 		String className = workFlowBean.getClass().getTypeName();
-		if (className.toUpperCase().contains(WorkFlowProcessingType.PARALLEL.name()))
+		if (className.toUpperCase().contains(WorkFlowProcessingType.PARALLEL.name())) {
 			return WorkFlowProcessingType.PARALLEL;
-		if (className.toUpperCase().contains(WorkFlowProcessingType.SEQUENTIAL.name()))
+		}
+		if (className.toUpperCase().contains(WorkFlowProcessingType.SEQUENTIAL.name())) {
 			return WorkFlowProcessingType.SEQUENTIAL;
+		}
 		return WorkFlowProcessingType.OTHER;
 	}
 

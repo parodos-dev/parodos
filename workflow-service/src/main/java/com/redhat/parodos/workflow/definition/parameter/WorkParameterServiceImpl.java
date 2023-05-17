@@ -50,8 +50,9 @@ public class WorkParameterServiceImpl implements WorkParameterService {
 			WorkParameterValueResponse workParameterValueResponse) {
 		String workName = Optional.ofNullable(workParameterValueResponse.getWorkName()).orElse(workflowDefinitionName);
 		Map<String, Object> parameters = workFlowDefinitionService.getWorkParametersByWorkName(workName);
-		if (parameters == null || !parameters.containsKey(workParameterValueResponse.getKey()))
+		if (parameters == null || !parameters.containsKey(workParameterValueResponse.getKey())) {
 			return null;
+		}
 
 		String propertyPath = workName;
 		WorkFlowDefinition workFlowDefinition = workFlowDefinitionService.getParentWorkFlowByWorkName(workName);

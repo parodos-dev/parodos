@@ -92,8 +92,9 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 	private HashMap<String, Map<String, Object>> convertWorkParameters(List<WorkParameter> workParameters) {
 		HashMap<String, Map<String, Object>> result = new HashMap<>();
 		for (WorkParameter workParameter : workParameters) {
-			if (workParameter == null)
+			if (workParameter == null) {
 				continue;
+			}
 
 			result.put(workParameter.getKey(), workParameter.getAsJsonSchema());
 		}

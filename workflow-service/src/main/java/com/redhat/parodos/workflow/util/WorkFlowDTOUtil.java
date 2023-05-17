@@ -37,6 +37,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class WorkFlowDTOUtil {
 
+	private WorkFlowDTOUtil() {
+	}
+
 	public static Map<String, String> convertArgumentListToMap(
 			List<WorkFlowRequestDTO.WorkRequestDTO.ArgumentRequestDTO> argumentRequestDTOList) {
 		return argumentRequestDTOList.stream()
