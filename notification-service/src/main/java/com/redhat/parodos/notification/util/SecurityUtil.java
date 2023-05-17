@@ -40,8 +40,9 @@ public class SecurityUtil {
 		if (ldapDetails != null) {
 			return ldapDetails.getUsername();
 		}
-		else
+		else {
 			log.error("Unable to get the LdapDetails to get the username");
+		}
 		return null;
 	}
 
