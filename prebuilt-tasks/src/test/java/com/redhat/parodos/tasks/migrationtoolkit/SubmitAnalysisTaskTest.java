@@ -15,7 +15,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import static com.redhat.parodos.workflows.workflow.WorkContextAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SubmitAnalysisTaskTest {
