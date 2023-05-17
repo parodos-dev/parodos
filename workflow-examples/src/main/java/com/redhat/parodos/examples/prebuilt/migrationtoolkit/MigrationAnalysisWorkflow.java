@@ -6,7 +6,10 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 import com.redhat.parodos.email.Message;
-import com.redhat.parodos.tasks.migrationtoolkit.*;
+import com.redhat.parodos.tasks.migrationtoolkit.CreateApplicationTask;
+import com.redhat.parodos.tasks.migrationtoolkit.GetAnalysisTask;
+import com.redhat.parodos.tasks.migrationtoolkit.GetApplicationTask;
+import com.redhat.parodos.tasks.migrationtoolkit.SubmitAnalysisTask;
 import com.redhat.parodos.workflow.annotation.Checker;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
 import com.redhat.parodos.workflows.workflow.WorkFlow;

@@ -12,14 +12,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 /**
- * 
+ *
  * Sample configuration for Tibco Task
  *
  */
 @Configuration
 @Profile("tibco")
 public class TibcoWorkFlowConfiguration {
-	
+
 	@Bean
 	TibcoWorkFlowTask tibcoTask() {
 		// TIBCO's default installation:
