@@ -7,8 +7,10 @@ import com.redhat.parodos.ControllerMockClient;
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 import com.redhat.parodos.workflow.definition.dto.WorkDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
+import com.redhat.parodos.workflow.definition.dto.WorkParameterValueRequestDTO;
 import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceImpl;
 import org.hamcrest.Matchers;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +67,7 @@ class WorkFlowDefinitionControllerTest extends ControllerMockClient {
 	}
 
 	@Test
-	public void ListWorkfFlowDefinitionsWithinvalidCredentials() throws Exception {
+	public void ListWorkflowDefinitionsWithInvalidCredentials() throws Exception {
 		// when
 		this.mockMvc.perform(this.getRequestWithInValidCredentials("/api/v1/workflowdefinitions"))
 				.andExpect(MockMvcResultMatchers.status().isUnauthorized());
@@ -121,6 +123,44 @@ class WorkFlowDefinitionControllerTest extends ControllerMockClient {
 
 		// then
 		verify(this.workFlowDefinitionService, never()).getWorkFlowDefinitionById(any());
+	}
+
+	@Test
+	public void testUpdateParameter() throws Exception {
+		// given
+		String workflowDefinitionName = "workflow-foo";
+		String valueProviderName = "valueProvider-foo";
+		WorkParameterValueRequestDTO requestDTO = new WorkParameterValueRequestDTO("param1", "value1",
+				workflowDefinitionName);
+		List<WorkParameterValueRequestDTO> workParameterValueRequestDTOs = List.of(requestDTO);
+
+		// when
+		// then
+		String content = JSONObject.valueToString(workParameterValueRequestDTOs);
+		this.mockMvc.perform(this
+				.postRequestWithValidCredentials(String.format("/api/v1/workflowdefinitions/%s/parameters/update/%s",
+						workflowDefinitionName, valueProviderName))
+				.content(content)).andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test
+	public void testUpdateParameter_EmptyParameterKey() throws Exception {
+		// given
+		String workflowDefinitionName = "workflow-foo";
+		String valueProviderName = "valueProvider-foo";
+		WorkParameterValueRequestDTO requestDTO = new WorkParameterValueRequestDTO(null, "value1",
+				workflowDefinitionName);
+		List<WorkParameterValueRequestDTO> workParameterValueRequestDTOs = List.of(requestDTO);
+
+		// when
+		// then
+		String content = JSONObject.valueToString(workParameterValueRequestDTOs);
+		this.mockMvc
+				.perform(this.postRequestWithValidCredentials(
+						String.format("/api/v1/workflowdefinitions/%s/parameters/update/%s", workflowDefinitionName,
+								valueProviderName))
+						.content(content))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 
 	private WorkFlowDefinitionResponseDTO createSampleWorkFlowDefinition(String name) {

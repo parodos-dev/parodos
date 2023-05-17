@@ -1,5 +1,7 @@
 package com.redhat.parodos.workflow.definition.dto;
 
+import javax.validation.constraints.NotEmpty;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WorkParameterValueRequestDTO {
 
+	@NotEmpty
 	private String key;
 
 	private String value;
