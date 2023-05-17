@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  *
  * @author Luke Shannon (Github: lshannon)
  * @author Gloria Ciavarrini (Github: gciavarrini)
- * 
+ *
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
