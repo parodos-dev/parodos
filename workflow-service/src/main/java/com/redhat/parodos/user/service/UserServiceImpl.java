@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import javax.persistence.EntityNotFoundException;
-
 import com.redhat.parodos.common.exceptions.IDType;
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 import com.redhat.parodos.common.exceptions.ResourceType;
@@ -79,7 +77,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User getUserEntityById(UUID id) {
 		return userRepository.findById(id)
-				.orElseThrow(() -> new EntityNotFoundException(String.format("User with id: %s not found", id)));
+				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER, IDType.ID, id));
 	}
 
 	@Override
