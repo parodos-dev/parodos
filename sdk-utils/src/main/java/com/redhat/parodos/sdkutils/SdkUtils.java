@@ -218,11 +218,28 @@ public abstract class SdkUtils {
 	 */
 	public static WorkFlowStatusResponseDTO waitWorkflowStatusAsync(WorkflowApi workflowApi, UUID workFlowExecutionId)
 			throws InterruptedException, ApiException {
+		return waitWorkflowStatusAsync(workflowApi, workFlowExecutionId,
+				WorkFlowStatusResponseDTO.StatusEnum.COMPLETED);
+	}
+
+	/**
+	 * Invokes @see com.redhat.parodos.sdk.api.WorkflowApi#getStatusAsync(String,
+	 * ApiCallback<WorkFlowStatusResponseDTO>) and retries for 60 seconds.
+	 * @param workflowApi the WorkflowAPI
+	 * @param workFlowExecutionId the workflow execution Id to monitor, as {String}
+	 * @param status the status to wait for
+	 * @return the workflow status if it's equal to @see
+	 * com.redhat.parodos.workflows.work.WorkStatus#COMPLETED
+	 * @throws InterruptedException If the async call reaches the waiting timeout
+	 * @throws ApiException If the API method invocation fails
+	 */
+	public static WorkFlowStatusResponseDTO waitWorkflowStatusAsync(WorkflowApi workflowApi, UUID workFlowExecutionId,
+			WorkFlowStatusResponseDTO.StatusEnum status) throws InterruptedException, ApiException {
 
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = waitAsyncResponse(new FuncExecutor<>() {
 			@Override
 			public boolean check(WorkFlowStatusResponseDTO result, int statusCode) {
-				return !result.getStatus().equals(WorkFlowStatusResponseDTO.StatusEnum.COMPLETED);
+				return result.getStatus() != status;
 			}
 
 			@Override

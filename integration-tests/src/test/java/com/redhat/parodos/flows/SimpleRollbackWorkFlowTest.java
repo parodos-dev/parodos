@@ -14,7 +14,6 @@ import com.redhat.parodos.sdk.model.WorkFlowResponseDTO.WorkStatusEnum;
 import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.sdkutils.SdkUtils;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
-import com.redhat.parodos.workflow.enums.WorkFlowType;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -25,7 +24,7 @@ import static org.junit.Assert.assertNotNull;
  * @author Richard Wang (Github: richrdW98)
  */
 @Slf4j
-public class SimpleRollbackWorkFlow extends BaseIntegrationTest {
+public class SimpleRollbackWorkFlowTest extends BaseIntegrationTest {
 
 	private static final String projectName = "project-1";
 
@@ -52,7 +51,8 @@ public class SimpleRollbackWorkFlow extends BaseIntegrationTest {
 				simpleSequentialWorkFlowDefinition.getName());
 		assertEquals(WorkFlowDefinitionResponseDTO.ProcessingTypeEnum.SEQUENTIAL,
 				simpleSequentialWorkFlowDefinition.getProcessingType());
-		assertEquals(WorkFlowType.INFRASTRUCTURE.toString(), simpleSequentialWorkFlowDefinition.getType().name());
+		assertEquals(WorkFlowDefinitionResponseDTO.TypeEnum.INFRASTRUCTURE,
+				simpleSequentialWorkFlowDefinition.getType());
 
 		// Define WorkRequests
 
@@ -72,11 +72,11 @@ public class SimpleRollbackWorkFlow extends BaseIntegrationTest {
 		assertEquals(WorkStatusEnum.IN_PROGRESS, workFlowResponseDTO.getWorkStatus());
 
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = SdkUtils.waitWorkflowStatusAsync(workflowApi,
-				workFlowResponseDTO.getWorkFlowExecutionId());
+				workFlowResponseDTO.getWorkFlowExecutionId(), WorkFlowStatusResponseDTO.StatusEnum.FAILED);
 
 		assertNotNull(workFlowStatusResponseDTO.getWorkFlowExecutionId());
 		assertNotNull(workFlowStatusResponseDTO.getStatus());
-		assertEquals(WorkStatusEnum.FAILED.name(), workFlowStatusResponseDTO.getStatus().name());
+		assertEquals(WorkFlowStatusResponseDTO.StatusEnum.FAILED, workFlowStatusResponseDTO.getStatus());
 		log.info("workflow finished successfully with response: {}", workFlowResponseDTO);
 		log.info("******** Simple Failed Flow Completed ********");
 	}
