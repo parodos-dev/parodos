@@ -16,6 +16,9 @@
         <attlasian-fugue.version>2.6.1</attlasian-fugue.version>
         <org.json.version>20230227</org.json.version>
         <jgit-version>6.5.0.202303070854-r</jgit-version>
+        <azure-core-version>1.37.0</azure-core-version>
+        <azure-identity-version>1.8.1</azure-identity-version>
+        <azure-resourcemanager-version>2.24.0</azure-resourcemanager-version>
     </properties>
 
     <repositories>
@@ -134,6 +137,23 @@
             <artifactId>spring-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- Start libraries for Azure access -->
+        <dependency>
+            <groupId>com.azure</groupId>
+            <artifactId>azure-core</artifactId>
+            <version>${azure-core-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.azure</groupId>
+            <artifactId>azure-identity</artifactId>
+            <version>${azure-identity-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.azure.resourcemanager</groupId>
+            <artifactId>azure-resourcemanager</artifactId>
+            <version>${azure-resourcemanager-version}</version>
+        </dependency>
+        <!-- End libraries for Azure access -->
     </dependencies>
 
     <build>
