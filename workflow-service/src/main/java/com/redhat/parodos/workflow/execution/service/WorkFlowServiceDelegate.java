@@ -110,12 +110,14 @@ public class WorkFlowServiceDelegate {
 		List<WorkFlowWorkDefinition> workFlowWorkDefinitions = workFlowWorkRepository
 				.findByWorkFlowDefinitionIdOrderByCreateDateAsc(workFlowDefinition.getId());
 		workFlowWorkDefinitions.forEach(workFlowWorkDefinition -> {
-			if (workFlowWorkDefinition.getWorkDefinitionType().equals(WorkType.WORKFLOW))
+			if (workFlowWorkDefinition.getWorkDefinitionType().equals(WorkType.WORKFLOW)) {
 				workStatusResponseDTOList
 						.add(getWorkStatusResponseDTOFromWorkFlow(workFlowWorkDefinition, workFlowExecution));
-			else
+			}
+			else {
 				workStatusResponseDTOList
 						.add(getWorkStatusResponseDTOFromWorkFlowTask(workFlowWorkDefinition, workFlowExecution));
+			}
 		});
 	}
 
@@ -131,12 +133,14 @@ public class WorkFlowServiceDelegate {
 				.findByWorkFlowDefinitionIdOrderByCreateDateAsc(workFlowExecution.getWorkFlowDefinition().getId());
 
 		workFlowWorksDefinitions.forEach(workFlowWorkDefinition -> {
-			if (workFlowWorkDefinition.getWorkDefinitionType().equals(WorkType.WORKFLOW))
+			if (workFlowWorkDefinition.getWorkDefinitionType().equals(WorkType.WORKFLOW)) {
 				workStatusResponseDTOList
 						.add(getWorkStatusResponseDTOFromWorkFlow(workFlowWorkDefinition, mainWorkFlowExecution));
-			else
+			}
+			else {
 				workStatusResponseDTOList
 						.add(getWorkStatusResponseDTOFromWorkFlowTask(workFlowWorkDefinition, workFlowExecution));
+			}
 		});
 	}
 

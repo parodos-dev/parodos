@@ -56,9 +56,10 @@ public class WorkFlowDelegate {
 					workFlowRequestDTO.getWorkFlowName(), WorkContextDelegate.Resource.ARGUMENTS,
 					WorkFlowDTOUtil.convertArgumentListToMap(workFlowRequestDTO.getArguments()));
 		}
-		if (mainWorkFlowDefinitionDto.getWorks() != null && !mainWorkFlowDefinitionDto.getWorks().isEmpty())
+		if (mainWorkFlowDefinitionDto.getWorks() != null && !mainWorkFlowDefinitionDto.getWorks().isEmpty()) {
 			mainWorkFlowDefinitionDto.getWorks().forEach(work -> initWorkContext(workContext,
 					workFlowRequestDTO.findFirstWorkByName(work.getName()), work, mainWorkFlowDefinitionDto.getName()));
+		}
 		return workContext;
 	}
 
@@ -74,12 +75,13 @@ public class WorkFlowDelegate {
 						workRequestDTO.getWorkName(), WorkContextDelegate.Resource.ARGUMENTS,
 						WorkFlowDTOUtil.convertArgumentListToMap(workRequestDTO.getArguments())));
 
-		if (workDefinitionResponseDTO.getWorks() != null)
+		if (workDefinitionResponseDTO.getWorks() != null) {
 			workDefinitionResponseDTO.getWorks()
 					.forEach(work -> initWorkContext(
 							workContext, Optional.ofNullable(workRequestDTO)
 									.map(dto -> dto.findFirstWorkByName(work.getName())).orElse(null),
 							work, workDefinitionResponseDTO.getName()));
+		}
 	}
 
 	public WorkFlow getWorkFlowByName(String workFlowName) {

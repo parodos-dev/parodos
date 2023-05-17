@@ -76,8 +76,9 @@ public class WorkFlowSchedulerServiceImpl implements WorkFlowSchedulerService {
 			boolean stopped = hm.get(new ScheduledTaskKey(projectId, userId)).get(workFlow.getName()).cancel(false);
 			if (stopped) {
 				hm.get(new ScheduledTaskKey(projectId, userId)).remove(workFlow.getName());
-				if (hm.get(new ScheduledTaskKey(projectId, userId)).isEmpty())
+				if (hm.get(new ScheduledTaskKey(projectId, userId)).isEmpty()) {
 					hm.remove(new ScheduledTaskKey(projectId, userId));
+				}
 			}
 			return stopped;
 		}

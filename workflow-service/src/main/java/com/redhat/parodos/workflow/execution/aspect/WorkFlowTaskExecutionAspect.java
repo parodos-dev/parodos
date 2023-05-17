@@ -129,8 +129,9 @@ public class WorkFlowTaskExecutionAspect {
 		}
 		try {
 			report = (WorkReport) proceedingJoinPoint.proceed();
-			if (report == null || report.getStatus() == null)
+			if (report == null || report.getStatus() == null) {
 				throw new NullPointerException("task execution not returns status: " + workFlowTaskName);
+			}
 		}
 		catch (Throwable e) {
 			log.error("Workflow task execution {} has failed! error message: {}", workFlowTaskName, e.getMessage());
