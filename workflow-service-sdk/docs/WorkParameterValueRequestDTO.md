@@ -7,7 +7,7 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**key** | **String** |  |  [optional] |
+|**key** | **String** |  |  |
 |**value** | **String** |  |  [optional] |
 |**workName** | **String** |  |  [optional] |
 

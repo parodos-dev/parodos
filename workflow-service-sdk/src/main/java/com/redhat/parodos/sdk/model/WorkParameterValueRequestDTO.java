@@ -63,7 +63,7 @@ public class WorkParameterValueRequestDTO {
 	 * Get key
 	 * @return key
 	 **/
-	@javax.annotation.Nullable
+	@javax.annotation.Nonnull
 
 	public String getKey() {
 		return key;
@@ -167,6 +167,7 @@ public class WorkParameterValueRequestDTO {
 
 		// a set of required properties/fields (JSON key names)
 		openapiRequiredFields = new HashSet<String>();
+		openapiRequiredFields.add("key");
 	}
 
 	/**
@@ -200,7 +201,17 @@ public class WorkParameterValueRequestDTO {
 						entry.getKey(), jsonObj.toString()));
 			}
 		}
-		if ((jsonObj.get("key") != null && !jsonObj.get("key").isJsonNull()) && !jsonObj.get("key").isJsonPrimitive()) {
+
+		// check to make sure all required properties/fields are present in the JSON
+		// string
+		for (String requiredField : WorkParameterValueRequestDTO.openapiRequiredFields) {
+			if (jsonObj.get(requiredField) == null) {
+				throw new IllegalArgumentException(
+						String.format("The required field `%s` is not found in the JSON string: %s", requiredField,
+								jsonObj.toString()));
+			}
+		}
+		if (!jsonObj.get("key").isJsonPrimitive()) {
 			throw new IllegalArgumentException(
 					String.format("Expected the field `key` to be a primitive type in the JSON string but got `%s`",
 							jsonObj.get("key").toString()));
