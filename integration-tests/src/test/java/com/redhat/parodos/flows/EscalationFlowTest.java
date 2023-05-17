@@ -7,11 +7,11 @@ import com.redhat.parodos.sdk.model.ProjectResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
 import com.redhat.parodos.sdk.model.WorkFlowResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
+import com.redhat.parodos.sdkutils.SdkUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 import static com.redhat.parodos.sdkutils.SdkUtils.getProjectAsync;
-import static com.redhat.parodos.sdkutils.SdkUtils.waitWorkflowStatusAsync;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -47,7 +47,7 @@ public class EscalationFlowTest extends BaseIntegrationTest {
 		log.info("Simple Escalation Flow {}", workFlowResponseDTO.getWorkStatus());
 		log.info("Waiting for checkers to complete...");
 
-		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = waitWorkflowStatusAsync(workflowApi,
+		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = SdkUtils.waitWorkflowStatusAsync(workflowApi,
 				workFlowResponseDTO.getWorkFlowExecutionId());
 
 		assertNotNull(workFlowStatusResponseDTO);
