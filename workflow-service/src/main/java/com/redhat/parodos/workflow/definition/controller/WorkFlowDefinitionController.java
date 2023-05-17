@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import javax.validation.Valid;
+
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkParameterValueRequestDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkParameterValueResponseDTO;
@@ -116,7 +118,7 @@ public class WorkFlowDefinitionController {
 	@PostMapping("/{workflowDefinitionName}/parameters/update/{valueProviderName}")
 	public ResponseEntity<List<WorkParameterValueResponseDTO>> updateParameter(
 			@PathVariable String workflowDefinitionName, @PathVariable String valueProviderName,
-			@RequestBody List<WorkParameterValueRequestDTO> workParameterValueRequestDTOS) {
+			@RequestBody @Valid List<WorkParameterValueRequestDTO> workParameterValueRequestDTOS) {
 		return ResponseEntity.ok(workParameterService.getValues(workflowDefinitionName, valueProviderName,
 				workParameterValueRequestDTOS));
 	}

@@ -1309,6 +1309,7 @@
         }
       },
       "WorkParameterValueRequestDTO" : {
+        "required" : [ "key" ],
         "type" : "object",
         "properties" : {
           "key" : {
