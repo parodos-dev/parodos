@@ -7,7 +7,9 @@ public enum ResourceType {
 	USER("User"),
 	ROLE("Role"),
 	WORKFLOW_DEFINITION("Workflow definition"),
-	WORKFLOW_EXECUTION("Workflow execution");
+	WORKFLOW_EXECUTION("Workflow execution"),
+	WORKFLOW_TASK("Workflow task"),
+	WORKFLOW_TASK_EXECUTION("Workflow task execution");
 	// @formatter:on
 	private final String name;
 

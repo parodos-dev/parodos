@@ -56,9 +56,9 @@ public class SecureAPIGetTestTask extends BaseInfrastructureWorkFlowTask {
 	 */
 	public WorkReport execute(WorkContext workContext) {
 		try {
-			String urlString = getRequiredParameterValue(workContext, SECURED_URL);
-			String username = getRequiredParameterValue(workContext, USERNAME);
-			String password = getRequiredParameterValue(workContext, PASSWORD);
+			String urlString = getRequiredParameterValue(SECURED_URL);
+			String username = getRequiredParameterValue(USERNAME);
+			String password = getRequiredParameterValue(PASSWORD);
 			log.info("Calling: urlString: {} username: {}", urlString, username);
 			ResponseEntity<String> result = RestUtils.restExchange(urlString, username, password);
 			if (result.getStatusCode().is2xxSuccessful()) {

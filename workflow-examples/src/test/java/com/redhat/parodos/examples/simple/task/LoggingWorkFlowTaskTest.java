@@ -2,6 +2,7 @@ package com.redhat.parodos.examples.simple.task;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import com.redhat.parodos.examples.base.BaseInfrastructureWorkFlowTaskTest;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
@@ -48,6 +49,9 @@ public class LoggingWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 	public void setUp() {
 		loggingWorkFlowTask = getConcretePersonImplementation();
 		workContext = new WorkContext();
+		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ID, UUID.randomUUID());
+		loggingWorkFlowTask.preExecute(workContext);
 		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
 				WORKFLOW_TASK_NAME, WorkContextDelegate.Resource.ARGUMENTS, new HashMap<>() {
 					{

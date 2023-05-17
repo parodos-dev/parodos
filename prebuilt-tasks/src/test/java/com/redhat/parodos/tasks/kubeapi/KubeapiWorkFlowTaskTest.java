@@ -2,6 +2,7 @@ package com.redhat.parodos.tasks.kubeapi;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.UUID;
 
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
@@ -30,6 +31,9 @@ public class KubeapiWorkFlowTaskTest {
 	@Test
 	public void missingArgs() {
 		WorkContext ctx = createWorkContext(new HashMap<>());
+		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ID, UUID.randomUUID());
+		task.preExecute(ctx);
 		WorkReport result = task.execute(ctx);
 		assertEquals(WorkStatus.FAILED, result.getStatus());
 		assertEquals(MissingParameterException.class, result.getError().getClass());
@@ -40,6 +44,9 @@ public class KubeapiWorkFlowTaskTest {
 		HashMap<String, String> map = new HashMap<>();
 		map.put("operation", "test");
 		WorkContext ctx = createWorkContext(map);
+		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ID, UUID.randomUUID());
+		task.preExecute(ctx);
 		WorkReport result = task.execute(ctx);
 		assertEquals(WorkStatus.FAILED, result.getStatus());
 		assertEquals(IllegalArgumentException.class, result.getError().getClass());
@@ -53,6 +60,9 @@ public class KubeapiWorkFlowTaskTest {
 		DynamicKubernetesObject obj = Dynamics.newFromJson(objJson);
 		WorkContext ctx = workContextGET();
 		doReturn(obj).when(api).get(any(), any(), any(), any(), any(), any());
+		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ID, UUID.randomUUID());
+		task.preExecute(ctx);
 		WorkReport result = task.execute(ctx);
 		assertEquals(WorkStatus.COMPLETED, result.getStatus());
 		assertEquals(objJson, ctx.get("testkey"));
@@ -63,6 +73,9 @@ public class KubeapiWorkFlowTaskTest {
 		DynamicKubernetesObject expectedObj = Dynamics.newFromJson(
 				"{\"apiVersion\": \"v1\",\"data\": {\"a\": \"vala\",\"b\": \"valb\"},\"kind\": \"ConfigMap\",\"metadata\": {\"name\": \"my-cm-create\",\"namespace\": \"test\"}}");
 		WorkContext ctx = workContextCREATE();
+		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ID, UUID.randomUUID());
+		task.preExecute(ctx);
 		WorkReport result = task.execute(ctx);
 		assertEquals(WorkStatus.COMPLETED, result.getStatus());
 		verify(api, times(1)).create(any(), any(), any(), any(), eq(expectedObj));
@@ -75,6 +88,9 @@ public class KubeapiWorkFlowTaskTest {
 		DynamicKubernetesObject getReturnValue = Dynamics.newFromJson(
 				"{\"apiVersion\": \"v1\",\"data\": {\"a\": \"vala\",\"b\": \"valb\"},\"kind\": \"ConfigMap\",\"metadata\": {\"resourceVersion\": \"1000\", \"name\": \"my-cm-create\",\"namespace\": \"test\"}}");
 		WorkContext ctx = workContextUPDATE();
+		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ID, UUID.randomUUID());
+		task.preExecute(ctx);
 		doReturn(getReturnValue).when(api).get(any(), any(), any(), any(), any(), any());
 		WorkReport result = task.execute(ctx);
 		assertEquals(WorkStatus.COMPLETED, result.getStatus());

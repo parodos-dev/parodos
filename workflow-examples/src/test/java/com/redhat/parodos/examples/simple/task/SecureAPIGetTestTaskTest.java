@@ -28,7 +28,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
@@ -57,12 +56,9 @@ public class SecureAPIGetTestTaskTest extends BaseInfrastructureWorkFlowTaskTest
 	public void setUp() {
 		this.secureAPIGetTestTask = spy((SecureAPIGetTestTask) getConcretePersonImplementation());
 		try {
-			doReturn(testUrl).when(this.secureAPIGetTestTask).getRequiredParameterValue(any(WorkContext.class),
-					eq(SECURED_URL));
-			doReturn(testUsername).when(this.secureAPIGetTestTask).getRequiredParameterValue(any(WorkContext.class),
-					eq(USERNAME));
-			doReturn(testPassword).when(this.secureAPIGetTestTask).getRequiredParameterValue(any(WorkContext.class),
-					eq(PASSWORD));
+			doReturn(testUrl).when(this.secureAPIGetTestTask).getRequiredParameterValue(eq(SECURED_URL));
+			doReturn(testUsername).when(this.secureAPIGetTestTask).getRequiredParameterValue(eq(USERNAME));
+			doReturn(testPassword).when(this.secureAPIGetTestTask).getRequiredParameterValue(eq(PASSWORD));
 		}
 		catch (MissingParameterException e) {
 			throw new RuntimeException(e);

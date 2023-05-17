@@ -20,13 +20,17 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.redhat.parodos.workflow.exception.MissingParameterException;
+import com.redhat.parodos.workflow.task.log.WorkFlowTaskLogger;
+import com.redhat.parodos.workflow.task.log.service.WorkFlowLogService;
 import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Base Class for a WorkFlowTask.
@@ -44,9 +48,23 @@ public abstract class BaseWorkFlowTask implements WorkFlowTask, BeanNameAware {
 	@Getter
 	private String name;
 
+	@Autowired
+	private WorkFlowLogService workFlowLogService;
+
+	private WorkContext workContext;
+
+	protected WorkFlowTaskLogger taskLogger;
+
 	@Override
 	public void setBeanName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public void preExecute(WorkContext workContext) {
+		this.workContext = workContext;
+		taskLogger = new WorkFlowTaskLogger(getMainExecutionId(), name, workFlowLogService,
+				LoggerFactory.getLogger(this.getClass()));
 	}
 
 	// WorkFlowChecker check a process that has been initiated by a WorkFlow to see if its
@@ -65,11 +83,11 @@ public abstract class BaseWorkFlowTask implements WorkFlowTask, BeanNameAware {
 		return WorkContextUtils.getProjectId(workContext);
 	}
 
-	public UUID getMainExecutionId(WorkContext workContext) {
+	public UUID getMainExecutionId() {
 		return WorkContextUtils.getMainExecutionId(workContext);
 	}
 
-	public void addParameter(WorkContext workContext, String key, String value) {
+	public void addParameter(String key, String value) {
 		WorkContextUtils.addParameter(workContext, key, value);
 	}
 
@@ -79,13 +97,11 @@ public abstract class BaseWorkFlowTask implements WorkFlowTask, BeanNameAware {
 
 	/**
 	 * Get Parameters specific to this WorkFlowTask, this is a required parameter
-	 * @param workContext
 	 * @param parameterName
 	 * @return String value for the Parameter name
 	 * @throws MissingParameterException
 	 */
-	public String getRequiredParameterValue(WorkContext workContext, String parameterName)
-			throws MissingParameterException {
+	public String getRequiredParameterValue(String parameterName) throws MissingParameterException {
 		Map<String, String> parameters = getAllParameters(workContext);
 		return parameters.entrySet().stream().filter(entry -> parameterName.equals(entry.getKey()))
 				.map(Map.Entry::getValue).findFirst().orElseThrow(() -> {
@@ -96,13 +112,12 @@ public abstract class BaseWorkFlowTask implements WorkFlowTask, BeanNameAware {
 
 	/**
 	 * Gets an optional parameter. Returns the defaultValue if not found
-	 * @param workContext
 	 * @param parameterName
 	 * @param defaultValue
 	 * @return
 	 * @throws MissingParameterException
 	 */
-	public String getOptionalParameterValue(WorkContext workContext, String parameterName, String defaultValue) {
+	public String getOptionalParameterValue(String parameterName, String defaultValue) {
 		Map<String, String> parameters = getAllParameters(workContext);
 		return parameters.entrySet().stream().filter(entry -> parameterName.equals(entry.getKey()))
 				.map(Map.Entry::getValue).findFirst().orElse(defaultValue);

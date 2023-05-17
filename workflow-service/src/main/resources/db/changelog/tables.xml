@@ -171,6 +171,19 @@
         </createTable>
 
         <!-- WorkFlow Context Table -->
+        <createTable tableName="prds_workflow_task_execution_log">
+            <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="workflow_task_execution_id" type="${uuidType}">
+                <constraints nullable="false" foreignKeyName="prds_workflow_task_execution_log_workflow_task_execution"
+                             references="prds_workflow_task_execution(id)"/>
+            </column>
+            <column name="log" type="longtext"/>
+            <column name="object_version" type="bigint"/>
+        </createTable>
+
+        <!-- WorkFlow Context Table -->
         <createTable tableName="prds_workflow_execution_context">
             <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
                 <constraints primaryKey="true" nullable="false"/>

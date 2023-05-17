@@ -18,6 +18,7 @@ package com.redhat.parodos.workflow.task;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
@@ -85,13 +86,17 @@ public class WorkFlowTaskTest {
 	public void verifyParameter() throws MissingParameterException {
 		TestTask task = new TestTask();
 		WorkContext context = new WorkContext();
+		WorkContextDelegate.write(context, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ID, UUID.randomUUID());
+
+		task.preExecute(context);
 		Map<String, String> map = Map.of("username", "test");
 
 		WorkContextDelegate.write(context, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION, "Test",
 				WorkContextDelegate.Resource.ARGUMENTS, map);
 
 		task.setBeanName("Test");
-		assertEquals("test", task.getRequiredParameterValue(context, "username"));
+		assertEquals("test", task.getRequiredParameterValue("username"));
 	}
 
 	@Test(expected = MissingParameterException.class)
@@ -100,9 +105,16 @@ public class WorkFlowTaskTest {
 		WorkContextDelegate.write(context, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION, "Test",
 				WorkContextDelegate.Resource.ARGUMENTS, new HashMap<String, String>());
 
+		WorkContextDelegate.write(context, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, "Test",
+				WorkContextDelegate.Resource.ID, UUID.randomUUID());
+
+		WorkContextDelegate.write(context, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ID, UUID.randomUUID());
+
 		BaseWorkFlowTask flowTask = new TestTask();
+		flowTask.preExecute(context);
 		flowTask.setBeanName("Test");
-		assertEquals("Test", flowTask.getRequiredParameterValue(context, "username"));
+		assertEquals("Test", flowTask.getRequiredParameterValue("username"));
 	}
 
 	@Test

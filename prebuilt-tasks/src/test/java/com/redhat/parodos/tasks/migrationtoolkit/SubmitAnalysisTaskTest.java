@@ -1,5 +1,8 @@
 package com.redhat.parodos.tasks.migrationtoolkit;
 
+import java.util.UUID;
+
+import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -39,6 +42,9 @@ public class SubmitAnalysisTaskTest {
 	@Test
 	@SneakyThrows
 	public void missingMandatoryParams() {
+		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ID, UUID.randomUUID());
+		underTest.preExecute(ctx);
 		WorkReport execute = underTest.execute(ctx);
 
 		assertThat(execute.getError()).isInstanceOf(MissingParameterException.class);
@@ -52,6 +58,9 @@ public class SubmitAnalysisTaskTest {
 	public void failsCreatingTaskGroup() {
 		when(mockClient.create(anyInt())).thenReturn(new Result.Failure<>(new Exception("not found")));
 		ctx.put("applicationID", "123");
+		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ID, UUID.randomUUID());
+		underTest.preExecute(ctx);
 		WorkReport execute = underTest.execute(ctx);
 
 		assertThat(execute.getError()).isNotInstanceOf(MissingParameterException.class);
@@ -68,7 +77,9 @@ public class SubmitAnalysisTaskTest {
 		int appID = 123;
 		ctx.put("applicationID", Integer.toString(appID));
 		when(mockClient.create(appID)).thenReturn(new Result.Success<>(of(taskGroupID, appID)));
-
+		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ID, UUID.randomUUID());
+		underTest.preExecute(ctx);
 		WorkReport execute = underTest.execute(ctx);
 
 		assertThat(execute.getError()).isNull();

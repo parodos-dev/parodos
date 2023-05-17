@@ -57,8 +57,8 @@ public class TibcoWorkFlowTask extends BaseWorkFlowTask {
 	@Override
 	public WorkReport execute(WorkContext workContext) {
 		try {
-			String topic = getRequiredParameterValue(workContext, "topic");
-			String message = getRequiredParameterValue(workContext, "message");
+			String topic = getRequiredParameterValue("topic");
+			String message = getRequiredParameterValue("message");
 
 			service.sendMessage(url, caFile, username, password, topic, message);
 

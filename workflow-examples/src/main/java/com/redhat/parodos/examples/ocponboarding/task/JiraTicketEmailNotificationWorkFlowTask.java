@@ -66,7 +66,7 @@ public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureW
 		// jira ticket url to extract from workContext
 		String jiraTicketUrl;
 		try {
-			jiraTicketUrl = getRequiredParameterValue(workContext, ISSUE_LINK_PARAMETER_NAME);
+			jiraTicketUrl = getRequiredParameterValue(ISSUE_LINK_PARAMETER_NAME);
 			log.info("Jira ticket url is: {}", jiraTicketUrl);
 		}
 		catch (MissingParameterException e) {

@@ -63,8 +63,8 @@ public class RestWorkFlowTask extends BaseWorkFlowTask {
 	public WorkReport execute(WorkContext workContext) {
 		String url = "";
 		try {
-			url = getRequiredParameterValue(workContext, "url");
-			String method = getRequiredParameterValue(workContext, "method");
+			url = getRequiredParameterValue("url");
+			String method = getRequiredParameterValue("method");
 
 			HttpMethod httpMethod = HttpMethod.valueOf(method.toUpperCase());
 
@@ -89,7 +89,7 @@ public class RestWorkFlowTask extends BaseWorkFlowTask {
 
 	protected void processResponseEntity(WorkContext workContext, ResponseEntity<String> responseEntity)
 			throws RestClientException {
-		String responseKey = getOptionalParameterValue(workContext, "response-key", "");
+		String responseKey = getOptionalParameterValue("response-key", "");
 
 		if (responseKey.isEmpty()) {
 			return;
@@ -99,7 +99,7 @@ public class RestWorkFlowTask extends BaseWorkFlowTask {
 	}
 
 	protected HttpEntity<String> buildRequestEntity(WorkContext workContext) throws RestClientException {
-		String content = getOptionalParameterValue(workContext, "content", "");
+		String content = getOptionalParameterValue("content", "");
 		return new HttpEntity<>(content, buildHttpHeaders(workContext));
 	}
 
@@ -109,12 +109,12 @@ public class RestWorkFlowTask extends BaseWorkFlowTask {
 		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 		httpHeaders.setAccept(List.of(MediaType.APPLICATION_JSON));
 
-		String username = getOptionalParameterValue(workContext, "username", "");
+		String username = getOptionalParameterValue("username", "");
 		String password;
 
 		if (!username.isEmpty()) {
 			try {
-				password = getRequiredParameterValue(workContext, "password");
+				password = getRequiredParameterValue("password");
 			}
 			catch (MissingParameterException e) {
 				throw new RestClientException("Missing password", e);

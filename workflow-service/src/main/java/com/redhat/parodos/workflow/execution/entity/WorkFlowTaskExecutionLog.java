@@ -15,16 +15,12 @@
  */
 package com.redhat.parodos.workflow.execution.entity;
 
-import java.util.Date;
-import java.util.UUID;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import com.redhat.parodos.common.AbstractEntity;
-import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,40 +28,28 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * WorkFlow task execution entity
+ * WorkFlow Context Entity
  *
  * @author Richard Wang (Github: richardw98)
  * @author Annel Ketcha (Github: anludke)
  */
 
-@Entity(name = "prds_workflow_task_execution")
+@Entity(name = "prds_workflow_task_execution_log")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class WorkFlowTaskExecution extends AbstractEntity {
+public class WorkFlowTaskExecutionLog extends AbstractEntity {
 
-	@Column(name = "workflow_execution_id")
-	private UUID workFlowExecutionId;
+	@OneToOne(optional = false, fetch = FetchType.LAZY)
+	@JoinColumn(name = "workflow_task_execution_id")
+	private WorkFlowTaskExecution workFlowTaskExecution;
 
-	@Column(name = "workflow_task_definition_id")
-	private UUID workFlowTaskDefinitionId;
+	private String log;
 
-	private String arguments;
-
-	private String results;
-
-	private WorkStatus status;
-
-	@Column(updatable = false)
-	private Date startDate;
-
-	private Date endDate;
-
-	private Date lastUpdateDate;
-
-	@OneToOne(mappedBy = "workFlowTaskExecution", cascade = { CascadeType.ALL })
-	private WorkFlowTaskExecutionLog workFlowTaskExecutionLog;
+	public void addLog(String nextLog) {
+		log = log + "\n" + nextLog;
+	}
 
 }

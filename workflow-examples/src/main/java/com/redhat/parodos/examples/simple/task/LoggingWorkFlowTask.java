@@ -46,8 +46,8 @@ public class LoggingWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	public WorkReport execute(WorkContext workContext) {
 		log.info("Writing a message to the logs from: {}", getName());
 		try {
-			String userId = getRequiredParameterValue(workContext, "user-id");
-			String apiServer = getRequiredParameterValue(workContext, "api-server");
+			String userId = getRequiredParameterValue("user-id");
+			String apiServer = getRequiredParameterValue("api-server");
 			log.info("task parameter 'api-server' value in {} is {}", getName(), apiServer);
 			log.info("workflow parameter 'user-id' value in {} is {}", getName(), userId);
 			return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);

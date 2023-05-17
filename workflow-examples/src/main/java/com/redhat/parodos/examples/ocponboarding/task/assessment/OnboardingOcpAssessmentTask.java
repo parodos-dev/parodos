@@ -50,7 +50,7 @@ public class OnboardingOcpAssessmentTask extends BaseAssessmentTask {
 	@Override
 	public WorkReport execute(WorkContext workContext) {
 		try {
-			log.info("parameter {} value: {}", GIT_REPO_URL, getRequiredParameterValue(workContext, GIT_REPO_URL));
+			log.info("parameter {} value: {}", GIT_REPO_URL, getRequiredParameterValue(GIT_REPO_URL));
 		}
 		catch (MissingParameterException e) {
 			log.error("can't get parameter {} value", GIT_REPO_URL);

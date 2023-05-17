@@ -50,7 +50,7 @@ public class AppLinkEmailNotificationWorkFlowTaskTest extends BaseInfrastructure
 				(AppLinkEmailNotificationWorkFlowTask) getConcretePersonImplementation());
 		try {
 			doReturn(APP_LINK_TEST).when(this.appLinkEmailNotificationWorkFlowTask)
-					.getRequiredParameterValue(any(WorkContext.class), eq(APP_LINK_PARAMETER_NAME));
+					.getRequiredParameterValue(eq(APP_LINK_PARAMETER_NAME));
 		}
 		catch (MissingParameterException e) {
 			throw new RuntimeException(e);

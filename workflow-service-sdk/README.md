@@ -118,6 +118,7 @@ Class | Method | HTTP request | Description
 *ProjectApi* | [**removeUsersFromProject**](docs/ProjectApi.md#removeUsersFromProject) | **DELETE** /api/v1/projects/{id}/users | Remove users from project
 *ProjectApi* | [**updateUserRolesToProject**](docs/ProjectApi.md#updateUserRolesToProject) | **POST** /api/v1/projects/{id}/users | Update user roles in project
 *WorkflowApi* | [**execute**](docs/WorkflowApi.md#execute) | **POST** /api/v1/workflows | Executes a workflow
+*WorkflowApi* | [**getLog**](docs/WorkflowApi.md#getLog) | **GET** /api/v1/workflows/{workFlowExecutionId}/log | Returns workflow execution log
 *WorkflowApi* | [**getStatus**](docs/WorkflowApi.md#getStatus) | **GET** /api/v1/workflows/{workFlowExecutionId}/status | Returns a workflow status
 *WorkflowApi* | [**getStatusByProjectId**](docs/WorkflowApi.md#getStatusByProjectId) | **GET** /api/v1/workflows | Returns workflows by project id
 *WorkflowApi* | [**getWorkflowParameters**](docs/WorkflowApi.md#getWorkflowParameters) | **GET** /api/v1/workflows/{workFlowExecutionId}/context | Returns workflow context parameters
