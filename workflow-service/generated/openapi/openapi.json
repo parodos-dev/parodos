@@ -1,0 +1,1387 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "Parodos Workflow Service API",
+    "description" : "This is the API documentation for the Parodos Workflow Service. It provides operations to execute assessments to determine infrastructure options (tooling + environments). Also executes infrastructure task workflows to call downstream systems to stand-up an infrastructure option.",
+    "version" : "v1.0.0"
+  },
+  "servers" : [ {
+    "url" : "http://localhost:8080",
+    "description" : "Generated server url"
+  } ],
+  "tags" : [ {
+    "description" : "Login endpoint",
+    "name" : "Login"
+  }, {
+    "description" : "Operations about workflow",
+    "name" : "Workflow"
+  }, {
+    "description" : "Operations about project",
+    "name" : "Project"
+  }, {
+    "description" : "Operations about workflow definition",
+    "name" : "Workflow Definition"
+  } ],
+  "paths" : {
+    "/api/v1/login" : {
+      "get" : {
+        "operationId" : "login",
+        "responses" : {
+          "200" : {
+            "description" : "Succeeded"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Not Found"
+          },
+          "409" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Login",
+        "tags" : [ "Login" ]
+      }
+    },
+    "/api/v1/projects" : {
+      "get" : {
+        "operationId" : "getProjects",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/ProjectResponseDTO"
+                  }
+                }
+              }
+            },
+            "description" : "Succeeded"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Not Found"
+          },
+          "409" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Returns a list of project",
+        "tags" : [ "Project" ]
+      },
+      "post" : {
+        "operationId" : "createProject",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ProjectRequestDTO"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProjectResponseDTO"
+                }
+              }
+            },
+            "description" : "Created"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Not Found"
+          },
+          "409" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Creates a new project",
+        "tags" : [ "Project" ]
+      }
+    },
+    "/api/v1/projects/{id}" : {
+      "get" : {
+        "operationId" : "getProjectById",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProjectResponseDTO"
+                }
+              }
+            },
+            "description" : "Succeeded"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "content" : { },
+            "description" : "Not found"
+          },
+          "409" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Returns information about a specified project",
+        "tags" : [ "Project" ]
+      }
+    },
+    "/api/v1/projects/{id}/users" : {
+      "delete" : {
+        "operationId" : "removeUsersFromProject",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "array",
+                "items" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProjectUserRoleResponseDTO"
+                }
+              }
+            },
+            "description" : "Succeeded"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "content" : { },
+            "description" : "Not found"
+          },
+          "409" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Remove users from project",
+        "tags" : [ "Project" ]
+      },
+      "post" : {
+        "operationId" : "updateUserRolesToProject",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/components/schemas/UserRoleRequestDTO"
+                }
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProjectUserRoleResponseDTO"
+                }
+              }
+            },
+            "description" : "Succeeded"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "content" : { },
+            "description" : "Not found"
+          },
+          "409" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Update user roles in project",
+        "tags" : [ "Project" ]
+      }
+    },
+    "/api/v1/workflowdefinitions" : {
+      "get" : {
+        "operationId" : "getWorkFlowDefinitions",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "name",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/WorkFlowDefinitionResponseDTO"
+                  }
+                }
+              }
+            },
+            "description" : "Succeeded"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Not Found"
+          },
+          "409" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Returns a list of workflow definition",
+        "tags" : [ "Workflow Definition" ]
+      }
+    },
+    "/api/v1/workflowdefinitions/{id}" : {
+      "get" : {
+        "operationId" : "getWorkFlowDefinitionById",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/WorkFlowDefinitionResponseDTO"
+                }
+              }
+            },
+            "description" : "Succeeded"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "content" : { },
+            "description" : "Not found"
+          },
+          "409" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Returns information about a workflow definition by id",
+        "tags" : [ "Workflow Definition" ]
+      }
+    },
+    "/api/v1/workflowdefinitions/{workflowDefinitionName}/parameters/update/{valueProviderName}" : {
+      "post" : {
+        "operationId" : "updateParameter",
+        "parameters" : [ {
+          "description" : "workflow Definition Name",
+          "example" : "complexWorkFlow",
+          "in" : "path",
+          "name" : "workflowDefinitionName",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "valueProvider Name. It can be referenced to 'valueProviderName' in [GET /getWorkFlowDefinitions](#/Workflow%20Definition/getWorkFlowDefinitions)",
+          "example" : "complexWorkFlowValueProvider",
+          "in" : "path",
+          "name" : "valueProviderName",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/components/schemas/WorkParameterValueRequestDTO"
+                }
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/WorkParameterValueResponseDTO"
+                  }
+                }
+              }
+            },
+            "description" : "Succeeded"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Not Found"
+          },
+          "409" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Returns updated parameter value",
+        "tags" : [ "Workflow Definition" ]
+      }
+    },
+    "/api/v1/workflows" : {
+      "get" : {
+        "operationId" : "getStatusByProjectId",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "projectId",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/WorkFlowResponseDTO"
+                  }
+                }
+              }
+            },
+            "description" : "Succeeded"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Not Found"
+          },
+          "409" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Returns workflows by project id",
+        "tags" : [ "Workflow" ]
+      },
+      "post" : {
+        "operationId" : "execute",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/WorkFlowRequestDTO"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "202" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/WorkFlowResponseDTO"
+                }
+              }
+            },
+            "description" : "Accepted"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Not Found"
+          },
+          "409" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Executes a workflow",
+        "tags" : [ "Workflow" ]
+      }
+    },
+    "/api/v1/workflows/{workFlowExecutionId}/checkers/{workFlowCheckerTaskName}" : {
+      "post" : {
+        "operationId" : "updateWorkFlowCheckerTaskStatus",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "workFlowExecutionId",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        }, {
+          "in" : "path",
+          "name" : "workFlowCheckerTaskName",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/WorkFlowCheckerTaskRequestDTO"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "Succeeded"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : { },
+            "description" : "Not found"
+          },
+          "409" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Updates a workflow checker task status",
+        "tags" : [ "Workflow" ]
+      }
+    },
+    "/api/v1/workflows/{workFlowExecutionId}/context" : {
+      "get" : {
+        "operationId" : "getWorkflowParameters",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "workFlowExecutionId",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        }, {
+          "in" : "query",
+          "name" : "param",
+          "required" : true,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "enum" : [ "ID", "NAME", "PARAMETERS", "ARGUMENTS", "STATUS", "WORKFLOW_OPTIONS", "PARENT_WORKFLOW" ]
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/WorkFlowContextResponseDTO"
+                }
+              }
+            },
+            "description" : "Succeeded"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Not Found"
+          },
+          "409" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Returns workflow context parameters",
+        "tags" : [ "Workflow" ]
+      }
+    },
+    "/api/v1/workflows/{workFlowExecutionId}/status" : {
+      "get" : {
+        "operationId" : "getStatus",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "workFlowExecutionId",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/WorkFlowStatusResponseDTO"
+                }
+              }
+            },
+            "description" : "Succeeded"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Not Found"
+          },
+          "409" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Returns a workflow status",
+        "tags" : [ "Workflow" ]
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "ArgumentRequestDTO" : {
+        "type" : "object",
+        "properties" : {
+          "key" : {
+            "type" : "string"
+          },
+          "value" : {
+            "type" : "string"
+          }
+        }
+      },
+      "ErrorMessageDTO" : {
+        "type" : "object",
+        "properties" : {
+          "date" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }
+      },
+      "ProjectRequestDTO" : {
+        "type" : "object",
+        "properties" : {
+          "description" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          }
+        }
+      },
+      "ProjectResponseDTO" : {
+        "type" : "object",
+        "properties" : {
+          "createDate" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "modifyDate" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "name" : {
+            "type" : "string"
+          }
+        }
+      },
+      "ProjectUserRoleResponseDTO" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "projectName" : {
+            "type" : "string"
+          },
+          "userResponseDTOList" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/UserRoleResponseDTO"
+            }
+          }
+        }
+      },
+      "UserRoleRequestDTO" : {
+        "type" : "object",
+        "properties" : {
+          "roles" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "enum" : [ "OWNER", "DEVELOPER", "ADMIN" ]
+            }
+          },
+          "username" : {
+            "type" : "string"
+          }
+        }
+      },
+      "UserRoleResponseDTO" : {
+        "type" : "object",
+        "properties" : {
+          "roles" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "enum" : [ "OWNER", "DEVELOPER", "ADMIN" ]
+            }
+          },
+          "username" : {
+            "type" : "string"
+          }
+        }
+      },
+      "WorkDefinitionResponseDTO" : {
+        "type" : "object",
+        "properties" : {
+          "author" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "outputs" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "enum" : [ "EXCEPTION", "HTTP2XX", "NO_EXCEPTION", "OTHER" ]
+            }
+          },
+          "parameters" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "object"
+              }
+            }
+          },
+          "processingType" : {
+            "type" : "string",
+            "enum" : [ "SEQUENTIAL", "PARALLEL", "OTHER" ]
+          },
+          "workType" : {
+            "type" : "string",
+            "enum" : [ "TASK", "WORKFLOW" ]
+          },
+          "works" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/WorkDefinitionResponseDTO"
+            }
+          }
+        }
+      },
+      "WorkFlowCheckerTaskRequestDTO" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "enum" : [ "FAILED", "COMPLETED", "IN_PROGRESS", "REJECTED", "PENDING" ]
+          }
+        }
+      },
+      "WorkFlowContextResponseDTO" : {
+        "type" : "object",
+        "properties" : {
+          "workFlowExecutionId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "workFlowOptions" : {
+            "$ref" : "#/components/schemas/WorkFlowOptionsResponseDTO"
+          }
+        }
+      },
+      "WorkFlowDefinitionResponseDTO" : {
+        "type" : "object",
+        "properties" : {
+          "author" : {
+            "type" : "string"
+          },
+          "createDate" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "modifyDate" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "parameters" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "object"
+              }
+            }
+          },
+          "processingType" : {
+            "type" : "string",
+            "enum" : [ "SEQUENTIAL", "PARALLEL", "OTHER" ]
+          },
+          "properties" : {
+            "$ref" : "#/components/schemas/WorkFlowPropertiesDefinitionDTO"
+          },
+          "rollbackWorkflow" : {
+            "type" : "string"
+          },
+          "type" : {
+            "type" : "string",
+            "enum" : [ "ASSESSMENT", "CHECKER", "INFRASTRUCTURE", "ESCALATION" ]
+          },
+          "works" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/WorkDefinitionResponseDTO"
+            }
+          }
+        }
+      },
+      "WorkFlowOption" : {
+        "type" : "object",
+        "properties" : {
+          "description" : {
+            "type" : "string"
+          },
+          "details" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "displayName" : {
+            "type" : "string"
+          },
+          "identifier" : {
+            "type" : "string"
+          },
+          "workFlowName" : {
+            "type" : "string"
+          }
+        }
+      },
+      "WorkFlowOptionsResponseDTO" : {
+        "type" : "object",
+        "properties" : {
+          "continuationOptions" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/WorkFlowOption"
+            }
+          },
+          "currentVersion" : {
+            "$ref" : "#/components/schemas/WorkFlowOption"
+          },
+          "migrationOptions" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/WorkFlowOption"
+            }
+          },
+          "newOptions" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/WorkFlowOption"
+            }
+          },
+          "otherOptions" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/WorkFlowOption"
+            }
+          },
+          "upgradeOptions" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/WorkFlowOption"
+            }
+          }
+        }
+      },
+      "WorkFlowPropertiesDefinitionDTO" : {
+        "type" : "object",
+        "properties" : {
+          "version" : {
+            "type" : "string"
+          }
+        }
+      },
+      "WorkFlowRequestDTO" : {
+        "type" : "object",
+        "properties" : {
+          "arguments" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/ArgumentRequestDTO"
+            }
+          },
+          "projectId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "workFlowName" : {
+            "type" : "string"
+          },
+          "works" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/WorkRequestDTO"
+            }
+          }
+        }
+      },
+      "WorkFlowResponseDTO" : {
+        "type" : "object",
+        "properties" : {
+          "endDate" : {
+            "type" : "string"
+          },
+          "executeBy" : {
+            "type" : "string"
+          },
+          "projectId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "startDate" : {
+            "type" : "string"
+          },
+          "workFlowExecutionId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "workFlowName" : {
+            "type" : "string"
+          },
+          "workStatus" : {
+            "type" : "string",
+            "enum" : [ "FAILED", "COMPLETED", "IN_PROGRESS", "REJECTED", "PENDING" ]
+          }
+        }
+      },
+      "WorkFlowStatusResponseDTO" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "enum" : [ "FAILED", "COMPLETED", "IN_PROGRESS", "REJECTED", "PENDING" ]
+          },
+          "workFlowExecutionId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "workFlowName" : {
+            "type" : "string"
+          },
+          "works" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/WorkStatusResponseDTO"
+            }
+          }
+        }
+      },
+      "WorkParameterValueRequestDTO" : {
+        "type" : "object",
+        "properties" : {
+          "key" : {
+            "type" : "string"
+          },
+          "value" : {
+            "type" : "string"
+          },
+          "workName" : {
+            "type" : "string"
+          }
+        }
+      },
+      "WorkParameterValueResponseDTO" : {
+        "type" : "object",
+        "properties" : {
+          "key" : {
+            "type" : "string"
+          },
+          "options" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "propertyPath" : {
+            "type" : "string"
+          },
+          "value" : {
+            "type" : "string"
+          }
+        }
+      },
+      "WorkRequestDTO" : {
+        "type" : "object",
+        "properties" : {
+          "arguments" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/ArgumentRequestDTO"
+            }
+          },
+          "type" : {
+            "type" : "string",
+            "enum" : [ "TASK", "WORKFLOW" ]
+          },
+          "workName" : {
+            "type" : "string"
+          }
+        }
+      },
+      "WorkStatusResponseDTO" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string",
+            "enum" : [ "FAILED", "COMPLETED", "IN_PROGRESS", "REJECTED", "PENDING" ]
+          },
+          "type" : {
+            "type" : "string",
+            "enum" : [ "TASK", "WORKFLOW" ]
+          },
+          "works" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/WorkStatusResponseDTO"
+            }
+          }
+        }
+      }
+    }
+  }
+}
