@@ -112,7 +112,7 @@ public class GetAnalysisTask extends BaseInfrastructureWorkFlowTask {
 		if (recipient == null) {
 			return;
 		}
-		messageConsumer.accept(new Message(recipient, "parodos-task-notificaion+mailtrap@redhat.com",
+		messageConsumer.accept(new Message(recipient, "parodos-task-notification@redhat.com",
 				"Parodos: Analysis report is done",
 				String.format("The analysis report is done. Find it here %s", reportURL)));
 	}
