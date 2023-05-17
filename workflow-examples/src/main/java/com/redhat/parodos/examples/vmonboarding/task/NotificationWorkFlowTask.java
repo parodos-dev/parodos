@@ -49,12 +49,12 @@ public class NotificationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	 * Executed by the InfrastructureTask engine as part of the Workflow
 	 */
 	public WorkReport execute(WorkContext workContext) {
-		notifier.send(subject, buildMessage());
+		notifier.send(subject, buildMessage(subject));
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
-	private String buildMessage() {
-		return "Request is completed with success.";
+	private String buildMessage(String subject) {
+		return "Task %s completed with success.".formatted(subject);
 	}
 
 }
