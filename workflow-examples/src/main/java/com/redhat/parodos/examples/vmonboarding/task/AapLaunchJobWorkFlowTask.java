@@ -28,7 +28,7 @@ public class AapLaunchJobWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	private static final String JOB_LAUNCH_CONTEXT_PATH = "/api/v2/job_templates/%s/launch/";
 
 	public AapLaunchJobWorkFlowTask(String aapUrl, String windowsJobTemplateId, String rhelJobTemplateId,
-			String username, String password) {
+									String username, String password) {
 		this.aapUrl = aapUrl;
 		this.windowsJobTemplateId = windowsJobTemplateId;
 		this.rhelJobTemplateId = rhelJobTemplateId;
@@ -38,7 +38,7 @@ public class AapLaunchJobWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		log.info("Start ServiceNowTicketCreationWorkFlowTask...");
+		log.info("Start AapLaunchJobWorkFlowTask...");
 		String vmType;
 		try {
 			vmType = getRequiredParameterValue("VM_TYPE");
