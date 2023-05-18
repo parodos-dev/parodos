@@ -15,17 +15,18 @@
  */
 package com.redhat.parodos.examples.vmonboarding.dto;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class OrderServiceCatalogItemResponseDto {
+@Data
+public class ServiceNowRequestDto {
 
-	private OrderServiceCatalogItemResponseResult result;
+	@JsonProperty("short_description")
+	private String shortDescription;
+
+	@JsonProperty("caller_id")
+	private String callerId;
 
 }
