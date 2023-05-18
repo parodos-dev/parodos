@@ -15,6 +15,9 @@ public class AapGetJobResponseDTO {
 	@JsonProperty("job")
 	private String jobId;
 
+	@JsonProperty("job")
+	private String jobId;
+
 	private String status;
 
 	private AapGetJobResponseArtifacts artifacts;
