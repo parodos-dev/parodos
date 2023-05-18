@@ -91,11 +91,10 @@ public class VmOnboardingWorkFlowConfiguration {
 			@Qualifier("ipAddressProvisioningWorkFlowChecker") WorkFlow ipAddressProvisioningWorkFlowChecker,
 			@Qualifier("ansibleCompletionWorkFlowChecker") WorkFlow ansibleCompletionWorkFlowChecker,
 			@Value("${SERVICE_NOW_URL:service-now}") String serviceNowUrl,
-			@Value("${RHEL_SYS_ID:rhel-sys-id}") String rhelSysId,
 			@Value("${SERVICE_NOW_USER_NAME:service-now-user}") String username,
 			@Value("${SERVICE_NOW_PASSWORD:service-now-password}") String password) {
 		ServiceNowTicketCreationWorkFlowTask serviceNowTicketCreationWorkFlowTask = new ServiceNowTicketCreationWorkFlowTask(
-				serviceNowUrl, rhelSysId, username, password);
+				serviceNowUrl, username, password);
 		serviceNowTicketCreationWorkFlowTask
 				.setWorkFlowCheckers(List.of(ipAddressProvisioningWorkFlowChecker, ansibleCompletionWorkFlowChecker));
 		return serviceNowTicketCreationWorkFlowTask;
@@ -109,8 +108,11 @@ public class VmOnboardingWorkFlowConfiguration {
 
 	// VM ONBOARDING WORKFLOW - Sequential Flow:
 	@Bean(name = "vmOnboardingWorkFlow")
-	@Infrastructure(parameters = { @Parameter(key = "hostname", description = "The hostname",
-			type = WorkParameterType.TEXT, optional = false) })
+	@Infrastructure(parameters = {
+			@Parameter(key = "VM_TYPE", description = "VM type", type = WorkParameterType.SELECT, optional = false,
+					selectOptions = { "RHEL", "Windows" }),
+			@Parameter(key = "hostname", description = "The hostname", type = WorkParameterType.TEXT,
+					optional = false) })
 	WorkFlow vmOnboardingWorkFlow(
 			@Qualifier("serviceNowTicketCreationWorkFlowTask") ServiceNowTicketCreationWorkFlowTask serviceNowTicketCreationWorkFlowTask,
 			@Qualifier("vmNotificationWorkFlowTask") NotificationWorkFlowTask notificationWorkFlowTask) {

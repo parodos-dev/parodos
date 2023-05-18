@@ -190,7 +190,8 @@ public class WorkFlowServiceDelegate {
 										.getWorkFlowCheckerMappingDefinition().getCheckWorkFlow().getId()))
 						.map(WorkFlowExecution::getStatus)
 						.map(checkerStatus -> WorkStatus.FAILED.equals(checkerStatus) ? WorkStatus.IN_PROGRESS
-								: WorkStatus.valueOf(checkerStatus.name()))
+								: (WorkStatus.REJECTED.equals(checkerStatus) ? WorkStatus.REJECTED
+										: WorkStatus.valueOf(checkerStatus.name())))
 						.orElse(WorkStatus.COMPLETED.equals(workStatus) ? WorkStatus.IN_PROGRESS : workStatus);
 			}
 		}
