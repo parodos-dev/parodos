@@ -10,11 +10,17 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderServiceCatalogItemResponseResult {
+public class ServiceNowResponseResult {
 
 	@JsonProperty("sys_id")
 	private String sysId;
 
 	private String number;
+
+	@JsonProperty("incident_state")
+	private String state;
+
+	@JsonProperty("description")
+	private String ip;
 
 }

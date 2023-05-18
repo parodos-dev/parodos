@@ -12,6 +12,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AapGetJobResponseDto {
 
+	@JsonProperty("job")
+	private String jobId;
+
 	private String status;
 
 	private AapGetJobResponseArtifacts artifacts;

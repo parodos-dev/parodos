@@ -1,5 +1,7 @@
 package com.redhat.parodos.examples.vmonboarding.dto;
 
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,9 +12,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderServiceCatalogItemRequestVariable {
+public class AapJobLaunchRequestDto {
 
-	@JsonProperty("rhel_vm_name")
-	private String vmName;
+	@JsonProperty("extra_vars")
+	private Map<String, String> extraVars;
 
 }
