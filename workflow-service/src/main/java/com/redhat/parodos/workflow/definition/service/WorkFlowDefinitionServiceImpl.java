@@ -197,7 +197,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 	@Override
 	public WorkFlowDefinitionResponseDTO getWorkFlowDefinitionById(UUID id) {
 		WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.WORKFLOW_DEFINITION, IDType.ID, id));
+				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.WORKFLOW_DEFINITION, id));
 		List<WorkFlowWorkDefinition> workFlowWorkDependencies = workFlowWorkRepository
 				.findByWorkFlowDefinitionIdOrderByCreateDateAsc(workFlowDefinition.getId()).stream()
 				.sorted(Comparator.comparing(WorkFlowWorkDefinition::getCreateDate)).toList();
