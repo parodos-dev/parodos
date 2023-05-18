@@ -25,14 +25,10 @@ import com.redhat.parodos.examples.ocponboarding.task.JiraTicketCreationWorkFlow
 import com.redhat.parodos.examples.ocponboarding.task.JiraTicketEmailNotificationWorkFlowTask;
 import com.redhat.parodos.examples.ocponboarding.task.NotificationWorkFlowTask;
 import com.redhat.parodos.examples.ocponboarding.task.OcpAppDeploymentWorkFlowTask;
-import com.redhat.parodos.examples.ocponboarding.task.assessment.OnboardingOcpAssessmentTask;
-import com.redhat.parodos.workflow.annotation.Assessment;
 import com.redhat.parodos.workflow.annotation.Checker;
 import com.redhat.parodos.workflow.annotation.Escalation;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
 import com.redhat.parodos.workflow.annotation.Parameter;
-import com.redhat.parodos.workflow.consts.WorkFlowConstants;
-import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
@@ -45,52 +41,57 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OcpOnboardingWorkFlowConfiguration {
 
-	// Assessment workflow
-	@Bean
-	WorkFlowOption onboardingOcpOption() {
-		return new WorkFlowOption.Builder("ocpOnboarding", "ocpOnboardingWorkFlow")
-				.addToDetails("this is for the app to deploy on OCP").displayName("Onboarding to OCP")
-				.setDescription("this is for the app to deploy on OCP").build();
-	}
-
-	@Bean
-	WorkFlowOption badRepoOption() {
-		return new WorkFlowOption.Builder("badRepoOption",
-				"simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
-						.addToDetails("Container Fundamentals Training Required").displayName("Training Required")
-						.setDescription("Container Fundamentals Training Required").build();
-	}
-
-	@Bean
-	WorkFlowOption notSupportOption() {
-		return new WorkFlowOption.Builder("notSupportOption",
-				"simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
-						.addToDetails("Non-Supported Workflow Steps").displayName("Not Supported")
-						.setDescription("Non-Supported Workflow Steps").build();
-	}
-
-	// An AssessmentTask returns one or more WorkFlowOption wrapped in a WorkflowOptions
-	@Bean
-	OnboardingOcpAssessmentTask onboardingAssessmentTask(
-			@Qualifier("onboardingOcpOption") WorkFlowOption onboardingOcpOption,
-			@Qualifier("badRepoOption") WorkFlowOption badRepoOption,
-			@Qualifier("notSupportOption") WorkFlowOption notSupportOption) {
-		return new OnboardingOcpAssessmentTask(List.of(onboardingOcpOption, badRepoOption, notSupportOption));
-	}
-
-	// A Workflow designed to execute and return WorkflowOption(s) that can be executed
-	// next. In this case there is only one.
-	@Bean(name = "onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
-	@Assessment
-	WorkFlow assessmentWorkFlow(
-			@Qualifier("onboardingAssessmentTask") OnboardingOcpAssessmentTask onboardingAssessmentTask) {
-		// @formatter:off
-        return SequentialFlow.Builder.aNewSequentialFlow()
-                .named("onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
-                .execute(onboardingAssessmentTask)
-                .build();
-        // @formatter:on
-	}
+	// // Assessment workflow
+	// @Bean
+	// WorkFlowOption onboardingOcpOption() {
+	// return new WorkFlowOption.Builder("ocpOnboarding", "ocpOnboardingWorkFlow")
+	// .addToDetails("this is for the app to deploy on OCP").displayName("Onboarding to
+	// OCP")
+	// .setDescription("this is for the app to deploy on OCP").build();
+	// }
+	//
+	// @Bean
+	// WorkFlowOption badRepoOption() {
+	// return new WorkFlowOption.Builder("badRepoOption",
+	// "simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+	// .addToDetails("Container Fundamentals Training Required").displayName("Training
+	// Required")
+	// .setDescription("Container Fundamentals Training Required").build();
+	// }
+	//
+	// @Bean
+	// WorkFlowOption notSupportOption() {
+	// return new WorkFlowOption.Builder("notSupportOption",
+	// "simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+	// .addToDetails("Non-Supported Workflow Steps").displayName("Not Supported")
+	// .setDescription("Non-Supported Workflow Steps").build();
+	// }
+	//
+	// // An AssessmentTask returns one or more WorkFlowOption wrapped in a
+	// WorkflowOptions
+	// @Bean
+	// OnboardingOcpAssessmentTask onboardingAssessmentTask(
+	// @Qualifier("onboardingOcpOption") WorkFlowOption onboardingOcpOption,
+	// @Qualifier("badRepoOption") WorkFlowOption badRepoOption,
+	// @Qualifier("notSupportOption") WorkFlowOption notSupportOption) {
+	// return new OnboardingOcpAssessmentTask(List.of(onboardingOcpOption, badRepoOption,
+	// notSupportOption));
+	// }
+	//
+	// // A Workflow designed to execute and return WorkflowOption(s) that can be executed
+	// // next. In this case there is only one.
+	// @Bean(name = "onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
+	// @Assessment
+	// WorkFlow assessmentWorkFlow(
+	// @Qualifier("onboardingAssessmentTask") OnboardingOcpAssessmentTask
+	// onboardingAssessmentTask) {
+//		// @formatter:off
+//        return SequentialFlow.Builder.aNewSequentialFlow()
+//                .named("onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
+//                .execute(onboardingAssessmentTask)
+//                .build();
+//        // @formatter:on
+	// }
 
 	// WORKFLOW A - Sequential Flow:
 	// @formatter:off

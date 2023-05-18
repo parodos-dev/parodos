@@ -57,8 +57,9 @@ public class NotificationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	 */
 	public WorkReport execute(WorkContext workContext) {
 		try {
+			String ip = getRequiredParameterValue(workContext, "IP");
 			NotificationRequest request = NotificationRequest.builder().usernames(List.of(NOTIFICATION_USERNAME))
-					.subject(NOTIFICATION_SUBJECT).body(buildMessage()).build();
+					.subject(NOTIFICATION_SUBJECT).body(buildMessage(ip)).build();
 
 			HttpEntity<NotificationRequest> notificationRequestHttpEntity = RestUtils.getRequestWithHeaders(request,
 					NOTIFICATION_USERNAME, NOTIFICATION_PASSWORD);
@@ -78,8 +79,9 @@ public class NotificationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 		return new DefaultWorkReport(WorkStatus.FAILED, workContext);
 	}
 
-	private String buildMessage() {
-		return "Message...";
+	private String buildMessage(String ip) {
+
+		return "IP: " + ip;
 	}
 
 }
