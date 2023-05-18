@@ -99,10 +99,8 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Override
 	public ProjectResponseDTO getProjectById(UUID id) {
-		return modelMapper.map(
-				projectRepository.findById(id)
-						.orElseThrow(() -> new ResourceNotFoundException(ResourceType.PROJECT, IDType.ID, id)),
-				ProjectResponseDTO.class);
+		return modelMapper.map(projectRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.PROJECT, id)), ProjectResponseDTO.class);
 	}
 
 	@Override
@@ -127,7 +125,7 @@ public class ProjectServiceImpl implements ProjectService {
 	@Transactional
 	public ProjectUserRoleResponseDTO updateUserRolesToProject(UUID id, List<UserRoleRequestDTO> userRoleRequestDTOs) {
 		Project project = projectRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.PROJECT, IDType.ID, id));
+				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.PROJECT, id));
 
 		Set<ProjectUserRole> projectUserRoles = userRoleRequestDTOs.stream()
 				.map(userRoleRequestDTO -> userRoleRequestDTO.getRoles().stream()
@@ -153,7 +151,7 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public ProjectUserRoleResponseDTO removeUsersFromProject(UUID id, List<String> usernames) {
 		Project project = projectRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.PROJECT, IDType.ID, id));
+				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.PROJECT, id));
 
 		projectUserRoleRepository.deleteAllByIdProjectIdAndIdUserIdIn(project.getId(),
 				userService.findAllUserEntitiesByUsernameIn(usernames).stream().map(AbstractEntity::getId).toList());

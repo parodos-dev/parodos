@@ -53,8 +53,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserResponseDTO getUserById(UUID id) {
-		return modelMapper.map(userRepository.findById(id).orElseThrow(
-				() -> new ResourceNotFoundException(ResourceType.USER, IDType.ID, id)), UserResponseDTO.class);
+		return modelMapper.map(
+				userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER, id)),
+				UserResponseDTO.class);
 	}
 
 	@Override
@@ -74,8 +75,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User getUserEntityById(UUID id) {
-		return userRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER, IDType.ID, id));
+		return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER, id));
 	}
 
 	@Override
