@@ -53,17 +53,15 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserResponseDTO getUserById(UUID id) {
-		return modelMapper.map(
-				userRepository.findById(id)
-						.orElseThrow(() -> new RuntimeException(String.format("User with id: %s not found", id))),
-				UserResponseDTO.class);
+		return modelMapper.map(userRepository.findById(id).orElseThrow(
+				() -> new ResourceNotFoundException(ResourceType.USER, IDType.ID, id)), UserResponseDTO.class);
 	}
 
 	@Override
 	public UserResponseDTO getUserByUsername(String username) {
 		Optional<User> user = userRepository.findByUsername(username);
 		if (!user.isPresent()) {
-			throw new RuntimeException(String.format("User with username: %s not found", username));
+			throw new ResourceNotFoundException(ResourceType.USER, IDType.NAME, username);
 		}
 		return modelMapper.map(user.get(), UserResponseDTO.class);
 	}

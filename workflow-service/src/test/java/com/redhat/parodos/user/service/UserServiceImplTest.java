@@ -3,6 +3,7 @@ package com.redhat.parodos.user.service;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 import com.redhat.parodos.user.dto.UserResponseDTO;
 import com.redhat.parodos.user.entity.User;
 import com.redhat.parodos.user.repository.UserRepository;
@@ -74,11 +75,12 @@ class UserServiceImplTest {
 		when(this.userRepository.findById(user.getId())).thenReturn(Optional.empty());
 
 		// when
-		Exception exception = assertThrows(RuntimeException.class, () -> this.service.getUserById(user.getId()));
+		Exception exception = assertThrows(ResourceNotFoundException.class,
+				() -> this.service.getUserById(user.getId()));
 
 		// then
 		assertNotNull(exception);
-		assertEquals(exception.getMessage(), format("User with id: %s not found", user.getId()));
+		assertEquals(exception.getMessage(), format("User with ID: %s not found", user.getId()));
 		verify(this.userRepository, times(1)).findById(any());
 	}
 
@@ -106,7 +108,7 @@ class UserServiceImplTest {
 		when(this.userRepository.findByUsername(user.getUsername())).thenReturn(Optional.empty());
 
 		// then
-		assertThrows(RuntimeException.class, () -> this.service.getUserByUsername(user.getUsername()));
+		assertThrows(ResourceNotFoundException.class, () -> this.service.getUserByUsername(user.getUsername()));
 		verify(this.userRepository, times(1)).findByUsername(any());
 	}
 
