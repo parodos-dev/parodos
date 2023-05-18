@@ -26,6 +26,7 @@ import java.util.UUID;
 
 import javax.annotation.PreDestroy;
 
+import com.redhat.parodos.common.exceptions.IllegalWorkFlowStateException;
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 import com.redhat.parodos.common.exceptions.ResourceType;
 import com.redhat.parodos.project.dto.ProjectResponseDTO;
@@ -68,9 +69,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 
 import org.springframework.dao.DataAccessException;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 /**
  * Workflow execution service implementation
@@ -178,7 +177,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 					.projectId(projectId).user(user).status(workStatus).startDate(new Date()).arguments(arguments)
 					.mainWorkFlowExecution(mainWorkFlowExecution).build());
 		}
-		catch (DataAccessException | IllegalArgumentException e) {
+		catch (DataAccessException e) {
 			log.error("failing persist workflow execution for: {} in main workflow execution: {}. error Message: {}",
 					workFlowDefinition.getId(), mainWorkFlowExecution.getId(), e.getMessage());
 			throw new WorkflowPersistenceFailedException(e.getMessage());
@@ -226,7 +225,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
 		// check if it is not an inner workflow
 		if (workFlowExecution.getMainWorkFlowExecution() != null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+			throw new IllegalWorkFlowStateException(
 					String.format("workflow id: %s from workflow name: %s is an inner workflow!",
 							workFlowExecution.getId(), workFlowDefinition.getName()));
 		}
@@ -286,7 +285,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 					.workFlowTaskDefinitionId(workFlowTaskDefinitionId).arguments(arguments).status(workFlowTaskStatus)
 					.startDate(new Date()).build());
 		}
-		catch (DataAccessException | IllegalArgumentException e) {
+		catch (DataAccessException e) {
 			log.error("failing persist task execution for: {} in main workflow execution: {}. error Message: {}",
 					workFlowTaskDefinitionId, workFlowTaskDefinitionId, e.getMessage());
 			throw new WorkflowPersistenceFailedException(e.getMessage());
@@ -326,7 +325,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 				.filter(workFlowExecution -> workFlowExecution.getWorkFlowDefinition().getId()
 						.equals(workFlowTaskDefinition.getWorkFlowDefinition().getId()))
 				.max(Comparator.comparing(WorkFlowExecution::getStartDate)).orElseThrow(() -> {
-					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String
+					throw new IllegalWorkFlowStateException(String
 							.format("workflow checker associated to task: %s has not started!", workFlowTaskName));
 				});
 		// get the workflow checker task execution
@@ -334,7 +333,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 				.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(workFlowCheckerExecution.getId(),
 						workFlowTaskDefinition.getId())
 				.stream().findFirst().orElseThrow(() -> {
-					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					throw new IllegalWorkFlowStateException(
 							String.format("workflow checker task name: %s has not been executed!", workFlowTaskName));
 				});
 		// update workflow checker task status
