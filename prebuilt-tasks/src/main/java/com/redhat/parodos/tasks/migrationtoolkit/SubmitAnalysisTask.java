@@ -1,17 +1,13 @@
 package com.redhat.parodos.tasks.migrationtoolkit;
 
 import java.net.URI;
-import java.util.List;
 
 import com.redhat.parodos.workflow.exception.MissingParameterException;
-import com.redhat.parodos.workflow.parameter.WorkParameter;
-import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -39,19 +35,6 @@ public class SubmitAnalysisTask extends BaseInfrastructureWorkFlowTask {
 
 	public SubmitAnalysisTask(URI serverURL, String bearerToken) {
 		this.mtaClient = new MTAClient(serverURL, bearerToken);
-	}
-
-	@Override
-	public @NonNull List<WorkParameter> getWorkFlowTaskParameters() {
-		return List.of(
-				WorkParameter.builder().key("applicationName").type(WorkParameterType.TEXT).optional(false).description(
-						"The application name as presented in the application hub. Can be generated from the repository name")
-						.build(),
-				WorkParameter.builder().key("serverURL").type(WorkParameterType.TEXT).optional(true).description(
-						"Base URL of the MTA instance - e.g https://mta-openshift-mta.app.clustername.clusterdomain")
-						.build(),
-				WorkParameter.builder().key("bearerToken").type(WorkParameterType.TEXT).optional(true)
-						.description("Bearer token to authenticate server requests").build());
 	}
 
 	/**
