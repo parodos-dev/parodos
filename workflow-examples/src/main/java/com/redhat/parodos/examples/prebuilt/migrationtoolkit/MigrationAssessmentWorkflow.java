@@ -7,13 +7,13 @@ import com.redhat.parodos.tasks.migrationtoolkit.CreateApplicationTask;
 import com.redhat.parodos.tasks.migrationtoolkit.GetAnalysisTask;
 import com.redhat.parodos.tasks.migrationtoolkit.GetApplicationTask;
 import com.redhat.parodos.tasks.migrationtoolkit.SubmitAnalysisTask;
+import com.redhat.parodos.workflow.annotation.Assessment;
 import com.redhat.parodos.workflow.annotation.Checker;
-import com.redhat.parodos.workflow.annotation.Infrastructure;
 import com.redhat.parodos.workflow.annotation.Parameter;
+import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflow.task.infrastructure.Notifier;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
-import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -23,35 +23,21 @@ import org.springframework.context.annotation.Profile;
 import static com.redhat.parodos.workflows.workflow.SequentialFlow.Builder.aNewSequentialFlow;
 
 /**
- * A workflow to analyze applications using Migration Toolkit for Applications
+ * An assessment workflow to analyze applications using Migration Toolkit for Applications
+ * and return a move2kube option when needed.
  * <p>
  * This workflow will: - create an application with a name, and git repo URL - submit an
- * analysis report for it - wait till the report is back - send an email with the report
- * url
+ * analysis report for it - wait till the report is back, analyze it, and return a
+ * workflow option to move2kube based on the findings
  * <p>
- * ENV Variables: For security reasons the MTA url and bearer token can be passed to all
- * the task constructors For example use MTA_URL and MTA_BEARER_TOKEN To get an email
- * supply the following variables MAILER_HOST MAILER_PORT MAILER_USER MAILER_PASS
  */
 @Configuration
-@Profile("dev")
-@Slf4j
-public class MigrationAnalysisWorkflow {
+@Profile("local")
+public class MigrationAssessmentWorkflow {
 
 	// the url of the MTA (migration toolkit for application)
 	@Value("${workflows.mta.url}")
 	private String mtaUrl;
-
-	// in the end you can send a message to an email server with the fields below. The
-	// email code
-	// can be removed from the workflow configuration if not needed or be replaced with
-	// any messaging system.
-	// See #messageConsumer
-	// If you do remove or change the messaging consumer then make sure to update the
-	// constructor checks.
-
-	public MigrationAnalysisWorkflow() {
-	}
 
 	@Bean
 	public CreateApplicationTask createApplicationTask() {
@@ -75,22 +61,46 @@ public class MigrationAnalysisWorkflow {
 		return new GetAnalysisTask(URI.create(mtaUrl), "", notifier);
 	}
 
-	@Bean(name = "AnalyzeApplication")
-	@Infrastructure(parameters = {
+	@Bean
+	ProcessAnalysisTask processAnalysisTask(WorkFlowOption move2kube, WorkFlowOption defaultOption, Notifier notifier) {
+		return new ProcessAnalysisTask(move2kube, defaultOption,
+				// suggest the move2kube option if this predicate is true
+				analysisIncidents -> analysisIncidents.mandatory() == 0 && analysisIncidents.cloudMandatory() == 0,
+				notifier);
+	}
+
+	@Bean
+	WorkFlowOption move2kube() {
+		return new WorkFlowOption.Builder("move2kube", "move2kube").addToDetails("Migration to OCP")
+				.displayName("Migration to OCP")
+				.setDescription("This app is ready to be migrated to OCP. Click to migrate.").build();
+	}
+
+	@Bean
+	WorkFlowOption defaultOption() {
+		return new WorkFlowOption.Builder("defaultOption", "AnalyzeApplicationAssessment")
+				.addToDetails("Rerun Analysis").displayName("Run Migration Analysis")
+				.setDescription(
+						"This application didn't meet the expected analysis score. Update or apply the relevant fixes and re-run the analysis")
+				.build();
+	}
+
+	@Bean(name = "AnalyzeApplicationAssessment")
+	@Assessment(parameters = {
 			@Parameter(key = "repositoryURL", description = "The repository with the code to analyze",
 					type = WorkParameterType.URL, optional = false),
 			@Parameter(key = "applicationName", description = "The name of the application to analyze",
 					type = WorkParameterType.TEXT, optional = false) })
-	public WorkFlow AnalyzeApplication(CreateApplicationTask createApplicationTask, GetApplicationTask getAppTask,
-			SubmitAnalysisTask submitAnalysisTask) {
-		return aNewSequentialFlow().named("AnalyzeApplication").execute(createApplicationTask).then(getAppTask)
-				.then(submitAnalysisTask).build();
+	public WorkFlow AnalyzeApplicationAssessment(CreateApplicationTask createApplicationTask,
+			GetApplicationTask getAppTask, SubmitAnalysisTask submitAnalysisTask) {
+		return aNewSequentialFlow().named("AnalyzeApplicationAssessment").execute(createApplicationTask)
+				.then(getAppTask).then(submitAnalysisTask).build();
 	}
 
 	@Bean("fetchReportURL")
 	@Checker(cronExpression = "*/5 * * * * ?")
-	public WorkFlow fetchReportURL(GetAnalysisTask getAnalysisTask) {
-		return aNewSequentialFlow().named("fetchReportURL").execute(getAnalysisTask).build();
+	public WorkFlow fetchReportURL(GetAnalysisTask getAnalysisTask, ProcessAnalysisTask processAnalysisTask) {
+		return aNewSequentialFlow().named("fetchReportURL").execute(getAnalysisTask).then(processAnalysisTask).build();
 	}
 
 }

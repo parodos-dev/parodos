@@ -41,8 +41,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
+@Profile("local")
 public class OcpOnboardingWorkFlowConfiguration {
 
 	// Assessment workflow
@@ -76,15 +78,24 @@ public class OcpOnboardingWorkFlowConfiguration {
 						.setDescription("Non-Supported Workflow Steps").build();
 	}
 
+	@Bean
+	WorkFlowOption analyzeOption() {
+		return new WorkFlowOption.Builder("analyzeOption", "AnalyzeApplicationAssessment")
+				.addToDetails("Analyze an application's source code before migrating it."
+						+ " Produces a containerization report by MTA")
+				.displayName("Migration Analysis").setDescription("Migration Analysis step").build();
+	}
+
 	// An AssessmentTask returns one or more WorkFlowOption wrapped in a WorkflowOptions
 	@Bean
 	OnboardingOcpAssessmentTask onboardingAssessmentTask(
 			@Qualifier("onboardingOcpOption") WorkFlowOption onboardingOcpOption,
 			@Qualifier("badRepoOption") WorkFlowOption badRepoOption,
 			@Qualifier("notSupportOption") WorkFlowOption notSupportOption,
-			@Qualifier("move2kube") WorkFlowOption move2kube) {
+			@Qualifier("move2kube") WorkFlowOption move2kube,
+			@Qualifier("analyzeOption") WorkFlowOption analyzeOption) {
 		return new OnboardingOcpAssessmentTask(
-				List.of(onboardingOcpOption, badRepoOption, notSupportOption, move2kube));
+				List.of(onboardingOcpOption, badRepoOption, notSupportOption, move2kube, analyzeOption));
 	}
 
 	// A Workflow designed to execute and return WorkflowOption(s) that can be executed

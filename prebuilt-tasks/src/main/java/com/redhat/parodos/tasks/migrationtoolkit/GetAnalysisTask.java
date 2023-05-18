@@ -2,13 +2,15 @@ package com.redhat.parodos.tasks.migrationtoolkit;
 
 import java.net.URI;
 import java.util.List;
-import java.util.function.Consumer;
 
-import com.redhat.parodos.email.Message;
+import javax.inject.Inject;
+
+import com.redhat.parodos.notification.sdk.model.NotificationMessageCreateRequestDTO;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
+import com.redhat.parodos.workflow.task.infrastructure.Notifier;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -35,12 +37,13 @@ public class GetAnalysisTask extends BaseInfrastructureWorkFlowTask {
 
 	private URI serverUrl;
 
-	private final Consumer<Message> messageConsumer;
+	@Inject
+	private Notifier notificationSender;
 
-	public GetAnalysisTask(URI serverURL, String bearerToken, Consumer<Message> messageConsumer) {
+	public GetAnalysisTask(URI serverURL, String bearerToken, Notifier notifier) {
 		this.serverUrl = serverURL;
 		this.mtaClient = new MTAClient(serverURL, bearerToken);
-		this.messageConsumer = messageConsumer;
+		this.notificationSender = notifier;
 	}
 
 	@Override
@@ -95,8 +98,8 @@ public class GetAnalysisTask extends BaseInfrastructureWorkFlowTask {
 					&& success.value().tasks()[0].state().equals("Succeeded")) {
 				String reportURL = String.format("%s/hub/applications/%d/bucket/%s", serverUrl,
 						success.value().tasks()[0].application().id(), success.value().data().output());
-				sendEmail(reportURL, getOptionalParameterValue("email", null));
 				addParameter("reportURL", reportURL);
+				sendNotification(reportURL);
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 			}
 			else if ("Failed".equals(success.value().state())) {
@@ -108,13 +111,14 @@ public class GetAnalysisTask extends BaseInfrastructureWorkFlowTask {
 		throw new IllegalArgumentException();
 	}
 
-	private void sendEmail(String reportURL, String recipient) {
-		if (recipient == null) {
-			return;
-		}
-		messageConsumer.accept(new Message(recipient, "parodos-task-notification@redhat.com",
-				"Parodos: Analysis report is done",
-				String.format("The analysis report is done. Find it here %s", reportURL)));
+	private void sendNotification(String reportURL) {
+		var request = new NotificationMessageCreateRequestDTO();
+		request.setMessageType("text");
+		request.setBody("Report URL: " + reportURL);
+		request.subject("Migration Analysis Report Completed");
+		request.setUsernames(List.of("test"));
+		request.setGroupNames(List.of("test"));
+		notificationSender.send(request);
 	}
 
 }
