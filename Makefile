@@ -230,3 +230,13 @@ stop-postgres:
 format-files:
 	mvn spring-javaformat:apply
 	mvn impsort:sort
+
+.PHONY: install-kubernetes-dependencies-and-wait deploy-to-kind
+
+install-kubernetes-dependencies-and-wait: install-kubernetes-dependencies
+	sleep 10
+
+deploy-to-kind: install-kubernetes-dependencies-and-wait wait-kubernetes-dependencies build-images tag-images push-images-to-kind
+	kubectl kustomize hack/manifests/testing | kubectl apply -f -
+	kubectl wait --timeout=300s --for=condition=Ready pods --all -n default
+	kubectl get pods -A
