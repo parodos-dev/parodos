@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AapJobLaunchRequestDto {
 
+	private String limit;
+
 	@JsonProperty("extra_vars")
 	private Map<String, String> extraVars;
 
