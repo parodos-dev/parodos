@@ -100,10 +100,16 @@ public class VmOnboardingWorkFlowConfiguration {
 		return serviceNowTicketCreationWorkFlowTask;
 	}
 
-	@Bean(name = "vmNotificationWorkFlowTask")
-	NotificationWorkFlowTask notificationWorkFlowTask(
+	@Bean(name = "notificationIpAddressWorkFlowTask")
+	NotificationWorkFlowTask notificationIpAddressWorkFlowTask(
 			@Value("${NOTIFICATION_SERVER_URL:test}") String notificationServiceUrl) {
-		return new NotificationWorkFlowTask(notificationServiceUrl);
+		return new NotificationWorkFlowTask(notificationServiceUrl, "IP Address");
+	}
+
+	@Bean(name = "notificationTomcatProvisioningWorkFlowTask")
+	NotificationWorkFlowTask notificationTomcatProvisioningWorkFlowTask(
+			@Value("${NOTIFICATION_SERVER_URL:test}") String notificationServiceUrl) {
+		return new NotificationWorkFlowTask(notificationServiceUrl, "Tomcat Provisioning");
 	}
 
 	// VM ONBOARDING WORKFLOW - Sequential Flow:
@@ -115,9 +121,13 @@ public class VmOnboardingWorkFlowConfiguration {
 					optional = false) })
 	WorkFlow vmOnboardingWorkFlow(
 			@Qualifier("serviceNowTicketCreationWorkFlowTask") ServiceNowTicketCreationWorkFlowTask serviceNowTicketCreationWorkFlowTask,
-			@Qualifier("vmNotificationWorkFlowTask") NotificationWorkFlowTask notificationWorkFlowTask) {
+			@Qualifier("notificationIpAddressWorkFlowTask") NotificationWorkFlowTask notificationIpAddressWorkFlowTask,
+			@Qualifier("notificationTomcatProvisioningWorkFlowTask") NotificationWorkFlowTask notificationTomcatProvisioningWorkFlowTask) {
 		return SequentialFlow.Builder.aNewSequentialFlow().named("vmOnboardingWorkFlow")
-				.execute(serviceNowTicketCreationWorkFlowTask).then(notificationWorkFlowTask).build();
+				.execute(serviceNowTicketCreationWorkFlowTask)
+				.then(notificationIpAddressWorkFlowTask)
+				.then(notificationTomcatProvisioningWorkFlowTask)
+				.build();
 	}
 
 	// Assessment workflow
