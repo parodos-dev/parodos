@@ -65,9 +65,11 @@ public class NotificationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 				String ip = getRequiredParameterValue(workContext, "IP");
 				request = NotificationRequest.builder().usernames(List.of(NOTIFICATION_USERNAME))
 						.subject(NOTIFICATION_SUBJECT_PREF + notificationSubject).body(buildMessage(ip)).build();
-			} else { // Tomcat Provisioning
+			}
+			else { // Tomcat Provisioning
 				request = NotificationRequest.builder().usernames(List.of(NOTIFICATION_USERNAME))
-						.subject(NOTIFICATION_SUBJECT_PREF + notificationSubject).body(buildMessage(buildMessage())).build();
+						.subject(NOTIFICATION_SUBJECT_PREF + notificationSubject).body(buildMessage(buildMessage()))
+						.build();
 			}
 			HttpEntity<NotificationRequest> notificationRequestHttpEntity = RestUtils.getRequestWithHeaders(request,
 					NOTIFICATION_USERNAME, NOTIFICATION_PASSWORD);

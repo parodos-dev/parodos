@@ -27,7 +27,7 @@ public class ServiceNowTicketCreationWorkFlowTask extends BaseInfrastructureWork
 
 	private final String password;
 
-	private static final String CREATE_INCIDENT_CONTEXT_PATH = "api/now/table/incident";
+	private static final String CREATE_INCIDENT_CONTEXT_PATH = "/api/now/table/incident";
 
 	public ServiceNowTicketCreationWorkFlowTask(String serviceNowUrl, String username, String password) {
 		this.serviceNowUrl = serviceNowUrl;
@@ -45,7 +45,7 @@ public class ServiceNowTicketCreationWorkFlowTask extends BaseInfrastructureWork
 			log.info("vm name: {}", vmName);
 
 			ServiceNowRequestDto request = ServiceNowRequestDto.builder().callerId(username)
-					.shortDescription("Azure Vm Onboarding").build();
+					.shortDescription("Azure linux Vm Onboarding").build();
 
 			ResponseEntity<ServiceNowResponseDto> response = RestUtils.executePost(urlString, request, username,
 					password, ServiceNowResponseDto.class);
@@ -54,6 +54,7 @@ public class ServiceNowTicketCreationWorkFlowTask extends BaseInfrastructureWork
 				String sysId = response.getBody().getResult().getSysId();
 				String number = response.getBody().getResult().getNumber();
 				log.info("Rest call completed, sys id: {}, incident number: {}", sysId, number);
+				addParameter(workContext, "INCIDENT_ID", sysId);
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 			}
 			log.error("Call to the API was not successful. Response: {}", response.getStatusCode());
