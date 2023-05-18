@@ -1,11 +1,11 @@
 package com.redhat.parodos.examples.vmonboarding;
 
-import java.util.Date;
 import java.util.List;
 
 import com.redhat.parodos.examples.vmonboarding.checker.AnsibleCompletionWorkFlowCheckerTask;
-import com.redhat.parodos.examples.vmonboarding.checker.IpAddressProvisioningWorkFlowCheckerTask;
+import com.redhat.parodos.examples.vmonboarding.checker.IncidentWorkFlowCheckerTask;
 import com.redhat.parodos.examples.vmonboarding.escalation.ServiceNowTicketFulfillmentEscalationWorkFlowTask;
+import com.redhat.parodos.examples.vmonboarding.task.AapLaunchJobWorkFlowTask;
 import com.redhat.parodos.examples.vmonboarding.task.NotificationWorkFlowTask;
 import com.redhat.parodos.examples.vmonboarding.task.OnboardingVmAssessmentTask;
 import com.redhat.parodos.examples.vmonboarding.task.ServiceNowTicketCreationWorkFlowTask;
@@ -54,21 +54,20 @@ public class VmOnboardingWorkFlowConfiguration {
 				.execute(serviceNowTicketFulfillmentEscalationWorkFlowTask).build();
 	}
 
-	@Bean(name = "ipAddressProvisioningWorkFlowCheckerTask")
-	IpAddressProvisioningWorkFlowCheckerTask ipAddressProvisioningWorkFlowCheckerTask(
-			@Qualifier("serviceNowTicketFulfillmentEscalationWorkFlow") WorkFlow serviceNowTicketFulfillmentEscalationWorkFlow,
-			@Value("${AAP_URL:aap-url}") String aapUrl, @Value("${AAP_USER_NAME:aap-user}") String username,
-			@Value("${AAP_PASSWORD:aap-password}") String password) {
-		return new IpAddressProvisioningWorkFlowCheckerTask(serviceNowTicketFulfillmentEscalationWorkFlow,
-				new Date().getTime() / 1000 + 30, aapUrl, username, password);
+	@Bean(name = "incidentWorkFlowCheckerTask")
+	IncidentWorkFlowCheckerTask incidentWorkFlowCheckerTask(
+			@Value("${SERVICE_NOW_URL:service-now}") String serviceNowUrl,
+			@Value("${SERVICE_NOW_USER_NAME:service-now-user}") String username,
+			@Value("${SERVICE_NOW_PASSWORD:service-now-password}") String password) {
+		return new IncidentWorkFlowCheckerTask(serviceNowUrl, username, password);
 	}
 
-	@Bean(name = "ipAddressProvisioningWorkFlowChecker")
-	@Checker(cronExpression = "*/5 * * * * ?")
-	WorkFlow ipAddressProvisioningWorkFlowChecker(
-			@Qualifier("ipAddressProvisioningWorkFlowCheckerTask") IpAddressProvisioningWorkFlowCheckerTask ipAddressProvisioningWorkFlowCheckerTask) {
-		return SequentialFlow.Builder.aNewSequentialFlow().named("ipAddressProvisioningWorkFlowChecker")
-				.execute(ipAddressProvisioningWorkFlowCheckerTask).build();
+	@Bean(name = "incidentWorkFlowChecker")
+	@Checker(cronExpression = "*/10 * * * * ?")
+	WorkFlow incidentWorkFlowChecker(
+			@Qualifier("incidentWorkFlowCheckerTask") IncidentWorkFlowCheckerTask incidentWorkFlowCheckerTask) {
+		return SequentialFlow.Builder.aNewSequentialFlow().named("incidentWorkFlowChecker")
+				.execute(incidentWorkFlowCheckerTask).build();
 	}
 
 	@Bean(name = "ansibleCompletionWorkFlowCheckerTask")
@@ -88,15 +87,13 @@ public class VmOnboardingWorkFlowConfiguration {
 
 	@Bean(name = "serviceNowTicketCreationWorkFlowTask")
 	ServiceNowTicketCreationWorkFlowTask serviceNowTicketCreationWorkFlowTask(
-			@Qualifier("ipAddressProvisioningWorkFlowChecker") WorkFlow ipAddressProvisioningWorkFlowChecker,
-			@Qualifier("ansibleCompletionWorkFlowChecker") WorkFlow ansibleCompletionWorkFlowChecker,
+			@Qualifier("incidentWorkFlowChecker") WorkFlow incidentWorkFlowChecker,
 			@Value("${SERVICE_NOW_URL:service-now}") String serviceNowUrl,
 			@Value("${SERVICE_NOW_USER_NAME:service-now-user}") String username,
 			@Value("${SERVICE_NOW_PASSWORD:service-now-password}") String password) {
 		ServiceNowTicketCreationWorkFlowTask serviceNowTicketCreationWorkFlowTask = new ServiceNowTicketCreationWorkFlowTask(
 				serviceNowUrl, username, password);
-		serviceNowTicketCreationWorkFlowTask
-				.setWorkFlowCheckers(List.of(ipAddressProvisioningWorkFlowChecker, ansibleCompletionWorkFlowChecker));
+		serviceNowTicketCreationWorkFlowTask.setWorkFlowCheckers(List.of(incidentWorkFlowChecker));
 		return serviceNowTicketCreationWorkFlowTask;
 	}
 
@@ -112,22 +109,29 @@ public class VmOnboardingWorkFlowConfiguration {
 		return new NotificationWorkFlowTask(notificationServiceUrl, "Tomcat Provisioning");
 	}
 
+	@Bean(name = "aapLaunchJobWorkFlowTask")
+	AapLaunchJobWorkFlowTask aapLaunchJobWorkFlowTask(
+			@Qualifier("ansibleCompletionWorkFlowChecker") WorkFlow ansibleCompletionWorkFlowChecker,
+			@Value("${AAP_URL:aap-url}") String aapUrl, @Value("${AAP_USER_NAME:aap-user}") String username,
+			@Value("${AAP_PASSWORD:aap-password}") String password) {
+		AapLaunchJobWorkFlowTask aapLaunchJobWorkFlowTask = new AapLaunchJobWorkFlowTask(aapUrl, "20", username,
+				password);
+		aapLaunchJobWorkFlowTask.setWorkFlowCheckers(List.of(ansibleCompletionWorkFlowChecker));
+		return aapLaunchJobWorkFlowTask;
+	}
+
 	// VM ONBOARDING WORKFLOW - Sequential Flow:
 	@Bean(name = "vmOnboardingWorkFlow")
-	@Infrastructure(parameters = {
-			@Parameter(key = "VM_TYPE", description = "VM type", type = WorkParameterType.SELECT, optional = false,
-					selectOptions = { "RHEL", "Windows" }),
-			@Parameter(key = "hostname", description = "The hostname", type = WorkParameterType.TEXT,
-					optional = false) })
+	@Infrastructure(parameters = { @Parameter(key = "VM_TYPE", description = "VM type", type = WorkParameterType.SELECT,
+			optional = false, selectOptions = { "RHEL", "Windows" }) })
 	WorkFlow vmOnboardingWorkFlow(
 			@Qualifier("serviceNowTicketCreationWorkFlowTask") ServiceNowTicketCreationWorkFlowTask serviceNowTicketCreationWorkFlowTask,
 			@Qualifier("notificationIpAddressWorkFlowTask") NotificationWorkFlowTask notificationIpAddressWorkFlowTask,
+			@Qualifier("aapLaunchJobWorkFlowTask") AapLaunchJobWorkFlowTask aapLaunchJobWorkFlowTask,
 			@Qualifier("notificationTomcatProvisioningWorkFlowTask") NotificationWorkFlowTask notificationTomcatProvisioningWorkFlowTask) {
 		return SequentialFlow.Builder.aNewSequentialFlow().named("vmOnboardingWorkFlow")
-				.execute(serviceNowTicketCreationWorkFlowTask)
-				.then(notificationIpAddressWorkFlowTask)
-				.then(notificationTomcatProvisioningWorkFlowTask)
-				.build();
+				.execute(serviceNowTicketCreationWorkFlowTask).then(notificationIpAddressWorkFlowTask)
+				.then(aapLaunchJobWorkFlowTask).then(notificationTomcatProvisioningWorkFlowTask).build();
 	}
 
 	// Assessment workflow
