@@ -10,16 +10,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AapGetJobResponseDTO {
+public class OrderServiceCatalogItemRequestVariable {
 
-	@JsonProperty("job")
-	private String jobId;
-
-	private String status;
-
-	private AapGetJobResponseArtifacts artifacts;
-
-	@JsonProperty("extra_vars")
-	private String extraVars;
+	@JsonProperty("rhel_vm_name")
+	private String vmName;
 
 }

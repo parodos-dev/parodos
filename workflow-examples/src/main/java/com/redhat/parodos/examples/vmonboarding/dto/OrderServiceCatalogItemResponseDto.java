@@ -15,9 +15,6 @@
  */
 package com.redhat.parodos.examples.vmonboarding.dto;
 
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,24 +24,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetRequestItemResponseDTO {
+public class OrderServiceCatalogItemResponseDto {
 
-	List<GetRequestItemResponseDtoResult> result;
-
-	@Data
-	@Builder
-	@AllArgsConstructor
-	@NoArgsConstructor
-	public static class GetRequestItemResponseDtoResult {
-
-		@JsonProperty("sys_id")
-		private String sysId;
-
-		private String number;
-
-		@JsonProperty("short_description")
-		private String shortDescription;
-
-	}
+	private OrderServiceCatalogItemResponseResult result;
 
 }

@@ -64,16 +64,16 @@ public class OcpOnboardingWorkFlowConfiguration {
 	WorkFlowOption badRepoOption() {
 		return new WorkFlowOption.Builder("badRepoOption",
 				"simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
-						.addToDetails("Container Fundamentals Training Required").displayName("Training Required")
-						.setDescription("Container Fundamentals Training Required").build();
+				.addToDetails("Container Fundamentals Training Required").displayName("Training Required")
+				.setDescription("Container Fundamentals Training Required").build();
 	}
 
 	@Bean
 	WorkFlowOption notSupportOption() {
 		return new WorkFlowOption.Builder("notSupportOption",
 				"simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
-						.addToDetails("Non-Supported Workflow Steps").displayName("Not Supported")
-						.setDescription("Non-Supported Workflow Steps").build();
+				.addToDetails("Non-Supported Workflow Steps").displayName("Not Supported")
+				.setDescription("Non-Supported Workflow Steps").build();
 	}
 
 	@Bean
@@ -110,11 +110,11 @@ public class OcpOnboardingWorkFlowConfiguration {
 	WorkFlow assessmentWorkFlow(
 			@Qualifier("onboardingAssessmentTask") OnboardingOcpAssessmentTask onboardingAssessmentTask) {
 		// @formatter:off
-        return SequentialFlow.Builder.aNewSequentialFlow()
-                .named("onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
-                .execute(onboardingAssessmentTask)
-                .build();
-        // @formatter:on
+		return SequentialFlow.Builder.aNewSequentialFlow()
+				.named("onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
+				.execute(onboardingAssessmentTask)
+				.build();
+		// @formatter:on
 	}
 
 	// WORKFLOW A - Sequential Flow:
@@ -223,7 +223,7 @@ public class OcpOnboardingWorkFlowConfiguration {
 	@Infrastructure(parameters = { @Parameter(key = "NAMESPACE", description = "The namespace in the ocp cluster",
 			type = WorkParameterType.TEXT, optional = false) })
 	WorkFlow ocpOnboardingWorkFlow(@Qualifier("workFlowA") WorkFlow workFlowA,
-			@Qualifier("workFlowB") WorkFlow workFlowB) {
+								   @Qualifier("workFlowB") WorkFlow workFlowB) {
 		return SequentialFlow.Builder.aNewSequentialFlow().named("ocpOnboardingWorkFlow").execute(workFlowA)
 				.then(workFlowB).build();
 	}
