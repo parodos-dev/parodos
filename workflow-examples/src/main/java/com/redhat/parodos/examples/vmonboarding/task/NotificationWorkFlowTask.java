@@ -39,7 +39,7 @@ import org.springframework.http.ResponseEntity;
 @Slf4j
 public class NotificationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
-	private static final String NOTIFICATION_SUBJECT = "VM Demo";
+	private static final String NOTIFICATION_SUBJECT_PREF = "VM Demo";
 
 	private static final String NOTIFICATION_USERNAME = "test";
 
@@ -47,9 +47,12 @@ public class NotificationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
 	private final String notificationServiceUrl;
 
-	public NotificationWorkFlowTask(String notificationServiceUrl) {
+	private final String notificationSubject;
+
+	public NotificationWorkFlowTask(String notificationServiceUrl, String notificationSubject) {
 		super();
 		this.notificationServiceUrl = notificationServiceUrl;
+		this.notificationSubject = notificationSubject;
 	}
 
 	/**
@@ -57,10 +60,15 @@ public class NotificationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	 */
 	public WorkReport execute(WorkContext workContext) {
 		try {
-			String ip = getRequiredParameterValue(workContext, "IP");
-			NotificationRequest request = NotificationRequest.builder().usernames(List.of(NOTIFICATION_USERNAME))
-					.subject(NOTIFICATION_SUBJECT).body(buildMessage(ip)).build();
-
+			NotificationRequest request;
+			if (notificationSubject.equalsIgnoreCase("IP Address")) { // IP Address
+				String ip = getRequiredParameterValue(workContext, "IP");
+				request = NotificationRequest.builder().usernames(List.of(NOTIFICATION_USERNAME))
+						.subject(NOTIFICATION_SUBJECT_PREF + notificationSubject).body(buildMessage(ip)).build();
+			} else { // Tomcat Provisioning
+				request = NotificationRequest.builder().usernames(List.of(NOTIFICATION_USERNAME))
+						.subject(NOTIFICATION_SUBJECT_PREF + notificationSubject).body(buildMessage(buildMessage())).build();
+			}
 			HttpEntity<NotificationRequest> notificationRequestHttpEntity = RestUtils.getRequestWithHeaders(request,
 					NOTIFICATION_USERNAME, NOTIFICATION_PASSWORD);
 
@@ -80,8 +88,11 @@ public class NotificationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	}
 
 	private String buildMessage(String ip) {
+		return "Ip address: " + ip;
+	}
 
-		return "IP: " + ip;
+	private String buildMessage() {
+		return "Tomcat installed to your vm";
 	}
 
 }
