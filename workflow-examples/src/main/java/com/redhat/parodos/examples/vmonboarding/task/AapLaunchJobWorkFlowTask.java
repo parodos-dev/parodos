@@ -43,7 +43,8 @@ public class AapLaunchJobWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
 			log.info("vm ip: {}", vmIp);
 
-			AapJobLaunchRequestDto request = AapJobLaunchRequestDto.builder().extraVars(Map.of("ip", vmIp)).build();
+			AapJobLaunchRequestDto request = AapJobLaunchRequestDto.builder().limit(vmIp)
+					.extraVars(Map.of("my_var", "my_answer")).build();
 
 			ResponseEntity<AapGetJobResponseDto> response = RestUtils.executePost(urlString, request, username,
 					password, AapGetJobResponseDto.class);
@@ -51,7 +52,7 @@ public class AapLaunchJobWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 			if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
 				String jobId = response.getBody().getJobId();
 				log.info("Rest call completed, job id: {}", jobId);
-
+				addParameter(workContext, "JOB_ID", jobId);
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 			}
 			log.error("Call to the API was not successful. Response: {}", response.getStatusCode());
