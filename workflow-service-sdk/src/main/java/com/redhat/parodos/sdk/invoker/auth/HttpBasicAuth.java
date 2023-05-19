@@ -12,13 +12,16 @@
 
 package com.redhat.parodos.sdk.invoker.auth;
 
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
-
-import com.redhat.parodos.sdk.invoker.ApiException;
 import com.redhat.parodos.sdk.invoker.Pair;
+import com.redhat.parodos.sdk.invoker.ApiException;
+
 import okhttp3.Credentials;
+
+import java.net.URI;
+import java.util.Map;
+import java.util.List;
+
+import java.io.UnsupportedEncodingException;
 
 public class HttpBasicAuth implements Authentication {
 

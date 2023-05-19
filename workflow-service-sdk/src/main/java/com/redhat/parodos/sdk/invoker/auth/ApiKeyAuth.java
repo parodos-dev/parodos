@@ -12,12 +12,12 @@
 
 package com.redhat.parodos.sdk.invoker.auth;
 
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
-
 import com.redhat.parodos.sdk.invoker.ApiException;
 import com.redhat.parodos.sdk.invoker.Pair;
+
+import java.net.URI;
+import java.util.Map;
+import java.util.List;
 
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class ApiKeyAuth implements Authentication {
