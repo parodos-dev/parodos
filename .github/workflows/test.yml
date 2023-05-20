@@ -155,6 +155,9 @@ jobs:
           make install-kubernetes-dependencies
           make wait-kubernetes-dependencies
 
+      - name: Maven Build
+        run: mvn -Dmaven.test.skip=true install
+
       - id: wait-for-jobs
         uses: yogeshlonkar/wait-for-jobs@v0
         with:
@@ -189,9 +192,6 @@ jobs:
             exit 1;
           }
           kubectl get pods --all-namespaces
-
-      - name: Maven Build
-        run: mvn -Dmaven.test.skip=true install
 
       - name: Run integration tests
         run: |
