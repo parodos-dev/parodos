@@ -2,17 +2,8 @@ package com.redhat.parodos.tasks.azure;
 
 import java.util.List;
 
-import com.azure.core.credential.TokenCredential;
-import com.azure.core.http.policy.HttpLogDetailLevel;
-import com.azure.core.management.AzureEnvironment;
-import com.azure.core.management.Region;
-import com.azure.core.management.profile.AzureProfile;
-import com.azure.identity.ClientSecretCredentialBuilder;
-import com.azure.resourcemanager.AzureResourceManager;
 import com.azure.resourcemanager.compute.models.AvailabilitySet;
-import com.azure.resourcemanager.compute.models.KnownLinuxVirtualMachineImage;
 import com.azure.resourcemanager.compute.models.VirtualMachine;
-import com.azure.resourcemanager.compute.models.VirtualMachineSizeTypes;
 import com.azure.resourcemanager.network.models.Network;
 import com.azure.resourcemanager.network.models.NetworkInterface;
 import com.azure.resourcemanager.network.models.PublicIpAddress;
@@ -26,34 +17,52 @@ import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
+import com.sun.jdi.InternalException;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.util.StringUtils;
 
 @Slf4j
 public class AzureCreateVirtualMachineTask extends BaseInfrastructureWorkFlowTask {
 
+	static final String VM_USER_NAME_KEY = "vm-user-name";
+	static final String VM_SSH_PUBLIC_KEY_KEY = "vm-ssh-public-key";
+	static final String AZURE_TENANT_ID_KEY = "azure-tenant-id";
+	static final String AZURE_SUBSCRIPTION_ID_KEY = "azure-subscription-id";
+	static final String AZURE_CLIENT_ID_KEY = "azure-client-id";
+	static final String AZURE_CLIENT_SECRET_KEY = "azure-client-secret";
+	static final String AZURE_RESOURCES_PREFIX_KEY = "azure-resources-prefix";
+
+	private AzureResourceClient azureResourceClient;
+
+	public AzureCreateVirtualMachineTask() {
+		this(new AzureResourceClientImpl());
+	}
+
+	AzureCreateVirtualMachineTask(AzureResourceClient azureResourceClient) {
+		this.azureResourceClient = azureResourceClient;
+	}
+
 	@Override
 	public @NonNull List<WorkParameter> getWorkFlowTaskParameters() {
 		return List.of(
-				WorkParameter.builder().key("vm-user-name").description("The user name for the Virtual Machine login")
+				WorkParameter.builder().key(VM_USER_NAME_KEY).description("The user name for the Virtual Machine login")
 						.type(WorkParameterType.TEXT).optional(false).build(),
-				WorkParameter.builder().key("vm-ssh-public-key")
+				WorkParameter.builder().key(VM_SSH_PUBLIC_KEY_KEY)
 						.description("The SSH public key for the Virtual Machine login").type(WorkParameterType.TEXT)
 						.optional(false).build(),
-				WorkParameter.builder().key("azure-tenant-id")
+				WorkParameter.builder().key(AZURE_TENANT_ID_KEY)
 						.description("The unique identifier of the Azure Active Directory instance")
 						.type(WorkParameterType.TEXT).optional(false).build(),
-				WorkParameter.builder().key("azure-subscription-id")
+				WorkParameter.builder().key(AZURE_SUBSCRIPTION_ID_KEY)
 						.description("The GUID that uniquely identifies your subscription to use Azure services")
 						.type(WorkParameterType.TEXT).optional(false).build(),
-				WorkParameter.builder().key("azure-client-id").description(
+				WorkParameter.builder().key(AZURE_CLIENT_ID_KEY).description(
 						"The unique Application (client) ID assigned to your app by Azure AD when the app was registered")
 						.type(WorkParameterType.TEXT).optional(false).build(),
-				WorkParameter.builder().key("azure-client-secret").description("The password of the service principal")
-						.type(WorkParameterType.TEXT).optional(false).build(),
-				WorkParameter.builder().key("azure-resources-prefix")
+				WorkParameter.builder().key(AZURE_CLIENT_SECRET_KEY)
+						.description("The password of the service principal").type(WorkParameterType.TEXT)
+						.optional(false).build(),
+				WorkParameter.builder().key(AZURE_RESOURCES_PREFIX_KEY)
 						.description("A designated prefix for naming all Azure resources").type(WorkParameterType.TEXT)
 						.optional(false).build());
 	}
@@ -67,82 +76,51 @@ public class AzureCreateVirtualMachineTask extends BaseInfrastructureWorkFlowTas
 	 */
 	public WorkReport execute(WorkContext context) {
 		try {
-			final String userName = getRequiredParameterValue(context, "vm-user-name");
-			final String sshKey = getRequiredParameterValue(context, "vm-ssh-public-key");
+			final String userName = getRequiredParameterValue(context, VM_USER_NAME_KEY);
+			final String sshKey = getRequiredParameterValue(context, VM_SSH_PUBLIC_KEY_KEY);
 
-			final String azureTenantId = getRequiredParameterValue(context, "azure-tenant-id");
-			final String azureSubscriptionId = getRequiredParameterValue(context, "azure-subscription-id");
-			final String azureClientId = getRequiredParameterValue(context, "azure-client-id");
-			final String azureClientSecret = getRequiredParameterValue(context, "azure-client-secret");
-			final String resourcesPrefix = getRequiredParameterValue(context, "azure-resources-prefix");
+			final String azureTenantId = getRequiredParameterValue(context, AZURE_TENANT_ID_KEY);
+			final String azureSubscriptionId = getRequiredParameterValue(context, AZURE_SUBSCRIPTION_ID_KEY);
+			final String azureClientId = getRequiredParameterValue(context, AZURE_CLIENT_ID_KEY);
+			final String azureClientSecret = getRequiredParameterValue(context, AZURE_CLIENT_SECRET_KEY);
+			final String resourcesPrefix = getRequiredParameterValue(context, AZURE_RESOURCES_PREFIX_KEY);
 
-			TokenCredential credential = new ClientSecretCredentialBuilder().tenantId(azureTenantId)
-					.clientId(azureClientId).clientSecret(azureClientSecret).build();
+			this.azureResourceClient.init(azureTenantId, azureClientId, azureClientSecret, azureSubscriptionId);
 
-			AzureProfile profile;
-			if (StringUtils.hasLength(azureTenantId) && StringUtils.hasLength(azureSubscriptionId)) {
-				profile = new AzureProfile(azureTenantId, azureSubscriptionId, AzureEnvironment.AZURE);
-			}
-			else {
-				profile = new AzureProfile(AzureEnvironment.AZURE);
-			}
+			ResourceGroup resourceGroup = azureResourceClient.createResourceGroup(resourcesPrefix);
 
-			AzureResourceManager azureResourceManager = AzureResourceManager.configure()
-					.withLogLevel(HttpLogDetailLevel.BASIC).authenticate(credential, profile).withDefaultSubscription();
+			AvailabilitySet availabilitySet = azureResourceClient.createAvailabilitySet(resourcesPrefix);
 
-			log.info("Creating resource group...");
-			ResourceGroup resourceGroup = azureResourceManager.resourceGroups()
-					.define(resourcesPrefix + "ResourceGroup").withRegion(Region.US_EAST).create();
+			PublicIpAddress publicIPAddress = azureResourceClient.createPublicIpAddress(resourcesPrefix);
 
-			log.info("Creating availability set...");
-			AvailabilitySet availabilitySet = azureResourceManager.availabilitySets()
-					.define(resourcesPrefix + "AvailabilitySet").withRegion(Region.US_EAST)
-					.withExistingResourceGroup(resourcesPrefix + "ResourceGroup").create();
+			Network network = azureResourceClient.createNetwork(resourcesPrefix);
 
-			log.info("Creating public IP address...");
-			PublicIpAddress publicIPAddress = azureResourceManager.publicIpAddresses()
-					.define(resourcesPrefix + "PublicIP").withRegion(Region.US_EAST)
-					.withExistingResourceGroup(resourcesPrefix + "ResourceGroup").withDynamicIP().create();
+			NetworkInterface networkInterface = azureResourceClient.createNetworkInterface(resourcesPrefix, network,
+					publicIPAddress);
 
-			log.info("Creating virtual network...");
-			Network network = azureResourceManager.networks().define(resourcesPrefix + "VN").withRegion(Region.US_EAST)
-					.withExistingResourceGroup(resourcesPrefix + "ResourceGroup").withAddressSpace("10.0.0.0/16")
-					.withSubnet(resourcesPrefix + "Subnet", "10.0.0.0/24").create();
-
-			log.info("Creating network interface...");
-			NetworkInterface networkInterface = azureResourceManager.networkInterfaces().define(resourcesPrefix + "NIC")
-					.withRegion(Region.US_EAST).withExistingResourceGroup(resourcesPrefix + "ResourceGroup")
-					.withExistingPrimaryNetwork(network).withSubnet(resourcesPrefix + "Subnet")
-					.withPrimaryPrivateIPAddressDynamic().withExistingPrimaryPublicIPAddress(publicIPAddress).create();
-
-			log.info("Creating virtual machine...");
-			VirtualMachine virtualMachine = azureResourceManager.virtualMachines().define(resourcesPrefix + "VM")
-					.withRegion(Region.US_EAST).withExistingResourceGroup(resourcesPrefix + "ResourceGroup")
-					.withExistingPrimaryNetworkInterface(networkInterface)
-					.withPopularLinuxImage(KnownLinuxVirtualMachineImage.UBUNTU_SERVER_18_04_LTS)
-					.withRootUsername(userName).withSsh(sshKey).withComputerName(resourcesPrefix + "VM")
-					.withExistingAvailabilitySet(availabilitySet).withSize(VirtualMachineSizeTypes.STANDARD_D3_V2)
-					.create();
+			VirtualMachine virtualMachine = azureResourceClient.createVirtualMachine(resourcesPrefix, networkInterface,
+					availabilitySet, userName, sshKey);
 
 			PublicIpAddress publicIpAddress = virtualMachine.getPrimaryPublicIPAddress();
 			if (publicIpAddress == null) {
 				log.error("VirtualMachine was created but without public IP");
+				throw new InternalException("The new created VirtualMachine missing public IP address");
 			}
 
 			String ipAddress = publicIpAddress.ipAddress();
 			log.info("VirtualMachine was created with public IP {}", ipAddress);
 			context.put("public-ip-address", ipAddress);
-
-			return new DefaultWorkReport(WorkStatus.COMPLETED, context, null);
 		}
 		catch (MissingParameterException e) {
 			log.error("Task {} failed: missing required parameter, error: {}", getName(), e.getMessage());
+			return new DefaultWorkReport(WorkStatus.FAILED, context, e);
 		}
 		catch (Exception e) {
 			log.error("Task {} failed, with error: {}", getName(), e.getMessage());
+			return new DefaultWorkReport(WorkStatus.FAILED, context, e);
 		}
 
-		return new DefaultWorkReport(WorkStatus.FAILED, context);
+		return new DefaultWorkReport(WorkStatus.COMPLETED, context);
 	}
 
 	@Override
