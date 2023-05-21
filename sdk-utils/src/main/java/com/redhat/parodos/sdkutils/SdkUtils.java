@@ -38,20 +38,18 @@ import org.springframework.core.env.MissingRequiredPropertiesException;
 @Slf4j
 public abstract class SdkUtils {
 
-	private static String serverIp = "localhost";
-
 	private SdkUtils() {
 	}
 
 	/**
 	 * Creates and configures the APIClient using the configuration properties available
-	 * in `sdk-config.yml`
+	 * in environment variables.
 	 * @return the ApiClient
 	 */
 	public static ApiClient getParodosAPiClient()
 			throws ApiException, MissingRequiredPropertiesException, InterruptedException {
 		ApiClient apiClient = Configuration.getDefaultApiClient();
-		serverIp = Optional.ofNullable(System.getenv("SERVER_IP")).orElse("localhost");
+		String serverIp = Optional.ofNullable(System.getenv("SERVER_IP")).orElse("localhost");
 		String serverPort = Optional.ofNullable(System.getenv("SERVER_PORT")).orElse("8080");
 
 		if (Strings.isNullOrEmpty(serverIp) || Strings.isNullOrEmpty(serverPort)) {
@@ -63,7 +61,7 @@ public abstract class SdkUtils {
 			throw new IllegalArgumentException("serverPort must be > 0 && <= 65535");
 		}
 
-		String basePath = "http://" + serverIp + ":" + serverPort;
+		String basePath = "http://%s:%s".formatted(serverIp, serverPort);
 		log.info("serverIp is: {}, serverPort is {}. Set BasePath to {}", serverIp, serverPort, basePath);
 
 		apiClient.setBasePath(basePath);
@@ -359,10 +357,6 @@ public abstract class SdkUtils {
 			throw new ApiException("Can retrieve project with name " + projectName);
 		}
 		return testProject;
-	}
-
-	public static String getServerIp() {
-		return serverIp;
 	}
 
 }
