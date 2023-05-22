@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.redhat.parodos.notification.sdk.api.ApiClient;
@@ -29,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Slf4j
 public class NotificationRecordTest {
 
-	private static final String BASE_PATH = "http://localhost:8081";
+	String BASE_PATH;
 
 	private static final String user = "test";
 
@@ -45,6 +46,11 @@ public class NotificationRecordTest {
 
 	@Before
 	public void setUp() throws IOException {
+		String serverIp = Optional.ofNullable(System.getenv("NOTIFICATION_SERVER_ADDRESS")).orElse("localhost");
+		String serverPort = Optional.ofNullable(System.getenv("NOTIFICATION_SERVER_PORT")).orElse("8080");
+		String BASE_PATH = "http://" + serverIp + ":" + serverPort;
+		log.info("NotificationWorkFlowTask basePath: {}", BASE_PATH);
+
 		ApiClient apiClient = Configuration.getDefaultApiClient();
 		apiClient.addDefaultHeader(HttpHeaders.AUTHORIZATION, "Basic " + CredUtils.getBase64Creds(user, password));
 		apiClient.setBasePath(BASE_PATH);
