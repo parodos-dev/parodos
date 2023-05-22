@@ -26,6 +26,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import com.redhat.parodos.notification.jpa.entity.base.AbstractEntity;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Users belong to zero or more groups.
@@ -35,6 +37,8 @@ import com.redhat.parodos.notification.jpa.entity.base.AbstractEntity;
  */
 @Entity
 @Table(name = "NotificationGroup")
+@Setter
+@Getter
 public class NotificationGroup extends AbstractEntity {
 
 	@Column(name = "groupname", unique = true)
@@ -43,22 +47,6 @@ public class NotificationGroup extends AbstractEntity {
 
 	@ManyToMany(mappedBy = "notificationGroupList", fetch = FetchType.LAZY)
 	private List<NotificationUser> notificationUserList = new ArrayList<>();
-
-	public String getGroupname() {
-		return groupname;
-	}
-
-	public void setGroupname(String groupname) {
-		this.groupname = groupname;
-	}
-
-	public List<NotificationUser> getNotificationsUserList() {
-		return notificationUserList;
-	}
-
-	public void setNotificationsUserList(List<NotificationUser> notificationUserList) {
-		this.notificationUserList = notificationUserList;
-	}
 
 	@Override
 	public String toString() {
