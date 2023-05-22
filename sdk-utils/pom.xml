@@ -28,6 +28,12 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>dev.parodos</groupId>
+            <artifactId>notification-service-sdk</artifactId>
+            <version>${revision}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
         </dependency>
