@@ -6,7 +6,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.redhat.parodos.notification.sdk.api.*;
+import com.redhat.parodos.notification.sdk.api.ApiClient;
+import com.redhat.parodos.notification.sdk.api.ApiException;
+import com.redhat.parodos.notification.sdk.api.Configuration;
+import com.redhat.parodos.notification.sdk.api.NotificationMessageApi;
+import com.redhat.parodos.notification.sdk.api.NotificationRecordApi;
 import com.redhat.parodos.notification.sdk.model.NotificationMessageCreateRequestDTO;
 import com.redhat.parodos.notification.sdk.model.NotificationRecordResponseDTO;
 import com.redhat.parodos.notification.sdk.model.PageNotificationRecordResponseDTO;
@@ -18,6 +22,7 @@ import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -59,12 +64,14 @@ public class NotificationRecordTest {
 
 			countNotificationRecord(testName);
 			PageNotificationRecordResponseDTO notificationsAfterCreation = listNotificationRecord(testName, null);
+			assertNotNull(notificationsAfterCreation.getContent());
 			NotificationRecordResponseDTO notificationRecord1 = notificationsAfterCreation.getContent().get(0);
 			logTestStep(testName, "Update one Notification Record as \"READ\"");
 			updateNotificationRecord(testName, notificationRecord1.getId(), "READ");
 
 			countNotificationRecord(testName);
 			PageNotificationRecordResponseDTO notificationsAfterUpdate = listNotificationRecord(testName, null);
+			assertNotNull(notificationsAfterUpdate.getContent());
 			NotificationRecordResponseDTO notificationRecord2 = notificationsAfterUpdate.getContent().get(1);
 			deleteNotificationRecord(testName, notificationRecord2.getId());
 
@@ -88,7 +95,7 @@ public class NotificationRecordTest {
 		String testName = "notificationServiceListInvalidSortErr";
 
 		ApiException e = assertThrows(ApiException.class, () -> {
-			listNotificationRecord(testName, Arrays.asList(user));
+			listNotificationRecord(testName, List.of(user));
 		});
 		assertEquals(400, e.getCode());
 	}
@@ -109,7 +116,7 @@ public class NotificationRecordTest {
 		String testName = "notificationServiceCreateMissingUsernames";
 
 		ApiException e = assertThrows(ApiException.class, () -> {
-			createNotificationMessage(testName, "type0", "body0", "subject0", new ArrayList());
+			createNotificationMessage(testName, "type0", "body0", "subject0", new ArrayList<>());
 		});
 		assertEquals(400, e.getCode());
 	}
@@ -217,7 +224,7 @@ public class NotificationRecordTest {
 	private void countNotificationRecord(String testName) throws ApiException {
 		logTestStep(testName, "Count Notification Records for the user");
 		Integer count = this.recordApiInstance.countUnreadNotifications("UNREAD");
-		log.info("Found ", count, "notification records for the user");
+		log.info("Found {} notification records for the user", count);
 		assertEquals(countNotificationsExpectedCount, count.intValue());
 	}
 
@@ -226,6 +233,7 @@ public class NotificationRecordTest {
 		logTestStep(testName, "List Notification Records for the user");
 		PageNotificationRecordResponseDTO result = this.recordApiInstance.getNotifications(0, 10, sort, null, null);
 		List<NotificationRecordResponseDTO> content = result.getContent();
+		assertNotNull(content);
 		log.info(content.toString());
 		assertEquals(listNotificationsExpectedCount, content.size());
 		return result;
