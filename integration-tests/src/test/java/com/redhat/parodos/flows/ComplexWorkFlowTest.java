@@ -8,7 +8,6 @@ import com.redhat.parodos.sdk.api.WorkflowApi;
 import com.redhat.parodos.sdk.api.WorkflowDefinitionApi;
 import com.redhat.parodos.sdk.invoker.ApiException;
 import com.redhat.parodos.sdk.model.ArgumentRequestDTO;
-import com.redhat.parodos.sdk.model.ProjectResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowContextResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
@@ -31,15 +30,9 @@ import static org.junit.Assert.fail;
 @Slf4j
 public class ComplexWorkFlowTest extends BaseIntegrationTest {
 
-	private static final String projectName = "project-1";
-
-	private static final String projectDescription = "an example project";
-
 	@Test
 	public void runComplexWorkFlow() throws ApiException, InterruptedException {
 		log.info("Running complex flow");
-
-		ProjectResponseDTO testProject = SdkUtils.getProjectAsync(apiClient, projectName, projectDescription);
 
 		WorkflowApi workflowApi = new WorkflowApi();
 		log.info("******** Running The Complex WorkFlow ********");

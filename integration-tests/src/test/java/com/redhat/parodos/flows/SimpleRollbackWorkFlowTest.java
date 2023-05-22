@@ -6,7 +6,6 @@ import com.redhat.parodos.flows.base.BaseIntegrationTest;
 import com.redhat.parodos.sdk.api.WorkflowApi;
 import com.redhat.parodos.sdk.api.WorkflowDefinitionApi;
 import com.redhat.parodos.sdk.invoker.ApiException;
-import com.redhat.parodos.sdk.model.ProjectResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
 import com.redhat.parodos.sdk.model.WorkFlowResponseDTO;
@@ -26,15 +25,9 @@ import static org.junit.Assert.assertNotNull;
 @Slf4j
 public class SimpleRollbackWorkFlowTest extends BaseIntegrationTest {
 
-	private static final String projectName = "project-1";
-
-	private static final String projectDescription = "an example project";
-
 	@Test
 	public void runRollbackWorkFlow() throws ApiException, InterruptedException {
 		log.info("Running simple flow");
-
-		ProjectResponseDTO testProject = SdkUtils.getProjectAsync(apiClient, projectName, projectDescription);
 
 		// GET simpleSequentialWorkFlow DEFINITIONS
 		WorkflowDefinitionApi workflowDefinitionApi = new WorkflowDefinitionApi();

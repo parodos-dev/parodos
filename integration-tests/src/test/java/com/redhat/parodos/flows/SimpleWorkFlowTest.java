@@ -9,7 +9,6 @@ import com.redhat.parodos.sdk.api.WorkflowApi;
 import com.redhat.parodos.sdk.api.WorkflowDefinitionApi;
 import com.redhat.parodos.sdk.invoker.ApiException;
 import com.redhat.parodos.sdk.model.ArgumentRequestDTO;
-import com.redhat.parodos.sdk.model.ProjectResponseDTO;
 import com.redhat.parodos.sdk.model.WorkDefinitionResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
@@ -35,15 +34,9 @@ import static org.junit.Assert.assertTrue;
 @Slf4j
 public class SimpleWorkFlowTest extends BaseIntegrationTest {
 
-	private static final String projectName = "project-1";
-
-	private static final String projectDescription = "an example project";
-
 	@Test
 	public void runSimpleWorkFlow() throws ApiException, InterruptedException {
 		log.info("Running simple flow");
-
-		ProjectResponseDTO testProject = SdkUtils.getProjectAsync(apiClient, projectName, projectDescription);
 
 		// GET simpleSequentialWorkFlow DEFINITIONS
 		WorkflowDefinitionApi workflowDefinitionApi = new WorkflowDefinitionApi();
