@@ -26,6 +26,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import com.redhat.parodos.notification.jpa.entity.base.AbstractEntity;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * The message associated with a notification. Want to ensure that the potentially large
@@ -37,6 +39,8 @@ import com.redhat.parodos.notification.jpa.entity.base.AbstractEntity;
  * @author Annel Ketcha (Github: anludke)
  */
 @Entity
+@Setter
+@Getter
 @Table(name = "NotificationMessage")
 public class NotificationMessage extends AbstractEntity {
 
@@ -72,70 +76,6 @@ public class NotificationMessage extends AbstractEntity {
 	private String body;
 
 	private String fromuser;
-
-	public List<String> getUsernames() {
-		return usernames;
-	}
-
-	public void setUsernames(List<String> usernames) {
-		this.usernames = usernames;
-	}
-
-	public List<String> getGroupNames() {
-		return groupNames;
-	}
-
-	public void setGroupNames(List<String> groupNames) {
-		this.groupNames = groupNames;
-	}
-
-	public NotificationRecord getNotificationsRecord() {
-		return notificationRecord;
-	}
-
-	public void setNotificationsRecord(NotificationRecord notificationRecord) {
-		this.notificationRecord = notificationRecord;
-	}
-
-	public String getSubject() {
-		return subject;
-	}
-
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
-
-	public Instant getCreatedOn() {
-		return createdOn;
-	}
-
-	public void setCreatedOn(Instant createdOn) {
-		this.createdOn = createdOn;
-	}
-
-	public String getMessageType() {
-		return messageType;
-	}
-
-	public void setMessageType(String messageType) {
-		this.messageType = messageType;
-	}
-
-	public String getBody() {
-		return body;
-	}
-
-	public void setBody(String body) {
-		this.body = body;
-	}
-
-	public String getFromuser() {
-		return fromuser;
-	}
-
-	public void setFromuser(String fromuser) {
-		this.fromuser = fromuser;
-	}
 
 	@Override
 	public String toString() {

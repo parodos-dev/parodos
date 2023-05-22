@@ -31,7 +31,9 @@ import javax.validation.constraints.NotNull;
 import com.redhat.parodos.notification.jpa.entity.base.AbstractEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * Represents a user in the system, not definitive owner, can create a record per user
@@ -47,6 +49,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "NotificationUser")
 @Builder
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class NotificationUser extends AbstractEntity {
@@ -65,38 +69,14 @@ public class NotificationUser extends AbstractEntity {
 	@Builder.Default
 	private List<NotificationRecord> notificationRecordList = new ArrayList<>();
 
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public List<NotificationGroup> getNotificationGroupList() {
-		return notificationGroupList;
-	}
-
-	public void setNotificationGroupList(List<NotificationGroup> notificationGroupList) {
-		this.notificationGroupList = notificationGroupList;
-	}
-
 	public void addNotificationGroup(NotificationGroup notificationGroup) {
 		this.notificationGroupList.add(notificationGroup);
-		notificationGroup.getNotificationsUserList().add(this);
+		notificationGroup.getNotificationUserList().add(this);
 	}
 
 	public void removeNotificationGroup(NotificationGroup notificationGroup) {
 		this.notificationGroupList.remove(notificationGroup);
-		notificationGroup.getNotificationsUserList().remove(this);
-	}
-
-	public List<NotificationRecord> getNotificationRecordList() {
-		return notificationRecordList;
-	}
-
-	public void setNotificationRecordList(List<NotificationRecord> notificationRecordList) {
-		this.notificationRecordList = notificationRecordList;
+		notificationGroup.getNotificationUserList().remove(this);
 	}
 
 	public void addNotificationRecord(NotificationRecord notificationRecord) {
