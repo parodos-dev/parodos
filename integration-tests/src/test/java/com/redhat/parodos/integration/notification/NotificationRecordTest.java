@@ -1,6 +1,5 @@
 package com.redhat.parodos.integration.notification;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +23,7 @@ import org.springframework.http.HttpHeaders;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -45,7 +45,7 @@ public class NotificationRecordTest {
 	private int countNotificationsExpectedCount = 0;
 
 	@Before
-	public void setUp() throws IOException {
+	public void setUp() throws ApiException {
 		String serverIp = Optional.ofNullable(System.getenv("NOTIFICATION_SERVER_ADDRESS")).orElse("localhost");
 		String serverPort = Optional.ofNullable(System.getenv("NOTIFICATION_SERVER_PORT")).orElse("8080");
 		String BASE_PATH = "http://" + serverIp + ":" + serverPort;
@@ -56,6 +56,9 @@ public class NotificationRecordTest {
 		apiClient.setBasePath(BASE_PATH);
 		recordApiInstance = new NotificationRecordApi(apiClient);
 		messageApiInstance = new NotificationMessageApi(apiClient);
+
+		// When junit5 will be available, move this method in @BeforeAll
+		cleanUpNotifications();
 	}
 
 	@Test
@@ -260,4 +263,16 @@ public class NotificationRecordTest {
 		listNotificationsExpectedCount--;
 	}
 
+	private void cleanUpNotifications() throws ApiException {
+		PageNotificationRecordResponseDTO notifications = null;
+		notifications = recordApiInstance.getNotifications(0, 50, null, null, null);
+
+		if (notifications.getContent().size() > 0) {
+			for (NotificationRecordResponseDTO record : notifications.getContent()) {
+				recordApiInstance.deleteNotification(record.getId());
+			}
+			notifications = recordApiInstance.getNotifications(0, 50, null, null, null);
+			assertTrue(notifications.getContent().size() == 0);
+		}
+	}
 }
