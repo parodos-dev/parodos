@@ -15,6 +15,8 @@
  */
 package com.redhat.parodos.notification.exceptions;
 
+import java.util.UUID;
+
 /**
  * The NotificationRecordNotFoundException wraps unchecked standard Java exception and
  * enriches them with a custom error code. You can use this execution when there is a miss
@@ -27,8 +29,8 @@ public class NotificationRecordNotFoundException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public NotificationRecordNotFoundException(String message) {
-		super(message);
+	public NotificationRecordNotFoundException(UUID id) {
+		super("Notification record not found: %s".formatted(id));
 	}
 
 }

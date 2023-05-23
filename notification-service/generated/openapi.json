@@ -43,6 +43,16 @@
               }
             },
             "description" : "Bad Request"
+          },
+          "404" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Not Found"
           }
         },
         "tags" : [ "Notification Message" ]
@@ -138,6 +148,16 @@
               }
             },
             "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Not Found"
           }
         },
         "summary" : "Return a list of notification records for the user",
@@ -199,6 +219,16 @@
               }
             },
             "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Not Found"
           }
         },
         "summary" : "Return the number of the unread notification records for the user",
@@ -236,6 +266,16 @@
           },
           "403" : {
             "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Not Found"
           }
         },
         "summary" : "Delete the specified notification record",
@@ -295,7 +335,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/NotificationRecordResponseDTO"
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
                 }
               }
             },
