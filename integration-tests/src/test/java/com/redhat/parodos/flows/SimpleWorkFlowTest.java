@@ -3,14 +3,17 @@ package com.redhat.parodos.flows;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
-import com.redhat.parodos.flows.base.BaseIntegrationTest;
+import com.redhat.parodos.flows.common.WorkFlowTestBuilder;
+import com.redhat.parodos.flows.common.WorkFlowTestBuilder.TestComponents;
 import com.redhat.parodos.sdk.api.WorkflowApi;
-import com.redhat.parodos.sdk.api.WorkflowDefinitionApi;
 import com.redhat.parodos.sdk.invoker.ApiException;
 import com.redhat.parodos.sdk.model.ArgumentRequestDTO;
 import com.redhat.parodos.sdk.model.WorkDefinitionResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
+import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO.ProcessingTypeEnum;
+import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO.TypeEnum;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
 import com.redhat.parodos.sdk.model.WorkFlowResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowResponseDTO.WorkStatusEnum;
@@ -32,45 +35,15 @@ import static org.junit.Assert.assertTrue;
  * @author Gloria Ciavarrini (Github: gciavarrini)
  */
 @Slf4j
-public class SimpleWorkFlowTest extends BaseIntegrationTest {
+public class SimpleWorkFlowTest {
+
+	private static final String WORKFLOW_NAME = "simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW;
 
 	@Test
 	public void runSimpleWorkFlow() throws ApiException, InterruptedException {
-		log.info("Running simple flow");
-
-		// GET simpleSequentialWorkFlow DEFINITIONS
-		WorkflowDefinitionApi workflowDefinitionApi = new WorkflowDefinitionApi();
-		List<WorkFlowDefinitionResponseDTO> simpleSequentialWorkFlowDefinitions = workflowDefinitionApi
-				.getWorkFlowDefinitions("simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW);
-		assertEquals(1, simpleSequentialWorkFlowDefinitions.size());
-
-		// GET WORKFLOW DEFINITION BY Id
-		WorkFlowDefinitionResponseDTO simpleSequentialWorkFlowDefinition = workflowDefinitionApi
-				.getWorkFlowDefinitionById(simpleSequentialWorkFlowDefinitions.get(0).getId());
-
-		assertNotNull(simpleSequentialWorkFlowDefinition.getId());
-		assertEquals("simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW,
-				simpleSequentialWorkFlowDefinition.getName());
-		assertEquals(WorkFlowDefinitionResponseDTO.ProcessingTypeEnum.SEQUENTIAL,
-				simpleSequentialWorkFlowDefinition.getProcessingType());
-		assertEquals(WorkFlowDefinitionResponseDTO.TypeEnum.INFRASTRUCTURE,
-				simpleSequentialWorkFlowDefinition.getType());
-
-		assertNotNull(simpleSequentialWorkFlowDefinition.getWorks());
-		assertEquals(2, simpleSequentialWorkFlowDefinition.getWorks().size());
-		assertEquals("restCallTask", simpleSequentialWorkFlowDefinition.getWorks().get(0).getName());
-		assertEquals(WorkDefinitionResponseDTO.WorkTypeEnum.TASK,
-				simpleSequentialWorkFlowDefinition.getWorks().get(0).getWorkType());
-		assertTrue(CollectionUtils.isEmpty(simpleSequentialWorkFlowDefinition.getWorks().get(0).getWorks()));
-		assertNull(simpleSequentialWorkFlowDefinition.getWorks().get(0).getProcessingType());
-		assertNotNull(simpleSequentialWorkFlowDefinition.getWorks().get(0).getParameters());
-
-		assertEquals("loggingTask", simpleSequentialWorkFlowDefinition.getWorks().get(1).getName());
-		assertEquals(WorkDefinitionResponseDTO.WorkTypeEnum.TASK,
-				simpleSequentialWorkFlowDefinition.getWorks().get(1).getWorkType());
-		assertTrue(CollectionUtils.isEmpty(simpleSequentialWorkFlowDefinition.getWorks().get(1).getWorks()));
-		assertNull(simpleSequentialWorkFlowDefinition.getWorks().get(1).getProcessingType());
-		assertNotNull(simpleSequentialWorkFlowDefinition.getWorks().get(1).getParameters());
+		log.info("******** Running The Simple WorkFlow ********");
+		TestComponents components = new WorkFlowTestBuilder().withDefaultProject()
+				.withWorkFlowDefinition(WORKFLOW_NAME, getWorkFlowDefinitionResponseConsumer()).build();
 
 		// Define WorkRequests
 		WorkRequestDTO work1 = new WorkRequestDTO();
@@ -80,18 +53,17 @@ public class SimpleWorkFlowTest extends BaseIntegrationTest {
 
 		WorkRequestDTO work2 = new WorkRequestDTO();
 		work2.setWorkName("loggingTask");
-		work2.setArguments(Arrays.asList(new ArgumentRequestDTO().key("user-id").value("test-user-id"),
+		work2.setArguments(List.of(new ArgumentRequestDTO().key("user-id").value("test-user-id"),
 				new ArgumentRequestDTO().key("api-server").value("test-api-server")));
 
 		// Define WorkFlowRequest
 		WorkFlowRequestDTO workFlowRequestDTO = new WorkFlowRequestDTO();
-		workFlowRequestDTO.setProjectId(testProject.getId());
-		workFlowRequestDTO.setWorkFlowName("simpleSequentialWorkFlow_INFRASTRUCTURE_WORKFLOW");
+		workFlowRequestDTO.setProjectId(components.project().getId());
+		workFlowRequestDTO.setWorkFlowName(WORKFLOW_NAME);
 		workFlowRequestDTO.setWorks(Arrays.asList(work1, work2));
 
-		WorkflowApi workflowApi = new WorkflowApi();
 		log.info("******** Running The Simple Sequence Flow ********");
-
+		WorkflowApi workflowApi = new WorkflowApi(components.apiClient());
 		WorkFlowResponseDTO workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
 
 		assertNotNull(workFlowResponseDTO.getWorkFlowExecutionId());
@@ -107,6 +79,31 @@ public class SimpleWorkFlowTest extends BaseIntegrationTest {
 		assertEquals(WorkFlowStatusResponseDTO.StatusEnum.COMPLETED, workFlowStatusResponseDTO.getStatus());
 		log.info("workflow finished successfully with response: {}", workFlowResponseDTO);
 		log.info("******** Simple Sequence Flow Completed ********");
+	}
+
+	private static Consumer<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitionResponseConsumer() {
+		return workFlowDefinition -> {
+			assertNotNull(workFlowDefinition.getId());
+			assertEquals(WORKFLOW_NAME, workFlowDefinition.getName());
+			assertEquals(ProcessingTypeEnum.SEQUENTIAL, workFlowDefinition.getProcessingType());
+			assertEquals(TypeEnum.INFRASTRUCTURE, workFlowDefinition.getType());
+
+			assertNotNull(workFlowDefinition.getWorks());
+			assertEquals(2, workFlowDefinition.getWorks().size());
+			assertEquals("restCallTask", workFlowDefinition.getWorks().get(0).getName());
+			assertEquals(WorkDefinitionResponseDTO.WorkTypeEnum.TASK,
+					workFlowDefinition.getWorks().get(0).getWorkType());
+			assertTrue(CollectionUtils.isEmpty(workFlowDefinition.getWorks().get(0).getWorks()));
+			assertNull(workFlowDefinition.getWorks().get(0).getProcessingType());
+			assertNotNull(workFlowDefinition.getWorks().get(0).getParameters());
+
+			assertEquals("loggingTask", workFlowDefinition.getWorks().get(1).getName());
+			assertEquals(WorkDefinitionResponseDTO.WorkTypeEnum.TASK,
+					workFlowDefinition.getWorks().get(1).getWorkType());
+			assertTrue(CollectionUtils.isEmpty(workFlowDefinition.getWorks().get(1).getWorks()));
+			assertNull(workFlowDefinition.getWorks().get(1).getProcessingType());
+			assertNotNull(workFlowDefinition.getWorks().get(1).getParameters());
+		};
 	}
 
 }
