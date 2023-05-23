@@ -27,6 +27,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import lombok.Data;
+
 /**
  * Work execution context. This can be used to pass initial parameters to the workflow and
  * share data between work units.
@@ -35,6 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
+@Data
 public class WorkContext {
 
 	private final Map<String, Object> context = new ConcurrentHashMap<>();
