@@ -32,6 +32,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Bad Request
+        "404":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Not Found
       tags:
       - Notification Message
       x-content-type: application/json
@@ -113,6 +119,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/PageNotificationRecordResponseDTO'
           description: Forbidden
+        "404":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Not Found
       summary: Return a list of notification records for the user
       tags:
       - Notification Record
@@ -159,6 +171,12 @@ paths:
                 format: int32
                 type: integer
           description: Forbidden
+        "404":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Not Found
       summary: Return the number of the unread notification records for the user
       tags:
       - Notification Record
@@ -188,6 +206,12 @@ paths:
           description: Unauthorized
         "403":
           description: Forbidden
+        "404":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Not Found
       summary: Delete the specified notification record
       tags:
       - Notification Record
@@ -236,7 +260,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/NotificationRecordResponseDTO'
+                $ref: '#/components/schemas/ErrorMessageDTO'
           description: Not found
       summary: Update the specified notification record with user operation
       tags:

@@ -96,6 +96,11 @@ public class NotificationRecordApi {
 	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call countUnreadNotificationsCall(String state, final ApiCallback _callback) throws ApiException {
@@ -193,6 +198,11 @@ public class NotificationRecordApi {
 	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public Integer countUnreadNotifications(String state) throws ApiException {
@@ -231,6 +241,11 @@ public class NotificationRecordApi {
 	 * <tr>
 	 * <td>403</td>
 	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -276,6 +291,11 @@ public class NotificationRecordApi {
 	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call countUnreadNotificationsAsync(String state, final ApiCallback<Integer> _callback)
@@ -319,6 +339,11 @@ public class NotificationRecordApi {
 	 * <tr>
 	 * <td>403</td>
 	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -413,6 +438,11 @@ public class NotificationRecordApi {
 	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public void deleteNotification(UUID id) throws ApiException {
@@ -450,6 +480,11 @@ public class NotificationRecordApi {
 	 * <tr>
 	 * <td>403</td>
 	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -491,6 +526,11 @@ public class NotificationRecordApi {
 	 * <tr>
 	 * <td>403</td>
 	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -538,6 +578,11 @@ public class NotificationRecordApi {
 	 * <tr>
 	 * <td>403</td>
 	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -653,6 +698,11 @@ public class NotificationRecordApi {
 	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public PageNotificationRecordResponseDTO getNotifications(Integer page, Integer size, List<String> sort,
@@ -698,6 +748,11 @@ public class NotificationRecordApi {
 	 * <tr>
 	 * <td>403</td>
 	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -747,6 +802,11 @@ public class NotificationRecordApi {
 	 * <tr>
 	 * <td>403</td>
 	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
