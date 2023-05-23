@@ -2,10 +2,11 @@ package com.redhat.parodos.flows;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
-import com.redhat.parodos.flows.base.BaseIntegrationTest;
+import com.redhat.parodos.flows.common.WorkFlowTestBuilder;
+import com.redhat.parodos.flows.common.WorkFlowTestBuilder.TestComponents;
 import com.redhat.parodos.sdk.api.WorkflowApi;
-import com.redhat.parodos.sdk.api.WorkflowDefinitionApi;
 import com.redhat.parodos.sdk.invoker.ApiException;
 import com.redhat.parodos.sdk.model.ArgumentRequestDTO;
 import com.redhat.parodos.sdk.model.WorkDefinitionResponseDTO;
@@ -27,38 +28,15 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @Slf4j
-public class PrebuiltWorkFlowTest extends BaseIntegrationTest {
+public class PrebuiltWorkFlowTest {
+
+	private static final String WORKFLOW_NAME = "prebuiltWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW;
 
 	@Test
 	public void runPreBuiltWorkFlow() throws ApiException, InterruptedException {
-		String workFlowName = "prebuiltWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW;
-
-		log.info("Running pre-built flow (name: {})", workFlowName);
-
-		// GET preBuiltWorkFlow DEFINITIONS
-		WorkflowDefinitionApi workflowDefinitionApi = new WorkflowDefinitionApi(apiClient);
-		List<WorkFlowDefinitionResponseDTO> prebuiltWorkFlowDefinitions = workflowDefinitionApi
-				.getWorkFlowDefinitions(workFlowName);
-		assertEquals(1, prebuiltWorkFlowDefinitions.size());
-
-		// GET WORKFLOW DEFINITION BY Id
-		WorkFlowDefinitionResponseDTO prebuiltWorkFlowDefinition = workflowDefinitionApi
-				.getWorkFlowDefinitionById(prebuiltWorkFlowDefinitions.get(0).getId());
-
-		assertNotNull(prebuiltWorkFlowDefinition.getId());
-		assertEquals(workFlowName, prebuiltWorkFlowDefinition.getName());
-		assertEquals(WorkFlowDefinitionResponseDTO.ProcessingTypeEnum.SEQUENTIAL,
-				prebuiltWorkFlowDefinition.getProcessingType());
-		assertEquals(WorkFlowDefinitionResponseDTO.TypeEnum.INFRASTRUCTURE, prebuiltWorkFlowDefinition.getType());
-
-		assertNotNull(prebuiltWorkFlowDefinition.getWorks());
-		assertEquals(1, prebuiltWorkFlowDefinition.getWorks().size());
-		assertEquals("notificationTask", prebuiltWorkFlowDefinition.getWorks().get(0).getName());
-		assertEquals(WorkDefinitionResponseDTO.WorkTypeEnum.TASK,
-				prebuiltWorkFlowDefinition.getWorks().get(0).getWorkType());
-		assertTrue(CollectionUtils.isEmpty(prebuiltWorkFlowDefinition.getWorks().get(0).getWorks()));
-		assertNull(prebuiltWorkFlowDefinition.getWorks().get(0).getProcessingType());
-		assertNotNull(prebuiltWorkFlowDefinition.getWorks().get(0).getParameters());
+		log.info("******** Running The pre-built WorkFlow (name: {}) ********", WORKFLOW_NAME);
+		TestComponents components = new WorkFlowTestBuilder().withDefaultProject()
+				.withWorkFlowDefinition(WORKFLOW_NAME, getWorkFlowDefinitionResponseConsumer()).build();
 
 		// Define WorkRequests
 		WorkRequestDTO work1 = new WorkRequestDTO();
@@ -70,11 +48,11 @@ public class PrebuiltWorkFlowTest extends BaseIntegrationTest {
 
 		// Define WorkFlowRequest
 		WorkFlowRequestDTO workFlowRequestDTO = new WorkFlowRequestDTO();
-		workFlowRequestDTO.setProjectId(testProject.getId());
-		workFlowRequestDTO.setWorkFlowName(workFlowName);
+		workFlowRequestDTO.setProjectId(components.project().getId());
+		workFlowRequestDTO.setWorkFlowName(WORKFLOW_NAME);
 		workFlowRequestDTO.setWorks(List.of(work1));
 
-		WorkflowApi workflowApi = new WorkflowApi(apiClient);
+		WorkflowApi workflowApi = new WorkflowApi(components.apiClient());
 		log.info("******** Running The PreBuilt Flow ********");
 		WorkFlowResponseDTO workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
 
@@ -88,6 +66,25 @@ public class PrebuiltWorkFlowTest extends BaseIntegrationTest {
 		assertEquals(WorkFlowStatusResponseDTO.StatusEnum.COMPLETED, workFlowStatusResponseDTO.getStatus());
 		log.info("workflow finished successfully with response: {}", workFlowResponseDTO);
 		log.info("******** PreBuilt Sequence Flow Completed ********");
+	}
+
+	private Consumer<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitionResponseConsumer() {
+		return workFlowDefinition -> {
+			assertNotNull(workFlowDefinition.getId());
+			assertEquals(WORKFLOW_NAME, workFlowDefinition.getName());
+			assertEquals(WorkFlowDefinitionResponseDTO.ProcessingTypeEnum.SEQUENTIAL,
+					workFlowDefinition.getProcessingType());
+			assertEquals(WorkFlowDefinitionResponseDTO.TypeEnum.INFRASTRUCTURE, workFlowDefinition.getType());
+
+			assertNotNull(workFlowDefinition.getWorks());
+			assertEquals(1, workFlowDefinition.getWorks().size());
+			assertEquals("notificationTask", workFlowDefinition.getWorks().get(0).getName());
+			assertEquals(WorkDefinitionResponseDTO.WorkTypeEnum.TASK,
+					workFlowDefinition.getWorks().get(0).getWorkType());
+			assertTrue(CollectionUtils.isEmpty(workFlowDefinition.getWorks().get(0).getWorks()));
+			assertNull(workFlowDefinition.getWorks().get(0).getProcessingType());
+			assertNotNull(workFlowDefinition.getWorks().get(0).getParameters());
+		};
 	}
 
 }
