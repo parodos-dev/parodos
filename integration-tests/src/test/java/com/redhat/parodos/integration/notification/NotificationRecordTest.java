@@ -48,7 +48,7 @@ public class NotificationRecordTest {
 	public void setUp() throws ApiException {
 		String serverIp = Optional.ofNullable(System.getenv("NOTIFICATION_SERVER_ADDRESS")).orElse("localhost");
 		String serverPort = Optional.ofNullable(System.getenv("NOTIFICATION_SERVER_PORT")).orElse("8080");
-		String BASE_PATH = "http://" + serverIp + ":" + serverPort;
+		String BASE_PATH = "http://" + serverIp + ":" + serverPort + "/notification-service";
 		log.info("NotificationWorkFlowTask basePath: {}", BASE_PATH);
 
 		ApiClient apiClient = Configuration.getDefaultApiClient();
