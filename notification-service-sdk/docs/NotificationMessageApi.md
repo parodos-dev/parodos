@@ -66,4 +66,5 @@ No authorization required
 |-------------|-------------|------------------|
 | **201** | Created |  -  |
 | **400** | Bad Request |  -  |
+| **404** | Not Found |  -  |
 

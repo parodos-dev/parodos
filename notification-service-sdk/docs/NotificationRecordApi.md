@@ -72,6 +72,7 @@ No authorization required
 | **400** | Bad Request |  -  |
 | **401** | Unauthorized |  -  |
 | **403** | Forbidden |  -  |
+| **404** | Not Found |  -  |
 
 <a name="deleteNotification"></a>
 # **deleteNotification**
@@ -134,6 +135,7 @@ No authorization required
 | **400** | Bad Request |  -  |
 | **401** | Unauthorized |  -  |
 | **403** | Forbidden |  -  |
+| **404** | Not Found |  -  |
 
 <a name="getNotifications"></a>
 # **getNotifications**
@@ -205,6 +207,7 @@ No authorization required
 | **400** | Bad request |  -  |
 | **401** | Unauthorized |  -  |
 | **403** | Forbidden |  -  |
+| **404** | Not Found |  -  |
 
 <a name="updateNotificationStatusById"></a>
 # **updateNotificationStatusById**

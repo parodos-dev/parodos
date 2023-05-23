@@ -82,6 +82,11 @@ public class NotificationMessageApi {
 	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call createCall(NotificationMessageCreateRequestDTO notificationMessageCreateRequestDTO,
@@ -165,6 +170,11 @@ public class NotificationMessageApi {
 	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public void create(NotificationMessageCreateRequestDTO notificationMessageCreateRequestDTO) throws ApiException {
@@ -191,6 +201,11 @@ public class NotificationMessageApi {
 	 * <tr>
 	 * <td>400</td>
 	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -223,6 +238,11 @@ public class NotificationMessageApi {
 	 * <tr>
 	 * <td>400</td>
 	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
