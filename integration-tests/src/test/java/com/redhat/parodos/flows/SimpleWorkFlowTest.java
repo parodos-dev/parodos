@@ -42,7 +42,7 @@ public class SimpleWorkFlowTest {
 	@Test
 	public void runSimpleWorkFlow() throws ApiException, InterruptedException {
 		log.info("******** Running The Simple WorkFlow ********");
-		TestComponents components = new WorkFlowTestBuilder().withDefaultProject()
+		TestComponents components = new WorkFlowTestBuilder().withProject("simpleWorkFlowProject", "test project")
 				.withWorkFlowDefinition(WORKFLOW_NAME, getWorkFlowDefinitionResponseConsumer()).build();
 
 		// Define WorkRequests

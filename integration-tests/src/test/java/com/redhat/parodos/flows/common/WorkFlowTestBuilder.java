@@ -66,26 +66,26 @@ public class WorkFlowTestBuilder {
 	// Test two methods to retrieve the workflow definition: one by name and one by id
 	// The consumer is used to test the workflow definition.
 	private void setupWorkFlowDefinition() throws ApiException {
-		WorkflowDefinitionApi workflowDefinitionApi = new WorkflowDefinitionApi(apiClient);
+		WorkflowDefinitionApi workflowDefinitionApi = new WorkflowDefinitionApi(this.apiClient);
 
 		// Get workflow definition by name
 		List<WorkFlowDefinitionResponseDTO> workFlowDefinitions = workflowDefinitionApi
-				.getWorkFlowDefinitions(workFlowName);
+				.getWorkFlowDefinitions(this.workFlowName);
 		assertThat(workFlowDefinitions.size()).isEqualTo(1);
 		assertThat(workFlowDefinitions.get(0)).isNotNull();
-		assertThat(workFlowDefinitions.get(0).getName()).isEqualTo(workFlowName);
+		assertThat(workFlowDefinitions.get(0).getName()).isEqualTo(this.workFlowName);
 		assertThat(workFlowDefinitions.get(0).getId()).isNotNull();
 
 		// Get workflow definition by ID
 		WorkFlowDefinitionResponseDTO workFlowDefinition = workflowDefinitionApi
 				.getWorkFlowDefinitionById(workFlowDefinitions.get(0).getId());
 
-		workFlowDefinitionConsumer.accept(workFlowDefinition);
+		this.workFlowDefinitionConsumer.accept(workFlowDefinition);
 	}
 
 	private void setupClient() throws InterruptedException, ApiException {
-		apiClient = getParodosAPiClient();
-		assertThat(apiClient).isNotNull();
+		this.apiClient = getParodosAPiClient();
+		assertThat(this.apiClient).isNotNull();
 	}
 
 	public WorkFlowTestBuilder withWorkFlowDefinition(String workflowName,
@@ -96,12 +96,12 @@ public class WorkFlowTestBuilder {
 		return this;
 	}
 
-	public WorkFlowTestBuilder withWorkFlowDefinition(String workflowName) {
-		assertThat(workflowName).isNotBlank();
-		this.workFlowName = workflowName;
+	public WorkFlowTestBuilder withWorkFlowDefinition(String workFlowName) {
+		assertThat(workFlowName).isNotBlank();
+		this.workFlowName = workFlowName;
 		this.workFlowDefinitionConsumer = (workFlowDefinition) -> {
 			assertThat(workFlowDefinition.getId()).isNotNull();
-			assertThat(workFlowDefinition.getName()).isEqualTo(workflowName);
+			assertThat(workFlowDefinition.getName()).isEqualTo(this.workFlowName);
 		};
 		return this;
 	}
