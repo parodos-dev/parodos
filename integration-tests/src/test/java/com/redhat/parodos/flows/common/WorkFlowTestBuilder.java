@@ -84,7 +84,7 @@ public class WorkFlowTestBuilder {
 
 	private void setupClient() throws InterruptedException, ApiException {
 		this.apiClient = WorkFlowServiceSdkUtils.getParodosAPiClient();
-		assertThat(this.apiClient).isNotNull();
+		assertThat(apiClient).isNotNull();
 	}
 
 	public WorkFlowTestBuilder withWorkFlowDefinition(String workflowName,
