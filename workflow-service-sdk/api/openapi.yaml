@@ -477,7 +477,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WorkFlowResponseDTO'
+                $ref: '#/components/schemas/WorkFlowExecutionResponseDTO'
           description: Accepted
         "400":
           content:
@@ -1034,6 +1034,23 @@ components:
           items:
             $ref: '#/components/schemas/WorkDefinitionResponseDTO'
           type: array
+      type: object
+    WorkFlowExecutionResponseDTO:
+      example:
+        workStatus: FAILED
+        workFlowExecutionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        workFlowExecutionId:
+          format: uuid
+          type: string
+        workStatus:
+          enum:
+          - FAILED
+          - COMPLETED
+          - IN_PROGRESS
+          - REJECTED
+          - PENDING
+          type: string
       type: object
     WorkFlowOption:
       example:

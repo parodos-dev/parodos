@@ -11,9 +11,9 @@ import com.redhat.parodos.sdk.invoker.ApiException;
 import com.redhat.parodos.sdk.model.ArgumentRequestDTO;
 import com.redhat.parodos.sdk.model.WorkFlowContextResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
+import com.redhat.parodos.sdk.model.WorkFlowExecutionResponseDTO;
+import com.redhat.parodos.sdk.model.WorkFlowExecutionResponseDTO.WorkStatusEnum;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
-import com.redhat.parodos.sdk.model.WorkFlowResponseDTO;
-import com.redhat.parodos.sdk.model.WorkFlowResponseDTO.WorkStatusEnum;
 import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.sdk.model.WorkRequestDTO;
 import com.redhat.parodos.sdkutils.SdkUtils;
@@ -49,7 +49,7 @@ public class ComplexWorkFlowTest {
 
 		log.info("Running the Assessment to see what WorkFlows are eligible for this situation:");
 		WorkflowApi workflowApi = new WorkflowApi(components.apiClient());
-		WorkFlowResponseDTO workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
+		WorkFlowExecutionResponseDTO workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
 		assertEquals(WorkStatusEnum.IN_PROGRESS, workFlowResponseDTO.getWorkStatus());
 		log.info("workflow submitted successfully with response: {}", workFlowResponseDTO);
 
@@ -103,7 +103,7 @@ public class ComplexWorkFlowTest {
 		workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
 
 		assertNotNull("There is no valid WorkFlowExecutionId", workFlowResponseDTO.getWorkFlowExecutionId());
-		assertEquals(workFlowResponseDTO.getWorkStatus(), WorkStatusEnum.IN_PROGRESS);
+		assertEquals(WorkStatusEnum.IN_PROGRESS, workFlowResponseDTO.getWorkStatus());
 		log.info("Onboarding workflow execution id: {}", workFlowResponseDTO.getWorkFlowExecutionId());
 
 		workFlowStatusResponseDTO = SdkUtils.waitWorkflowStatusAsync(workflowApi,

@@ -140,6 +140,7 @@ Class | Method | HTTP request | Description
  - [WorkFlowCheckerTaskRequestDTO](docs/WorkFlowCheckerTaskRequestDTO.md)
  - [WorkFlowContextResponseDTO](docs/WorkFlowContextResponseDTO.md)
  - [WorkFlowDefinitionResponseDTO](docs/WorkFlowDefinitionResponseDTO.md)
+ - [WorkFlowExecutionResponseDTO](docs/WorkFlowExecutionResponseDTO.md)
  - [WorkFlowOption](docs/WorkFlowOption.md)
  - [WorkFlowOptionsResponseDTO](docs/WorkFlowOptionsResponseDTO.md)
  - [WorkFlowPropertiesDefinitionDTO](docs/WorkFlowPropertiesDefinitionDTO.md)

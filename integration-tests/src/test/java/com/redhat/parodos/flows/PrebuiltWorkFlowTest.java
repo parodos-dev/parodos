@@ -11,8 +11,9 @@ import com.redhat.parodos.sdk.invoker.ApiException;
 import com.redhat.parodos.sdk.model.ArgumentRequestDTO;
 import com.redhat.parodos.sdk.model.WorkDefinitionResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
+import com.redhat.parodos.sdk.model.WorkFlowExecutionResponseDTO;
+import com.redhat.parodos.sdk.model.WorkFlowExecutionResponseDTO.WorkStatusEnum;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
-import com.redhat.parodos.sdk.model.WorkFlowResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.sdk.model.WorkRequestDTO;
 import com.redhat.parodos.sdkutils.SdkUtils;
@@ -54,11 +55,11 @@ public class PrebuiltWorkFlowTest {
 
 		WorkflowApi workflowApi = new WorkflowApi(components.apiClient());
 		log.info("******** Running The PreBuilt Flow ********");
-		WorkFlowResponseDTO workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
+		WorkFlowExecutionResponseDTO workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
 
 		assertNotNull(workFlowResponseDTO.getWorkFlowExecutionId());
 		assertNotNull(workFlowResponseDTO.getWorkStatus());
-		assertEquals(WorkFlowResponseDTO.WorkStatusEnum.IN_PROGRESS, workFlowResponseDTO.getWorkStatus());
+		assertEquals(WorkStatusEnum.IN_PROGRESS, workFlowResponseDTO.getWorkStatus());
 
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = SdkUtils.waitWorkflowStatusAsync(workflowApi,
 				workFlowResponseDTO.getWorkFlowExecutionId());

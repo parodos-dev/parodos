@@ -28,6 +28,7 @@ import com.redhat.parodos.sdk.invoker.Configuration;
 import com.redhat.parodos.sdk.invoker.Pair;
 import com.redhat.parodos.sdk.model.WorkFlowCheckerTaskRequestDTO;
 import com.redhat.parodos.sdk.model.WorkFlowContextResponseDTO;
+import com.redhat.parodos.sdk.model.WorkFlowExecutionResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
 import com.redhat.parodos.sdk.model.WorkFlowResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
@@ -178,7 +179,7 @@ public class WorkflowApi {
 	/**
 	 * Executes a workflow
 	 * @param workFlowRequestDTO (required)
-	 * @return WorkFlowResponseDTO
+	 * @return WorkFlowExecutionResponseDTO
 	 * @throws ApiException If fail to call the API, e.g. server error or cannot
 	 * deserialize the response body
 	 * @http.response.details
@@ -220,15 +221,15 @@ public class WorkflowApi {
 	 * </tr>
 	 * </table>
 	 */
-	public WorkFlowResponseDTO execute(WorkFlowRequestDTO workFlowRequestDTO) throws ApiException {
-		ApiResponse<WorkFlowResponseDTO> localVarResp = executeWithHttpInfo(workFlowRequestDTO);
+	public WorkFlowExecutionResponseDTO execute(WorkFlowRequestDTO workFlowRequestDTO) throws ApiException {
+		ApiResponse<WorkFlowExecutionResponseDTO> localVarResp = executeWithHttpInfo(workFlowRequestDTO);
 		return localVarResp.getData();
 	}
 
 	/**
 	 * Executes a workflow
 	 * @param workFlowRequestDTO (required)
-	 * @return ApiResponse&lt;WorkFlowResponseDTO&gt;
+	 * @return ApiResponse&lt;WorkFlowExecutionResponseDTO&gt;
 	 * @throws ApiException If fail to call the API, e.g. server error or cannot
 	 * deserialize the response body
 	 * @http.response.details
@@ -270,10 +271,10 @@ public class WorkflowApi {
 	 * </tr>
 	 * </table>
 	 */
-	public ApiResponse<WorkFlowResponseDTO> executeWithHttpInfo(WorkFlowRequestDTO workFlowRequestDTO)
+	public ApiResponse<WorkFlowExecutionResponseDTO> executeWithHttpInfo(WorkFlowRequestDTO workFlowRequestDTO)
 			throws ApiException {
 		okhttp3.Call localVarCall = executeValidateBeforeCall(workFlowRequestDTO, null);
-		Type localVarReturnType = new TypeToken<WorkFlowResponseDTO>() {
+		Type localVarReturnType = new TypeToken<WorkFlowExecutionResponseDTO>() {
 		}.getType();
 		return localVarApiClient.execute(localVarCall, localVarReturnType);
 	}
@@ -325,10 +326,10 @@ public class WorkflowApi {
 	 * </table>
 	 */
 	public okhttp3.Call executeAsync(WorkFlowRequestDTO workFlowRequestDTO,
-			final ApiCallback<WorkFlowResponseDTO> _callback) throws ApiException {
+			final ApiCallback<WorkFlowExecutionResponseDTO> _callback) throws ApiException {
 
 		okhttp3.Call localVarCall = executeValidateBeforeCall(workFlowRequestDTO, _callback);
-		Type localVarReturnType = new TypeToken<WorkFlowResponseDTO>() {
+		Type localVarReturnType = new TypeToken<WorkFlowExecutionResponseDTO>() {
 		}.getType();
 		localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
 		return localVarCall;

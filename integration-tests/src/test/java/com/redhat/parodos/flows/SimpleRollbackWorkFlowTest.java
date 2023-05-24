@@ -8,9 +8,9 @@ import com.redhat.parodos.flows.common.WorkFlowTestBuilder.TestComponents;
 import com.redhat.parodos.sdk.api.WorkflowApi;
 import com.redhat.parodos.sdk.invoker.ApiException;
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
+import com.redhat.parodos.sdk.model.WorkFlowExecutionResponseDTO;
+import com.redhat.parodos.sdk.model.WorkFlowExecutionResponseDTO.WorkStatusEnum;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
-import com.redhat.parodos.sdk.model.WorkFlowResponseDTO;
-import com.redhat.parodos.sdk.model.WorkFlowResponseDTO.WorkStatusEnum;
 import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.sdkutils.SdkUtils;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
@@ -44,7 +44,7 @@ public class SimpleRollbackWorkFlowTest {
 		WorkflowApi workflowApi = new WorkflowApi(components.apiClient());
 		log.info("******** Running The Simple Failed Flow ********");
 
-		WorkFlowResponseDTO workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
+		WorkFlowExecutionResponseDTO workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
 
 		assertNotNull(workFlowResponseDTO.getWorkFlowExecutionId());
 		assertNotNull(workFlowResponseDTO.getWorkStatus());

@@ -13,7 +13,7 @@ All URIs are relative to *http://localhost:8080*
 
 <a name="execute"></a>
 # **execute**
-> WorkFlowResponseDTO execute(workFlowRequestDTO)
+> WorkFlowExecutionResponseDTO execute(workFlowRequestDTO)
 
 Executes a workflow
 
@@ -34,7 +34,7 @@ public class Example {
     WorkflowApi apiInstance = new WorkflowApi(defaultClient);
     WorkFlowRequestDTO workFlowRequestDTO = new WorkFlowRequestDTO(); // WorkFlowRequestDTO | 
     try {
-      WorkFlowResponseDTO result = apiInstance.execute(workFlowRequestDTO);
+      WorkFlowExecutionResponseDTO result = apiInstance.execute(workFlowRequestDTO);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling WorkflowApi#execute");
@@ -55,7 +55,7 @@ public class Example {
 
 ### Return type
 
-[**WorkFlowResponseDTO**](WorkFlowResponseDTO.md)
+[**WorkFlowExecutionResponseDTO**](WorkFlowExecutionResponseDTO.md)
 
 ### Authorization
 

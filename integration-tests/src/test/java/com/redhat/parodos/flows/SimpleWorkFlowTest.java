@@ -14,9 +14,9 @@ import com.redhat.parodos.sdk.model.WorkDefinitionResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO.ProcessingTypeEnum;
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO.TypeEnum;
+import com.redhat.parodos.sdk.model.WorkFlowExecutionResponseDTO;
+import com.redhat.parodos.sdk.model.WorkFlowExecutionResponseDTO.WorkStatusEnum;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
-import com.redhat.parodos.sdk.model.WorkFlowResponseDTO;
-import com.redhat.parodos.sdk.model.WorkFlowResponseDTO.WorkStatusEnum;
 import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.sdk.model.WorkRequestDTO;
 import com.redhat.parodos.sdkutils.SdkUtils;
@@ -64,7 +64,7 @@ public class SimpleWorkFlowTest {
 
 		log.info("******** Running The Simple Sequence Flow ********");
 		WorkflowApi workflowApi = new WorkflowApi(components.apiClient());
-		WorkFlowResponseDTO workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
+		WorkFlowExecutionResponseDTO workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
 
 		assertNotNull(workFlowResponseDTO.getWorkFlowExecutionId());
 		assertNotNull(workFlowResponseDTO.getWorkStatus());
