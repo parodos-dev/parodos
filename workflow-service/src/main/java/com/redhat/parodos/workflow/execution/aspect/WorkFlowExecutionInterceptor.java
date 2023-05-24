@@ -68,32 +68,23 @@ public abstract class WorkFlowExecutionInterceptor implements WorkFlowIntercepto
 
 	public WorkReport handlePostWorkFlowExecution(WorkReport report, WorkFlow workFlow) {
 		// update workflow execution entity
-		workFlowExecution.setStatus(WorkStatus.valueOf(report.getStatus().name()));
+		workFlowExecution.setStatus(report.getStatus());
 		workFlowExecution.setEndDate(new Date());
 
 		WorkFlowPostInterceptor postExecutor = createPostExecutor(workFlow, report.getStatus());
-		WorkReport workReport = null;
-		if (postExecutor != null) {
-			workReport = postExecutor.handlePostWorkFlowExecution();
-		}
+		WorkReport workReport = postExecutor.handlePostWorkFlowExecution();
 		return workReport == null ? report : workReport;
 	}
 
 	private WorkFlowPostInterceptor createPostExecutor(WorkFlow workFlow, WorkStatus workStatus) {
-		switch (workFlowDefinition.getType()) {
-			case INFRASTRUCTURE:
-			case ASSESSMENT:
-				return new AssessmentInfrastructureWorkFlowPostInterceptor(workFlowDefinition, workContext,
-						workFlowService, workFlowRepository, workFlowExecution, getMainWorkFlowExecution());
-			case CHECKER:
-				return new CheckerWorkFlowPostInterceptor(workFlowDefinition, workContext, workFlowService,
-						workFlowSchedulerService, workFlowContinuationServiceImpl, workFlowExecution,
-						getMainWorkFlowExecution(), workFlow, workStatus);
-			default:
-				workFlowService.updateWorkFlow(workFlowExecution);
-				break;
-		}
-		return null;
+		return switch (workFlowDefinition.getType()) {
+			case INFRASTRUCTURE, ASSESSMENT -> new AssessmentInfrastructureWorkFlowPostInterceptor(workFlowDefinition,
+					workContext, workFlowService, workFlowRepository, workFlowExecution, getMainWorkFlowExecution());
+			case CHECKER -> new CheckerWorkFlowPostInterceptor(workFlowDefinition, workContext, workFlowService,
+					workFlowSchedulerService, workFlowContinuationServiceImpl, workFlowExecution,
+					getMainWorkFlowExecution(), workFlow, workStatus);
+			default -> new DefaultWorkFlowPostInterceptor(workFlowService, workFlowExecution);
+		};
 	}
 
 }
