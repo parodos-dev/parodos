@@ -107,6 +107,8 @@ public class JSON {
 				new com.redhat.parodos.sdk.model.WorkFlowContextResponseDTO.CustomTypeAdapterFactory());
 		gsonBuilder.registerTypeAdapterFactory(
 				new com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO.CustomTypeAdapterFactory());
+		gsonBuilder.registerTypeAdapterFactory(
+				new com.redhat.parodos.sdk.model.WorkFlowExecutionResponseDTO.CustomTypeAdapterFactory());
 		gsonBuilder
 				.registerTypeAdapterFactory(new com.redhat.parodos.sdk.model.WorkFlowOption.CustomTypeAdapterFactory());
 		gsonBuilder.registerTypeAdapterFactory(
