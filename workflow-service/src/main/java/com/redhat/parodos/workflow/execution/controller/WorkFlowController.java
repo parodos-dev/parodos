@@ -24,6 +24,7 @@ import javax.validation.constraints.NotEmpty;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowCheckerTaskRequestDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowContextResponseDTO;
+import com.redhat.parodos.workflow.execution.dto.WorkFlowExecutionResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowStatusResponseDTO;
@@ -75,16 +76,17 @@ public class WorkFlowController {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "202", description = "Accepted",
 					content = { @Content(mediaType = "application/json",
-							schema = @Schema(implementation = WorkFlowResponseDTO.class)) }),
+							schema = @Schema(implementation = WorkFlowExecutionResponseDTO.class)) }),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content) })
 	@PostMapping
-	public ResponseEntity<WorkFlowResponseDTO> execute(@RequestBody @Valid WorkFlowRequestDTO workFlowRequestDTO) {
+	public ResponseEntity<WorkFlowExecutionResponseDTO> execute(
+			@RequestBody @Valid WorkFlowRequestDTO workFlowRequestDTO) {
 		WorkReport workReport = workFlowService.execute(workFlowRequestDTO);
 		if (workReport.getStatus() == WorkStatus.FAILED) {
 			return ResponseEntity.status(500).build();
 		}
-		return ResponseEntity.ok(WorkFlowResponseDTO.builder()
+		return ResponseEntity.ok(WorkFlowExecutionResponseDTO.builder()
 				.workFlowExecutionId(WorkContextUtils.getMainExecutionId(workReport.getWorkContext()))
 				.workStatus(workReport.getStatus()).build());
 	}
