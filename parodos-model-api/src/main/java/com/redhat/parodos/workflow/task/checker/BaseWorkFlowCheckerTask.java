@@ -75,7 +75,7 @@ public abstract class BaseWorkFlowCheckerTask extends BaseWorkFlowTask {
 		if (escalationWorkflow != null && report.getStatus() == WorkStatus.FAILED
 				&& new Date().getTime() > expectedCompletionDate) {
 			// run escalation if SLA is exceeded
-			WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(escalationWorkflow, workContext);
+			return WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(escalationWorkflow, workContext);
 		}
 		return report;
 	}
