@@ -669,7 +669,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/WorkFlowResponseDTO"
+                  "$ref" : "#/components/schemas/WorkFlowExecutionResponseDTO"
                 }
               }
             },
@@ -1161,6 +1161,19 @@
             "items" : {
               "$ref" : "#/components/schemas/WorkDefinitionResponseDTO"
             }
+          }
+        }
+      },
+      "WorkFlowExecutionResponseDTO" : {
+        "type" : "object",
+        "properties" : {
+          "workFlowExecutionId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "workStatus" : {
+            "type" : "string",
+            "enum" : [ "FAILED", "COMPLETED", "IN_PROGRESS", "REJECTED", "PENDING" ]
           }
         }
       },
