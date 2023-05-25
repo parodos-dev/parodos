@@ -3,18 +3,15 @@ package com.redhat.parodos.integration.notification;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-import com.redhat.parodos.notification.sdk.api.ApiClient;
+import com.redhat.parodos.integration.notification.common.NotificationTestBuilder;
 import com.redhat.parodos.notification.sdk.api.ApiException;
-import com.redhat.parodos.notification.sdk.api.Configuration;
 import com.redhat.parodos.notification.sdk.api.NotificationMessageApi;
 import com.redhat.parodos.notification.sdk.api.NotificationRecordApi;
 import com.redhat.parodos.notification.sdk.model.NotificationMessageCreateRequestDTO;
 import com.redhat.parodos.notification.sdk.model.NotificationRecordResponseDTO;
 import com.redhat.parodos.notification.sdk.model.PageNotificationRecordResponseDTO;
-import com.redhat.parodos.workflow.utils.CredUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +20,6 @@ import org.springframework.http.HttpHeaders;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -45,20 +41,12 @@ public class NotificationRecordTest {
 	private int countNotificationsExpectedCount = 0;
 
 	@Before
-	public void setUp() throws ApiException {
-		String serverIp = Optional.ofNullable(System.getenv("NOTIFICATION_SERVER_ADDRESS")).orElse("localhost");
-		String serverPort = Optional.ofNullable(System.getenv("NOTIFICATION_SERVER_PORT")).orElse("8080");
-		String BASE_PATH = "http://" + serverIp + ":" + serverPort + "/notification-service";
-		log.info("NotificationWorkFlowTask basePath: {}", BASE_PATH);
+	public void setUp() throws ApiException, InterruptedException {
 
-		ApiClient apiClient = Configuration.getDefaultApiClient();
-		apiClient.addDefaultHeader(HttpHeaders.AUTHORIZATION, "Basic " + CredUtils.getBase64Creds(user, password));
-		apiClient.setBasePath(BASE_PATH);
-		recordApiInstance = new NotificationRecordApi(apiClient);
-		messageApiInstance = new NotificationMessageApi(apiClient);
-
-		// When junit5 will be available, move this method in @BeforeAll
-		cleanUpNotifications();
+		NotificationTestBuilder.TestComponents components = new NotificationTestBuilder().build();
+		log.info("CHECK NotificationWorkFlowTask basePath: {}", components.apiClient().getBasePath());
+		recordApiInstance = new NotificationRecordApi(components.apiClient());
+		messageApiInstance = new NotificationMessageApi(components.apiClient());
 	}
 
 	@Test
@@ -134,10 +122,9 @@ public class NotificationRecordTest {
 	public void notificationServiceCreateAuthErr() {
 		String testName = "notificationServiceCreateAuthErr";
 
-		ApiClient apiClient = Configuration.getDefaultApiClient();
-		apiClient.addDefaultHeader(HttpHeaders.AUTHORIZATION, "");
-		apiClient.setBasePath(BASE_PATH);
-		this.messageApiInstance = new NotificationMessageApi(apiClient);
+		NotificationTestBuilder.TestComponents components = new NotificationTestBuilder().build();
+		components.apiClient().addDefaultHeader(HttpHeaders.AUTHORIZATION, "");
+		this.recordApiInstance = new NotificationRecordApi(components.apiClient());
 
 		ApiException e = assertThrows(ApiException.class, () -> {
 			createNotificationMessage(testName, "type0", "body0", "subject0", List.of(user));
@@ -148,11 +135,9 @@ public class NotificationRecordTest {
 	@Test
 	public void notificationServiceGetAuthErr() {
 		String testName = "notificationServiceGetAuthErr";
-
-		ApiClient apiClient = Configuration.getDefaultApiClient();
-		apiClient.addDefaultHeader(HttpHeaders.AUTHORIZATION, "");
-		apiClient.setBasePath(BASE_PATH);
-		this.recordApiInstance = new NotificationRecordApi(apiClient);
+		NotificationTestBuilder.TestComponents components = new NotificationTestBuilder().build();
+		components.apiClient().addDefaultHeader(HttpHeaders.AUTHORIZATION, "");
+		this.recordApiInstance = new NotificationRecordApi(components.apiClient());
 
 		ApiException e = assertThrows(ApiException.class, () -> {
 			listNotificationRecord(testName, null);
@@ -164,11 +149,9 @@ public class NotificationRecordTest {
 	public void notificationServiceCountAuthErr() {
 		String testName = "notificationServiceCountAuthErr";
 
-		ApiClient apiClient = Configuration.getDefaultApiClient();
-		apiClient.addDefaultHeader(HttpHeaders.AUTHORIZATION, "");
-		apiClient.setBasePath(BASE_PATH);
-		this.recordApiInstance = new NotificationRecordApi(apiClient);
-
+		NotificationTestBuilder.TestComponents components = new NotificationTestBuilder().build();
+		components.apiClient().addDefaultHeader(HttpHeaders.AUTHORIZATION, "");
+		this.recordApiInstance = new NotificationRecordApi(components.apiClient());
 		ApiException e = assertThrows(ApiException.class, () -> {
 			countNotificationRecord(testName);
 		});
@@ -178,11 +161,9 @@ public class NotificationRecordTest {
 	@Test
 	public void notificationServiceDeleteAuthErr() {
 		String testName = "notificationServiceDeleteAuthErr";
-
-		ApiClient apiClient = Configuration.getDefaultApiClient();
-		apiClient.addDefaultHeader(HttpHeaders.AUTHORIZATION, "");
-		apiClient.setBasePath(BASE_PATH);
-		this.recordApiInstance = new NotificationRecordApi(apiClient);
+		NotificationTestBuilder.TestComponents components = new NotificationTestBuilder().build();
+		components.apiClient().addDefaultHeader(HttpHeaders.AUTHORIZATION, "");
+		this.recordApiInstance = new NotificationRecordApi(components.apiClient());
 
 		ApiException e = assertThrows(ApiException.class, () -> {
 			deleteNotificationRecord(testName, UUID.randomUUID());
@@ -193,11 +174,9 @@ public class NotificationRecordTest {
 	@Test
 	public void notificationServiceUpdateAuthErr() {
 		String testName = "notificationServiceUpdateAuthErr";
-
-		ApiClient apiClient = Configuration.getDefaultApiClient();
-		apiClient.addDefaultHeader(HttpHeaders.AUTHORIZATION, "");
-		apiClient.setBasePath(BASE_PATH);
-		this.recordApiInstance = new NotificationRecordApi(apiClient);
+		NotificationTestBuilder.TestComponents components = new NotificationTestBuilder().build();
+		components.apiClient().addDefaultHeader(HttpHeaders.AUTHORIZATION, "");
+		this.recordApiInstance = new NotificationRecordApi(components.apiClient());
 
 		ApiException e = assertThrows(ApiException.class, () -> {
 			updateNotificationRecord(testName, UUID.randomUUID(), "READ");
@@ -263,16 +242,4 @@ public class NotificationRecordTest {
 		listNotificationsExpectedCount--;
 	}
 
-	private void cleanUpNotifications() throws ApiException {
-		PageNotificationRecordResponseDTO notifications = null;
-		notifications = recordApiInstance.getNotifications(0, 50, null, null, null);
-
-		if (notifications.getContent().size() > 0) {
-			for (NotificationRecordResponseDTO record : notifications.getContent()) {
-				recordApiInstance.deleteNotification(record.getId());
-			}
-			notifications = recordApiInstance.getNotifications(0, 50, null, null, null);
-			assertTrue(notifications.getContent().size() == 0);
-		}
-	}
 }
