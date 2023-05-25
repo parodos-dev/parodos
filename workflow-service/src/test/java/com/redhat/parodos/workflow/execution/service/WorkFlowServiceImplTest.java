@@ -32,6 +32,7 @@ import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionContext;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
+import com.redhat.parodos.workflow.execution.service.WorkFlowExecutor.ExecutionContext;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.Work;
@@ -131,8 +132,10 @@ class WorkFlowServiceImplTest {
 				.thenReturn(this.sampleWorkflowDefinition("test"));
 
 		// when
-		WorkReport report = this.workFlowExecutor.execute(UUID.randomUUID(), UUID.randomUUID(), TEST_WORKFLOW_NAME,
-				new WorkContext(), UUID.randomUUID(), null);
+		ExecutionContext executionContext = ExecutionContext.builder().projectId(UUID.randomUUID())
+				.userId(UUID.randomUUID()).workFlowName(TEST_WORKFLOW_NAME).workContext(new WorkContext())
+				.executionId(UUID.randomUUID()).build();
+		WorkReport report = this.workFlowExecutor.execute(executionContext);
 
 		// then
 		assertNotNull(report);

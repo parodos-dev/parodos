@@ -15,18 +15,19 @@ import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
 import com.redhat.parodos.workflow.execution.service.WorkFlowExecutor;
+import com.redhat.parodos.workflow.execution.service.WorkFlowExecutor.ExecutionContext;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -72,7 +73,7 @@ class WorkFlowContinuationServiceImplTest {
 
 		// then
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
-		verify(this.workFlowExecutor, times(0)).executeAsync(any(), any(), any(), any(), any(), any());
+		verify(this.workFlowExecutor, times(0)).executeAsync(any(ExecutionContext.class));
 	}
 
 	@Test
@@ -86,8 +87,8 @@ class WorkFlowContinuationServiceImplTest {
 
 		// then
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
-		verify(this.workFlowExecutor, times(1)).executeAsync(eq(workFlowExecution.getProjectId()),
-				eq(workFlowExecution.getUser().getId()), eq(TEST_WORKFLOW), any(), any(), nullable(String.class));
+
+		verifyAsyncExecution(workFlowExecution);
 	}
 
 	@Test
@@ -102,8 +103,8 @@ class WorkFlowContinuationServiceImplTest {
 
 		// then
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
-		verify(this.workFlowExecutor, times(1)).executeAsync(eq(workFlowExecution.getProjectId()),
-				eq(workFlowExecution.getUser().getId()), eq(TEST_WORKFLOW), any(), any(), nullable(String.class));
+
+		verifyAsyncExecution(workFlowExecution);
 	}
 
 	@Test
@@ -127,8 +128,7 @@ class WorkFlowContinuationServiceImplTest {
 
 		// then
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
-		verify(this.workFlowExecutor, times(1)).executeAsync(eq(workFlowExecution.getProjectId()),
-				eq(workFlowExecution.getUser().getId()), eq(TEST_WORKFLOW), any(), any(), nullable(String.class));
+		verifyAsyncExecution(workFlowExecution);
 	}
 
 	@Test
@@ -146,8 +146,8 @@ class WorkFlowContinuationServiceImplTest {
 
 		when(this.workFlowTaskRepository.findByWorkFlowExecutionId(wfExecution.getId()))
 				.thenReturn(List.of(workFlowTaskExecution));
-		doThrow(new RuntimeException("JsonParseException")).when(workFlowExecutor).executeAsync(any(), any(), any(),
-				any(), any(), any());
+		doThrow(new RuntimeException("JsonParseException")).when(workFlowExecutor)
+				.executeAsync(any(ExecutionContext.class));
 
 		// when
 		Exception exception = assertThrows(RuntimeException.class, () -> this.service.workFlowRunAfterStartup());
@@ -157,7 +157,7 @@ class WorkFlowContinuationServiceImplTest {
 		assertTrue(exception.getMessage().contains("JsonParseException"));
 
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
-		verify(this.workFlowExecutor, times(1)).executeAsync(any(), any(), any(), any(), any(), any());
+		verify(this.workFlowExecutor, times(1)).executeAsync(any(ExecutionContext.class));
 
 	}
 
@@ -185,6 +185,14 @@ class WorkFlowContinuationServiceImplTest {
 		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(TEST_WORKFLOW).build();
 		workFlowDefinition.setId(UUID.randomUUID());
 		return workFlowDefinition;
+	}
+
+	private void verifyAsyncExecution(WorkFlowExecution workFlowExecution) {
+		var argument = ArgumentCaptor.forClass(ExecutionContext.class);
+		verify(this.workFlowExecutor, times(1)).executeAsync(argument.capture());
+		assertThat(argument.getValue().projectId()).isEqualTo(workFlowExecution.getProjectId());
+		assertThat(argument.getValue().userId()).isEqualTo(workFlowExecution.getUser().getId());
+		assertThat(argument.getValue().workFlowName()).isEqualTo(TEST_WORKFLOW);
 	}
 
 }
