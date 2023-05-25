@@ -1,7 +1,5 @@
 package com.redhat.parodos.workflow.execution.service;
 
-import java.util.Optional;
-
 import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.utils.WorkContextUtils;
@@ -34,23 +32,39 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor {
 	@Override
 	public WorkReport execute(ExecutionContext context) {
 		WorkFlow workFlow = workFlowDelegate.getWorkFlowByName(context.workFlowName());
-		log.info("execute workFlow {}", context.workFlowName());
+		log.info("execute workflow {} (ID: {})", context.workFlowName(), context.executionId());
 		WorkContextUtils.updateWorkContextPartially(context.workContext(), context.projectId(), context.userId(),
 				context.workFlowName(), context.executionId());
 		WorkReport report = WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(workFlow, context.workContext());
-		// need to use the status from db to avoid of repetitive execution on rollback
-		if (workFlowRepository.findById(context.executionId())
-				.map(execution -> execution.getStatus() == WorkStatus.FAILED).orElse(false)) {
-			Optional.ofNullable(workFlowDelegate.getWorkFlowByName(context.rollbackWorkFlowName()))
-					.ifPresentOrElse(rollbackWorkFlow -> {
-						log.error(
-								"The Infrastructure  workflow failed. Check the logs for errors coming for the Tasks in this workflow. Checking if there is a Rollback");
-						WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(rollbackWorkFlow, context.workContext());
-					}, () -> log.error(
-							"A rollback workflow could not be found for failed workflow: {} in execution: {}",
-							context.workFlowName(), context.executionId()));
+		if (isExecutionFailed(context)) {
+			log.error("workflow {} (ID: {}) failed. Check the logs for errors coming from the tasks in this workflow.",
+					context.workFlowName(), context.executionId());
+			executeRollbackWorkFlowIfNeeded(context);
 		}
 		return report;
+	}
+
+	private void executeRollbackWorkFlowIfNeeded(ExecutionContext context) {
+		if (context.rollbackWorkFlowName() == null) {
+			return;
+		}
+
+		WorkFlow rollbackWorkFlow = workFlowDelegate.getWorkFlowByName(context.rollbackWorkFlowName());
+		if (rollbackWorkFlow == null) {
+			log.error("A rollback workflow {} could not be found for failed workflow {} (ID: {})",
+					context.rollbackWorkFlowName(), context.workFlowName(), context.executionId());
+			return;
+		}
+
+		log.info("execute rollback workflow {} for workflow {} (ID: {})", context.rollbackWorkFlowName(),
+				context.workFlowName(), context.executionId());
+		WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(rollbackWorkFlow, context.workContext());
+	}
+
+	private boolean isExecutionFailed(ExecutionContext context) {
+		// need to use the status from db to avoid of repetitive execution on rollback
+		return workFlowRepository.findById(context.executionId())
+				.map(execution -> execution.getStatus() == WorkStatus.FAILED).orElse(false);
 	}
 
 }
