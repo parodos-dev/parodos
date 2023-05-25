@@ -36,6 +36,12 @@
         </dependency>
         <dependency>
             <groupId>dev.parodos</groupId>
+            <artifactId>notification-service-sdk</artifactId>
+            <version>${revision}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>dev.parodos</groupId>
             <artifactId>sdk-utils</artifactId>
             <version>${revision}</version>
             <scope>test</scope>
@@ -68,12 +74,6 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>dev.parodos</groupId>
-            <artifactId>notification-service-sdk</artifactId>
-            <version>${revision}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -142,9 +142,6 @@
                                 <include>**/*FlowTest.java</include>
                                 <include>**/integration/**/*.java</include>
                             </includes>
-                            <excludes>
-                                <exclude>**/integration/notification/**/*.java</exclude>
-                            </excludes>
                         </configuration>
                     </plugin>
                 </plugins>
