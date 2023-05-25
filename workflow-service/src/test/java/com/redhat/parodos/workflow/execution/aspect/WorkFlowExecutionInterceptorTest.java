@@ -11,6 +11,7 @@ import com.redhat.parodos.workflow.execution.continuation.WorkFlowContinuationSe
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.scheduler.WorkFlowSchedulerServiceImpl;
+import com.redhat.parodos.workflow.execution.service.WorkFlowExecutor.ExecutionContext;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -25,7 +26,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.eq;
@@ -36,10 +36,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 public class WorkFlowExecutionInterceptorTest {
-
-	private static final UUID TEST_USER_ID = UUID.randomUUID();
-
-	private static final String TEST_USERNAME = "test-username";
 
 	private static final String TEST_WORKFLOW_NAME = "test-workflow-name";
 
@@ -70,7 +66,7 @@ public class WorkFlowExecutionInterceptorTest {
 
 	@BeforeEach
 	public void setUp() {
-		User user = createUser(TEST_USER_ID, TEST_USERNAME);
+		User user = createUser();
 		expectedWorkFlowExecution = new WorkFlowExecution();
 		expectedWorkFlowExecution.setProjectId(UUID.randomUUID());
 		expectedWorkFlowExecution.setUser(user);
@@ -145,14 +141,13 @@ public class WorkFlowExecutionInterceptorTest {
 		verify(workFlowService, times(0)).saveWorkFlow(any(UUID.class), any(UUID.class), any(),
 				eq(WorkStatus.IN_PROGRESS), any(), anyString());
 		verify(workFlowSchedulerService, times(1)).stop(any(), any(), any(WorkFlow.class));
-		verify(workFlowContinuationServiceImpl, times(1)).continueWorkFlow(any(UUID.class), any(UUID.class),
-				anyString(), any(WorkContext.class), any(UUID.class), nullable(String.class));
+		verify(workFlowContinuationServiceImpl, times(1)).continueWorkFlow(any(ExecutionContext.class));
 		assertEquals(result.getStatus(), report.getStatus());
 	}
 
-	private User createUser(UUID userId, String username) {
-		User user = User.builder().username(username).build();
-		user.setId(userId);
+	private User createUser() {
+		User user = User.builder().username(UUID.randomUUID().toString()).build();
+		user.setId(UUID.randomUUID());
 		return user;
 	}
 

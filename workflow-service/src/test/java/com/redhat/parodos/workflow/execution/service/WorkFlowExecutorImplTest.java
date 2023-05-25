@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
+import com.redhat.parodos.workflow.execution.service.WorkFlowExecutor.ExecutionContext;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkStatus;
@@ -66,7 +67,10 @@ class WorkFlowExecutorImplTest {
 	@Test
 	void execute_when_mainWorkflowIsFailed_and_rollbackIsFound_then_executeRollback() {
 		workFlowExecution.setStatus(WorkStatus.FAILED);
-		workFlowExecutor.execute(projectId, userId, workflowName, workContext, executionId, rollbackWorkflowName);
+		ExecutionContext executionContext = ExecutionContext.builder().projectId(projectId).userId(userId)
+				.workFlowName(workflowName).workContext(workContext).executionId(executionId)
+				.rollbackWorkFlowName(rollbackWorkflowName).build();
+		workFlowExecutor.execute(executionContext);
 
 		verify(mainWorkFlow, Mockito.times(1)).execute(any(WorkContext.class));
 		verify(rollbackWorkFlow, Mockito.times(1)).execute(any(WorkContext.class));
@@ -76,7 +80,9 @@ class WorkFlowExecutorImplTest {
 	@Test
 	void execute_when_mainWorkflowIsFailed_and_rollbackIsNotFound_then_notExecuteRollback() {
 		workFlowExecution.setStatus(WorkStatus.FAILED);
-		workFlowExecutor.execute(projectId, userId, workflowName, workContext, executionId, null);
+		ExecutionContext executionContext = ExecutionContext.builder().projectId(projectId).userId(userId)
+				.workFlowName(workflowName).workContext(workContext).executionId(executionId).build();
+		workFlowExecutor.execute(executionContext);
 
 		verify(mainWorkFlow, Mockito.times(1)).execute(any(WorkContext.class));
 		verify(rollbackWorkFlow, Mockito.never()).execute(any(WorkContext.class));
@@ -85,7 +91,10 @@ class WorkFlowExecutorImplTest {
 	@Test
 	void execute_when_mainWorkflowIsCompleted_then_notExecuteRollback() {
 		workFlowExecution.setStatus(WorkStatus.COMPLETED);
-		workFlowExecutor.execute(projectId, userId, workflowName, workContext, executionId, rollbackWorkflowName);
+		ExecutionContext executionContext = ExecutionContext.builder().projectId(projectId).userId(userId)
+				.workFlowName(workflowName).workContext(workContext).executionId(executionId)
+				.rollbackWorkFlowName(rollbackWorkflowName).build();
+		workFlowExecutor.execute(executionContext);
 
 		verify(mainWorkFlow, Mockito.times(1)).execute(any(WorkContext.class));
 		verify(rollbackWorkFlow, Mockito.never()).execute(any(WorkContext.class));

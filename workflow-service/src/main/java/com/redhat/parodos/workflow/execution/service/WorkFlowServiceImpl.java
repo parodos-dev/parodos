@@ -157,8 +157,10 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		WorkFlowExecution workFlowExecution = saveWorkFlow(projectId, user.getId(),
 				workFlowDefinitionRepository.findFirstByName(workflowName), WorkStatus.IN_PROGRESS, null, arguments);
 		WorkContextUtils.setMainExecutionId(workContext, workFlowExecution.getId());
-		workFlowExecutor.executeAsync(projectId, user.getId(), workflowName, workContext, workFlowExecution.getId(),
-				workFlowDefinitionResponseDTO.getRollbackWorkflow());
+		workFlowExecutor
+				.executeAsync(WorkFlowExecutor.ExecutionContext.builder().projectId(projectId).userId(user.getId())
+						.workFlowName(workflowName).workContext(workContext).executionId(workFlowExecution.getId())
+						.rollbackWorkFlowName(workFlowDefinitionResponseDTO.getRollbackWorkflow()).build());
 		return new DefaultWorkReport(WorkStatus.IN_PROGRESS, workContext, null);
 	}
 

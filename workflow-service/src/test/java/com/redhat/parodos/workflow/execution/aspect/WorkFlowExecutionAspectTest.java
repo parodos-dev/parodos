@@ -17,6 +17,7 @@ import com.redhat.parodos.workflow.execution.continuation.WorkFlowContinuationSe
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.scheduler.WorkFlowSchedulerServiceImpl;
+import com.redhat.parodos.workflow.execution.service.WorkFlowExecutor.ExecutionContext;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
@@ -125,7 +126,7 @@ class WorkFlowExecutionAspectTest {
 		when(workFlowRepository.findFirstByWorkFlowDefinitionIdAndMainWorkFlowExecution(any(), any()))
 				.thenReturn(workFlowExecution);
 		when(workFlowRepository.findById(any())).thenReturn(Optional.of(workFlowExecution));
-		doNothing().when(workFlowContinuationService).continueWorkFlow(any(), any(), any(), any(), any(), any());
+		doNothing().when(workFlowContinuationService).continueWorkFlow(any(ExecutionContext.class));
 		// when
 		WorkReport workReport = this.workFlowExecutionAspect.executeAroundAdvice(proceedingJoinPoint, workContext);
 
