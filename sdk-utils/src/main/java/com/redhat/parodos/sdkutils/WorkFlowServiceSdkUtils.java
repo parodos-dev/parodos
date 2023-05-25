@@ -49,7 +49,7 @@ public abstract class WorkFlowServiceSdkUtils {
 	public static ApiClient getParodosAPiClient()
 			throws ApiException, MissingRequiredPropertiesException, InterruptedException {
 		ApiClient apiClient = Configuration.getDefaultApiClient();
-		String serverIp = Optional.ofNullable(System.getenv("SERVER_IP")).orElse("localhost");
+		String serverIp = Optional.ofNullable(System.getenv("WORKFLOW_SERVICE_HOST")).orElse("localhost");
 		String serverPort = Optional.ofNullable(System.getenv("SERVER_PORT")).orElse("8080");
 
 		if (Strings.isNullOrEmpty(serverIp) || Strings.isNullOrEmpty(serverPort)) {
