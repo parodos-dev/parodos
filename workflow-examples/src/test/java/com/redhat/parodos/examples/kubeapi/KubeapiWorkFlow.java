@@ -20,7 +20,7 @@ import org.junit.Test;
 
 import org.springframework.http.HttpHeaders;
 
-import static com.redhat.parodos.sdkutils.SdkUtils.getProjectAsync;
+import static com.redhat.parodos.sdkutils.WorkFlowServiceSdkUtils.getProjectAsync;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;

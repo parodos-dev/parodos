@@ -36,9 +36,9 @@ import org.springframework.core.env.MissingRequiredPropertiesException;
  */
 
 @Slf4j
-public abstract class SdkUtils {
+public abstract class WorkFlowServiceSdkUtils {
 
-	private SdkUtils() {
+	private WorkFlowServiceSdkUtils() {
 	}
 
 	/**

@@ -14,12 +14,12 @@ import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowExecutionResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
 import com.redhat.parodos.sdk.model.WorkRequestDTO;
+import com.redhat.parodos.sdkutils.WorkFlowServiceSdkUtils;
 import com.redhat.parodos.workflow.utils.CredUtils;
 import org.junit.Test;
 
 import org.springframework.http.HttpHeaders;
 
-import static com.redhat.parodos.sdkutils.SdkUtils.getProjectAsync;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -37,7 +37,8 @@ public class RestWorkFlow {
 	public void runFlow() throws InterruptedException, ApiException {
 		ApiClient defaultClient = Configuration.getDefaultApiClient();
 		defaultClient.addDefaultHeader(HttpHeaders.AUTHORIZATION, "Basic " + CredUtils.getBase64Creds("test", "test"));
-		ProjectResponseDTO testProject = getProjectAsync(defaultClient, projectName, projectDescription);
+		ProjectResponseDTO testProject = WorkFlowServiceSdkUtils.getProjectAsync(defaultClient, projectName,
+				projectDescription);
 
 		// GET workflow DEFINITIONS
 		WorkflowDefinitionApi workflowDefinitionApi = new WorkflowDefinitionApi(defaultClient);
