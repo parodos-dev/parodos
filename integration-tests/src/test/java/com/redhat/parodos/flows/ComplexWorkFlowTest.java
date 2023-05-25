@@ -16,7 +16,7 @@ import com.redhat.parodos.sdk.model.WorkFlowExecutionResponseDTO.WorkStatusEnum;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
 import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.sdk.model.WorkRequestDTO;
-import com.redhat.parodos.sdkutils.SdkUtils;
+import com.redhat.parodos.sdkutils.WorkFlowServiceSdkUtils;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -26,9 +26,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-/**
- * @author Gloria Ciavarrini (Github: gciavarrini)
- */
 @Slf4j
 public class ComplexWorkFlowTest {
 
@@ -54,8 +51,8 @@ public class ComplexWorkFlowTest {
 		log.info("workflow submitted successfully with response: {}", workFlowResponseDTO);
 
 		// wait till assessment workflow is completed
-		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = SdkUtils.waitWorkflowStatusAsync(workflowApi,
-				workFlowResponseDTO.getWorkFlowExecutionId());
+		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = WorkFlowServiceSdkUtils
+				.waitWorkflowStatusAsync(workflowApi, workFlowResponseDTO.getWorkFlowExecutionId());
 		assertNotNull(workFlowStatusResponseDTO);
 		assertThat(workFlowStatusResponseDTO.getStatus()).as("Assessment workflow should be completed")
 				.isEqualTo(WorkFlowStatusResponseDTO.StatusEnum.COMPLETED);
@@ -106,7 +103,7 @@ public class ComplexWorkFlowTest {
 		assertEquals(WorkStatusEnum.IN_PROGRESS, workFlowResponseDTO.getWorkStatus());
 		log.info("Onboarding workflow execution id: {}", workFlowResponseDTO.getWorkFlowExecutionId());
 
-		workFlowStatusResponseDTO = SdkUtils.waitWorkflowStatusAsync(workflowApi,
+		workFlowStatusResponseDTO = WorkFlowServiceSdkUtils.waitWorkflowStatusAsync(workflowApi,
 				workFlowResponseDTO.getWorkFlowExecutionId());
 
 		assertNotNull(workFlowStatusResponseDTO);
