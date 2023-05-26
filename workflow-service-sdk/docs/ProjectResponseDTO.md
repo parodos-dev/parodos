@@ -7,10 +7,13 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**createDate** | **Date** |  |  [optional] |
+|**accessRole** | **String** |  |  [optional] |
+|**createdBy** | **String** |  |  [optional] |
+|**createdDate** | **Date** |  |  [optional] |
 |**description** | **String** |  |  [optional] |
 |**id** | **UUID** |  |  [optional] |
-|**modifyDate** | **Date** |  |  [optional] |
+|**modifiedBy** | **String** |  |  [optional] |
+|**modifiedDate** | **Date** |  |  [optional] |
 |**name** | **String** |  |  [optional] |
 
 
