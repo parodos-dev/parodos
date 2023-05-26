@@ -1,5 +1,6 @@
 package com.redhat.parodos.tasks.git;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,6 +19,7 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
@@ -64,6 +66,10 @@ public class GitBranchTask extends BaseWorkFlowTask {
 			}
 			git.branchCreate().setName(branchName).call();
 			git.checkout().setName(branchName).call();
+		}
+		catch (FileNotFoundException | GitAPIException e) {
+			return new DefaultWorkReport(WorkStatus.FAILED, workContext,
+					new RuntimeException("Cannot create the branch for the repository: %s".formatted(e.getMessage())));
 		}
 		catch (IOException e) {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext,
