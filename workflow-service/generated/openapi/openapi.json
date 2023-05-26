@@ -977,7 +977,13 @@
       "ProjectResponseDTO" : {
         "type" : "object",
         "properties" : {
-          "createDate" : {
+          "accessRole" : {
+            "type" : "string"
+          },
+          "createdBy" : {
+            "type" : "string"
+          },
+          "createdDate" : {
             "type" : "string",
             "format" : "date-time"
           },
@@ -988,7 +994,10 @@
             "type" : "string",
             "format" : "uuid"
           },
-          "modifyDate" : {
+          "modifiedBy" : {
+            "type" : "string"
+          },
+          "modifiedDate" : {
             "type" : "string",
             "format" : "date-time"
           },

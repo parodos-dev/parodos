@@ -21,7 +21,7 @@ import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
-import com.redhat.parodos.common.AbstractEntity;
+import com.redhat.parodos.common.entity.AbstractEntity;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

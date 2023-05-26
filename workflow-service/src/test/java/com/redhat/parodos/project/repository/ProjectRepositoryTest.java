@@ -1,5 +1,6 @@
 package com.redhat.parodos.project.repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -7,6 +8,7 @@ import javax.persistence.PersistenceException;
 
 import com.redhat.parodos.project.entity.Project;
 import com.redhat.parodos.repository.RepositoryTestBase;
+import com.redhat.parodos.user.entity.User;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +32,9 @@ public class ProjectRepositoryTest extends RepositoryTestBase {
 	@Test
 	public void testFindAll() {
 		// given
-		createProject(UUID.randomUUID().toString());
-		createProject(UUID.randomUUID().toString());
+		User user = createUser(UUID.randomUUID().toString());
+		createProject(user, UUID.randomUUID().toString());
+		createProject(user, UUID.randomUUID().toString());
 
 		// when
 		List<Project> projects = projectRepository.findAll();
@@ -44,9 +47,9 @@ public class ProjectRepositoryTest extends RepositoryTestBase {
 	@Test
 	public void testFindByName() {
 		// given
+		User user = createUser(UUID.randomUUID().toString());
 		var name = UUID.randomUUID().toString();
-		createProject(name);
-		createProject(UUID.randomUUID().toString());
+		createProject(user, name);
 
 		// when
 		var project = projectRepository.findByNameIgnoreCase(name);
@@ -78,20 +81,28 @@ public class ProjectRepositoryTest extends RepositoryTestBase {
 	@Test
 	public void testUniqueNameConstraint() {
 		// given
+		User user = createUser(UUID.randomUUID().toString());
 		final var name = UUID.randomUUID().toString();
 		assertEquals(0, projectRepository.count());
 
 		// when
-		createProject(name);
+		createProject(user, name);
 		assertEquals(1, projectRepository.count());
 
 		// then
-		assertThrows(PersistenceException.class, () -> createProject(name));
+		assertThrows(PersistenceException.class, () -> createProject(user, name));
 	}
 
-	private void createProject(String name) {
+	private void createProject(User user, String name) {
 		Project project = Project.builder().name(name).description(name + " test").build();
+		project.setCreatedDate(new Date());
+		project.setCreatedBy(user.getId());
 		entityManager.persistAndFlush(project);
+	}
+
+	private User createUser(String username) {
+		User user = User.builder().username(username).build();
+		return entityManager.persistAndFlush(user);
 	}
 
 }

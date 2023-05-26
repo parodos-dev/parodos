@@ -1,5 +1,6 @@
 package com.redhat.parodos.workflow.execution.repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,8 +37,9 @@ public class WorkFlowRepositoryTest extends RepositoryTestBase {
 	@Test
 	public void testSave() {
 		// given
+		User user = createUser();
 		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().workFlowDefinition(createWorkFlowDefinition())
-				.status(WorkStatus.IN_PROGRESS).projectId(createProject().getId()).build();
+				.status(WorkStatus.IN_PROGRESS).projectId(createProject(user).getId()).build();
 		List<WorkFlowExecution> workFlowExecutions = workFlowRepository.findAll();
 		assertTrue(workFlowExecutions.isEmpty());
 
@@ -85,9 +87,10 @@ public class WorkFlowRepositoryTest extends RepositoryTestBase {
 	@Test
 	public void testFindByMainWorkFlowExecution() {
 		// given
+		User user = createUser();
 		WorkFlowExecution mainWorkFlowExecution = createWorkFlowExecution();
 		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().workFlowDefinition(createWorkFlowDefinition())
-				.status(WorkStatus.IN_PROGRESS).projectId(createProject().getId()).user(createUser())
+				.status(WorkStatus.IN_PROGRESS).projectId(createProject(user).getId()).user(createUser())
 				.mainWorkFlowExecution(mainWorkFlowExecution).build();
 		workFlowExecution = workFlowRepository.save(workFlowExecution);
 
@@ -104,9 +107,10 @@ public class WorkFlowRepositoryTest extends RepositoryTestBase {
 	@Test
 	public void testFindByStatusInAndIsMain() {
 		// given
+		User user = createUser();
 		WorkFlowExecution mainWorkFlowExecution = createWorkFlowExecution();
 		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().workFlowDefinition(createWorkFlowDefinition())
-				.status(WorkStatus.IN_PROGRESS).projectId(createProject().getId()).user(createUser())
+				.status(WorkStatus.IN_PROGRESS).projectId(createProject(user).getId()).user(createUser())
 				.mainWorkFlowExecution(mainWorkFlowExecution).build();
 		workFlowRepository.save(workFlowExecution);
 
@@ -125,8 +129,10 @@ public class WorkFlowRepositoryTest extends RepositoryTestBase {
 		return entityManager.persist(user);
 	}
 
-	private Project createProject() {
+	private Project createProject(User user) {
 		Project project = Project.builder().name(UUID.randomUUID().toString()).build();
+		project.setCreatedDate(new Date());
+		project.setCreatedBy(user.getId());
 		return entityManager.persist(project);
 	}
 
@@ -137,8 +143,9 @@ public class WorkFlowRepositoryTest extends RepositoryTestBase {
 	}
 
 	private WorkFlowExecution createWorkFlowExecution() {
+		User user = createUser();
 		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().workFlowDefinition(createWorkFlowDefinition())
-				.status(WorkStatus.IN_PROGRESS).projectId(createProject().getId()).user(createUser()).build();
+				.status(WorkStatus.IN_PROGRESS).projectId(createProject(user).getId()).user(createUser()).build();
 		return entityManager.persist(workFlowExecution);
 	}
 

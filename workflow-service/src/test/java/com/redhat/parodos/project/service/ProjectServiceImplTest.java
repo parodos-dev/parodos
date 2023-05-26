@@ -25,6 +25,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.modelmapper.ModelMapper;
@@ -36,9 +37,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -88,12 +86,19 @@ class ProjectServiceImplTest {
 	}
 
 	@Test
+	@WithMockUser(username = "test-user")
 	public void testGetProjectByIdWithValidData() {
 		// given
+		User user = getUser(TEST_USER_ID, TEST_USERNAME);
 		Project project = getProject(TEST_PROJECT_NAME, TEST_PROJECT_DESCRIPTION);
-		when(this.projectRepository.findById(project.getId())).thenReturn(Optional.of(project));
+		Role role = getRole(TEST_ROLE_OWNER_NAME);
+		ProjectUserRole projectUserRole = getProjectUserRole(project, user, role);
 
 		// when
+		when(this.userService.getUserEntityByUsername(ArgumentMatchers.nullable(String.class))).thenReturn(user);
+		when(this.projectUserRoleRepository.findByProjectId(ArgumentMatchers.eq(project.getId())))
+				.thenReturn(Optional.of(projectUserRole));
+
 		ProjectResponseDTO projectResponseDTO = this.projectService.getProjectById(project.getId());
 
 		// then
@@ -102,6 +107,7 @@ class ProjectServiceImplTest {
 	}
 
 	@Test
+	@WithMockUser(username = "test-user")
 	public void testGetProjectByIdAndUsernameWithValidData() {
 		// given
 		User user = getUser(TEST_USER_ID, TEST_USERNAME);
@@ -110,7 +116,7 @@ class ProjectServiceImplTest {
 		ProjectUserRole projectUserRole = getProjectUserRole(project, user, role);
 
 		// when
-		when(this.userService.getUserEntityByUsername(TEST_USERNAME)).thenReturn(user);
+		when(this.userService.getUserEntityByUsername(ArgumentMatchers.nullable(String.class))).thenReturn(user);
 		when(this.projectUserRoleRepository.findByProjectIdAndUserId(project.getId(), TEST_USER_ID))
 				.thenReturn(List.of(projectUserRole));
 
@@ -124,11 +130,14 @@ class ProjectServiceImplTest {
 	}
 
 	@Test
+	@WithMockUser(username = "test-user")
 	public void testFindProjectByIdWithInvalidData() {
 		// given
+		User user = getUser(TEST_USER_ID, TEST_USERNAME);
 		Project project = getProject(TEST_PROJECT_NAME, TEST_PROJECT_DESCRIPTION);
 
 		// when
+		when(this.userService.getUserEntityByUsername(ArgumentMatchers.nullable(String.class))).thenReturn(user);
 		when(this.projectRepository.findById(project.getId())).thenReturn(Optional.empty());
 
 		// then
@@ -146,7 +155,7 @@ class ProjectServiceImplTest {
 		Project projectTwo = getProject(TEST_PROJECT_TWO_NAME, TEST_PROJECT_TWO_DESCRIPTION);
 
 		// when
-		when(this.userService.getUserEntityByUsername(nullable(String.class))).thenReturn(user);
+		when(this.userService.getUserEntityByUsername(ArgumentMatchers.nullable(String.class))).thenReturn(user);
 		when(this.projectUserRoleRepository.findByUserId(TEST_USER_ID)).thenReturn(
 				List.of(getProjectUserRole(projectOne, user, role), getProjectUserRole(projectTwo, user, role)));
 
@@ -163,7 +172,7 @@ class ProjectServiceImplTest {
 	@WithMockUser(username = TEST_USERNAME)
 	public void testGetProjectsWithInvalidData() {
 		// when
-		when(this.userService.getUserEntityByUsername(nullable(String.class)))
+		when(this.userService.getUserEntityByUsername(ArgumentMatchers.nullable(String.class)))
 				.thenReturn(getUser(TEST_USER_ID, TEST_USERNAME));
 		when(this.projectUserRoleRepository.findByUserId(TEST_USER_ID)).thenReturn(Collections.emptyList());
 
@@ -186,10 +195,12 @@ class ProjectServiceImplTest {
 				.description(TEST_PROJECT_DESCRIPTION).build();
 
 		// when
-		when(this.userService.getUserEntityByUsername(nullable(String.class))).thenReturn(user);
-		when(this.roleRepository.findByNameIgnoreCase(nullable(String.class))).thenReturn(Optional.ofNullable(role));
-		when(this.projectRepository.save(any(Project.class))).thenReturn(project);
-		when(this.projectUserRoleRepository.save(any(ProjectUserRole.class))).thenReturn(projectUserRole);
+		when(this.userService.getUserEntityByUsername(ArgumentMatchers.nullable(String.class))).thenReturn(user);
+		when(this.roleRepository.findByNameIgnoreCase(ArgumentMatchers.nullable(String.class)))
+				.thenReturn(Optional.ofNullable(role));
+		when(this.projectRepository.save(ArgumentMatchers.any(Project.class))).thenReturn(project);
+		when(this.projectUserRoleRepository.save(ArgumentMatchers.any(ProjectUserRole.class)))
+				.thenReturn(projectUserRole);
 
 		ProjectResponseDTO projectResponseDTO = this.projectService.save(projectRequestDTO);
 
@@ -215,12 +226,12 @@ class ProjectServiceImplTest {
 		ProjectUserRole projectUserRole = ProjectUserRole.builder().project(project).user(user).role(role).build();
 
 		// when
-		when(projectRepository.findById(any())).thenReturn(Optional.of(project));
-		when(userService.getUserEntityByUsername(anyString())).thenReturn(user);
-		when(roleRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.of(role));
-		when(projectUserRoleRepository.deleteAllByIdProjectIdAndIdUserIdIn(any(), any()))
-				.thenReturn(List.of(projectUserRole));
-		when(projectUserRoleRepository.saveAll(any())).thenReturn(List.of(projectUserRole));
+		when(projectRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.of(project));
+		when(userService.getUserEntityByUsername(ArgumentMatchers.anyString())).thenReturn(user);
+		when(roleRepository.findByNameIgnoreCase(ArgumentMatchers.anyString())).thenReturn(Optional.of(role));
+		when(projectUserRoleRepository.deleteAllByIdProjectIdAndIdUserIdIn(ArgumentMatchers.any(),
+				ArgumentMatchers.any())).thenReturn(List.of(projectUserRole));
+		when(projectUserRoleRepository.saveAll(ArgumentMatchers.any())).thenReturn(List.of(projectUserRole));
 
 		ProjectUserRoleResponseDTO projectUserRoleResponseDTO = projectService.updateUserRolesToProject(project.getId(),
 				List.of(UserRoleRequestDTO.builder().roles(List.of(com.redhat.parodos.project.enums.Role.OWNER))
@@ -246,9 +257,9 @@ class ProjectServiceImplTest {
 		project.setProjectUserRoles(new HashSet<>(List.of(projectUserRole, projectUserRole2)));
 
 		// when
-		when(projectRepository.findById(any())).thenReturn(Optional.of(project));
-		when(projectUserRoleRepository.deleteAllByIdProjectIdAndIdUserIdIn(any(), any()))
-				.thenReturn(List.of(projectUserRole));
+		when(projectRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.of(project));
+		when(projectUserRoleRepository.deleteAllByIdProjectIdAndIdUserIdIn(ArgumentMatchers.any(),
+				ArgumentMatchers.any())).thenReturn(List.of(projectUserRole));
 
 		ProjectUserRoleResponseDTO projectUserRoleResponseDTO = projectService.removeUsersFromProject(project.getId(),
 				List.of(TEST_USERNAME));
@@ -263,9 +274,10 @@ class ProjectServiceImplTest {
 	}
 
 	private Project getProject(String name, String description) {
-		Project project = Project.builder().name(name).description(description).createDate(new Date())
-				.modifyDate(new Date()).build();
+		Project project = Project.builder().name(name).description(description).build();
 		project.setId(UUID.randomUUID());
+		project.setCreatedDate(new Date());
+		project.setModifiedDate(new Date());
 		return project;
 	}
 

@@ -15,14 +15,13 @@
  */
 package com.redhat.parodos.project.service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.redhat.parodos.common.AbstractEntity;
+import com.redhat.parodos.common.entity.AbstractEntity;
 import com.redhat.parodos.common.exceptions.IDType;
 import com.redhat.parodos.common.exceptions.ResourceAlreadyExistsException;
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
@@ -89,37 +88,42 @@ public class ProjectServiceImpl implements ProjectService {
 		User user = userService.getUserEntityByUsername(SecurityUtils.getUsername());
 		// create project entity
 		Project project = projectRepository.save(Project.builder().name(projectRequestDTO.getName())
-				.description(projectRequestDTO.getDescription()).createDate(new Date()).modifyDate(new Date()).build());
+				.description(projectRequestDTO.getDescription()).build());
 		// map project, user and role
 		ProjectUserRole projectUserRole = projectUserRoleRepository.save(ProjectUserRole.builder().id(ProjectUserRole.Id
 				.builder().projectId(project.getId()).userId(user.getId()).roleId(role.getId()).build())
 				.project(project).user(user).role(role).build());
-		return modelMapper.map(projectUserRole, ProjectResponseDTO.class);
+
+		return buildProjectReponseDTO(user, projectUserRole);
 	}
 
 	@Override
 	public ProjectResponseDTO getProjectById(UUID id) {
-		return modelMapper.map(projectRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.PROJECT, id)), ProjectResponseDTO.class);
+		User user = userService.getUserEntityByUsername(SecurityUtils.getUsername());
+		ProjectUserRole projectUserRole = projectUserRoleRepository.findByProjectId(id)
+				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.PROJECT, id));
+		return buildProjectReponseDTO(user, projectUserRole);
 	}
 
 	@Override
 	public List<ProjectResponseDTO> getProjects() {
 		User user = userService.getUserEntityByUsername(SecurityUtils.getUsername());
 		return projectUserRoleRepository.findByUserId(user.getId()).stream()
-				.map(projectUserRole -> modelMapper.map(projectUserRole, ProjectResponseDTO.class)).toList();
+				.map(projectUserRole -> buildProjectReponseDTO(user, projectUserRole)).toList();
 	}
 
 	@Override
 	public List<ProjectResponseDTO> getProjectByIdAndUserId(UUID projectId, UUID userId) {
+		User user = userService.getUserEntityByUsername(SecurityUtils.getUsername());
 		return projectUserRoleRepository.findByProjectIdAndUserId(projectId, userId).stream()
-				.map(projectUserRole -> modelMapper.map(projectUserRole, ProjectResponseDTO.class)).toList();
+				.map(projectUserRole -> buildProjectReponseDTO(user, projectUserRole)).toList();
 	}
 
 	@Override
 	public List<ProjectResponseDTO> getProjectsByUserId(UUID userId) {
+		User user = userService.getUserEntityByUsername(SecurityUtils.getUsername());
 		return projectUserRoleRepository.findByUserId(userId).stream()
-				.map(projectUserRole -> modelMapper.map(projectUserRole, ProjectResponseDTO.class)).toList();
+				.map(projectUserRole -> buildProjectReponseDTO(user, projectUserRole)).toList();
 	}
 
 	@Transactional
@@ -173,6 +177,20 @@ public class ProjectServiceImpl implements ProjectService {
 										.collect(Collectors.toSet()))
 								.build())
 						.toList())
+				.build();
+	}
+
+	private ProjectResponseDTO buildProjectReponseDTO(User user, ProjectUserRole projectUserRole) {
+		return ProjectResponseDTO.builder().id(projectUserRole.getProject().getId())
+				.name(projectUserRole.getProject().getName()).description(projectUserRole.getProject().getDescription())
+				.createdDate(projectUserRole.getProject().getCreatedDate())
+				.createdBy(projectUserRole.getUser().getUsername())
+				.modifiedDate(projectUserRole.getProject().getModifiedDate())
+				.modifiedBy(projectUserRole.getProject().getModifiedBy() != null
+						? userService.getUserEntityById(projectUserRole.getProject().getModifiedBy()).getUsername()
+						: null)
+				.accessRole(projectUserRole.getUser().getId().equals(user.getId()) ? projectUserRole.getRole().getName()
+						: null)
 				.build();
 	}
 
