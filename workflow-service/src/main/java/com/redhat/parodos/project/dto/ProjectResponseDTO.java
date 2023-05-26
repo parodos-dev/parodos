@@ -18,7 +18,6 @@ package com.redhat.parodos.project.dto;
 import java.util.Date;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
