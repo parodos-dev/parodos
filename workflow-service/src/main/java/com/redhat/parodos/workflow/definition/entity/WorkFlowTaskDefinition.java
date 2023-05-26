@@ -25,7 +25,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 
-import com.redhat.parodos.common.AbstractEntity;
+import com.redhat.parodos.common.entity.AbstractEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

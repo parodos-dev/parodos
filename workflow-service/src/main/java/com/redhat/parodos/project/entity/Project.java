@@ -15,16 +15,18 @@
  */
 package com.redhat.parodos.project.entity;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.redhat.parodos.common.AbstractEntity;
+import com.redhat.parodos.common.audit.AuditEnabledEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,17 +45,17 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Project extends AbstractEntity {
+public class Project extends AuditEnabledEntity {
+
+	@Id
+	@GeneratedValue
+	@Column(columnDefinition = "uuid")
+	private UUID id;
 
 	@Column(unique = true)
 	private String name;
 
 	private String description;
-
-	@Column(updatable = false)
-	private Date createDate;
-
-	private Date modifyDate;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "project")
 	private Set<ProjectUserRole> projectUserRoles = new HashSet<>();

@@ -26,7 +26,7 @@ import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.redhat.parodos.common.AbstractEntity;
+import com.redhat.parodos.common.entity.AbstractEntity;
 import com.redhat.parodos.common.exceptions.IDType;
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 import com.redhat.parodos.common.exceptions.ResourceType;

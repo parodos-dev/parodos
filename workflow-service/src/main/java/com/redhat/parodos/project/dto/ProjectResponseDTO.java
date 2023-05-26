@@ -18,6 +18,8 @@ package com.redhat.parodos.project.dto;
 import java.util.Date;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,6 +35,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ProjectResponseDTO {
 
 	private UUID id;
@@ -41,8 +44,16 @@ public class ProjectResponseDTO {
 
 	private String description;
 
-	private Date createDate;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date createdDate;
 
-	private Date modifyDate;
+	private String createdBy;
+
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date modifiedDate;
+
+	private String modifiedBy;
+
+	private String accessRole;
 
 }
