@@ -758,13 +758,20 @@ components:
       type: object
     ProjectResponseDTO:
       example:
-        modifyDate: 2000-01-23T04:56:07.000+00:00
+        createdDate: 2000-01-23T04:56:07.000+00:00
+        createdBy: createdBy
+        accessRole: accessRole
+        modifiedDate: 2000-01-23T04:56:07.000+00:00
         name: name
         description: description
+        modifiedBy: modifiedBy
         id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        createDate: 2000-01-23T04:56:07.000+00:00
       properties:
-        createDate:
+        accessRole:
+          type: string
+        createdBy:
+          type: string
+        createdDate:
           format: date-time
           type: string
         description:
@@ -772,7 +779,9 @@ components:
         id:
           format: uuid
           type: string
-        modifyDate:
+        modifiedBy:
+          type: string
+        modifiedDate:
           format: date-time
           type: string
         name:
