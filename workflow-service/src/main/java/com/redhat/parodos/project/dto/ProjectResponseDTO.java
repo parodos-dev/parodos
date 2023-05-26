@@ -44,12 +44,10 @@ public class ProjectResponseDTO {
 
 	private String description;
 
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date createdDate;
 
 	private String createdBy;
 
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date modifiedDate;
 
 	private String modifiedBy;
