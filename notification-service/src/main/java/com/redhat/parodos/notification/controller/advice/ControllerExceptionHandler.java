@@ -40,7 +40,7 @@ public class ControllerExceptionHandler {
 	@ExceptionHandler(value = { UsernameNotFoundException.class, NotificationRecordNotFoundException.class })
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.NOT_FOUND)
-	public ErrorMessageDTO resourceNotFoundException(UsernameNotFoundException ex, WebRequest request) {
+	public ErrorMessageDTO resourceNotFoundException(RuntimeException ex, WebRequest request) {
 		return new ErrorMessageDTO(new Date(), ex.getMessage(), "Resource not found");
 	}
 
@@ -54,7 +54,7 @@ public class ControllerExceptionHandler {
 	@ExceptionHandler(value = { UnsupportedOperationException.class })
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
-	public ErrorMessageDTO unsupportedOperationException(UnsupportedStateException ex, WebRequest request) {
+	public ErrorMessageDTO unsupportedOperationException(UnsupportedOperationException ex, WebRequest request) {
 		return new ErrorMessageDTO(new Date(), ex.getMessage(), "Unsupported operation");
 	}
 
