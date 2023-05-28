@@ -92,11 +92,6 @@ public class NotificationRecordApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
-	 * <td>403</td>
-	 * <td>Forbidden</td>
-	 * <td>-</td>
-	 * </tr>
-	 * <tr>
 	 * <td>404</td>
 	 * <td>Not Found</td>
 	 * <td>-</td>
@@ -166,7 +161,7 @@ public class NotificationRecordApi {
 	}
 
 	/**
-	 * Return the number of the unread notification records for the user
+	 * Return the number of the notification records with given state for the user
 	 * @param state (required)
 	 * @return Integer
 	 * @throws ApiException If fail to call the API, e.g. server error or cannot
@@ -194,11 +189,6 @@ public class NotificationRecordApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
-	 * <td>403</td>
-	 * <td>Forbidden</td>
-	 * <td>-</td>
-	 * </tr>
-	 * <tr>
 	 * <td>404</td>
 	 * <td>Not Found</td>
 	 * <td>-</td>
@@ -211,7 +201,7 @@ public class NotificationRecordApi {
 	}
 
 	/**
-	 * Return the number of the unread notification records for the user
+	 * Return the number of the notification records with given state for the user
 	 * @param state (required)
 	 * @return ApiResponse&lt;Integer&gt;
 	 * @throws ApiException If fail to call the API, e.g. server error or cannot
@@ -239,11 +229,6 @@ public class NotificationRecordApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
-	 * <td>403</td>
-	 * <td>Forbidden</td>
-	 * <td>-</td>
-	 * </tr>
-	 * <tr>
 	 * <td>404</td>
 	 * <td>Not Found</td>
 	 * <td>-</td>
@@ -258,7 +243,8 @@ public class NotificationRecordApi {
 	}
 
 	/**
-	 * Return the number of the unread notification records for the user (asynchronously)
+	 * Return the number of the notification records with given state for the user
+	 * (asynchronously)
 	 * @param state (required)
 	 * @param _callback The callback to be executed when the API call finishes
 	 * @return The request call
@@ -284,11 +270,6 @@ public class NotificationRecordApi {
 	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
-	 * <td>-</td>
-	 * </tr>
-	 * <tr>
-	 * <td>403</td>
-	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -322,8 +303,8 @@ public class NotificationRecordApi {
 	 * <td>Response Headers</td>
 	 * </tr>
 	 * <tr>
-	 * <td>200</td>
-	 * <td>Successfully retrieved the amount of notifications</td>
+	 * <td>204</td>
+	 * <td>Successfully Deleted</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -334,11 +315,6 @@ public class NotificationRecordApi {
 	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
-	 * <td>-</td>
-	 * </tr>
-	 * <tr>
-	 * <td>403</td>
-	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -419,8 +395,8 @@ public class NotificationRecordApi {
 	 * <td>Response Headers</td>
 	 * </tr>
 	 * <tr>
-	 * <td>200</td>
-	 * <td>Successfully retrieved the amount of notifications</td>
+	 * <td>204</td>
+	 * <td>Successfully Deleted</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -431,11 +407,6 @@ public class NotificationRecordApi {
 	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
-	 * <td>-</td>
-	 * </tr>
-	 * <tr>
-	 * <td>403</td>
-	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -463,8 +434,8 @@ public class NotificationRecordApi {
 	 * <td>Response Headers</td>
 	 * </tr>
 	 * <tr>
-	 * <td>200</td>
-	 * <td>Successfully retrieved the amount of notifications</td>
+	 * <td>204</td>
+	 * <td>Successfully Deleted</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -475,11 +446,6 @@ public class NotificationRecordApi {
 	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
-	 * <td>-</td>
-	 * </tr>
-	 * <tr>
-	 * <td>403</td>
-	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -509,8 +475,8 @@ public class NotificationRecordApi {
 	 * <td>Response Headers</td>
 	 * </tr>
 	 * <tr>
-	 * <td>200</td>
-	 * <td>Successfully retrieved the amount of notifications</td>
+	 * <td>204</td>
+	 * <td>Successfully Deleted</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -521,11 +487,6 @@ public class NotificationRecordApi {
 	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
-	 * <td>-</td>
-	 * </tr>
-	 * <tr>
-	 * <td>403</td>
-	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -567,17 +528,12 @@ public class NotificationRecordApi {
 	 * </tr>
 	 * <tr>
 	 * <td>400</td>
-	 * <td>Bad request</td>
+	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
-	 * <td>-</td>
-	 * </tr>
-	 * <tr>
-	 * <td>403</td>
-	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -685,17 +641,12 @@ public class NotificationRecordApi {
 	 * </tr>
 	 * <tr>
 	 * <td>400</td>
-	 * <td>Bad request</td>
+	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
-	 * <td>-</td>
-	 * </tr>
-	 * <tr>
-	 * <td>403</td>
-	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -737,17 +688,12 @@ public class NotificationRecordApi {
 	 * </tr>
 	 * <tr>
 	 * <td>400</td>
-	 * <td>Bad request</td>
+	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
-	 * <td>-</td>
-	 * </tr>
-	 * <tr>
-	 * <td>403</td>
-	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -791,17 +737,12 @@ public class NotificationRecordApi {
 	 * </tr>
 	 * <tr>
 	 * <td>400</td>
-	 * <td>Bad request</td>
+	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
-	 * <td>-</td>
-	 * </tr>
-	 * <tr>
-	 * <td>403</td>
-	 * <td>Forbidden</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -837,7 +778,7 @@ public class NotificationRecordApi {
 	 * </tr>
 	 * <tr>
 	 * <td>200</td>
-	 * <td>Succeeded</td>
+	 * <td>OK</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -890,7 +831,7 @@ public class NotificationRecordApi {
 			localVarQueryParams.addAll(localVarApiClient.parameterToPair("operation", operation));
 		}
 
-		final String[] localVarAccepts = { "*/*" };
+		final String[] localVarAccepts = { "application/json", "*/*" };
 		final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
 		if (localVarAccept != null) {
 			localVarHeaderParams.put("Accept", localVarAccept);
@@ -943,7 +884,7 @@ public class NotificationRecordApi {
 	 * </tr>
 	 * <tr>
 	 * <td>200</td>
-	 * <td>Succeeded</td>
+	 * <td>OK</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -985,7 +926,7 @@ public class NotificationRecordApi {
 	 * </tr>
 	 * <tr>
 	 * <td>200</td>
-	 * <td>Succeeded</td>
+	 * <td>OK</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -1030,7 +971,7 @@ public class NotificationRecordApi {
 	 * </tr>
 	 * <tr>
 	 * <td>200</td>
-	 * <td>Succeeded</td>
+	 * <td>OK</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>

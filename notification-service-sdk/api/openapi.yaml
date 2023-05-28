@@ -106,19 +106,13 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
-          description: Bad request
+          description: Bad Request
         "401":
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/PageNotificationRecordResponseDTO'
           description: Unauthorized
-        "403":
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/PageNotificationRecordResponseDTO'
-          description: Forbidden
         "404":
           content:
             '*/*':
@@ -164,20 +158,14 @@ paths:
                 format: int32
                 type: integer
           description: Unauthorized
-        "403":
-          content:
-            '*/*':
-              schema:
-                format: int32
-                type: integer
-          description: Forbidden
         "404":
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Not Found
-      summary: Return the number of the unread notification records for the user
+      summary: Return the number of the notification records with given state for
+        the user
       tags:
       - Notification Record
       x-accepts: '*/*'
@@ -194,8 +182,8 @@ paths:
           type: string
         style: simple
       responses:
-        "200":
-          description: Successfully retrieved the amount of notifications
+        "204":
+          description: Successfully Deleted
         "400":
           content:
             '*/*':
@@ -204,8 +192,6 @@ paths:
           description: Bad Request
         "401":
           description: Unauthorized
-        "403":
-          description: Forbidden
         "404":
           content:
             '*/*':
@@ -240,10 +226,10 @@ paths:
       responses:
         "200":
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/NotificationRecordResponseDTO'
-          description: Succeeded
+          description: OK
         "400":
           content:
             '*/*':
@@ -265,7 +251,7 @@ paths:
       summary: Update the specified notification record with user operation
       tags:
       - Notification Record
-      x-accepts: '*/*'
+      x-accepts: application/json
 components:
   schemas:
     ErrorMessageDTO:
@@ -276,37 +262,6 @@ components:
         description:
           type: string
         message:
-          type: string
-      type: object
-    Link:
-      example:
-        hreflang: hreflang
-        profile: profile
-        name: name
-        rel: rel
-        href: href
-        media: media
-        deprecation: deprecation
-        title: title
-        type: type
-      properties:
-        deprecation:
-          type: string
-        href:
-          type: string
-        hreflang:
-          type: string
-        media:
-          type: string
-        name:
-          type: string
-        profile:
-          type: string
-        rel:
-          type: string
-        title:
-          type: string
-        type:
           type: string
       type: object
     NotificationMessageCreateRequestDTO:
@@ -343,25 +298,6 @@ components:
         messageType: messageType
         subject: subject
         fromuser: fromuser
-        links:
-        - hreflang: hreflang
-          profile: profile
-          name: name
-          rel: rel
-          href: href
-          media: media
-          deprecation: deprecation
-          title: title
-          type: type
-        - hreflang: hreflang
-          profile: profile
-          name: name
-          rel: rel
-          href: href
-          media: media
-          deprecation: deprecation
-          title: title
-          type: type
         id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         body: body
         createdOn: 2000-01-23T04:56:07.000+00:00
@@ -381,10 +317,6 @@ components:
         id:
           format: uuid
           type: string
-        links:
-          items:
-            $ref: '#/components/schemas/Link'
-          type: array
         messageType:
           type: string
         read:
@@ -423,25 +355,6 @@ components:
           messageType: messageType
           subject: subject
           fromuser: fromuser
-          links:
-          - hreflang: hreflang
-            profile: profile
-            name: name
-            rel: rel
-            href: href
-            media: media
-            deprecation: deprecation
-            title: title
-            type: type
-          - hreflang: hreflang
-            profile: profile
-            name: name
-            rel: rel
-            href: href
-            media: media
-            deprecation: deprecation
-            title: title
-            type: type
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           body: body
           createdOn: 2000-01-23T04:56:07.000+00:00
@@ -453,25 +366,6 @@ components:
           messageType: messageType
           subject: subject
           fromuser: fromuser
-          links:
-          - hreflang: hreflang
-            profile: profile
-            name: name
-            rel: rel
-            href: href
-            media: media
-            deprecation: deprecation
-            title: title
-            type: type
-          - hreflang: hreflang
-            profile: profile
-            name: name
-            rel: rel
-            href: href
-            media: media
-            deprecation: deprecation
-            title: title
-            type: type
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           body: body
           createdOn: 2000-01-23T04:56:07.000+00:00
