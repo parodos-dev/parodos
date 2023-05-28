@@ -4,7 +4,7 @@ All URIs are relative to *http://localhost:8080*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**countUnreadNotifications**](NotificationRecordApi.md#countUnreadNotifications) | **GET** /api/v1/notifications/count | Return the number of the unread notification records for the user |
+| [**countUnreadNotifications**](NotificationRecordApi.md#countUnreadNotifications) | **GET** /api/v1/notifications/count | Return the number of the notification records with given state for the user |
 | [**deleteNotification**](NotificationRecordApi.md#deleteNotification) | **DELETE** /api/v1/notifications/{id} | Delete the specified notification record |
 | [**getNotifications**](NotificationRecordApi.md#getNotifications) | **GET** /api/v1/notifications | Return a list of notification records for the user |
 | [**updateNotificationStatusById**](NotificationRecordApi.md#updateNotificationStatusById) | **PUT** /api/v1/notifications/{id} | Update the specified notification record with user operation |
@@ -14,7 +14,7 @@ All URIs are relative to *http://localhost:8080*
 # **countUnreadNotifications**
 > Integer countUnreadNotifications(state)
 
-Return the number of the unread notification records for the user
+Return the number of the notification records with given state for the user
 
 ### Example
 ```java
@@ -71,7 +71,6 @@ No authorization required
 | **200** | Successfully retrieved the amount of notifications |  -  |
 | **400** | Bad Request |  -  |
 | **401** | Unauthorized |  -  |
-| **403** | Forbidden |  -  |
 | **404** | Not Found |  -  |
 
 <a name="deleteNotification"></a>
@@ -131,10 +130,9 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Successfully retrieved the amount of notifications |  -  |
+| **204** | Successfully Deleted |  -  |
 | **400** | Bad Request |  -  |
 | **401** | Unauthorized |  -  |
-| **403** | Forbidden |  -  |
 | **404** | Not Found |  -  |
 
 <a name="getNotifications"></a>
@@ -204,9 +202,8 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Successfully retrieved page of notifications |  -  |
-| **400** | Bad request |  -  |
+| **400** | Bad Request |  -  |
 | **401** | Unauthorized |  -  |
-| **403** | Forbidden |  -  |
 | **404** | Not Found |  -  |
 
 <a name="updateNotificationStatusById"></a>
@@ -264,12 +261,12 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: */*
+ - **Accept**: application/json, */*
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Succeeded |  -  |
+| **200** | OK |  -  |
 | **400** | Bad Request |  -  |
 | **401** | Unauthorized |  -  |
 | **404** | Not found |  -  |

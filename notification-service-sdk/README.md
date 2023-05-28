@@ -113,7 +113,7 @@ All URIs are relative to *http://localhost:8080*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *NotificationMessageApi* | [**create**](docs/NotificationMessageApi.md#create) | **POST** /api/v1/messages | 
-*NotificationRecordApi* | [**countUnreadNotifications**](docs/NotificationRecordApi.md#countUnreadNotifications) | **GET** /api/v1/notifications/count | Return the number of the unread notification records for the user
+*NotificationRecordApi* | [**countUnreadNotifications**](docs/NotificationRecordApi.md#countUnreadNotifications) | **GET** /api/v1/notifications/count | Return the number of the notification records with given state for the user
 *NotificationRecordApi* | [**deleteNotification**](docs/NotificationRecordApi.md#deleteNotification) | **DELETE** /api/v1/notifications/{id} | Delete the specified notification record
 *NotificationRecordApi* | [**getNotifications**](docs/NotificationRecordApi.md#getNotifications) | **GET** /api/v1/notifications | Return a list of notification records for the user
 *NotificationRecordApi* | [**updateNotificationStatusById**](docs/NotificationRecordApi.md#updateNotificationStatusById) | **PUT** /api/v1/notifications/{id} | Update the specified notification record with user operation
@@ -122,7 +122,6 @@ Class | Method | HTTP request | Description
 ## Documentation for Models
 
  - [ErrorMessageDTO](docs/ErrorMessageDTO.md)
- - [Link](docs/Link.md)
  - [NotificationMessageCreateRequestDTO](docs/NotificationMessageCreateRequestDTO.md)
  - [NotificationRecordResponseDTO](docs/NotificationRecordResponseDTO.md)
  - [PageNotificationRecordResponseDTO](docs/PageNotificationRecordResponseDTO.md)
