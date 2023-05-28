@@ -24,9 +24,6 @@ import com.redhat.parodos.notification.jpa.entity.NotificationRecord;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import org.springframework.hateoas.RepresentationModel;
-import org.springframework.hateoas.server.core.Relation;
-
 /**
  * Notification record response DTO
  *
@@ -35,9 +32,8 @@ import org.springframework.hateoas.server.core.Relation;
  */
 
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Relation(collectionRelation = "notificationrecords", itemRelation = "notificationrecord")
-public class NotificationRecordResponseDTO extends RepresentationModel<NotificationRecordResponseDTO> {
+@EqualsAndHashCode
+public class NotificationRecordResponseDTO {
 
 	private UUID id;
 
