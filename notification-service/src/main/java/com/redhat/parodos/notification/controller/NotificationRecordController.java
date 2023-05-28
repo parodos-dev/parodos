@@ -24,6 +24,8 @@ import com.redhat.parodos.notification.jpa.entity.NotificationRecord;
 import com.redhat.parodos.notification.service.NotificationRecordService;
 import com.redhat.parodos.notification.util.SecurityUtil;
 import com.redhat.parodos.notification.validation.AllowedSortFields;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -75,9 +77,8 @@ public class NotificationRecordController {
 	@io.swagger.v3.oas.annotations.Operation(summary = "Return a list of notification records for the user")
 	@ApiResponses(
 			value = { @ApiResponse(responseCode = "200", description = "Successfully retrieved page of notifications"),
-					@ApiResponse(responseCode = "401", description = "Unauthorized"),
-					@ApiResponse(responseCode = "403", description = "Forbidden"),
-					@ApiResponse(responseCode = "400", description = "Bad request") })
+					@ApiResponse(responseCode = "400", description = "Bad Request"),
+					@ApiResponse(responseCode = "401", description = "Unauthorized") })
 	@GetMapping
 	public ResponseEntity<Page<NotificationRecordResponseDTO>> getNotifications(
 			@PageableDefault(size = 100) @AllowedSortFields({ "id", "notificationMessage.subject",
@@ -94,21 +95,25 @@ public class NotificationRecordController {
 	}
 
 	/**
-	 * Returns the number of the unread notification records for the user.
+	 * Returns the number of the notification records with given state for the user.
 	 */
 	@io.swagger.v3.oas.annotations.Operation(
-			summary = "Return the number of the unread notification records for the user")
+			summary = "Return the number of the notification records with given state for the user")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Successfully retrieved the amount of notifications"),
-			@ApiResponse(responseCode = "401", description = "Unauthorized"),
-			@ApiResponse(responseCode = "403", description = "Forbidden") })
+			@ApiResponse(responseCode = "400", description = "Bad Request"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized") })
 	@GetMapping("/count")
 	@ResponseStatus(HttpStatus.OK)
 	public int countUnreadNotifications(@RequestParam State state) {
 		return this.notificationRecordService.countNotificationRecords(securityUtil.getUsername(), state);
 	}
 
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Succeeded"),
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200",
+					content = { @Content(mediaType = "application/json",
+							schema = @Schema(implementation = NotificationRecordResponseDTO.class)) }),
+			@ApiResponse(responseCode = "400", description = "Bad Request"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized"),
 			@ApiResponse(responseCode = "404", description = "Not found") })
 	@io.swagger.v3.oas.annotations.Operation(summary = "Update the specified notification record with user operation")
@@ -119,10 +124,8 @@ public class NotificationRecordController {
 		return NotificationRecordResponseDTO.toModel(notificationRecord);
 	}
 
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Successfully retrieved the amount of notifications"),
-			@ApiResponse(responseCode = "401", description = "Unauthorized"),
-			@ApiResponse(responseCode = "403", description = "Forbidden") })
+	@ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Successfully Deleted"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized") })
 	@io.swagger.v3.oas.annotations.Operation(summary = "Delete the specified notification record")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
