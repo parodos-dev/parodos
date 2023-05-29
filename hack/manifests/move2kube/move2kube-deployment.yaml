@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: move2kube
+  name: move2kube
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: move2kube
+  template:
+    metadata:
+      labels:
+        app: move2kube
+    spec:
+      containers:
+      - name: move2kube-ui
+        image: quay.io/konveyor/move2kube-ui
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: move2kube
+  namespace: move2kube
+spec:
+  selector:
+    app: move2kube
+  ports:
+    - name: move2kube
+      port: 8080
+      targetPort: move2kube
