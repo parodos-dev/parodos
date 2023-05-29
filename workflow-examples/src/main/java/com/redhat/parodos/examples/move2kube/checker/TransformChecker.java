@@ -33,7 +33,6 @@ public class TransformChecker extends BaseWorkFlowCheckerTask {
 	protected static String projectContextKey = "move2KubeProjectID";
 
 	public TransformChecker(String server) {
-		super();
 		client = new ApiClient();
 		client.setBasePath(server);
 	}

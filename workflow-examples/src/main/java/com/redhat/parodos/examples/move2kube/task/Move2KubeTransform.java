@@ -24,9 +24,9 @@ import org.springframework.http.ResponseEntity;
 @Slf4j
 public class Move2KubeTransform extends Move2KubeBase {
 
-	PlanApi planApi;
+	private PlanApi planApi;
 
-	ProjectOutputsApi projectOutputsApi;
+	private ProjectOutputsApi projectOutputsApi;
 
 	private String plan;
 
@@ -38,8 +38,7 @@ public class Move2KubeTransform extends Move2KubeBase {
 	}
 
 	public Move2KubeTransform(String server, PlanApi plan, ProjectOutputsApi projectOutputs) {
-		super();
-		this.setClient(server);
+		new Move2KubeTransform(server);
 		planApi = plan;
 		projectOutputsApi = projectOutputs;
 	}

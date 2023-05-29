@@ -1,9 +1,7 @@
 package com.redhat.parodos.examples.move2kube.task;
 
 import java.io.File;
-import java.util.List;
 
-import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -20,9 +18,9 @@ import static java.lang.Thread.sleep;
 @Slf4j
 public class Move2KubePlan extends Move2KubeBase {
 
-	PlanApi planApi;
+	private PlanApi planApi;
 
-	ProjectInputsApi projectInputsApi;
+	private ProjectInputsApi projectInputsApi;
 
 	public Move2KubePlan(String server) {
 		super();
@@ -31,12 +29,12 @@ public class Move2KubePlan extends Move2KubeBase {
 
 		ApiClient clientFormData = client;
 		clientFormData.addDefaultHeader("Content-Type", "multipart/form-data");
-		ProjectInputsApi projectInputsApi = new ProjectInputsApi(clientFormData);
+		projectInputsApi = new ProjectInputsApi(clientFormData);
 	}
 
 	// only used for testing
 	public Move2KubePlan(String server, PlanApi plan, ProjectInputsApi projectInputs) {
-		super();
+		new Move2KubePlan(server);
 		this.setClient(server);
 		planApi = plan;
 		projectInputsApi = projectInputs;
@@ -79,11 +77,6 @@ public class Move2KubePlan extends Move2KubeBase {
 		catch (Exception e) {
 			log.error("cannot append source code! {}", e.getMessage());
 		}
-	}
-
-	@Override
-	public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
-		return List.of(WorkFlowTaskOutput.HTTP2XX, WorkFlowTaskOutput.OTHER);
 	}
 
 }

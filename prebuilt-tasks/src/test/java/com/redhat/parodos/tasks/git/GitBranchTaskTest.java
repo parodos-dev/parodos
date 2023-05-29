@@ -2,6 +2,7 @@ package com.redhat.parodos.tasks.git;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import com.redhat.parodos.workflow.exception.MissingParameterException;
@@ -18,9 +19,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @Slf4j
@@ -48,9 +46,9 @@ class GitBranchTaskTest {
 		command.setInitialBranch("main");
 		command.setDirectory(tempDir.toFile());
 		Git git = command.call();
-		assertNotNull(git);
-		assertEquals(git.getRepository().getFullBranch(), "refs/heads/main");
-		assertEquals(git.getRepository().getBranch(), "main");
+		assertThat(git).isNotNull();
+		assertThat(git.getRepository().getFullBranch()).isEqualTo("refs/heads/main");
+		assertThat(git.getRepository().getBranch()).isEqualTo("main");
 		repository = git.getRepository();
 
 		log.info("Created a new repository at '{}'", this.repository.getDirectory());
@@ -73,22 +71,23 @@ class GitBranchTaskTest {
 	public void testBranchCheckout() {
 		// given
 		createSingleFileInRepo();
-		WorkContext workContext = new WorkContext();
+		WorkContext workContext = getSampleContext();
 		workContext.put("path", tempDir.toString());
 		WorkContextUtils.addParameter(workContext, "branch", "newBranch");
 		WorkContextUtils.addParameter(workContext, "path", tempDir.toString());
 
 		// when
-		var result = this.gitBranchTask.execute(workContext);
+		gitBranchTask.preExecute(workContext);
+		var result = gitBranchTask.execute(workContext);
 
 		// then
-		assertNull(result.getError());
-		assertEquals(result.getStatus(), WorkStatus.COMPLETED);
+		assertThat(result.getError()).isNull();
+		assertThat(result.getStatus()).isEqualTo(WorkStatus.COMPLETED);
 
 		assertDoesNotThrow(() -> {
 			Ref branchRef = repository.findRef("newBranch");
-			assertNotNull(branchRef);
-			assertEquals(repository.getBranch(), "newBranch");
+			assertThat(branchRef).isNotNull();
+			assertThat(repository.getBranch()).isEqualTo("newBranch");
 		});
 	}
 
@@ -98,64 +97,68 @@ class GitBranchTaskTest {
 		createSingleFileInRepo();
 
 		assertDoesNotThrow(() -> {
-			assertEquals(repository.getBranch(), defaultBranch);
+			assertThat(repository.getBranch()).isEqualTo(defaultBranch);
 		});
-		WorkContext workContext = new WorkContext();
+		WorkContext workContext = getSampleContext();
 		workContext.put("path", tempDir.toString());
 		WorkContextUtils.addParameter(workContext, "branch", defaultBranch);
 
 		// when
-		var result = this.gitBranchTask.execute(workContext);
+		gitBranchTask.preExecute(workContext);
+		var result = gitBranchTask.execute(workContext);
 
 		// then
-		assertNotNull(result.getError());
-		assertEquals(result.getStatus(), WorkStatus.FAILED);
+		assertThat(result.getError()).isNotNull();
+		assertThat(result.getStatus()).isEqualTo(WorkStatus.FAILED);
 	}
 
 	@Test
 	public void testWitMissingParams() {
 		// given
-		WorkContext workContext = new WorkContext();
+		WorkContext workContext = getSampleContext();
 
 		// when
-		var result = this.gitBranchTask.execute(workContext);
+		gitBranchTask.preExecute(workContext);
+		var result = gitBranchTask.execute(workContext);
 
 		// then
-		assertNotNull(result.getError());
-		assertEquals(result.getStatus(), WorkStatus.FAILED);
+		assertThat(result.getError()).isNotNull();
+		assertThat(result.getStatus()).isEqualTo(WorkStatus.FAILED);
 		assertThat(result.getError()).isInstanceOf(MissingParameterException.class);
 	}
 
 	@Test
 	public void testWithNoPath() {
 		// given
-		WorkContext workContext = new WorkContext();
+		WorkContext workContext = getSampleContext();
 		WorkContextUtils.addParameter(workContext, "branch", defaultBranch);
 
 		// when
-		var result = this.gitBranchTask.execute(workContext);
+		gitBranchTask.preExecute(workContext);
+		var result = gitBranchTask.execute(workContext);
 
 		// then
-		assertNotNull(result.getError());
-		assertEquals(result.getStatus(), WorkStatus.FAILED);
+		assertThat(result.getError()).isNotNull();
+		assertThat(result.getStatus()).isEqualTo(WorkStatus.FAILED);
 		assertThat(result.getError()).isInstanceOf(IllegalArgumentException.class);
 	}
 
 	@Test
 	public void testWithInvalidPath() {
 		// given
-		WorkContext workContext = new WorkContext();
+		WorkContext workContext = getSampleContext();
 		workContext.put("path", "/tmp/failingone");
 		WorkContextUtils.addParameter(workContext, "branch", defaultBranch);
 
 		// when
-		var result = this.gitBranchTask.execute(workContext);
+		gitBranchTask.preExecute(workContext);
+		var result = gitBranchTask.execute(workContext);
 
 		// then
-		assertNotNull(result.getError());
+		assertThat(result.getError()).isNotNull();
 		assertThat(result.getError()).isInstanceOf(RuntimeException.class);
 		assertThat(result.getError().toString()).contains("Ref HEAD cannot be resolved");
-		assertEquals(result.getStatus(), WorkStatus.FAILED);
+		assertThat(result.getStatus()).isEqualTo(WorkStatus.FAILED);
 	}
 
 	private void createSingleFileInRepo() {
@@ -166,6 +169,12 @@ class GitBranchTaskTest {
 			git.add().addFilepattern(".").call();
 			git.commit().setMessage("Initial commit").setSign(false).call();
 		});
+	}
+
+	private WorkContext getSampleContext() {
+		WorkContext context = new WorkContext();
+		WorkContextUtils.setMainExecutionId(context, UUID.randomUUID());
+		return context;
 	}
 
 }

@@ -17,14 +17,12 @@ import dev.parodos.move2kube.api.ProjectOutputsApi;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 @Slf4j
 public class Move2KubeRetrieveTest {
@@ -43,7 +41,7 @@ public class Move2KubeRetrieveTest {
 
 	@Before
 	public void setup() {
-		output = Mockito.mock(ProjectOutputsApi.class);
+		output = mock(ProjectOutputsApi.class);
 		task = new Move2KubeRetrieve("http://localhost/", output);
 	}
 
@@ -52,24 +50,23 @@ public class Move2KubeRetrieveTest {
 		// given
 		WorkContext context = getSampleWorkContext();
 		assertDoesNotThrow(() -> {
-			Mockito.when(output.getProjectOutput(Mockito.any(), Mockito.any(), Mockito.any()))
-					.thenReturn(createSampleZip());
+			when(output.getProjectOutput(any(), any(), any())).thenReturn(createSampleZip());
 		});
 		// when
 		WorkReport report = task.execute(context);
 
 		// then
-		assertNull(report.getError());
-		assertEquals(report.getStatus(), WorkStatus.COMPLETED);
+		assertThat(report.getError()).isNull();
+		assertThat(report.getStatus()).isEqualTo(WorkStatus.COMPLETED);
 
 		String path = (String) context.get(gitDestinationCtxKey);
-		assertNotNull(path);
+		assertThat(path).isNotNull();
 		File gitPath = new File(path);
 
 		String[] fileNames = { "deploy/bar.txt", "deploy/foo.txt", "scripts/bar.sh", "scripts/foo.sh" };
 
 		for (String fileName : fileNames) {
-			assertTrue(gitPath.toPath().resolve(fileName).toFile().exists(), "Failed on file '%s'".formatted(fileName));
+			assertThat(gitPath.toPath().resolve(fileName).toFile().exists()).isTrue();
 		}
 	}
 
@@ -79,17 +76,16 @@ public class Move2KubeRetrieveTest {
 		WorkContext context = getSampleWorkContext();
 
 		assertDoesNotThrow(() -> {
-			Mockito.when(output.getProjectOutput(Mockito.any(), Mockito.any(), Mockito.any()))
-					.thenThrow(ApiException.class);
+			when(output.getProjectOutput(any(), any(), any())).thenThrow(ApiException.class);
 		});
 
 		// when
 		WorkReport report = task.execute(context);
 
 		// then
-		assertNotNull(report.getError());
+		assertThat(report.getError()).isNotNull();
 		assertThat(report.getError()).isInstanceOf(ApiException.class);
-		assertEquals(report.getStatus(), WorkStatus.FAILED);
+		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
 	}
 
 	@Test
@@ -98,16 +94,16 @@ public class Move2KubeRetrieveTest {
 		WorkContext context = getSampleWorkContext();
 
 		assertDoesNotThrow(() -> {
-			Mockito.when(output.getProjectOutput(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(null);
+			when(output.getProjectOutput(any(), any(), any())).thenReturn(null);
 		});
 
 		// when
 		WorkReport report = task.execute(context);
 
 		// then
-		assertNotNull(report.getError());
+		assertThat(report.getError()).isNotNull();
 		assertThat(report.getError()).isInstanceOf(RuntimeException.class);
-		assertEquals(report.getStatus(), WorkStatus.FAILED);
+		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
 	}
 
 	public WorkContext getSampleWorkContext() {
@@ -140,10 +136,9 @@ public class Move2KubeRetrieveTest {
 		for (String fileName : fileNames) {
 			File file = new File("%s%s".formatted(tempDir, fileName));
 			if (file.getParentFile() != null && !file.getParentFile().exists()) {
-				assertTrue(file.getParentFile().mkdirs());
+				assertThat(file.getParentFile().mkdirs()).isTrue();
 			}
-			assertTrue(file.createNewFile());
-
+			assertThat(file.createNewFile()).isTrue();
 			ZipEntry zipEntry = new ZipEntry(fileName);
 			zos.putNextEntry(zipEntry);
 

@@ -15,12 +15,16 @@ import dev.parodos.move2kube.api.PlanApi;
 import dev.parodos.move2kube.api.ProjectInputsApi;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 public class Move2KubePlanTest {
 
@@ -28,23 +32,23 @@ public class Move2KubePlanTest {
 
 	private static String project = "project";
 
-	Move2KubePlan task;
+	private Move2KubePlan task;
 
-	ProjectInputsApi projectInputsApi;
+	private ProjectInputsApi projectInputsApi;
 
-	PlanApi planApi;
+	private PlanApi planApi;
 
 	@Before
 	public void setup() {
-		projectInputsApi = Mockito.mock(ProjectInputsApi.class);
-		planApi = Mockito.mock(PlanApi.class);
+		projectInputsApi = mock(ProjectInputsApi.class);
+		planApi = mock(PlanApi.class);
 
 		task = new Move2KubePlan("http://localhost:8080", planApi, projectInputsApi);
 	}
 
 	@Test
 	public void testParameters() {
-		assertEquals(task.getWorkFlowTaskParameters().size(), 0);
+		assertThat(task.getWorkFlowTaskParameters().size()).isEqualTo(0);
 	}
 
 	@Test
@@ -52,21 +56,19 @@ public class Move2KubePlanTest {
 		// given
 		WorkContext context = getWorkContext();
 		assertDoesNotThrow(() -> {
-			Mockito.when(projectInputsApi.createProjectInput(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(),
-					Mockito.any(), Mockito.any())).thenReturn(null);
+			when(projectInputsApi.createProjectInput(any(), any(), any(), any(), any(), any())).thenReturn(null);
 		});
 
 		// when
-
 		WorkReport report = task.execute(context);
 
 		// then
-		assertNull(report.getError());
-		assertEquals(report.getStatus(), WorkStatus.COMPLETED);
+		assertThat(report.getError()).isNull();
+		assertThat(report.getStatus()).isEqualTo(WorkStatus.COMPLETED);
 
 		assertDoesNotThrow(() -> {
-			Mockito.verify(projectInputsApi, Mockito.times(1)).createProjectInput(Mockito.eq(workspace),
-					Mockito.eq(project), Mockito.eq("sources"), Mockito.eq("Id"), Mockito.anyString(), Mockito.any());
+			verify(projectInputsApi, times(1)).createProjectInput(eq(workspace), eq(project), eq("sources"), eq("Id"),
+					anyString(), any());
 		});
 	}
 
@@ -95,9 +97,9 @@ public class Move2KubePlanTest {
 		for (String fileName : fileNames) {
 			File file = new File("%s%s".formatted(tempDir, fileName));
 			if (file.getParentFile() != null && !file.getParentFile().exists()) {
-				assertTrue(file.getParentFile().mkdirs());
+				assertThat(file.getParentFile().mkdirs()).isTrue();
 			}
-			assertTrue(file.createNewFile());
+			assertThat(file.createNewFile()).isTrue();
 
 			ZipEntry zipEntry = new ZipEntry(fileName);
 			zos.putNextEntry(zipEntry);

@@ -14,15 +14,19 @@ import dev.parodos.move2kube.client.model.StartTransformation202Response;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class Move2KubeTransformTest {
 
@@ -32,20 +36,20 @@ public class Move2KubeTransformTest {
 
 	private static String move2KubeProjectIDCtxKey = "move2KubeProjectID";
 
-	PlanApi planApi;
+	private PlanApi planApi;
 
-	ProjectOutputsApi projectOutputsApi;
+	private ProjectOutputsApi projectOutputsApi;
 
 	@Before
 	public void setup() throws Exception {
-		planApi = Mockito.mock(PlanApi.class);
-		projectOutputsApi = Mockito.mock(ProjectOutputsApi.class);
+		planApi = mock(PlanApi.class);
+		projectOutputsApi = mock(ProjectOutputsApi.class);
 		task = new Move2KubeTransform("http://localhost:8080", planApi, projectOutputsApi);
 	}
 
 	@Test
 	public void testParameters() {
-		assertEquals(this.task.getWorkFlowTaskParameters().size(), 0);
+		assertThat(this.task.getWorkFlowTaskParameters().size()).isEqualTo(0);
 	}
 
 	@Test
@@ -58,30 +62,28 @@ public class Move2KubeTransformTest {
 		transformResponse.setId("foo");
 
 		assertDoesNotThrow(() -> {
-			Mockito.when(planApi.getPlan(Mockito.any(), Mockito.any())).thenReturn(new GetPlan200Response());
-			Mockito.when(projectOutputsApi.startTransformation(Mockito.any(), Mockito.any(), Mockito.any()))
-					.thenReturn(transformResponse);
+			when(planApi.getPlan(any(), any())).thenReturn(new GetPlan200Response());
+			when(projectOutputsApi.startTransformation(any(), any(), any())).thenReturn(transformResponse);
 		});
 
 		try (MockedStatic<RestUtils> mockedStatic = mockStatic(RestUtils.class)) {
 			ResponseEntity<String> responseo = ResponseEntity.ok("ok");
 			responseo.getStatusCode();
 
-			mockedStatic.when(
-					(MockedStatic.Verification) RestUtils.executePost(Mockito.any(), (HttpEntity<?>) Mockito.any()))
+			mockedStatic.when((MockedStatic.Verification) RestUtils.executePost(any(), (HttpEntity<?>) any()))
 					.thenReturn(ResponseEntity.ok("ok"));
 
 			// when
 			WorkReport report = this.task.execute(context);
 
 			// then
-			assertNull(report.getError());
-			assertEquals(report.getStatus(), WorkStatus.COMPLETED);
+			assertThat(report.getError()).isNull();
+			assertThat(report.getStatus()).isEqualTo(WorkStatus.COMPLETED);
 		}
 
 		assertDoesNotThrow(() -> {
-			Mockito.verify(projectOutputsApi, Mockito.times(1)).startTransformation(
-					Mockito.eq(move2KubeWorkspaceIDCtxKey), Mockito.eq(move2KubeProjectIDCtxKey), Mockito.any());
+			verify(projectOutputsApi, times(1)).startTransformation(eq(move2KubeWorkspaceIDCtxKey),
+					eq(move2KubeProjectIDCtxKey), any());
 		});
 
 	}

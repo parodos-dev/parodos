@@ -1,6 +1,6 @@
 package com.redhat.parodos.examples.move2kube;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Executors;
 
 import com.redhat.parodos.examples.move2kube.checker.TransformChecker;
@@ -75,7 +75,7 @@ public class move2kubeWorkFlowConfiguration {
 	@Bean
 	Move2KubeTransform move2KubeTransform(@Qualifier("transformWorkFlowChecker") WorkFlow transformWorkFlowChecker) {
 		Move2KubeTransform move2KubeTransform = new Move2KubeTransform(getMove2KubeAPIEndpoint());
-		move2KubeTransform.setWorkFlowCheckers(Arrays.asList(transformWorkFlowChecker));
+		move2KubeTransform.setWorkFlowCheckers(List.of(transformWorkFlowChecker));
 		return move2KubeTransform;
 	}
 

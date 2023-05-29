@@ -32,8 +32,7 @@ public class Move2KubeRetrieve extends Move2KubeBase {
 	}
 
 	public Move2KubeRetrieve(String server, ProjectOutputsApi outputsApi) {
-		super();
-		this.setClient(server);
+		new Move2KubeRetrieve(server);
 		output = outputsApi;
 	}
 
