@@ -3,7 +3,6 @@ bases:
 
 resources:
 - namespace.yaml
-- postgres.yaml
 - backstage.yaml
 
 configMapGenerator:
@@ -11,10 +10,3 @@ configMapGenerator:
   namespace: backstage
   files:
   - app-config.yaml
-
-secretGenerator:
-- name: postgres-secrets
-  namespace: backstage
-  literals:
-  - POSTGRES_USER=admin
-  - POSTGRES_PASSWORD=admin

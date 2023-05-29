@@ -31,9 +31,6 @@ spec:
           ports:
             - name: backend
               containerPort: 7007
-          envFrom:
-            - secretRef:
-                name: postgres-secrets
           volumeMounts:
             - name: app-config
               mountPath: /app/app-config.yaml
