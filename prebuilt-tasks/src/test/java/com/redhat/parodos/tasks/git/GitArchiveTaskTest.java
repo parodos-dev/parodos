@@ -2,8 +2,10 @@ package com.redhat.parodos.tasks.git;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.UUID;
 import java.util.stream.Stream;
 
+import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.extern.slf4j.Slf4j;
@@ -16,9 +18,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 @Slf4j
 public class GitArchiveTaskTest {
@@ -59,15 +58,16 @@ public class GitArchiveTaskTest {
 	public void testWithValidData() {
 		// given
 		createSingleFileInRepo();
-		WorkContext workContext = new WorkContext();
+		WorkContext workContext = getSampleContext();
 		workContext.put("path", tempDir.toString());
 
 		// when
+		gitArchiveTask.preExecute(workContext);
 		var result = this.gitArchiveTask.execute(workContext);
 
 		// then
-		assertNull(result.getError());
-		assertEquals(result.getStatus(), WorkStatus.COMPLETED);
+		assertThat(result.getError()).isNull();
+		assertThat(result.getStatus()).isEqualTo(WorkStatus.COMPLETED);
 		assertThat(result.getWorkContext().get("gitArchivePath").toString()).contains("output.zip");
 	}
 
@@ -75,15 +75,16 @@ public class GitArchiveTaskTest {
 	public void testWithContextFromAnotherGit() {
 		// given
 		createSingleFileInRepo();
-		WorkContext workContext = new WorkContext();
+		WorkContext workContext = getSampleContext();
 		workContext.put("gitDestination", tempDir.toString());
 
 		// when
+		gitArchiveTask.preExecute(workContext);
 		var result = this.gitArchiveTask.execute(workContext);
 
 		// then
-		assertNull(result.getError());
-		assertEquals(result.getStatus(), WorkStatus.COMPLETED);
+		assertThat(result.getError()).isNull();
+		assertThat(result.getStatus()).isEqualTo(WorkStatus.COMPLETED);
 		assertThat(result.getWorkContext().get("gitArchivePath").toString()).contains("output.zip");
 	}
 
@@ -91,14 +92,15 @@ public class GitArchiveTaskTest {
 	public void testWithInvalidParameters() {
 		// given
 		createSingleFileInRepo();
-		WorkContext workContext = new WorkContext();
+		WorkContext workContext = getSampleContext();
 
 		// when
+		gitArchiveTask.preExecute(workContext);
 		var result = this.gitArchiveTask.execute(workContext);
 
 		// then
-		assertNotNull(result.getError());
-		assertEquals(result.getStatus(), WorkStatus.FAILED);
+		assertThat(result.getError()).isNotNull();
+		assertThat(result.getStatus()).isEqualTo(WorkStatus.FAILED);
 		assertThat(result.getError().toString()).contains("The path parameter cannot be null or empty");
 	}
 
@@ -106,15 +108,16 @@ public class GitArchiveTaskTest {
 	public void testWithInvalidRepo() {
 		// given
 		createSingleFileInRepo();
-		WorkContext workContext = new WorkContext();
+		WorkContext workContext = getSampleContext();
 		workContext.put("path", "noexists");
 
 		// when
+		gitArchiveTask.preExecute(workContext);
 		var result = this.gitArchiveTask.execute(workContext);
 
 		// then
-		assertNotNull(result.getError());
-		assertEquals(result.getStatus(), WorkStatus.FAILED);
+		assertThat(result.getError()).isNotNull();
+		assertThat(result.getStatus()).isEqualTo(WorkStatus.FAILED);
 		assertThat(result.getError().toString()).contains("Cannot archive the repository");
 	}
 
@@ -127,6 +130,12 @@ public class GitArchiveTaskTest {
 			git.commit().setMessage("Initial commit").setSign(false).call();
 		});
 
+	}
+
+	private WorkContext getSampleContext() {
+		WorkContext context = new WorkContext();
+		WorkContextUtils.setMainExecutionId(context, UUID.randomUUID());
+		return context;
 	}
 
 }

@@ -3,13 +3,13 @@ package com.redhat.parodos.examples.move2kube.task;
 import com.redhat.parodos.workflows.work.WorkContext;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class GitArchiveTaskTest {
 
 	@Test
 	public void testArchiveParams() {
-		assertEquals(new GitArchiveTask().getWorkFlowTaskParameters().size(), 0);
+		assertThat(new GitArchiveTask().getWorkFlowTaskParameters().size()).isEqualTo(0);
 	}
 
 	@Test
@@ -17,7 +17,7 @@ public class GitArchiveTaskTest {
 		GitArchiveTask task = new GitArchiveTask();
 		WorkContext ctx = new WorkContext();
 		ctx.put("gitDestination", "/invalid");
-		assertEquals(task.getRepoPath(ctx), "/invalid");
+		assertThat(task.getRepoPath(ctx)).isEqualTo("/invalid");
 	}
 
 }

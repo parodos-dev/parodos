@@ -24,7 +24,6 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.archive.ZipFormat;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
 @Slf4j
 @AllArgsConstructor
@@ -32,7 +31,7 @@ public class GitArchiveTask extends BaseWorkFlowTask {
 
 	@Override
 	public @NonNull List<WorkParameter> getWorkFlowTaskParameters() {
-		return List.of(WorkParameter.builder().key(GitUtils.getGitRepoPath()).type(WorkParameterType.TEXT)
+		return List.of(WorkParameter.builder().key(GitConstants.GIT_REPO_PATH).type(WorkParameterType.TEXT)
 				.optional(true).description("path where the git repo is located").build());
 	}
 
@@ -51,21 +50,21 @@ public class GitArchiveTask extends BaseWorkFlowTask {
 		try {
 			repo = getRepo(path);
 			Path archivePath = archive(repo);
-			workContext.put(GitUtils.getContextArchivePath(), archivePath.toAbsolutePath().toString());
+			workContext.put(GitConstants.CONTEXT_ARCHIVE_PATH, archivePath.toAbsolutePath().toString());
 		}
 		catch (FileNotFoundException | GitAPIException e) {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext,
-					new Exception("Cannot archive the repository: %s".formatted(e.getMessage())));
+					new Exception("Cannot archive the repository: %s".formatted(e.getMessage()), e));
 		}
 		catch (IOException e) {
 			// This is the catch for Repository clone call or archive, we don't really
 			// know.
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext,
-					new Exception("No repository at '%s' Error: %s".formatted(path, e.getMessage())));
+					new Exception("No repository at '%s' Error: %s".formatted(path, e.getMessage()), e));
 		}
 		catch (Exception e) {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext,
-					new Exception("Cannot archive the repository:" + e));
+					new Exception("Cannot archive the repository: %s".formatted(e.getMessage()), e));
 		}
 		finally {
 			if (repo != null) {
@@ -77,8 +76,7 @@ public class GitArchiveTask extends BaseWorkFlowTask {
 	}
 
 	private Repository getRepo(String path) throws IOException {
-		Path gitDir = Paths.get(path + "/.git");
-		return new FileRepositoryBuilder().setGitDir(gitDir.toFile()).build();
+		return GitUtils.getRepo(path);
 	}
 
 	private Path archive(Repository repo) throws FileNotFoundException, IOException, GitAPIException {
@@ -90,7 +88,8 @@ public class GitArchiveTask extends BaseWorkFlowTask {
 		String tmpdir = Files.createTempDir().getAbsolutePath();
 		Path zipFile = Paths.get(tmpdir + "/output.zip");
 		try (FileOutputStream out = new FileOutputStream(zipFile.toAbsolutePath().toString())) {
-			git.archive().setTree(repo.resolve("HEAD")).setPrefix("src/").setFormat("zip").setOutputStream(out).call();
+			git.archive().setTree(repo.resolve(GitConstants.GIT_HEAD)).setPrefix(GitConstants.SRC_FOLDER)
+					.setFormat("zip").setOutputStream(out).call();
 		}
 		finally {
 			git.close();

@@ -28,9 +28,9 @@ public class GitCloneTask extends BaseWorkFlowTask {
 	@Override
 	public @NonNull List<WorkParameter> getWorkFlowTaskParameters() {
 		return List.of(
-				WorkParameter.builder().key(GitUtils.getUri()).type(WorkParameterType.TEXT).optional(false)
+				WorkParameter.builder().key(GitConstants.URI).type(WorkParameterType.TEXT).optional(false)
 						.description("Url to clone from").build(),
-				WorkParameter.builder().key(GitUtils.getBranch()).type(WorkParameterType.TEXT).optional(true)
+				WorkParameter.builder().key(GitConstants.BRANCH).type(WorkParameterType.TEXT).optional(true)
 						.description("Branch to clone from, default main").build(),
 				WorkParameter.builder().key("credentials").type(WorkParameterType.TEXT).optional(false)
 						.description("Git credential").build());
@@ -43,12 +43,12 @@ public class GitCloneTask extends BaseWorkFlowTask {
 		String gitBranch = null;
 
 		try {
-			gitUri = this.getRequiredParameterValue(workContext, GitUtils.getUri());
-			gitBranch = this.getOptionalParameterValue(workContext, GitUtils.getBranch(), GitUtils.getDefaultBranch());
+			gitUri = this.getRequiredParameterValue(GitConstants.URI);
+			gitBranch = this.getOptionalParameterValue(GitConstants.BRANCH, GitConstants.DEFAULT_BRANCH);
 			destination = cloneRepo(gitUri, gitBranch);
 		}
 		catch (MissingParameterException e) {
-			log.debug("Something failed with the parameters: {}", e.getMessage());
+			log.debug("Failed to resolve required parameter: {}", e.getMessage());
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
 		}
 		catch (TransportException e) {
@@ -66,9 +66,9 @@ public class GitCloneTask extends BaseWorkFlowTask {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext,
 					new Exception("cannot clone repository, error: " + e.getMessage()));
 		}
-		workContext.put(GitUtils.getContextUri(), gitUri);
-		workContext.put(GitUtils.getContextDestination(), destination);
-		workContext.put(GitUtils.getContextBranch(), gitBranch);
+		workContext.put(GitConstants.CONTEXT_URI, gitUri);
+		workContext.put(GitConstants.CONTEXT_DESTINATION, destination);
+		workContext.put(GitConstants.CONTEXT_BRANCH, gitBranch);
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext, null);
 	}
 

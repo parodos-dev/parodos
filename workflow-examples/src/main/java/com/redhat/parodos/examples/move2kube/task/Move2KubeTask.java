@@ -1,12 +1,10 @@
 package com.redhat.parodos.examples.move2kube.task;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 import com.google.common.base.Strings;
-import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
@@ -40,13 +38,12 @@ public class Move2KubeTask extends Move2KubeBase {
 
 		ApiClient clientFormData = client;
 		clientFormData.addDefaultHeader("Content-Type", "multipart/form-data");
-		ProjectInputsApi projectInputsApi = new ProjectInputsApi(clientFormData);
+		projectInputsApi = new ProjectInputsApi(clientFormData);
 	}
 
 	// constructor only used for testing.
 	Move2KubeTask(String server, WorkspacesApi wrk, ProjectsApi projects, ProjectInputsApi projectInputs) {
-		super();
-		this.setClient(server);
+		new Move2KubeTask(server);
 		workspacesApi = wrk;
 		projectsApi = projects;
 		projectInputsApi = projectInputs;
@@ -83,11 +80,6 @@ public class Move2KubeTask extends Move2KubeBase {
 		}
 
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
-	}
-
-	@Override
-	public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
-		return List.of(WorkFlowTaskOutput.HTTP2XX, WorkFlowTaskOutput.OTHER);
 	}
 
 	private Optional<Workspace> setWorkspace() throws ApiException {

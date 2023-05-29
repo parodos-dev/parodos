@@ -3,6 +3,7 @@ package com.redhat.parodos.tasks.git;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import com.redhat.parodos.workflow.exception.MissingParameterException;
@@ -23,9 +24,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @Slf4j
@@ -71,83 +69,89 @@ class GitCommitTaskTest {
 	public void testWithValidData() {
 		// given
 		String message = "My commit message";
-		WorkContext workContext = new WorkContext();
+		WorkContext workContext = getSampleContext();
 		workContext.put("path", tempDir.toString());
 		WorkContextUtils.addParameter(workContext, commitMessageCtxKey, message);
 
 		// when
+		gitCommitTask.preExecute(workContext);
 		WorkReport report = gitCommitTask.execute(workContext);
 
 		// then
-		assertNull(report.getError());
-		assertEquals(report.getStatus(), WorkStatus.COMPLETED);
+		assertThat(report.getError()).isNull();
+		assertThat(report.getStatus()).isEqualTo(WorkStatus.COMPLETED);
 
 		assertDoesNotThrow(() -> {
 			RevCommit commit = getLastCommit();
-			assertEquals(commit.getFullMessage(), message);
+			assertThat(commit.getFullMessage()).isEqualTo(message);
 		});
 	}
 
 	@Test
 	public void testWithNoCommitMessage() {
 		// given
-		WorkContext workContext = new WorkContext();
+		WorkContext workContext = getSampleContext();
 		workContext.put("path", tempDir.toString());
+
 		// when
+		gitCommitTask.preExecute(workContext);
 		WorkReport report = gitCommitTask.execute(workContext);
 
 		// then
-		assertNotNull(report.getError());
+		assertThat(report.getError()).isNotNull();
 		assertThat(report.getError()).isInstanceOf(MissingParameterException.class);
-		assertEquals(report.getStatus(), WorkStatus.FAILED);
+		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
 	}
 
 	@Test
 	public void testWithMissingRepo() {
 		// given
-		WorkContext workContext = new WorkContext();
+		WorkContext workContext = getSampleContext();
 		WorkContextUtils.addParameter(workContext, commitMessageCtxKey, "new one");
 
 		// when
+		gitCommitTask.preExecute(workContext);
 		WorkReport report = gitCommitTask.execute(workContext);
 
 		// then
-		assertNotNull(report.getError());
+		assertThat(report.getError()).isNotNull();
 		assertThat(report.getError()).isInstanceOf(IllegalArgumentException.class);
-		assertEquals(report.getStatus(), WorkStatus.FAILED);
+		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
 	}
 
 	@Test
 	public void testWithEmptyRepo() {
 		// given
-		WorkContext workContext = new WorkContext();
+		WorkContext workContext = getSampleContext();
 		workContext.put("path", "");
 		WorkContextUtils.addParameter(workContext, commitMessageCtxKey, "new one");
 
 		// when
+		gitCommitTask.preExecute(workContext);
 		WorkReport report = gitCommitTask.execute(workContext);
 
 		// then
-		assertNotNull(report.getError());
+		assertThat(report.getError()).isNotNull();
 		assertThat(report.getError()).isInstanceOf(IllegalArgumentException.class);
-		assertEquals(report.getStatus(), WorkStatus.FAILED);
+		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
 	}
 
 	@Test
 	public void testWithInvalidRepo() {
 		// given
-		WorkContext workContext = new WorkContext();
+		WorkContext workContext = getSampleContext();
 		workContext.put("path", "/tmp/invalidRepo");
 		WorkContextUtils.addParameter(workContext, commitMessageCtxKey, "new one");
 
 		// when
+		gitCommitTask.preExecute(workContext);
 		WorkReport report = gitCommitTask.execute(workContext);
 
 		// then
-		assertNotNull(report.getError());
+		assertThat(report.getError()).isNotNull();
 		assertThat(report.getError()).isInstanceOf(Exception.class);
 		assertThat(report.getError().getMessage()).contains("Commit on repo without HEAD currently not supported");
-		assertEquals(report.getStatus(), WorkStatus.FAILED);
+		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
 	}
 
 	private void createSingleFileInRepo() {
@@ -164,15 +168,21 @@ class GitCommitTaskTest {
 
 		Ref head = repository.exactRef("HEAD");
 		ObjectId headId = head.getObjectId();
-		assertNotNull(headId);
+		assertThat(headId).isNotNull();
 		// Create a RevWalk instance to walk through commits
 		RevWalk revWalk = new RevWalk(repository);
-		assertNotNull(revWalk);
+		assertThat(revWalk).isNotNull();
 
 		// Parse the HEAD commit
 		RevCommit headCommit = revWalk.parseCommit(headId);
-		assertNotNull(headCommit);
+		assertThat(headCommit).isNotNull();
 		return headCommit;
+	}
+
+	private WorkContext getSampleContext() {
+		WorkContext context = new WorkContext();
+		WorkContextUtils.setMainExecutionId(context, UUID.randomUUID());
+		return context;
 	}
 
 }

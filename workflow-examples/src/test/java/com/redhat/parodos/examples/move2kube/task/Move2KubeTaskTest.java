@@ -21,12 +21,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @Slf4j
 public class Move2KubeTaskTest {
@@ -45,9 +47,9 @@ public class Move2KubeTaskTest {
 
 	@Before
 	public void BeforeEach() {
-		workspacesApi = Mockito.mock(WorkspacesApi.class);
-		projectsApi = Mockito.mock(ProjectsApi.class);
-		projectInputsApi = Mockito.mock(ProjectInputsApi.class);
+		workspacesApi = mock(WorkspacesApi.class);
+		projectsApi = mock(ProjectsApi.class);
+		projectInputsApi = mock(ProjectInputsApi.class);
 
 		task = new Move2KubeTask("http://localhost", workspacesApi, projectsApi, projectInputsApi);
 		log.error("Move2KubeTask BeforeEach");
@@ -70,24 +72,23 @@ public class Move2KubeTaskTest {
 		workspace.setInputs(inputs);
 
 		assertDoesNotThrow(() -> {
-			Mockito.when(workspacesApi.getWorkspaces()).thenReturn(List.of(workspace));
-			Mockito.when(projectsApi.createProject(Mockito.any(), Mockito.any())).thenReturn(getSampleProject("test"));
+			when(workspacesApi.getWorkspaces()).thenReturn(List.of(workspace));
+			when(projectsApi.createProject(any(), any())).thenReturn(getSampleProject("test"));
 		});
 
 		// when
 		WorkReport report = task.execute(workContext);
 
 		// then
-		assertNull(report.getError());
-		assertEquals(report.getStatus(), WorkStatus.COMPLETED);
-		assertNotNull(report.getWorkContext().get(move2KubeWorkspaceIDCtxKey));
-		assertNotNull(report.getWorkContext().get(move2KubeProjectIDCtxKey));
+		assertThat(report.getError()).isNull();
+		assertThat(report.getStatus()).isEqualTo(WorkStatus.COMPLETED);
+		assertThat(report.getWorkContext().get(move2KubeWorkspaceIDCtxKey)).isNotNull();
+		assertThat(report.getWorkContext().get(move2KubeProjectIDCtxKey)).isNotNull();
 
 		assertDoesNotThrow(() -> {
-			Mockito.verify(workspacesApi, Mockito.times(1)).getWorkspaces();
-			Mockito.verify(projectsApi, Mockito.times(1)).createProject(Mockito.any(), Mockito.any());
-			Mockito.verify(projectInputsApi, Mockito.times(2)).createProjectInput(Mockito.any(), Mockito.any(),
-					Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
+			verify(workspacesApi, times(1)).getWorkspaces();
+			verify(projectsApi, times(1)).createProject(any(), any());
+			verify(projectInputsApi, times(2)).createProjectInput(any(), any(), any(), any(), any(), any());
 		});
 	}
 
@@ -96,22 +97,22 @@ public class Move2KubeTaskTest {
 		// given
 		WorkContext workContext = getSampleWorkContext();
 		assertDoesNotThrow(() -> {
-			Mockito.when(workspacesApi.getWorkspaces()).thenReturn(Collections.emptyList());
-			Mockito.when(projectsApi.createProject(Mockito.any(), Mockito.any())).thenReturn(getSampleProject("test"));
+			when(workspacesApi.getWorkspaces()).thenReturn(Collections.emptyList());
+			when(projectsApi.createProject(any(), any())).thenReturn(getSampleProject("test"));
 		});
 
 		// when
 		WorkReport report = task.execute(workContext);
 
 		// then
-		assertNotNull(report.getError());
-		assertEquals(report.getStatus(), WorkStatus.FAILED);
-		assertNull(report.getWorkContext().get(move2KubeWorkspaceIDCtxKey));
-		assertNull(report.getWorkContext().get(move2KubeProjectIDCtxKey));
+		assertThat(report.getError()).isNotNull();
+		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
+		assertThat(report.getWorkContext().get(move2KubeWorkspaceIDCtxKey)).isNull();
+		assertThat(report.getWorkContext().get(move2KubeProjectIDCtxKey)).isNull();
 
 		assertDoesNotThrow(() -> {
-			Mockito.verify(workspacesApi, Mockito.times(1)).getWorkspaces();
-			Mockito.verify(projectsApi, Mockito.times(0)).createProject(Mockito.any(), Mockito.any());
+			verify(workspacesApi, times(1)).getWorkspaces();
+			verify(projectsApi, times(0)).createProject(any(), any());
 		});
 	}
 
@@ -120,22 +121,22 @@ public class Move2KubeTaskTest {
 		// given
 		WorkContext workContext = getSampleWorkContext();
 		assertDoesNotThrow(() -> {
-			Mockito.when(workspacesApi.getWorkspaces()).thenReturn(List.of(getSampleWorkspace("test")));
-			Mockito.when(projectsApi.createProject(Mockito.any(), Mockito.any())).thenThrow(ApiException.class);
+			when(workspacesApi.getWorkspaces()).thenReturn(List.of(getSampleWorkspace("test")));
+			when(projectsApi.createProject(any(), any())).thenThrow(ApiException.class);
 		});
 
 		// when
 		WorkReport report = task.execute(workContext);
 
 		// then
-		assertNotNull(report.getError());
-		assertEquals(report.getStatus(), WorkStatus.FAILED);
-		assertNotNull(report.getWorkContext().get(move2KubeWorkspaceIDCtxKey));
-		assertNull(report.getWorkContext().get(move2KubeProjectIDCtxKey));
+		assertThat(report.getError()).isNotNull();
+		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
+		assertThat(report.getWorkContext().get(move2KubeWorkspaceIDCtxKey)).isNotNull();
+		assertThat(report.getWorkContext().get(move2KubeProjectIDCtxKey)).isNull();
 
 		assertDoesNotThrow(() -> {
-			Mockito.verify(workspacesApi, Mockito.times(1)).getWorkspaces();
-			Mockito.verify(projectsApi, Mockito.times(1)).createProject(Mockito.any(), Mockito.any());
+			verify(workspacesApi, times(1)).getWorkspaces();
+			verify(projectsApi, times(1)).createProject(any(), any());
 		});
 	}
 
