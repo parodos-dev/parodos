@@ -3,6 +3,7 @@ package com.redhat.parodos.tasks.git;
 public class GitConstants {
 
 	static final String GIT_REPO_PATH = "path";
+	static final String GIT_REMOTE = "remote";
 	static final String GIT_COMMIT_MESSAGE = "commitMessage";
 	static final String URI = "uri";
 	static final String BRANCH = "branch";
