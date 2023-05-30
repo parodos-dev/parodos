@@ -13,12 +13,12 @@ import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowExecutionResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
 import com.redhat.parodos.sdk.model.WorkRequestDTO;
+import com.redhat.parodos.sdkutils.WorkFlowServiceUtils;
 import com.redhat.parodos.workflow.utils.CredUtils;
 import org.junit.Test;
 
 import org.springframework.http.HttpHeaders;
 
-import static com.redhat.parodos.sdkutils.SdkUtils.getProjectAsync;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
@@ -49,7 +49,8 @@ public class JdbcWorkFlow {
 		defaultClient.addDefaultHeader(HttpHeaders.AUTHORIZATION, "Basic " + CredUtils.getBase64Creds("test", "test"));
 
 		try {
-			ProjectResponseDTO testProject = getProjectAsync(defaultClient, projectName, projectDescription);
+			ProjectResponseDTO testProject = WorkFlowServiceUtils.getProjectAsync(defaultClient, projectName,
+					projectDescription);
 
 			// GET workflow DEFINITIONS
 			WorkflowDefinitionApi workflowDefinitionApi = new WorkflowDefinitionApi(defaultClient);

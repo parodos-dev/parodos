@@ -13,21 +13,6 @@ public class NotificationTestBuilder {
 
 	private ApiClient apiClient;
 
-	// private Consumer<WorkFlowDefinitionResponseDTO> workFlowDefinitionConsumer;
-
-	// public NotificationTestBuilder withDefaultProject() {
-	// return this;
-	// }
-
-	// public NotificationTestBuilder withProject(String projectName, String
-	// projectDescription) {
-	// assertThat(projectName).isNotBlank();
-	// assertThat(projectDescription).isNotBlank();
-	//// this.projectName = projectName;
-	//// this.projectDescription = projectDescription;
-	// return this;
-	// }
-
 	private void setupNotification() throws ApiException, InterruptedException {
 		PageNotificationRecordResponseDTO notifications = NotificationServiceSdkUtils.waitNotificationStart(apiClient);
 		assertThat(notifications).isNotNull();

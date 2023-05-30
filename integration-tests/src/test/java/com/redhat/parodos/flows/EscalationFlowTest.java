@@ -7,7 +7,7 @@ import com.redhat.parodos.sdk.invoker.ApiException;
 import com.redhat.parodos.sdk.model.WorkFlowExecutionResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
 import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
-import com.redhat.parodos.sdkutils.WorkFlowServiceSdkUtils;
+import com.redhat.parodos.sdkutils.WorkFlowServiceUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -44,8 +44,8 @@ public class EscalationFlowTest {
 		log.info("Escalation workFlow {}", workFlowResponseDTO.getWorkStatus());
 		log.info("Waiting for checkers to complete...");
 
-		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = WorkFlowServiceSdkUtils
-				.waitWorkflowStatusAsync(workflowApi, workFlowResponseDTO.getWorkFlowExecutionId());
+		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = WorkFlowServiceUtils.waitWorkflowStatusAsync(workflowApi,
+				workFlowResponseDTO.getWorkFlowExecutionId());
 
 		assertNotNull(workFlowStatusResponseDTO);
 		assertNotNull(workFlowStatusResponseDTO.getWorkFlowExecutionId());

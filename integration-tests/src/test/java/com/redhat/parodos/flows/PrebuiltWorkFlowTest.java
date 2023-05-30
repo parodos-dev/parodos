@@ -16,7 +16,7 @@ import com.redhat.parodos.sdk.model.WorkFlowExecutionResponseDTO.WorkStatusEnum;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
 import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.sdk.model.WorkRequestDTO;
-import com.redhat.parodos.sdkutils.WorkFlowServiceSdkUtils;
+import com.redhat.parodos.sdkutils.WorkFlowServiceUtils;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -61,8 +61,8 @@ public class PrebuiltWorkFlowTest {
 		assertNotNull(workFlowResponseDTO.getWorkStatus());
 		assertEquals(WorkStatusEnum.IN_PROGRESS, workFlowResponseDTO.getWorkStatus());
 
-		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = WorkFlowServiceSdkUtils
-				.waitWorkflowStatusAsync(workflowApi, workFlowResponseDTO.getWorkFlowExecutionId());
+		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = WorkFlowServiceUtils.waitWorkflowStatusAsync(workflowApi,
+				workFlowResponseDTO.getWorkFlowExecutionId());
 		assertNotNull(workFlowStatusResponseDTO);
 		assertEquals(WorkFlowStatusResponseDTO.StatusEnum.COMPLETED, workFlowStatusResponseDTO.getStatus());
 		log.info("workflow finished successfully with response: {}", workFlowResponseDTO);
