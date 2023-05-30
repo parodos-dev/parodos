@@ -18,6 +18,7 @@ public class GitCommitTaskTest {
 		WorkContext ctx = new WorkContext();
 		ctx.put("gitDestination", "/invalid");
 		assertThat(task.getRepoPath(ctx)).isEqualTo("/invalid");
+        assertNull(null);
 	}
 
 }

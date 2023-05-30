@@ -3,7 +3,7 @@ rules:
     pattern-either:
      - pattern: assertNull(...)
      - pattern: assertTrue(...)
-    message: Assert should be moved to assertThat
+    message: Assert should be moved to assertThat()
     languages:
       - java
     severity: ERROR

@@ -24,7 +24,10 @@ jobs:
 
       - name: Run Semgrep
         run: |
-          semgrep --config=semgrep.yaml $(git diff --name-only --diff-filter=AM ${{ github.base_ref }}...HEAD)
+          pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          files=$(curl https://api.github.com/repos/${{ github.repository }}/pulls/$pr_number/files | jq -r '.[] | .filename')
+          echo "Files to test are: $files"
+          semgrep --config=semgrep.yaml --error $files
 
   build:
     runs-on: ubuntu-latest
