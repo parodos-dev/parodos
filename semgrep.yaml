@@ -1,0 +1,9 @@
+rules:
+  - id: untitled_rule
+    pattern-either:
+     - pattern: assertNull(...)
+     - pattern: assertTrue(...)
+    message: Assert should be moved to assertThat
+    languages:
+      - java
+    severity: ERROR

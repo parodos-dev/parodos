@@ -12,6 +12,20 @@ on:
       - '**'
 permissions: read-all
 jobs:
+
+  checkstyle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Semgrep
+        run: |
+          pip install semgrep
+
+      - name: Run Semgrep
+        run: |
+          semgrep --config=semgrep.yaml $(git diff --name-only --diff-filter=AM ${{ github.base_ref }}...HEAD)
+
   build:
     runs-on: ubuntu-latest
     steps:
