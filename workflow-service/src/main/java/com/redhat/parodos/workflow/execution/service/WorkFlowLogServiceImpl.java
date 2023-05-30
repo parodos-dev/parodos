@@ -83,7 +83,7 @@ public class WorkFlowLogServiceImpl implements WorkFlowLogService {
 		WorkFlowExecution workFlowExecution = Optional
 				.ofNullable(workFlowRepository.findFirstByMainWorkFlowExecutionIdAndWorkFlowDefinitionId(
 						mainWorkflowExecutionId, workFlowTaskDefinition.getWorkFlowDefinition().getId()))
-				.orElseThrow(
+				.or(() -> workFlowRepository.findById(mainWorkflowExecutionId)).orElseThrow(
 						() -> new ResourceNotFoundException(ResourceType.WORKFLOW_EXECUTION, mainWorkflowExecutionId));
 		return Optional
 				.ofNullable(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(
@@ -96,7 +96,8 @@ public class WorkFlowLogServiceImpl implements WorkFlowLogService {
 
 	private String getTaskLog(UUID mainWorkflowExecutionId, String taskName) {
 		WorkFlowTaskExecution workFlowTaskExecution = getWorkFlowTaskExecution(mainWorkflowExecutionId, taskName);
-		return workFlowTaskExecution.getWorkFlowTaskExecutionLog().getLog();
+		return Optional.ofNullable(workFlowTaskExecution.getWorkFlowTaskExecutionLog())
+				.map(WorkFlowTaskExecutionLog::getLog).orElse("");
 	}
 
 }
