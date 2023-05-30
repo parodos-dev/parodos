@@ -28,20 +28,18 @@ import static org.mockito.Mockito.when;
 
 public class Move2KubePlanTest {
 
-	private static String workspace = "workspace";
+	private static final String WORKSPACE = "workspace";
 
-	private static String project = "project";
+	private static final String PROJECT = "project";
 
 	private Move2KubePlan task;
 
 	private ProjectInputsApi projectInputsApi;
 
-	private PlanApi planApi;
-
 	@Before
 	public void setup() {
 		projectInputsApi = mock(ProjectInputsApi.class);
-		planApi = mock(PlanApi.class);
+		PlanApi planApi = mock(PlanApi.class);
 
 		task = new Move2KubePlan("http://localhost:8080", planApi, projectInputsApi);
 	}
@@ -67,7 +65,7 @@ public class Move2KubePlanTest {
 		assertThat(report.getStatus()).isEqualTo(WorkStatus.COMPLETED);
 
 		assertDoesNotThrow(() -> {
-			verify(projectInputsApi, times(1)).createProjectInput(eq(workspace), eq(project), eq("sources"), eq("Id"),
+			verify(projectInputsApi, times(1)).createProjectInput(eq(WORKSPACE), eq(PROJECT), eq("sources"), eq("Id"),
 					anyString(), any());
 		});
 	}
@@ -76,9 +74,7 @@ public class Move2KubePlanTest {
 		WorkContext context = new WorkContext();
 		context.put("move2KubeWorkspaceID", "workspace");
 		context.put("move2KubeProjectID", "project");
-		assertDoesNotThrow(() -> {
-			context.put("gitArchivePath", createSampleZip().getAbsolutePath().toString());
-		});
+		assertDoesNotThrow(() -> context.put("gitArchivePath", createSampleZip().getAbsolutePath()));
 		return context;
 	}
 

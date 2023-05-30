@@ -13,6 +13,7 @@ public class Move2KubeBaseTest {
 		assertThat(new Move2KubeBase().getWorkFlowTaskOutputs().size()).isEqualTo(0);
 	}
 
+	@Test
 	public void testExecute() {
 		// given
 

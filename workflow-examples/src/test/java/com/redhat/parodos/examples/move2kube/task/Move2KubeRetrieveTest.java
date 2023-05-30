@@ -27,13 +27,13 @@ import static org.mockito.Mockito.when;
 @Slf4j
 public class Move2KubeRetrieveTest {
 
-	private static String move2KubeWorkspaceIDCtxKey = "move2KubeWorkspaceID";
+	private static final String MOVE2KUBE_WORKSPACE_ID = "move2KubeWorkspaceID";
 
-	private static String move2KubeProjectIDCtxKey = "move2KubeProjectID";
+	private static final String MOVE2KUBE_PROJECT_ID = "move2KubeProjectID";
 
-	private static String move2KubeTransformIDCtxKey = "move2KubeTransformID";
+	private static final String MOVE2KUBE_TRANSFORM_ID = "move2KubeTransformID";
 
-	private static String gitDestinationCtxKey = "gitDestination";
+	private static final String GIT_DESTINATION_CONTEXT_KEY = "gitDestination";
 
 	private ProjectOutputsApi output;
 
@@ -59,7 +59,7 @@ public class Move2KubeRetrieveTest {
 		assertThat(report.getError()).isNull();
 		assertThat(report.getStatus()).isEqualTo(WorkStatus.COMPLETED);
 
-		String path = (String) context.get(gitDestinationCtxKey);
+		String path = (String) context.get(GIT_DESTINATION_CONTEXT_KEY);
 		assertThat(path).isNotNull();
 		File gitPath = new File(path);
 
@@ -108,12 +108,10 @@ public class Move2KubeRetrieveTest {
 
 	public WorkContext getSampleWorkContext() {
 		WorkContext workContext = new WorkContext();
-		workContext.put(move2KubeTransformIDCtxKey, move2KubeProjectIDCtxKey);
-		workContext.put(move2KubeProjectIDCtxKey, move2KubeProjectIDCtxKey);
-		workContext.put(move2KubeWorkspaceIDCtxKey, move2KubeWorkspaceIDCtxKey);
-		assertDoesNotThrow(() -> {
-			workContext.put(gitDestinationCtxKey, createTempDir());
-		});
+		workContext.put(MOVE2KUBE_TRANSFORM_ID, MOVE2KUBE_PROJECT_ID);
+		workContext.put(MOVE2KUBE_PROJECT_ID, MOVE2KUBE_PROJECT_ID);
+		workContext.put(MOVE2KUBE_WORKSPACE_ID, MOVE2KUBE_WORKSPACE_ID);
+		assertDoesNotThrow(() -> workContext.put(GIT_DESTINATION_CONTEXT_KEY, createTempDir()));
 		return workContext;
 	}
 

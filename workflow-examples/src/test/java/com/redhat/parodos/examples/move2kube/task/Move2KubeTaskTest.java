@@ -41,9 +41,9 @@ public class Move2KubeTaskTest {
 
 	private ProjectInputsApi projectInputsApi;
 
-	private static String move2KubeWorkspaceIDCtxKey = "move2KubeWorkspaceID";
+	private static final String MOVE2KUBE_WORKSPACE_ID = "move2KubeWorkspaceID";
 
-	private static String move2KubeProjectIDCtxKey = "move2KubeProjectID";
+	private static final String MOVE2KUBE_PROJECT_ID = "move2KubeProjectID";
 
 	@Before
 	public void BeforeEach() {
@@ -66,7 +66,7 @@ public class Move2KubeTaskTest {
 		WorkContext workContext = getSampleWorkContext();
 		Workspace workspace = getSampleWorkspace("test");
 
-		Map<String, ProjectInputsValue> inputs = new HashMap<String, ProjectInputsValue>();
+		Map<String, ProjectInputsValue> inputs = new HashMap<>();
 		inputs.put("test1", getSampleProjectInput("test1"));
 		inputs.put("test2", getSampleProjectInput("test2"));
 		workspace.setInputs(inputs);
@@ -82,8 +82,8 @@ public class Move2KubeTaskTest {
 		// then
 		assertThat(report.getError()).isNull();
 		assertThat(report.getStatus()).isEqualTo(WorkStatus.COMPLETED);
-		assertThat(report.getWorkContext().get(move2KubeWorkspaceIDCtxKey)).isNotNull();
-		assertThat(report.getWorkContext().get(move2KubeProjectIDCtxKey)).isNotNull();
+		assertThat(report.getWorkContext().get(MOVE2KUBE_WORKSPACE_ID)).isNotNull();
+		assertThat(report.getWorkContext().get(MOVE2KUBE_PROJECT_ID)).isNotNull();
 
 		assertDoesNotThrow(() -> {
 			verify(workspacesApi, times(1)).getWorkspaces();
@@ -107,8 +107,8 @@ public class Move2KubeTaskTest {
 		// then
 		assertThat(report.getError()).isNotNull();
 		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
-		assertThat(report.getWorkContext().get(move2KubeWorkspaceIDCtxKey)).isNull();
-		assertThat(report.getWorkContext().get(move2KubeProjectIDCtxKey)).isNull();
+		assertThat(report.getWorkContext().get(MOVE2KUBE_WORKSPACE_ID)).isNull();
+		assertThat(report.getWorkContext().get(MOVE2KUBE_PROJECT_ID)).isNull();
 
 		assertDoesNotThrow(() -> {
 			verify(workspacesApi, times(1)).getWorkspaces();
@@ -131,8 +131,8 @@ public class Move2KubeTaskTest {
 		// then
 		assertThat(report.getError()).isNotNull();
 		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
-		assertThat(report.getWorkContext().get(move2KubeWorkspaceIDCtxKey)).isNotNull();
-		assertThat(report.getWorkContext().get(move2KubeProjectIDCtxKey)).isNull();
+		assertThat(report.getWorkContext().get(MOVE2KUBE_WORKSPACE_ID)).isNotNull();
+		assertThat(report.getWorkContext().get(MOVE2KUBE_PROJECT_ID)).isNull();
 
 		assertDoesNotThrow(() -> {
 			verify(workspacesApi, times(1)).getWorkspaces();
@@ -149,7 +149,7 @@ public class Move2KubeTaskTest {
 
 	public CreateProject201Response getSampleProject(String name) {
 		CreateProject201Response project = new CreateProject201Response();
-		project.setId(UUID.randomUUID().toString());
+		project.setId(name);
 		return project;
 	}
 
