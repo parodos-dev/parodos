@@ -128,7 +128,7 @@ fast-build-workflow-examples: ARGS = $(FAST_BUILD_ARGS) ## Fast build workflow e
 fast-build-workflow-examples: workflow-examples
 
 coverage: mvn-checks ## Build coverage
-	$(MAVEN) $(ARGS) -pl coverage
+	$(MAVEN) $(ARGS) verify -pl coverage
 
 fast-build-coverage: ARGS = $(FAST_BUILD_ARGS) ## Fast build coverage
 fast-build-coverage: coverage

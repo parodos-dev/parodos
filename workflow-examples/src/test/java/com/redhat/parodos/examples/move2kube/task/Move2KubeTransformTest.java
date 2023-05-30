@@ -32,9 +32,9 @@ public class Move2KubeTransformTest {
 
 	Move2KubeTransform task;
 
-	private static String move2KubeWorkspaceIDCtxKey = "move2KubeWorkspaceID";
+	private static final String MOVE2KUBE_WORKSPACE_ID_CONTEXT_KEY = "move2KubeWorkspaceID";
 
-	private static String move2KubeProjectIDCtxKey = "move2KubeProjectID";
+	private static final String MOVE2KUBE_PROJECT_ID_CONTEXT_KEY = "move2KubeProjectID";
 
 	private PlanApi planApi;
 
@@ -57,7 +57,6 @@ public class Move2KubeTransformTest {
 
 		// given
 		WorkContext context = getSampleWorkContext();
-		GetPlan200Response response = new GetPlan200Response();
 		StartTransformation202Response transformResponse = new StartTransformation202Response();
 		transformResponse.setId("foo");
 
@@ -67,8 +66,8 @@ public class Move2KubeTransformTest {
 		});
 
 		try (MockedStatic<RestUtils> mockedStatic = mockStatic(RestUtils.class)) {
-			ResponseEntity<String> responseo = ResponseEntity.ok("ok");
-			responseo.getStatusCode();
+			ResponseEntity<String> response = ResponseEntity.ok("ok");
+			response.getStatusCode();
 
 			mockedStatic.when((MockedStatic.Verification) RestUtils.executePost(any(), (HttpEntity<?>) any()))
 					.thenReturn(ResponseEntity.ok("ok"));
@@ -82,16 +81,16 @@ public class Move2KubeTransformTest {
 		}
 
 		assertDoesNotThrow(() -> {
-			verify(projectOutputsApi, times(1)).startTransformation(eq(move2KubeWorkspaceIDCtxKey),
-					eq(move2KubeProjectIDCtxKey), any());
+			verify(projectOutputsApi, times(1)).startTransformation(eq(MOVE2KUBE_WORKSPACE_ID_CONTEXT_KEY),
+					eq(MOVE2KUBE_PROJECT_ID_CONTEXT_KEY), any());
 		});
 
 	}
 
 	public WorkContext getSampleWorkContext() {
 		WorkContext workContext = new WorkContext();
-		workContext.put(move2KubeProjectIDCtxKey, move2KubeProjectIDCtxKey);
-		workContext.put(move2KubeWorkspaceIDCtxKey, move2KubeWorkspaceIDCtxKey);
+		workContext.put(MOVE2KUBE_PROJECT_ID_CONTEXT_KEY, MOVE2KUBE_PROJECT_ID_CONTEXT_KEY);
+		workContext.put(MOVE2KUBE_WORKSPACE_ID_CONTEXT_KEY, MOVE2KUBE_WORKSPACE_ID_CONTEXT_KEY);
 		WorkContextUtils.setUserId(workContext, UUID.randomUUID());
 		return workContext;
 	}
