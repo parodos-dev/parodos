@@ -1,6 +1,7 @@
 package com.redhat.parodos.workflow.execution.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
@@ -67,7 +68,7 @@ class WorkFlowLogServiceImplTest {
 	}
 
 	@Test
-	void getLog_when_workflowExecutionLogIsNotFound_then_throwException() {
+	void getLog_when_workflowTaskExecutionIsNotFound_then_throwException() {
 		UUID mainWorkflowExecutionId = UUID.randomUUID();
 		WorkFlowDefinition workFlowDefinition = createTestWorkflowDefinition();
 		when(workFlowTaskDefinitionRepository.findFirstByName(anyString()))
@@ -81,6 +82,19 @@ class WorkFlowLogServiceImplTest {
 	}
 
 	@Test
+	void getLog_when_workflowExecutionLogIsNotFound_then_returnEmpty() {
+		UUID mainWorkflowExecutionId = UUID.randomUUID();
+		WorkFlowDefinition workFlowDefinition = createTestWorkflowDefinition();
+		when(workFlowTaskDefinitionRepository.findFirstByName(anyString()))
+				.thenReturn(createTestTaskDefinition(workFlowDefinition));
+		when(workFlowRepository.findFirstByMainWorkFlowExecutionIdAndWorkFlowDefinitionId(any(), any()))
+				.thenReturn(createTestExecution(workFlowDefinition));
+		when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(any(), any()))
+				.thenReturn(List.of(createTestTaskExecution(UUID.randomUUID(), UUID.randomUUID(), null)));
+		assertEquals("", workFlowLogService.getLog(mainWorkflowExecutionId, "test-task"));
+	}
+
+	@Test
 	void writeLog_when_workflowExecutionLogIsFound_then_return_save() {
 		UUID mainWorkflowExecutionId = UUID.randomUUID();
 		WorkFlowDefinition workFlowDefinition = createTestWorkflowDefinition();
@@ -89,6 +103,29 @@ class WorkFlowLogServiceImplTest {
 				.thenReturn(createTestTaskDefinition(workFlowDefinition));
 		when(workFlowRepository.findFirstByMainWorkFlowExecutionIdAndWorkFlowDefinitionId(any(), any()))
 				.thenReturn(createTestExecution(workFlowDefinition));
+		when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(any(), any())).thenReturn(
+				List.of(createTestTaskExecution(UUID.randomUUID(), UUID.randomUUID(), workFlowTaskExecutionLog)));
+		workFlowLogService.writeLog(mainWorkflowExecutionId, "test-task",
+				WorkFlowTaskLog.builder().workFlowLoglevel(WorkFlowLogLevel.INFO).logText("test-log1").build());
+
+		ArgumentCaptor<WorkFlowTaskExecution> argument = ArgumentCaptor.forClass(WorkFlowTaskExecution.class);
+		verify(workFlowTaskRepository, times(1)).save(argument.capture());
+		assertThat(argument.getValue().getWorkFlowTaskExecutionLog().getLog()).startsWith("test-log\n")
+				.endsWith("\u001B[32mINFO\u001B[39m test-log1");
+
+	}
+
+	@Test
+	void writeLog_when_workflowIsMain_then_return_save() {
+		UUID mainWorkflowExecutionId = UUID.randomUUID();
+		WorkFlowDefinition workFlowDefinition = createTestWorkflowDefinition();
+		WorkFlowTaskExecutionLog workFlowTaskExecutionLog = createTestTaskExecutionLog();
+		when(workFlowTaskDefinitionRepository.findFirstByName(anyString()))
+				.thenReturn(createTestTaskDefinition(workFlowDefinition));
+		when(workFlowRepository.findFirstByMainWorkFlowExecutionIdAndWorkFlowDefinitionId(any(), any()))
+				.thenReturn(null);
+		when(workFlowRepository.findById(mainWorkflowExecutionId))
+				.thenReturn(Optional.of(createTestExecution(workFlowDefinition)));
 		when(workFlowTaskRepository.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(any(), any())).thenReturn(
 				List.of(createTestTaskExecution(UUID.randomUUID(), UUID.randomUUID(), workFlowTaskExecutionLog)));
 		workFlowLogService.writeLog(mainWorkflowExecutionId, "test-task",
