@@ -15,11 +15,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -72,8 +73,8 @@ class WorkFlowExecutorImplTest {
 				.rollbackWorkFlowName(rollbackWorkflowName).build();
 		workFlowExecutor.execute(executionContext);
 
-		verify(mainWorkFlow, Mockito.times(1)).execute(any(WorkContext.class));
-		verify(rollbackWorkFlow, Mockito.times(1)).execute(any(WorkContext.class));
+		verify(mainWorkFlow, times(1)).execute(any(WorkContext.class));
+		verify(rollbackWorkFlow, times(1)).execute(any(WorkContext.class));
 
 	}
 
@@ -84,8 +85,8 @@ class WorkFlowExecutorImplTest {
 				.workFlowName(workflowName).workContext(workContext).executionId(executionId).build();
 		workFlowExecutor.execute(executionContext);
 
-		verify(mainWorkFlow, Mockito.times(1)).execute(any(WorkContext.class));
-		verify(rollbackWorkFlow, Mockito.never()).execute(any(WorkContext.class));
+		verify(mainWorkFlow, times(1)).execute(any(WorkContext.class));
+		verify(rollbackWorkFlow, never()).execute(any(WorkContext.class));
 	}
 
 	@Test
@@ -96,8 +97,8 @@ class WorkFlowExecutorImplTest {
 				.rollbackWorkFlowName(rollbackWorkflowName).build();
 		workFlowExecutor.execute(executionContext);
 
-		verify(mainWorkFlow, Mockito.times(1)).execute(any(WorkContext.class));
-		verify(rollbackWorkFlow, Mockito.never()).execute(any(WorkContext.class));
+		verify(mainWorkFlow, times(1)).execute(any(WorkContext.class));
+		verify(rollbackWorkFlow, never()).execute(any(WorkContext.class));
 	}
 
 }
