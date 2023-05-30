@@ -42,5 +42,18 @@
             <property name="illegalPattern" value="true"/>
             <property name="message" value="Trailing whitespace"/>
         </module>
+
+        <!-- Use static import for mockito -->
+        <module name="Regexp">
+            <property name="format" value="^(?!import).*Mockito\."/>
+            <property name="illegalPattern" value="true"/>
+            <property name="message" value="Use static import for Mockito"/>
+        </module>
+
+        <module name="Regexp">
+            <property name="format" value="^(?!import).*Assertions\."/>
+            <property name="illegalPattern" value="true"/>
+            <property name="message" value="Use static import for Assertions"/>
+        </module>
     </module>
 </module>

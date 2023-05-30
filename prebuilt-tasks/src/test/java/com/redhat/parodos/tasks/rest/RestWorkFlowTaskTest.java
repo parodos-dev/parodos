@@ -9,7 +9,6 @@ import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -26,10 +25,11 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 
 public class RestWorkFlowTaskTest {
 
-	private RestService restService = Mockito.mock(RestService.class);
+	private RestService restService = mock(RestService.class);
 
 	private RestWorkFlowTask task = new RestWorkFlowTask("Test", restService);
 

@@ -12,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static com.redhat.parodos.tasks.migrationtoolkit.TestConsts.APP_ID;
@@ -22,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -52,7 +52,7 @@ public class GetApplicationTaskTest {
 
 		assertThat(execute.getError()).isInstanceOf(MissingParameterException.class);
 		assertThat(execute.getStatus()).isEqualTo(WorkStatus.FAILED);
-		verify(mockClient, Mockito.times(0)).get(anyString());
+		verify(mockClient, times(0)).get(anyString());
 	}
 
 	@Test
@@ -68,7 +68,7 @@ public class GetApplicationTaskTest {
 		assertThat(execute.getError()).isInstanceOf(Exception.class);
 		assertThat(execute.getError()).isNotInstanceOf(MissingParameterException.class);
 		assertThat(execute.getStatus()).isEqualTo(WorkStatus.FAILED);
-		verify(mockClient, Mockito.times(1)).get(anyString());
+		verify(mockClient, times(1)).get(anyString());
 	}
 
 	@Test
@@ -85,8 +85,8 @@ public class GetApplicationTaskTest {
 		assertThat(execute.getError()).isNull();
 		assertThat(execute.getStatus()).isEqualTo(WorkStatus.COMPLETED);
 		assertThat(execute.getWorkContext().getEntrySet()).contains(entry("applicationID", APP_ID));
-		verify(mockClient, Mockito.times(1)).get(anyString());
-		verify(mockClient, Mockito.times(0)).create(any());
+		verify(mockClient, times(1)).get(anyString());
+		verify(mockClient, times(0)).create(any());
 
 	}
 
