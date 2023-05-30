@@ -8,7 +8,7 @@ import com.redhat.parodos.sdk.invoker.ApiClient;
 import com.redhat.parodos.sdk.invoker.ApiException;
 import com.redhat.parodos.sdk.model.ProjectResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
-import com.redhat.parodos.sdkutils.WorkFlowServiceSdkUtils;
+import com.redhat.parodos.sdkutils.WorkFlowServiceUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -45,7 +45,7 @@ public class WorkFlowTestBuilder {
 	}
 
 	private void setupProject() throws ApiException {
-		this.testProject = WorkFlowServiceSdkUtils.getProjectAsync(apiClient, projectName, projectDescription);
+		this.testProject = WorkFlowServiceUtils.getProjectAsync(apiClient, projectName, projectDescription);
 		assertThat(testProject).isNotNull();
 	}
 
@@ -83,7 +83,7 @@ public class WorkFlowTestBuilder {
 	}
 
 	private void setupClient() throws InterruptedException, ApiException {
-		this.apiClient = WorkFlowServiceSdkUtils.getParodosAPiClient();
+		this.apiClient = WorkFlowServiceUtils.getParodosAPiClient();
 		assertThat(apiClient).isNotNull();
 	}
 
