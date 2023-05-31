@@ -18,3 +18,9 @@ spring:
   lifecycle:
     timeout-per-shutdown-phase: "25s"
 
+notification:
+  url: "${NOTIFICATION_SERVER_URL:http://localhost:8081}"
+  auth:
+    basic:
+      user: test
+      password: test

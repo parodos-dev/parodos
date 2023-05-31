@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.UUID;
 
 import com.redhat.parodos.notification.sdk.api.ApiException;
-import com.redhat.parodos.notification.sdk.api.NotificationMessageApi;
 import com.redhat.parodos.notification.sdk.model.NotificationMessageCreateRequestDTO;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
+import com.redhat.parodos.workflow.task.infrastructure.Notifier;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.verify;
 
 public class NotificationWorkFlowTaskTest {
 
-	private static NotificationMessageApi apiInstanceMock;
+	private Notifier mockNotifier;
 
 	private static NotificationWorkFlowTask underTest;
 
@@ -33,8 +33,8 @@ public class NotificationWorkFlowTaskTest {
 
 	@Before
 	public void setUp() {
-		apiInstanceMock = mock(NotificationMessageApi.class);
-		underTest = new NotificationWorkFlowTask("http://localhost:8080", apiInstanceMock);
+		mockNotifier = mock(Notifier.class);
+		underTest = new NotificationWorkFlowTask(mockNotifier);
 		underTest.setBeanName("notificationWorkFlowTask");
 		ctx = new WorkContext();
 	}
@@ -50,7 +50,7 @@ public class NotificationWorkFlowTaskTest {
 		WorkReport result = underTest.execute(ctx);
 
 		assertEquals(WorkStatus.COMPLETED, result.getStatus());
-		verify(apiInstanceMock, times(1)).create(dto);
+		verify(mockNotifier, times(1)).trySend(dto);
 	}
 
 	@Test
@@ -61,13 +61,13 @@ public class NotificationWorkFlowTaskTest {
 				Arrays.asList("test-group-1", "test-group-2"));
 		putParamsToCtx(dto, ctx);
 
-		doThrow(ApiException.class).when(apiInstanceMock).create(dto);
+		doThrow(ApiException.class).when(mockNotifier).trySend(dto);
 		underTest.preExecute(ctx);
 		WorkReport result = underTest.execute(ctx);
 
 		assertEquals(WorkStatus.FAILED, result.getStatus());
 		assertEquals(ApiException.class, result.getError().getClass());
-		verify(apiInstanceMock, times(1)).create(dto);
+		verify(mockNotifier, times(1)).trySend(dto);
 	}
 
 	@Test
@@ -82,7 +82,7 @@ public class NotificationWorkFlowTaskTest {
 
 		assertEquals(WorkStatus.FAILED, result.getStatus());
 		assertEquals(MissingParameterException.class, result.getError().getClass());
-		verify(apiInstanceMock, times(0)).create(dto);
+		verify(mockNotifier, times(0)).trySend(dto);
 	}
 
 	@Test
@@ -97,7 +97,7 @@ public class NotificationWorkFlowTaskTest {
 
 		assertEquals(WorkStatus.FAILED, result.getStatus());
 		assertEquals(MissingParameterException.class, result.getError().getClass());
-		verify(apiInstanceMock, times(0)).create(dto);
+		verify(mockNotifier, times(0)).trySend(dto);
 	}
 
 	@Test
@@ -111,7 +111,7 @@ public class NotificationWorkFlowTaskTest {
 
 		assertEquals(WorkStatus.FAILED, result.getStatus());
 		assertEquals(MissingParameterException.class, result.getError().getClass());
-		verify(apiInstanceMock, times(0)).create(dto);
+		verify(mockNotifier, times(0)).trySend(dto);
 	}
 
 	@Test
@@ -124,7 +124,7 @@ public class NotificationWorkFlowTaskTest {
 		WorkReport result = underTest.execute(ctx);
 
 		assertEquals(WorkStatus.COMPLETED, result.getStatus());
-		verify(apiInstanceMock, times(1)).create(dto);
+		verify(mockNotifier, times(1)).trySend(dto);
 	}
 
 	@Test
@@ -137,7 +137,7 @@ public class NotificationWorkFlowTaskTest {
 		WorkReport result = underTest.execute(ctx);
 
 		assertEquals(WorkStatus.COMPLETED, result.getStatus());
-		verify(apiInstanceMock, times(1)).create(dto);
+		verify(mockNotifier, times(1)).trySend(dto);
 	}
 
 	@Test
@@ -151,7 +151,7 @@ public class NotificationWorkFlowTaskTest {
 
 		assertEquals(WorkStatus.FAILED, result.getStatus());
 		assertEquals(MissingParameterException.class, result.getError().getClass());
-		verify(apiInstanceMock, times(0)).create(dto);
+		verify(mockNotifier, times(0)).trySend(dto);
 	}
 
 	private NotificationMessageCreateRequestDTO buildNotificationMessageCreateRequestDTO(String type, String body,
