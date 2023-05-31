@@ -38,3 +38,9 @@ spring:
 # ApplicationProperties class to have type-safe configuration
 # ===================================================================
 
+notification:
+  url: "${NOTIFICATION_SERVER_URL:http://localhost:8081}"
+  auth:
+    basic:
+      user: test
+      password: test
