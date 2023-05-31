@@ -1,9 +1,9 @@
 bases:
 - ../base
 resources:
+- postgres.yaml
 - ingress.yaml
 - oauth.yaml
-# - postgres.yaml
 
 patchesStrategicMerge:
 - parodos-patch.yaml
