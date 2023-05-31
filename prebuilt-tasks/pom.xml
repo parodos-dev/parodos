@@ -19,6 +19,7 @@
         <azure-core-version>1.37.0</azure-core-version>
         <azure-identity-version>1.8.1</azure-identity-version>
         <azure-resourcemanager-version>2.24.0</azure-resourcemanager-version>
+        <fabric8.version>6.6.2</fabric8.version>
     </properties>
 
     <repositories>
@@ -158,6 +159,31 @@
             <version>${azure-resourcemanager-version}</version>
         </dependency>
         <!-- End libraries for Azure access -->
+
+        <dependency>
+            <groupId>io.fabric8</groupId>
+            <artifactId>kubernetes-client</artifactId>
+            <version>${fabric8.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.fabric8</groupId>
+            <artifactId>openshift-client</artifactId>
+            <version>${fabric8.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.fabric8</groupId>
+            <artifactId>openshift-server-mock</artifactId>
+            <version>${fabric8.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- This specific version is needed for openshift server mock -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>mockwebserver</artifactId>
+            <version>4.11.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
