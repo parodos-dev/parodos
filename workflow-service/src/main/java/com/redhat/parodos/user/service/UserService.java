@@ -31,6 +31,8 @@ public interface UserService {
 
 	UserResponseDTO save(User user);
 
+	UserResponseDTO saveCurrentUser();
+
 	UserResponseDTO getUserById(UUID id);
 
 	UserResponseDTO getUserByUsername(String username);
