@@ -1,5 +1,6 @@
 package com.redhat.parodos.user.service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -9,7 +10,11 @@ import com.redhat.parodos.user.entity.User;
 import com.redhat.parodos.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.modelmapper.ModelMapper;
+
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,6 +26,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(SpringExtension.class)
 class UserServiceImplTest {
 
 	private UserRepository userRepository;
@@ -110,6 +116,21 @@ class UserServiceImplTest {
 		// then
 		assertThrows(ResourceNotFoundException.class, () -> this.service.getUserByUsername(user.getUsername()));
 		verify(this.userRepository, times(1)).findByUsername(any());
+	}
+
+	@Test
+	@WithMockUser("test")
+	void testSaveCurrentUser() {
+		String username = "test";
+
+		when(userRepository.findAllByUsernameIn(List.of(username))).thenReturn(List.of());
+		when(userRepository.save(any(User.class))).thenReturn(User.builder().username(username).build());
+		assertEquals(username, service.saveCurrentUser().getUsername());
+
+		// Then
+		verify(userRepository, times(1)).findAllByUsernameIn(any());
+		verify(userRepository, times(1)).save(any());
+
 	}
 
 	private User getSampleUser() {

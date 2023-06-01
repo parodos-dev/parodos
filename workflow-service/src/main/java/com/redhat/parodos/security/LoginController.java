@@ -15,6 +15,7 @@
  */
 package com.redhat.parodos.security;
 
+import com.redhat.parodos.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -41,11 +42,18 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Login", description = "Login endpoint")
 public class LoginController {
 
+	private final UserService userService;
+
+	public LoginController(UserService userService) {
+		this.userService = userService;
+	}
+
 	@Operation(summary = "Login")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Succeeded", content = @Content),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content) })
 	@GetMapping
 	public ResponseEntity<String> login() {
+		userService.saveCurrentUser();
 		return ResponseEntity.ok("logged in successfully!");
 	}
 

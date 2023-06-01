@@ -28,6 +28,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.ldap.userdetails.InetOrgPersonContextMapper;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.stereotype.Component;
@@ -38,7 +39,6 @@ import org.springframework.stereotype.Component;
  * application.yml file
  *
  * @author Luke Shannon (Github: lshannon)
- *
  */
 
 @Component
@@ -61,20 +61,20 @@ public class SecurityConfiguration {
 		}
 
 		// @formatter:off
-		http
-			.authorizeRequests()
-			.mvcMatchers(HttpMethod.OPTIONS, "/**")
-			.permitAll()
-			.mvcMatchers("/api/**", "/actuator/shutdown")
-			.fullyAuthenticated()
-			.and()
-			.httpBasic(Customizer.withDefaults())
-			.headers().frameOptions().disable()
-			.and()
-			.formLogin(form -> form.loginProcessingUrl("/login"))
-			.logout()
-			.logoutSuccessUrl("/login").permitAll();
-		// @formatter:on
+        http
+                .authorizeRequests()
+                .mvcMatchers(HttpMethod.OPTIONS, "/**")
+                .permitAll()
+                .mvcMatchers("/api/**", "/actuator/shutdown")
+                .fullyAuthenticated()
+                .and()
+                .httpBasic(Customizer.withDefaults())
+                .headers().frameOptions().disable()
+                .and()
+                .formLogin(form -> form.loginProcessingUrl("/login"))
+                .logout()
+                .logoutSuccessUrl("/login").permitAll();
+        // @formatter:on
 		return http;
 	}
 
@@ -90,17 +90,23 @@ public class SecurityConfiguration {
 			return;
 		}
 		// @formatter:off
-		auth.ldapAuthentication()
-			.userDnPatterns(this.ldapConnectionProperties.getUserDNPatterns())
-			.groupSearchBase(this.ldapConnectionProperties.getGroupSearchBase()).contextSource()
-			.url(this.ldapConnectionProperties.getUrl())
-			.managerDn(this.ldapConnectionProperties.getManagerDN())
-			.managerPassword(this.ldapConnectionProperties.getManagerPassword())
-			.and()
-			.passwordCompare()
-			.passwordEncoder(new BCryptPasswordEncoder())
-			.passwordAttribute(this.ldapConnectionProperties.getPasswordAttribute());
-		// @formatter:on
+        auth.ldapAuthentication()
+                .userDetailsContextMapper(userContextMapper())
+                .userDnPatterns(this.ldapConnectionProperties.getUserDNPatterns())
+                .groupSearchBase(this.ldapConnectionProperties.getGroupSearchBase()).contextSource()
+                .url(this.ldapConnectionProperties.getUrl())
+                .managerDn(this.ldapConnectionProperties.getManagerDN())
+                .managerPassword(this.ldapConnectionProperties.getManagerPassword())
+                .and()
+                .passwordCompare()
+                .passwordEncoder(new BCryptPasswordEncoder())
+                .passwordAttribute(this.ldapConnectionProperties.getPasswordAttribute());
+        // @formatter:on
+	}
+
+	@Bean
+	public InetOrgPersonContextMapper userContextMapper() {
+		return new InetOrgPersonContextMapper();
 	}
 
 }

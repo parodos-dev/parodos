@@ -19,13 +19,14 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.ldap.userdetails.InetOrgPerson;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 /**
  * Utility Method for assessing the Username and Accesstoken fron the authenticated
  * session
  *
  * @author Jennifer Ubah, Luke Shannon (Github: lshannon)
- *
  */
 
 @Slf4j
@@ -39,13 +40,44 @@ public abstract class SecurityUtils {
 	 * @return username.
 	 */
 	public static String getUsername() {
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (userDetails != null) {
+			return userDetails.getUsername();
+		}
+		log.error("Unable to get the details to get the username");
+		return null;
+	}
+
+	public static String getFirstname() {
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (userDetails == null) {
+			log.error("Unable to get the details to get user firstname");
+			return null;
+		}
+		else if (userDetails instanceof InetOrgPerson inetOrgPerson) {
+			return inetOrgPerson.getGivenName();
+		}
+		else if (userDetails instanceof Jwt jwt) {
+			return jwt.getClaim("given_name");
+		}
+		return userDetails.getUsername();
+	}
+
+	public static String getLastname() {
 		UserDetails ldapDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (ldapDetails != null) {
-			return ldapDetails.getUsername();
+		if (ldapDetails instanceof InetOrgPerson inetOrgPerson) {
+			return inetOrgPerson.getSn();
 		}
-		else {
-			log.error("Unable to get the LdapDetails to get the username");
+		log.error("Unable to get the details to get user last name");
+		return null;
+	}
+
+	public static String getMail() {
+		UserDetails ldapDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (ldapDetails instanceof InetOrgPerson inetOrgPerson) {
+			return inetOrgPerson.getMail();
 		}
+		log.error("Unable to get the details to get user mail");
 		return null;
 	}
 

@@ -49,10 +49,17 @@ objectclass: top
 objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
-cn: test
-sn: test
+cn: test est
+cn: t est
 uid: test
+sn: est
 userpassword: $2a$10$SeVolYcPl3zJJbq.ox9U0ug7fo624hpT49O7FjvCNH2Us5HQRuvBe
+givenname: test
+mail: test@parodos.com
+displayname: test est
+manager: uid=ben,ou=people,dc=springframework,dc=org
+telephonenumber: +1 888 888 888
+description: test's entry
 
 dn: uid=bob,ou=people,dc=springframework,dc=org
 objectclass: top
