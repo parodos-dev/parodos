@@ -4,7 +4,11 @@ bases:
 resources:
 - namespace.yaml
 - postgres.yaml
+- postgres-parodos.yaml
 - backstage.yaml
+
+patchesStrategicMerge:
+- parodos-patch.yaml
 
 configMapGenerator:
 - name: app-config
@@ -18,3 +22,12 @@ secretGenerator:
   literals:
   - POSTGRES_USER=admin
   - POSTGRES_PASSWORD=admin
+  - PGDATA=/var/lib/postgresql/data/mydata
+
+- name: postgres-secrets-default
+  namespace: default
+  literals:
+  - POSTGRES_USER=parodos
+  - POSTGRES_PASSWORD=parodos
+  - POSTGRES_DB=parodos
+  - PGDATA=/var/lib/postgresql/data/mydata
