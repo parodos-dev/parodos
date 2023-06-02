@@ -5,6 +5,7 @@ parodos:
   workflows:
     assessment: 'onboardingAssessment_ASSESSMENT_WORKFLOW'
     assessmentTask: 'onboardingAssessmentTask'
+  pollingInterval: 10000
 
 organization:
   name: My Company
