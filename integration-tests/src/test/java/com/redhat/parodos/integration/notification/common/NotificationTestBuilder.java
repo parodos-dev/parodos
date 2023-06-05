@@ -5,7 +5,7 @@ import com.redhat.parodos.notification.sdk.api.ApiException;
 import com.redhat.parodos.notification.sdk.api.NotificationRecordApi;
 import com.redhat.parodos.notification.sdk.model.NotificationRecordResponseDTO;
 import com.redhat.parodos.notification.sdk.model.PageNotificationRecordResponseDTO;
-import com.redhat.parodos.sdkutils.NotificationServiceSdkUtils;
+import com.redhat.parodos.sdkutils.NotificationServiceUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,7 +14,7 @@ public class NotificationTestBuilder {
 	private ApiClient apiClient;
 
 	private void setupNotification() throws ApiException, InterruptedException {
-		PageNotificationRecordResponseDTO notifications = NotificationServiceSdkUtils.waitNotificationStart(apiClient);
+		PageNotificationRecordResponseDTO notifications = NotificationServiceUtils.waitNotificationStart(apiClient);
 		assertThat(notifications).isNotNull();
 	}
 
@@ -47,7 +47,7 @@ public class NotificationTestBuilder {
 	}
 
 	private void setupClient() throws InterruptedException, ApiException {
-		apiClient = NotificationServiceSdkUtils.getParodosAPiClient();
+		apiClient = NotificationServiceUtils.getParodosAPiClient();
 		assertThat(apiClient).isNotNull();
 	}
 
