@@ -13,11 +13,6 @@ public class NotificationTestBuilder {
 
 	private ApiClient apiClient;
 
-	private void setupNotification() throws ApiException, InterruptedException {
-		PageNotificationRecordResponseDTO notifications = NotificationServiceUtils.waitNotificationStart(apiClient);
-		assertThat(notifications).isNotNull();
-	}
-
 	public TestComponents build() {
 		try {
 			setupClient();
