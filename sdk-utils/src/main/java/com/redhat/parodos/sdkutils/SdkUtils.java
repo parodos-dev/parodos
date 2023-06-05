@@ -121,9 +121,10 @@ public abstract class SdkUtils {
 			public void onFailure(ApiException e, int statusCode, Map<String, List<String>> responseHeaders) {
 				log.info("onFailure {}", e.getMessage());
 				try {
+					Thread.sleep(3000);
 					f.execute(this);
 				}
-				catch (ApiException apie) {
+				catch (ApiException | InterruptedException apie) {
 					asyncResult.setError(apie.getMessage());
 					signal();
 				}
@@ -133,9 +134,10 @@ public abstract class SdkUtils {
 			public void onSuccess(T result, int statusCode, Map<String, List<String>> responseHeaders) {
 				if (f.check(result, statusCode)) {
 					try {
+						Thread.sleep(3000);
 						f.execute(this);
 					}
-					catch (ApiException apie) {
+					catch (ApiException | InterruptedException apie) {
 						asyncResult.setError(apie.getMessage());
 						signal();
 					}
