@@ -108,6 +108,20 @@ public class ProjectControllerTest extends ControllerMockClient {
 	}
 
 	@Test
+	public void testListProjects_when_etagEquals_then_return_notModified() throws Exception {
+		ProjectResponseDTO project1DTO = createSampleProject(PROJECT_NAME_1);
+		ProjectResponseDTO project2DTO = createSampleProject(PROJECT_NAME_2);
+		when(projectService.getProjects()).thenReturn(List.of(project1DTO, project2DTO));
+		String etagValue = String.valueOf(List.of(project1DTO, project2DTO).hashCode());
+		// When
+		mockMvc.perform(this.getRequestWithValidCredentials("/api/v1/projects/").header("If-None-Match",
+				"\"" + etagValue + "\"")).andExpect(MockMvcResultMatchers.status().isNotModified());
+
+		// Then
+		verify(projectService, times(1)).getProjects();
+	}
+
+	@Test
 	public void testGetProjectsWithInvalidCredentials() throws Exception {
 		// When
 		mockMvc.perform(this.getRequestWithInValidCredentials("/api/v1/projects/"))

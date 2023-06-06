@@ -119,10 +119,13 @@ public class WorkFlowController {
 					content = { @Content(mediaType = "application/json",
 							schema = @Schema(implementation = WorkFlowStatusResponseDTO.class)) }),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
-			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content) })
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
+			@ApiResponse(responseCode = "304", description = "Not Modified", content = @Content) })
 	@GetMapping("/{workFlowExecutionId}/status")
 	public ResponseEntity<WorkFlowStatusResponseDTO> getStatus(@PathVariable UUID workFlowExecutionId) {
-		return ResponseEntity.ok(workFlowService.getWorkFlowStatus(workFlowExecutionId));
+		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = workFlowService.getWorkFlowStatus(workFlowExecutionId);
+		return ResponseEntity.ok().eTag(String.valueOf(workFlowStatusResponseDTO.hashCode()))
+				.body(workFlowStatusResponseDTO);
 	}
 
 	@Operation(summary = "Returns workflows by project id")
@@ -161,11 +164,13 @@ public class WorkFlowController {
 					content = { @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
 							schema = @Schema(implementation = String.class)) }),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
-			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content) })
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
+			@ApiResponse(responseCode = "304", description = "Not Modified", content = @Content) })
 	@GetMapping("/{workFlowExecutionId}/log")
 	public ResponseEntity<String> getLog(@PathVariable UUID workFlowExecutionId,
 			@RequestParam(required = false) String taskName) {
-		return ResponseEntity.ok(workFlowLogService.getLog(workFlowExecutionId, taskName));
+		String log = workFlowLogService.getLog(workFlowExecutionId, taskName);
+		return ResponseEntity.ok().eTag(String.valueOf(log.hashCode())).body(log);
 	}
 
 }

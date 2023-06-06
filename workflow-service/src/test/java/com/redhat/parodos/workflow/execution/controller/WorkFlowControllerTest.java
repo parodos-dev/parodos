@@ -14,6 +14,7 @@ import com.redhat.parodos.workflow.execution.dto.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.service.WorkFlowLogServiceImpl;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
+import com.redhat.parodos.workflow.version.WorkFlowVersionService;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -59,6 +60,9 @@ class WorkFlowControllerTest extends ControllerMockClient {
 
 	@MockBean
 	private WorkFlowLogServiceImpl workFlowLogService;
+
+	@MockBean
+	private WorkFlowVersionService workFlowVersionService;
 
 	@Test
 	public void ExecuteWithoutAuth() throws Exception {
@@ -234,11 +238,23 @@ class WorkFlowControllerTest extends ControllerMockClient {
 
 	@Test
 	public void TestGetStatusWithValidData() throws Exception {
-		// @TODO this test should be completed when the API is implemented
+		UUID mainWorkFlowExecutionId = UUID.randomUUID();
+		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = WorkFlowStatusResponseDTO.builder()
+				.workFlowExecutionId(mainWorkFlowExecutionId).status(WorkStatus.IN_PROGRESS).workFlowName("test")
+				.works(List.of(
+						WorkStatusResponseDTO.builder().name("test").status(WorkStatus.PENDING).type(WorkType.WORKFLOW)
+								.works(List.of(WorkStatusResponseDTO.builder().name("test").status(WorkStatus.PENDING)
+										.type(WorkType.TASK).build()))
+								.build(),
+						WorkStatusResponseDTO.builder().name("test").status(WorkStatus.COMPLETED).type(WorkType.TASK)
+								.build()))
+				.build();
+		when(workFlowService.getWorkFlowStatus(mainWorkFlowExecutionId)).thenReturn(workFlowStatusResponseDTO);
+
 		// when
 		this.mockMvc
 				.perform(this.getRequestWithValidCredentials(
-						String.format("/api/v1/workflows/%s/status", UUID.randomUUID())))
+						String.format("/api/v1/workflows/%s/status", mainWorkFlowExecutionId)))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 

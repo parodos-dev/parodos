@@ -355,6 +355,11 @@ public class WorkflowApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>304</td>
+	 * <td>Not Modified</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>400</td>
 	 * <td>Bad Request</td>
 	 * <td>-</td>
@@ -464,6 +469,11 @@ public class WorkflowApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>304</td>
+	 * <td>Not Modified</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>400</td>
 	 * <td>Bad Request</td>
 	 * <td>-</td>
@@ -512,6 +522,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>200</td>
 	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>304</td>
+	 * <td>Not Modified</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -569,6 +584,11 @@ public class WorkflowApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>304</td>
+	 * <td>Not Modified</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>400</td>
 	 * <td>Bad Request</td>
 	 * <td>-</td>
@@ -621,6 +641,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>200</td>
 	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>304</td>
+	 * <td>Not Modified</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -728,6 +753,11 @@ public class WorkflowApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>304</td>
+	 * <td>Not Modified</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>400</td>
 	 * <td>Bad Request</td>
 	 * <td>-</td>
@@ -775,6 +805,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>200</td>
 	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>304</td>
+	 * <td>Not Modified</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -828,6 +863,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>200</td>
 	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>304</td>
+	 * <td>Not Modified</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
