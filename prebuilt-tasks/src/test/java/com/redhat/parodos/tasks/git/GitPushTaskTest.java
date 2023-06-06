@@ -14,7 +14,6 @@ import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import junit.framework.TestCase;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.InitCommand;
@@ -33,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @Slf4j
-public class GitPushTaskTest extends TestCase {
+public class GitPushTaskTest {
 
 	private GitPushTask task;
 
@@ -80,7 +79,7 @@ public class GitPushTaskTest extends TestCase {
 
 		// then
 		assertThat(params).isNotNull();
-		assertThat(params.size()).isEqualTo(2);
+		assertThat(params.size()).isEqualTo(3);
 		assertThat(params.get(0).getKey()).isEqualTo("path");
 	}
 

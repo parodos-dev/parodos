@@ -1,11 +1,15 @@
 package com.redhat.parodos.tasks.git;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import com.google.common.base.Strings;
 import com.google.common.io.Files;
@@ -19,10 +23,7 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.jgit.api.ArchiveCommand;
-import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.archive.ZipFormat;
 import org.eclipse.jgit.lib.Repository;
 
 @Slf4j
@@ -79,20 +80,38 @@ public class GitArchiveTask extends BaseWorkFlowTask {
 		return GitUtils.getRepo(path);
 	}
 
+	private static void addFolderContentsToZip(File folder, String parentFolderPath, ZipOutputStream zos)
+			throws IOException {
+		for (File file : folder.listFiles()) {
+			if (file.isDirectory()) {
+				addFolderContentsToZip(file, parentFolderPath + "/" + file.getName(), zos);
+			}
+			else {
+				byte[] buffer = new byte[1024];
+				try (FileInputStream fis = new FileInputStream(file)) {
+					String entryPath = parentFolderPath + "/" + file.getName();
+					ZipEntry entry = new ZipEntry(entryPath);
+					zos.putNextEntry(entry);
+					int length;
+					while ((length = fis.read(buffer)) > 0) {
+						zos.write(buffer, 0, length);
+					}
+					zos.closeEntry();
+				}
+			}
+		}
+	}
+
 	private Path archive(Repository repo) throws FileNotFoundException, IOException, GitAPIException {
-		// Create a Git instance
-		Git git = new Git(repo);
-		ArchiveCommand.registerFormat("zip", new ZipFormat());
 
 		// Create a ZipFormat instance
 		String tmpdir = Files.createTempDir().getAbsolutePath();
 		Path zipFile = Paths.get(tmpdir + "/output.zip");
-		try (FileOutputStream out = new FileOutputStream(zipFile.toAbsolutePath().toString())) {
-			git.archive().setTree(repo.resolve(GitConstants.GIT_HEAD)).setPrefix(GitConstants.SRC_FOLDER)
-					.setFormat("zip").setOutputStream(out).call();
-		}
-		finally {
-			git.close();
+		Path repoDir = Path.of(repo.getDirectory().getAbsolutePath()).resolve("..");
+
+		try (FileOutputStream fos = new FileOutputStream(zipFile.toAbsolutePath().toString());
+				ZipOutputStream zos = new ZipOutputStream(fos)) {
+			addFolderContentsToZip(repoDir.toFile(), GitConstants.SRC_FOLDER, zos);
 		}
 		return zipFile;
 	}

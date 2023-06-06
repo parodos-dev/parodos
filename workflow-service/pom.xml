@@ -28,6 +28,7 @@
     </scm>
 
     <properties>
+        <jgit-version>6.5.0.202303070854-r</jgit-version>
         <common.io.version>2.11.0</common.io.version>
         <model.mapper.version>3.1.1</model.mapper.version>
         <spring-cloud.version>2020.0.6</spring-cloud.version>
@@ -225,6 +226,61 @@
             <groupId>dev.parodos</groupId>
             <artifactId>prebuilt-tasks</artifactId>
             <version>${revision}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>${jgit-version}</version>
+        </dependency>
+
+        <dependency>
+          <groupId>com.github.mwiede</groupId>
+          <artifactId>jsch</artifactId>
+          <version>0.2.9</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit.ssh.jsch</artifactId>
+            <version>${jgit-version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.jcraft</groupId>
+                    <artifactId>jsch</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk18on</artifactId>
+            <version>1.73</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>${jgit-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit.ssh.apache</artifactId>
+            <version>${jgit-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit.gpg.bc</artifactId>
+            <version>${jgit-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit.archive</artifactId>
+            <version>${jgit-version}</version>
         </dependency>
     </dependencies>
 

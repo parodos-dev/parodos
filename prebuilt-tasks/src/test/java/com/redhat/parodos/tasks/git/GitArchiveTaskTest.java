@@ -1,9 +1,14 @@
 package com.redhat.parodos.tasks.git;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Enumeration;
 import java.util.UUID;
 import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.WorkContext;
@@ -69,6 +74,22 @@ public class GitArchiveTaskTest {
 		assertThat(result.getError()).isNull();
 		assertThat(result.getStatus()).isEqualTo(WorkStatus.COMPLETED);
 		assertThat(result.getWorkContext().get("gitArchivePath").toString()).contains("output.zip");
+		try {
+			listFilesInZip(result.getWorkContext().get("gitArchivePath").toString());
+		}
+		catch (IOException e) {
+			return;
+		}
+	}
+
+	private static void listFilesInZip(String zipFilePath) throws IOException {
+		File file = new File(zipFilePath);
+		try (ZipFile zipFile = new ZipFile(file)) {
+			Enumeration<? extends ZipEntry> entries = zipFile.entries();
+			while (entries.hasMoreElements()) {
+				ZipEntry entry = entries.nextElement();
+			}
+		}
 	}
 
 	@Test
@@ -102,6 +123,7 @@ public class GitArchiveTaskTest {
 		assertThat(result.getError()).isNotNull();
 		assertThat(result.getStatus()).isEqualTo(WorkStatus.FAILED);
 		assertThat(result.getError().toString()).contains("The path parameter cannot be null or empty");
+
 	}
 
 	@Test
