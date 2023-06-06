@@ -15,6 +15,7 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Repository;
 
@@ -54,7 +55,9 @@ public class GitCommitTask extends BaseWorkFlowTask {
 		try (Repository repo = getRepo(path)) {
 			Git git = new Git(repo);
 			git.add().addFilepattern(".").call();
-			git.commit().setSign(false).setMessage(commitMessage).call();
+			CommitCommand commit = git.commit().setMessage(commitMessage);
+			commit.setSign(Boolean.FALSE);
+			commit.call();
 		}
 		catch (IOException e) {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext,
@@ -62,9 +65,8 @@ public class GitCommitTask extends BaseWorkFlowTask {
 		}
 		catch (Exception e) {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext,
-					new RuntimeException("Cannot create the branch on the repository: %s".formatted(e)));
+					new RuntimeException("Cannot create the commit on the repository: %s".formatted(e)));
 		}
-
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext, null);
 	}
 

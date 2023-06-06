@@ -160,7 +160,7 @@ class GitCommitTaskTest {
 			Files.write(filePath, "Hello, world!".getBytes());
 			Git git = Git.init().setDirectory(tempDir.toFile()).call();
 			git.add().addFilepattern(".").call();
-			git.commit().setMessage("Initial commit").setSign(false).call();
+			git.commit().setSign(false).setMessage("Initial commit").call();
 		});
 	}
 

@@ -3,8 +3,10 @@ package com.redhat.parodos.tasks.git;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
+import com.google.common.base.Strings;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
@@ -16,6 +18,7 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
@@ -41,28 +44,30 @@ public class GitCloneTask extends BaseWorkFlowTask {
 		String gitUri = null;
 		String destination = null;
 		String gitBranch = null;
+		String gitCredentials = null;
 
 		try {
 			gitUri = this.getRequiredParameterValue(GitConstants.URI);
 			gitBranch = this.getOptionalParameterValue(GitConstants.BRANCH, GitConstants.DEFAULT_BRANCH);
-			destination = cloneRepo(gitUri, gitBranch);
+			gitCredentials = this.getOptionalParameterValue("credentials", "");
+			destination = cloneRepo(gitUri, gitBranch, gitCredentials);
 		}
 		catch (MissingParameterException e) {
-			log.debug("Failed to resolve required parameter: {}", e.getMessage());
+			log.error("Failed to resolve required parameter: {}", e.getMessage());
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
 		}
 		catch (TransportException e) {
-			log.debug("Cannot connect to repository server '{}' error: {}", gitUri, e.getMessage());
+			log.error("Cannot connect to repository server '{}' error: {}", gitUri, e.getMessage());
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext,
 					new Exception("cannot connect to the repository server"));
 		}
 		catch (InvalidRemoteException e) {
-			log.debug("remote repository server '{}' is not available, error: {}", gitUri, e.getMessage());
+			log.error("remote repository server '{}' is not available, error: {}", gitUri, e.getMessage());
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext,
 					new Exception("Remote repository " + gitUri + " is not available"));
 		}
 		catch (IOException | GitAPIException e) {
-			log.debug("Cannot clone repository: {} {}", gitUri, e.getMessage());
+			log.error("Cannot clone repository: {} {}", gitUri, e.getMessage());
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext,
 					new Exception("cannot clone repository, error: " + e.getMessage()));
 		}
@@ -72,10 +77,17 @@ public class GitCloneTask extends BaseWorkFlowTask {
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext, null);
 	}
 
-	private String cloneRepo(String gitUri, String gitBranch)
+	private String cloneRepo(String gitUri, String gitBranch, String credentials)
 			throws InvalidRemoteException, TransportException, IOException, GitAPIException {
+
 		String tmpDir = Files.createTempDirectory("GitTaskClone").toAbsolutePath().toString();
-		Git.cloneRepository().setURI(gitUri).setBranch("refs/heads/" + gitBranch).setDirectory(new File(tmpDir)).call();
+
+		CloneCommand cloneCommand = Git.cloneRepository().setURI(gitUri).setBranch("refs/heads/" + gitBranch)
+				.setDirectory(new File(tmpDir));
+		if (!Strings.isNullOrEmpty(credentials)) {
+			cloneCommand.setTransportConfigCallback(GitUtils.getTransport(Path.of(credentials)));
+		}
+		cloneCommand.call();
 		return tmpDir;
 	}
 

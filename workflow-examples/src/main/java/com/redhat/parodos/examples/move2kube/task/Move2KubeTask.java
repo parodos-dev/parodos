@@ -89,7 +89,7 @@ public class Move2KubeTask extends Move2KubeBase {
 	private String setProject(String workspaceId, Map<String, ProjectInputsValue> inputs, UUID workflowId)
 			throws ApiException {
 		Project project = new Project();
-		project.setName("WorkFlowID: " + workflowId.toString());
+		project.setName("WF- " + workflowId.toString().substring(0, 8));
 		project.description("Project for workflow execution id: " + workflowId.toString());
 
 		CreateProject201Response res = projectsApi.createProject(workspaceId, project);

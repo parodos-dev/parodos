@@ -15,6 +15,6 @@ public class GitConstants {
 
 	static final String GIT_FOLDER = ".git/";
 	static final String GIT_HEAD = "HEAD";
-	static final String SRC_FOLDER = "src/";
+	static final String SRC_FOLDER = "src";
 
 }

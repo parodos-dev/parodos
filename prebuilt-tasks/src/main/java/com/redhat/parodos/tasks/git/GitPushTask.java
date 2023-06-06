@@ -2,6 +2,7 @@ package com.redhat.parodos.tasks.git;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 import com.google.common.base.Strings;
@@ -17,6 +18,7 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.PushCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
 
@@ -30,7 +32,9 @@ public class GitPushTask extends BaseWorkFlowTask {
 				WorkParameter.builder().key(GitConstants.GIT_REPO_PATH).type(WorkParameterType.TEXT).optional(true)
 						.description("path where the git repo is located").build(),
 				WorkParameter.builder().key(GitConstants.GIT_REMOTE).type(WorkParameterType.TEXT).optional(false)
-						.description("path where the git repo is located").build());
+						.description("path where the git repo is located").build(),
+				WorkParameter.builder().key("credentials").type(WorkParameterType.TEXT).optional(true)
+						.description("Git credential").build());
 	}
 
 	public String getRepoPath(WorkContext workContext) {
@@ -49,8 +53,9 @@ public class GitPushTask extends BaseWorkFlowTask {
 		String remote = "";
 		try {
 			remote = this.getRequiredParameterValue(GitConstants.GIT_REMOTE);
+			String credentials = this.getOptionalParameterValue("credentials", "");
 			repo = getRepo(path);
-			push(repo, remote);
+			push(repo, remote, credentials);
 		}
 		catch (MissingParameterException e) {
 			log.debug("Failed to resolve required parameter: {}", e.getMessage());
@@ -81,11 +86,16 @@ public class GitPushTask extends BaseWorkFlowTask {
 		return GitUtils.getRepo(path);
 	}
 
-	private void push(Repository repo, String remoteName) throws FileNotFoundException, IOException, GitAPIException {
+	private void push(Repository repo, String remoteName, String credentials)
+			throws FileNotFoundException, IOException, GitAPIException {
 		Git git = new Git(repo);
 
 		try {
-			git.push().setForce(false).setRemote(remoteName).call();
+			PushCommand push = git.push().setForce(false).setRemote(remoteName);
+			if (!Strings.isNullOrEmpty(credentials)) {
+				push.setTransportConfigCallback(GitUtils.getTransport(Path.of(credentials)));
+			}
+			push.call();
 		}
 		finally {
 			git.close();
