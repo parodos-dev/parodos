@@ -113,7 +113,7 @@
     <profiles>
         <!--
          Integration test profile.
-         Explicitly triggered with -P integrationtest or by environment variable "integrationtest" set
+         Explicitly triggered with -P integration-test or by environment variable "integration-test" set
          -->
         <profile>
             <id>integration-test</id>
