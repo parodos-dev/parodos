@@ -57,7 +57,7 @@ public abstract class WorkFlowServiceSdkUtils {
 		}
 
 		int port = Integer.parseInt(serverPort);
-		if (port <= 0 && port > 65535) {
+		if (port <= 0 || port > 65535) {
 			throw new IllegalArgumentException("serverPort must be > 0 && <= 65535");
 		}
 
