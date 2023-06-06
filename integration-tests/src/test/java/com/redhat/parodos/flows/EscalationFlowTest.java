@@ -24,7 +24,7 @@ public class EscalationFlowTest {
 	private static final String WORKFLOW_NAME = "workflowStartingCheckingAndEscalation";
 
 	@Test
-	public void runEscalationFlow() throws ApiException, InterruptedException {
+	public void runEscalationFlow() throws ApiException {
 		log.info("******** Running The Escalation workFlow ********");
 		TestComponents components = new WorkFlowTestBuilder().withDefaultProject().withWorkFlowDefinition(WORKFLOW_NAME)
 				.build();

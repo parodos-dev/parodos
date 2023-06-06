@@ -30,7 +30,7 @@ public class SimpleRollbackWorkFlowTest {
 	private static final String WORKFLOW_NAME = "simpleFailedWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW;
 
 	@Test
-	public void runRollbackWorkFlow() throws ApiException, InterruptedException {
+	public void runRollbackWorkFlow() throws ApiException {
 		log.info("******** Running The Simple WorkFlow ********");
 		TestComponents components = new WorkFlowTestBuilder().withDefaultProject()
 				.withWorkFlowDefinition(WORKFLOW_NAME, getWorkFlowDefinitionResponseConsumer()).build();
