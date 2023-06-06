@@ -333,6 +333,11 @@ public class ProjectApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>304</td>
+	 * <td>Not Modified</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>400</td>
 	 * <td>Bad Request</td>
 	 * <td>-</td>
@@ -430,6 +435,11 @@ public class ProjectApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>304</td>
+	 * <td>Not Modified</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>400</td>
 	 * <td>Bad Request</td>
 	 * <td>-</td>
@@ -472,6 +482,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>200</td>
 	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>304</td>
+	 * <td>Not Modified</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -523,6 +538,11 @@ public class ProjectApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>304</td>
+	 * <td>Not Modified</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>400</td>
 	 * <td>Bad Request</td>
 	 * <td>-</td>
@@ -569,6 +589,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>200</td>
 	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>304</td>
+	 * <td>Not Modified</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -667,6 +692,11 @@ public class ProjectApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>304</td>
+	 * <td>Not Modified</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>400</td>
 	 * <td>Bad Request</td>
 	 * <td>-</td>
@@ -713,6 +743,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>200</td>
 	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>304</td>
+	 * <td>Not Modified</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -765,6 +800,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>200</td>
 	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>304</td>
+	 * <td>Not Modified</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>

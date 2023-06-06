@@ -1,6 +1,5 @@
 package com.redhat.parodos.examples.ocponboarding.task.dto.notification;
 
-import java.io.Serializable;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -12,13 +11,12 @@ import lombok.NoArgsConstructor;
  * request DTO of notification service
  *
  * @author Richard Wang (Github: RichardW98)
- *
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class NotificationRequest implements Serializable {
+public class NotificationRequest {
 
 	private List<String> usernames;
 

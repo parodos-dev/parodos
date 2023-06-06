@@ -88,10 +88,12 @@ public class ProjectController {
 									array = @ArraySchema(
 											schema = @Schema(implementation = ProjectResponseDTO.class))) }),
 					@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
-					@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content) })
+					@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
+					@ApiResponse(responseCode = "304", description = "Not Modified", content = @Content) })
 	@GetMapping
 	public ResponseEntity<List<ProjectResponseDTO>> getProjects() {
-		return ResponseEntity.ok(projectService.getProjects());
+		List<ProjectResponseDTO> projects = projectService.getProjects();
+		return ResponseEntity.ok().eTag(String.valueOf(projects.hashCode())).body(projects);
 	}
 
 	@Operation(summary = "Returns information about a specified project")
@@ -100,11 +102,12 @@ public class ProjectController {
 					content = { @Content(mediaType = "application/json",
 							schema = @Schema(implementation = ProjectResponseDTO.class)) }),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
-			@ApiResponse(responseCode = "404", description = "Not found", content = @Content) })
+			@ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+			@ApiResponse(responseCode = "304", description = "Not Modified", content = @Content) })
 	@GetMapping("/{id}")
 	public ResponseEntity<ProjectResponseDTO> getProjectById(@PathVariable UUID id) {
 		ProjectResponseDTO projectResponseDTO = projectService.getProjectById(id);
-		return ResponseEntity.ok(projectResponseDTO);
+		return ResponseEntity.ok().eTag(String.valueOf(projectResponseDTO.hashCode())).body(projectResponseDTO);
 	}
 
 	@Operation(summary = "Update user roles in project")

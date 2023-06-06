@@ -85,6 +85,9 @@
             },
             "description" : "Succeeded"
           },
+          "304" : {
+            "description" : "Not Modified"
+          },
           "400" : {
             "content" : {
               "*/*" : {
@@ -208,6 +211,9 @@
               }
             },
             "description" : "Succeeded"
+          },
+          "304" : {
+            "description" : "Not Modified"
           },
           "400" : {
             "content" : {
@@ -896,6 +902,9 @@
             },
             "description" : "Succeeded"
           },
+          "304" : {
+            "description" : "Not Modified"
+          },
           "400" : {
             "content" : {
               "*/*" : {
@@ -959,6 +968,9 @@
               }
             },
             "description" : "Succeeded"
+          },
+          "304" : {
+            "description" : "Not Modified"
           },
           "400" : {
             "content" : {

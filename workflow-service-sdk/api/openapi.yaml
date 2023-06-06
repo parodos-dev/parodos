@@ -61,6 +61,8 @@ paths:
                   $ref: '#/components/schemas/ProjectResponseDTO'
                 type: array
           description: Succeeded
+        "304":
+          description: Not Modified
         "400":
           content:
             '*/*':
@@ -146,6 +148,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProjectResponseDTO'
           description: Succeeded
+        "304":
+          description: Not Modified
         "400":
           content:
             '*/*':
@@ -650,6 +654,8 @@ paths:
               schema:
                 type: string
           description: Succeeded
+        "304":
+          description: Not Modified
         "400":
           content:
             '*/*':
@@ -695,6 +701,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/WorkFlowStatusResponseDTO'
           description: Succeeded
+        "304":
+          description: Not Modified
         "400":
           content:
             '*/*':
