@@ -99,7 +99,7 @@ public class GetAnalysisTask extends BaseInfrastructureWorkFlowTask {
 						success.value().tasks()[0].application().id(), success.value().data().output());
 				addParameter("reportURL", reportURL);
 				notificationSender.send("Migration Analysis Report Completed",
-						"Migration analysis [report](%s) completed.".formatted(reportURL));
+						"[Migration analysis report](%s) completed.".formatted(reportURL));
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 			}
 			else if ("Failed".equals(success.value().state())) {
