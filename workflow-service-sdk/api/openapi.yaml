@@ -18,6 +18,8 @@ tags:
   name: Project
 - description: Operations about workflow definition
   name: Workflow Definition
+- description: Operations about project access
+  name: Project Access
 paths:
   /api/v1/login:
     get:
@@ -129,6 +131,88 @@ paths:
       - Project
       x-content-type: application/json
       x-accepts: application/json
+  /api/v1/projects/access/{id}/status:
+    get:
+      operationId: getProjectAccessStatus
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessStatusResponseDTO'
+          description: Succeeded
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          content: {}
+          description: Not found
+        "409":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Conflict
+      summary: Returns status about a specified project access request
+      tags:
+      - Project Access
+      x-accepts: application/json
+    post:
+      operationId: updateProjectAccessStatus
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccessStatusRequestDTO'
+        required: true
+      responses:
+        "204":
+          description: Updated successfully
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          content: {}
+          description: Not found
+        "409":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Conflict
+      summary: Update status of a specified project access request
+      tags:
+      - Project Access
+      x-content-type: application/json
+      x-accepts: '*/*'
   /api/v1/projects/{id}:
     get:
       operationId: getProjectById
@@ -170,6 +254,53 @@ paths:
       summary: Returns information about a specified project
       tags:
       - Project
+      x-accepts: application/json
+  /api/v1/projects/{id}/access:
+    post:
+      operationId: createAccessRequestToProject
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccessRequestDTO'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessResponseDTO'
+          description: Succeeded
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          content: {}
+          description: Not found
+        "409":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Conflict
+      summary: Request user access to project
+      tags:
+      - Project
+      x-content-type: application/json
       x-accepts: application/json
   /api/v1/projects/{id}/users:
     delete:
@@ -731,6 +862,74 @@ paths:
       x-accepts: application/json
 components:
   schemas:
+    AccessRequestDTO:
+      example:
+        role: OWNER
+        username: username
+      properties:
+        role:
+          enum:
+          - OWNER
+          - DEVELOPER
+          - ADMIN
+          type: string
+        username:
+          type: string
+      type: object
+    AccessResponseDTO:
+      example:
+        approvalSentTo:
+        - approvalSentTo
+        - approvalSentTo
+        accessRequestId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        escalationSentTo: escalationSentTo
+        project:
+          createdDate: 2000-01-23T04:56:07.000+00:00
+          createdBy: createdBy
+          name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        accessRequestId:
+          format: uuid
+          type: string
+        approvalSentTo:
+          items:
+            type: string
+          type: array
+        escalationSentTo:
+          type: string
+        project:
+          $ref: '#/components/schemas/ProjectDTO'
+      type: object
+    AccessStatusRequestDTO:
+      example:
+        comment: comment
+        status: APPROVED
+      properties:
+        comment:
+          type: string
+        status:
+          enum:
+          - APPROVED
+          - PENDING
+          - REJECTED
+          type: string
+      type: object
+    AccessStatusResponseDTO:
+      example:
+        accessRequestId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        status: APPROVED
+      properties:
+        accessRequestId:
+          format: uuid
+          type: string
+        status:
+          enum:
+          - APPROVED
+          - PENDING
+          - REJECTED
+          type: string
+      type: object
     ArgumentRequestDTO:
       example:
         value: value
@@ -753,6 +952,24 @@ components:
         status:
           format: int32
           type: integer
+      type: object
+    ProjectDTO:
+      example:
+        createdDate: 2000-01-23T04:56:07.000+00:00
+        createdBy: createdBy
+        name: name
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        createdBy:
+          type: string
+        createdDate:
+          format: date-time
+          type: string
+        id:
+          format: uuid
+          type: string
+        name:
+          type: string
       type: object
     ProjectRequestDTO:
       example:

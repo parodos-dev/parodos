@@ -35,7 +35,7 @@ import org.springframework.http.ResponseEntity;
 /**
  * An example of a task that send a Jira ticket email notification
  *
- * @author Annel Ketch (Github: anludke)
+ * @author Annel Ketcha (Github: anludke)
  */
 
 @Slf4j
