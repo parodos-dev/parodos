@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
-import com.redhat.parodos.project.dto.ProjectResponseDTO;
+import com.redhat.parodos.project.dto.response.ProjectResponseDTO;
 import com.redhat.parodos.project.service.ProjectService;
 import com.redhat.parodos.user.entity.User;
 import com.redhat.parodos.user.service.UserService;

@@ -1,4 +1,4 @@
-package com.redhat.parodos.examples.utils;
+package com.redhat.parodos.utils;
 
 import java.net.URI;
 import java.util.Base64;

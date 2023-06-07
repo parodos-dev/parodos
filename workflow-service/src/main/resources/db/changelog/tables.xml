@@ -72,6 +72,32 @@
             <column name="object_version" type="bigint"/>
         </createTable>
 
+        <!-- Project Access Request Table -->
+        <createTable tableName="prds_project_access_request">
+            <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="project_id" type="${uuidType}">
+                <constraints nullable="false" foreignKeyName="fk_project_access_request_project" references="prds_project(id)"/>
+            </column>
+            <column name="user_id" type="${uuidType}">
+                <constraints nullable="false" foreignKeyName="fk_project_access_request_USER" references="prds_user(id)"/>
+            </column>
+            <column name="role_id" type="${uuidType}">
+                <constraints nullable="false" foreignKeyName="fk_project_access_request_role" references="prds_role(id)"/>
+            </column>
+            <column name="status" type="varchar(255)"/>
+            <column name="comment" type="varchar(4000)"/>
+            <column name="created_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="created_by" type="${uuidType}">
+                <constraints nullable="false" foreignKeyName="fk_project_access_request_user_created" references="prds_user(id)"/>
+            </column>
+            <column name="modified_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="modified_by" type="${uuidType}">
+                <constraints nullable="true" foreignKeyName="fk_project_access_request_user_modified" references="prds_user(id)"/>
+            </column>
+        </createTable>
+
         <!-- Workflow Definition Table -->
         <createTable tableName="prds_workflow_definition">
             <column name="id" type="${uuidType}" defaultValue="${uuidFunction}">

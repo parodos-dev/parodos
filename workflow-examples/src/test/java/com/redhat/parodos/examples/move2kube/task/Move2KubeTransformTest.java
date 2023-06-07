@@ -2,7 +2,7 @@ package com.redhat.parodos.examples.move2kube.task;
 
 import java.util.UUID;
 
-import com.redhat.parodos.examples.utils.RestUtils;
+import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;

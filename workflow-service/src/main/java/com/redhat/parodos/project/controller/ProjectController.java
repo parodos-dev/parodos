@@ -22,10 +22,12 @@ import java.util.UUID;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 
-import com.redhat.parodos.project.dto.ProjectRequestDTO;
-import com.redhat.parodos.project.dto.ProjectResponseDTO;
-import com.redhat.parodos.project.dto.ProjectUserRoleResponseDTO;
-import com.redhat.parodos.project.dto.UserRoleRequestDTO;
+import com.redhat.parodos.project.dto.request.AccessRequestDTO;
+import com.redhat.parodos.project.dto.request.ProjectRequestDTO;
+import com.redhat.parodos.project.dto.request.UserRoleRequestDTO;
+import com.redhat.parodos.project.dto.response.AccessResponseDTO;
+import com.redhat.parodos.project.dto.response.ProjectResponseDTO;
+import com.redhat.parodos.project.dto.response.ProjectUserRoleResponseDTO;
 import com.redhat.parodos.project.service.ProjectServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -74,7 +76,7 @@ public class ProjectController {
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content) })
 	@PostMapping
 	public ResponseEntity<ProjectResponseDTO> createProject(@Valid @RequestBody ProjectRequestDTO projectRequestDTO) {
-		ProjectResponseDTO projectResponseDTO = projectService.save(projectRequestDTO);
+		ProjectResponseDTO projectResponseDTO = projectService.createProject(projectRequestDTO);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(projectResponseDTO.getId()).toUri();
 		return ResponseEntity.created(location).body(projectResponseDTO);
@@ -137,6 +139,20 @@ public class ProjectController {
 			@RequestBody @NotEmpty List<String> usernames) {
 		ProjectUserRoleResponseDTO projectUserRoleResponseDTO = projectService.removeUsersFromProject(id, usernames);
 		return ResponseEntity.ok(projectUserRoleResponseDTO);
+	}
+
+	@Operation(summary = "Request user access to project")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Succeeded",
+					content = { @Content(mediaType = "application/json",
+							schema = @Schema(implementation = AccessResponseDTO.class)) }),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Not found", content = @Content) })
+	@PostMapping("/{id}/access")
+	public ResponseEntity<AccessResponseDTO> createAccessRequestToProject(@PathVariable UUID id,
+			@RequestBody AccessRequestDTO accessRequestDTO) {
+		AccessResponseDTO accessResponseDTO = projectService.createAccessRequestToProject(id, accessRequestDTO);
+		return ResponseEntity.ok(accessResponseDTO);
 	}
 
 }

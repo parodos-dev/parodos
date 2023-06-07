@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.redhat.parodos.examples.ocponboarding.task.dto.email.MessageRequestDTO;
-import com.redhat.parodos.examples.utils.RestUtils;
+import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;

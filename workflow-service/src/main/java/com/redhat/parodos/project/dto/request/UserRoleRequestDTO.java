@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.project.dto;
+package com.redhat.parodos.project.dto.request;
 
-import java.util.Set;
+import java.util.List;
 
 import com.redhat.parodos.project.enums.Role;
 import lombok.AllArgsConstructor;
@@ -24,19 +24,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * project user role response DTO
+ * project user role request DTO
  *
  * @author Annel Ketcha (Github: anludke)
  */
-
-@Builder
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRoleResponseDTO {
+public class UserRoleRequestDTO {
 
 	private String username;
 
-	private Set<Role> roles;
+	private List<Role> roles;
 
 }

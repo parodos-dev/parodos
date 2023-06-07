@@ -19,7 +19,7 @@ import java.util.List;
 
 import com.redhat.parodos.examples.ocponboarding.task.dto.jira.GetJiraTicketResponseDto;
 import com.redhat.parodos.examples.ocponboarding.task.dto.jira.GetJiraTicketResponseValue;
-import com.redhat.parodos.examples.utils.RestUtils;
+import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.checker.BaseWorkFlowCheckerTask;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;

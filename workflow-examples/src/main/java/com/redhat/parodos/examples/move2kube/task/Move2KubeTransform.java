@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.redhat.parodos.examples.ocponboarding.task.dto.notification.NotificationRequest;
-import com.redhat.parodos.examples.utils.RestUtils;
+import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;

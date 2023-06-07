@@ -13,44 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.project.dto;
+package com.redhat.parodos.project.dto.request;
 
-import java.util.Date;
-import java.util.UUID;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.redhat.parodos.project.enums.ProjectAccessStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * project response DTO
+ * access status request DTO
  *
  * @author Annel Ketcha (Github: anludke)
  */
-
-@Builder
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class ProjectResponseDTO {
+public class AccessStatusRequestDTO {
 
-	private UUID id;
+	private ProjectAccessStatus status;
 
-	private String name;
-
-	private String description;
-
-	private Date createdDate;
-
-	private String createdBy;
-
-	private Date modifiedDate;
-
-	private String modifiedBy;
-
-	private String accessRole;
+	private String comment;
 
 }

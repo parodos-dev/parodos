@@ -17,7 +17,7 @@ package com.redhat.parodos.examples.simple.task;
 
 import java.util.List;
 
-import com.redhat.parodos.examples.utils.RestUtils;
+import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
