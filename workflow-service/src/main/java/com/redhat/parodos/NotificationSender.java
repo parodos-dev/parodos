@@ -1,6 +1,7 @@
 package com.redhat.parodos;
 
 import java.util.Base64;
+import java.util.List;
 
 import javax.ws.rs.core.HttpHeaders;
 
@@ -8,6 +9,7 @@ import com.redhat.parodos.notification.sdk.api.ApiClient;
 import com.redhat.parodos.notification.sdk.api.ApiException;
 import com.redhat.parodos.notification.sdk.api.NotificationMessageApi;
 import com.redhat.parodos.notification.sdk.model.NotificationMessageCreateRequestDTO;
+import com.redhat.parodos.security.SecurityUtils;
 import com.redhat.parodos.workflow.task.infrastructure.Notifier;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,7 +32,17 @@ public class NotificationSender implements Notifier {
 	}
 
 	@Override
+	public void send(String subject, String body) {
+		var m = new NotificationMessageCreateRequestDTO();
+		m.setSubject(subject);
+		m.setBody(body);
+		setUserIfUnset(m);
+		send(m);
+	}
+
+	@Override
 	public void send(NotificationMessageCreateRequestDTO message) {
+		setUserIfUnset(message);
 		try {
 			trySend(message);
 		}
@@ -42,6 +54,12 @@ public class NotificationSender implements Notifier {
 	@Override
 	public void trySend(NotificationMessageCreateRequestDTO message) throws ApiException {
 		client.create(message);
+	}
+
+	private void setUserIfUnset(NotificationMessageCreateRequestDTO message) {
+		if (message.getUsernames() == null || message.getUsernames().isEmpty()) {
+			message.setUsernames(List.of(SecurityUtils.getUsername()));
+		}
 	}
 
 }
