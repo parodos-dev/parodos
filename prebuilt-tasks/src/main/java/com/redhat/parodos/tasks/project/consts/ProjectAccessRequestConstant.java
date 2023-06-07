@@ -14,4 +14,8 @@ public class ProjectAccessRequestConstant {
 
 	public final static String ACCESS_REQUEST_ESCALATION_USER_EMAIL = "ACCESS_REQUEST_ESCALATION_USER_EMAIL";
 
+	public final static String MAIL_SUBJECT_ACCESS_REQUEST_APPROVAL = "Parodos: Project Access Request Approval";
+
+	public final static String MAIL_SUBJECT_ACCESS_REQUEST_ESCALATION = "Parodos: Project Access Request Escalation";
+
 }

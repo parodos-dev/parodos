@@ -26,10 +26,8 @@ public class ProjectAccessRequestWorkFlowConfiguration {
 	@Bean
 	ProjectAccessRequestEscalationWorkFlowTask projectAccessRequestEscalationWorkFlowTask(
 			@Value("${SERVICE_URL:localhost}") String serviceUrl, @Value("${SERVICE_PORT:8080}") String servicePort,
-			@Value("${MAIL_SERVICE_URL:service}") String mailServiceUrl,
-			@Value("${MAIL_SERVICE_SITE_NAME_PROJECT:site}") String mailServiceSiteName) {
-		return new ProjectAccessRequestEscalationWorkFlowTask(serviceUrl, servicePort, mailServiceUrl,
-				mailServiceSiteName);
+			@Value("${MAIL_SERVICE_URL:service}") String mailServiceUrl) {
+		return new ProjectAccessRequestEscalationWorkFlowTask(serviceUrl, servicePort, mailServiceUrl);
 	}
 
 	@Bean(name = "projectAccessRequestEscalationWorkFlow")
@@ -71,10 +69,9 @@ public class ProjectAccessRequestWorkFlowConfiguration {
 	ProjectAccessRequestApprovalWorkFlowTask projectAccessRequestApprovalWorkFlowTask(
 			@Qualifier("projectAccessRequestApprovalWorkFlowChecker") WorkFlow projectAccessRequestApprovalWorkFlowChecker,
 			@Value("${SERVICE_URL:localhost}") String serviceUrl, @Value("${SERVICE_PORT:8080}") String servicePort,
-			@Value("${MAIL_SERVICE_URL:service}") String mailServiceUrl,
-			@Value("${MAIL_SERVICE_SITE_NAME_PROJECT:site}") String mailServiceSiteName) {
+			@Value("${MAIL_SERVICE_URL:service}") String mailServiceUrl) {
 		ProjectAccessRequestApprovalWorkFlowTask projectAccessRequestApprovalWorkFlowTask = new ProjectAccessRequestApprovalWorkFlowTask(
-				serviceUrl, servicePort, mailServiceUrl, mailServiceSiteName);
+				serviceUrl, servicePort, mailServiceUrl);
 		projectAccessRequestApprovalWorkFlowTask
 				.setWorkFlowCheckers(List.of(projectAccessRequestApprovalWorkFlowChecker));
 		return projectAccessRequestApprovalWorkFlowTask;

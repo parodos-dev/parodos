@@ -15,14 +15,13 @@
  */
 package com.redhat.parodos.tasks.project.escalation;
 
-import java.util.Collections;
 import java.util.Objects;
 import java.util.UUID;
 
 import com.redhat.parodos.tasks.project.dto.MessageRequest;
 import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
-import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
+import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -34,6 +33,7 @@ import org.springframework.http.ResponseEntity;
 
 import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_ESCALATION_USER_EMAIL;
 import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_ID;
+import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.MAIL_SUBJECT_ACCESS_REQUEST_ESCALATION;
 import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.PARAMETER_USERNAME;
 
 /**
@@ -43,7 +43,7 @@ import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConsta
  */
 
 @Slf4j
-public class ProjectAccessRequestEscalationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
+public class ProjectAccessRequestEscalationWorkFlowTask extends BaseWorkFlowTask {
 
 	private final String serviceUrl;
 
@@ -51,15 +51,11 @@ public class ProjectAccessRequestEscalationWorkFlowTask extends BaseInfrastructu
 
 	private final String mailServiceUrl;
 
-	private final String mailServiceSiteName;
-
-	public ProjectAccessRequestEscalationWorkFlowTask(String serviceUrl, String servicePort, String mailServiceUrl,
-			String mailServiceSiteName) {
+	public ProjectAccessRequestEscalationWorkFlowTask(String serviceUrl, String servicePort, String mailServiceUrl) {
 		super();
 		this.serviceUrl = serviceUrl;
 		this.servicePort = servicePort;
 		this.mailServiceUrl = mailServiceUrl;
-		this.mailServiceSiteName = mailServiceSiteName;
 	}
 
 	@Override
@@ -81,8 +77,7 @@ public class ProjectAccessRequestEscalationWorkFlowTask extends BaseInfrastructu
 
 		String projectAccessRequestStatusUrl = String.format("http://%s:%s/api/v1/projects/access/%s/status",
 				serviceUrl, servicePort, accessRequestId);
-		MessageRequest messageRequest = new MessageRequest(username, Collections.singletonList(escalationUserEmail),
-				mailServiceSiteName, getMessage(projectAccessRequestStatusUrl));
+		MessageRequest messageRequest = new MessageRequest(username, MAIL_SUBJECT_ACCESS_REQUEST_ESCALATION, new String[]{escalationUserEmail}, getMessage(projectAccessRequestStatusUrl));
 		ResponseEntity<String> responseEntity = null;
 		try {
 			HttpEntity<MessageRequest> requestEntity = new HttpEntity<>(messageRequest);
