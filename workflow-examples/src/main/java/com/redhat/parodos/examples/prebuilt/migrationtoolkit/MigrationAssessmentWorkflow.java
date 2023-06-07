@@ -18,7 +18,6 @@ import com.redhat.parodos.workflows.workflow.WorkFlow;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 import static com.redhat.parodos.workflows.workflow.SequentialFlow.Builder.aNewSequentialFlow;
 
@@ -32,7 +31,6 @@ import static com.redhat.parodos.workflows.workflow.SequentialFlow.Builder.aNewS
  * <p>
  */
 @Configuration
-@Profile("local")
 public class MigrationAssessmentWorkflow {
 
 	// the url of the MTA (migration toolkit for application)
