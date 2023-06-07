@@ -1,0 +1,58 @@
+name: Full Release on Tag Push
+on:
+  push:
+    tags:
+      - v**
+jobs:
+  GitHub-Release:
+    runs-on: ubuntu-latest
+    steps:
+       steps:
+        - run: gh release create ${{  github.ref_name }} --generate-notes
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  Maven-Publish:
+    runs-on: ubuntu-latest
+      - uses: actions/checkout@v3
+
+      - name: "Set up Maven Central Repository"
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          server-id: ossrh
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+
+      - name: "Publish package to maven repo"
+        run: mvn --batch-mode deploy
+        env:
+          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+
+  Container-Publish:
+    - name: "Build container images"
+      run: |
+        make build-images GIT_BRANCH=${GITHUB_REF##*/}
+        make tag-images GIT_BRANCH=${GITHUB_REF##*/}
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        registry: "quay.io"
+        username: "parodos-dev+githubpush"
+        password: "${{ secrets.QUAY_GITHUB_TOKEN }}"
+
+    - name: "Push container images"
+      run: |
+        make push-images GIT_BRANCH=${GITHUB_REF##*/}
+
+  Bump-Next:
+    - name: "Bump to next version"
+      run: |
+        git config --global user.name 'GitHub workflow committer for $GITHUB_REPOSITORY'
+        git config --global user.email 'github-workflow-committer@users.noreply.github.com'
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
+        make bump-version install bump-git-commit
+        git push origin
+

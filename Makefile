@@ -192,7 +192,12 @@ git-tag: ## tag commit and prepare for image release
 	git tag -a $(TAG) -m "$(TAG)"
 	$(eval TAG=$(TAG))
 
+# Officially release using local machine. Deprecated.
 release-all: update-version release git-release git-tag build-images tag-images push-images bump-version install bump-git-commit
+
+# Officially release using github automation
+release-tag-push: update-version git-release git-tag
+	git push origin v$(RELEASE_VERSION)
 
 ##@ Run
 .PHONY: docker-run docker-stop

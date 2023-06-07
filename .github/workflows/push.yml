@@ -38,6 +38,6 @@ jobs:
           username: "parodos-dev+githubpush"
           password: "${{ secrets.QUAY_GITHUB_TOKEN }}"
 
-      - name: "Build container images"
+      - name: "Push container images"
         run: |
           make push-images GIT_BRANCH=${GITHUB_REF##*/}
