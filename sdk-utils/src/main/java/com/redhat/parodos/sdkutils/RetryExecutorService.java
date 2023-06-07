@@ -1,18 +1,20 @@
 package com.redhat.parodos.sdkutils;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class RetryExecutorService<T> implements AutoCloseable {
 
-	private final ExecutorService executor;
+	private final ScheduledExecutorService scheduledExecutor;
 
 	public RetryExecutorService() {
-		executor = Executors.newFixedThreadPool(1);
+		scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
 	}
 
 	/**
@@ -22,7 +24,7 @@ public class RetryExecutorService<T> implements AutoCloseable {
 	 */
 	public T submitWithRetry(Callable<T> task) {
 		// @formatter:off
-		return submitWithRetry(task, () -> {}, () -> {}, 10 * 60 * 1000, 5000);
+		return submitWithRetry(task, () -> {}, () -> {}, 2 * 60 * 1000, 5000);
 		// @formatter:on
 	}
 
@@ -37,35 +39,25 @@ public class RetryExecutorService<T> implements AutoCloseable {
 	 */
 	public T submitWithRetry(Callable<T> task, Runnable onSuccess, Runnable onFailure, long maxRetryTime,
 			long retryDelay) {
-		Future<T> future = executor.submit(() -> {
-			long startTime = System.currentTimeMillis();
-			long endTime = startTime + maxRetryTime;
+		CompletableFuture<T> future = new CompletableFuture<>();
+		long startTime = System.currentTimeMillis();
+		long endTime = startTime + maxRetryTime;
 
-			while (System.currentTimeMillis() < endTime) {
-				try {
-					T result = task.call();
-					onSuccess.run();
-					return result; // Success, no need to retry
-				}
-				catch (Exception e) {
-					// Task failed, invoke onFailure callback
-					onFailure.run();
-
-					// Sleep for the retry delay
-					try {
-						// FIXME: This is a blocking call, we should use a non-blocking
-						// sleep
-						Thread.sleep(retryDelay);
-					}
-					catch (InterruptedException ex) {
-						Thread.currentThread().interrupt();
-						return null; // Interrupted, exit the task
-					}
-				}
+		ScheduledFuture<?> scheduledFuture = scheduledExecutor.scheduleWithFixedDelay(() -> {
+			if (System.currentTimeMillis() >= endTime) {
+				future.completeExceptionally(new TimeoutException("Retry limit reached."));
+				return;
 			}
 
-			return null; // Retry limit reached
-		});
+			try {
+				T result = task.call();
+				onSuccess.run();
+				future.complete(result); // Success, complete the future with the result
+			}
+			catch (Exception e) {
+				onFailure.run();
+			}
+		}, 0, retryDelay, TimeUnit.MILLISECONDS);
 
 		try {
 			return future.get();
@@ -73,12 +65,15 @@ public class RetryExecutorService<T> implements AutoCloseable {
 		catch (InterruptedException | ExecutionException e) {
 			throw new RuntimeException(e);
 		}
+		finally {
+			scheduledFuture.cancel(false);
+			scheduledExecutor.shutdown();
+		}
 	}
 
 	@Override
 	public void close() throws Exception {
-		executor.shutdown();
-		boolean awaited = executor.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
+		boolean awaited = scheduledExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
 		if (!awaited) {
 			throw new RuntimeException("Failed to await termination of executor service");
 		}
