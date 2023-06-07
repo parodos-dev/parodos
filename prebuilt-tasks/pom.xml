@@ -148,12 +148,6 @@
             <artifactId>azure-resourcemanager</artifactId>
             <version>${azure-resourcemanager-version}</version>
         </dependency>
-        <dependency>
-            <groupId>dev.parodos</groupId>
-            <artifactId>workflow-service-sdk</artifactId>
-            <version>1.0.14-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
         <!-- End libraries for Azure access -->
 
         <dependency>
