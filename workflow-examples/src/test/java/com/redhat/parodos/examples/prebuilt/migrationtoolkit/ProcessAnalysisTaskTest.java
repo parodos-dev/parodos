@@ -21,7 +21,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -30,9 +31,11 @@ public class ProcessAnalysisTaskTest {
 
 	ProcessAnalysisTask underTest;
 
-	WorkFlowOption passCriteria = new WorkFlowOption.Builder("pass", "nextWorkflow").build();
+	WorkFlowOption passCriteria = new WorkFlowOption.Builder("pass", "nextWorkflow").displayName("next workflow to run")
+			.build();
 
-	WorkFlowOption failCriteria = new WorkFlowOption.Builder("fail", "failWorkflow").build();
+	WorkFlowOption failCriteria = new WorkFlowOption.Builder("fail", "failWorkflow")
+			.displayName("rerun current workflow").build();
 
 	WorkContext ctx;
 
@@ -69,8 +72,7 @@ public class ProcessAnalysisTaskTest {
 
 		assertThat(execute.getError()).isNull();
 		assertThat(execute.getStatus()).isEqualTo(WorkStatus.COMPLETED);
-
-		verify(notifier, times(1)).send(any());
+		verify(notifier, times(1)).send(eq(passCriteria.getDisplayName()), anyString());
 	}
 
 }

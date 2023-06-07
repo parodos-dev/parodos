@@ -20,7 +20,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import com.redhat.parodos.notification.sdk.model.NotificationMessageCreateRequestDTO;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
@@ -83,7 +82,9 @@ public class ProcessAnalysisTask extends BaseAssessmentTask {
 			MTAAnalysisReport.AnalysisIncidents incidents = MTAAnalysisReport.extractIncidents(issueSummaries);
 
 			if (incidentsPredicate.test(incidents)) {
-				sendNotification();
+				notificationSender.send(passOption.getDisplayName(),
+						"The MTA report summary passes the specified criteria in the workflow. \\ %s \\ ##Incidents summary %s"
+								.formatted(passOption.getDescription(), incidents));
 				WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
 						WorkContextDelegate.Resource.WORKFLOW_OPTIONS,
 						new WorkFlowOptions.Builder().addNewOption(passOption).build());
@@ -100,17 +101,6 @@ public class ProcessAnalysisTask extends BaseAssessmentTask {
 
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
 		}
-	}
-
-	private void sendNotification() {
-		var request = new NotificationMessageCreateRequestDTO();
-		request.setMessageType("text");
-		request.setBody("The MTA report summary passes the specified criteria in the workflow. { %s }"
-				.formatted(incidentsPredicate) + passOption.getDescription());
-		request.subject(passOption.getDisplayName());
-		request.setUsernames(List.of("test"));
-		request.setGroupNames(List.of("test"));
-		notificationSender.send(request);
 	}
 
 	private String download(URI uri) throws NoSuchAlgorithmException, KeyManagementException {

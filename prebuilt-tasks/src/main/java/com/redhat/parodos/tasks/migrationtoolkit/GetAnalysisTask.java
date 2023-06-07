@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import com.redhat.parodos.notification.sdk.model.NotificationMessageCreateRequestDTO;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
@@ -99,7 +98,8 @@ public class GetAnalysisTask extends BaseInfrastructureWorkFlowTask {
 				String reportURL = String.format("%s/hub/applications/%d/bucket/%s", serverUrl,
 						success.value().tasks()[0].application().id(), success.value().data().output());
 				addParameter("reportURL", reportURL);
-				sendNotification(reportURL);
+				notificationSender.send("Migration Analysis Report Completed",
+						"Migration analysis [report](%s) completed.".formatted(reportURL));
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 			}
 			else if ("Failed".equals(success.value().state())) {
@@ -109,16 +109,6 @@ public class GetAnalysisTask extends BaseInfrastructureWorkFlowTask {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext, new Throwable("The report is not ready yet."));
 		}
 		throw new IllegalArgumentException();
-	}
-
-	private void sendNotification(String reportURL) {
-		var request = new NotificationMessageCreateRequestDTO();
-		request.setMessageType("text");
-		request.setBody("Migration analysis [report](%s) completed.".formatted(reportURL));
-		request.subject("Migration Analysis Report Completed");
-		request.setUsernames(List.of("test"));
-		request.setGroupNames(List.of("test"));
-		notificationSender.send(request);
 	}
 
 }
