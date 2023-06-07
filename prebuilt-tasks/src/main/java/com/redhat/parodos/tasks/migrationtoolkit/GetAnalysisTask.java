@@ -114,7 +114,7 @@ public class GetAnalysisTask extends BaseInfrastructureWorkFlowTask {
 	private void sendNotification(String reportURL) {
 		var request = new NotificationMessageCreateRequestDTO();
 		request.setMessageType("text");
-		request.setBody("Report URL: " + reportURL);
+		request.setBody("Migration analysis [report](%s) completed.".formatted(reportURL));
 		request.subject("Migration Analysis Report Completed");
 		request.setUsernames(List.of("test"));
 		request.setGroupNames(List.of("test"));
