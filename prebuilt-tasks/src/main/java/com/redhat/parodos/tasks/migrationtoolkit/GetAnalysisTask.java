@@ -94,7 +94,7 @@ public class GetAnalysisTask extends BaseInfrastructureWorkFlowTask {
 		}
 		else if (result instanceof Result.Success<TaskGroup> success) {
 			if ("Ready".equals(success.value().state()) && success.value().tasks() != null
-					&& success.value().tasks()[0].state().equals("Succeeded")) {
+					&& "Succeeded".equals(success.value().tasks()[0].state())) {
 				String reportURL = String.format("%s/hub/applications/%d/bucket/%s", serverUrl,
 						success.value().tasks()[0].application().id(), success.value().data().output());
 				addParameter("reportURL", reportURL);
