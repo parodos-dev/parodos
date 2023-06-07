@@ -9,11 +9,20 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * 	 This class help parsing and representing a migration report which is assumed to be valid html.
+ * 	 MTA 6.1 should supply a CSV instead and is obviously preferred.
+ */
 public class MTAAnalysisReport {
 
 	/**
-	 * migrationIssuesReport is assumed to be valid html. MTA 6.1 should supply a CSV as
-	 * well. Throw and exception when the parsing fails or if it can't extract data
+	 * A representation of the summary of the incidents by severity of an MTA analysis report
+	 * @param mandatory
+	 * @param optional
+	 * @param potential
+	 * @param cloudMandatory
+	 * @param cloudOptional
+	 * @param information
 	 */
 	public record AnalysisIncidents(int mandatory, int optional, int potential, int cloudMandatory, int cloudOptional,
 			int information) {
