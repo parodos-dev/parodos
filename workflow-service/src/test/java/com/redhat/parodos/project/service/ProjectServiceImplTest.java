@@ -9,13 +9,14 @@ import java.util.UUID;
 
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 import com.redhat.parodos.config.ModelMapperConfig;
-import com.redhat.parodos.project.dto.ProjectRequestDTO;
-import com.redhat.parodos.project.dto.ProjectResponseDTO;
-import com.redhat.parodos.project.dto.ProjectUserRoleResponseDTO;
-import com.redhat.parodos.project.dto.UserRoleRequestDTO;
+import com.redhat.parodos.project.dto.request.ProjectRequestDTO;
+import com.redhat.parodos.project.dto.request.UserRoleRequestDTO;
+import com.redhat.parodos.project.dto.response.ProjectResponseDTO;
+import com.redhat.parodos.project.dto.response.ProjectUserRoleResponseDTO;
 import com.redhat.parodos.project.entity.Project;
 import com.redhat.parodos.project.entity.ProjectUserRole;
 import com.redhat.parodos.project.entity.Role;
+import com.redhat.parodos.project.repository.ProjectAccessRequestRepository;
 import com.redhat.parodos.project.repository.ProjectRepository;
 import com.redhat.parodos.project.repository.ProjectUserRoleRepository;
 import com.redhat.parodos.project.repository.RoleRepository;
@@ -72,6 +73,9 @@ class ProjectServiceImplTest {
 	private ProjectUserRoleRepository projectUserRoleRepository;
 
 	@Mock
+	private ProjectAccessRequestRepository projectAccessRequestRepository;
+
+	@Mock
 	private UserService userService;
 
 	@Spy
@@ -82,7 +86,8 @@ class ProjectServiceImplTest {
 	@BeforeEach
 	public void initEach() {
 		this.projectService = new ProjectServiceImpl(this.projectRepository, this.roleRepository,
-				this.projectUserRoleRepository, this.userService, this.modelMapper);
+				this.projectUserRoleRepository, this.projectAccessRequestRepository, this.userService,
+				this.modelMapper);
 	}
 
 	@Test
@@ -156,6 +161,7 @@ class ProjectServiceImplTest {
 
 		// when
 		when(this.userService.getUserEntityByUsername(ArgumentMatchers.nullable(String.class))).thenReturn(user);
+		when(this.projectRepository.findAll()).thenReturn(List.of(projectOne, projectTwo));
 		when(this.projectUserRoleRepository.findByUserId(TEST_USER_ID)).thenReturn(
 				List.of(getProjectUserRole(projectOne, user, role), getProjectUserRole(projectTwo, user, role)));
 
@@ -202,7 +208,7 @@ class ProjectServiceImplTest {
 		when(this.projectUserRoleRepository.save(ArgumentMatchers.any(ProjectUserRole.class)))
 				.thenReturn(projectUserRole);
 
-		ProjectResponseDTO projectResponseDTO = this.projectService.save(projectRequestDTO);
+		ProjectResponseDTO projectResponseDTO = this.projectService.createProject(projectRequestDTO);
 
 		// then
 		ArgumentCaptor<Project> projectArgumentCaptor = ArgumentCaptor.forClass(Project.class);

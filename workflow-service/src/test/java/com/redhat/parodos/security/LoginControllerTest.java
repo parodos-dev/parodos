@@ -17,7 +17,7 @@ package com.redhat.parodos.security;
 
 import com.redhat.parodos.ControllerMockClient;
 import com.redhat.parodos.user.dto.UserResponseDTO;
-import com.redhat.parodos.user.service.UserService;
+import com.redhat.parodos.user.service.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +50,7 @@ class LoginControllerTest extends ControllerMockClient {
 	private MockMvc mockMvc;
 
 	@MockBean
-	private UserService userService;
+	private UserServiceImpl userService;
 
 	@Test
 	@WithMockUser("test")

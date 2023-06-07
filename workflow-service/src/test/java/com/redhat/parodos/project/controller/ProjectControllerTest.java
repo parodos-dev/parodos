@@ -6,10 +6,10 @@ import java.util.UUID;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.ControllerMockClient;
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
-import com.redhat.parodos.project.dto.ProjectRequestDTO;
-import com.redhat.parodos.project.dto.ProjectResponseDTO;
-import com.redhat.parodos.project.dto.ProjectUserRoleResponseDTO;
-import com.redhat.parodos.project.dto.UserRoleRequestDTO;
+import com.redhat.parodos.project.dto.request.ProjectRequestDTO;
+import com.redhat.parodos.project.dto.request.UserRoleRequestDTO;
+import com.redhat.parodos.project.dto.response.ProjectResponseDTO;
+import com.redhat.parodos.project.dto.response.ProjectUserRoleResponseDTO;
 import com.redhat.parodos.project.service.ProjectServiceImpl;
 import org.hamcrest.Matchers;
 import org.json.JSONObject;
@@ -59,7 +59,7 @@ public class ProjectControllerTest extends ControllerMockClient {
 
 		ProjectResponseDTO response = createSampleProject(PROJECT_NAME_1);
 
-		when(projectService.save(eq(project1DTO))).thenReturn(response);
+		when(projectService.createProject(eq(project1DTO))).thenReturn(response);
 
 		// When
 		mockMvc.perform(this.postRequestWithValidCredentials("/api/v1/projects/").content(json)
@@ -69,7 +69,7 @@ public class ProjectControllerTest extends ControllerMockClient {
 				.andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.is(response.getName())));
 
 		// Then
-		verify(projectService, times(1)).save(any());
+		verify(projectService, times(1)).createProject(any());
 	}
 
 	@Test
@@ -84,7 +84,7 @@ public class ProjectControllerTest extends ControllerMockClient {
 				.contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isUnauthorized());
 
 		// Then
-		verify(projectService, never()).save(any());
+		verify(projectService, never()).createProject(any());
 	}
 
 	@Test

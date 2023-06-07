@@ -13,29 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.project.dto;
+package com.redhat.parodos.common.exceptions;
 
-import java.util.List;
+public class OperationDeniedException extends RuntimeException {
 
-import com.redhat.parodos.project.enums.Role;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+	public OperationDeniedException(String msg) {
+		super(msg);
+	}
 
-/**
- * project user role request DTO
- *
- * @author Annel Ketcha (Github: anludke)
- */
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class UserRoleRequestDTO {
-
-	private String username;
-
-	private List<Role> roles;
+	public OperationDeniedException(String msg, Throwable cause) {
+		super(msg, cause);
+	}
 
 }

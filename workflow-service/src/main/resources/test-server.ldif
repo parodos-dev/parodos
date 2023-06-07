@@ -61,6 +61,24 @@ manager: uid=ben,ou=people,dc=springframework,dc=org
 telephonenumber: +1 888 888 888
 description: test's entry
 
+
+dn: uid=user1,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: user1 est
+cn: t est
+uid: user1
+sn: est
+userpassword: $2a$12$VoTPdrYLAG6CXzL0vMvjIeFR9s5UDtK2G6Y8DnsTCQvRkAs2uBcg2
+givenname: user1
+mail: user1@parodos.com
+displayname: user1 est
+manager: uid=ben,ou=people,dc=springframework,dc=org
+telephonenumber: +1 888 888 888
+description: user1's entry
+
 dn: uid=bob,ou=people,dc=springframework,dc=org
 objectclass: top
 objectclass: person

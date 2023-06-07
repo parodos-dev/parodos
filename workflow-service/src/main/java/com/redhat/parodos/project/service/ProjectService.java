@@ -18,10 +18,12 @@ package com.redhat.parodos.project.service;
 import java.util.List;
 import java.util.UUID;
 
-import com.redhat.parodos.project.dto.ProjectRequestDTO;
-import com.redhat.parodos.project.dto.ProjectResponseDTO;
-import com.redhat.parodos.project.dto.ProjectUserRoleResponseDTO;
-import com.redhat.parodos.project.dto.UserRoleRequestDTO;
+import com.redhat.parodos.project.dto.request.AccessRequestDTO;
+import com.redhat.parodos.project.dto.request.ProjectRequestDTO;
+import com.redhat.parodos.project.dto.request.UserRoleRequestDTO;
+import com.redhat.parodos.project.dto.response.AccessResponseDTO;
+import com.redhat.parodos.project.dto.response.ProjectResponseDTO;
+import com.redhat.parodos.project.dto.response.ProjectUserRoleResponseDTO;
 
 /**
  * Project service
@@ -30,7 +32,7 @@ import com.redhat.parodos.project.dto.UserRoleRequestDTO;
  */
 public interface ProjectService {
 
-	ProjectResponseDTO save(ProjectRequestDTO projectRequestDTO);
+	ProjectResponseDTO createProject(ProjectRequestDTO projectRequestDTO);
 
 	ProjectResponseDTO getProjectById(UUID id);
 
@@ -43,5 +45,7 @@ public interface ProjectService {
 	ProjectUserRoleResponseDTO updateUserRolesToProject(UUID id, List<UserRoleRequestDTO> userRoleRequestDTOs);
 
 	ProjectUserRoleResponseDTO removeUsersFromProject(UUID id, List<String> usernames);
+
+	AccessResponseDTO createAccessRequestToProject(UUID id, AccessRequestDTO accessRequestDTO);
 
 }

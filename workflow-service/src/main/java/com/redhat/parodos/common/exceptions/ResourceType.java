@@ -6,6 +6,7 @@ public enum ResourceType {
 	PROJECT("Project"),
 	USER("User"),
 	ROLE("Role"),
+	ACCESS_REQUEST ("Access request"),
 	WORKFLOW_DEFINITION("Workflow definition"),
 	WORKFLOW_EXECUTION("Workflow execution"),
 	WORKFLOW_TASK("Workflow task"),

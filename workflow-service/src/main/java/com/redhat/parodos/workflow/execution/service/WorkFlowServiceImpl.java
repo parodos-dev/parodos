@@ -29,7 +29,7 @@ import javax.annotation.PreDestroy;
 import com.redhat.parodos.common.exceptions.IllegalWorkFlowStateException;
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 import com.redhat.parodos.common.exceptions.ResourceType;
-import com.redhat.parodos.project.dto.ProjectResponseDTO;
+import com.redhat.parodos.project.dto.response.ProjectResponseDTO;
 import com.redhat.parodos.project.service.ProjectService;
 import com.redhat.parodos.security.SecurityUtils;
 import com.redhat.parodos.user.entity.User;
