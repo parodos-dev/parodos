@@ -23,12 +23,14 @@ import org.springframework.context.annotation.Profile;
 import static com.redhat.parodos.workflows.workflow.SequentialFlow.Builder.aNewSequentialFlow;
 
 /**
- * A workflow to analyze applications using Migration Toolkit for Applications
- * <p>
- * This workflow will: - create an application with a name, and git repo URL - submit an
- * analysis report for it - wait till the report is back - send an email with the report
- * url
- * <p>
+ * A workflow to analyze applications using Migration Toolkit for Applications. This
+ * workflow will:
+ * <ol>
+ * <li>create an application with a name, and git repo URL</li>
+ * <li>create a taskgroup prior to submitting the report</li>
+ * <li>submit an analysis report for it</li>
+ * <li>wait till the report is back, send a notification when done</li>
+ * </ol>
  * ENV Variables: For security reasons the MTA url and bearer token can be passed to all
  * the task constructors For example use MTA_URL and MTA_BEARER_TOKEN To get an email
  * supply the following variables MAILER_HOST MAILER_PORT MAILER_USER MAILER_PASS
@@ -41,14 +43,6 @@ public class MigrationAnalysisWorkflow {
 	// the url of the MTA (migration toolkit for application)
 	@Value("${workflows.mta.url}")
 	private String mtaUrl;
-
-	// in the end you can send a message to an email server with the fields below. The
-	// email code
-	// can be removed from the workflow configuration if not needed or be replaced with
-	// any messaging system.
-	// See #messageConsumer
-	// If you do remove or change the messaging consumer then make sure to update the
-	// constructor checks.
 
 	public MigrationAnalysisWorkflow() {
 	}

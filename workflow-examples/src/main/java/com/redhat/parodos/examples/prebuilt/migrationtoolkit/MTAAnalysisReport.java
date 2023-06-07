@@ -10,13 +10,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * 	 This class help parsing and representing a migration report which is assumed to be valid html.
- * 	 MTA 6.1 should supply a CSV instead and is obviously preferred.
+ * This class help parsing and representing a migration report which is assumed to be
+ * valid html. MTA 6.1 should supply a CSV instead and is obviously preferred.
  */
 public class MTAAnalysisReport {
 
 	/**
-	 * A representation of the summary of the incidents by severity of an MTA analysis report
+	 * A representation of the summary of the incidents by severity of an MTA analysis
+	 * report
 	 * @param mandatory
 	 * @param optional
 	 * @param potential
