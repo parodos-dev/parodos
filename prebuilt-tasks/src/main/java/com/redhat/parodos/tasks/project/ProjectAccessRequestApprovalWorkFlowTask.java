@@ -15,14 +15,13 @@
  */
 package com.redhat.parodos.tasks.project;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 import com.redhat.parodos.tasks.project.dto.MessageRequest;
 import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
-import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
+import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -34,6 +33,7 @@ import org.springframework.http.ResponseEntity;
 
 import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_APPROVAL_USERS_EMAILS;
 import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_ID;
+import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.MAIL_SUBJECT_ACCESS_REQUEST_APPROVAL;
 import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.PARAMETER_USERNAME;
 
 /**
@@ -43,23 +43,19 @@ import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConsta
  */
 
 @Slf4j
-public class ProjectAccessRequestApprovalWorkFlowTask extends BaseInfrastructureWorkFlowTask {
+public class ProjectAccessRequestApprovalWorkFlowTask extends BaseWorkFlowTask {
 
 	private final String mailServiceUrl;
-
-	private final String mailServiceSiteName;
 
 	private final String serviceUrl;
 
 	private final String servicePort;
 
-	public ProjectAccessRequestApprovalWorkFlowTask(String serviceUrl, String servicePort, String mailServiceUrl,
-			String mailServiceSiteName) {
+	public ProjectAccessRequestApprovalWorkFlowTask(String serviceUrl, String servicePort, String mailServiceUrl) {
 		super();
 		this.serviceUrl = serviceUrl;
 		this.servicePort = servicePort;
 		this.mailServiceUrl = mailServiceUrl;
-		this.mailServiceSiteName = mailServiceSiteName;
 	}
 
 	@Override
@@ -81,8 +77,7 @@ public class ProjectAccessRequestApprovalWorkFlowTask extends BaseInfrastructure
 
 		String approvalUrl = String.format("http://%s:%s/api/v1/projects/access/%s", serviceUrl, servicePort,
 				accessRequestId);
-		MessageRequest messageRequest = new MessageRequest(username, List.of(approvalUsersEmails.split(",")),
-				mailServiceSiteName, getMessage(approvalUrl));
+		MessageRequest messageRequest = new MessageRequest(username, MAIL_SUBJECT_ACCESS_REQUEST_APPROVAL, approvalUsersEmails.split(","), getMessage(approvalUrl));
 		ResponseEntity<String> responseEntity = null;
 		try {
 			HttpEntity<MessageRequest> requestEntity = new HttpEntity<>(messageRequest);
