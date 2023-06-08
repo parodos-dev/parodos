@@ -190,6 +190,9 @@ public class ProjectServiceImpl implements ProjectService {
 	public AccessResponseDTO createAccessRequestToProject(UUID id, AccessRequestDTO accessRequestDTO) {
 		Project project = projectRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.PROJECT, id));
+		if (isNull(accessRequestDTO.getUsername()) || accessRequestDTO.getUsername().isEmpty()) {
+			accessRequestDTO.setUsername(SecurityUtils.getUsername());
+		}
 		User user = userService.getUserEntityByUsername(accessRequestDTO.getUsername());
 		Role role = roleRepository.findByNameIgnoreCase(accessRequestDTO.getRole().name()).orElseThrow(
 				() -> new ResourceNotFoundException(ResourceType.ROLE, IDType.NAME, accessRequestDTO.getRole().name()));

@@ -7,13 +7,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.redhat.parodos.common.exceptions.OperationDeniedException;
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 import com.redhat.parodos.config.ModelMapperConfig;
+import com.redhat.parodos.project.dto.request.AccessRequestDTO;
 import com.redhat.parodos.project.dto.request.ProjectRequestDTO;
 import com.redhat.parodos.project.dto.request.UserRoleRequestDTO;
+import com.redhat.parodos.project.dto.response.AccessResponseDTO;
 import com.redhat.parodos.project.dto.response.ProjectResponseDTO;
 import com.redhat.parodos.project.dto.response.ProjectUserRoleResponseDTO;
 import com.redhat.parodos.project.entity.Project;
+import com.redhat.parodos.project.entity.ProjectAccessRequest;
 import com.redhat.parodos.project.entity.ProjectUserRole;
 import com.redhat.parodos.project.entity.Role;
 import com.redhat.parodos.project.repository.ProjectAccessRequestRepository;
@@ -38,6 +42,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -59,9 +64,21 @@ class ProjectServiceImplTest {
 
 	private final static String TEST_USERNAME = "test-username";
 
+	private final static String TEST_USERNAME_ADMIN = "test-username-admin";
+
+	private final static String TEST_USERNAME_OWNER = "test-username-owner";
+
 	private final static UUID TEST_USER_ID = UUID.randomUUID();
 
+	private final static UUID TEST_USER_ADMIN_ID = UUID.randomUUID();
+
+	private final static UUID TEST_USER_OWNER_ID = UUID.randomUUID();
+
 	private final static String TEST_ROLE_OWNER_NAME = com.redhat.parodos.project.enums.Role.OWNER.name();
+
+	private final static String TEST_ROLE_ADMIN_NAME = com.redhat.parodos.project.enums.Role.ADMIN.name();
+
+	private final static String TEST_ROLE_DEVELOPER_NAME = com.redhat.parodos.project.enums.Role.DEVELOPER.name();
 
 	@Mock
 	private ProjectRepository projectRepository;
@@ -280,7 +297,120 @@ class ProjectServiceImplTest {
 	}
 
 	@Test
+	@WithMockUser(username = TEST_USERNAME)
 	void testCreateAccessRequestToProject() {
+		// given
+		Project project = getProject(TEST_PROJECT_NAME, TEST_PROJECT_DESCRIPTION);
+		User user = getUser(TEST_USER_ID, TEST_USERNAME);
+		Role roleDeveloper = getRole(TEST_ROLE_DEVELOPER_NAME);
+		ProjectAccessRequest projectAccessRequest = ProjectAccessRequest.builder().project(project).user(user)
+				.role(roleDeveloper).build();
+
+		User projectAdmin = getUser(TEST_USER_ADMIN_ID, TEST_USERNAME_ADMIN);
+		Role roleAdmin = getRole(TEST_ROLE_ADMIN_NAME);
+
+		User projectOwner = getUser(TEST_USER_OWNER_ID, TEST_USERNAME_OWNER);
+		ProjectUserRole projectUserRoleAdmin = ProjectUserRole.builder().project(project).user(projectAdmin)
+				.role(roleAdmin).build();
+
+		// when
+		when(projectRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.of(project));
+		when(userService.getUserEntityByUsername(ArgumentMatchers.anyString())).thenReturn(user);
+		when(userService.getUserEntityById(ArgumentMatchers.any())).thenReturn(projectOwner);
+		when(roleRepository.findByNameIgnoreCase(ArgumentMatchers.anyString())).thenReturn(Optional.of(roleDeveloper));
+		when(projectUserRoleRepository.findByProjectIdAndUserIdAndRoleId(ArgumentMatchers.any(), ArgumentMatchers.any(),
+				ArgumentMatchers.any())).thenReturn(Optional.empty());
+		when(projectUserRoleRepository.findByProjectIdAndRoleId(ArgumentMatchers.any(), ArgumentMatchers.any()))
+				.thenReturn(List.of(projectUserRoleAdmin));
+		when(projectAccessRequestRepository.save(ArgumentMatchers.any(ProjectAccessRequest.class)))
+				.thenReturn(projectAccessRequest);
+
+		// then
+		AccessResponseDTO accessResponseDTO = projectService.createAccessRequestToProject(project.getId(),
+				AccessRequestDTO.builder().role(com.redhat.parodos.project.enums.Role.DEVELOPER).build());
+
+		assertEquals(project.getId(), accessResponseDTO.getProject().getId());
+		assertEquals(project.getName(), accessResponseDTO.getProject().getName());
+		assertThat(accessResponseDTO.getApprovalSentTo()).hasSize(1).satisfies(dto -> {
+			assertEquals(projectAdmin.getEmail(), dto.get(0));
+		});
+		assertEquals(projectOwner.getEmail(), accessResponseDTO.getEscalationSentTo());
+	}
+
+	@Test
+	@WithMockUser(username = TEST_USERNAME)
+	void testCreateAccessRequestToProjectWhenUserAlreadyAssignedInProject() {
+		// given
+		Project project = getProject(TEST_PROJECT_NAME, TEST_PROJECT_DESCRIPTION);
+		User user = getUser(TEST_USER_ID, TEST_USERNAME);
+		Role roleDeveloper = getRole(TEST_ROLE_DEVELOPER_NAME);
+		ProjectUserRole projectUserRole = ProjectUserRole.builder().project(project).user(user).role(roleDeveloper)
+				.build();
+
+		// when
+		when(projectRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.of(project));
+		when(userService.getUserEntityByUsername(ArgumentMatchers.anyString())).thenReturn(user);
+		when(roleRepository.findByNameIgnoreCase(ArgumentMatchers.anyString())).thenReturn(Optional.of(roleDeveloper));
+		when(projectUserRoleRepository.findByProjectIdAndUserIdAndRoleId(ArgumentMatchers.any(), ArgumentMatchers.any(),
+				ArgumentMatchers.any())).thenReturn(Optional.of(projectUserRole));
+
+		// then
+		assertThrows(OperationDeniedException.class, () -> {
+			projectService.createAccessRequestToProject(project.getId(),
+					AccessRequestDTO.builder().role(com.redhat.parodos.project.enums.Role.DEVELOPER).build());
+			;
+		});
+
+		verify(projectUserRoleRepository, never()).findByProjectIdAndRoleId(ArgumentMatchers.any(),
+				ArgumentMatchers.any());
+		verify(projectAccessRequestRepository, never()).save(ArgumentMatchers.any());
+	}
+
+	@Test
+	@WithMockUser(username = TEST_USERNAME)
+	void testCreateAccessRequestToProjectWhenProjectNotFound() {
+		// when
+		when(projectRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.empty());
+
+		// then
+		assertThrows(ResourceNotFoundException.class, () -> {
+			projectService.createAccessRequestToProject(UUID.randomUUID(),
+					AccessRequestDTO.builder().role(com.redhat.parodos.project.enums.Role.DEVELOPER).build());
+			;
+		});
+
+		verify(projectRepository, times(1)).findById(ArgumentMatchers.any());
+		verify(userService, never()).getUserEntityByUsername(ArgumentMatchers.any());
+		verify(roleRepository, never()).findByNameIgnoreCase(ArgumentMatchers.any());
+		verify(projectUserRoleRepository, never()).findByProjectIdAndRoleId(ArgumentMatchers.any(),
+				ArgumentMatchers.any());
+		verify(projectAccessRequestRepository, never()).save(ArgumentMatchers.any());
+	}
+
+	@Test
+	@WithMockUser(username = TEST_USERNAME)
+	void testCreateAccessRequestToProjectWhenUserNotFound() {
+		// given
+		Project project = getProject(TEST_PROJECT_NAME, TEST_PROJECT_DESCRIPTION);
+
+		// when
+		when(projectRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.of(project));
+		when(userService.getUserEntityByUsername(ArgumentMatchers.anyString()))
+				.thenThrow(new ResourceNotFoundException(""));
+
+		// then
+		assertThrows(ResourceNotFoundException.class, () -> {
+			projectService.createAccessRequestToProject(UUID.randomUUID(),
+					AccessRequestDTO.builder().role(com.redhat.parodos.project.enums.Role.DEVELOPER).build());
+			;
+		});
+
+		verify(projectRepository, times(1)).findById(ArgumentMatchers.any());
+		verify(userService, times(1)).getUserEntityByUsername(ArgumentMatchers.any());
+		verify(roleRepository, never()).findByNameIgnoreCase(ArgumentMatchers.any());
+		verify(projectUserRoleRepository, never()).findByProjectIdAndRoleId(ArgumentMatchers.any(),
+				ArgumentMatchers.any());
+		verify(projectAccessRequestRepository, never()).save(ArgumentMatchers.any());
 	}
 
 	private Project getProject(String name, String description) {
@@ -292,7 +422,8 @@ class ProjectServiceImplTest {
 	}
 
 	private User getUser(UUID userId, String username) {
-		User user = User.builder().username(username).build();
+		User user = User.builder().username(username).firstName(username).lastName(username)
+				.email(String.format("%s@parodos.dev", username)).build();
 		user.setId(userId);
 		return user;
 	}
