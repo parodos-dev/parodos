@@ -77,7 +77,8 @@ public class ProjectAccessRequestApprovalWorkFlowTask extends BaseWorkFlowTask {
 
 		String approvalUrl = String.format("http://%s:%s/api/v1/projects/access/%s", serviceUrl, servicePort,
 				accessRequestId);
-		MessageRequest messageRequest = new MessageRequest(username, MAIL_SUBJECT_ACCESS_REQUEST_APPROVAL, approvalUsersEmails.split(","), getMessage(approvalUrl));
+		MessageRequest messageRequest = new MessageRequest(username, MAIL_SUBJECT_ACCESS_REQUEST_APPROVAL,
+				approvalUsersEmails.split(","), getMessage(approvalUrl));
 		ResponseEntity<String> responseEntity = null;
 		try {
 			HttpEntity<MessageRequest> requestEntity = new HttpEntity<>(messageRequest);
