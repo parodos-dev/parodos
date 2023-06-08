@@ -144,16 +144,16 @@ tag-images: ## Tag docker images with git hash and branch name
 	$(DOCKER) tag docker-compose_workflow-service:latest $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(TAG)
 	$(DOCKER) tag docker-compose_notification-service:latest $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(TAG)
 
-	$(DOCKER) tag docker-compose_workflow-service:latest $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(TAG)
-	$(DOCKER) tag docker-compose_notification-service:latest $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(TAG)
+	$(DOCKER) tag docker-compose_workflow-service:latest $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(GIT_BRANCH)
+	$(DOCKER) tag docker-compose_notification-service:latest $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(GIT_BRANCH)
 
 push-images: ## Push docker images to quay.io registry
 	$(eval TAG?=$(GIT_HASH))
 	$(DOCKER) push  $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(TAG)
 	$(DOCKER) push  $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(TAG)
 
-	$(DOCKER) push  $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(TAG)
-	$(DOCKER) push  $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(TAG)
+	$(DOCKER) push  $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(GIT_BRANCH)
+	$(DOCKER) push  $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(GIT_BRANCH)
 
 push-images-to-kind: ## Push docker images to kind
 	$(DOCKER) tag docker-compose_workflow-service:latest $(ORG)$(WORKFLOW_SERVICE_IMAGE):test
