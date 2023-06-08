@@ -12,7 +12,7 @@
             <column name="enabled" value="1"/>
             <column name="first_name" value="test"/>
             <column name="last_name" value="test"/>
-            <column name="email" value="test@mail.com"/>
+            <column name="email" value="test@parodos.dev"/>
             <column name="object_version" value="0"/>
         </insert>
 
