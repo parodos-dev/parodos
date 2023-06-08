@@ -11,6 +11,10 @@ import java.util.concurrent.TimeoutException;
 
 public class RetryExecutorService<T> implements AutoCloseable {
 
+	private static final int MAX_RETRY_TIME = 2 * 60 * 1000; // 2 minutes
+
+	public static final int RETRY_DELAY = 5 * 1000; // 5 seconds
+
 	private final ScheduledExecutorService scheduledExecutor;
 
 	public RetryExecutorService() {
@@ -24,7 +28,7 @@ public class RetryExecutorService<T> implements AutoCloseable {
 	 */
 	public T submitWithRetry(Callable<T> task) {
 		// @formatter:off
-		return submitWithRetry(task, () -> {}, () -> {}, 2 * 60 * 1000, 5000);
+		return submitWithRetry(task, () -> {}, () -> {}, MAX_RETRY_TIME, RETRY_DELAY);
 		// @formatter:on
 	}
 
