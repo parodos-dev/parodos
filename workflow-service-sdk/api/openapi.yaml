@@ -1557,17 +1557,22 @@ components:
           - null
           - null
           name: name
+          message: message
           type: TASK
           status: FAILED
         - works:
           - null
           - null
           name: name
+          message: message
           type: TASK
           status: FAILED
         workFlowExecutionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        message: message
         status: FAILED
       properties:
+        message:
+          type: string
         status:
           enum:
           - FAILED
@@ -1649,9 +1654,12 @@ components:
         - null
         - null
         name: name
+        message: message
         type: TASK
         status: FAILED
       properties:
+        message:
+          type: string
         name:
           type: string
         status:
