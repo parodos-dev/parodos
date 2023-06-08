@@ -24,6 +24,8 @@ import org.jetbrains.annotations.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.AuditorAware;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Audit aware implementation
@@ -36,7 +38,7 @@ public class AuditorAwareImpl implements AuditorAware<UUID> {
 	private UserService userService;
 
 	@NotNull
-	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public Optional<UUID> getCurrentAuditor() {
 		return Optional.of(userService.getUserEntityByUsername(SecurityUtils.getUsername()).getId());
 	}
