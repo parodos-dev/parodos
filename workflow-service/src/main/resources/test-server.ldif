@@ -49,14 +49,14 @@ objectclass: top
 objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
-cn: test est
-cn: t est
+cn: test
+cn: test
 uid: test
-sn: est
+sn: test
 userpassword: $2a$10$SeVolYcPl3zJJbq.ox9U0ug7fo624hpT49O7FjvCNH2Us5HQRuvBe
 givenname: test
-mail: test@parodos.com
-displayname: test est
+mail: test@parodos.dev
+displayname: test
 manager: uid=ben,ou=people,dc=springframework,dc=org
 telephonenumber: +1 888 888 888
 description: test's entry
@@ -67,17 +67,34 @@ objectclass: top
 objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
-cn: user1 est
-cn: t est
+cn: user1
+cn: user1
 uid: user1
-sn: est
+sn: user1
 userpassword: $2a$12$VoTPdrYLAG6CXzL0vMvjIeFR9s5UDtK2G6Y8DnsTCQvRkAs2uBcg2
 givenname: user1
-mail: user1@parodos.com
-displayname: user1 est
+mail: user1@parodos.dev
+displayname: user1
 manager: uid=ben,ou=people,dc=springframework,dc=org
 telephonenumber: +1 888 888 888
 description: user1's entry
+
+dn: uid=user2,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: user2
+cn: user2
+uid: user2
+sn: user2
+userpassword: $2a$12$jOxRGXplQAqSIlgeXifcYuOFE5wqLsF9SJcgPULDNGEooyBT2mW9W
+givenname: user2
+mail: user2@parodos.dev
+displayname: user2
+manager: uid=ben,ou=people,dc=springframework,dc=org
+telephonenumber: +1 888 888 888
+description: user2's entry
 
 dn: uid=bob,ou=people,dc=springframework,dc=org
 objectclass: top
