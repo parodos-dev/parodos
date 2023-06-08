@@ -40,7 +40,7 @@ public class ProjectAccessRequestWorkFlowConfiguration {
 
 	@Bean
 	ProjectAccessRequestApprovalWorkFlowCheckerTask projectAccessRequestApprovalWorkFlowCheckerTask(
-			@Qualifier("jiraTicketApprovalEscalationWorkFlow") WorkFlow projectAccessRequestEscalationWorkFlow,
+			@Qualifier("projectAccessRequestEscalationWorkFlow") WorkFlow projectAccessRequestEscalationWorkFlow,
 			@Value("${SERVICE_URL:localhost}") String serviceUrl, @Value("${SERVICE_PORT:8080}") String servicePort,
 			@Value("${MAIL_SERVICE_URL:service}") String mailServiceUrl,
 			@Value("${MAIL_SERVICE_SITE_NAME_PROJECT:site}") String mailServiceSiteName) {
