@@ -30,8 +30,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * User service implementation
@@ -84,7 +82,6 @@ public class UserServiceImpl implements UserService {
 		return modelMapper.map(user.get(), UserResponseDTO.class);
 	}
 
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@Override
 	public User getUserEntityByUsername(String username) {
 		return userRepository.findByUsername(username).stream().findFirst()
