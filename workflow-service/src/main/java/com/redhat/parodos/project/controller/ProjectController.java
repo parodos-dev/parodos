@@ -150,7 +150,7 @@ public class ProjectController {
 			@ApiResponse(responseCode = "404", description = "Not found", content = @Content) })
 	@PostMapping("/{id}/access")
 	public ResponseEntity<AccessResponseDTO> createAccessRequestToProject(@PathVariable UUID id,
-			@RequestBody AccessRequestDTO accessRequestDTO) {
+			@Valid @RequestBody AccessRequestDTO accessRequestDTO) {
 		AccessResponseDTO accessResponseDTO = projectService.createAccessRequestToProject(id, accessRequestDTO);
 		return ResponseEntity.ok(accessResponseDTO);
 	}

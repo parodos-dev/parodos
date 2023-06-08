@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 
 import com.redhat.parodos.common.entity.AbstractEntity;
 import com.redhat.parodos.common.exceptions.IDType;
+import com.redhat.parodos.common.exceptions.OperationDeniedException;
 import com.redhat.parodos.common.exceptions.ResourceAlreadyExistsException;
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 import com.redhat.parodos.common.exceptions.ResourceType;
@@ -195,7 +196,7 @@ public class ProjectServiceImpl implements ProjectService {
 		Optional<ProjectUserRole> projectUserRoleOptional = projectUserRoleRepository
 				.findByProjectIdAndUserIdAndRoleId(project.getId(), user.getId(), role.getId());
 		if (projectUserRoleOptional.isPresent()) {
-			throw new RuntimeException(String.format("User %s already assigned into project %s with role %s",
+			throw new OperationDeniedException(String.format("User %s already assigned into project %s with role %s",
 					user.getUsername(), project.getName(), projectUserRoleOptional.get().getRole().getName()));
 		}
 		ProjectAccessRequest projectAccessRequest = projectAccessRequestRepository.save(ProjectAccessRequest.builder()

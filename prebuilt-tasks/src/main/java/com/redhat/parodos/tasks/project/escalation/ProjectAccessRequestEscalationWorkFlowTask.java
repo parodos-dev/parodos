@@ -77,7 +77,8 @@ public class ProjectAccessRequestEscalationWorkFlowTask extends BaseWorkFlowTask
 
 		String projectAccessRequestStatusUrl = String.format("http://%s:%s/api/v1/projects/access/%s/status",
 				serviceUrl, servicePort, accessRequestId);
-		MessageRequest messageRequest = new MessageRequest(username, MAIL_SUBJECT_ACCESS_REQUEST_ESCALATION, new String[]{escalationUserEmail}, getMessage(projectAccessRequestStatusUrl));
+		MessageRequest messageRequest = new MessageRequest(username, MAIL_SUBJECT_ACCESS_REQUEST_ESCALATION,
+				new String[] { escalationUserEmail }, getMessage(projectAccessRequestStatusUrl));
 		ResponseEntity<String> responseEntity = null;
 		try {
 			HttpEntity<MessageRequest> requestEntity = new HttpEntity<>(messageRequest);
