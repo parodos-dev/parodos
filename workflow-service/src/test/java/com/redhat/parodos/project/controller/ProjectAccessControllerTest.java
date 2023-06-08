@@ -86,7 +86,7 @@ public class ProjectAccessControllerTest extends ControllerMockClient {
 	public void testGetProjectAccessStatusWithNotFoundAccessRequestId() throws Exception {
 		// when
 		when(projectAccessService.getProjectAccessStatusById(eq(TEST_ACCESS_REQUEST_ID)))
-				.thenThrow(new ResourceNotFoundException(""));
+				.thenThrow(ResourceNotFoundException.class);
 
 		// then
 		mockMvc.perform(this
@@ -104,7 +104,7 @@ public class ProjectAccessControllerTest extends ControllerMockClient {
 				.status(ProjectAccessStatus.APPROVED).build();
 
 		// when
-		doThrow(new ResourceNotFoundException("")).when(projectAccessService)
+		doThrow(ResourceNotFoundException.class).when(projectAccessService)
 				.updateProjectAccessStatusById(eq(TEST_ACCESS_REQUEST_ID), any());
 
 		String jsonPayload = objectMapper.writeValueAsString(accessStatusRequestDTO);

@@ -260,7 +260,7 @@ public class ProjectControllerTest extends ControllerMockClient {
 
 		// When
 		when(projectService.createAccessRequestToProject(eq(projectId), eq(accessRequestDTO)))
-				.thenThrow(new ResourceNotFoundException(""));
+				.thenThrow(ResourceNotFoundException.class);
 
 		String jsonPayload = objectMapper.writeValueAsString(accessRequestDTO);
 		mockMvc.perform(this.postRequestWithValidCredentials(String.format("/api/v1/projects/%s/access", projectId))
@@ -279,7 +279,7 @@ public class ProjectControllerTest extends ControllerMockClient {
 
 		// When
 		when(projectService.createAccessRequestToProject(eq(projectId), eq(accessRequestDTO)))
-				.thenThrow(new OperationDeniedException(""));
+				.thenThrow(OperationDeniedException.class);
 
 		String jsonPayload = objectMapper.writeValueAsString(accessRequestDTO);
 		mockMvc.perform(this.postRequestWithValidCredentials(String.format("/api/v1/projects/%s/access", projectId))
