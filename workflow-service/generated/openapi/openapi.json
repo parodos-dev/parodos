@@ -1382,6 +1382,9 @@
       "WorkFlowStatusResponseDTO" : {
         "type" : "object",
         "properties" : {
+          "message" : {
+            "type" : "string"
+          },
           "status" : {
             "type" : "string",
             "enum" : [ "FAILED", "COMPLETED", "IN_PROGRESS", "REJECTED", "PENDING" ]
@@ -1457,6 +1460,9 @@
       "WorkStatusResponseDTO" : {
         "type" : "object",
         "properties" : {
+          "message" : {
+            "type" : "string"
+          },
           "name" : {
             "type" : "string"
           },

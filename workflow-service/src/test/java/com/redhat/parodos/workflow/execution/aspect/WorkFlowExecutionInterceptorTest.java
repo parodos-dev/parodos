@@ -26,6 +26,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.eq;
@@ -140,9 +141,41 @@ public class WorkFlowExecutionInterceptorTest {
 		// then
 		verify(workFlowService, times(0)).saveWorkFlow(any(UUID.class), any(UUID.class), any(),
 				eq(WorkStatus.IN_PROGRESS), any(), anyString());
+		verify(workFlowService, times(1)).updateWorkFlow(argThat(we -> we.getMessage() == null));
 		verify(workFlowSchedulerService, times(1)).stop(any(), any(), any(WorkFlow.class));
 		verify(workFlowContinuationServiceImpl, times(1)).continueWorkFlow(any(ExecutionContext.class));
 		assertEquals(result.getStatus(), report.getStatus());
+	}
+
+	@Test
+	public void testHandlePostWorkFlowExecutionWithFailedStatus() {
+		// given
+		WorkReport report = mock(WorkReport.class);
+
+		// when
+		when(report.getStatus()).thenReturn(WorkStatus.FAILED);
+		when(report.getError()).thenReturn(new Throwable("Error while executing"));
+		when(workContext.get(WorkContextDelegate.buildKey(WorkContextDelegate.ProcessType.WORKFLOW_DEFINITION,
+				WorkContextDelegate.Resource.NAME))).thenReturn(TEST_WORKFLOW_NAME);
+		WorkFlow workFlow = mock(WorkFlow.class);
+		when(workFlow.getName()).thenReturn(TEST_WORKFLOW_NAME);
+		when(workFlowDefinition.getType()).thenReturn(WorkFlowType.CHECKER);
+		when(workFlowDefinition.getCheckerWorkFlowDefinition())
+				.thenReturn(mock(WorkFlowCheckerMappingDefinition.class));
+		when(mainWorkFlowExecution.getId()).thenReturn(UUID.randomUUID());
+		when(mainWorkFlowExecution.getWorkFlowDefinition()).thenReturn(workFlowDefinition);
+
+		WorkFlowExecution workFlowExecution = interceptor.handlePreWorkFlowExecution();
+		assertNotNull(workFlowExecution);
+		WorkReport result = interceptor.handlePostWorkFlowExecution(report, workFlow);
+
+		// then
+		verify(workFlowService, times(0)).saveWorkFlow(any(UUID.class), any(UUID.class), any(),
+				eq(WorkStatus.IN_PROGRESS), any(), anyString());
+		verify(workFlowService, times(1))
+				.updateWorkFlow(argThat(we -> we.getMessage().equals(report.getError().getMessage())));
+		assertEquals(result.getStatus(), report.getStatus());
+		assertEquals(result.getError(), report.getError());
 	}
 
 	private User createUser() {

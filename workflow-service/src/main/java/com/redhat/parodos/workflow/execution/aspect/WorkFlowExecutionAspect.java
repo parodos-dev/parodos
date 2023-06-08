@@ -108,7 +108,7 @@ public class WorkFlowExecutionAspect {
 		}
 		catch (Throwable e) {
 			log.error("Workflow {} has failed! with error: {}", workflowName, e.getMessage());
-			report = new DefaultWorkReport(WorkStatus.FAILED, workContext);
+			report = new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
 		}
 
 		return executionHandler.handlePostWorkFlowExecution(report, (WorkFlow) proceedingJoinPoint.getTarget());

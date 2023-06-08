@@ -96,12 +96,12 @@ public class WorkFlowServiceDelegate {
 			CopyOnWriteArrayList<WorkStatusResponseDTO> workStatusResponseDTOList,
 			Map<String, Integer> workFlowWorkStartIndexMap) {
 		// build workflow status DTO
-		workStatusResponseDTOList.add(WorkStatusResponseDTO.builder().name(workFlowDefinition.getName())
-				.type(WorkType.WORKFLOW)
-				.status(WorkStatus.IN_PROGRESS.equals(workFlowExecution.getStatus()) ? WorkStatus.PENDING
-						: WorkStatus.valueOf(workFlowExecution.getStatus().name()))
-				.workExecution(workFlowExecution).numberOfWorks(workFlowDefinition.getNumberOfWorks())
-				.works(new ArrayList<>()).build());
+		workStatusResponseDTOList
+				.add(WorkStatusResponseDTO.builder().name(workFlowDefinition.getName()).type(WorkType.WORKFLOW)
+						.status(WorkStatus.IN_PROGRESS.equals(workFlowExecution.getStatus()) ? WorkStatus.PENDING
+								: WorkStatus.valueOf(workFlowExecution.getStatus().name()))
+						.message(workFlowExecution.getMessage()).workExecution(workFlowExecution)
+						.numberOfWorks(workFlowDefinition.getNumberOfWorks()).works(new ArrayList<>()).build());
 
 		// save the start index of the workflow's works
 		workFlowWorkStartIndexMap.put(workFlowDefinition.getName(), workStatusResponseDTOList.size());
