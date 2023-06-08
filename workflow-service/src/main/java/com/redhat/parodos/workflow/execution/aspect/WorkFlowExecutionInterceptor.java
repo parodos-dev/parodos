@@ -70,6 +70,9 @@ public abstract class WorkFlowExecutionInterceptor implements WorkFlowIntercepto
 		// update workflow execution entity
 		workFlowExecution.setStatus(report.getStatus());
 		workFlowExecution.setEndDate(new Date());
+		if (report.getError() != null) {
+			workFlowExecution.setMessage(report.getError().getMessage());
+		}
 
 		WorkFlowPostInterceptor postExecutor = createPostExecutor(workFlow, report.getStatus());
 		WorkReport workReport = postExecutor.handlePostWorkFlowExecution();

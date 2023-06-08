@@ -136,7 +136,7 @@ public class WorkFlowTaskExecutionAspect {
 		}
 		catch (Throwable e) {
 			log.error("Workflow task execution {} has failed! error message: {}", workFlowTaskName, e.getMessage());
-			report = new DefaultWorkReport(WorkStatus.FAILED, workContext);
+			report = new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
 		}
 
 		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION,
