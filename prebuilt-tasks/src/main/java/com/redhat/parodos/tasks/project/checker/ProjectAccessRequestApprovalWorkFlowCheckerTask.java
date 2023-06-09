@@ -27,8 +27,10 @@ import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.ResponseEntity;
@@ -48,17 +50,18 @@ public class ProjectAccessRequestApprovalWorkFlowCheckerTask extends BaseWorkFlo
 
 	private final String servicePort;
 
-	private final String serviceUsername;
+	private final String serviceAccountUsername;
 
-	private final String servicePassword;
+	private final String serviceAccountPassword;
 
 	public ProjectAccessRequestApprovalWorkFlowCheckerTask(WorkFlow projectAccessRequestApprovalEscalationWorkFlow,
-			long sla, String serviceUrl, String servicePort, String serviceUsername, String servicePassword) {
+			long sla, String serviceUrl, String servicePort, String serviceAccountUsername,
+			String serviceAccountPassword) {
 		super(projectAccessRequestApprovalEscalationWorkFlow, sla);
 		this.serviceUrl = serviceUrl;
 		this.servicePort = servicePort;
-		this.serviceUsername = serviceUsername;
-		this.servicePassword = servicePassword;
+		this.serviceAccountUsername = serviceAccountUsername;
+		this.serviceAccountPassword = serviceAccountPassword;
 	}
 
 	@Override
@@ -74,10 +77,10 @@ public class ProjectAccessRequestApprovalWorkFlowCheckerTask extends BaseWorkFlo
 		}
 
 		try {
-			String url = String.format("http://%s:%s/api/v1/projects/access/%s", serviceUrl, servicePort,
+			String url = String.format("http://%s:%s/api/v1/projects/access/%s/status", serviceUrl, servicePort,
 					accessRequestId);
-			ResponseEntity<AccessStatusResponseDTO> responseDTO = RestUtils.restExchange(url, serviceUsername,
-					servicePassword, AccessStatusResponseDTO.class);
+			ResponseEntity<AccessStatusResponseDTO> responseDTO = RestUtils.restExchange(url, serviceAccountUsername,
+					serviceAccountPassword, AccessStatusResponseDTO.class);
 			if (!responseDTO.getStatusCode().is2xxSuccessful()) {
 				log.error("Call to the api was not successful: {}", responseDTO.getStatusCode());
 			}
@@ -105,6 +108,8 @@ public class ProjectAccessRequestApprovalWorkFlowCheckerTask extends BaseWorkFlo
 
 	@Data
 	@Builder
+	@AllArgsConstructor
+	@NoArgsConstructor
 	private static class AccessStatusResponseDTO {
 
 		private UUID accessRequestId;

@@ -10,12 +10,12 @@ public class ProjectAccessRequestConstant {
 
 	public final static String ACCESS_REQUEST_ID = "ACCESS_REQUEST_ID";
 
-	public final static String ACCESS_REQUEST_APPROVAL_USERS_EMAILS = "ACCESS_REQUEST_APPROVAL_USERS_EMAILS";
+	public final static String ACCESS_REQUEST_APPROVAL_USERNAMES = "ACCESS_REQUEST_APPROVAL_USERNAMES";
 
-	public final static String ACCESS_REQUEST_ESCALATION_USER_EMAIL = "ACCESS_REQUEST_ESCALATION_USER_EMAIL";
+	public final static String ACCESS_REQUEST_ESCALATION_USERNAME = "ACCESS_REQUEST_ESCALATION_USERNAME";
 
-	public final static String MAIL_SUBJECT_ACCESS_REQUEST_APPROVAL = "Parodos: Project Access Request Approval";
+	public final static String NOTIFICATION_SUBJECT_ACCESS_REQUEST_APPROVAL = "Project Access Request Approval";
 
-	public final static String MAIL_SUBJECT_ACCESS_REQUEST_ESCALATION = "Parodos: Project Access Request Escalation";
+	public final static String NOTIFICATION_SUBJECT_ACCESS_REQUEST_ESCALATION = "Project Access Request Escalation";
 
 }

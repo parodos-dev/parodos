@@ -212,9 +212,9 @@ public class ProjectServiceImpl implements ProjectService {
 						.createdBy(String.format("%s, %s", projectOwner.getFirstName(), user.getLastName()))
 						.createdDate(project.getCreatedDate()).build())
 				.approvalSentTo((isNull(projectAdmins) || projectAdmins.isEmpty())
-						? Collections.singletonList(projectOwner.getEmail())
-						: projectAdmins.stream().map(User::getEmail).collect(Collectors.toList()))
-				.escalationSentTo(projectOwner.getEmail()).build();
+						? Collections.singletonList(projectOwner.getUsername())
+						: projectAdmins.stream().map(User::getUsername).collect(Collectors.toList()))
+				.escalationSentTo(projectOwner.getUsername()).build();
 	}
 
 	private ProjectUserRoleResponseDTO getProjectUserRoleResponseDTOFromProject(Project project) {

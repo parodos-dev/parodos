@@ -21,8 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.ResponseEntity;
 
-import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_APPROVAL_USERS_EMAILS;
-import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_ESCALATION_USER_EMAIL;
+import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_APPROVAL_USERNAMES;
+import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_ESCALATION_USERNAME;
 import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_ID;
 import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.PARAMETER_ROLE;
 import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.PARAMETER_ROLE_DEFAULT;
@@ -35,17 +35,17 @@ public class ProjectAccessRequestWorkFlowTask extends BaseWorkFlowTask {
 
 	private final String servicePort;
 
-	private final String serviceUsername;
+	private final String serviceAccountUsername;
 
-	private final String servicePassword;
+	private final String serviceAccountPassword;
 
-	public ProjectAccessRequestWorkFlowTask(String serviceUrl, String servicePort, String serviceUsername,
-			String servicePassword) {
+	public ProjectAccessRequestWorkFlowTask(String serviceUrl, String servicePort, String serviceAccountUsername,
+			String serviceAccountPassword) {
 		super();
 		this.serviceUrl = serviceUrl;
 		this.servicePort = servicePort;
-		this.serviceUsername = serviceUsername;
-		this.servicePassword = servicePassword;
+		this.serviceAccountUsername = serviceAccountUsername;
+		this.serviceAccountPassword = serviceAccountPassword;
 	}
 
 	@Override
@@ -76,15 +76,15 @@ public class ProjectAccessRequestWorkFlowTask extends BaseWorkFlowTask {
 			log.info("url: {}", url);
 			AccessRequestDTO requestDTO = AccessRequestDTO.builder().username(username)
 					.role(Role.valueOf(role.toUpperCase())).build();
-			ResponseEntity<AccessResponseDTO> responseDTO = RestUtils.executePost(url, requestDTO, serviceUsername,
-					servicePassword, AccessResponseDTO.class);
+			ResponseEntity<AccessResponseDTO> responseDTO = RestUtils.executePost(url, requestDTO,
+					serviceAccountUsername, serviceAccountPassword, AccessResponseDTO.class);
 			if (responseDTO.getStatusCode().is2xxSuccessful()) {
 				log.info("Rest call completed with response: {}", responseDTO.getBody());
 				addParameter(ACCESS_REQUEST_ID,
 						Objects.requireNonNull(responseDTO.getBody()).accessRequestId.toString());
-				addParameter(ACCESS_REQUEST_APPROVAL_USERS_EMAILS,
+				addParameter(ACCESS_REQUEST_APPROVAL_USERNAMES,
 						String.join(",", Objects.requireNonNull(responseDTO.getBody()).getApprovalSentTo()));
-				addParameter(ACCESS_REQUEST_ESCALATION_USER_EMAIL,
+				addParameter(ACCESS_REQUEST_ESCALATION_USERNAME,
 						String.join(",", Objects.requireNonNull(responseDTO.getBody()).getEscalationSentTo()));
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 			}
