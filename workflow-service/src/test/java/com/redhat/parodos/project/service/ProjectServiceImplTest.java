@@ -332,9 +332,9 @@ class ProjectServiceImplTest {
 		assertEquals(project.getId(), accessResponseDTO.getProject().getId());
 		assertEquals(project.getName(), accessResponseDTO.getProject().getName());
 		assertThat(accessResponseDTO.getApprovalSentTo()).hasSize(1).satisfies(dto -> {
-			assertEquals(projectAdmin.getEmail(), dto.get(0));
+			assertEquals(projectAdmin.getUsername(), dto.get(0));
 		});
-		assertEquals(projectOwner.getEmail(), accessResponseDTO.getEscalationSentTo());
+		assertEquals(projectOwner.getUsername(), accessResponseDTO.getEscalationSentTo());
 	}
 
 	@Test
@@ -422,8 +422,7 @@ class ProjectServiceImplTest {
 	}
 
 	private User getUser(UUID userId, String username) {
-		User user = User.builder().username(username).firstName(username).lastName(username)
-				.email(String.format("%s@parodos.dev", username)).build();
+		User user = User.builder().username(username).firstName(username).lastName(username).build();
 		user.setId(userId);
 		return user;
 	}

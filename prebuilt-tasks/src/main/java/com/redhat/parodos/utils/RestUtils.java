@@ -6,6 +6,7 @@ import java.util.Base64;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -114,6 +115,7 @@ public abstract class RestUtils {
 		String base64Creds = getBase64Creds(username, password);
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Authorization", "Basic " + base64Creds);
+		headers.setContentType(MediaType.APPLICATION_JSON);
 		return new HttpEntity<>(request, headers);
 	}
 

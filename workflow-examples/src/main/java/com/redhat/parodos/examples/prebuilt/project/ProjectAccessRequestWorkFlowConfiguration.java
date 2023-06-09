@@ -26,8 +26,12 @@ public class ProjectAccessRequestWorkFlowConfiguration {
 	@Bean
 	ProjectAccessRequestEscalationWorkFlowTask projectAccessRequestEscalationWorkFlowTask(
 			@Value("${SERVICE_URL:localhost}") String serviceUrl, @Value("${SERVICE_PORT:8080}") String servicePort,
-			@Value("${MAIL_SERVICE_URL:service}") String mailServiceUrl) {
-		return new ProjectAccessRequestEscalationWorkFlowTask(serviceUrl, servicePort, mailServiceUrl);
+			@Value("${NOTIFICATION_SERVICE_URL:localhost}") String notificationServiceUrl,
+			@Value("${NOTIFICATION_SERVICE_PORT:8081}") String notificationServicePort,
+			@Value("${NOTIFICATION_SERVICE_ACCOUNT_NAME:test}") String notificationServiceAccountName,
+			@Value("${NOTIFICATION_SERVICE_ACCOUNT_PASSWORD:test}") String notificationServiceAccountPassword) {
+		return new ProjectAccessRequestEscalationWorkFlowTask(serviceUrl, servicePort, notificationServiceUrl,
+				notificationServicePort, notificationServiceAccountName, notificationServiceAccountPassword);
 	}
 
 	@Bean(name = "projectAccessRequestEscalationWorkFlow")
@@ -42,10 +46,10 @@ public class ProjectAccessRequestWorkFlowConfiguration {
 	ProjectAccessRequestApprovalWorkFlowCheckerTask projectAccessRequestApprovalWorkFlowCheckerTask(
 			@Qualifier("projectAccessRequestEscalationWorkFlow") WorkFlow projectAccessRequestEscalationWorkFlow,
 			@Value("${SERVICE_URL:localhost}") String serviceUrl, @Value("${SERVICE_PORT:8080}") String servicePort,
-			@Value("${MAIL_SERVICE_URL:service}") String mailServiceUrl,
-			@Value("${MAIL_SERVICE_SITE_NAME_PROJECT:site}") String mailServiceSiteName) {
+			@Value("${SERVICE_ACCOUNT_NAME:test}") String serviceAccountName,
+			@Value("${SERVICE_ACCOUNT_PASSWORD:test}") String serviceAccountPassword) {
 		return new ProjectAccessRequestApprovalWorkFlowCheckerTask(projectAccessRequestEscalationWorkFlow,
-				new Date().getTime() / 1000 + 30, serviceUrl, servicePort, mailServiceUrl, mailServiceSiteName);
+				new Date().getTime() / 1000 + 30, serviceUrl, servicePort, serviceAccountName, serviceAccountPassword);
 	}
 
 	@Bean(name = "projectAccessRequestApprovalWorkFlowChecker")
@@ -69,9 +73,13 @@ public class ProjectAccessRequestWorkFlowConfiguration {
 	ProjectAccessRequestApprovalWorkFlowTask projectAccessRequestApprovalWorkFlowTask(
 			@Qualifier("projectAccessRequestApprovalWorkFlowChecker") WorkFlow projectAccessRequestApprovalWorkFlowChecker,
 			@Value("${SERVICE_URL:localhost}") String serviceUrl, @Value("${SERVICE_PORT:8080}") String servicePort,
-			@Value("${MAIL_SERVICE_URL:service}") String mailServiceUrl) {
+			@Value("${NOTIFICATION_SERVICE_URL:localhost}") String notificationServiceUrl,
+			@Value("${NOTIFICATION_SERVICE_PORT:8081}") String notificationServicePort,
+			@Value("${NOTIFICATION_SERVICE_ACCOUNT_NAME:test}") String notificationServiceAccountName,
+			@Value("${NOTIFICATION_SERVICE_ACCOUNT_PASSWORD:test}") String notificationServiceAccountPassword) {
 		ProjectAccessRequestApprovalWorkFlowTask projectAccessRequestApprovalWorkFlowTask = new ProjectAccessRequestApprovalWorkFlowTask(
-				serviceUrl, servicePort, mailServiceUrl);
+				serviceUrl, servicePort, notificationServiceUrl, notificationServicePort,
+				notificationServiceAccountName, notificationServiceAccountPassword);
 		projectAccessRequestApprovalWorkFlowTask
 				.setWorkFlowCheckers(List.of(projectAccessRequestApprovalWorkFlowChecker));
 		return projectAccessRequestApprovalWorkFlowTask;
