@@ -23,10 +23,6 @@ Parallel workflows.
 This package shows how to work with WorkflowTasks that create a manual process that needs to be monitored before further
 WorkFlowTasks can be created. In this project WorkflowCheckers and other related concepts are created and configured.
 
-### TIBCO
-
-A workflow configuration that demonstrates use of TibcoWorkflowTask
-
 ## Compiling The Code
 
 To get the Parodos dependencies you will need to run a maven install from the **root** of the project folder. This will
@@ -378,12 +374,6 @@ Rollback workflow is a type of workflow that will be triggered once the main wor
 	}
 ```
 The property `rollbackWorkflow` in `@Infrastructure` can be removed in order to remove the rollback workflow. By default, there will be no rollback for any workflows.
-
-
-### TIBCO workflow
-
-'TibcoWorkFlowConfiguration.java' is the workflow code. You'll find details inside the file.
-Use the script 'run_tibco.sh' to execute the workflow.
 
 #### A Note On Defining WorkflowTasks for Usage In A Workflow
 

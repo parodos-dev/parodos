@@ -67,7 +67,6 @@
     <modules>
         <module>workflow-engine</module>
         <module>parodos-model-api</module>
-        <module>external-dependencies</module>
         <module>notification-service</module>
         <module>notification-service-sdk</module>
         <module>prebuilt-tasks</module>
