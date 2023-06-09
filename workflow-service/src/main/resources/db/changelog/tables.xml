@@ -86,7 +86,7 @@
             <column name="role_id" type="${uuidType}">
                 <constraints nullable="false" foreignKeyName="fk_project_access_request_role" references="prds_role(id)"/>
             </column>
-            <column name="status" type="varchar(255)"/>
+            <column name="status" type="varchar(8)"/>
             <column name="comment" type="varchar(4000)"/>
             <column name="created_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="created_by" type="${uuidType}">
