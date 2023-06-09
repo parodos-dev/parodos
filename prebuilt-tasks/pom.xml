@@ -32,11 +32,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>dev.parodos</groupId>
-            <artifactId>external-dependencies</artifactId>
-            <version>${revision}</version>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
@@ -49,11 +44,6 @@
         <dependency>
             <groupId>jakarta.jms</groupId>
             <artifactId>jakarta.jms-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.tibco</groupId>
-            <artifactId>tibjms</artifactId>
-            <version>10.2</version>
         </dependency>
         <dependency>
             <groupId>com.atlassian.jira</groupId>
