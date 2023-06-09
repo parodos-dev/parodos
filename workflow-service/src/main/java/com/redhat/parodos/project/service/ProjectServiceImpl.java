@@ -194,6 +194,9 @@ public class ProjectServiceImpl implements ProjectService {
 			accessRequestDTO.setUsername(SecurityUtils.getUsername());
 		}
 		User user = userService.getUserEntityByUsername(accessRequestDTO.getUsername());
+		if (isNull(accessRequestDTO.getRole())) {
+			throw new ResourceNotFoundException("Role cannot be null");
+		}
 		Role role = roleRepository.findByNameIgnoreCase(accessRequestDTO.getRole().name()).orElseThrow(
 				() -> new ResourceNotFoundException(ResourceType.ROLE, IDType.NAME, accessRequestDTO.getRole().name()));
 		Optional<ProjectUserRole> projectUserRoleOptional = projectUserRoleRepository
@@ -209,7 +212,7 @@ public class ProjectServiceImpl implements ProjectService {
 				com.redhat.parodos.project.enums.Role.ADMIN);
 		return AccessResponseDTO.builder().accessRequestId(projectAccessRequest.getId())
 				.project(AccessResponseDTO.ProjectDTO.builder().id(project.getId()).name(project.getName())
-						.createdBy(String.format("%s, %s", projectOwner.getFirstName(), user.getLastName()))
+						.createdBy(String.format("%s, %s", projectOwner.getFirstName(), projectOwner.getLastName()))
 						.createdDate(project.getCreatedDate()).build())
 				.approvalSentTo((isNull(projectAdmins) || projectAdmins.isEmpty())
 						? Collections.singletonList(projectOwner.getUsername())
