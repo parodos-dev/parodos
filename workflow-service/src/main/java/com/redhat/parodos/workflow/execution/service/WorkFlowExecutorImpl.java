@@ -25,23 +25,18 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor {
 	}
 
 	@Override
-	public void executeAsync(ExecutionContext executionContext) {
-		execute(executionContext);
-	}
-
-	@Override
-	public WorkReport execute(ExecutionContext context) {
+	public void execute(ExecutionContext context) {
 		WorkFlow workFlow = workFlowDelegate.getWorkFlowByName(context.workFlowName());
 		log.info("execute workflow {} (ID: {})", context.workFlowName(), context.executionId());
 		WorkContextUtils.updateWorkContextPartially(context.workContext(), context.projectId(), context.userId(),
 				context.workFlowName(), context.executionId());
 		WorkReport report = WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(workFlow, context.workContext());
+		log.info("work report for  {} (ID: {}): {}", context.workFlowName(), context.executionId(), report);
 		if (isExecutionFailed(context)) {
 			log.error("workflow {} (ID: {}) failed. Check the logs for errors coming from the tasks in this workflow.",
 					context.workFlowName(), context.executionId());
 			executeRollbackWorkFlowIfNeeded(context);
 		}
-		return report;
 	}
 
 	private void executeRollbackWorkFlowIfNeeded(ExecutionContext context) {

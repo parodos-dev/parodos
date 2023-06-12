@@ -73,7 +73,7 @@ class WorkFlowContinuationServiceImplTest {
 
 		// then
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
-		verify(this.workFlowExecutor, times(0)).executeAsync(any(ExecutionContext.class));
+		verify(this.workFlowExecutor, times(0)).execute(any(ExecutionContext.class));
 	}
 
 	@Test
@@ -146,8 +146,7 @@ class WorkFlowContinuationServiceImplTest {
 
 		when(this.workFlowTaskRepository.findByWorkFlowExecutionId(wfExecution.getId()))
 				.thenReturn(List.of(workFlowTaskExecution));
-		doThrow(new RuntimeException("JsonParseException")).when(workFlowExecutor)
-				.executeAsync(any(ExecutionContext.class));
+		doThrow(new RuntimeException("JsonParseException")).when(workFlowExecutor).execute(any(ExecutionContext.class));
 
 		// when
 		Exception exception = assertThrows(RuntimeException.class, () -> this.service.workFlowRunAfterStartup());
@@ -157,7 +156,7 @@ class WorkFlowContinuationServiceImplTest {
 		assertTrue(exception.getMessage().contains("JsonParseException"));
 
 		verify(this.workFlowRepository, times(1)).findByStatusInAndIsMain(workFlowStatuses);
-		verify(this.workFlowExecutor, times(1)).executeAsync(any(ExecutionContext.class));
+		verify(this.workFlowExecutor, times(1)).execute(any(ExecutionContext.class));
 
 	}
 
@@ -189,7 +188,7 @@ class WorkFlowContinuationServiceImplTest {
 
 	private void verifyAsyncExecution(WorkFlowExecution workFlowExecution) {
 		var argument = ArgumentCaptor.forClass(ExecutionContext.class);
-		verify(this.workFlowExecutor, times(1)).executeAsync(argument.capture());
+		verify(this.workFlowExecutor, times(1)).execute(argument.capture());
 		assertThat(argument.getValue().projectId()).isEqualTo(workFlowExecution.getProjectId());
 		assertThat(argument.getValue().userId()).isEqualTo(workFlowExecution.getUser().getId());
 		assertThat(argument.getValue().workFlowName()).isEqualTo(TEST_WORKFLOW);
