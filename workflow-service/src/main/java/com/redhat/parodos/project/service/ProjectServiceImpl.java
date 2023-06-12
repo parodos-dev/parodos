@@ -195,7 +195,7 @@ public class ProjectServiceImpl implements ProjectService {
 		}
 		User user = userService.getUserEntityByUsername(accessRequestDTO.getUsername());
 		if (isNull(accessRequestDTO.getRole())) {
-			throw new ResourceNotFoundException("Role cannot be null");
+			accessRequestDTO.setRole(com.redhat.parodos.project.enums.Role.DEVELOPER);
 		}
 		Role role = roleRepository.findByNameIgnoreCase(accessRequestDTO.getRole().name()).orElseThrow(
 				() -> new ResourceNotFoundException(ResourceType.ROLE, IDType.NAME, accessRequestDTO.getRole().name()));
