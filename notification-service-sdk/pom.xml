@@ -1,38 +1,22 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>notification-service-sdk</artifactId>
-    <packaging>jar</packaging>
-    <name>notification-service-sdk</name>
-    <url>https://github.com/openapitools/openapi-generator</url>
-    <description>OpenAPI Java</description>
-    <scm>
-        <connection>scm:git:git@github.com:openapitools/openapi-generator.git</connection>
-        <developerConnection>scm:git:git@github.com:openapitools/openapi-generator.git</developerConnection>
-        <url>https://github.com/openapitools/openapi-generator</url>
-    </scm>
     <parent>
         <groupId>dev.parodos</groupId>
         <artifactId>parodos-parent</artifactId>
         <version>${revision}</version>
     </parent>
 
-    <licenses>
-        <license>
-            <name>Unlicense</name>
-            <url>http://unlicense.org</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
-    <developers>
-        <developer>
-            <name>OpenAPI-Generator Contributors</name>
-            <email>team@openapitools.org</email>
-            <organization>OpenAPITools.org</organization>
-            <organizationUrl>http://openapitools.org</organizationUrl>
-        </developer>
-    </developers>
+    <artifactId>notification-service-sdk</artifactId>
+    <name>notification-service-sdk</name>
+    <description>Notification Service SDK for Parodos</description>
+    <url>https://github.com/openapitools/openapi-generator</url>
+    <properties>
+        <spring.javaformat.version>0.0.34</spring.javaformat.version>
+        <skip.sdk.generation>false</skip.sdk.generation>
+    </properties>
 
     <build>
         <plugins>
@@ -48,18 +32,60 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>skip-if-no-modifications</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target name="skip-plugins-if-no-modifications">
+                                <exec executable="git" outputproperty="git.status">
+                                    <arg value="status"/>
+                                    <arg value="--porcelain"/>
+                                    <arg value="../notification-service/generated/openapi.json"/>
+                                </exec>
+                                <condition property="openapi.unchanged" else="false">
+                                    <or>
+                                        <equals arg1="${skip.sdk.generation}" arg2="true"/>
+                                        <not>
+                                            <or>
+                                                <contains string="${git.status}" substring="M "/>
+                                                <contains string="${git.status}" substring="D "/>
+                                            </or>
+                                        </not>
+                                    </or>
+                                </condition>
 
+                                <echo message="Is openapi.json file unchanged? ${openapi.unchanged}"/>
+                                <echo message="Force skip SDK generation? ${skip.sdk.generation}"/>
+                            </target>
+                            <exportAntProperties>true</exportAntProperties>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>2.5</version>
                 <executions>
                     <execution>
+                        <id>default-clean</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
                         <id>auto-clean</id>
-                        <phase>clean</phase>
+                        <phase>process-test-sources</phase>
                         <goals>
                             <goal>clean</goal>
                         </goals>
                         <configuration>
+                            <skip>${openapi.unchanged}</skip>
                             <filesets>
                                 <fileset>
                                     <directory>${basedir}</directory>
@@ -69,6 +95,10 @@
                                     <excludes>
                                         <exclude>.openapi-generator-ignore</exclude>
                                         <exclude>pom.xml</exclude>
+                                        <exclude>.flattened-pom.xml</exclude>
+                                        <exclude>README.md</exclude>
+                                        <exclude>README.md</exclude>
+                                        <exclude>.openapi-generator</exclude>
                                     </excludes>
                                     <followSymlinks>false</followSymlinks>
                                 </fileset>
@@ -85,11 +115,12 @@
                 <executions>
                     <execution>
                         <id>generate-client-api-code</id>
+                        <phase>generate-sources</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>
-                        <phase>generate-sources</phase>
                         <configuration>
+                            <skip>${openapi.unchanged}</skip>
                             <generatorName>java</generatorName>
 
                             <groupId>dev.parodos</groupId>
@@ -103,16 +134,21 @@
                             <apiPackage>com.redhat.parodos.notification.sdk.api</apiPackage>
                             <modelPackage>com.redhat.parodos.notification.sdk.model</modelPackage>
                             <addCompileSourceRoot>true</addCompileSourceRoot>
-
+                            <enablePostProcessFile>true</enablePostProcessFile>
                             <configOptions>
+                                <hideGenerationTimestamp>true</hideGenerationTimestamp>
                                 <basePackage>com.redhat.parodos.notification.sdk</basePackage>
                                 <configPackage>com.redhat.parodos.notification.sdk.configuration</configPackage>
-                                <parentArtifactId>parodos-parent</parentArtifactId>
                                 <parentGroupId>dev.parodos</parentGroupId>
+                                <parentArtifactId>parodos-parent</parentArtifactId>
                                 <parentVersion>${revision}</parentVersion>
                                 <artifactVersion>${revision}</artifactVersion>
                                 <dateLibrary>legacy</dateLibrary>
-                                <hideGenerationTimestamp>true</hideGenerationTimestamp>
+                                <licenseName>The Apache Software License, Version 2.0</licenseName>
+                                <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.txt</licenseUrl>
+                                <scmConnection>scm:git:git://github.com/parodos-dev/parodos.git</scmConnection>
+                                <scmDeveloperConnection>scm:git:ssh://github.com/parodos-dev/parodos.git</scmDeveloperConnection>
+                                <scmUrl>http://github.com/parodos-dev/parodos/tree/master</scmUrl>
                             </configOptions>
                         </configuration>
                     </execution>

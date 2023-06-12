@@ -140,8 +140,8 @@
                                 <hideGenerationTimestamp>true</hideGenerationTimestamp>
                                 <basePackage>com.redhat.parodos.sdk</basePackage>
                                 <configPackage>com.redhat.parodos.sdk.configuration</configPackage>
-                                <parentArtifactId>parados-parent</parentArtifactId>
                                 <parentGroupId>dev.parodos</parentGroupId>
+                                <parentArtifactId>parados-parent</parentArtifactId>
                                 <parentVersion>${revision}</parentVersion>
                                 <artifactVersion>${revision}</artifactVersion>
                                 <dateLibrary>legacy</dateLibrary>
