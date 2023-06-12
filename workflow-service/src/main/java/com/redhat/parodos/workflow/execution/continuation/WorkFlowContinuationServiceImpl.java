@@ -77,7 +77,7 @@ public class WorkFlowContinuationServiceImpl implements WorkFlowContinuationServ
 
 	@Override
 	public void continueWorkFlow(ExecutionContext executionContext) {
-		workFlowExecutor.executeAsync(executionContext);
+		workFlowExecutor.execute(executionContext);
 	}
 
 }

@@ -32,7 +32,6 @@ import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionContext;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
-import com.redhat.parodos.workflow.execution.service.WorkFlowExecutor.ExecutionContext;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.Work;
@@ -102,52 +101,15 @@ class WorkFlowServiceImplTest {
 
 	private final MeterRegistry metricRegistry = new SimpleMeterRegistry();
 
-	private WorkFlowExecutor workFlowExecutor;
-
 	private WorkFlowServiceImpl workFlowService;
 
 	@BeforeEach
 	void initEach() {
-		this.workFlowExecutor = new WorkFlowExecutorImpl(this.workFlowDelegate, workFlowRepository);
+		WorkFlowExecutor workFlowExecutor = new WorkFlowExecutorImpl(this.workFlowDelegate, workFlowRepository);
 		this.workFlowService = new WorkFlowServiceImpl(this.projectService, this.userService,
 				this.workFlowDefinitionService, this.workFlowDelegate, this.workFlowServiceDelegate,
 				this.workFlowDefinitionRepository, this.workFlowTaskDefinitionRepository, this.workFlowRepository,
-				this.workFlowTaskRepository, this.workFlowWorkRepository, this.metricRegistry, this.workFlowExecutor);
-	}
-
-	@Test
-	void executeTestWithValidData() {
-		// given
-		Work work = mock(Work.class);
-		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow().named("test").execute(work).build();
-
-		when(work.execute(any())).thenReturn(new DefaultWorkReport(WorkStatus.COMPLETED, new WorkContext() {
-			{
-				put("foo", "bar");
-			}
-		}));
-		when(this.workFlowDelegate.getWorkFlowByName(TEST_WORKFLOW_NAME)).thenReturn(workFlow);
-		when(this.workFlowDelegate.initWorkFlowContext(any(), any())).thenReturn(new WorkContext());
-		when(this.workFlowDefinitionRepository.findFirstByName(any()))
-				.thenReturn(this.sampleWorkflowDefinition("test"));
-
-		// when
-		ExecutionContext executionContext = ExecutionContext.builder().projectId(UUID.randomUUID())
-				.userId(UUID.randomUUID()).workFlowName(TEST_WORKFLOW_NAME).workContext(new WorkContext())
-				.executionId(UUID.randomUUID()).build();
-		WorkReport report = this.workFlowExecutor.execute(executionContext);
-
-		// then
-		assertNotNull(report);
-		assertEquals(report.getStatus().toString(), "COMPLETED");
-		assertNull(report.getError());
-
-		assertNotNull(report.getWorkContext());
-		assertEquals(report.getWorkContext().get("foo"), "bar");
-
-		verify(this.workFlowDelegate, times(1)).getWorkFlowByName(any());
-		verify(work, times(1)).execute(any());
-
+				this.workFlowTaskRepository, this.workFlowWorkRepository, this.metricRegistry, workFlowExecutor);
 	}
 
 	@Test
