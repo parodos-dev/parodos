@@ -233,6 +233,7 @@ class WorkFlowControllerTest extends ControllerMockClient {
 				.andExpect(MockMvcResultMatchers.jsonPath("$.works[1].type", Matchers.is(WorkType.TASK.name())))
 				.andExpect(
 						MockMvcResultMatchers.jsonPath("$.works[1].status", Matchers.is(WorkStatus.COMPLETED.name())))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.works[1].message", Matchers.is("")))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.works[2].name", Matchers.is(testFailedWorkFlowTask1)))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.works[2].type", Matchers.is(WorkType.TASK.name())))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.works[2].status", Matchers.is(WorkStatus.FAILED.name())))
