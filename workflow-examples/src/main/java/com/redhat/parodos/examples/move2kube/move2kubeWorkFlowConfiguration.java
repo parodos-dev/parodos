@@ -20,11 +20,15 @@ import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class move2kubeWorkFlowConfiguration {
+
+	@Value("${workflows.m2k.url}")
+	private String m2kURL;
 
 	@Bean
 	GitCloneTask gitCloneTask() {
@@ -46,23 +50,19 @@ public class move2kubeWorkFlowConfiguration {
 		return new GitBranchTask();
 	}
 
-	private String getMove2KubeAPIEndpoint() {
-		return "http://localhost:8081/api/v1";
-	}
-
 	@Bean
 	Move2KubeTask move2KubeTask() {
-		return new Move2KubeTask(getMove2KubeAPIEndpoint());
+		return new Move2KubeTask(m2kURL);
 	}
 
 	@Bean
 	Move2KubeRetrieve move2KubeRetrieve() {
-		return new Move2KubeRetrieve(getMove2KubeAPIEndpoint());
+		return new Move2KubeRetrieve(m2kURL);
 	}
 
 	@Bean
 	TransformChecker transformChecker() {
-		return new TransformChecker(getMove2KubeAPIEndpoint());
+		return new TransformChecker(m2kURL);
 	}
 
 	@Bean(name = "transformWorkFlowChecker")
@@ -74,14 +74,14 @@ public class move2kubeWorkFlowConfiguration {
 
 	@Bean
 	Move2KubeTransform move2KubeTransform(@Qualifier("transformWorkFlowChecker") WorkFlow transformWorkFlowChecker) {
-		Move2KubeTransform move2KubeTransform = new Move2KubeTransform(getMove2KubeAPIEndpoint());
+		Move2KubeTransform move2KubeTransform = new Move2KubeTransform(m2kURL);
 		move2KubeTransform.setWorkFlowCheckers(List.of(transformWorkFlowChecker));
 		return move2KubeTransform;
 	}
 
 	@Bean
 	Move2KubePlan move2KubePlan() {
-		return new Move2KubePlan(getMove2KubeAPIEndpoint());
+		return new Move2KubePlan(m2kURL);
 	}
 
 	@Bean(name = "move2KubeProject")
