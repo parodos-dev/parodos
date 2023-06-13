@@ -16,6 +16,7 @@ import com.redhat.parodos.tasks.git.GitCloneTask;
 import com.redhat.parodos.workflow.annotation.Checker;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
+import com.redhat.parodos.workflow.task.infrastructure.Notifier;
 import com.redhat.parodos.workflows.workflow.ParallelFlow;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
@@ -79,8 +80,9 @@ public class move2kubeWorkFlowConfiguration {
 	}
 
 	@Bean
-	Move2KubeTransform move2KubeTransform(@Qualifier("transformWorkFlowChecker") WorkFlow transformWorkFlowChecker) {
-		Move2KubeTransform move2KubeTransform = new Move2KubeTransform(m2kURL);
+	Move2KubeTransform move2KubeTransform(@Qualifier("transformWorkFlowChecker") WorkFlow transformWorkFlowChecker,
+			Notifier notifier) {
+		Move2KubeTransform move2KubeTransform = new Move2KubeTransform(m2kURL, notifier);
 		move2KubeTransform.setWorkFlowCheckers(List.of(transformWorkFlowChecker));
 		return move2KubeTransform;
 	}
