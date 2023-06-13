@@ -56,7 +56,7 @@ public class Move2KubeRetrieve extends Move2KubeBase {
 		}
 
 		try {
-			Path finalPath = Files.newDirectoryStream(Paths.get(tempDir.toString() + "/output/")).iterator().next();
+			Path finalPath = Files.newDirectoryStream(tempDir.resolve("output"), Files::isDirectory).iterator().next();
 			log.info("FinalPath is --->{} and GitPath is {}", finalPath, sourcePath);
 			FileUtils.deleteDirectory(finalPath.resolve(Paths.get("source/output/src/.git")).toFile());
 			FileUtils.copyDirectory(finalPath.resolve(Paths.get("source/output/src")).toFile(),
