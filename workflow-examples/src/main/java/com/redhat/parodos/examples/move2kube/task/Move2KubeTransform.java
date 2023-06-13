@@ -1,10 +1,10 @@
 package com.redhat.parodos.examples.move2kube.task;
 
 import java.io.IOException;
-import java.util.List;
+import java.net.URI;
+import java.net.URISyntaxException;
 
-import com.redhat.parodos.examples.ocponboarding.task.dto.notification.NotificationRequest;
-import com.redhat.parodos.utils.RestUtils;
+import com.redhat.parodos.workflow.task.infrastructure.Notifier;
 import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
@@ -18,9 +18,6 @@ import dev.parodos.move2kube.client.model.StartTransformation202Response;
 import dev.parodos.move2kube.client.model.StartTransformationRequest;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.ResponseEntity;
-
 @Slf4j
 public class Move2KubeTransform extends Move2KubeBase {
 
@@ -28,24 +25,34 @@ public class Move2KubeTransform extends Move2KubeBase {
 
 	private ProjectOutputsApi projectOutputsApi;
 
+	private Notifier notifierBus;
+
 	private String plan;
 
-	public Move2KubeTransform(String server) {
+	private String server;
+
+	public Move2KubeTransform(String serverUrl, Notifier notifier) {
 		super();
-		this.setClient(server);
+		this.setClient(serverUrl);
 		planApi = new PlanApi(client);
 		projectOutputsApi = new ProjectOutputsApi(client);
+		notifierBus = notifier;
+		server = serverUrl;
 	}
 
-	public Move2KubeTransform(String server, PlanApi plan, ProjectOutputsApi projectOutputs) {
-		new Move2KubeTransform(server);
+	public Move2KubeTransform(String serverUrl, Notifier notifier, PlanApi plan, ProjectOutputsApi projectOutputs) {
+		new Move2KubeTransform(serverUrl, notifier);
 		planApi = plan;
 		projectOutputsApi = projectOutputs;
+		notifierBus = notifier;
+		server = serverUrl;
 	}
 
 	public WorkReport execute(WorkContext workContext) {
 		String workspaceId = (String) workContext.get(getWorkspaceContextKey());
 		String projectId = (String) workContext.get(getProjectContextKey());
+		String transformId = null;
+
 		try {
 			isPlanCreated(workspaceId, projectId);
 		}
@@ -56,7 +63,7 @@ public class Move2KubeTransform extends Move2KubeBase {
 		}
 
 		try {
-			String transformId = transform(workspaceId, projectId);
+			transformId = transform(workspaceId, projectId);
 			workContext.put(getTransformContextKey(), transformId);
 		}
 		catch (IllegalArgumentException | IOException e) {
@@ -67,30 +74,29 @@ public class Move2KubeTransform extends Move2KubeBase {
 		}
 
 		String userId = String.valueOf(WorkContextUtils.getUserId(workContext));
-		if (!sendNotification(userId, workspaceId, projectId)) {
+		if (!sendNotification(userId, workspaceId, projectId, transformId)) {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext,
 					new RuntimeException("Cannot notify user about the transformation status"));
 		}
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
-	private boolean sendNotification(String userID, String workspaceID, String projectID) {
+	private boolean sendNotification(String userID, String workspaceID, String projectID, String outputID) {
+		String path = String.format("/workspaces/%s/projects/%s/outputs/%s", workspaceID, projectID, outputID);
+		try {
+			URI baseUri = new URI(server);
+			URI url = new URI(baseUri.getScheme(), baseUri.getAuthority(), path, null, null);
 
-		String url = String.format("http://localhost:8081/workspaces/%s/projects/%s", workspaceID, projectID);
-		String message = String.format(
-				"You need to complete some information for your transformation in the following url <a href=\"%s\"> %s</a>",
-				url, url);
+			String message = String.format(
+					"You need to complete some information for your transformation in the following [url](%s)", url);
 
-		// @TODO userID is the ID, but we need the username, so hardcode it here for now.
-		NotificationRequest request = NotificationRequest.builder().usernames(List.of("test"))
-				.subject("Complete the Move2Kube transformation steps").body(message).build();
-
-		HttpEntity<NotificationRequest> notificationRequestHttpEntity = RestUtils.getRequestWithHeaders(request, "test",
-				"test");
-		ResponseEntity<String> response = RestUtils.executePost("http://localhost:8082/api/v1/messages",
-				notificationRequestHttpEntity);
-
-		return response.getStatusCode().is2xxSuccessful();
+			notifierBus.send("Move2kube workflow approval needed", message);
+		}
+		catch (URISyntaxException e) {
+			log.error("Cannot parse move2kube url {}", server);
+			return false;
+		}
+		return true;
 	}
 
 	private String transform(String workspaceID, String projectID)

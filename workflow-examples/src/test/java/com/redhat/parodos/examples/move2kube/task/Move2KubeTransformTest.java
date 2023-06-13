@@ -3,6 +3,7 @@ package com.redhat.parodos.examples.move2kube.task;
 import java.util.UUID;
 
 import com.redhat.parodos.utils.RestUtils;
+import com.redhat.parodos.workflow.task.infrastructure.Notifier;
 import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -38,13 +39,16 @@ public class Move2KubeTransformTest {
 
 	private PlanApi planApi;
 
+	private Notifier notifierBus;
+
 	private ProjectOutputsApi projectOutputsApi;
 
 	@Before
 	public void setup() throws Exception {
 		planApi = mock(PlanApi.class);
 		projectOutputsApi = mock(ProjectOutputsApi.class);
-		task = new Move2KubeTransform("http://localhost:8080", planApi, projectOutputsApi);
+		notifierBus = mock(Notifier.class);
+		task = new Move2KubeTransform("http://localhost:8080", notifierBus, planApi, projectOutputsApi);
 	}
 
 	@Test
