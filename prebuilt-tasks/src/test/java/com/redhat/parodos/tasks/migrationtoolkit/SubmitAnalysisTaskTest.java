@@ -91,7 +91,7 @@ public class SubmitAnalysisTaskTest {
 
 	@NotNull
 	private static TaskGroup of(int id, int appID) {
-		return new TaskGroup(id, "", "", "", null, "",
+		return new TaskGroup(id, "", "", "", null, null,
 				new Task[] { new Task(new App(appID, "", null), "", "", "", null, "") });
 	}
 
