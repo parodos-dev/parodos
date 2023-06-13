@@ -21,10 +21,10 @@ record Scope(boolean withKnown, Packages packages) {
 record Data(Mode mode, String output, Rules rules, Scope scope, String[] sources, String[] targets) {
 }
 
-record Task(App application, String state, String name, String addon, Data data, String bucket) {
+record Task(App application, String state, String name, String addon, Data data, Object bucket) {
 }
 
-record TaskGroup(int id, String name, String state, String addon, Data data, String bucket, Task[] tasks) {
+record TaskGroup(int id, String name, String state, String addon, Data data, Object bucket, Task[] tasks) {
 	static TaskGroup ofCloudReadiness(int appID) {
 		return new TaskGroup(0, "taskgroups.windup", null, "windup",
 				new Data(new Mode(false, false, false, ""), "/windup/report", new Rules("", null),
