@@ -43,3 +43,5 @@ notification:
 workflows:
   mta:
     url: "${MTA_URL:https://mta-openshift-mta.apps.parodos-dev.projects.ecosystem.sysdeseng.com}"
+  m2k:
+    url: "${M2K_URL:http://localhost:8081/api/v1}"
