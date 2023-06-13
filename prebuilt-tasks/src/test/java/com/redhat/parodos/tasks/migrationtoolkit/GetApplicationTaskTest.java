@@ -16,6 +16,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import static com.redhat.parodos.tasks.migrationtoolkit.TestConsts.APP_ID;
 import static com.redhat.parodos.tasks.migrationtoolkit.TestConsts.APP_NAME;
+import static com.redhat.parodos.tasks.migrationtoolkit.TestConsts.REPO_BRANCH;
 import static com.redhat.parodos.tasks.migrationtoolkit.TestConsts.REPO_URL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
@@ -74,8 +75,8 @@ public class GetApplicationTaskTest {
 	@Test
 	@SneakyThrows
 	public void getByName() {
-		when(mockClient.get(anyString()))
-				.thenReturn(new Result.Success<>(new App(APP_ID, APP_NAME, new Repository("git", REPO_URL))));
+		when(mockClient.get(anyString())).thenReturn(
+				new Result.Success<>(new App(APP_ID, APP_NAME, new Repository("git", REPO_URL, REPO_BRANCH))));
 		ctx.put("applicationName", APP_NAME);
 		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
 				WorkContextDelegate.Resource.ID, UUID.randomUUID());

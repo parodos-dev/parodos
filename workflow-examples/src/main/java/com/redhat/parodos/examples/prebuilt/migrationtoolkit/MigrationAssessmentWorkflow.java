@@ -88,7 +88,9 @@ public class MigrationAssessmentWorkflow {
 			@Parameter(key = "repositoryURL", description = "The repository with the code to analyze",
 					type = WorkParameterType.URL, optional = false),
 			@Parameter(key = "applicationName", description = "The name of the application to analyze",
-					type = WorkParameterType.TEXT, optional = false) })
+					type = WorkParameterType.TEXT, optional = false),
+			@Parameter(key = "branch", description = "The repository branch to analyze", type = WorkParameterType.TEXT,
+					optional = true) })
 	public WorkFlow AnalyzeApplicationAssessment(CreateApplicationTask createApplicationTask,
 			GetApplicationTask getAppTask, SubmitAnalysisTask submitAnalysisTask) {
 		return aNewSequentialFlow().named("AnalyzeApplicationAssessment").execute(createApplicationTask)
