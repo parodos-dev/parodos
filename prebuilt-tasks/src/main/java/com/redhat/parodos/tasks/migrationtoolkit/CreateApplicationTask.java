@@ -39,21 +39,23 @@ public class CreateApplicationTask extends BaseInfrastructureWorkFlowTask {
 	 */
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		String appName, repo;
+		String appName, repo, branch;
 		try {
 			appName = getOptionalParameterValue("applicationName", "");
 			repo = getRequiredParameterValue("repositoryURL");
+
 			if (mtaClient == null) {
 				var serverUrl = getOptionalParameterValue("serverURL", null);
 				var bearerToken = getOptionalParameterValue("bearerToken", null);
 				this.mtaClient = new MTAClient(URI.create(serverUrl), bearerToken);
 			}
+			branch = getOptionalParameterValue("branch", null);
 		}
 		catch (MissingParameterException e) {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
 		}
 
-		Result<App> result = mtaClient.create(new App(0, appName, new Repository("git", repo)));
+		Result<App> result = mtaClient.create(new App(0, appName, new Repository("git", repo, branch)));
 
 		if (result == null) {
 			// unexpected

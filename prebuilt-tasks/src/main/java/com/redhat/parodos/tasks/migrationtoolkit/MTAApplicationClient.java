@@ -1,6 +1,6 @@
 package com.redhat.parodos.tasks.migrationtoolkit;
 
-record Repository(String kind, String url) {
+record Repository(String kind, String url, String branch) {
 }
 
 record App(int id, String name, Repository repository) {
