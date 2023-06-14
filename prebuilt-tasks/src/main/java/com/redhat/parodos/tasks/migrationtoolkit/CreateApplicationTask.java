@@ -58,15 +58,19 @@ public class CreateApplicationTask extends BaseInfrastructureWorkFlowTask {
 		Result<App> result = mtaClient.create(new App(0, appName, new Repository("git", repo, branch)));
 
 		if (result == null) {
+			taskLogger.logErrorWithSlf4j("MTA client returned empty result with no error");
 			// unexpected
-			return new DefaultWorkReport(WorkStatus.FAILED, new WorkContext(),
+			return new DefaultWorkReport(WorkStatus.REJECTED, new WorkContext(),
 					new IllegalStateException("MTA client returned empty result with no error"));
 		}
 		else if (result instanceof Result.Failure<App> failure) {
-			return new DefaultWorkReport(WorkStatus.FAILED, workContext, failure.t());
+			taskLogger.logErrorWithSlf4j("MTA client returned failed result");
+			return new DefaultWorkReport(WorkStatus.REJECTED, workContext, failure.t());
 		}
 		else if (result instanceof Result.Success<App> success) {
 			workContext.put("application", success.value());
+			taskLogger.logInfoWithSlf4j("MTA client returned success result for application creation: {}",
+					success.value().name());
 			return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 		}
 		throw new IllegalArgumentException();

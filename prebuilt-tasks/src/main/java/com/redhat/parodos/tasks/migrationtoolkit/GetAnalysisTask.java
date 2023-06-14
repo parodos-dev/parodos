@@ -85,25 +85,29 @@ public class GetAnalysisTask extends BaseInfrastructureWorkFlowTask {
 		Result<TaskGroup> result = mtaClient.get(taskGroupID);
 
 		if (result == null) {
+			taskLogger.logErrorWithSlf4j("MTA client returned empty result with no error.");
 			// unexpected
-			return new DefaultWorkReport(WorkStatus.FAILED, new WorkContext(),
+			return new DefaultWorkReport(WorkStatus.REJECTED, new WorkContext(),
 					new IllegalStateException("MTA client returned empty result with no error."));
 		}
 		else if (result instanceof Result.Failure<TaskGroup> failure) {
-			return new DefaultWorkReport(WorkStatus.FAILED, workContext, failure.t());
+			taskLogger.logErrorWithSlf4j("MTA client returned failed result");
+			return new DefaultWorkReport(WorkStatus.REJECTED, workContext, failure.t());
 		}
 		else if (result instanceof Result.Success<TaskGroup> success) {
 			if ("Ready".equals(success.value().state()) && success.value().tasks() != null
 					&& "Succeeded".equals(success.value().tasks()[0].state())) {
-				String reportURL = "%s/hub/applications/%d/bucket/%s".formatted(serverUrl,
+				String reportURL = "%s/hub/applications/%d/bucket%s".formatted(serverUrl,
 						success.value().tasks()[0].application().id(), success.value().data().output());
+				taskLogger.logInfoWithSlf4j("MTA client returned success result with report url: {}", reportURL);
 				addParameter("reportURL", reportURL);
 				notificationSender.send("Migration Analysis Report Completed",
 						"[Migration analysis report](%s) completed.".formatted(reportURL));
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 			}
 			else if ("Failed".equals(success.value().state())) {
-				return new DefaultWorkReport(WorkStatus.FAILED, workContext,
+				taskLogger.logErrorWithSlf4j("The underlying task failed, the report will not be ready");
+				return new DefaultWorkReport(WorkStatus.REJECTED, workContext,
 						new Throwable("The underlying task failed, the report will not be ready"));
 			}
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext, new Throwable("The report is not ready yet."));

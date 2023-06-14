@@ -59,15 +59,19 @@ public class SubmitAnalysisTask extends BaseInfrastructureWorkFlowTask {
 		Result<TaskGroup> result = mtaClient.create(applicationID);
 
 		if (result == null) {
+			taskLogger.logErrorWithSlf4j("MTA client returned empty result with no error");
 			// unexpected
-			return new DefaultWorkReport(WorkStatus.FAILED, new WorkContext(),
+			return new DefaultWorkReport(WorkStatus.REJECTED, new WorkContext(),
 					new IllegalStateException("MTA client returned result with no error"));
 		}
 		else if (result instanceof Result.Failure<TaskGroup> failure) {
-			return new DefaultWorkReport(WorkStatus.FAILED, workContext, failure.t());
+			taskLogger.logErrorWithSlf4j("MTA client returned failed result");
+			return new DefaultWorkReport(WorkStatus.REJECTED, workContext, failure.t());
 		}
 		else if (result instanceof Result.Success<TaskGroup> success) {
 			addParameter("taskGroupID", String.valueOf(success.value().id()));
+			taskLogger.logInfoWithSlf4j("MTA client returned success result for analysis task with id: {}",
+					String.valueOf(success.value().id()));
 			return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 		}
 		throw new IllegalArgumentException();
