@@ -30,4 +30,4 @@ spec:
   ports:
     - name: move2kube
       port: 8080
-      targetPort: move2kube
+      targetPort: 8080

@@ -1,0 +1,52 @@
+move2kube:
+  containerruntime: docker
+  minreplicas: "2"
+  services:
+    demo:
+      "8080":
+        servicetype: Ingress
+        urlpath: /
+      enable: true
+      port: "8080"
+  target:
+    default:
+      clustertype: Kubernetes
+      ingress:
+        host: localhost
+        ingressclassname: ""
+        tls: ""
+    imageregistry:
+      quay.io:
+        logintype: use an existing pull secret
+        pullsecret: parodosSecret
+      namespace: parodos
+      url: quay.io
+  transformers:
+    types:
+      - ArgoCD
+      - Buildconfig
+      - ClusterSelector
+      - ComposeAnalyser
+      - ComposeGenerator
+      - ContainerImagesPushScriptGenerator
+      - DockerfileDetector
+      - DockerfileImageBuildScript
+      - DockerfileParser
+      - DotNetCore-Dockerfile
+      - Gradle
+      - Jar
+      - Jboss
+      - Kubernetes
+      - Tekton
+      - KubernetesVersionChanger
+      - Liberty
+      - Maven
+      - Parameterizer
+      - ReadMeGenerator
+      - Tomcat
+      - WarAnalyser
+      - WarRouter
+      - WinWebApp-Dockerfile
+      - ZuulAnalyser
+      - AddWorkspacesToTektonPipeline
+  transformerselector: ""
