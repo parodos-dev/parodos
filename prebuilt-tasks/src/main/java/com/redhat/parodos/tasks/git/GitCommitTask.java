@@ -67,7 +67,7 @@ public class GitCommitTask extends BaseWorkFlowTask {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext,
 					new RuntimeException("Cannot create the commit on the repository: %s".formatted(e)));
 		}
-		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext, null);
+		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
 	private Repository getRepo(String path) throws IOException {

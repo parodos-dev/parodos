@@ -160,7 +160,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		workFlowExecutor.execute(WorkFlowExecutor.ExecutionContext.builder().projectId(projectId).userId(user.getId())
 				.workFlowName(workflowName).workContext(workContext).executionId(workFlowExecution.getId())
 				.rollbackWorkFlowName(workFlowDefinitionResponseDTO.getRollbackWorkflow()).build());
-		return new DefaultWorkReport(WorkStatus.IN_PROGRESS, workContext, null);
+		return new DefaultWorkReport(WorkStatus.IN_PROGRESS, workContext);
 	}
 
 	@Override

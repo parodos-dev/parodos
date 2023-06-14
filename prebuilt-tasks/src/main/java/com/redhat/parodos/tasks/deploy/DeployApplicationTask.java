@@ -135,7 +135,7 @@ public class DeployApplicationTask extends BaseWorkFlowTask {
 		}
 
 		workContext.put(DeployConstants.APPLICATION_HOSTNAMES, hostnames);
-		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext, null);
+		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
 	private static Set<Path> loadManifests(String manifestsPath) throws IOException {

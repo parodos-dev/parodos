@@ -73,7 +73,7 @@ public class GitArchiveTask extends BaseWorkFlowTask {
 			}
 		}
 
-		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext, null);
+		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
 	private Repository getRepo(String path) throws IOException {

@@ -96,7 +96,7 @@ public class JiraTask extends BaseWorkFlowTask {
 		if (id.isBlank()) {
 			try {
 				JiraIssue issue = createIssue(new JiraIssue("", project, summary, description, "", List.of(comment)));
-				WorkReport report = new DefaultWorkReport(WorkStatus.COMPLETED, new WorkContext(), null);
+				WorkReport report = new DefaultWorkReport(WorkStatus.COMPLETED, new WorkContext());
 				report.getWorkContext().put("issue", issue);
 				return report;
 			}
@@ -114,7 +114,7 @@ public class JiraTask extends BaseWorkFlowTask {
 
 					var context = new WorkContext();
 					context.put("issue", issue);
-					return new DefaultWorkReport(WorkStatus.COMPLETED, context, null);
+					return new DefaultWorkReport(WorkStatus.COMPLETED, context);
 				}
 				if (!summary.isBlank() && !issue.summary.equals(summary)) {
 					issue.summary = summary;
@@ -134,7 +134,7 @@ public class JiraTask extends BaseWorkFlowTask {
 				}
 				var context = new WorkContext();
 				context.put("issue", issue);
-				return new DefaultWorkReport(WorkStatus.COMPLETED, context, null);
+				return new DefaultWorkReport(WorkStatus.COMPLETED, context);
 			}
 			catch (Exception e) {
 				return new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
