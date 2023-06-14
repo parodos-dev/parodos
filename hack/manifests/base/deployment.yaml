@@ -27,6 +27,8 @@ spec:
           httpGet:
             path: /actuator/health
             port: 8080
+          initialDelaySeconds: 30
+          timeoutSeconds: 4
 ---
 apiVersion: apps/v1
 kind: Deployment
