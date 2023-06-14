@@ -149,6 +149,10 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		WorkContext workContext = workFlowDelegate.initWorkFlowContext(workFlowRequestDTO,
 				workFlowDefinitionResponseDTO);
 
+		if (workFlowRequestDTO.getInvokingExecutionID() != null) {
+			mergeContextArgumentsFromExecution(workFlowRequestDTO.getInvokingExecutionID(), workContext);
+		}
+
 		// save workflow execution
 		String arguments = WorkFlowDTOUtil.writeObjectValueAsString(
 				WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
@@ -162,6 +166,24 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 						.workFlowName(workflowName).workContext(workContext).executionId(workFlowExecution.getId())
 						.rollbackWorkFlowName(workFlowDefinitionResponseDTO.getRollbackWorkflow()).build());
 		return new DefaultWorkReport(WorkStatus.IN_PROGRESS, workContext, null);
+	}
+
+	/**
+	 * Merge the context of the previous execution into the top level of this current
+	 * context. Don't override in case of collisions.
+	 * @param executionId the execution context with the source context arguments
+	 * @param target target context to put arguments on
+	 */
+	private void mergeContextArgumentsFromExecution(UUID executionId, WorkContext target) {
+		WorkFlowExecution invokedBy = workFlowRepository.getById(executionId);
+		if (invokedBy != null) {
+			var source = invokedBy.getWorkFlowExecutionContext().getWorkContext();
+			// TODO don't overwrite in case key already exists
+			Map<String, String> sourceArguments = (Map<String, String>) WorkContextDelegate.read(source,
+					WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ARGUMENTS);
+			sourceArguments.entrySet().forEach(entry -> WorkContextDelegate.write(target,
+					WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ARGUMENTS, entry));
+		}
 	}
 
 	@Override
