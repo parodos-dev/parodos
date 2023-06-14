@@ -62,6 +62,7 @@
                     <excludes>${project.parent.basedir}/workflow-service-sdk/*</excludes>
                     <excludes>${project.parent.basedir}/notification-service-sdk/*</excludes>
                     <excludes>${project.parent.basedir}/integration-tests/*</excludes>
+                    <excludes>com/redhat/parodos/examples/negative/**/*</excludes>
                 </configuration>
             </plugin>
         </plugins>
