@@ -36,6 +36,8 @@ public class DefaultWorkReport implements WorkReport {
 
 	private Throwable error;
 
+	private String message;
+
 	/**
 	 * Create a new {@link DefaultWorkReport}.
 	 * @param status of work
@@ -53,6 +55,16 @@ public class DefaultWorkReport implements WorkReport {
 	public DefaultWorkReport(WorkStatus status, WorkContext workContext, Throwable error) {
 		this(status, workContext);
 		this.error = error;
+	}
+
+	/**
+	 * Create a new {@link DefaultWorkReport}.
+	 * @param status of work
+	 * @param message if any
+	 */
+	public DefaultWorkReport(WorkStatus status, WorkContext workContext, String message) {
+		this(status, workContext);
+		this.message = message;
 	}
 
 	public WorkStatus getStatus() {
