@@ -1,10 +1,12 @@
 package com.redhat.parodos.examples.move2kube.checker;
 
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 import com.google.common.base.Strings;
+import com.redhat.parodos.examples.move2kube.utils.Move2KubeUtils;
 import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.task.checker.BaseWorkFlowCheckerTask;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
@@ -19,6 +21,7 @@ import dev.parodos.move2kube.client.model.Project;
 import dev.parodos.move2kube.client.model.ProjectOutputsValue;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.steppschuh.markdowngenerator.text.TextBuilder;
 
 @Slf4j
 public class TransformChecker extends BaseWorkFlowCheckerTask {
@@ -32,9 +35,12 @@ public class TransformChecker extends BaseWorkFlowCheckerTask {
 	@Getter
 	protected static String projectContextKey = "move2KubeProjectID";
 
+	private final String server;
+
 	public TransformChecker(String server) {
 		client = new ApiClient();
 		client.setBasePath(server);
+		this.server = server;
 	}
 
 	@Override
@@ -56,7 +62,8 @@ public class TransformChecker extends BaseWorkFlowCheckerTask {
 						new IllegalArgumentException("Cannot get the project transformation output from the list"));
 			}
 			if (!Objects.equals(output.getStatus(), "done")) {
-				return new DefaultWorkReport(WorkStatus.FAILED, workContext);
+				return new DefaultWorkReport(WorkStatus.FAILED, workContext,
+						getMessage(server, workspaceID, projectID, transformID));
 			}
 		}
 		catch (ApiException e) {
@@ -78,6 +85,18 @@ public class TransformChecker extends BaseWorkFlowCheckerTask {
 	@Override
 	public List<WorkFlowTaskOutput> getWorkFlowTaskOutputs() {
 		return Collections.emptyList();
+	}
+
+	private String getMessage(String server, String workspaceID, String projectID, String transformId) {
+		return new TextBuilder()
+				.heading("Alert", 1)
+				.newParagraph()
+				.text("You need to complete some information for your transformation")
+				.newLine()
+				.text("Please check this")
+				.link("link", Move2KubeUtils.getPath(server, workspaceID, projectID, transformId))
+				.end()
+				.toString();
 	}
 
 }
