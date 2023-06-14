@@ -1,9 +1,9 @@
 package com.redhat.parodos.examples.move2kube.task;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 
+import com.redhat.parodos.examples.move2kube.utils.Move2KubeUtils;
 import com.redhat.parodos.workflow.task.infrastructure.Notifier;
 import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
@@ -82,11 +82,8 @@ public class Move2KubeTransform extends Move2KubeBase {
 	}
 
 	private boolean sendNotification(String userID, String workspaceID, String projectID, String outputID) {
-		String path = String.format("/workspaces/%s/projects/%s/outputs/%s", workspaceID, projectID, outputID);
 		try {
-			URI baseUri = new URI(server);
-			URI url = new URI(baseUri.getScheme(), baseUri.getAuthority(), path, null, null);
-
+			String url = Move2KubeUtils.getPath(server, workspaceID, projectID, outputID);
 			String message = String.format(
 					"You need to complete some information for your transformation in the following [url](%s)", url);
 
