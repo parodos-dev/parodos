@@ -1603,6 +1603,10 @@
               "$ref" : "#/components/schemas/ArgumentRequestDTO"
             }
           },
+          "invokingExecutionID" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
           "projectId" : {
             "type" : "string",
             "format" : "uuid"
@@ -1715,6 +1719,10 @@
             "items" : {
               "$ref" : "#/components/schemas/ArgumentRequestDTO"
             }
+          },
+          "invokingExecutionID" : {
+            "type" : "string",
+            "format" : "uuid"
           },
           "type" : {
             "type" : "string",
