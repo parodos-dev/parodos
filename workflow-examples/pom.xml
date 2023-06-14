@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>workflow-examples</artifactId>
     <name>workflow-examples</name>
@@ -24,6 +26,7 @@
         <fabric8.version>6.5.1</fabric8.version>
         <move2kube.version>v1.0.3</move2kube.version>
         <markdowngenerator.version>1.3.1.1</markdowngenerator.version>
+        <okhttp3.version>4.11.0</okhttp3.version>
     </properties>
     <dependencies>
         <dependency>
@@ -98,6 +101,25 @@
             <groupId>io.fabric8</groupId>
             <artifactId>openshift-client</artifactId>
             <version>${fabric8.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.fabric8</groupId>
+            <artifactId>openshift-server-mock</artifactId>
+            <version>${fabric8.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.fabric8</groupId>
+            <artifactId>generator-annotations</artifactId>
+            <version>${fabric8.version}</version>
+        </dependency>
+
+        <!-- This specific version is needed for openshift server mock -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>mockwebserver</artifactId>
+            <version>${okhttp3.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>dev.parodos</groupId>
