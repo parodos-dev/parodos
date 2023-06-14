@@ -156,17 +156,18 @@ public class WorkFlowServiceDelegate {
 		 * the workflow execution might be null when there is pending checker before it
 		 */
 		WorkStatus workStatus;
-
+		String message = null;
 		if (workExecution == null) {
 			workStatus = WorkStatus.PENDING;
 		}
 		else {
 			workStatus = WorkStatus.valueOf(workExecution.getStatus().name());
+			message = workExecution.getMessage();
 		}
 
 		return WorkStatusResponseDTO.builder().name(workFlowDefinition.getName()).type(WorkType.WORKFLOW)
 				.status(workStatus).works(new ArrayList<>()).workExecution(workExecution)
-				.numberOfWorks(workFlowDefinition.getNumberOfWorks()).build();
+				.numberOfWorks(workFlowDefinition.getNumberOfWorks()).message(message).build();
 	}
 
 	private WorkStatusResponseDTO getWorkStatusResponseDTOFromWorkFlowTask(
@@ -182,8 +183,10 @@ public class WorkFlowServiceDelegate {
 				.max(Comparator.comparing(WorkFlowTaskExecution::getStartDate));
 
 		WorkStatus workStatus = WorkStatus.PENDING;
+		String message = null;
 
 		if (workFlowTaskExecutionOptional.isPresent()) {
+			message = workFlowTaskExecutionOptional.get().getMessage();
 			workStatus = WorkStatus.valueOf(workFlowTaskExecutionOptional.get().getStatus().name());
 			if (workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition() != null) {
 				workStatus = Optional
@@ -199,7 +202,7 @@ public class WorkFlowServiceDelegate {
 		}
 
 		return WorkStatusResponseDTO.builder().name(workFlowTaskDefinition.getName()).type(WorkType.TASK)
-				.status(workStatus).build();
+				.status(workStatus).message(message).build();
 	}
 
 	private List<WorkStatusResponseDTO> nestWorkFlowWorksStatusDTO(

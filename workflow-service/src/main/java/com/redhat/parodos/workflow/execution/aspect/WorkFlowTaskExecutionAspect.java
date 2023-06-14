@@ -143,6 +143,9 @@ public class WorkFlowTaskExecutionAspect {
 				workFlowTaskName, WorkContextDelegate.Resource.STATUS, report.getStatus().name());
 
 		workFlowTaskExecution.setStatus(report.getStatus());
+		if (report.getError() != null) {
+			workFlowTaskExecution.setMessage(report.getError().getMessage());
+		}
 		workFlowTaskExecution.setLastUpdateDate(new Date());
 		workFlowService.updateWorkFlowTask(workFlowTaskExecution);
 

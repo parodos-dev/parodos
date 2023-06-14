@@ -58,6 +58,8 @@ public class WorkFlowTaskExecution extends AbstractEntity {
 
 	private WorkStatus status;
 
+	private String message;
+
 	@Column(updatable = false)
 	private Date startDate;
 
