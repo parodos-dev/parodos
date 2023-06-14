@@ -54,15 +54,19 @@ public class GetApplicationTask extends BaseInfrastructureWorkFlowTask {
 		Result<App> result = mtaClient.get(applicationName);
 
 		if (result == null) {
+			taskLogger.logErrorWithSlf4j("MTA client returned empty result with no error");
 			// unexpected
-			return new DefaultWorkReport(WorkStatus.FAILED, new WorkContext(),
+			return new DefaultWorkReport(WorkStatus.REJECTED, new WorkContext(),
 					new IllegalStateException("MTA client returned empty result with no error"));
 		}
 		else if (result instanceof Result.Failure<App> failure) {
-			return new DefaultWorkReport(WorkStatus.FAILED, workContext, failure.t());
+			taskLogger.logErrorWithSlf4j("MTA client returned failed result");
+			return new DefaultWorkReport(WorkStatus.REJECTED, workContext, failure.t());
 		}
 		else if (result instanceof Result.Success<App> success) {
 			addParameter("applicationID", String.valueOf(success.value().id()));
+			taskLogger.logInfoWithSlf4j("MTA client returned success result for getting application with id: {}",
+					String.valueOf(success.value().id()));
 			return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 		}
 		throw new IllegalArgumentException();
