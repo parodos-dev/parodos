@@ -74,7 +74,7 @@ public class GitCloneTask extends BaseWorkFlowTask {
 		workContext.put(GitConstants.CONTEXT_URI, gitUri);
 		workContext.put(GitConstants.CONTEXT_DESTINATION, destination);
 		workContext.put(GitConstants.CONTEXT_BRANCH, gitBranch);
-		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext, null);
+		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
 	private String cloneRepo(String gitUri, String gitBranch, String credentials)

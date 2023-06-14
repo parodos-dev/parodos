@@ -77,7 +77,7 @@ public class GitBranchTask extends BaseWorkFlowTask {
 					"Cannot create the branch on the repository: %s".formatted(e.getMessage()), e));
 		}
 
-		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext, null);
+		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
 	private Repository getRepo(String path) throws IOException {
