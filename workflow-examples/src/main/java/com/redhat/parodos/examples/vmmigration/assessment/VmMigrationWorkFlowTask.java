@@ -3,22 +3,25 @@ package com.redhat.parodos.examples.vmmigration.assessment;
 import java.util.List;
 
 import com.redhat.parodos.examples.vmmigration.constants.Constants;
-import com.redhat.parodos.examples.vmmigration.dto.models.V1beta1Plan;
-import com.redhat.parodos.examples.vmmigration.utils.Kubernetes;
+import com.redhat.parodos.examples.vmmigration.dto.io.konveyor.forklift.v1beta1.Plan;
+import com.redhat.parodos.examples.vmmigration.util.Kubernetes;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflow.option.WorkFlowOptions;
 import com.redhat.parodos.workflow.parameter.WorkParameter;
-import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflow.task.assessment.BaseAssessmentTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import io.kubernetes.client.openapi.ApiClient;
-import io.kubernetes.client.openapi.ApiException;
-import io.kubernetes.client.openapi.apis.CustomObjectsApi;
+import io.fabric8.kubernetes.api.model.KubernetesResourceList;
+import io.fabric8.kubernetes.client.Config;
+import io.fabric8.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.client.KubernetesClientBuilder;
+import io.fabric8.kubernetes.client.dsl.MixedOperation;
+import io.fabric8.kubernetes.client.dsl.Resource;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -26,6 +29,11 @@ public class VmMigrationWorkFlowTask extends BaseAssessmentTask {
 
 	public VmMigrationWorkFlowTask(List<WorkFlowOption> options) {
 		super(options);
+	}
+
+	public KubernetesClient getKubernetesClient(String apiUrl, String token, String caCert) {
+		Config config = Kubernetes.buildKubernetesClient(apiUrl, token, caCert);
+		return new KubernetesClientBuilder().withConfig(config).build();
 	}
 
 	@Override
@@ -36,61 +44,51 @@ public class VmMigrationWorkFlowTask extends BaseAssessmentTask {
 		log.info("Assess Migration WorkfFlow...");
 
 		try {
-
-			// Create ApiClient
-			String apiURL = getRequiredParameterValue(Constants.KUBERNETES_API_SERVER_URL);
-			String token = getRequiredParameterValue(Constants.KUBERNETES_TOKEN);
-			String caCert = getOptionalParameterValue(Constants.KUBERNETES_CA_CERT, "");
-			ApiClient client = Kubernetes.buildApiClient(apiURL, token, caCert);
-
-			// Create forklift plan
+			String apiUrl = getRequiredParameterValue(Constants.KUBERNETES_API_SERVER_URL_PARAMETER_NAME);
+			String token = getRequiredParameterValue(Constants.KUBERNETES_TOKEN_PARAMETER_NAME);
+			String storageName = getRequiredParameterValue(Constants.STORAGE_NAME_PARAMETER_NAME);
+			String networkName = getRequiredParameterValue(Constants.NETWORK_NAME_PARAMETER_NAME);
+			String namespaceName = getRequiredParameterValue(Constants.NAMESPACE_NAME_PARAMETER_NAME);
+			String destinationProviderType = getRequiredParameterValue(
+					Constants.DESTINATION_PROVIDER_TYPE_PARAMETER_NAME);
+			String sourceProviderType = getRequiredParameterValue(Constants.SOURCE_PROVIDER_TYPE_PARAMETER_NAME);
+			String caCert = getOptionalParameterValue(Constants.KUBERNETES_CA_CERT_PARAMETER_NAME, "");
 			String vmName = getRequiredParameterValue(Constants.VM_NAME_PARAMETER_NAME);
-			V1beta1Plan plan = Kubernetes.createPlanForVM(vmName); // mtv-rhel8-sanity
-			CustomObjectsApi coapi = new CustomObjectsApi(client);
-			coapi.createNamespacedCustomObject("forklift.konveyor.io", "v1beta1", "demo24", "plans", plan, null, null,
-					null);
-			// Object resp = coapi.listNamespacedCustomObject("forklift.konveyor.io",
-			// "v1beta1", "demo24",
-			// "plans",null,false,null,null,null,null,null,null,null,false);
-			// Store plan's name in the context
-			addParameter(Constants.PLAN_NAME_PARAMETER_NAME, plan.getMetadata().getName());
-			addParameter(Constants.KUBERNETES_API_SERVER_URL, apiURL);
-			addParameter(Constants.KUBERNETES_TOKEN, token);
-			if (caCert != null) {
-				addParameter(Constants.KUBERNETES_CA_CERT, caCert);
+
+			Config config = Kubernetes.buildKubernetesClient(apiUrl, token, caCert);
+			try (KubernetesClient client = getKubernetesClient(apiUrl, token, caCert)) {
+				// Create forklift plan
+				Plan plan = Kubernetes.createPlan(vmName, storageName, networkName, namespaceName,
+						destinationProviderType, sourceProviderType);
+				// Create ApiClient
+
+				MixedOperation<Plan, KubernetesResourceList<Plan>, Resource<Plan>> planClient = client
+						.resources(Plan.class);
+				planClient.inNamespace(namespaceName).resource(plan).create();
+				addParameter(Constants.PLAN_NAME_PARAMETER_NAME, plan.getMetadata().getName());
+				addParameter(Constants.KUBERNETES_API_SERVER_URL_PARAMETER_NAME, apiUrl);
+				addParameter(Constants.KUBERNETES_TOKEN_PARAMETER_NAME, token);
+				addParameter(Constants.NAMESPACE_NAME_PARAMETER_NAME, namespaceName);
+				if (caCert != null) {
+					addParameter(Constants.KUBERNETES_CA_CERT_PARAMETER_NAME, caCert);
+				}
 			}
-		}
-		catch (ApiException e) {
-			log.error("Failed to create plan", e);
-			ApiException a = (ApiException) e;
-			log.error(a.getResponseBody());
-			return new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
+			// Store plan's name in the context
 		}
 		catch (MissingParameterException e) {
-			log.error("Can't get parameter {} value", Constants.VM_NAME_PARAMETER_NAME);
+			log.debug("Failed to resolve required parameter: {}", e.getMessage());
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext);
 		}
 
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
-	public List<WorkParameter> getWorkFlowTaskParameters() {
-		WorkParameter vmName = WorkParameter.builder().key(Constants.VM_NAME_PARAMETER_NAME)
-				.description("Enter the name of the Vmware VM to determine if it can be migrated to OCP Virtualization")
-				.optional(false).type(WorkParameterType.TEXT).selectOptions(List.of("mtv-rhel8-sanity")).build();
-		WorkParameter apiUrl = WorkParameter.builder().key(Constants.KUBERNETES_API_SERVER_URL)
-				.description("Enter the URL of the OpenShift API server where the VM will be migrated to")
-				.optional(false).type(WorkParameterType.TEXT).build();
-
-		WorkParameter token = WorkParameter.builder().key(Constants.KUBERNETES_TOKEN)
-				.description("Enter the authentication token to the Openshift API server").type(WorkParameterType.TEXT)
-				.optional(false).build();
-
-		WorkParameter caCert = WorkParameter.builder().key(Constants.KUBERNETES_CA_CERT).description(
-				"Enter the CA certificate to the API server to verify the SSL certificate with the API server. If not available, the connection will not validate the certificate from the server")
-				.optional(true).build();
-
-		return List.of(vmName, apiUrl, token, caCert);
+	@Override
+	public @NonNull List<WorkParameter> getWorkFlowTaskParameters() {
+		return List.of(Constants.vmNameParameter, Constants.apiUrlParameter, Constants.tokenParameter,
+				Constants.caCertParameter, Constants.namespaceNameParameter, Constants.storageNameParameter,
+				Constants.networkNameParameter, Constants.destinationProviderTypeParameter,
+				Constants.sourceProviderTypeParameter);
 	}
 
 }

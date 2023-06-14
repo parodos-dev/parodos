@@ -26,8 +26,6 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource("classpath:git.properties")
 public class VmMigrationWorkFlowConfiguration {
 
-	// assessment workflow
-
 	// Assessment workflow
 	@Bean
 	WorkFlowOption vmMigrationOption() {
@@ -54,14 +52,30 @@ public class VmMigrationWorkFlowConfiguration {
 			@Parameter(key = Constants.VM_NAME_PARAMETER_NAME,
 					description = "The name of the VM to migrate from vmware to OCP Virtualization",
 					type = WorkParameterType.TEXT, optional = false),
-			@Parameter(key = Constants.KUBERNETES_API_SERVER_URL, description = "The URL of the kubernetes API server",
+			@Parameter(key = Constants.KUBERNETES_API_SERVER_URL_PARAMETER_NAME,
+					description = "The URL of the kubernetes API server", type = WorkParameterType.TEXT,
+					optional = false),
+			@Parameter(key = Constants.KUBERNETES_TOKEN_PARAMETER_NAME,
+					description = "The token to authenticate against the kubernetes API server",
 					type = WorkParameterType.TEXT, optional = false),
-			@Parameter(key = Constants.KUBERNETES_TOKEN,
-					description = "The token to authenitcate against the kubernetes API server",
-					type = WorkParameterType.TEXT, optional = false),
-			@Parameter(key = Constants.KUBERNETES_CA_CERT,
+			@Parameter(key = Constants.KUBERNETES_CA_CERT_PARAMETER_NAME,
 					description = "The Certificate Authority Cert to validate the encrypted connection with the API server",
-					type = WorkParameterType.TEXT, optional = true) })
+					type = WorkParameterType.TEXT, optional = false),
+			@Parameter(key = Constants.NAMESPACE_NAME_PARAMETER_NAME,
+					description = "Enter the target namespace where the VM will be migrated to inside the OCP cluster. This namespace will also need to contain the storage and network CRs required to perform the migration",
+					type = WorkParameterType.TEXT, optional = false),
+			@Parameter(key = Constants.STORAGE_NAME_PARAMETER_NAME,
+					description = "Enter the name of the migration storage instance in the target namespace that will be used to migrate the VM",
+					type = WorkParameterType.TEXT, optional = false),
+			@Parameter(key = Constants.NETWORK_NAME_PARAMETER_NAME,
+					description = "Enter the name of the migration network instance in the target namespace that will be used to migrate the VM",
+					type = WorkParameterType.TEXT, optional = false),
+			@Parameter(key = Constants.SOURCE_PROVIDER_TYPE_PARAMETER_NAME,
+					description = "Enter the name of the VM provider where the VM is being hosted",
+					type = WorkParameterType.TEXT, optional = false),
+			@Parameter(key = Constants.DESTINATION_PROVIDER_TYPE_PARAMETER_NAME,
+					description = "Enter the name of the VM provider where the VM will be migrated to",
+					type = WorkParameterType.TEXT, optional = false) })
 	WorkFlow VmMigrationAssessmentTask(
 			@Qualifier("vmMigrationWorkFlowTask") VmMigrationWorkFlowTask vmMigrationWorkFlowTask) {
 		// @formatter:off
@@ -121,14 +135,30 @@ public class VmMigrationWorkFlowConfiguration {
 			@Parameter(key = Constants.VM_NAME_PARAMETER_NAME,
 					description = "The name of the VM to migrate from vmware to OCP Virtualization",
 					type = WorkParameterType.TEXT, optional = false),
-			@Parameter(key = Constants.KUBERNETES_API_SERVER_URL, description = "The URL of the kubernetes API server",
+			@Parameter(key = Constants.KUBERNETES_API_SERVER_URL_PARAMETER_NAME,
+					description = "The URL of the kubernetes API server", type = WorkParameterType.TEXT,
+					optional = false),
+			@Parameter(key = Constants.KUBERNETES_TOKEN_PARAMETER_NAME,
+					description = "The token to authenticate against the kubernetes API server",
 					type = WorkParameterType.TEXT, optional = false),
-			@Parameter(key = Constants.KUBERNETES_TOKEN,
-					description = "The token to authenitcate against the kubernetes API server",
-					type = WorkParameterType.TEXT, optional = false),
-			@Parameter(key = Constants.KUBERNETES_CA_CERT,
+			@Parameter(key = Constants.KUBERNETES_CA_CERT_PARAMETER_NAME,
 					description = "The Certificate Authority Cert to validate the encrypted connection with the API server",
-					type = WorkParameterType.TEXT, optional = true) })
+					type = WorkParameterType.TEXT, optional = true),
+			@Parameter(key = Constants.NAMESPACE_NAME_PARAMETER_NAME,
+					description = "Enter the target namespace where the VM will be migrated to inside the OCP cluster. This namespace will also need to contain the storage and network CRs required to perform the migration",
+					type = WorkParameterType.TEXT, optional = false),
+			@Parameter(key = Constants.STORAGE_NAME_PARAMETER_NAME,
+					description = "Enter the name of the migration storage instance in the target namespace that will be used to migrate the VM",
+					type = WorkParameterType.TEXT, optional = false),
+			@Parameter(key = Constants.NETWORK_NAME_PARAMETER_NAME,
+					description = "Enter the name of the migration network instance in the target namespace that will be used to migrate the VM",
+					type = WorkParameterType.TEXT, optional = false),
+			@Parameter(key = Constants.SOURCE_PROVIDER_TYPE_PARAMETER_NAME,
+					description = "Enter the name of the VM provider where the VM is being hosted",
+					type = WorkParameterType.TEXT, optional = false),
+			@Parameter(key = Constants.DESTINATION_PROVIDER_TYPE_PARAMETER_NAME,
+					description = "Enter the name of the VM provider where the VM will be migrated to",
+					type = WorkParameterType.TEXT, optional = false) })
 	WorkFlow vmMigrationWorkFlow(
 			@Qualifier("createMigrationFlow") CreateMigrationWorkFlowTask createMigrationWorkFlow) {
 		return SequentialFlow.Builder.aNewSequentialFlow()
