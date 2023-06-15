@@ -1480,15 +1480,18 @@ components:
     WorkFlowRequestDTO:
       example:
         workFlowName: workFlowName
+        invokingExecutionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         works:
-        - arguments:
+        - invokingExecutionID: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          arguments:
           - value: value
             key: key
           - value: value
             key: key
           type: TASK
           workName: workName
-        - arguments:
+        - invokingExecutionID: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          arguments:
           - value: value
             key: key
           - value: value
@@ -1506,6 +1509,9 @@ components:
           items:
             $ref: '#/components/schemas/ArgumentRequestDTO'
           type: array
+        invokingExecutionId:
+          format: uuid
+          type: string
         projectId:
           format: uuid
           type: string
@@ -1630,6 +1636,7 @@ components:
       type: object
     WorkRequestDTO:
       example:
+        invokingExecutionID: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         arguments:
         - value: value
           key: key
@@ -1642,6 +1649,9 @@ components:
           items:
             $ref: '#/components/schemas/ArgumentRequestDTO'
           type: array
+        invokingExecutionID:
+          format: uuid
+          type: string
         type:
           enum:
           - TASK
