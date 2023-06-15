@@ -71,7 +71,7 @@ public class FailedWithAlertMessageWorkFlowTest {
 				.isEqualTo(WorkStatusResponseDTO.StatusEnum.FAILED);
 		assertThat(workFlowStatusResponseDTO.getWorks().get(0).getMessage()).isNull();
 		assertThat(workFlowStatusResponseDTO.getWorks().get(0).getAlertMessage())
-				.isEqualTo("[link](http://localhost:8080)");
+				.contains("[link](http://localhost:8080)");
 
 		log.info("******** FailedWithAlertMessageWorkFlow successfully ended: {} ********",
 				workFlowStatusResponseDTO.getStatus());

@@ -86,16 +86,23 @@ public class OcpOnboardingWorkFlowConfiguration {
 				.displayName("Migration Analysis").setDescription("Migration Analysis step").build();
 	}
 
+	@Bean
+	WorkFlowOption alertMessageOption() {
+		return new WorkFlowOption.Builder("alert message option", "failedWithAlertMessageWorkFlow")
+				.addToDetails("this is to show alert in workflow").displayName("workflow with alert message")
+				.setDescription("this is to show alert in workflow").build();
+	}
+
 	// An AssessmentTask returns one or more WorkFlowOption wrapped in a WorkflowOptions
 	@Bean
 	OnboardingOcpAssessmentTask onboardingAssessmentTask(
 			@Qualifier("onboardingOcpOption") WorkFlowOption onboardingOcpOption,
 			@Qualifier("badRepoOption") WorkFlowOption badRepoOption,
 			@Qualifier("notSupportOption") WorkFlowOption notSupportOption,
-			@Qualifier("move2kube") WorkFlowOption move2kube,
-			@Qualifier("analyzeOption") WorkFlowOption analyzeOption) {
-		return new OnboardingOcpAssessmentTask(
-				List.of(onboardingOcpOption, badRepoOption, notSupportOption, move2kube, analyzeOption));
+			@Qualifier("move2kube") WorkFlowOption move2kube, @Qualifier("analyzeOption") WorkFlowOption analyzeOption,
+			@Qualifier("alertMessageOption") WorkFlowOption alertMessageOption) {
+		return new OnboardingOcpAssessmentTask(List.of(onboardingOcpOption, badRepoOption, notSupportOption, move2kube,
+				analyzeOption, alertMessageOption));
 	}
 
 	// A Workflow designed to execute and return WorkflowOption(s) that can be executed

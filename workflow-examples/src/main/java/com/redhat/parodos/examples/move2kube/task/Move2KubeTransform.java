@@ -5,7 +5,6 @@ import java.net.URISyntaxException;
 
 import com.redhat.parodos.examples.move2kube.utils.Move2KubeUtils;
 import com.redhat.parodos.workflow.task.infrastructure.Notifier;
-import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -73,27 +72,28 @@ public class Move2KubeTransform extends Move2KubeBase {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
 		}
 
-		String userId = String.valueOf(WorkContextUtils.getUserId(workContext));
-		if (!sendNotification(userId, workspaceId, projectId, transformId)) {
+		String message = sendNotification(workspaceId, projectId, transformId);
+		if (message == null) {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext,
 					new RuntimeException("Cannot notify user about the transformation status"));
 		}
-		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
+		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext, message);
 	}
 
-	private boolean sendNotification(String userID, String workspaceID, String projectID, String outputID) {
+	private String sendNotification(String workspaceID, String projectID, String outputID) {
+		String message;
 		try {
 			String url = Move2KubeUtils.getPath(server, workspaceID, projectID, outputID);
-			String message = String.format(
+			message = String.format(
 					"You need to complete some information for your transformation in the following [url](%s)", url);
 
 			notifierBus.send("Move2kube workflow approval needed", message);
 		}
 		catch (URISyntaxException e) {
 			log.error("Cannot parse move2kube url {}", server);
-			return false;
+			return null;
 		}
-		return true;
+		return message;
 	}
 
 	private String transform(String workspaceID, String projectID)

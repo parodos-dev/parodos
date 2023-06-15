@@ -16,7 +16,8 @@ public class FailedWithAlertMessageWorkFlowTask extends BaseInfrastructureWorkFl
 	@Override
 	public WorkReport execute(WorkContext workContext) {
 		log.info("FailedWithAlertMessageWorkFlowTask execution should return FAILED");
-		return new DefaultWorkReport(WorkStatus.FAILED, workContext, "[link](http://localhost:8080)");
+		return new DefaultWorkReport(WorkStatus.FAILED, workContext,
+				"this is a sample alert [link](http://localhost:8080)");
 	}
 
 }
