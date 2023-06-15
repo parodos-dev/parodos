@@ -26,6 +26,7 @@ package com.redhat.parodos.workflows.workflow;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -139,9 +140,16 @@ public class ParallelFlowReport implements WorkReport {
 		return workContext;
 	}
 
+	/**
+	 * Return the last alertMessage of partial reports, or null if there are no
+	 * alertMessage.
+	 * @return the last alertMessage
+	 */
+
 	@Override
 	public String getAlertMessage() {
-		return null;
+		return reports.stream().map(WorkReport::getAlertMessage).filter(Objects::nonNull)
+				.reduce((first, second) -> second).orElse(null);
 	}
 
 }
