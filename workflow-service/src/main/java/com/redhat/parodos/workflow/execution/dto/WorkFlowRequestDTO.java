@@ -72,8 +72,6 @@ public class WorkFlowRequestDTO {
 		// recursive works
 		List<WorkRequestDTO> works;
 
-		UUID invokingExecutionID;
-
 		public WorkFlowRequestDTO.WorkRequestDTO findFirstWorkByName(String name) {
 			return findWorks(works, name).stream().findFirst().orElse(null);
 		}
