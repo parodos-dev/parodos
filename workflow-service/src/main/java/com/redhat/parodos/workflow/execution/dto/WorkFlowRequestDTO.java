@@ -51,7 +51,7 @@ public class WorkFlowRequestDTO {
 	 * The ID of the flow that lead to execution of this workflow. Useful for passing
 	 * context from execution to execution
 	 */
-	private UUID invokingExecutionID;
+	private UUID invokingExecutionId;
 
 	public WorkFlowRequestDTO.WorkRequestDTO findFirstWorkByName(String name) {
 		return findWorks(works, name).stream().findFirst().orElse(null);

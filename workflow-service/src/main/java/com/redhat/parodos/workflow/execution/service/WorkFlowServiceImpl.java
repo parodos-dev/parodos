@@ -149,8 +149,8 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		WorkContext workContext = workFlowDelegate.initWorkFlowContext(workFlowRequestDTO,
 				workFlowDefinitionResponseDTO);
 
-		if (workFlowRequestDTO.getInvokingExecutionID() != null) {
-			mergeContextArgumentsFromExecution(workFlowRequestDTO.getInvokingExecutionID(), workContext);
+		if (workFlowRequestDTO.getInvokingExecutionId() != null) {
+			mergeContextArgumentsFromExecution(workFlowRequestDTO.getInvokingExecutionId(), workContext);
 		}
 
 		// save workflow execution
