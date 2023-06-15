@@ -84,7 +84,7 @@ public class ParallelFlowReportTest {
 	@Test
 	public void testGetAlertMessage() {
 		assertThat(completedParallelFlowReport.getAlertMessage()).isEqualTo("alertMessage_2");
-		assertThat(failedParallelFlowReport.getAlertMessage()).isEqualTo("alertMessage_1");
+		assertThat(failedParallelFlowReport.getAlertMessage()).isNull();
 		assertThat(progressParallelFlowReport.getAlertMessage()).isEqualTo("alertMessage_3");
 	}
 
