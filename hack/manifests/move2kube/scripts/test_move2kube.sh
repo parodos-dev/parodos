@@ -156,6 +156,6 @@ curl -u test:test "${TARGET_URL}/api/v1/workflows/${WORKFLOW_EXEC_ID}/status" | 
 
 echo "URL for checking this is:"
 
-echo "kubectl -exec -ti client -- curl -u test:test ${TARGET_URL}/api/v1/workflows/${WORKFLOW_EXEC_ID}/status | jq ."
+echo "kubectl exec -ti client -- curl -u test:test ${TARGET_URL}/api/v1/workflows/${WORKFLOW_EXEC_ID}/status | jq ."
 
 echo "http://localhost:7007/parodos/onboarding/${PROJECT_ID}/${WORKFLOW_EXEC_ID}/workflow-detail"

@@ -22,9 +22,9 @@ kind: ConfigMap
 metadata:
   name: workflow-service-config
 data:
-  SPRING_PROFILES_ACTIVE: "local"
   NOTIFICATION_SERVER_URL: "http://notification-service.default.svc.cluster.local:8080"
   M2K_URL: "http://move2kube.move2kube.svc.cluster.local:8080/api/v1"
+  SPRING_PROFILES_ACTIVE: "local"
 ---
 apiVersion: v1
 kind: ConfigMap
