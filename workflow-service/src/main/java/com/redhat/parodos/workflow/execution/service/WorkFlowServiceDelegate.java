@@ -184,9 +184,11 @@ public class WorkFlowServiceDelegate {
 
 		WorkStatus workStatus = WorkStatus.PENDING;
 		String message = null;
+		String alertMessage = null;
 
 		if (workFlowTaskExecutionOptional.isPresent()) {
 			message = workFlowTaskExecutionOptional.get().getMessage();
+			alertMessage = workFlowTaskExecutionOptional.get().getAlertMessage();
 			workStatus = WorkStatus.valueOf(workFlowTaskExecutionOptional.get().getStatus().name());
 			if (workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition() != null) {
 				workStatus = Optional
@@ -202,7 +204,7 @@ public class WorkFlowServiceDelegate {
 		}
 
 		return WorkStatusResponseDTO.builder().name(workFlowTaskDefinition.getName()).type(WorkType.TASK)
-				.status(workStatus).message(message).build();
+				.status(workStatus).message(message).alertMessage(alertMessage).build();
 	}
 
 	private List<WorkStatusResponseDTO> nestWorkFlowWorksStatusDTO(
