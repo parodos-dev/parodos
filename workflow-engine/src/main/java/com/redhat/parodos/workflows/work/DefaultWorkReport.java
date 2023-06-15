@@ -36,7 +36,7 @@ public class DefaultWorkReport implements WorkReport {
 
 	private Throwable error;
 
-	private String message;
+	private String alertMessage;
 
 	/**
 	 * Create a new {@link DefaultWorkReport}.
@@ -60,11 +60,11 @@ public class DefaultWorkReport implements WorkReport {
 	/**
 	 * Create a new {@link DefaultWorkReport}.
 	 * @param status of work
-	 * @param message if any
+	 * @param alertMessage if any
 	 */
-	public DefaultWorkReport(WorkStatus status, WorkContext workContext, String message) {
+	public DefaultWorkReport(WorkStatus status, WorkContext workContext, String alertMessage) {
 		this(status, workContext);
-		this.message = message;
+		this.alertMessage = alertMessage;
 	}
 
 	public WorkStatus getStatus() {
@@ -81,9 +81,14 @@ public class DefaultWorkReport implements WorkReport {
 	}
 
 	@Override
+	public String getAlertMessage() {
+		return this.alertMessage;
+	}
+
+	@Override
 	public String toString() {
-		return "DefaultWorkReport {" + "status=" + status + ", context=" + workContext + ", error="
-				+ (error == null ? "''" : error) + '}';
+		return "DefaultWorkReport {" + "status=" + status + ", context=" + workContext + ", alertMessage='"
+				+ alertMessage + ", error=" + (error == null ? "''" : error) + '}';
 	}
 
 }
