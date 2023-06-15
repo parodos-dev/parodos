@@ -7,6 +7,7 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
+|**alertMessage** | **String** |  |  [optional] |
 |**message** | **String** |  |  [optional] |
 |**name** | **String** |  |  [optional] |
 |**status** | [**StatusEnum**](#StatusEnum) |  |  [optional] |

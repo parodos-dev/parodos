@@ -91,18 +91,13 @@ public class TransformChecker extends BaseWorkFlowCheckerTask {
 		String path;
 		try {
 			path = Move2KubeUtils.getPath(server, workspaceID, projectID, transformId);
-		} catch (URISyntaxException e) {
+		}
+		catch (URISyntaxException e) {
 			path = "Cannot parse move2kube url " + server;
 		}
-		return new TextBuilder()
-				.heading("Alert", 1)
-				.newParagraph()
-				.text("You need to complete some information for your transformation")
-				.newLine()
-				.text("Please check this")
-				.link("link", path)
-				.end()
-				.toString();
+		return new TextBuilder().heading("Alert", 1).newParagraph()
+				.text("You need to complete some information for your transformation").newLine()
+				.text("Please check this").link("link", path).end().toString();
 	}
 
 }

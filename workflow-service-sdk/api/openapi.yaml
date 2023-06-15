@@ -1553,14 +1553,16 @@ components:
       example:
         workFlowName: workFlowName
         works:
-        - works:
+        - alertMessage: alertMessage
+          works:
           - null
           - null
           name: name
           message: message
           type: TASK
           status: FAILED
-        - works:
+        - alertMessage: alertMessage
+          works:
           - null
           - null
           name: name
@@ -1650,6 +1652,7 @@ components:
       type: object
     WorkStatusResponseDTO:
       example:
+        alertMessage: alertMessage
         works:
         - null
         - null
@@ -1658,6 +1661,8 @@ components:
         type: TASK
         status: FAILED
       properties:
+        alertMessage:
+          type: string
         message:
           type: string
         name:
