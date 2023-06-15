@@ -25,7 +25,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import javax.annotation.PreDestroy;
-import javax.persistence.EntityNotFoundException;
 
 import com.redhat.parodos.common.exceptions.IllegalWorkFlowStateException;
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
@@ -175,22 +174,20 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	 * @param target target context to put arguments on
 	 */
 	private void mergeContextArgumentsFromExecution(UUID executionId, WorkContext target) {
-		WorkFlowExecution invokedBy = null;
-		try {
-			invokedBy = workFlowRepository.getById(executionId);
-		}
-		catch (EntityNotFoundException e) {
+		Optional<WorkFlowExecution> invokedBy = workFlowRepository.findById(executionId);
+		if (invokedBy.isEmpty()) {
 			throw new ResourceNotFoundException(ResourceType.WORKFLOW_EXECUTION, executionId);
 		}
 
-		if (invokedBy != null) {
-			var source = invokedBy.getWorkFlowExecutionContext().getWorkContext();
-			// TODO don't overwrite in case key already exists
-			Map<String, String> sourceArguments = (Map<String, String>) WorkContextDelegate.read(source,
-					WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ARGUMENTS);
-			sourceArguments.entrySet().forEach(entry -> WorkContextDelegate.write(target,
-					WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ARGUMENTS, entry));
+		var source = invokedBy.get().getWorkFlowExecutionContext().getWorkContext();
+		Map<String, String> sourceArguments = (Map<String, String>) WorkContextDelegate.read(source,
+				WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ARGUMENTS);
+		if (sourceArguments == null) {
+			return;
 		}
+		// TODO don't overwrite in case key already exists
+		sourceArguments.entrySet().forEach(entry -> WorkContextDelegate.write(target,
+				WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ARGUMENTS, entry));
 	}
 
 	@Override
