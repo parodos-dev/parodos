@@ -1728,6 +1728,9 @@
       "WorkStatusResponseDTO" : {
         "type" : "object",
         "properties" : {
+          "alertMessage" : {
+            "type" : "string"
+          },
           "message" : {
             "type" : "string"
           },
