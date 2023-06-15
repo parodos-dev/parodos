@@ -67,19 +67,6 @@ public class DefaultWorkReport implements WorkReport {
 		this.alertMessage = alertMessage;
 	}
 
-	/**
-	 * Create a new {@link DefaultWorkReport}.
-	 * @param status of work
-	 * @param error if any
-	 * @param message if any
-	 */
-	public DefaultWorkReport(WorkStatus status, WorkContext workContext, Throwable error, String message) {
-		this(status, workContext);
-		this.error = error;
-		this.message = message;
-	}
-
-
 	public WorkStatus getStatus() {
 		return status;
 	}

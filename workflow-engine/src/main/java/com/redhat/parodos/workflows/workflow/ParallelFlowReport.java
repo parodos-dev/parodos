@@ -139,4 +139,9 @@ public class ParallelFlowReport implements WorkReport {
 		return workContext;
 	}
 
+	@Override
+	public String getAlertMessage() {
+		return null;
+	}
+
 }

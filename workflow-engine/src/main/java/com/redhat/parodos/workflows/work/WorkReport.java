@@ -50,4 +50,9 @@ public interface WorkReport {
 	 */
 	WorkContext getWorkContext();
 
+	/**
+	 * Get alert message if any.
+	 */
+	String getAlertMessage();
+
 }
