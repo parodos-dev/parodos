@@ -1720,10 +1720,6 @@
               "$ref" : "#/components/schemas/ArgumentRequestDTO"
             }
           },
-          "invokingExecutionID" : {
-            "type" : "string",
-            "format" : "uuid"
-          },
           "type" : {
             "type" : "string",
             "enum" : [ "TASK", "WORKFLOW" ]
