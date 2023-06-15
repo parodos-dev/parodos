@@ -11,6 +11,7 @@ import dev.parodos.move2kube.ApiException;
 import dev.parodos.move2kube.api.PlanApi;
 import dev.parodos.move2kube.api.ProjectInputsApi;
 import dev.parodos.move2kube.client.model.GetPlan200Response;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import static java.lang.Thread.sleep;
@@ -19,6 +20,9 @@ import static java.lang.Thread.sleep;
 public class Move2KubePlan extends Move2KubeBase {
 
 	private PlanApi planApi;
+
+	@Setter
+	private long sleepTime = 1000;
 
 	private ProjectInputsApi projectInputsApi;
 
@@ -51,7 +55,7 @@ public class Move2KubePlan extends Move2KubeBase {
 				GetPlan200Response plan = planApi.getPlan(workspaceID, projectID);
 				if (plan == null) {
 					try {
-						sleep(i * 1000);
+						sleep(i * this.sleepTime);
 					}
 					catch (Exception e) {
 						continue;
