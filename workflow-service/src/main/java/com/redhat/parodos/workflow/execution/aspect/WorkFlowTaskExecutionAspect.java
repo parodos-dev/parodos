@@ -147,7 +147,8 @@ public class WorkFlowTaskExecutionAspect {
 			workFlowTaskExecution.setMessage(report.getError().getMessage());
 		}
 
-		workFlowTaskExecution.setAlertMessage(report.getAlertMessage());
+		workFlowTaskExecution
+			.setAlertMessage(report.getStatus() != WorkStatus.COMPLETED ? report.getAlertMessage() : null);
 		workFlowTaskExecution.setLastUpdateDate(new Date());
 		workFlowService.updateWorkFlowTask(workFlowTaskExecution);
 
