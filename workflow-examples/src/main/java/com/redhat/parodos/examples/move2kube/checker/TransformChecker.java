@@ -74,7 +74,8 @@ public class TransformChecker extends BaseWorkFlowCheckerTask {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext,
 					new IllegalArgumentException("Transform checker cannot be validated:" + e.getMessage()));
 		}
-		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
+		// reset alert message, if any
+		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext, (String) null);
 	}
 
 	@Override
