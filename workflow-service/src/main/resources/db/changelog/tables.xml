@@ -160,6 +160,7 @@
             </column>
             <column name="status" type="varchar(255)"/>
             <column name="message" type="varchar(4000)"/>
+            <column name="alertMessage" type="varchar(4000)"/>
             <column name="start_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="end_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="arguments" type="varchar(4000)"/>
