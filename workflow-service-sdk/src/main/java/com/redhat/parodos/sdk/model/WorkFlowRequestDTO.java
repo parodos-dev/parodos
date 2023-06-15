@@ -44,6 +44,11 @@ public class WorkFlowRequestDTO {
 	@SerializedName(SERIALIZED_NAME_ARGUMENTS)
 	private List<ArgumentRequestDTO> arguments = new ArrayList<>();
 
+	public static final String SERIALIZED_NAME_INVOKING_EXECUTION_ID = "invokingExecutionId";
+
+	@SerializedName(SERIALIZED_NAME_INVOKING_EXECUTION_ID)
+	private UUID invokingExecutionId;
+
 	public static final String SERIALIZED_NAME_PROJECT_ID = "projectId";
 
 	@SerializedName(SERIALIZED_NAME_PROJECT_ID)
@@ -88,6 +93,26 @@ public class WorkFlowRequestDTO {
 
 	public void setArguments(List<ArgumentRequestDTO> arguments) {
 		this.arguments = arguments;
+	}
+
+	public WorkFlowRequestDTO invokingExecutionId(UUID invokingExecutionId) {
+
+		this.invokingExecutionId = invokingExecutionId;
+		return this;
+	}
+
+	/**
+	 * Get invokingExecutionId
+	 * @return invokingExecutionId
+	 **/
+	@javax.annotation.Nullable
+
+	public UUID getInvokingExecutionId() {
+		return invokingExecutionId;
+	}
+
+	public void setInvokingExecutionId(UUID invokingExecutionId) {
+		this.invokingExecutionId = invokingExecutionId;
 	}
 
 	public WorkFlowRequestDTO projectId(UUID projectId) {
@@ -168,6 +193,7 @@ public class WorkFlowRequestDTO {
 		}
 		WorkFlowRequestDTO workFlowRequestDTO = (WorkFlowRequestDTO) o;
 		return Objects.equals(this.arguments, workFlowRequestDTO.arguments)
+				&& Objects.equals(this.invokingExecutionId, workFlowRequestDTO.invokingExecutionId)
 				&& Objects.equals(this.projectId, workFlowRequestDTO.projectId)
 				&& Objects.equals(this.workFlowName, workFlowRequestDTO.workFlowName)
 				&& Objects.equals(this.works, workFlowRequestDTO.works);
@@ -175,7 +201,7 @@ public class WorkFlowRequestDTO {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(arguments, projectId, workFlowName, works);
+		return Objects.hash(arguments, invokingExecutionId, projectId, workFlowName, works);
 	}
 
 	@Override
@@ -183,6 +209,7 @@ public class WorkFlowRequestDTO {
 		StringBuilder sb = new StringBuilder();
 		sb.append("class WorkFlowRequestDTO {\n");
 		sb.append("    arguments: ").append(toIndentedString(arguments)).append("\n");
+		sb.append("    invokingExecutionId: ").append(toIndentedString(invokingExecutionId)).append("\n");
 		sb.append("    projectId: ").append(toIndentedString(projectId)).append("\n");
 		sb.append("    workFlowName: ").append(toIndentedString(workFlowName)).append("\n");
 		sb.append("    works: ").append(toIndentedString(works)).append("\n");
@@ -209,6 +236,7 @@ public class WorkFlowRequestDTO {
 		// a set of all properties/fields (JSON key names)
 		openapiFields = new HashSet<String>();
 		openapiFields.add("arguments");
+		openapiFields.add("invokingExecutionId");
 		openapiFields.add("projectId");
 		openapiFields.add("workFlowName");
 		openapiFields.add("works");
@@ -259,6 +287,12 @@ public class WorkFlowRequestDTO {
 				}
 				;
 			}
+		}
+		if ((jsonObj.get("invokingExecutionId") != null && !jsonObj.get("invokingExecutionId").isJsonNull())
+				&& !jsonObj.get("invokingExecutionId").isJsonPrimitive()) {
+			throw new IllegalArgumentException(String.format(
+					"Expected the field `invokingExecutionId` to be a primitive type in the JSON string but got `%s`",
+					jsonObj.get("invokingExecutionId").toString()));
 		}
 		if ((jsonObj.get("projectId") != null && !jsonObj.get("projectId").isJsonNull())
 				&& !jsonObj.get("projectId").isJsonPrimitive()) {
