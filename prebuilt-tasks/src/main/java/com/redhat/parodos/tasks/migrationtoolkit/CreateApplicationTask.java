@@ -65,7 +65,7 @@ public class CreateApplicationTask extends BaseInfrastructureWorkFlowTask {
 		}
 		else if (result instanceof Result.Failure<App> failure) {
 			taskLogger.logErrorWithSlf4j("MTA client returned failed result");
-			return new DefaultWorkReport(WorkStatus.REJECTED, workContext, failure.t());
+			return new DefaultWorkReport(WorkStatus.FAILED, workContext, failure.t());
 		}
 		else if (result instanceof Result.Success<App> success) {
 			workContext.put("application", success.value());

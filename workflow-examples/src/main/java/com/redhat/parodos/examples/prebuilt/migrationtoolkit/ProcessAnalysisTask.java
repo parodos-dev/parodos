@@ -39,7 +39,7 @@ public class ProcessAnalysisTask extends BaseAssessmentTask {
 
 	private final Predicate<MTAAnalysisReport.AnalysisIncidents> incidentsPredicate;
 
-	private Notifier notificationSender;
+	private final Notifier notificationSender;
 
 	/**
 	 * @param passOption option for a successful report analysis

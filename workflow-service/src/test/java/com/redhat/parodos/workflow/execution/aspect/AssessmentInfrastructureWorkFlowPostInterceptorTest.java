@@ -25,6 +25,8 @@ import static com.redhat.parodos.workflow.execution.aspect.WorkFlowExecutionAspe
 import static com.redhat.parodos.workflow.execution.aspect.WorkFlowExecutionAspectTest.getSampleWorkFlowExecution;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -72,6 +74,16 @@ class AssessmentInfrastructureWorkFlowPostInterceptorTest {
 
 		underTest = new AssessmentInfrastructureWorkFlowPostInterceptor(workFlowDefinition, workContext,
 				workFlowService, workFlowRepository, workFlowExecution, getSampleWorkFlowExecution());
+	}
+
+	@Test
+	void workFlowRejectedTest() {
+		// given
+		workFlowExecution.setStatus(WorkStatus.REJECTED);
+		// when
+		underTest.handlePostWorkFlowExecution();
+		// then
+		verify(workFlowService, times(1)).updateWorkFlow(workFlowExecution);
 	}
 
 	@Test
