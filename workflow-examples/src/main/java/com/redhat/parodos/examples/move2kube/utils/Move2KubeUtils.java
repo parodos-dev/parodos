@@ -11,15 +11,10 @@ public abstract class Move2KubeUtils {
     private Move2KubeUtils() {
     }
 
-    public static String getPath(String server, String workspaceID, String projectID, String outputID) {
+    public static String getPath(String server, String workspaceID, String projectID, String outputID) throws URISyntaxException {
         String path = String.format("/workspaces/%s/projects/%s/outputs/%s", workspaceID, projectID, outputID);
-        URI baseUri = null;
-        try {
-            baseUri = new URI(server);
-            return new URI(baseUri.getScheme(), baseUri.getAuthority(), path, null, null).getPath();
-        } catch (URISyntaxException e) {
-            return null;
-        }
+        URI baseUri = new URI(server);
+        return new URI(baseUri.getScheme(), baseUri.getAuthority(), path, null, null).getPath();
     }
 
 }
