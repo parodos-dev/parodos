@@ -63,7 +63,7 @@ public class TransformChecker extends BaseWorkFlowCheckerTask {
 			}
 			if (!Objects.equals(output.getStatus(), "done")) {
 				return new DefaultWorkReport(WorkStatus.FAILED, workContext,
-						getMessage(server, workspaceID, projectID, transformID));
+						getMessage(workspaceID, projectID, transformID));
 			}
 		}
 		catch (ApiException e) {
@@ -87,10 +87,10 @@ public class TransformChecker extends BaseWorkFlowCheckerTask {
 		return Collections.emptyList();
 	}
 
-	private String getMessage(String server, String workspaceID, String projectID, String transformId) {
+	private String getMessage(String workspaceID, String projectID, String transformId) {
 		String path;
 		try {
-			path = Move2KubeUtils.getPath(server, workspaceID, projectID, transformId);
+			path = Move2KubeUtils.getPath(this.server, workspaceID, projectID, transformId);
 		}
 		catch (URISyntaxException e) {
 			path = "Cannot parse move2kube url " + server;
