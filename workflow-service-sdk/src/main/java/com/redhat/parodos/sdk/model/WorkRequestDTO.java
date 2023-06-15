@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -44,11 +43,6 @@ public class WorkRequestDTO {
 
 	@SerializedName(SERIALIZED_NAME_ARGUMENTS)
 	private List<ArgumentRequestDTO> arguments = new ArrayList<>();
-
-	public static final String SERIALIZED_NAME_INVOKING_EXECUTION_I_D = "invokingExecutionID";
-
-	@SerializedName(SERIALIZED_NAME_INVOKING_EXECUTION_I_D)
-	private UUID invokingExecutionID;
 
 	/**
 	 * Gets or Sets type
@@ -142,26 +136,6 @@ public class WorkRequestDTO {
 		this.arguments = arguments;
 	}
 
-	public WorkRequestDTO invokingExecutionID(UUID invokingExecutionID) {
-
-		this.invokingExecutionID = invokingExecutionID;
-		return this;
-	}
-
-	/**
-	 * Get invokingExecutionID
-	 * @return invokingExecutionID
-	 **/
-	@javax.annotation.Nullable
-
-	public UUID getInvokingExecutionID() {
-		return invokingExecutionID;
-	}
-
-	public void setInvokingExecutionID(UUID invokingExecutionID) {
-		this.invokingExecutionID = invokingExecutionID;
-	}
-
 	public WorkRequestDTO type(TypeEnum type) {
 
 		this.type = type;
@@ -212,14 +186,13 @@ public class WorkRequestDTO {
 		}
 		WorkRequestDTO workRequestDTO = (WorkRequestDTO) o;
 		return Objects.equals(this.arguments, workRequestDTO.arguments)
-				&& Objects.equals(this.invokingExecutionID, workRequestDTO.invokingExecutionID)
 				&& Objects.equals(this.type, workRequestDTO.type)
 				&& Objects.equals(this.workName, workRequestDTO.workName);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(arguments, invokingExecutionID, type, workName);
+		return Objects.hash(arguments, type, workName);
 	}
 
 	@Override
@@ -227,7 +200,6 @@ public class WorkRequestDTO {
 		StringBuilder sb = new StringBuilder();
 		sb.append("class WorkRequestDTO {\n");
 		sb.append("    arguments: ").append(toIndentedString(arguments)).append("\n");
-		sb.append("    invokingExecutionID: ").append(toIndentedString(invokingExecutionID)).append("\n");
 		sb.append("    type: ").append(toIndentedString(type)).append("\n");
 		sb.append("    workName: ").append(toIndentedString(workName)).append("\n");
 		sb.append("}");
@@ -253,7 +225,6 @@ public class WorkRequestDTO {
 		// a set of all properties/fields (JSON key names)
 		openapiFields = new HashSet<String>();
 		openapiFields.add("arguments");
-		openapiFields.add("invokingExecutionID");
 		openapiFields.add("type");
 		openapiFields.add("workName");
 
@@ -302,12 +273,6 @@ public class WorkRequestDTO {
 				}
 				;
 			}
-		}
-		if ((jsonObj.get("invokingExecutionID") != null && !jsonObj.get("invokingExecutionID").isJsonNull())
-				&& !jsonObj.get("invokingExecutionID").isJsonPrimitive()) {
-			throw new IllegalArgumentException(String.format(
-					"Expected the field `invokingExecutionID` to be a primitive type in the JSON string but got `%s`",
-					jsonObj.get("invokingExecutionID").toString()));
 		}
 		if ((jsonObj.get("type") != null && !jsonObj.get("type").isJsonNull())
 				&& !jsonObj.get("type").isJsonPrimitive()) {
