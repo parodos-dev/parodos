@@ -56,7 +56,8 @@ public class AssessmentInfrastructureWorkFlowPostInterceptor implements WorkFlow
 							.workContext(workContext).build()));
 		}
 
-		if (workFlowExecution.getStatus() == WorkStatus.FAILED) {
+		if (workFlowExecution.getStatus() == WorkStatus.FAILED
+				|| workFlowExecution.getStatus() == WorkStatus.REJECTED) {
 			workFlowService.updateWorkFlow(workFlowExecution);
 			return null;
 		}

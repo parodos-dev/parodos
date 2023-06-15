@@ -66,7 +66,7 @@ public class SubmitAnalysisTask extends BaseInfrastructureWorkFlowTask {
 		}
 		else if (result instanceof Result.Failure<TaskGroup> failure) {
 			taskLogger.logErrorWithSlf4j("MTA client returned failed result");
-			return new DefaultWorkReport(WorkStatus.REJECTED, workContext, failure.t());
+			return new DefaultWorkReport(WorkStatus.FAILED, workContext, failure.t());
 		}
 		else if (result instanceof Result.Success<TaskGroup> success) {
 			addParameter("taskGroupID", String.valueOf(success.value().id()));
