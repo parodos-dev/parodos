@@ -42,6 +42,7 @@ public class Move2KubePlanTest {
 		PlanApi planApi = mock(PlanApi.class);
 
 		task = new Move2KubePlan("http://localhost:8080", planApi, projectInputsApi);
+		task.setSleepTime(1);
 	}
 
 	@Test
