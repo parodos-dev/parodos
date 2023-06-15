@@ -153,7 +153,13 @@ export DATASOURCE_DRIVER="org.postgresql.Driver"
 export DATASOURCE_USERNAME="parodos"
 export DATASOURCE_PASSWORD="parodos"
 ```
-
+Sometimes, changes are made to the database schema. In order to apply these changes, you need to drop and recreate the database.
+Dropping and recreating the database **(only in development environment)**:
+```sql
+drop DATABASE workflow_service;CREATE DATABASE workflow_service;
+CREATE USER parodos WITH PASSWORD 'parodos';
+GRANT ALL PRIVILEGES ON DATABASE workflow_service TO parodos;
+```
 ### How to configure my workflow configuration class in different package?
 the environment variable for workflow configuration in different package:
 * CONFIGURATION_PACKAGE
