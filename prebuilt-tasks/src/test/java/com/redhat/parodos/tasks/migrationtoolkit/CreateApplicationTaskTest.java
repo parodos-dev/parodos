@@ -77,7 +77,7 @@ public class CreateApplicationTaskTest {
 	public void createCompletes() {
 		ctx.put("applicationName", APP_NAME);
 		ctx.put("repositoryURL", REPO_URL);
-		ctx.put("branch", REPO_URL);
+		ctx.put("branch", REPO_BRANCH);
 
 		when(mockClient.create(any())).thenReturn(
 				new Result.Success<>(new App(APP_ID, APP_NAME, new Repository("git", REPO_URL, REPO_BRANCH))));
