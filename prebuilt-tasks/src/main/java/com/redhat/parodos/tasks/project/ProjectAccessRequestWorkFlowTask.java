@@ -54,7 +54,7 @@ public class ProjectAccessRequestWorkFlowTask extends BaseWorkFlowTask {
 		String role;
 		try {
 			username = getRequiredParameterValue(PARAMETER_USERNAME);
-			role = getOptionalParameterValue(PARAMETER_ROLE, PARAMETER_ROLE_DEFAULT);
+			role = getOptionalParameterValue(PARAMETER_ROLE, PARAMETER_ROLE_DEFAULT, false);
 			log.info("Project access request with the following - username: {}, role: {}", username, role);
 		}
 		catch (MissingParameterException e) {

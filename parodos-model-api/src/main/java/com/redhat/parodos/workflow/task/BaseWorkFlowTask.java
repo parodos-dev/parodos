@@ -32,6 +32,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static java.util.Objects.isNull;
+
 /**
  * Base Class for a WorkFlowTask.
  * <p>
@@ -120,6 +122,22 @@ public abstract class BaseWorkFlowTask implements WorkFlowTask, BeanNameAware {
 	public String getOptionalParameterValue(String parameterName, String defaultValue) {
 		Map<String, String> parameters = getAllParameters(workContext);
 		return parameters.entrySet().stream().filter(entry -> parameterName.equals(entry.getKey()))
+				.map(Map.Entry::getValue).findFirst().orElse(defaultValue);
+	}
+
+	/**
+	 * Gets non-null and non-empty optional parameter. Returns the defaultValue if not
+	 * found
+	 * @param parameterName parameter name
+	 * @param defaultValue default value
+	 * @param isNullable is nullable
+	 * @return parameter value
+	 * @throws MissingParameterException exception
+	 */
+	public String getOptionalParameterValue(String parameterName, String defaultValue, Boolean isNullable) {
+		Map<String, String> parameters = getAllParameters(workContext);
+		return parameters.entrySet().stream().filter(entry -> !isNullable && !isNull(entry.getValue()) && !entry.getValue().equalsIgnoreCase("null"))
+				.filter(entry -> parameterName.equals(entry.getKey()))
 				.map(Map.Entry::getValue).findFirst().orElse(defaultValue);
 	}
 
