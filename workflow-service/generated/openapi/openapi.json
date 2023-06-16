@@ -901,6 +901,64 @@
         "tags" : [ "Workflow" ]
       }
     },
+    "/api/v1/workflows/{workFlowExecutionId}" : {
+      "post" : {
+        "operationId" : "restartWorkflow",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "workFlowExecutionId",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/WorkFlowExecutionResponseDTO"
+                }
+              }
+            },
+            "description" : "Accepted"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : { },
+            "description" : "Not Found"
+          },
+          "409" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Restart a workflow execution with same parameters",
+        "tags" : [ "Workflow" ]
+      }
+    },
     "/api/v1/workflows/{workFlowExecutionId}/checkers/{workFlowCheckerTaskName}" : {
       "post" : {
         "operationId" : "updateWorkFlowCheckerTaskStatus",
