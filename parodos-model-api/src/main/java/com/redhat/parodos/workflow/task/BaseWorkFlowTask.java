@@ -126,7 +126,7 @@ public abstract class BaseWorkFlowTask implements WorkFlowTask, BeanNameAware {
 	}
 
 	/**
-	 * Gets non-null and non-empty optional parameter. Returns the defaultValue if not
+	 * Gets an optional parameter and nullable or not. Returns the defaultValue if not
 	 * found
 	 * @param parameterName parameter name
 	 * @param defaultValue default value
@@ -136,9 +136,10 @@ public abstract class BaseWorkFlowTask implements WorkFlowTask, BeanNameAware {
 	 */
 	public String getOptionalParameterValue(String parameterName, String defaultValue, Boolean isNullable) {
 		Map<String, String> parameters = getAllParameters(workContext);
-		return parameters.entrySet().stream().filter(entry -> !isNullable && !isNull(entry.getValue()) && !entry.getValue().equalsIgnoreCase("null"))
-				.filter(entry -> parameterName.equals(entry.getKey()))
-				.map(Map.Entry::getValue).findFirst().orElse(defaultValue);
+		return parameters.entrySet().stream()
+				.filter(entry -> !isNullable && !isNull(entry.getValue()) && !entry.getValue().equalsIgnoreCase("null"))
+				.filter(entry -> parameterName.equals(entry.getKey())).map(Map.Entry::getValue).findFirst()
+				.orElse(defaultValue);
 	}
 
 }
