@@ -18,6 +18,11 @@ public class NamespaceWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	@Override
 	public WorkReport execute(WorkContext workContext) {
 		log.info("NamespaceWorkFlowTask");
+		if (!validateWorkflowParameters(workContext)) {
+			log.warn("Missing keys in context for workflowExecution {}, context: {}", getMainExecutionId(),
+					workContext);
+			return new DefaultWorkReport(WorkStatus.FAILED, workContext);
+		}
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 

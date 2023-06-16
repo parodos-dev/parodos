@@ -11,6 +11,7 @@ import com.redhat.parodos.common.exceptions.IllegalWorkFlowStateException;
 import com.redhat.parodos.common.exceptions.OperationDeniedException;
 import com.redhat.parodos.common.exceptions.ResourceAlreadyExistsException;
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
+import com.redhat.parodos.workflow.exceptions.WorkflowExecutionException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -64,6 +65,14 @@ public class ControllerExceptionHandler {
 	public ErrorMessageDTO illegalWorkFlowStateException(IllegalWorkFlowStateException ex, WebRequest request) {
 		return new ErrorMessageDTO(HttpStatus.BAD_REQUEST.value(), new Date(), ex.getMessage(),
 				"Illegal workflow state");
+	}
+
+	@ExceptionHandler(value = { WorkflowExecutionException.class })
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+	public ErrorMessageDTO workflowExecutionException(WorkflowExecutionException ex, WebRequest request) {
+		return new ErrorMessageDTO(HttpStatus.INTERNAL_SERVER_ERROR.value(), new Date(), ex.getMessage(),
+				"Workflow execution exception");
 	}
 
 	record ErrorMessageDTO(int status, Date date, String message, String description) {

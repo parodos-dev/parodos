@@ -70,6 +70,10 @@ public class WorkFlowExecution extends AbstractEntity {
 	@Column(name = "project_id")
 	private UUID projectId;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "original_workflow_execution_id")
+	private WorkFlowExecution originalWorkFlowExecution;
+
 	private String arguments;
 
 	@ManyToOne(fetch = FetchType.LAZY)

@@ -45,6 +45,16 @@ public class WorkFlowStatusResponseDTO {
 	@SerializedName(SERIALIZED_NAME_MESSAGE)
 	private String message;
 
+	public static final String SERIALIZED_NAME_ORIGINAL_EXECUTION_ID = "originalExecutionId";
+
+	@SerializedName(SERIALIZED_NAME_ORIGINAL_EXECUTION_ID)
+	private UUID originalExecutionId;
+
+	public static final String SERIALIZED_NAME_RESTARTED_COUNT = "restartedCount";
+
+	@SerializedName(SERIALIZED_NAME_RESTARTED_COUNT)
+	private Integer restartedCount;
+
 	/**
 	 * Gets or Sets status
 	 */
@@ -144,6 +154,44 @@ public class WorkFlowStatusResponseDTO {
 		this.message = message;
 	}
 
+	public WorkFlowStatusResponseDTO originalExecutionId(UUID originalExecutionId) {
+
+		this.originalExecutionId = originalExecutionId;
+		return this;
+	}
+
+	/**
+	 * Get originalExecutionId
+	 * @return originalExecutionId
+	 **/
+	@javax.annotation.Nullable
+	public UUID getOriginalExecutionId() {
+		return originalExecutionId;
+	}
+
+	public void setOriginalExecutionId(UUID originalExecutionId) {
+		this.originalExecutionId = originalExecutionId;
+	}
+
+	public WorkFlowStatusResponseDTO restartedCount(Integer restartedCount) {
+
+		this.restartedCount = restartedCount;
+		return this;
+	}
+
+	/**
+	 * Get restartedCount
+	 * @return restartedCount
+	 **/
+	@javax.annotation.Nullable
+	public Integer getRestartedCount() {
+		return restartedCount;
+	}
+
+	public void setRestartedCount(Integer restartedCount) {
+		this.restartedCount = restartedCount;
+	}
+
 	public WorkFlowStatusResponseDTO status(StatusEnum status) {
 
 		this.status = status;
@@ -238,6 +286,8 @@ public class WorkFlowStatusResponseDTO {
 		}
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = (WorkFlowStatusResponseDTO) o;
 		return Objects.equals(this.message, workFlowStatusResponseDTO.message)
+				&& Objects.equals(this.originalExecutionId, workFlowStatusResponseDTO.originalExecutionId)
+				&& Objects.equals(this.restartedCount, workFlowStatusResponseDTO.restartedCount)
 				&& Objects.equals(this.status, workFlowStatusResponseDTO.status)
 				&& Objects.equals(this.workFlowExecutionId, workFlowStatusResponseDTO.workFlowExecutionId)
 				&& Objects.equals(this.workFlowName, workFlowStatusResponseDTO.workFlowName)
@@ -246,7 +296,8 @@ public class WorkFlowStatusResponseDTO {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(message, status, workFlowExecutionId, workFlowName, works);
+		return Objects.hash(message, originalExecutionId, restartedCount, status, workFlowExecutionId, workFlowName,
+				works);
 	}
 
 	@Override
@@ -254,6 +305,8 @@ public class WorkFlowStatusResponseDTO {
 		StringBuilder sb = new StringBuilder();
 		sb.append("class WorkFlowStatusResponseDTO {\n");
 		sb.append("    message: ").append(toIndentedString(message)).append("\n");
+		sb.append("    originalExecutionId: ").append(toIndentedString(originalExecutionId)).append("\n");
+		sb.append("    restartedCount: ").append(toIndentedString(restartedCount)).append("\n");
 		sb.append("    status: ").append(toIndentedString(status)).append("\n");
 		sb.append("    workFlowExecutionId: ").append(toIndentedString(workFlowExecutionId)).append("\n");
 		sb.append("    workFlowName: ").append(toIndentedString(workFlowName)).append("\n");
@@ -281,6 +334,8 @@ public class WorkFlowStatusResponseDTO {
 		// a set of all properties/fields (JSON key names)
 		openapiFields = new HashSet<String>();
 		openapiFields.add("message");
+		openapiFields.add("originalExecutionId");
+		openapiFields.add("restartedCount");
 		openapiFields.add("status");
 		openapiFields.add("workFlowExecutionId");
 		openapiFields.add("workFlowName");
@@ -325,6 +380,12 @@ public class WorkFlowStatusResponseDTO {
 			throw new IllegalArgumentException(
 					String.format("Expected the field `message` to be a primitive type in the JSON string but got `%s`",
 							jsonObj.get("message").toString()));
+		}
+		if ((jsonObj.get("originalExecutionId") != null && !jsonObj.get("originalExecutionId").isJsonNull())
+				&& !jsonObj.get("originalExecutionId").isJsonPrimitive()) {
+			throw new IllegalArgumentException(String.format(
+					"Expected the field `originalExecutionId` to be a primitive type in the JSON string but got `%s`",
+					jsonObj.get("originalExecutionId").toString()));
 		}
 		if ((jsonObj.get("status") != null && !jsonObj.get("status").isJsonNull())
 				&& !jsonObj.get("status").isJsonPrimitive()) {

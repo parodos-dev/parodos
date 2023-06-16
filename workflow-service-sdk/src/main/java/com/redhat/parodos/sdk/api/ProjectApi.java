@@ -112,6 +112,11 @@ public class ProjectApi {
 	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call createAccessRequestToProjectCall(UUID id, AccessRequestDTO accessRequestDTO,
@@ -219,6 +224,11 @@ public class ProjectApi {
 	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public AccessResponseDTO createAccessRequestToProject(UUID id, AccessRequestDTO accessRequestDTO)
@@ -264,6 +274,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -316,6 +331,11 @@ public class ProjectApi {
 	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call createAccessRequestToProjectAsync(UUID id, AccessRequestDTO accessRequestDTO,
@@ -364,6 +384,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -465,6 +490,11 @@ public class ProjectApi {
 	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public ProjectResponseDTO createProject(ProjectRequestDTO projectRequestDTO) throws ApiException {
@@ -508,6 +538,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -557,6 +592,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -612,6 +652,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -716,6 +761,11 @@ public class ProjectApi {
 	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public ProjectResponseDTO getProjectById(UUID id) throws ApiException {
@@ -764,6 +814,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -817,6 +872,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -876,6 +936,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -978,6 +1043,11 @@ public class ProjectApi {
 	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public List<ProjectResponseDTO> getProjects() throws ApiException {
@@ -1030,6 +1100,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -1089,6 +1164,11 @@ public class ProjectApi {
 	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call getProjectsAsync(final ApiCallback<List<ProjectResponseDTO>> _callback) throws ApiException {
@@ -1137,6 +1217,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -1245,6 +1330,11 @@ public class ProjectApi {
 	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public ProjectUserRoleResponseDTO removeUsersFromProject(UUID id, List<String> requestBody) throws ApiException {
@@ -1289,6 +1379,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -1341,6 +1436,11 @@ public class ProjectApi {
 	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call removeUsersFromProjectAsync(UUID id, List<String> requestBody,
@@ -1390,6 +1490,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -1498,6 +1603,11 @@ public class ProjectApi {
 	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public ProjectUserRoleResponseDTO updateUserRolesToProject(UUID id, List<UserRoleRequestDTO> userRoleRequestDTO)
@@ -1544,6 +1654,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -1594,6 +1709,11 @@ public class ProjectApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>

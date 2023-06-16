@@ -47,6 +47,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Conflict
+        "500":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Internal Server Error
       summary: Login
       tags:
       - Login
@@ -87,6 +93,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Conflict
+        "500":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Internal Server Error
       summary: Returns a list of project
       tags:
       - Project
@@ -126,6 +138,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Conflict
+        "500":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Internal Server Error
       summary: Creates a new project
       tags:
       - Project
@@ -167,6 +185,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Conflict
+        "500":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Internal Server Error
       summary: Returns status about a specified project access request
       tags:
       - Project Access
@@ -208,6 +232,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Conflict
+        "500":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Internal Server Error
       summary: Update status of a specified project access request
       tags:
       - Project Access
@@ -251,6 +281,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Conflict
+        "500":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Internal Server Error
       summary: Returns information about a specified project
       tags:
       - Project
@@ -297,6 +333,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Conflict
+        "500":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Internal Server Error
       summary: Request user access to project
       tags:
       - Project
@@ -346,6 +388,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Conflict
+        "500":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Internal Server Error
       summary: Remove users from project
       tags:
       - Project
@@ -394,6 +442,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Conflict
+        "500":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Internal Server Error
       summary: Update user roles in project
       tags:
       - Project
@@ -441,6 +495,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Conflict
+        "500":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Internal Server Error
       summary: Returns a list of workflow definition
       tags:
       - Workflow Definition
@@ -481,6 +541,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Conflict
+        "500":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Internal Server Error
       summary: Returns information about a workflow definition by id
       tags:
       - Workflow Definition
@@ -547,6 +613,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Conflict
+        "500":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Internal Server Error
       summary: Returns updated parameter value
       tags:
       - Workflow Definition
@@ -595,6 +667,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Conflict
+        "500":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Internal Server Error
       summary: Returns workflows by project id
       tags:
       - Workflow
@@ -636,6 +714,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Conflict
+        "500":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Internal Server Error
       summary: Executes a workflow
       tags:
       - Workflow
@@ -692,6 +776,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Conflict
+        "500":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Internal Server Error
       summary: Updates a workflow checker task status
       tags:
       - Workflow
@@ -756,6 +846,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Conflict
+        "500":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Internal Server Error
       summary: Returns workflow context parameters
       tags:
       - Workflow
@@ -810,10 +906,64 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Conflict
+        "500":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Internal Server Error
       summary: Returns workflow execution log
       tags:
       - Workflow
       x-accepts: "*/*,text/plain"
+  /api/v1/workflows/{workFlowExecutionId}/restart:
+    post:
+      operationId: restartWorkFlow
+      parameters:
+      - explode: false
+        in: path
+        name: workFlowExecutionId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "202":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkFlowExecutionResponseDTO'
+          description: Accepted
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          content: {}
+          description: Not Found
+        "409":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Conflict
+        "500":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Internal Server Error
+      summary: Restart a workflow execution with same parameters
+      tags:
+      - Workflow
+      x-accepts: application/json
   /api/v1/workflows/{workFlowExecutionId}/status:
     get:
       operationId: getStatus
@@ -857,6 +1007,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageDTO'
           description: Conflict
+        "500":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Internal Server Error
       summary: Returns a workflow status
       tags:
       - Workflow
@@ -1518,14 +1674,20 @@ components:
         workFlowName: workFlowName
         invokingExecutionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         works:
-        - arguments:
+        - works:
+          - null
+          - null
+          arguments:
           - value: value
             key: key
           - value: value
             key: key
           type: TASK
           workName: workName
-        - arguments:
+        - works:
+          - null
+          - null
+          arguments:
           - value: value
             key: key
           - value: value
@@ -1608,6 +1770,7 @@ components:
       type: object
     WorkFlowStatusResponseDTO:
       example:
+        originalExecutionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         workFlowName: workFlowName
         works:
         - alertMessage: alertMessage
@@ -1627,11 +1790,18 @@ components:
           type: TASK
           status: FAILED
         workFlowExecutionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        restartedCount: 0
         message: message
         status: FAILED
       properties:
         message:
           type: string
+        originalExecutionId:
+          format: uuid
+          type: string
+        restartedCount:
+          format: int32
+          type: integer
         status:
           enum:
           - FAILED
@@ -1687,6 +1857,9 @@ components:
       type: object
     WorkRequestDTO:
       example:
+        works:
+        - null
+        - null
         arguments:
         - value: value
           key: key
@@ -1706,6 +1879,10 @@ components:
           type: string
         workName:
           type: string
+        works:
+          items:
+            $ref: '#/components/schemas/WorkRequestDTO'
+          type: array
       type: object
     WorkStatusResponseDTO:
       example:

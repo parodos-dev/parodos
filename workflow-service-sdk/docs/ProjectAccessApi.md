@@ -71,6 +71,7 @@ No authorization required
 | **401** | Unauthorized |  -  |
 | **404** | Not found |  -  |
 | **409** | Conflict |  -  |
+| **500** | Internal Server Error |  -  |
 
 <a id="updateProjectAccessStatus"></a>
 # **updateProjectAccessStatus**
@@ -136,4 +137,5 @@ No authorization required
 | **401** | Unauthorized |  -  |
 | **404** | Not found |  -  |
 | **409** | Conflict |  -  |
+| **500** | Internal Server Error |  -  |
 

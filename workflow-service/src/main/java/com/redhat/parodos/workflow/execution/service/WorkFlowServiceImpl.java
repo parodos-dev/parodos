@@ -54,6 +54,7 @@ import com.redhat.parodos.workflow.execution.dto.WorkFlowResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
+import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionContext;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowTaskExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowTaskRepository;
@@ -162,10 +163,72 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		WorkFlowExecution workFlowExecution = saveWorkFlow(projectId, user.getId(),
 				workFlowDefinitionRepository.findFirstByName(workflowName), WorkStatus.IN_PROGRESS, null, arguments);
 		WorkContextUtils.setMainExecutionId(workContext, workFlowExecution.getId());
+		workFlowExecution.setWorkFlowExecutionContext(WorkFlowExecutionContext.builder().workContext(workContext)
+				.mainWorkFlowExecution(workFlowExecution).build());
+		workFlowExecution = this.workFlowRepository.save(workFlowExecution);
 		workFlowExecutor.execute(WorkFlowExecutor.ExecutionContext.builder().projectId(projectId).userId(user.getId())
 				.workFlowName(workflowName).workContext(workContext).executionId(workFlowExecution.getId())
 				.rollbackWorkFlowName(workFlowDefinitionResponseDTO.getRollbackWorkflow()).build());
 		return new DefaultWorkReport(WorkStatus.IN_PROGRESS, workContext);
+	}
+
+	@Override
+	public WorkReport restart(UUID workFlowExecutionId) {
+		User user = userService.getUserEntityByUsername(SecurityUtils.getUsername());
+		WorkFlowExecution workFlowExecution = workFlowRepository.findById(workFlowExecutionId).orElseThrow(() -> {
+			throw new ResourceNotFoundException(ResourceType.WORKFLOW_EXECUTION, workFlowExecutionId);
+		});
+		WorkFlowDefinition workFlowDefinition = Optional.ofNullable(workFlowExecution.getWorkFlowDefinition())
+				.orElseThrow(() -> {
+					throw new ResourceNotFoundException(ResourceType.WORKFLOW_DEFINITION, workFlowExecution.getId());
+				});
+		WorkFlowDefinitionResponseDTO workFlowDefinitionResponseDTO = workFlowDefinitionService
+				.getWorkFlowDefinitionByName(workFlowDefinition.getName());
+		// check if it is not an inner workflow
+		if (workFlowExecution.getMainWorkFlowExecution() != null) {
+			throw new IllegalWorkFlowStateException(
+					String.format("workflow id: %s from workflow name: %s is an inner workflow!",
+							workFlowExecution.getId(), workFlowDefinition.getName()));
+		}
+		if (workFlowExecution.getWorkFlowExecutionContext() == null) {
+			throw new IllegalWorkFlowStateException(String.format(
+					"workflow id: %s from workflow name: %s has not Workflow Execution Context saved in the database, cannot restart it!",
+					workFlowExecution.getId(), workFlowDefinition.getName()));
+		}
+
+		WorkFlowExecution restartedWorkFlowExecution = saveRestartedWorkFlow(workFlowExecution.getProjectId(),
+				user.getId(), workFlowDefinition, WorkStatus.IN_PROGRESS, null, workFlowExecution.getArguments(),
+				workFlowExecution);
+		WorkContext context = rebuildRestartedWorkContext(
+				workFlowExecution.getWorkFlowExecutionContext().getWorkContext(), restartedWorkFlowExecution,
+				workFlowDefinition);
+
+		restartedWorkFlowExecution.setWorkFlowExecutionContext(workFlowExecution.getWorkFlowExecutionContext());
+		restartedWorkFlowExecution = this.workFlowRepository.save(restartedWorkFlowExecution);
+		workFlowExecutor.execute(
+				WorkFlowExecutor.ExecutionContext.builder().projectId(restartedWorkFlowExecution.getProjectId())
+						.userId(user.getId()).workFlowName(workFlowDefinition.getName()).workContext(context)
+						.executionId(restartedWorkFlowExecution.getId())
+						.rollbackWorkFlowName(workFlowDefinitionResponseDTO.getRollbackWorkflow()).build());
+
+		return new DefaultWorkReport(WorkStatus.IN_PROGRESS, context);
+	}
+
+	private static WorkContext rebuildRestartedWorkContext(WorkContext context, WorkFlowExecution workFlowExecution,
+			WorkFlowDefinition workFlowDefinition) {
+		if (context == null) {
+			log.warn(
+					"workflow id: {} from workflow name: {} has null WorkContext from WorkflowExecutionContext, using default empty",
+					workFlowExecution.getId(), workFlowDefinition.getName());
+			context = new WorkContext();
+		}
+		context.getContext().entrySet().removeIf(entry -> {
+			String key = entry.getKey();
+			return !(key.endsWith(WorkContextDelegate.Resource.ARGUMENTS.name())
+					|| key.endsWith(WorkContextDelegate.Resource.PARENT_WORKFLOW.name()));
+		});
+		WorkContextUtils.setMainExecutionId(context, workFlowExecution.getId());
+		return context;
 	}
 
 	/**
@@ -191,12 +254,24 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	@Override
 	public WorkFlowExecution saveWorkFlow(UUID projectId, UUID userId, WorkFlowDefinition workFlowDefinition,
 			WorkStatus workStatus, WorkFlowExecution mainWorkFlowExecution, String arguments) {
+		return saveRestartedWorkFlow(projectId, userId, workFlowDefinition, workStatus, mainWorkFlowExecution,
+				arguments, null);
+	}
+
+	@Override
+	public WorkFlowExecution saveRestartedWorkFlow(UUID projectId, UUID userId, WorkFlowDefinition workFlowDefinition,
+			WorkStatus workStatus, WorkFlowExecution mainWorkFlowExecution, String arguments,
+			WorkFlowExecution originalWorkflowExecution) {
 		User user = userService.getUserEntityById(userId);
 		try {
 			this.statusCounterWithStatus(workStatus);
-			return workFlowRepository.save(WorkFlowExecution.builder().workFlowDefinition(workFlowDefinition)
-					.projectId(projectId).user(user).status(workStatus).startDate(new Date()).arguments(arguments)
-					.mainWorkFlowExecution(mainWorkFlowExecution).build());
+			WorkFlowExecution.WorkFlowExecutionBuilder builder = WorkFlowExecution.builder()
+					.workFlowDefinition(workFlowDefinition).projectId(projectId).user(user).status(workStatus)
+					.startDate(new Date()).arguments(arguments).mainWorkFlowExecution(mainWorkFlowExecution);
+			if (originalWorkflowExecution != null) {
+				builder = builder.originalWorkFlowExecution(originalWorkflowExecution);
+			}
+			return workFlowRepository.save(builder.build());
 		}
 		catch (DataAccessException e) {
 			log.error("failing persist workflow execution for: {} in main workflow execution: {}. error Message: {}",
@@ -253,10 +328,13 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
 		List<WorkStatusResponseDTO> workFlowWorksStatusResponseDTOs = workFlowServiceDelegate
 				.getWorkFlowAndWorksStatus(workFlowExecution, workFlowDefinition);
-
 		return WorkFlowStatusResponseDTO.builder().workFlowExecutionId(workFlowExecution.getId())
 				.workFlowName(workFlowDefinition.getName()).status(workFlowExecution.getStatus())
-				.message(workFlowExecution.getMessage()).works(workFlowWorksStatusResponseDTOs).build();
+				.message(workFlowExecution.getMessage()).works(workFlowWorksStatusResponseDTOs)
+				.restartedCount(workFlowRepository.countRestartedWorkflow(workFlowExecution.getId()))
+				.originalExecutionId(Optional.ofNullable(workFlowExecution.getOriginalWorkFlowExecution())
+						.orElse(new WorkFlowExecution()).getId())
+				.build();
 	}
 
 	@Override

@@ -124,6 +124,37 @@ public class WorkFlowRepositoryTest extends RepositoryTestBase {
 		assertEquals(mainWorkFlowExecution, workFlowExecutions.get(0));
 	}
 
+	@Test
+	public void testCountRestartedWorkflow() {
+		// given
+		User user = createUser();
+		WorkFlowExecution mainWorkFlowExecution = createWorkFlowExecution();
+		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().workFlowDefinition(createWorkFlowDefinition())
+				.status(WorkStatus.IN_PROGRESS).projectId(createProject(user).getId()).user(createUser())
+				.mainWorkFlowExecution(mainWorkFlowExecution).build();
+		workFlowRepository.save(workFlowExecution);
+
+		// when
+		int count = workFlowRepository.countRestartedWorkflow(workFlowExecution.getId());
+
+		// then
+		assertEquals(0, count);
+
+		// When
+		WorkFlowExecution restartedWorkFlowExecution = WorkFlowExecution.builder()
+				.workFlowDefinition(createWorkFlowDefinition()).status(WorkStatus.IN_PROGRESS)
+				.projectId(createProject(user).getId()).user(createUser()).mainWorkFlowExecution(mainWorkFlowExecution)
+				.originalWorkFlowExecution(workFlowExecution).build();
+		workFlowRepository.save(restartedWorkFlowExecution);
+
+		count = workFlowRepository.countRestartedWorkflow(workFlowExecution.getId());
+		int countForRestarted = workFlowRepository.countRestartedWorkflow(restartedWorkFlowExecution.getId());
+
+		// then
+		assertEquals(1, count);
+		assertEquals(0, countForRestarted);
+	}
+
 	private User createUser() {
 		User user = User.builder().username(UUID.randomUUID().toString()).build();
 		return entityManager.persist(user);

@@ -144,8 +144,13 @@ public abstract class WorkFlowServiceUtils {
 		try (var executorService = new RetryExecutorService<WorkFlowStatusResponseDTO>()) {
 			Callable<WorkFlowStatusResponseDTO> task = () -> {
 				WorkFlowStatusResponseDTO status = workflowApi.getStatus(workFlowExecutionId);
+				if (status.getStatus() == StatusEnum.IN_PROGRESS) {
+					throw new InProgressStatusException(
+							"Workflow status is still in progress, not yet in state: %s".formatted(expectedStatus));
+				}
 				if (status.getStatus() != expectedStatus) {
-					throw new ApiException("Workflow status is not " + expectedStatus);
+					throw new WrongStatusException(
+							"Workflow status is not %s, it is %s ".formatted(expectedStatus, status.getStatus()));
 				}
 				return status;
 			};
@@ -153,7 +158,7 @@ public abstract class WorkFlowServiceUtils {
 			result = executorService.submitWithRetry(task);
 		}
 		catch (Exception e) {
-			throw new RuntimeException("Workflow status is not " + expectedStatus, e);
+			throw new RuntimeException("Workflow status is not %s".formatted(expectedStatus), e);
 		}
 		return result;
 	}
@@ -234,6 +239,22 @@ public abstract class WorkFlowServiceUtils {
 			throw new ApiException("Can retrieve project with name " + projectName);
 		}
 		return testProject;
+	}
+
+	public static class InProgressStatusException extends Exception {
+
+		public InProgressStatusException(String message) {
+			super(message);
+		}
+
+	}
+
+	public static class WrongStatusException extends Exception {
+
+		public WrongStatusException(String message) {
+			super(message);
+		}
+
 	}
 
 }

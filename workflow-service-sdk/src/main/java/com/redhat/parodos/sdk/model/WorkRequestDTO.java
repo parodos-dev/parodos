@@ -105,6 +105,11 @@ public class WorkRequestDTO {
 	@SerializedName(SERIALIZED_NAME_WORK_NAME)
 	private String workName;
 
+	public static final String SERIALIZED_NAME_WORKS = "works";
+
+	@SerializedName(SERIALIZED_NAME_WORKS)
+	private List<WorkRequestDTO> works;
+
 	public WorkRequestDTO() {
 	}
 
@@ -173,6 +178,33 @@ public class WorkRequestDTO {
 		this.workName = workName;
 	}
 
+	public WorkRequestDTO works(List<WorkRequestDTO> works) {
+
+		this.works = works;
+		return this;
+	}
+
+	public WorkRequestDTO addWorksItem(WorkRequestDTO worksItem) {
+		if (this.works == null) {
+			this.works = new ArrayList<>();
+		}
+		this.works.add(worksItem);
+		return this;
+	}
+
+	/**
+	 * Get works
+	 * @return works
+	 **/
+	@javax.annotation.Nullable
+	public List<WorkRequestDTO> getWorks() {
+		return works;
+	}
+
+	public void setWorks(List<WorkRequestDTO> works) {
+		this.works = works;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -184,12 +216,13 @@ public class WorkRequestDTO {
 		WorkRequestDTO workRequestDTO = (WorkRequestDTO) o;
 		return Objects.equals(this.arguments, workRequestDTO.arguments)
 				&& Objects.equals(this.type, workRequestDTO.type)
-				&& Objects.equals(this.workName, workRequestDTO.workName);
+				&& Objects.equals(this.workName, workRequestDTO.workName)
+				&& Objects.equals(this.works, workRequestDTO.works);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(arguments, type, workName);
+		return Objects.hash(arguments, type, workName, works);
 	}
 
 	@Override
@@ -199,6 +232,7 @@ public class WorkRequestDTO {
 		sb.append("    arguments: ").append(toIndentedString(arguments)).append("\n");
 		sb.append("    type: ").append(toIndentedString(type)).append("\n");
 		sb.append("    workName: ").append(toIndentedString(workName)).append("\n");
+		sb.append("    works: ").append(toIndentedString(works)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}
@@ -224,6 +258,7 @@ public class WorkRequestDTO {
 		openapiFields.add("arguments");
 		openapiFields.add("type");
 		openapiFields.add("workName");
+		openapiFields.add("works");
 
 		// a set of required properties/fields (JSON key names)
 		openapiRequiredFields = new HashSet<String>();
@@ -282,6 +317,23 @@ public class WorkRequestDTO {
 			throw new IllegalArgumentException(String.format(
 					"Expected the field `workName` to be a primitive type in the JSON string but got `%s`",
 					jsonObj.get("workName").toString()));
+		}
+		if (jsonObj.get("works") != null && !jsonObj.get("works").isJsonNull()) {
+			JsonArray jsonArrayworks = jsonObj.getAsJsonArray("works");
+			if (jsonArrayworks != null) {
+				// ensure the json data is an array
+				if (!jsonObj.get("works").isJsonArray()) {
+					throw new IllegalArgumentException(
+							String.format("Expected the field `works` to be an array in the JSON string but got `%s`",
+									jsonObj.get("works").toString()));
+				}
+
+				// validate the optional field `works` (array)
+				for (int i = 0; i < jsonArrayworks.size(); i++) {
+					WorkRequestDTO.validateJsonObject(jsonArrayworks.get(i).getAsJsonObject());
+				}
+				;
+			}
 		}
 	}
 

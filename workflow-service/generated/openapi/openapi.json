@@ -65,6 +65,16 @@
               }
             },
             "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
           }
         },
         "summary" : "Login",
@@ -126,6 +136,16 @@
               }
             },
             "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
           }
         },
         "summary" : "Returns a list of project",
@@ -186,6 +206,16 @@
               }
             },
             "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
           }
         },
         "summary" : "Creates a new project",
@@ -241,6 +271,16 @@
               }
             },
             "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
           }
         },
         "summary" : "Returns status about a specified project access request",
@@ -297,6 +337,16 @@
               }
             },
             "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
           }
         },
         "summary" : "Update status of a specified project access request",
@@ -355,6 +405,16 @@
               }
             },
             "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
           }
         },
         "summary" : "Returns information about a specified project",
@@ -420,6 +480,16 @@
               }
             },
             "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
           }
         },
         "summary" : "Request user access to project",
@@ -488,6 +558,16 @@
               }
             },
             "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
           }
         },
         "summary" : "Remove users from project",
@@ -554,6 +634,16 @@
               }
             },
             "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
           }
         },
         "summary" : "Update user roles in project",
@@ -620,6 +710,16 @@
               }
             },
             "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
           }
         },
         "summary" : "Returns a list of workflow definition",
@@ -675,6 +775,16 @@
               }
             },
             "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
           }
         },
         "summary" : "Returns information about a workflow definition by id",
@@ -765,6 +875,16 @@
               }
             },
             "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
           }
         },
         "summary" : "Returns updated parameter value",
@@ -832,6 +952,16 @@
               }
             },
             "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
           }
         },
         "summary" : "Returns workflows by project id",
@@ -895,67 +1025,19 @@
               }
             },
             "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
           }
         },
         "summary" : "Executes a workflow",
-        "tags" : [ "Workflow" ]
-      }
-    },
-    "/api/v1/workflows/{workFlowExecutionId}" : {
-      "post" : {
-        "operationId" : "restartWorkflow",
-        "parameters" : [ {
-          "in" : "path",
-          "name" : "workFlowExecutionId",
-          "required" : true,
-          "schema" : {
-            "type" : "string",
-            "format" : "uuid"
-          }
-        } ],
-        "responses" : {
-          "202" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/WorkFlowExecutionResponseDTO"
-                }
-              }
-            },
-            "description" : "Accepted"
-          },
-          "400" : {
-            "content" : {
-              "*/*" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ErrorMessageDTO"
-                }
-              }
-            },
-            "description" : "Bad Request"
-          },
-          "401" : {
-            "description" : "Unauthorized"
-          },
-          "403" : {
-            "description" : "Forbidden"
-          },
-          "404" : {
-            "content" : { },
-            "description" : "Not Found"
-          },
-          "409" : {
-            "content" : {
-              "*/*" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ErrorMessageDTO"
-                }
-              }
-            },
-            "description" : "Conflict"
-          }
-        },
-        "summary" : "Restart a workflow execution with same parameters",
         "tags" : [ "Workflow" ]
       }
     },
@@ -1028,6 +1110,16 @@
               }
             },
             "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
           }
         },
         "summary" : "Updates a workflow checker task status",
@@ -1103,6 +1195,16 @@
               }
             },
             "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
           }
         },
         "summary" : "Returns workflow context parameters",
@@ -1177,9 +1279,87 @@
               }
             },
             "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
           }
         },
         "summary" : "Returns workflow execution log",
+        "tags" : [ "Workflow" ]
+      }
+    },
+    "/api/v1/workflows/{workFlowExecutionId}/restart" : {
+      "post" : {
+        "operationId" : "restartWorkFlow",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "workFlowExecutionId",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/WorkFlowExecutionResponseDTO"
+                }
+              }
+            },
+            "description" : "Accepted"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : { },
+            "description" : "Not Found"
+          },
+          "409" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Restart a workflow execution with same parameters",
         "tags" : [ "Workflow" ]
       }
     },
@@ -1244,6 +1424,16 @@
               }
             },
             "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
           }
         },
         "summary" : "Returns a workflow status",
@@ -1739,6 +1929,14 @@
           "message" : {
             "type" : "string"
           },
+          "originalExecutionId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "restartedCount" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
           "status" : {
             "type" : "string",
             "enum" : [ "FAILED", "COMPLETED", "IN_PROGRESS", "REJECTED", "PENDING" ]
@@ -1808,6 +2006,12 @@
           },
           "workName" : {
             "type" : "string"
+          },
+          "works" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/WorkRequestDTO"
+            }
           }
         }
       },

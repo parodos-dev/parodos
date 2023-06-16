@@ -39,10 +39,16 @@ public interface WorkFlowService {
 
 	WorkReport execute(WorkFlowRequestDTO workFlowRequestDTO);
 
+	WorkReport restart(UUID workFlowExecutionId);
+
 	WorkFlowExecution getWorkFlowById(UUID workFlowExecutionId);
 
 	WorkFlowExecution saveWorkFlow(UUID projectId, UUID userId, WorkFlowDefinition workFlowDefinition,
 			WorkStatus workStatus, WorkFlowExecution mainWorkFlowExecution, String arguments);
+
+	WorkFlowExecution saveRestartedWorkFlow(UUID projectId, UUID userId, WorkFlowDefinition workFlowDefinition,
+			WorkStatus workStatus, WorkFlowExecution mainWorkFlowExecution, String arguments,
+			WorkFlowExecution originalWorkflowExecution);
 
 	WorkFlowExecution updateWorkFlow(WorkFlowExecution workFlowExecution);
 

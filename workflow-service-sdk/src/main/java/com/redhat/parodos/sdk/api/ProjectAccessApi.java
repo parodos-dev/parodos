@@ -107,6 +107,11 @@ public class ProjectAccessApi {
 	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call getProjectAccessStatusCall(UUID id, final ApiCallback _callback) throws ApiException {
@@ -205,6 +210,11 @@ public class ProjectAccessApi {
 	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public AccessStatusResponseDTO getProjectAccessStatus(UUID id) throws ApiException {
@@ -248,6 +258,11 @@ public class ProjectAccessApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -296,6 +311,11 @@ public class ProjectAccessApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -347,6 +367,11 @@ public class ProjectAccessApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -454,6 +479,11 @@ public class ProjectAccessApi {
 	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public void updateProjectAccessStatus(UUID id, AccessStatusRequestDTO accessStatusRequestDTO) throws ApiException {
@@ -497,6 +527,11 @@ public class ProjectAccessApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -545,6 +580,11 @@ public class ProjectAccessApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>

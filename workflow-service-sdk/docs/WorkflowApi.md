@@ -9,6 +9,7 @@ All URIs are relative to *http://localhost:8080*
 | [**getStatus**](WorkflowApi.md#getStatus) | **GET** /api/v1/workflows/{workFlowExecutionId}/status | Returns a workflow status |
 | [**getStatusByProjectId**](WorkflowApi.md#getStatusByProjectId) | **GET** /api/v1/workflows | Returns workflows by project id |
 | [**getWorkflowParameters**](WorkflowApi.md#getWorkflowParameters) | **GET** /api/v1/workflows/{workFlowExecutionId}/context | Returns workflow context parameters |
+| [**restartWorkFlow**](WorkflowApi.md#restartWorkFlow) | **POST** /api/v1/workflows/{workFlowExecutionId}/restart | Restart a workflow execution with same parameters |
 | [**updateWorkFlowCheckerTaskStatus**](WorkflowApi.md#updateWorkFlowCheckerTaskStatus) | **POST** /api/v1/workflows/{workFlowExecutionId}/checkers/{workFlowCheckerTaskName} | Updates a workflow checker task status |
 
 
@@ -76,6 +77,7 @@ No authorization required
 | **403** | Forbidden |  -  |
 | **404** | Not Found |  -  |
 | **409** | Conflict |  -  |
+| **500** | Internal Server Error |  -  |
 
 <a id="getLog"></a>
 # **getLog**
@@ -144,6 +146,7 @@ No authorization required
 | **403** | Forbidden |  -  |
 | **404** | Not Found |  -  |
 | **409** | Conflict |  -  |
+| **500** | Internal Server Error |  -  |
 
 <a id="getStatus"></a>
 # **getStatus**
@@ -210,6 +213,7 @@ No authorization required
 | **403** | Forbidden |  -  |
 | **404** | Not Found |  -  |
 | **409** | Conflict |  -  |
+| **500** | Internal Server Error |  -  |
 
 <a id="getStatusByProjectId"></a>
 # **getStatusByProjectId**
@@ -275,6 +279,7 @@ No authorization required
 | **403** | Forbidden |  -  |
 | **404** | Not Found |  -  |
 | **409** | Conflict |  -  |
+| **500** | Internal Server Error |  -  |
 
 <a id="getWorkflowParameters"></a>
 # **getWorkflowParameters**
@@ -342,6 +347,73 @@ No authorization required
 | **403** | Forbidden |  -  |
 | **404** | Not Found |  -  |
 | **409** | Conflict |  -  |
+| **500** | Internal Server Error |  -  |
+
+<a id="restartWorkFlow"></a>
+# **restartWorkFlow**
+> WorkFlowExecutionResponseDTO restartWorkFlow(workFlowExecutionId)
+
+Restart a workflow execution with same parameters
+
+### Example
+```java
+// Import classes:
+import com.redhat.parodos.sdk.invoker.ApiClient;
+import com.redhat.parodos.sdk.invoker.ApiException;
+import com.redhat.parodos.sdk.invoker.Configuration;
+import com.redhat.parodos.sdk.invoker.models.*;
+import com.redhat.parodos.sdk.api.WorkflowApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("http://localhost:8080");
+
+    WorkflowApi apiInstance = new WorkflowApi(defaultClient);
+    UUID workFlowExecutionId = UUID.randomUUID(); // UUID | 
+    try {
+      WorkFlowExecutionResponseDTO result = apiInstance.restartWorkFlow(workFlowExecutionId);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling WorkflowApi#restartWorkFlow");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **workFlowExecutionId** | **UUID**|  | |
+
+### Return type
+
+[**WorkFlowExecutionResponseDTO**](WorkFlowExecutionResponseDTO.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json, */*
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **202** | Accepted |  -  |
+| **400** | Bad Request |  -  |
+| **401** | Unauthorized |  -  |
+| **403** | Forbidden |  -  |
+| **404** | Not Found |  -  |
+| **409** | Conflict |  -  |
+| **500** | Internal Server Error |  -  |
 
 <a id="updateWorkFlowCheckerTaskStatus"></a>
 # **updateWorkFlowCheckerTaskStatus**
@@ -411,4 +483,5 @@ No authorization required
 | **403** | Forbidden |  -  |
 | **404** | Not found |  -  |
 | **409** | Conflict |  -  |
+| **500** | Internal Server Error |  -  |
 
