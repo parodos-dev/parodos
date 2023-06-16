@@ -32,6 +32,12 @@ public class RetryExecutorService<T> implements AutoCloseable {
 		// @formatter:on
 	}
 
+	public T submitWithRetry(Callable<T> task, long maxRetryTime) {
+		// @formatter:off
+		return submitWithRetry(task, () -> {}, () -> {}, maxRetryTime, RETRY_DELAY);
+		// @formatter:on
+	}
+
 	/**
 	 * Submit a task to the executor service, retrying on failure until the task
 	 * @param task The task to submit
@@ -58,8 +64,13 @@ public class RetryExecutorService<T> implements AutoCloseable {
 				onSuccess.run();
 				future.complete(result); // Success, complete the future with the result
 			}
+			catch (WorkFlowServiceUtils.InProgressStatusException e) {
+				return;
+			}
 			catch (Exception e) {
 				onFailure.run();
+				future.completeExceptionally(e);
+				return;
 			}
 		}, 0, retryDelay, TimeUnit.MILLISECONDS);
 

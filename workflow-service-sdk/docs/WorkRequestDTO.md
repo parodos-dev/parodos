@@ -10,6 +10,7 @@
 |**arguments** | [**List&lt;ArgumentRequestDTO&gt;**](ArgumentRequestDTO.md) |  |  [optional] |
 |**type** | [**TypeEnum**](#TypeEnum) |  |  [optional] |
 |**workName** | **String** |  |  [optional] |
+|**works** | [**List&lt;WorkRequestDTO&gt;**](WorkRequestDTO.md) |  |  [optional] |
 
 
 

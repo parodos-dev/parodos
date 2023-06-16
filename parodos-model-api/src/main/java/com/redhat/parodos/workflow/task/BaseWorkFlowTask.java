@@ -18,6 +18,7 @@ package com.redhat.parodos.workflow.task;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.log.WorkFlowTaskLogger;
@@ -114,6 +115,21 @@ public abstract class BaseWorkFlowTask implements WorkFlowTask, BeanNameAware {
 					log.error(String.format("parameter %s is not provided for task %s!", parameterName, name));
 					return new MissingParameterException("missing parameter(s) for ParameterName: " + parameterName);
 				});
+	}
+
+	public boolean validateWorkflowParameters(WorkContext workContext) {
+		AtomicBoolean valid = new AtomicBoolean(true);
+		getWorkFlowTaskParameters().stream().filter(param -> !param.isOptional()).forEach(param -> {
+			try {
+				getRequiredParameterValue(param.getKey());
+			}
+			catch (MissingParameterException e) {
+				valid.set(false);
+				log.warn("{} is missing from workContext for workflow task {}", param.getKey(), getName());
+			}
+		});
+
+		return valid.get();
 	}
 
 	/**

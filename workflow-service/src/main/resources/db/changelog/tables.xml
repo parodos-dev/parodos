@@ -167,6 +167,10 @@
                 <constraints nullable="false" foreignKeyName="fk_workflow_execution_workflow_definition"
                              references="prds_workflow_definition(id)"/>
             </column>
+            <column name="original_workflow_execution_id" type="${uuidType}">
+                <constraints nullable="true" foreignKeyName="fk_workflow_execution_original_workflow_execution_id"
+                             references="prds_workflow_execution(id)"/>
+            </column>
             <column name="main_workflow_execution_id" type="${uuidType}">
                 <constraints nullable="true" foreignKeyName="fk_workflow_execution_main_workflow_execution_id"
                              references="prds_workflow_execution(id)"/>

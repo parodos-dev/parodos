@@ -1,7 +1,9 @@
 package com.redhat.parodos.flows;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import com.redhat.parodos.flows.common.WorkFlowTestBuilder;
 import com.redhat.parodos.flows.common.WorkFlowTestBuilder.TestComponents;
@@ -79,24 +81,52 @@ public class ComplexWorkFlowTest {
 		log.info("Onboarding workflow id {}", workFlowDefinitions.get(0).getId());
 		log.info("Onboarding workflow name {}", workFlowDefinitions.get(0).getName());
 
-		WorkRequestDTO work1 = new WorkRequestDTO();
-		work1.setWorkName("certWorkFlowTask");
-		work1.setArguments(Arrays.asList(new ArgumentRequestDTO().key("user-id").value("test-user-id"),
-				new ArgumentRequestDTO().key("api-server").value("api.com")));
+		WorkRequestDTO adGroupsTask = new WorkRequestDTO();
+		adGroupsTask.setWorkName("adGroupsWorkFlowTask");
+		adGroupsTask.setArguments(Arrays.asList(new ArgumentRequestDTO().key("userId").value("test-user-id"),
+				new ArgumentRequestDTO().key("adGroups").value("adGroupsVALUE")));
+		adGroupsTask.setType(WorkRequestDTO.TypeEnum.TASK);
 
-		WorkRequestDTO work2 = new WorkRequestDTO();
-		work2.setWorkName("adGroupWorkFlowTask");
-		work2.setArguments(Arrays.asList(new ArgumentRequestDTO().key("user-id").value("test-user-id"),
-				new ArgumentRequestDTO().key("api-server").value("api.com")));
+		WorkRequestDTO namespaceWorkFlowTask = new WorkRequestDTO();
+		namespaceWorkFlowTask.setWorkName("namespaceWorkFlowTask");
+		namespaceWorkFlowTask.setArguments(Collections
+				.singletonList(new ArgumentRequestDTO().key("projectId").value(UUID.randomUUID().toString())));
+		namespaceWorkFlowTask.setType(WorkRequestDTO.TypeEnum.TASK);
 
-		WorkRequestDTO work3 = new WorkRequestDTO();
-		work3.setWorkName("dynatraceWorkFlowTask");
-		work3.setArguments(Arrays.asList(new ArgumentRequestDTO().key("user-id").value("test-user-id"),
-				new ArgumentRequestDTO().key("api-server").value("api.com")));
+		WorkRequestDTO sslCertificationWorkFlowTask = new WorkRequestDTO();
+		sslCertificationWorkFlowTask.setWorkName("sslCertificationWorkFlowTask");
+		sslCertificationWorkFlowTask
+				.setArguments(Arrays.asList(new ArgumentRequestDTO().key("domainName").value("api.com"),
+						new ArgumentRequestDTO().key("ipAddress").value("127.0.0.1")));
+		sslCertificationWorkFlowTask.setType(WorkRequestDTO.TypeEnum.TASK);
+
+		// splunkMonitoringWorkFlowTask and adGroupsWorkFlowTask are task of
+		// subWorkFlowOne
+		WorkRequestDTO subWorkFlowOne = new WorkRequestDTO();
+		subWorkFlowOne.workName("subWorkFlowOne");
+		subWorkFlowOne.setType(WorkRequestDTO.TypeEnum.WORKFLOW);
+		subWorkFlowOne.addWorksItem(adGroupsTask);
+
+		// namespaceWorkFlowTask is task of subWorkFlowTwo and subWorkFlowOne is a
+		// sub-workflow
+		WorkRequestDTO subWorkFlowTwo = new WorkRequestDTO();
+		subWorkFlowTwo.workName("subWorkFlowTwo");
+		subWorkFlowTwo.setType(WorkRequestDTO.TypeEnum.WORKFLOW);
+		subWorkFlowTwo.addWorksItem(namespaceWorkFlowTask);
+		subWorkFlowTwo.addWorksItem(subWorkFlowOne);
+
+		// sslCertificationWorkFlowTask is task of subWorkFlowTwo and subWorkFlowTwo is a
+		// sub-workflow
+		WorkRequestDTO subWorkFlowThree = new WorkRequestDTO();
+		subWorkFlowThree.workName("subWorkFlowThree");
+		subWorkFlowThree.setType(WorkRequestDTO.TypeEnum.WORKFLOW);
+		subWorkFlowThree.addWorksItem(sslCertificationWorkFlowTask);
+		subWorkFlowThree.addWorksItem(subWorkFlowTwo);
 
 		workFlowRequestDTO.setProjectId(components.project().getId());
 		workFlowRequestDTO.setWorkFlowName(workFlowDefinitions.get(0).getName());
-		workFlowRequestDTO.setWorks(Arrays.asList(work1, work2, work3));
+		workFlowRequestDTO.setWorks(Arrays.asList(subWorkFlowOne, subWorkFlowTwo, subWorkFlowThree, adGroupsTask,
+				namespaceWorkFlowTask, sslCertificationWorkFlowTask));
 		workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
 
 		assertNotNull("There is no valid WorkFlowExecutionId", workFlowResponseDTO.getWorkFlowExecutionId());

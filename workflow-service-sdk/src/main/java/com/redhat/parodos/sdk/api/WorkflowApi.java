@@ -116,6 +116,11 @@ public class WorkflowApi {
 	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call executeCall(WorkFlowRequestDTO workFlowRequestDTO, final ApiCallback _callback)
@@ -219,6 +224,11 @@ public class WorkflowApi {
 	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public WorkFlowExecutionResponseDTO execute(WorkFlowRequestDTO workFlowRequestDTO) throws ApiException {
@@ -267,6 +277,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -321,6 +336,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -382,6 +402,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -498,6 +523,11 @@ public class WorkflowApi {
 	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public String getLog(UUID workFlowExecutionId, String taskName) throws ApiException {
@@ -552,6 +582,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -613,6 +648,11 @@ public class WorkflowApi {
 	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call getLogAsync(UUID workFlowExecutionId, String taskName, final ApiCallback<String> _callback)
@@ -671,6 +711,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -782,6 +827,11 @@ public class WorkflowApi {
 	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public WorkFlowStatusResponseDTO getStatus(UUID workFlowExecutionId) throws ApiException {
@@ -835,6 +885,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -895,6 +950,11 @@ public class WorkflowApi {
 	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call getStatusAsync(UUID workFlowExecutionId, final ApiCallback<WorkFlowStatusResponseDTO> _callback)
@@ -948,6 +1008,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -1051,6 +1116,11 @@ public class WorkflowApi {
 	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public List<WorkFlowResponseDTO> getStatusByProjectId(UUID projectId) throws ApiException {
@@ -1099,6 +1169,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -1152,6 +1227,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -1208,6 +1288,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -1325,6 +1410,11 @@ public class WorkflowApi {
 	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public WorkFlowContextResponseDTO getWorkflowParameters(UUID workFlowExecutionId, List<String> param)
@@ -1376,6 +1466,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -1433,6 +1528,11 @@ public class WorkflowApi {
 	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public okhttp3.Call getWorkflowParametersAsync(UUID workFlowExecutionId, List<String> param,
@@ -1440,6 +1540,289 @@ public class WorkflowApi {
 
 		okhttp3.Call localVarCall = getWorkflowParametersValidateBeforeCall(workFlowExecutionId, param, _callback);
 		Type localVarReturnType = new TypeToken<WorkFlowContextResponseDTO>() {
+		}.getType();
+		localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+		return localVarCall;
+	}
+
+	/**
+	 * Build call for restartWorkFlow
+	 * @param workFlowExecutionId (required)
+	 * @param _callback Callback for upload/download progress
+	 * @return Call to execute
+	 * @throws ApiException If fail to serialize the request body object
+	 * @http.response.details
+	 * <table summary="Response Details" border="1">
+	 * <tr>
+	 * <td>Status Code</td>
+	 * <td>Description</td>
+	 * <td>Response Headers</td>
+	 * </tr>
+	 * <tr>
+	 * <td>202</td>
+	 * <td>Accepted</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>403</td>
+	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
+	 * </table>
+	 */
+	public okhttp3.Call restartWorkFlowCall(UUID workFlowExecutionId, final ApiCallback _callback) throws ApiException {
+		String basePath = null;
+		// Operation Servers
+		String[] localBasePaths = new String[] {};
+
+		// Determine Base Path to Use
+		if (localCustomBaseUrl != null) {
+			basePath = localCustomBaseUrl;
+		}
+		else if (localBasePaths.length > 0) {
+			basePath = localBasePaths[localHostIndex];
+		}
+		else {
+			basePath = null;
+		}
+
+		Object localVarPostBody = null;
+
+		// create path and map variables
+		String localVarPath = "/api/v1/workflows/{workFlowExecutionId}/restart".replace(
+				"{" + "workFlowExecutionId" + "}", localVarApiClient.escapeString(workFlowExecutionId.toString()));
+
+		List<Pair> localVarQueryParams = new ArrayList<Pair>();
+		List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+		Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+		Map<String, String> localVarCookieParams = new HashMap<String, String>();
+		Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+		final String[] localVarAccepts = { "application/json", "*/*" };
+		final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+		if (localVarAccept != null) {
+			localVarHeaderParams.put("Accept", localVarAccept);
+		}
+
+		final String[] localVarContentTypes = {};
+		final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+		if (localVarContentType != null) {
+			localVarHeaderParams.put("Content-Type", localVarContentType);
+		}
+
+		String[] localVarAuthNames = new String[] {};
+		return localVarApiClient.buildCall(basePath, localVarPath, "POST", localVarQueryParams,
+				localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams,
+				localVarFormParams, localVarAuthNames, _callback);
+	}
+
+	@SuppressWarnings("rawtypes")
+	private okhttp3.Call restartWorkFlowValidateBeforeCall(UUID workFlowExecutionId, final ApiCallback _callback)
+			throws ApiException {
+		// verify the required parameter 'workFlowExecutionId' is set
+		if (workFlowExecutionId == null) {
+			throw new ApiException(
+					"Missing the required parameter 'workFlowExecutionId' when calling restartWorkFlow(Async)");
+		}
+
+		return restartWorkFlowCall(workFlowExecutionId, _callback);
+
+	}
+
+	/**
+	 * Restart a workflow execution with same parameters
+	 * @param workFlowExecutionId (required)
+	 * @return WorkFlowExecutionResponseDTO
+	 * @throws ApiException If fail to call the API, e.g. server error or cannot
+	 * deserialize the response body
+	 * @http.response.details
+	 * <table summary="Response Details" border="1">
+	 * <tr>
+	 * <td>Status Code</td>
+	 * <td>Description</td>
+	 * <td>Response Headers</td>
+	 * </tr>
+	 * <tr>
+	 * <td>202</td>
+	 * <td>Accepted</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>403</td>
+	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
+	 * </table>
+	 */
+	public WorkFlowExecutionResponseDTO restartWorkFlow(UUID workFlowExecutionId) throws ApiException {
+		ApiResponse<WorkFlowExecutionResponseDTO> localVarResp = restartWorkFlowWithHttpInfo(workFlowExecutionId);
+		return localVarResp.getData();
+	}
+
+	/**
+	 * Restart a workflow execution with same parameters
+	 * @param workFlowExecutionId (required)
+	 * @return ApiResponse&lt;WorkFlowExecutionResponseDTO&gt;
+	 * @throws ApiException If fail to call the API, e.g. server error or cannot
+	 * deserialize the response body
+	 * @http.response.details
+	 * <table summary="Response Details" border="1">
+	 * <tr>
+	 * <td>Status Code</td>
+	 * <td>Description</td>
+	 * <td>Response Headers</td>
+	 * </tr>
+	 * <tr>
+	 * <td>202</td>
+	 * <td>Accepted</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>403</td>
+	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
+	 * </table>
+	 */
+	public ApiResponse<WorkFlowExecutionResponseDTO> restartWorkFlowWithHttpInfo(UUID workFlowExecutionId)
+			throws ApiException {
+		okhttp3.Call localVarCall = restartWorkFlowValidateBeforeCall(workFlowExecutionId, null);
+		Type localVarReturnType = new TypeToken<WorkFlowExecutionResponseDTO>() {
+		}.getType();
+		return localVarApiClient.execute(localVarCall, localVarReturnType);
+	}
+
+	/**
+	 * Restart a workflow execution with same parameters (asynchronously)
+	 * @param workFlowExecutionId (required)
+	 * @param _callback The callback to be executed when the API call finishes
+	 * @return The request call
+	 * @throws ApiException If fail to process the API call, e.g. serializing the request
+	 * body object
+	 * @http.response.details
+	 * <table summary="Response Details" border="1">
+	 * <tr>
+	 * <td>Status Code</td>
+	 * <td>Description</td>
+	 * <td>Response Headers</td>
+	 * </tr>
+	 * <tr>
+	 * <td>202</td>
+	 * <td>Accepted</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>403</td>
+	 * <td>Forbidden</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not Found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
+	 * </table>
+	 */
+	public okhttp3.Call restartWorkFlowAsync(UUID workFlowExecutionId,
+			final ApiCallback<WorkFlowExecutionResponseDTO> _callback) throws ApiException {
+
+		okhttp3.Call localVarCall = restartWorkFlowValidateBeforeCall(workFlowExecutionId, _callback);
+		Type localVarReturnType = new TypeToken<WorkFlowExecutionResponseDTO>() {
 		}.getType();
 		localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
 		return localVarCall;
@@ -1488,6 +1871,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -1615,6 +2003,11 @@ public class WorkflowApi {
 	 * <td>Conflict</td>
 	 * <td>-</td>
 	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
 	 * </table>
 	 */
 	public String updateWorkFlowCheckerTaskStatus(UUID workFlowExecutionId, String workFlowCheckerTaskName,
@@ -1667,6 +2060,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -1725,6 +2123,11 @@ public class WorkflowApi {
 	 * <tr>
 	 * <td>409</td>
 	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>

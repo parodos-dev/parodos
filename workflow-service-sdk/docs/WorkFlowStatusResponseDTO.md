@@ -8,6 +8,8 @@
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
 |**message** | **String** |  |  [optional] |
+|**originalExecutionId** | **UUID** |  |  [optional] |
+|**restartedCount** | **Integer** |  |  [optional] |
 |**status** | [**StatusEnum**](#StatusEnum) |  |  [optional] |
 |**workFlowExecutionId** | **UUID** |  |  [optional] |
 |**workFlowName** | **String** |  |  [optional] |

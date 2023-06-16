@@ -46,6 +46,10 @@ public class WorkFlowStatusResponseDTO {
 
 	private String message;
 
+	private UUID originalExecutionId;
+
+	private int restartedCount;
+
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private List<WorkStatusResponseDTO> works;
 
