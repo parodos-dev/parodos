@@ -2,7 +2,7 @@ FROM registry.access.redhat.com/ubi9/openjdk-17-runtime
 
 WORKDIR /app
 
-COPY target/*.jar ./notification-service.jar
+COPY target/notification-service-*.*.*[^a-z].jar ./notification-service.jar
 
 EXPOSE 8080
 
