@@ -94,7 +94,7 @@ public class GetAnalysisTaskTest {
 				new Data(new Mode(false, false, false, ""), "/windup/report", new Rules("", null),
 						new Scope(false, new Packages(new String[] {}, new String[] {})), new String[] {},
 						new String[] { "cloud-readiness" }),
-				null, new Task[] { new Task(new App(APP_ID, "parodos", null), "Succeeded",
+				null, new Task[] { new Task(new App(APP_ID, "parodos", null, null), "Succeeded",
 						String.format("parodos.%s.windup", APP_ID), null, null, null) });
 	}
 

@@ -76,7 +76,7 @@ public class GetApplicationTaskTest {
 	@SneakyThrows
 	public void getByName() {
 		when(mockClient.get(anyString())).thenReturn(
-				new Result.Success<>(new App(APP_ID, APP_NAME, new Repository("git", REPO_URL, REPO_BRANCH))));
+				new Result.Success<>(new App(APP_ID, APP_NAME, new Repository("git", REPO_URL, REPO_BRANCH), null)));
 		ctx.put("applicationName", APP_NAME);
 		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
 				WorkContextDelegate.Resource.ID, UUID.randomUUID());

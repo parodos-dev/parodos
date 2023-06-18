@@ -3,7 +3,10 @@ package com.redhat.parodos.tasks.migrationtoolkit;
 record Repository(String kind, String url, String branch) {
 }
 
-record App(int id, String name, Repository repository) {
+record App(int id, String name, Repository repository, Identity[] identities) {
+}
+
+record Identity(int id, String name) {
 }
 
 record Mode(boolean binary, boolean withDeps, boolean diva, String artifact) {
@@ -30,7 +33,7 @@ record TaskGroup(int id, String name, String state, String addon, Data data, Obj
 				new Data(new Mode(false, false, false, ""), "/windup/report", new Rules("", null),
 						new Scope(false, new Packages(new String[] {}, new String[] {})), new String[] {},
 						new String[] { "cloud-readiness" }),
-				null, new Task[] { new Task(new App(appID, "parodos", null), null,
+				null, new Task[] { new Task(new App(appID, "parodos", null, null), null,
 						String.format("parodos.%s.windup", appID), null, null, null) });
 	}
 }
@@ -50,6 +53,8 @@ interface MTAApplicationClient {
 	Result<App> get(String name);
 
 	Result<App> create(App app);
+
+	Identity getIdentity(String name);
 
 }
 

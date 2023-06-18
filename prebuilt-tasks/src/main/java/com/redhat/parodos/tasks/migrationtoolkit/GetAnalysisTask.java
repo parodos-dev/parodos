@@ -1,7 +1,9 @@
 package com.redhat.parodos.tasks.migrationtoolkit;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -105,7 +107,9 @@ public class GetAnalysisTask extends BaseInfrastructureWorkFlowTask {
 						"[Migration analysis report](%s) completed.".formatted(reportURL));
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 			}
-			else if ("Failed".equals(success.value().state())) {
+			else if ("Failed".equals(success.value().state())
+					|| Arrays.stream(Objects.requireNonNull(success.value().tasks()))
+							.anyMatch(task -> "Failed".equals(task.state()))) {
 				taskLogger.logErrorWithSlf4j("The underlying task failed, the report will not be ready");
 				return new DefaultWorkReport(WorkStatus.REJECTED, workContext,
 						new Throwable("The underlying task failed, the report will not be ready"));
