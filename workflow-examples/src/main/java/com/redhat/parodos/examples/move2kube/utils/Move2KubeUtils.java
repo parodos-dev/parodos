@@ -15,7 +15,7 @@ public abstract class Move2KubeUtils {
 			throws URISyntaxException {
 		String path = "/workspaces/%s/projects/%s/outputs/%s".formatted(workspaceID, projectID, outputID);
 		URI baseUri = new URI(server);
-		return new URI(baseUri.getScheme(), baseUri.getAuthority(), path, null, null).getPath();
+		return new URI(baseUri.getScheme(), baseUri.getAuthority(), path, null, null).toString();
 	}
 
 }

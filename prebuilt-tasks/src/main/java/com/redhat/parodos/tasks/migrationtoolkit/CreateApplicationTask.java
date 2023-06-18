@@ -39,10 +39,11 @@ public class CreateApplicationTask extends BaseInfrastructureWorkFlowTask {
 	 */
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		String appName, repo, branch;
+		String appName, repo, branch, identityName;
 		try {
 			appName = getOptionalParameterValue("applicationName", "");
 			repo = getRequiredParameterValue("repositoryURL");
+			identityName = getOptionalParameterValue("identity", null, false);
 
 			if (mtaClient == null) {
 				var serverUrl = getOptionalParameterValue("serverURL", null);
@@ -55,7 +56,13 @@ public class CreateApplicationTask extends BaseInfrastructureWorkFlowTask {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
 		}
 
-		Result<App> result = mtaClient.create(new App(0, appName, new Repository("git", repo, branch)));
+		Identity identity = null;
+		if (identityName != null) {
+			identity = mtaClient.getIdentity(identityName);
+		}
+
+		Result<App> result = mtaClient
+				.create(new App(0, appName, new Repository("git", repo, branch), new Identity[] { identity }));
 
 		if (result == null) {
 			taskLogger.logErrorWithSlf4j("MTA client returned empty result with no error");

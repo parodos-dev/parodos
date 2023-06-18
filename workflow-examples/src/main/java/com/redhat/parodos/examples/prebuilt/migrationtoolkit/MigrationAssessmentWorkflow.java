@@ -86,10 +86,12 @@ public class MigrationAssessmentWorkflow {
 	@Bean(name = "AnalyzeApplicationAssessment")
 	@Assessment(parameters = {
 			@Parameter(key = "repositoryURL", description = "The repository with the code to analyze",
-					type = WorkParameterType.URL, optional = false),
+					type = WorkParameterType.TEXT, optional = false),
 			@Parameter(key = "applicationName", description = "The name of the application to analyze",
 					type = WorkParameterType.TEXT, optional = false),
 			@Parameter(key = "branch", description = "The repository branch to analyze", type = WorkParameterType.TEXT,
+					optional = true),
+			@Parameter(key = "identity", description = "The identity of ssh key in MTA", type = WorkParameterType.TEXT,
 					optional = true) })
 	public WorkFlow AnalyzeApplicationAssessment(CreateApplicationTask createApplicationTask,
 			GetApplicationTask getAppTask, SubmitAnalysisTask submitAnalysisTask) {
