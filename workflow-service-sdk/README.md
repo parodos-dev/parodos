@@ -137,6 +137,7 @@ Class | Method | HTTP request | Description
  - [AccessResponseDTO](docs/AccessResponseDTO.md)
  - [AccessStatusRequestDTO](docs/AccessStatusRequestDTO.md)
  - [AccessStatusResponseDTO](docs/AccessStatusResponseDTO.md)
+ - [AdditionalInfo](docs/AdditionalInfo.md)
  - [ArgumentRequestDTO](docs/ArgumentRequestDTO.md)
  - [ErrorMessageDTO](docs/ErrorMessageDTO.md)
  - [ProjectDTO](docs/ProjectDTO.md)

@@ -103,6 +103,7 @@ public class GetAnalysisTask extends BaseInfrastructureWorkFlowTask {
 						success.value().tasks()[0].application().id(), success.value().data().output());
 				taskLogger.logInfoWithSlf4j("MTA client returned success result with report url: {}", reportURL);
 				addParameter("reportURL", reportURL);
+				addAdditionInfo("MTA assessment report", reportURL);
 				notificationSender.send("Migration Analysis Report Completed",
 						"[Migration analysis report](%s) completed.".formatted(reportURL));
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);

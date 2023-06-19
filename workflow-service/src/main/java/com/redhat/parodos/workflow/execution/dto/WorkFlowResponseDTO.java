@@ -15,6 +15,7 @@
  */
 package com.redhat.parodos.workflow.execution.dto;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -51,5 +52,10 @@ public class WorkFlowResponseDTO {
 	private String endDate;
 
 	private String executeBy;
+
+	private List<AdditionalInfo> additionalInfos;
+
+	public record AdditionalInfo(String key, String value) {
+	}
 
 }
