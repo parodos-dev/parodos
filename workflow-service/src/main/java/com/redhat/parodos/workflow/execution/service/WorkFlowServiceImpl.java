@@ -36,6 +36,8 @@ import com.redhat.parodos.user.entity.User;
 import com.redhat.parodos.user.service.UserService;
 import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
+import com.redhat.parodos.workflow.context.WorkContextDelegate.ProcessType;
+import com.redhat.parodos.workflow.context.WorkContextDelegate.Resource;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
@@ -154,9 +156,8 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		}
 
 		// save workflow execution
-		String arguments = WorkFlowDTOUtil.writeObjectValueAsString(
-				WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-						workFlowDefinitionResponseDTO.getName(), WorkContextDelegate.Resource.ARGUMENTS));
+		String arguments = WorkFlowDTOUtil.writeObjectValueAsString(WorkContextDelegate.read(workContext,
+				ProcessType.WORKFLOW_EXECUTION, workFlowDefinitionResponseDTO.getName(), Resource.ARGUMENTS));
 		UUID projectId = workFlowRequestDTO.getProjectId();
 		WorkFlowExecution workFlowExecution = saveWorkFlow(projectId, user.getId(),
 				workFlowDefinitionRepository.findFirstByName(workflowName), WorkStatus.IN_PROGRESS, null, arguments);
@@ -179,15 +180,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 			throw new ResourceNotFoundException(ResourceType.WORKFLOW_EXECUTION, executionId);
 		}
 
-		var source = invokedBy.get().getWorkFlowExecutionContext().getWorkContext();
-		Map<String, String> sourceArguments = (Map<String, String>) WorkContextDelegate.read(source,
-				WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ARGUMENTS);
-		if (sourceArguments == null) {
-			return;
-		}
-		// TODO don't overwrite in case key already exists
-		sourceArguments.entrySet().forEach(entry -> WorkContextDelegate.write(target,
-				WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ARGUMENTS, entry));
+		ContextArgumentsMerger.mergeArguments(invokedBy.get(), target);
 	}
 
 	@Override
@@ -267,17 +260,15 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	}
 
 	@Override
-	public WorkFlowContextResponseDTO getWorkflowParameters(UUID workFlowExecutionId,
-			List<WorkContextDelegate.Resource> params) {
+	public WorkFlowContextResponseDTO getWorkflowParameters(UUID workFlowExecutionId, List<Resource> params) {
 		WorkFlowExecution workFlowExecution = workFlowRepository.findById(workFlowExecutionId).orElseThrow(() -> {
 			throw new ResourceNotFoundException(ResourceType.WORKFLOW_EXECUTION, workFlowExecutionId);
 		});
 		Map options = Map.of();
-		if (params.contains(WorkContextDelegate.Resource.WORKFLOW_OPTIONS)) {
+		if (params.contains(Resource.WORKFLOW_OPTIONS)) {
 			options = Optional.ofNullable(
 					(Map) WorkContextDelegate.read(workFlowExecution.getWorkFlowExecutionContext().getWorkContext(),
-							WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-							WorkContextDelegate.Resource.WORKFLOW_OPTIONS))
+							ProcessType.WORKFLOW_EXECUTION, Resource.WORKFLOW_OPTIONS))
 					.orElse(Map.of());
 		}
 

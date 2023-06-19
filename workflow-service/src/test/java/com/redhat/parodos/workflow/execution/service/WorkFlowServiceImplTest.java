@@ -289,6 +289,7 @@ class WorkFlowServiceImplTest {
 
 	@Test
 	@WithMockUser(username = "test-user")
+	@SuppressWarnings("unchecked")
 	void executeWithDTOWithInvokingExecutionContext() {
 		// given
 		User user = User.builder().username("test-user").build();
@@ -310,8 +311,11 @@ class WorkFlowServiceImplTest {
 		workFlowExecution.setId(UUID.randomUUID());
 		when(this.workFlowRepository.save(any())).thenReturn(workFlowExecution);
 		UUID invokingExecutionId = UUID.randomUUID();
-
 		WorkContext invokingWorkContext = new WorkContext();
+		Map<String, String> invokingArguments = Map.of("key1", "value1", "key2", "value2");
+		WorkContextDelegate.write(invokingWorkContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ARGUMENTS, invokingArguments);
+
 		// @formatter:off
 		WorkFlowExecution invokingWorkFlowExecution = WorkFlowExecution.builder()
 				.status(WorkStatus.COMPLETED)
@@ -340,6 +344,10 @@ class WorkFlowServiceImplTest {
 		assertNotNull(report);
 		assertEquals("IN_PROGRESS", report.getStatus().toString());
 		assertNull(report.getError());
+		assertThat(report.getWorkContext()).isNotNull();
+		assertThat(report.getWorkContext().getContext()).isNotNull();
+		assertThat((Map) (report.getWorkContext().getContext().get("WORKFLOW_EXECUTION_ARGUMENTS")))
+				.containsAllEntriesOf(Map.of("key1", "value1", "key2", "value2"));
 
 		verify(this.workFlowDelegate, times(2)).getWorkFlowByName(any());
 		verify(this.workFlowDelegate, times(1)).initWorkFlowContext(any(), any());
