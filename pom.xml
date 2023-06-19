@@ -42,7 +42,7 @@
         </developer>
     </developers>
     <properties>
-        <revision>1.0.17</revision>
+        <revision>1.0.18-SNAPSHOT</revision>
         <flatten.version>1.3.0</flatten.version>
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
