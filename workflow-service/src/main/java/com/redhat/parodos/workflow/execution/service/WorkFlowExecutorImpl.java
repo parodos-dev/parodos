@@ -53,6 +53,7 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor {
 
 		log.info("execute rollback workflow {} for workflow {} (ID: {})", context.rollbackWorkFlowName(),
 				context.workFlowName(), context.executionId());
+		WorkContextUtils.setRollbackWorkFlowName(context.workContext(), context.rollbackWorkFlowName());
 		WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(rollbackWorkFlow, context.workContext());
 	}
 

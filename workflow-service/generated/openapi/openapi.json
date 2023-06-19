@@ -995,7 +995,7 @@
             "type" : "array",
             "items" : {
               "type" : "string",
-              "enum" : [ "ID", "NAME", "PARAMETERS", "ARGUMENTS", "STATUS", "WORKFLOW_OPTIONS", "PARENT_WORKFLOW", "ADDITIONAL_INFO" ]
+              "enum" : [ "ID", "NAME", "PARAMETERS", "ARGUMENTS", "STATUS", "WORKFLOW_OPTIONS", "PARENT_WORKFLOW", "ADDITIONAL_INFO", "ROLLBACK_WORKFLOW" ]
             }
           }
         } ],

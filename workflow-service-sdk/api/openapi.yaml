@@ -724,6 +724,7 @@ paths:
             - WORKFLOW_OPTIONS
             - PARENT_WORKFLOW
             - ADDITIONAL_INFO
+            - ROLLBACK_WORKFLOW
             type: string
           type: array
         style: form

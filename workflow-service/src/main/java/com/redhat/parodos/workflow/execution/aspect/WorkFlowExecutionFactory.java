@@ -35,6 +35,11 @@ public class WorkFlowExecutionFactory {
 	}
 
 	public WorkFlowExecutionInterceptor createExecutionHandler(WorkFlowDefinition definition, WorkContext workContext) {
+		if (isRollbackWorkFlow(definition, workContext)) {
+			return new RollbackWorkFlowExecutionInterceptor(definition, workContext, workFlowService,
+					workFlowRepository, workFlowSchedulerService, workFlowContinuationServiceImpl);
+		}
+
 		if (isMainWorkFlow(definition, workContext)) {
 			return new MainWorkFlowExecutionInterceptor(definition, workContext, workFlowService, workFlowRepository,
 					workFlowSchedulerService, workFlowContinuationServiceImpl);
@@ -43,6 +48,15 @@ public class WorkFlowExecutionFactory {
 			return new ContinuedWorkFlowExecutionInterceptor(definition, workContext, workFlowService,
 					workFlowRepository, workFlowSchedulerService, workFlowContinuationServiceImpl);
 		}
+	}
+
+	private static boolean isRollbackWorkFlow(WorkFlowDefinition definition, WorkContext workContext) {
+		if (!WorkContextUtils.hasRollbackWorkFlow(workContext)) {
+			return false;
+		}
+
+		String rollbackWorkFlowName = WorkContextUtils.getRollbackWorkFlowName(workContext);
+		return definition.getName().equals(rollbackWorkFlowName);
 	}
 
 	static boolean isMainWorkFlow(WorkFlowDefinition workflow, WorkContext workContext) {

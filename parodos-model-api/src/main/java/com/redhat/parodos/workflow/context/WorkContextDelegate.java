@@ -58,7 +58,9 @@ public class WorkContextDelegate {
 
 		PARENT_WORKFLOW,
 
-		ADDITIONAL_INFO;
+		ADDITIONAL_INFO,
+
+		ROLLBACK_WORKFLOW;
 		// @formatter:on
 
 		private final Visibility visibility;
@@ -97,8 +99,7 @@ public class WorkContextDelegate {
 	 * @param processType the type of Workflow object being persisted (ie:
 	 * WORKFLOW_TASK_DEFINITION)
 	 * @param workflowTaskName a unique identifier of a WorkflowTask in the event that
-	 * multiple WorkflowTasks are persisting values for the the same processTpe and
-	 * resource
+	 * multiple WorkflowTasks are persisting values for the same processTpe and resource
 	 * @param resource resource the object related to the processType (ie: PARAMETERS)
 	 * @return
 	 */

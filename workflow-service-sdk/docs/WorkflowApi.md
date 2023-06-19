@@ -318,7 +318,7 @@ public class Example {
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **workFlowExecutionId** | **UUID**|  | |
-| **param** | [**List&lt;String&gt;**](String.md)|  | [enum: ID, NAME, PARAMETERS, ARGUMENTS, STATUS, WORKFLOW_OPTIONS, PARENT_WORKFLOW, ADDITIONAL_INFO] |
+| **param** | [**List&lt;String&gt;**](String.md)|  | [enum: ID, NAME, PARAMETERS, ARGUMENTS, STATUS, WORKFLOW_OPTIONS, PARENT_WORKFLOW, ADDITIONAL_INFO, ROLLBACK_WORKFLOW] |
 
 ### Return type
 

@@ -197,4 +197,25 @@ public abstract class WorkContextUtils {
 				WorkContextDelegate.Resource.NAME, workflowName);
 	}
 
+	public static void setRollbackWorkFlowName(WorkContext workContext, String rollbackWorkFlow) {
+		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ROLLBACK_WORKFLOW, rollbackWorkFlow);
+	}
+
+	public static String getRollbackWorkFlowName(WorkContext workContext) {
+		Object rollbackWorkFlow = getRollbackWorkFlow(workContext);
+		rollbackWorkFlow = Optional.ofNullable(rollbackWorkFlow)
+				.orElseThrow(() -> new NoSuchElementException("Rollback workflow name is missing from workContext."));
+		return rollbackWorkFlow.toString();
+	}
+
+	public static boolean hasRollbackWorkFlow(WorkContext workContext) {
+		return getRollbackWorkFlow(workContext) != null;
+	}
+
+	private static Object getRollbackWorkFlow(WorkContext workContext) {
+		return WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ROLLBACK_WORKFLOW);
+	}
+
 }
