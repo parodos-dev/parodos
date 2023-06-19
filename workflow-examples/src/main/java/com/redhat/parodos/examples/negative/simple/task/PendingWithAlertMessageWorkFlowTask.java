@@ -16,6 +16,7 @@ public class PendingWithAlertMessageWorkFlowTask extends BaseInfrastructureWorkF
 	@Override
 	public WorkReport execute(WorkContext workContext) {
 		log.info("FailedWithAlertMessageWorkFlowTask execution should return PENDING");
+		addAdditionInfo("Alert message", "http://localhost:8080");
 		return new DefaultWorkReport(WorkStatus.PENDING, workContext, "[link](http://localhost:8080)");
 	}
 

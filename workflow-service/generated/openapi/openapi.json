@@ -995,7 +995,7 @@
             "type" : "array",
             "items" : {
               "type" : "string",
-              "enum" : [ "ID", "NAME", "PARAMETERS", "ARGUMENTS", "STATUS", "WORKFLOW_OPTIONS", "PARENT_WORKFLOW" ]
+              "enum" : [ "ID", "NAME", "PARAMETERS", "ARGUMENTS", "STATUS", "WORKFLOW_OPTIONS", "PARENT_WORKFLOW", "ADDITIONAL_INFO" ]
             }
           }
         } ],
@@ -1250,6 +1250,17 @@
           "status" : {
             "type" : "string",
             "enum" : [ "APPROVED", "PENDING", "REJECTED" ]
+          }
+        }
+      },
+      "AdditionalInfo" : {
+        "type" : "object",
+        "properties" : {
+          "key" : {
+            "type" : "string"
+          },
+          "value" : {
+            "type" : "string"
           }
         }
       },
@@ -1625,6 +1636,12 @@
       "WorkFlowResponseDTO" : {
         "type" : "object",
         "properties" : {
+          "additionalInfos" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/AdditionalInfo"
+            }
+          },
           "endDate" : {
             "type" : "string"
           },

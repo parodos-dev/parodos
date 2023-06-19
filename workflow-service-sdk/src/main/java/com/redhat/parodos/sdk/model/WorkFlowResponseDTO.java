@@ -13,13 +13,16 @@
 package com.redhat.parodos.sdk.model;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.TypeAdapter;
@@ -36,6 +39,11 @@ import com.redhat.parodos.sdk.invoker.JSON;
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowResponseDTO {
+
+	public static final String SERIALIZED_NAME_ADDITIONAL_INFOS = "additionalInfos";
+
+	@SerializedName(SERIALIZED_NAME_ADDITIONAL_INFOS)
+	private List<AdditionalInfo> additionalInfos = new ArrayList<>();
 
 	public static final String SERIALIZED_NAME_END_DATE = "endDate";
 
@@ -130,6 +138,34 @@ public class WorkFlowResponseDTO {
 	private WorkStatusEnum workStatus;
 
 	public WorkFlowResponseDTO() {
+	}
+
+	public WorkFlowResponseDTO additionalInfos(List<AdditionalInfo> additionalInfos) {
+
+		this.additionalInfos = additionalInfos;
+		return this;
+	}
+
+	public WorkFlowResponseDTO addAdditionalInfosItem(AdditionalInfo additionalInfosItem) {
+		if (this.additionalInfos == null) {
+			this.additionalInfos = new ArrayList<>();
+		}
+		this.additionalInfos.add(additionalInfosItem);
+		return this;
+	}
+
+	/**
+	 * Get additionalInfos
+	 * @return additionalInfos
+	 **/
+	@javax.annotation.Nullable
+
+	public List<AdditionalInfo> getAdditionalInfos() {
+		return additionalInfos;
+	}
+
+	public void setAdditionalInfos(List<AdditionalInfo> additionalInfos) {
+		this.additionalInfos = additionalInfos;
 	}
 
 	public WorkFlowResponseDTO endDate(String endDate) {
@@ -281,7 +317,8 @@ public class WorkFlowResponseDTO {
 			return false;
 		}
 		WorkFlowResponseDTO workFlowResponseDTO = (WorkFlowResponseDTO) o;
-		return Objects.equals(this.endDate, workFlowResponseDTO.endDate)
+		return Objects.equals(this.additionalInfos, workFlowResponseDTO.additionalInfos)
+				&& Objects.equals(this.endDate, workFlowResponseDTO.endDate)
 				&& Objects.equals(this.executeBy, workFlowResponseDTO.executeBy)
 				&& Objects.equals(this.projectId, workFlowResponseDTO.projectId)
 				&& Objects.equals(this.startDate, workFlowResponseDTO.startDate)
@@ -292,13 +329,15 @@ public class WorkFlowResponseDTO {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(endDate, executeBy, projectId, startDate, workFlowExecutionId, workFlowName, workStatus);
+		return Objects.hash(additionalInfos, endDate, executeBy, projectId, startDate, workFlowExecutionId,
+				workFlowName, workStatus);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("class WorkFlowResponseDTO {\n");
+		sb.append("    additionalInfos: ").append(toIndentedString(additionalInfos)).append("\n");
 		sb.append("    endDate: ").append(toIndentedString(endDate)).append("\n");
 		sb.append("    executeBy: ").append(toIndentedString(executeBy)).append("\n");
 		sb.append("    projectId: ").append(toIndentedString(projectId)).append("\n");
@@ -328,6 +367,7 @@ public class WorkFlowResponseDTO {
 	static {
 		// a set of all properties/fields (JSON key names)
 		openapiFields = new HashSet<String>();
+		openapiFields.add("additionalInfos");
 		openapiFields.add("endDate");
 		openapiFields.add("executeBy");
 		openapiFields.add("projectId");
@@ -364,6 +404,23 @@ public class WorkFlowResponseDTO {
 				throw new IllegalArgumentException(String.format(
 						"The field `%s` in the JSON string is not defined in the `WorkFlowResponseDTO` properties. JSON: %s",
 						entry.getKey(), jsonObj.toString()));
+			}
+		}
+		if (jsonObj.get("additionalInfos") != null && !jsonObj.get("additionalInfos").isJsonNull()) {
+			JsonArray jsonArrayadditionalInfos = jsonObj.getAsJsonArray("additionalInfos");
+			if (jsonArrayadditionalInfos != null) {
+				// ensure the json data is an array
+				if (!jsonObj.get("additionalInfos").isJsonArray()) {
+					throw new IllegalArgumentException(String.format(
+							"Expected the field `additionalInfos` to be an array in the JSON string but got `%s`",
+							jsonObj.get("additionalInfos").toString()));
+				}
+
+				// validate the optional field `additionalInfos` (array)
+				for (int i = 0; i < jsonArrayadditionalInfos.size(); i++) {
+					AdditionalInfo.validateJsonObject(jsonArrayadditionalInfos.get(i).getAsJsonObject());
+				}
+				;
 			}
 		}
 		if ((jsonObj.get("endDate") != null && !jsonObj.get("endDate").isJsonNull())

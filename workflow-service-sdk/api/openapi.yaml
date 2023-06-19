@@ -723,6 +723,7 @@ paths:
             - STATUS
             - WORKFLOW_OPTIONS
             - PARENT_WORKFLOW
+            - ADDITIONAL_INFO
             type: string
           type: array
         style: form
@@ -928,6 +929,16 @@ components:
           - APPROVED
           - PENDING
           - REJECTED
+          type: string
+      type: object
+    AdditionalInfo:
+      example:
+        value: value
+        key: key
+      properties:
+        key:
+          type: string
+        value:
           type: string
       type: object
     ArgumentRequestDTO:
@@ -1523,6 +1534,11 @@ components:
     WorkFlowResponseDTO:
       example:
         workStatus: FAILED
+        additionalInfos:
+        - value: value
+          key: key
+        - value: value
+          key: key
         workFlowName: workFlowName
         executeBy: executeBy
         endDate: endDate
@@ -1530,6 +1546,10 @@ components:
         projectId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         startDate: startDate
       properties:
+        additionalInfos:
+          items:
+            $ref: '#/components/schemas/AdditionalInfo'
+          type: array
         endDate:
           type: string
         executeBy:

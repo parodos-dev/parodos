@@ -71,6 +71,7 @@ public class CreateApplicationTask extends BaseInfrastructureWorkFlowTask {
 			workContext.put("application", success.value());
 			taskLogger.logInfoWithSlf4j("MTA client returned success result for application creation: {}",
 					success.value().name());
+			addAdditionInfo("VCS branch", repo);
 			return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 		}
 		throw new IllegalArgumentException();

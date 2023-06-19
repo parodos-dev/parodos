@@ -16,6 +16,7 @@ public class DoNothingWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	@Override
 	public WorkReport execute(WorkContext workContext) {
 		log.info("DoNothingWorkFlowTask execution should return COMPLETE");
+		addAdditionInfo("DoNothing", null);
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 

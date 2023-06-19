@@ -97,6 +97,10 @@ public abstract class BaseWorkFlowTask implements WorkFlowTask, BeanNameAware {
 		return WorkContextUtils.getAllParameters(workContext, name);
 	}
 
+	public void addAdditionInfo(String key, String value) {
+		WorkContextUtils.addAdditionalInfo(workContext, key, value);
+	}
+
 	/**
 	 * Get Parameters specific to this WorkFlowTask, this is a required parameter
 	 * @param parameterName

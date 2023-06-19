@@ -398,7 +398,18 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 				.workStatus(WorkStatus.valueOf(workflowExecution.getStatus().name()))
 				.startDate(Optional.ofNullable(workflowExecution.getStartDate()).map(Date::toString).orElse(null))
 				.endDate(Optional.ofNullable(workflowExecution.getEndDate()).map(Date::toString).orElse(null))
-				.executeBy(workflowExecution.getUser().getUsername()).build();
+				.executeBy(workflowExecution.getUser().getUsername())
+				.additionalInfos(Optional.ofNullable(workflowExecution.getWorkFlowExecutionContext())
+						.flatMap(workFlowExecutionContext -> Optional
+								.ofNullable(
+										WorkContextUtils.getAdditionalInfo(workFlowExecutionContext.getWorkContext()))
+								.map(additionalInfoMap -> additionalInfoMap.entrySet().stream()
+										.sorted(Map.Entry.comparingByKey())
+										.map(additionalInfo -> new WorkFlowResponseDTO.AdditionalInfo(
+												additionalInfo.getKey(), additionalInfo.getValue()))
+										.toList()))
+						.orElse(null))
+				.build();
 	}
 
 }

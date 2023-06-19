@@ -25,6 +25,7 @@ import com.redhat.parodos.workflow.definition.service.WorkFlowDefinitionServiceI
 import com.redhat.parodos.workflow.enums.WorkType;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowContextResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
+import com.redhat.parodos.workflow.execution.dto.WorkFlowResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
@@ -69,6 +70,10 @@ import static org.mockito.Mockito.when;
 class WorkFlowServiceImplTest {
 
 	private static final String TEST_WORKFLOW_NAME = "test-workflow";
+
+	public static final String TEST_ADDITIONAL_INFO_KEY = "test-additional-info-key";
+
+	public static final String TEST_ADDITIONAL_INFO_VALUE = "test-additional-info-value";
 
 	@Mock
 	private ProjectService projectService;
@@ -1078,8 +1083,13 @@ class WorkFlowServiceImplTest {
 		user.setId(userId);
 		UUID workflowExecutionId = UUID.randomUUID();
 		WorkFlowDefinition workFlowDefinition = sampleWorkflowDefinition(workName);
+		WorkContext workContext = new WorkContext();
+		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ADDITIONAL_INFO,
+				Map.of(TEST_ADDITIONAL_INFO_KEY, TEST_ADDITIONAL_INFO_VALUE));
 		WorkFlowExecution workFlowExecution = WorkFlowExecution.builder().projectId(projectId).user(user)
-				.status(WorkStatus.COMPLETED).workFlowDefinition(workFlowDefinition).build();
+				.status(WorkStatus.COMPLETED).workFlowDefinition(workFlowDefinition)
+				.workFlowExecutionContext(WorkFlowExecutionContext.builder().workContext(workContext).build()).build();
 		workFlowExecution.setId(workflowExecutionId);
 
 		when(workFlowRepository.findAllByProjectId(projectId)).thenReturn(List.of(workFlowExecution));
@@ -1089,8 +1099,11 @@ class WorkFlowServiceImplTest {
 		when(workFlowDefinitionService.getWorkFlowDefinitionById(any()))
 				.thenReturn(WorkFlowDefinitionResponseDTO.builder().name("test").build());
 
-		assertThat(workFlowService.getWorkFlowsByProjectId(projectId)).hasSize(1).extracting("workStatus")
-				.contains(WorkStatus.COMPLETED);
+		assertThat(workFlowService.getWorkFlowsByProjectId(projectId)).hasSize(1).satisfies(workflowStatus -> {
+			assertEquals(workflowStatus.get(0).getAdditionalInfos().get(0),
+					new WorkFlowResponseDTO.AdditionalInfo(TEST_ADDITIONAL_INFO_KEY, TEST_ADDITIONAL_INFO_VALUE));
+			assertEquals(WorkStatus.COMPLETED, workflowStatus.get(0).getWorkStatus());
+		});
 	}
 
 	@Test
