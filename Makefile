@@ -194,6 +194,9 @@ git-tag: ## tag commit and prepare for image release
 
 release-all: update-version release git-release git-tag build-images tag-images push-images bump-version install bump-git-commit
 
+release-manifests:
+	./hack/scripts/release.sh $(RELEASE_VERSION)
+
 ##@ Run
 .PHONY: docker-run docker-stop
 

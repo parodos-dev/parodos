@@ -77,3 +77,9 @@ workflow-service-sdk/.travis.yml
 ##############################
 notification-service-sdk/.openapi-generator
 
+
+##############################
+## Release manifests
+##############################
+manifests.yaml
+hack/manifests/release
