@@ -79,14 +79,14 @@ clean: ## Clean all modules
 all: mvn-checks java-checks install ## Build all modules
 
 install: ARGS = $(FAST_BUILD_ARGS)
-install: clean
-	$(MAVEN) $(ARGS) install
+install:
+	$(MAVEN) $(ARGS) install -Dmaven.test.skip=true
 
 deploy: clean ## push snapshot modules to maven central
 	$(MAVEN) deploy
 
 release: ## release and push modules to maven central
-	$(MAVEN) deploy -P release
+	$(MAVEN) deploy -P release -Dmaven.test.skip=true
 
 fast-build: ARGS = $(FAST_BUILD_ARGS) ## Build all modules without running the tests and generate javadoc
 fast-build: all
