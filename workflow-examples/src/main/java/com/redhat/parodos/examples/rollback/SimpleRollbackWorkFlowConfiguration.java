@@ -17,6 +17,7 @@ package com.redhat.parodos.examples.rollback;
 
 import com.redhat.parodos.examples.complex.rollback.RollbackWorkFlowTask;
 import com.redhat.parodos.examples.rollback.task.SimpleFailedWorkFlowTask;
+import com.redhat.parodos.examples.rollback.task.SimpleSuccessfulWorkFlowTask;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
 import com.redhat.parodos.workflow.annotation.WorkFlowProperties;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
@@ -46,16 +47,23 @@ public class SimpleRollbackWorkFlowConfiguration {
 		return new SimpleFailedWorkFlowTask();
 	}
 
+	@Bean
+	SimpleSuccessfulWorkFlowTask simpleSuccessfulWorkFlowTask() {
+		return new SimpleSuccessfulWorkFlowTask();
+	}
+
 	@Bean(name = "simpleFailedWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
 	@Infrastructure(rollbackWorkflow = "simpleRollbackWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
 	@WorkFlowProperties(version = "${git.commit.id}")
 	WorkFlow simpleFailedWorkFlow(
-			@Qualifier("simpleFailedWorkFlowTask") SimpleFailedWorkFlowTask simpleFailedWorkFlowTask) {
+			@Qualifier("simpleFailedWorkFlowTask") SimpleFailedWorkFlowTask simpleFailedWorkFlowTask,
+			@Qualifier("simpleSuccessfulWorkFlowTask") SimpleSuccessfulWorkFlowTask simpleSuccessfulWorkFlowTask) {
 		// @formatter:off
 		return SequentialFlow
 				.Builder.aNewSequentialFlow()
 				.named("simpleFailedWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
-				.execute(simpleFailedWorkFlowTask)
+				.execute(simpleSuccessfulWorkFlowTask)
+				.then(simpleFailedWorkFlowTask)
 				.build();
 		// @formatter:on
 	}
