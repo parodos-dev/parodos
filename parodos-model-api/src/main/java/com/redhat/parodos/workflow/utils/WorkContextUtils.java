@@ -122,9 +122,9 @@ public abstract class WorkContextUtils {
 
 	/**
 	 * add additional info for the workflow, e.g. result links
-	 * @param workContext
-	 * @param key
-	 * @param value
+	 * @param workContext work context
+	 * @param key key
+	 * @param value value
 	 */
 	public static void addAdditionalInfo(WorkContext workContext, String key, String value) {
 		Map<String, String> additionalInfoMap = Optional
@@ -199,23 +199,34 @@ public abstract class WorkContextUtils {
 
 	public static void setRollbackWorkFlowName(WorkContext workContext, String rollbackWorkFlow) {
 		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-				WorkContextDelegate.Resource.ROLLBACK_WORKFLOW, rollbackWorkFlow);
+				WorkContextDelegate.Resource.ROLLBACK_WORKFLOW_NAME, rollbackWorkFlow);
+	}
+
+	public static void setRollbackWorkFlowId(WorkContext workContext, UUID rollbackWorkFlowId) {
+		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ROLLBACK_WORKFLOW_ID, rollbackWorkFlowId.toString());
+	}
+
+	public static UUID getRollbackWorkFlowId(WorkContext workContext) {
+		Object rollbackId = WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ROLLBACK_WORKFLOW_ID);
+		return rollbackId == null ? null : UUID.fromString(rollbackId.toString());
 	}
 
 	public static String getRollbackWorkFlowName(WorkContext workContext) {
-		Object rollbackWorkFlow = getRollbackWorkFlow(workContext);
+		Object rollbackWorkFlow = getRollbackWorkFlowNameFromContext(workContext);
 		rollbackWorkFlow = Optional.ofNullable(rollbackWorkFlow)
 				.orElseThrow(() -> new NoSuchElementException("Rollback workflow name is missing from workContext."));
 		return rollbackWorkFlow.toString();
 	}
 
 	public static boolean hasRollbackWorkFlow(WorkContext workContext) {
-		return getRollbackWorkFlow(workContext) != null;
+		return getRollbackWorkFlowNameFromContext(workContext) != null;
 	}
 
-	private static Object getRollbackWorkFlow(WorkContext workContext) {
+	private static Object getRollbackWorkFlowNameFromContext(WorkContext workContext) {
 		return WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-				WorkContextDelegate.Resource.ROLLBACK_WORKFLOW);
+				WorkContextDelegate.Resource.ROLLBACK_WORKFLOW_NAME);
 	}
 
 }

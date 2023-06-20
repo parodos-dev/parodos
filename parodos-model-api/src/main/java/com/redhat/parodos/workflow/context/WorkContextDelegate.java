@@ -60,7 +60,9 @@ public class WorkContextDelegate {
 
 		ADDITIONAL_INFO,
 
-		ROLLBACK_WORKFLOW;
+		ROLLBACK_WORKFLOW_NAME,
+
+		ROLLBACK_WORKFLOW_ID(Visibility.PUBLIC);
 		// @formatter:on
 
 		private final Visibility visibility;

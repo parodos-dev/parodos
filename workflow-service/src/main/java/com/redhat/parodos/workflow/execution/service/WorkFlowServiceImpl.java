@@ -264,12 +264,19 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		WorkFlowExecution workFlowExecution = workFlowRepository.findById(workFlowExecutionId).orElseThrow(() -> {
 			throw new ResourceNotFoundException(ResourceType.WORKFLOW_EXECUTION, workFlowExecutionId);
 		});
+
+		WorkContext workContext = workFlowExecution.getWorkFlowExecutionContext().getWorkContext();
+		// Add workflow options
 		Map options = Map.of();
 		if (params.contains(Resource.WORKFLOW_OPTIONS)) {
-			options = Optional.ofNullable(
-					(Map) WorkContextDelegate.read(workFlowExecution.getWorkFlowExecutionContext().getWorkContext(),
-							ProcessType.WORKFLOW_EXECUTION, Resource.WORKFLOW_OPTIONS))
-					.orElse(Map.of());
+			options = Optional.ofNullable((Map) WorkContextDelegate.read(workContext, ProcessType.WORKFLOW_EXECUTION,
+					Resource.WORKFLOW_OPTIONS)).orElse(Map.of());
+		}
+
+		// Add rollback workflow id
+		UUID rollbackWorkflowId = null;
+		if (params.contains(Resource.ROLLBACK_WORKFLOW_ID)) {
+			rollbackWorkflowId = WorkContextUtils.getRollbackWorkFlowId(workContext);
 		}
 
 		return WorkFlowContextResponseDTO.builder().workFlowExecutionId(workFlowExecution.getId())
@@ -280,7 +287,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 						.otherOptions(getFlowOptions(options, "otherOptions"))
 						.upgradeOptions(getFlowOptions(options, "upgradeOptions"))
 						.newOptions(getFlowOptions(options, "newOptions")).build())
-				.build();
+				.rollbackWorkFlowExecutionId(rollbackWorkflowId).build();
 	}
 
 	@Nullable

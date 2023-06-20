@@ -38,4 +38,6 @@ public class WorkFlowContextResponseDTO {
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private WorkFlowOptionsResponseDTO workFlowOptions;
 
+	private UUID rollbackWorkFlowExecutionId;
+
 }

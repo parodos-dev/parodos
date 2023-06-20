@@ -7,6 +7,7 @@ import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.scheduler.WorkFlowSchedulerServiceImpl;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
+import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.WorkContext;
 
 public class RollbackWorkFlowExecutionInterceptor extends WorkFlowExecutionInterceptor {
@@ -27,7 +28,12 @@ public class RollbackWorkFlowExecutionInterceptor extends WorkFlowExecutionInter
 						"mainWorkFlow not found for rollback workflow: " + workFlowDefinition.getName()));
 
 		// get the workflow execution if this is triggered by continuation service
-		return saveWorkFlow(mainWorkFlowExecution);
+		WorkFlowExecution rollbackWorkFlowExecution = saveWorkFlow(mainWorkFlowExecution);
+		WorkContextUtils.setRollbackWorkFlowId(workContext, rollbackWorkFlowExecution.getId());
+		WorkContextUtils.setRollbackWorkFlowId(mainWorkFlowExecution.getWorkFlowExecutionContext().getWorkContext(),
+				rollbackWorkFlowExecution.getId());
+		workFlowRepository.save(mainWorkFlowExecution);
+		return rollbackWorkFlowExecution;
 	}
 
 }
