@@ -1,9 +1,11 @@
-bases:
-- ../base
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
 resources:
 - ingress.yaml
 - ldap.yaml
 - postgres.yaml
+- ../base
 
 patchesStrategicMerge:
 - parodos-patch.yaml
