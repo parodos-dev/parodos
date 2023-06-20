@@ -7,6 +7,7 @@ import com.redhat.parodos.flows.common.WorkFlowTestBuilder;
 import com.redhat.parodos.flows.common.WorkFlowTestBuilder.TestComponents;
 import com.redhat.parodos.sdk.api.WorkflowApi;
 import com.redhat.parodos.sdk.invoker.ApiException;
+import com.redhat.parodos.sdk.model.WorkFlowContextResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowExecutionResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowExecutionResponseDTO.WorkStatusEnum;
@@ -52,10 +53,24 @@ public class SimpleRollbackWorkFlowTest {
 
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = WorkFlowServiceUtils.waitWorkflowStatusAsync(workflowApi,
 				workFlowResponseDTO.getWorkFlowExecutionId(), WorkFlowStatusResponseDTO.StatusEnum.FAILED);
-
 		assertNotNull(workFlowStatusResponseDTO.getWorkFlowExecutionId());
 		assertNotNull(workFlowStatusResponseDTO.getStatus());
 		assertEquals(WorkFlowStatusResponseDTO.StatusEnum.FAILED, workFlowStatusResponseDTO.getStatus());
+		log.info("******** The Simple Failed Flow ended with failure - moving to rollback ********");
+
+		// Get the rollback workflow ID
+		WorkFlowContextResponseDTO params = WorkFlowServiceUtils.waitWorkFlowContextParameterAsync(workflowApi,
+				workFlowResponseDTO.getWorkFlowExecutionId(), true, false);
+		assertNotNull(params);
+		assertNotNull(params.getRollbackWorkFlowExecutionId());
+
+		log.info("******** The Simple Failed Flow rollback started {} ********", params.getRollbackWorkFlowExecutionId());
+		WorkFlowStatusResponseDTO rollbackStatusResponseDTO = WorkFlowServiceUtils.waitWorkflowStatusAsync(workflowApi,
+				params.getRollbackWorkFlowExecutionId(), WorkFlowStatusResponseDTO.StatusEnum.COMPLETED);
+		assertNotNull(rollbackStatusResponseDTO.getWorkFlowExecutionId());
+		assertNotNull(rollbackStatusResponseDTO.getStatus());
+		assertEquals(WorkFlowStatusResponseDTO.StatusEnum.COMPLETED, rollbackStatusResponseDTO.getStatus());
+
 		log.info("workflow finished successfully with response: {}", workFlowResponseDTO);
 		log.info("******** Simple Failed Flow Completed ********");
 	}

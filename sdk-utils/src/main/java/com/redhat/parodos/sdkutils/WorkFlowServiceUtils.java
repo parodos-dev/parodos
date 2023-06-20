@@ -1,5 +1,6 @@
 package com.redhat.parodos.sdkutils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,6 +20,7 @@ import com.redhat.parodos.sdk.invoker.ApiResponse;
 import com.redhat.parodos.sdk.invoker.Configuration;
 import com.redhat.parodos.sdk.model.ProjectRequestDTO;
 import com.redhat.parodos.sdk.model.ProjectResponseDTO;
+import com.redhat.parodos.sdk.model.WorkFlowContextResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO.StatusEnum;
 import com.redhat.parodos.workflow.utils.CredUtils;
@@ -153,7 +155,44 @@ public abstract class WorkFlowServiceUtils {
 			result = executorService.submitWithRetry(task);
 		}
 		catch (Exception e) {
-			throw new RuntimeException("Workflow status is not " + expectedStatus, e);
+			throw new RuntimeException("Workflow %s status is not %s".formatted(workFlowExecutionId, expectedStatus),
+					e);
+		}
+		return result;
+	}
+
+	public static WorkFlowContextResponseDTO waitWorkFlowContextParameterAsync(WorkflowApi workflowApi,
+			UUID workFlowExecutionId, boolean hasRollback, boolean hasOptions) {
+		WorkFlowContextResponseDTO result;
+
+		try (var executorService = new RetryExecutorService<WorkFlowContextResponseDTO>()) {
+			Callable<WorkFlowContextResponseDTO> task = () -> {
+				List<String> parameterNames = new ArrayList<>();
+				if (hasRollback) {
+					parameterNames.add("ROLLBACK_WORKFLOW_ID");
+				}
+				if (hasOptions) {
+					parameterNames.add("WORKFLOW_OPTIONS");
+				}
+				WorkFlowContextResponseDTO params = workflowApi.getWorkflowParameters(workFlowExecutionId,
+						parameterNames);
+				if (params == null) {
+					throw new ApiException("Workflow parameters are not available");
+				}
+				if (hasRollback && params.getRollbackWorkFlowExecutionId() == null) {
+					throw new ApiException("Workflow parameters hasRollback are not available");
+				}
+				if (hasOptions && params.getWorkFlowOptions() == null) {
+					throw new ApiException("Workflow parameters hasOptions are not available");
+				}
+
+				return params;
+			};
+
+			result = executorService.submitWithRetry(task);
+		}
+		catch (Exception e) {
+			throw new RuntimeException("Workflow context parameters error", e);
 		}
 		return result;
 	}
