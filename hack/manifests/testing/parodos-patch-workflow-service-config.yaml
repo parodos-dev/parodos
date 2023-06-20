@@ -1,14 +1,3 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: workflow-service
-spec:
-  template:
-    spec:
-      containers:
-      - name: workflow-service
-        imagePullPolicy: IfNotPresent
----
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -20,10 +9,3 @@ data:
   DATASOURCE_PASSWORD: "parodos"
   SPRING_PROFILES_ACTIVE: "dev"
   NOTIFICATION_SERVER_URL: "http://notification-service.default.svc.cluster.local:8080"
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: notification-service-config
-data:
-  SPRING_PROFILES_ACTIVE: "local"
