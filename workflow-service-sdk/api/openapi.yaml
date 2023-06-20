@@ -724,7 +724,8 @@ paths:
             - WORKFLOW_OPTIONS
             - PARENT_WORKFLOW
             - ADDITIONAL_INFO
-            - ROLLBACK_WORKFLOW
+            - ROLLBACK_WORKFLOW_NAME
+            - ROLLBACK_WORKFLOW_ID
             type: string
           type: array
         style: form
@@ -1240,7 +1241,11 @@ components:
             - details
             - details
         workFlowExecutionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        rollbackWorkFlowExecutionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
       properties:
+        rollbackWorkFlowExecutionId:
+          format: uuid
+          type: string
         workFlowExecutionId:
           format: uuid
           type: string

@@ -995,7 +995,7 @@
             "type" : "array",
             "items" : {
               "type" : "string",
-              "enum" : [ "ID", "NAME", "PARAMETERS", "ARGUMENTS", "STATUS", "WORKFLOW_OPTIONS", "PARENT_WORKFLOW", "ADDITIONAL_INFO", "ROLLBACK_WORKFLOW" ]
+              "enum" : [ "ID", "NAME", "PARAMETERS", "ARGUMENTS", "STATUS", "WORKFLOW_OPTIONS", "PARENT_WORKFLOW", "ADDITIONAL_INFO", "ROLLBACK_WORKFLOW_NAME", "ROLLBACK_WORKFLOW_ID" ]
             }
           }
         } ],
@@ -1462,6 +1462,10 @@
       "WorkFlowContextResponseDTO" : {
         "type" : "object",
         "properties" : {
+          "rollbackWorkFlowExecutionId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
           "workFlowExecutionId" : {
             "type" : "string",
             "format" : "uuid"

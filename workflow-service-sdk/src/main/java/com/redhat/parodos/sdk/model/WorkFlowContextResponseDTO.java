@@ -36,6 +36,11 @@ import com.redhat.parodos.sdk.invoker.JSON;
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowContextResponseDTO {
 
+	public static final String SERIALIZED_NAME_ROLLBACK_WORK_FLOW_EXECUTION_ID = "rollbackWorkFlowExecutionId";
+
+	@SerializedName(SERIALIZED_NAME_ROLLBACK_WORK_FLOW_EXECUTION_ID)
+	private UUID rollbackWorkFlowExecutionId;
+
 	public static final String SERIALIZED_NAME_WORK_FLOW_EXECUTION_ID = "workFlowExecutionId";
 
 	@SerializedName(SERIALIZED_NAME_WORK_FLOW_EXECUTION_ID)
@@ -47,6 +52,26 @@ public class WorkFlowContextResponseDTO {
 	private WorkFlowOptionsResponseDTO workFlowOptions;
 
 	public WorkFlowContextResponseDTO() {
+	}
+
+	public WorkFlowContextResponseDTO rollbackWorkFlowExecutionId(UUID rollbackWorkFlowExecutionId) {
+
+		this.rollbackWorkFlowExecutionId = rollbackWorkFlowExecutionId;
+		return this;
+	}
+
+	/**
+	 * Get rollbackWorkFlowExecutionId
+	 * @return rollbackWorkFlowExecutionId
+	 **/
+	@javax.annotation.Nullable
+
+	public UUID getRollbackWorkFlowExecutionId() {
+		return rollbackWorkFlowExecutionId;
+	}
+
+	public void setRollbackWorkFlowExecutionId(UUID rollbackWorkFlowExecutionId) {
+		this.rollbackWorkFlowExecutionId = rollbackWorkFlowExecutionId;
 	}
 
 	public WorkFlowContextResponseDTO workFlowExecutionId(UUID workFlowExecutionId) {
@@ -98,19 +123,22 @@ public class WorkFlowContextResponseDTO {
 			return false;
 		}
 		WorkFlowContextResponseDTO workFlowContextResponseDTO = (WorkFlowContextResponseDTO) o;
-		return Objects.equals(this.workFlowExecutionId, workFlowContextResponseDTO.workFlowExecutionId)
+		return Objects.equals(this.rollbackWorkFlowExecutionId, workFlowContextResponseDTO.rollbackWorkFlowExecutionId)
+				&& Objects.equals(this.workFlowExecutionId, workFlowContextResponseDTO.workFlowExecutionId)
 				&& Objects.equals(this.workFlowOptions, workFlowContextResponseDTO.workFlowOptions);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(workFlowExecutionId, workFlowOptions);
+		return Objects.hash(rollbackWorkFlowExecutionId, workFlowExecutionId, workFlowOptions);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("class WorkFlowContextResponseDTO {\n");
+		sb.append("    rollbackWorkFlowExecutionId: ").append(toIndentedString(rollbackWorkFlowExecutionId))
+				.append("\n");
 		sb.append("    workFlowExecutionId: ").append(toIndentedString(workFlowExecutionId)).append("\n");
 		sb.append("    workFlowOptions: ").append(toIndentedString(workFlowOptions)).append("\n");
 		sb.append("}");
@@ -135,6 +163,7 @@ public class WorkFlowContextResponseDTO {
 	static {
 		// a set of all properties/fields (JSON key names)
 		openapiFields = new HashSet<String>();
+		openapiFields.add("rollbackWorkFlowExecutionId");
 		openapiFields.add("workFlowExecutionId");
 		openapiFields.add("workFlowOptions");
 
@@ -171,6 +200,13 @@ public class WorkFlowContextResponseDTO {
 						"The field `%s` in the JSON string is not defined in the `WorkFlowContextResponseDTO` properties. JSON: %s",
 						entry.getKey(), jsonObj.toString()));
 			}
+		}
+		if ((jsonObj.get("rollbackWorkFlowExecutionId") != null
+				&& !jsonObj.get("rollbackWorkFlowExecutionId").isJsonNull())
+				&& !jsonObj.get("rollbackWorkFlowExecutionId").isJsonPrimitive()) {
+			throw new IllegalArgumentException(String.format(
+					"Expected the field `rollbackWorkFlowExecutionId` to be a primitive type in the JSON string but got `%s`",
+					jsonObj.get("rollbackWorkFlowExecutionId").toString()));
 		}
 		if ((jsonObj.get("workFlowExecutionId") != null && !jsonObj.get("workFlowExecutionId").isJsonNull())
 				&& !jsonObj.get("workFlowExecutionId").isJsonPrimitive()) {
