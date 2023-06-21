@@ -58,7 +58,14 @@ public class CreateApplicationTask extends BaseInfrastructureWorkFlowTask {
 
 		Identity identity = null;
 		if (identityName != null) {
-			identity = mtaClient.getIdentity(identityName);
+			Result<Identity> identityResult = mtaClient.getIdentity(identityName);
+			if (identityResult instanceof Result.Failure<Identity> failure) {
+				taskLogger.logErrorWithSlf4j("MTA client returned failed result to get identity: {}", identityName);
+				return new DefaultWorkReport(WorkStatus.FAILED, workContext, failure.t());
+			}
+			else {
+				identity = ((Result.Success<Identity>) identityResult).value();
+			}
 		}
 
 		Result<App> result = mtaClient

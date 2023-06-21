@@ -54,7 +54,7 @@ interface MTAApplicationClient {
 
 	Result<App> create(App app);
 
-	Identity getIdentity(String name);
+	Result<Identity> getIdentity(String name);
 
 }
 

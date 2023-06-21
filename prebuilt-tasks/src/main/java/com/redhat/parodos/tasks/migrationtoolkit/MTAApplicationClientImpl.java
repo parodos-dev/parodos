@@ -84,7 +84,7 @@ class MTAClient implements MTAApplicationClient, MTATaskGroupClient {
 	}
 
 	@Override
-	public Identity getIdentity(String name) {
+	public Result<Identity> getIdentity(String name) {
 		// identities in MTA have unique constraints on name.
 		try {
 			HttpResponse<String> getAll = client.send(
@@ -98,14 +98,14 @@ class MTAClient implements MTAApplicationClient, MTATaskGroupClient {
 
 			Optional<Identity> identity = identities.stream().filter(v -> v.name().equals(name)).findFirst();
 			if (identity.isPresent()) {
-				return identity.get();
+				return new Result.Success<>(identity.get());
 			}
 			else {
-				throw new NotFoundException("failed to find identity by name " + name);
+				return new Result.Failure<>(new NotFoundException("failed to find identity by name " + name));
 			}
 		}
 		catch (IOException | InterruptedException e) {
-			return null;
+			return new Result.Failure<>(e);
 		}
 	}
 
