@@ -41,7 +41,7 @@ public class PageNotificationRecordResponseDTO {
 	public static final String SERIALIZED_NAME_CONTENT = "content";
 
 	@SerializedName(SERIALIZED_NAME_CONTENT)
-	private List<NotificationRecordResponseDTO> content = new ArrayList<>();
+	private List<NotificationRecordResponseDTO> content;
 
 	public static final String SERIALIZED_NAME_EMPTY = "empty";
 
@@ -115,7 +115,6 @@ public class PageNotificationRecordResponseDTO {
 	 * @return content
 	 **/
 	@javax.annotation.Nullable
-
 	public List<NotificationRecordResponseDTO> getContent() {
 		return content;
 	}
@@ -135,7 +134,6 @@ public class PageNotificationRecordResponseDTO {
 	 * @return empty
 	 **/
 	@javax.annotation.Nullable
-
 	public Boolean getEmpty() {
 		return empty;
 	}
@@ -155,7 +153,6 @@ public class PageNotificationRecordResponseDTO {
 	 * @return first
 	 **/
 	@javax.annotation.Nullable
-
 	public Boolean getFirst() {
 		return first;
 	}
@@ -175,7 +172,6 @@ public class PageNotificationRecordResponseDTO {
 	 * @return last
 	 **/
 	@javax.annotation.Nullable
-
 	public Boolean getLast() {
 		return last;
 	}
@@ -195,7 +191,6 @@ public class PageNotificationRecordResponseDTO {
 	 * @return number
 	 **/
 	@javax.annotation.Nullable
-
 	public Integer getNumber() {
 		return number;
 	}
@@ -215,7 +210,6 @@ public class PageNotificationRecordResponseDTO {
 	 * @return numberOfElements
 	 **/
 	@javax.annotation.Nullable
-
 	public Integer getNumberOfElements() {
 		return numberOfElements;
 	}
@@ -235,7 +229,6 @@ public class PageNotificationRecordResponseDTO {
 	 * @return pageable
 	 **/
 	@javax.annotation.Nullable
-
 	public PageableObject getPageable() {
 		return pageable;
 	}
@@ -255,7 +248,6 @@ public class PageNotificationRecordResponseDTO {
 	 * @return size
 	 **/
 	@javax.annotation.Nullable
-
 	public Integer getSize() {
 		return size;
 	}
@@ -275,7 +267,6 @@ public class PageNotificationRecordResponseDTO {
 	 * @return sort
 	 **/
 	@javax.annotation.Nullable
-
 	public Sort getSort() {
 		return sort;
 	}
@@ -295,7 +286,6 @@ public class PageNotificationRecordResponseDTO {
 	 * @return totalElements
 	 **/
 	@javax.annotation.Nullable
-
 	public Long getTotalElements() {
 		return totalElements;
 	}
@@ -315,7 +305,6 @@ public class PageNotificationRecordResponseDTO {
 	 * @return totalPages
 	 **/
 	@javax.annotation.Nullable
-
 	public Integer getTotalPages() {
 		return totalPages;
 	}

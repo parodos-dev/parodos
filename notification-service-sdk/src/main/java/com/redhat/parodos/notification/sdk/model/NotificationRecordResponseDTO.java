@@ -82,7 +82,7 @@ public class NotificationRecordResponseDTO {
 	public static final String SERIALIZED_NAME_TAGS = "tags";
 
 	@SerializedName(SERIALIZED_NAME_TAGS)
-	private List<String> tags = new ArrayList<>();
+	private List<String> tags;
 
 	public NotificationRecordResponseDTO() {
 	}
@@ -98,7 +98,6 @@ public class NotificationRecordResponseDTO {
 	 * @return body
 	 **/
 	@javax.annotation.Nullable
-
 	public String getBody() {
 		return body;
 	}
@@ -118,7 +117,6 @@ public class NotificationRecordResponseDTO {
 	 * @return createdOn
 	 **/
 	@javax.annotation.Nullable
-
 	public Date getCreatedOn() {
 		return createdOn;
 	}
@@ -138,7 +136,6 @@ public class NotificationRecordResponseDTO {
 	 * @return folder
 	 **/
 	@javax.annotation.Nullable
-
 	public String getFolder() {
 		return folder;
 	}
@@ -158,7 +155,6 @@ public class NotificationRecordResponseDTO {
 	 * @return fromuser
 	 **/
 	@javax.annotation.Nullable
-
 	public String getFromuser() {
 		return fromuser;
 	}
@@ -178,7 +174,6 @@ public class NotificationRecordResponseDTO {
 	 * @return id
 	 **/
 	@javax.annotation.Nullable
-
 	public UUID getId() {
 		return id;
 	}
@@ -198,7 +193,6 @@ public class NotificationRecordResponseDTO {
 	 * @return messageType
 	 **/
 	@javax.annotation.Nullable
-
 	public String getMessageType() {
 		return messageType;
 	}
@@ -218,7 +212,6 @@ public class NotificationRecordResponseDTO {
 	 * @return read
 	 **/
 	@javax.annotation.Nullable
-
 	public Boolean getRead() {
 		return read;
 	}
@@ -238,7 +231,6 @@ public class NotificationRecordResponseDTO {
 	 * @return subject
 	 **/
 	@javax.annotation.Nullable
-
 	public String getSubject() {
 		return subject;
 	}
@@ -266,7 +258,6 @@ public class NotificationRecordResponseDTO {
 	 * @return tags
 	 **/
 	@javax.annotation.Nullable
-
 	public List<String> getTags() {
 		return tags;
 	}

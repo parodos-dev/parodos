@@ -10,7 +10,7 @@ All URIs are relative to *http://localhost:8080*
 | [**updateNotificationStatusById**](NotificationRecordApi.md#updateNotificationStatusById) | **PUT** /api/v1/notifications/{id} | Update the specified notification record with user operation |
 
 
-<a name="countUnreadNotifications"></a>
+<a id="countUnreadNotifications"></a>
 # **countUnreadNotifications**
 > Integer countUnreadNotifications(state)
 
@@ -73,7 +73,7 @@ No authorization required
 | **401** | Unauthorized |  -  |
 | **404** | Not Found |  -  |
 
-<a name="deleteNotification"></a>
+<a id="deleteNotification"></a>
 # **deleteNotification**
 > deleteNotification(id)
 
@@ -135,7 +135,7 @@ No authorization required
 | **401** | Unauthorized |  -  |
 | **404** | Not Found |  -  |
 
-<a name="getNotifications"></a>
+<a id="getNotifications"></a>
 # **getNotifications**
 > PageNotificationRecordResponseDTO getNotifications(page, size, sort, state, searchTerm)
 
@@ -206,7 +206,7 @@ No authorization required
 | **401** | Unauthorized |  -  |
 | **404** | Not Found |  -  |
 
-<a name="updateNotificationStatusById"></a>
+<a id="updateNotificationStatusById"></a>
 # **updateNotificationStatusById**
 > NotificationRecordResponseDTO updateNotificationStatusById(id, operation)
 

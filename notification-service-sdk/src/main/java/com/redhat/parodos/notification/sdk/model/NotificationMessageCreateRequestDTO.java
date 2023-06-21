@@ -45,7 +45,7 @@ public class NotificationMessageCreateRequestDTO {
 	public static final String SERIALIZED_NAME_GROUP_NAMES = "groupNames";
 
 	@SerializedName(SERIALIZED_NAME_GROUP_NAMES)
-	private List<String> groupNames = new ArrayList<>();
+	private List<String> groupNames;
 
 	public static final String SERIALIZED_NAME_MESSAGE_TYPE = "messageType";
 
@@ -60,7 +60,7 @@ public class NotificationMessageCreateRequestDTO {
 	public static final String SERIALIZED_NAME_USERNAMES = "usernames";
 
 	@SerializedName(SERIALIZED_NAME_USERNAMES)
-	private List<String> usernames = new ArrayList<>();
+	private List<String> usernames;
 
 	public NotificationMessageCreateRequestDTO() {
 	}
@@ -76,7 +76,6 @@ public class NotificationMessageCreateRequestDTO {
 	 * @return body
 	 **/
 	@javax.annotation.Nullable
-
 	public String getBody() {
 		return body;
 	}
@@ -104,7 +103,6 @@ public class NotificationMessageCreateRequestDTO {
 	 * @return groupNames
 	 **/
 	@javax.annotation.Nullable
-
 	public List<String> getGroupNames() {
 		return groupNames;
 	}
@@ -124,7 +122,6 @@ public class NotificationMessageCreateRequestDTO {
 	 * @return messageType
 	 **/
 	@javax.annotation.Nullable
-
 	public String getMessageType() {
 		return messageType;
 	}
@@ -144,7 +141,6 @@ public class NotificationMessageCreateRequestDTO {
 	 * @return subject
 	 **/
 	@javax.annotation.Nullable
-
 	public String getSubject() {
 		return subject;
 	}
@@ -172,7 +168,6 @@ public class NotificationMessageCreateRequestDTO {
 	 * @return usernames
 	 **/
 	@javax.annotation.Nullable
-
 	public List<String> getUsernames() {
 		return usernames;
 	}

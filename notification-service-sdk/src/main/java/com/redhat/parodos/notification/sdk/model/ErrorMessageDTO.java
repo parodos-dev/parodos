@@ -65,7 +65,6 @@ public class ErrorMessageDTO {
 	 * @return date
 	 **/
 	@javax.annotation.Nullable
-
 	public Date getDate() {
 		return date;
 	}
@@ -85,7 +84,6 @@ public class ErrorMessageDTO {
 	 * @return description
 	 **/
 	@javax.annotation.Nullable
-
 	public String getDescription() {
 		return description;
 	}
@@ -105,7 +103,6 @@ public class ErrorMessageDTO {
 	 * @return message
 	 **/
 	@javax.annotation.Nullable
-
 	public String getMessage() {
 		return message;
 	}
