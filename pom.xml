@@ -60,7 +60,7 @@
         <mockito.version>3.5.13</mockito.version>
         <assertj.version>3.17.2</assertj.version>
         <okhttp-version>4.9.2</okhttp-version>
-        <openapi.generator.version>6.4.0</openapi.generator.version>
+        <openapi.generator.version>6.6.0</openapi.generator.version>
         <gson-fire-version>1.8.5</gson-fire-version>
         <snakeyaml-version>1.28</snakeyaml-version>
     </properties>
