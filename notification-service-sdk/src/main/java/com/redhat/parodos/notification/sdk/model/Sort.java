@@ -64,7 +64,6 @@ public class Sort {
 	 * @return empty
 	 **/
 	@javax.annotation.Nullable
-
 	public Boolean getEmpty() {
 		return empty;
 	}
@@ -84,7 +83,6 @@ public class Sort {
 	 * @return sorted
 	 **/
 	@javax.annotation.Nullable
-
 	public Boolean getSorted() {
 		return sorted;
 	}
@@ -104,7 +102,6 @@ public class Sort {
 	 * @return unsorted
 	 **/
 	@javax.annotation.Nullable
-
 	public Boolean getUnsorted() {
 		return unsorted;
 	}
