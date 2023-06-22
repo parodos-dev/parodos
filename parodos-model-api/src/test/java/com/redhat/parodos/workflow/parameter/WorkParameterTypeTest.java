@@ -15,7 +15,7 @@ public class WorkParameterTypeTest {
 	@Test
 	public void testJsonSchema() {
 		WorkParameterType[] inputValues = { WorkParameterType.PASSWORD, WorkParameterType.TEXT, WorkParameterType.EMAIL,
-				WorkParameterType.NUMBER, WorkParameterType.URL, WorkParameterType.DATE, WorkParameterType.SELECT,
+				WorkParameterType.NUMBER, WorkParameterType.URI, WorkParameterType.DATE, WorkParameterType.SELECT,
 				WorkParameterType.MULTI_SELECT };
 
 		List<Map<String, Object>> outputs = new ArrayList<>();
@@ -45,7 +45,7 @@ public class WorkParameterTypeTest {
 
 		Map<String, String> expectedURLOutput = new HashMap<>();
 		expectedURLOutput.put("type", "string");
-		expectedURLOutput.put("format", "url");
+		expectedURLOutput.put("format", "uri");
 		assertEquals(expectedURLOutput, outputs.get(4));
 
 		Map<String, String> expectedDateOutput = new HashMap<>();

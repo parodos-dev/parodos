@@ -27,7 +27,7 @@ import java.util.Map;
  */
 public enum WorkParameterType {
 
-	PASSWORD, TEXT, EMAIL, DATE, NUMBER, URL, SELECT, MULTI_SELECT;
+	PASSWORD, TEXT, EMAIL, DATE, NUMBER, URI, SELECT, MULTI_SELECT;
 
 	private EnumSet<WorkParameterType> selectedTypes() {
 		return EnumSet.of(SELECT, MULTI_SELECT);
@@ -53,9 +53,9 @@ public enum WorkParameterType {
 				properties.put("format", "email");
 			}
 			case NUMBER -> properties.put("type", "number");
-			case URL -> {
+			case URI -> {
 				properties.put("type", "string");
-				properties.put("format", "url");
+				properties.put("format", "uri");
 			}
 			case DATE -> {
 				properties.put("type", "string");

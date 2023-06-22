@@ -24,7 +24,7 @@ public class SslCertificationWorkFlowTask extends BaseInfrastructureWorkFlowTask
 	@Override
 	public List<WorkParameter> getWorkFlowTaskParameters() {
 		return List.of(
-				WorkParameter.builder().key("domainName").description("The domain name").type(WorkParameterType.URL)
+				WorkParameter.builder().key("domainName").description("The domain name").type(WorkParameterType.URI)
 						.optional(false).build(),
 				WorkParameter.builder().key("ipAddress").description("The api address").type(WorkParameterType.TEXT)
 						.optional(false).build());

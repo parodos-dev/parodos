@@ -67,7 +67,7 @@ public class RestAPIWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	public List<WorkParameter> getWorkFlowTaskParameters() {
 		return List.of(
 				WorkParameter.builder().key(URL_KEY).description("The Url of the service (ie: https://httpbin.org/post")
-						.optional(false).type(WorkParameterType.URL).build(),
+						.optional(false).type(WorkParameterType.URI).build(),
 				WorkParameter.builder().key("user-id").description("The user id").type(WorkParameterType.TEXT)
 						.optional(false).build());
 	}
