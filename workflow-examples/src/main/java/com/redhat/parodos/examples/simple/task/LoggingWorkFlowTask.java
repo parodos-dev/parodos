@@ -61,7 +61,7 @@ public class LoggingWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	@Override
 	public List<WorkParameter> getWorkFlowTaskParameters() {
 		return List.of(
-				WorkParameter.builder().key("api-server").description("The api server").type(WorkParameterType.URL)
+				WorkParameter.builder().key("api-server").description("The api server").type(WorkParameterType.URI)
 						.optional(false).build(),
 				WorkParameter.builder().key("user-id").description("The user id").type(WorkParameterType.TEXT)
 						.optional(false).jsonSchemaOptions(Map.of("minLength", "1", "maxLength", "64")).build());

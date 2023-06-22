@@ -72,7 +72,7 @@ public class MigrationAnalysisWorkflow {
 	@Bean(name = "AnalyzeApplication")
 	@Infrastructure(parameters = {
 			@Parameter(key = "repositoryURL", description = "The repository with the code to analyze",
-					type = WorkParameterType.URL, optional = false),
+					type = WorkParameterType.URI, optional = false),
 			@Parameter(key = "applicationName", description = "The name of the application to analyze",
 					type = WorkParameterType.TEXT, optional = false) })
 	public WorkFlow AnalyzeApplication(CreateApplicationTask createApplicationTask, GetApplicationTask getAppTask,

@@ -85,7 +85,7 @@ public class SecureAPIGetTestTask extends BaseInfrastructureWorkFlowTask {
 	public List<WorkParameter> getWorkFlowTaskParameters() {
 		return List.of(
 				WorkParameter.builder().key(SECURED_URL).description("The URL of the Secured API you wish to call")
-						.optional(false).type(WorkParameterType.URL).build(),
+						.optional(false).type(WorkParameterType.URI).build(),
 				WorkParameter.builder().key(USERNAME).description("Please enter your username authentication")
 						.optional(false).type(WorkParameterType.TEXT).build(),
 				WorkParameter.builder().key(PASSWORD)

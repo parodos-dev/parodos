@@ -199,7 +199,7 @@ public class ComplexWorkFlowConfiguration {
 	@Infrastructure(parameters = {
 			@Parameter(key = "workloadId", description = "The workload id", type = WorkParameterType.TEXT,
 					optional = false),
-			@Parameter(key = "projectUrl", description = "The project url", type = WorkParameterType.URL,
+			@Parameter(key = "projectUrl", description = "The project url", type = WorkParameterType.URI,
 					optional = true),
 			@Parameter(key = "WORKFLOW_SELECT_SAMPLE", description = "Workflow select parameter sample",
 					type = WorkParameterType.SELECT, optional = true, selectOptions = { "option1", "option2" },

@@ -24,7 +24,7 @@ public class LoadBalancerWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	@Override
 	public List<WorkParameter> getWorkFlowTaskParameters() {
 		return List.of(
-				WorkParameter.builder().key("hostname").description("The hostname").type(WorkParameterType.URL)
+				WorkParameter.builder().key("hostname").description("The hostname").type(WorkParameterType.URI)
 						.optional(false).build(),
 				WorkParameter.builder().key("appId").description("The app id").type(WorkParameterType.TEXT)
 						.optional(false).build());

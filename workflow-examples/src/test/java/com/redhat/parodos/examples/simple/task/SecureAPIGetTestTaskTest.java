@@ -136,7 +136,7 @@ public class SecureAPIGetTestTaskTest extends BaseInfrastructureWorkFlowTaskTest
 		assertEquals(3, workParameters.size());
 		assertEquals(SECURED_URL, workParameters.get(0).getKey());
 		assertEquals("The URL of the Secured API you wish to call", workParameters.get(0).getDescription());
-		assertEquals(WorkParameterType.URL, workParameters.get(0).getType());
+		assertEquals(WorkParameterType.URI, workParameters.get(0).getType());
 
 		assertEquals(USERNAME, workParameters.get(1).getKey());
 		assertEquals("Please enter your username authentication", workParameters.get(1).getDescription());

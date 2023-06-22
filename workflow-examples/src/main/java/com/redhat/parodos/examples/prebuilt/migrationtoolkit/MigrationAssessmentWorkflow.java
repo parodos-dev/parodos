@@ -86,7 +86,7 @@ public class MigrationAssessmentWorkflow {
 	@Bean(name = "AnalyzeApplicationAssessment")
 	@Assessment(parameters = {
 			@Parameter(key = "repositoryURL", description = "The repository with the code to analyze",
-					type = WorkParameterType.URL, optional = false),
+					type = WorkParameterType.URI, optional = false),
 			@Parameter(key = "applicationName", description = "The name of the application to analyze",
 					type = WorkParameterType.TEXT, optional = false),
 			@Parameter(key = "branch", description = "The repository branch to analyze", type = WorkParameterType.TEXT,

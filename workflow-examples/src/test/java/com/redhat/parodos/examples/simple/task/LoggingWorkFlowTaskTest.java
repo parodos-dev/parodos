@@ -92,7 +92,7 @@ public class LoggingWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 		// then
 		assertNotNull(loggingWorkFlowTask.getWorkFlowTaskParameters());
 		assertEquals(2, workParameters.size());
-		assertEquals(WorkParameterType.URL, workParameters.get(0).getType());
+		assertEquals(WorkParameterType.URI, workParameters.get(0).getType());
 		assertEquals(WORKFLOW_PARAMETER_API_SERVER_KEY, workParameters.get(0).getKey());
 		assertEquals(WORKFLOW_PARAMETER_API_SERVER_DESCRIPTION, workParameters.get(0).getDescription());
 	}
