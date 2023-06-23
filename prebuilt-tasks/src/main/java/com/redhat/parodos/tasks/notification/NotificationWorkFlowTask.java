@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.redhat.parodos.infrastructure.Notifier;
 import com.redhat.parodos.notification.sdk.api.ApiException;
 import com.redhat.parodos.notification.sdk.model.NotificationMessageCreateRequestDTO;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
@@ -13,7 +14,6 @@ import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
-import com.redhat.parodos.workflow.task.infrastructure.Notifier;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;

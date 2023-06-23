@@ -7,9 +7,9 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.UUID;
 
+import com.redhat.parodos.infrastructure.Notifier;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
-import com.redhat.parodos.workflow.task.infrastructure.Notifier;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;

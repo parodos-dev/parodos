@@ -3,6 +3,7 @@ package com.redhat.parodos.examples.prebuilt.migrationtoolkit;
 import java.net.URI;
 import java.util.List;
 
+import com.redhat.parodos.infrastructure.Notifier;
 import com.redhat.parodos.tasks.migrationtoolkit.CreateApplicationTask;
 import com.redhat.parodos.tasks.migrationtoolkit.GetAnalysisTask;
 import com.redhat.parodos.tasks.migrationtoolkit.GetApplicationTask;
@@ -11,7 +12,6 @@ import com.redhat.parodos.workflow.annotation.Checker;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
 import com.redhat.parodos.workflow.annotation.Parameter;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
-import com.redhat.parodos.workflow.task.infrastructure.Notifier;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import lombok.extern.slf4j.Slf4j;
 

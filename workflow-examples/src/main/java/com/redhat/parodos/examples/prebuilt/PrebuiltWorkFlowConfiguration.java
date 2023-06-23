@@ -1,9 +1,9 @@
 package com.redhat.parodos.examples.prebuilt;
 
+import com.redhat.parodos.infrastructure.Notifier;
 import com.redhat.parodos.tasks.notification.NotificationWorkFlowTask;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
-import com.redhat.parodos.workflow.task.infrastructure.Notifier;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import lombok.extern.slf4j.Slf4j;

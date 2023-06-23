@@ -20,12 +20,12 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import com.redhat.parodos.infrastructure.Notifier;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflow.option.WorkFlowOptions;
 import com.redhat.parodos.workflow.task.assessment.BaseAssessmentTask;
-import com.redhat.parodos.workflow.task.infrastructure.Notifier;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
