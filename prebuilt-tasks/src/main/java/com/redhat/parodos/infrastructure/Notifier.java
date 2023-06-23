@@ -1,4 +1,4 @@
-package com.redhat.parodos.workflow.task.infrastructure;
+package com.redhat.parodos.infrastructure;
 
 import com.redhat.parodos.notification.sdk.api.ApiException;
 import com.redhat.parodos.notification.sdk.model.NotificationMessageCreateRequestDTO;

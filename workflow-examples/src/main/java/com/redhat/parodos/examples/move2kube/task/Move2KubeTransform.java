@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import com.redhat.parodos.examples.move2kube.utils.Move2KubeUtils;
-import com.redhat.parodos.workflow.task.infrastructure.Notifier;
+import com.redhat.parodos.infrastructure.Notifier;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
