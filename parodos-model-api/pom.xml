@@ -53,11 +53,6 @@
             <artifactId>jackson-databind</artifactId>
         </dependency>
         <dependency>
-            <groupId>dev.parodos</groupId>
-            <artifactId>notification-service-sdk</artifactId>
-            <version>${revision}</version>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
