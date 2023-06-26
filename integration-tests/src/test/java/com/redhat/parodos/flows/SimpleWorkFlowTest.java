@@ -1,7 +1,6 @@
 package com.redhat.parodos.flows;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -48,8 +47,9 @@ public class SimpleWorkFlowTest {
 		// Define WorkRequests
 		WorkRequestDTO work1 = new WorkRequestDTO();
 		work1.setWorkName("restCallTask");
-		work1.setArguments(Collections
-				.singletonList(new ArgumentRequestDTO().key("url").value("http://localhost:8080/actuator/health")));
+		work1.setArguments(
+				Arrays.asList(new ArgumentRequestDTO().key("url").value("http://localhost:8080/actuator/health"),
+						new ArgumentRequestDTO().key("method").value("get")));
 
 		WorkRequestDTO work2 = new WorkRequestDTO();
 		work2.setWorkName("loggingTask");
