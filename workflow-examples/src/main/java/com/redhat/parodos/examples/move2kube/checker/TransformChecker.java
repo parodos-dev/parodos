@@ -58,8 +58,9 @@ public class TransformChecker extends BaseWorkFlowCheckerTask {
 			Project res = project.getProject(workspaceID, projectID);
 			ProjectOutputsValue output = Objects.requireNonNull(res.getOutputs()).get(transformID);
 			if (output == null) {
-				return new DefaultWorkReport(WorkStatus.FAILED, workContext,
-						new IllegalArgumentException("Cannot get the project transformation output from the list"));
+				String errorMsg = "Cannot get the project transformation output from the list";
+				taskLogger.logErrorWithSlf4j(errorMsg);
+				return new DefaultWorkReport(WorkStatus.REJECTED, workContext, new IllegalArgumentException(errorMsg));
 			}
 			if (!Objects.equals(output.getStatus(), "done")) {
 				return new DefaultWorkReport(WorkStatus.FAILED, workContext,
@@ -67,11 +68,11 @@ public class TransformChecker extends BaseWorkFlowCheckerTask {
 			}
 		}
 		catch (ApiException e) {
-			return new DefaultWorkReport(WorkStatus.FAILED, workContext, new IllegalArgumentException(
+			return new DefaultWorkReport(WorkStatus.REJECTED, workContext, new IllegalArgumentException(
 					"Cannot get current project for the workflow, error:" + e.getMessage()));
 		}
 		catch (Exception e) {
-			return new DefaultWorkReport(WorkStatus.FAILED, workContext,
+			return new DefaultWorkReport(WorkStatus.REJECTED, workContext,
 					new IllegalArgumentException("Transform checker cannot be validated:" + e.getMessage()));
 		}
 		// reset alert message, if any
