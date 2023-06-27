@@ -120,7 +120,7 @@ public class WorkFlowStatusResponseDTO {
 	public static final String SERIALIZED_NAME_WORKS = "works";
 
 	@SerializedName(SERIALIZED_NAME_WORKS)
-	private List<WorkStatusResponseDTO> works = new ArrayList<>();
+	private List<WorkStatusResponseDTO> works;
 
 	public WorkFlowStatusResponseDTO() {
 	}
@@ -136,7 +136,6 @@ public class WorkFlowStatusResponseDTO {
 	 * @return message
 	 **/
 	@javax.annotation.Nullable
-
 	public String getMessage() {
 		return message;
 	}
@@ -156,7 +155,6 @@ public class WorkFlowStatusResponseDTO {
 	 * @return status
 	 **/
 	@javax.annotation.Nullable
-
 	public StatusEnum getStatus() {
 		return status;
 	}
@@ -176,7 +174,6 @@ public class WorkFlowStatusResponseDTO {
 	 * @return workFlowExecutionId
 	 **/
 	@javax.annotation.Nullable
-
 	public UUID getWorkFlowExecutionId() {
 		return workFlowExecutionId;
 	}
@@ -196,7 +193,6 @@ public class WorkFlowStatusResponseDTO {
 	 * @return workFlowName
 	 **/
 	@javax.annotation.Nullable
-
 	public String getWorkFlowName() {
 		return workFlowName;
 	}
@@ -224,7 +220,6 @@ public class WorkFlowStatusResponseDTO {
 	 * @return works
 	 **/
 	@javax.annotation.Nullable
-
 	public List<WorkStatusResponseDTO> getWorks() {
 		return works;
 	}

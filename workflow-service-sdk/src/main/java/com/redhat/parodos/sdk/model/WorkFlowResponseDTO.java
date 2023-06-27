@@ -43,7 +43,7 @@ public class WorkFlowResponseDTO {
 	public static final String SERIALIZED_NAME_ADDITIONAL_INFOS = "additionalInfos";
 
 	@SerializedName(SERIALIZED_NAME_ADDITIONAL_INFOS)
-	private List<AdditionalInfo> additionalInfos = new ArrayList<>();
+	private List<AdditionalInfo> additionalInfos;
 
 	public static final String SERIALIZED_NAME_END_DATE = "endDate";
 
@@ -74,6 +74,66 @@ public class WorkFlowResponseDTO {
 
 	@SerializedName(SERIALIZED_NAME_WORK_FLOW_NAME)
 	private String workFlowName;
+
+	/**
+	 * Gets or Sets workFlowType
+	 */
+	@JsonAdapter(WorkFlowTypeEnum.Adapter.class)
+	public enum WorkFlowTypeEnum {
+
+		ASSESSMENT("ASSESSMENT"),
+
+		CHECKER("CHECKER"),
+
+		INFRASTRUCTURE("INFRASTRUCTURE"),
+
+		ESCALATION("ESCALATION");
+
+		private String value;
+
+		WorkFlowTypeEnum(String value) {
+			this.value = value;
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		@Override
+		public String toString() {
+			return String.valueOf(value);
+		}
+
+		public static WorkFlowTypeEnum fromValue(String value) {
+			for (WorkFlowTypeEnum b : WorkFlowTypeEnum.values()) {
+				if (b.value.equals(value)) {
+					return b;
+				}
+			}
+			throw new IllegalArgumentException("Unexpected value '" + value + "'");
+		}
+
+		public static class Adapter extends TypeAdapter<WorkFlowTypeEnum> {
+
+			@Override
+			public void write(final JsonWriter jsonWriter, final WorkFlowTypeEnum enumeration) throws IOException {
+				jsonWriter.value(enumeration.getValue());
+			}
+
+			@Override
+			public WorkFlowTypeEnum read(final JsonReader jsonReader) throws IOException {
+				String value = jsonReader.nextString();
+				return WorkFlowTypeEnum.fromValue(value);
+			}
+
+		}
+
+	}
+
+	public static final String SERIALIZED_NAME_WORK_FLOW_TYPE = "workFlowType";
+
+	@SerializedName(SERIALIZED_NAME_WORK_FLOW_TYPE)
+	private WorkFlowTypeEnum workFlowType;
 
 	/**
 	 * Gets or Sets workStatus
@@ -159,7 +219,6 @@ public class WorkFlowResponseDTO {
 	 * @return additionalInfos
 	 **/
 	@javax.annotation.Nullable
-
 	public List<AdditionalInfo> getAdditionalInfos() {
 		return additionalInfos;
 	}
@@ -179,7 +238,6 @@ public class WorkFlowResponseDTO {
 	 * @return endDate
 	 **/
 	@javax.annotation.Nullable
-
 	public String getEndDate() {
 		return endDate;
 	}
@@ -199,7 +257,6 @@ public class WorkFlowResponseDTO {
 	 * @return executeBy
 	 **/
 	@javax.annotation.Nullable
-
 	public String getExecuteBy() {
 		return executeBy;
 	}
@@ -219,7 +276,6 @@ public class WorkFlowResponseDTO {
 	 * @return projectId
 	 **/
 	@javax.annotation.Nullable
-
 	public UUID getProjectId() {
 		return projectId;
 	}
@@ -239,7 +295,6 @@ public class WorkFlowResponseDTO {
 	 * @return startDate
 	 **/
 	@javax.annotation.Nullable
-
 	public String getStartDate() {
 		return startDate;
 	}
@@ -259,7 +314,6 @@ public class WorkFlowResponseDTO {
 	 * @return workFlowExecutionId
 	 **/
 	@javax.annotation.Nullable
-
 	public UUID getWorkFlowExecutionId() {
 		return workFlowExecutionId;
 	}
@@ -279,13 +333,31 @@ public class WorkFlowResponseDTO {
 	 * @return workFlowName
 	 **/
 	@javax.annotation.Nullable
-
 	public String getWorkFlowName() {
 		return workFlowName;
 	}
 
 	public void setWorkFlowName(String workFlowName) {
 		this.workFlowName = workFlowName;
+	}
+
+	public WorkFlowResponseDTO workFlowType(WorkFlowTypeEnum workFlowType) {
+
+		this.workFlowType = workFlowType;
+		return this;
+	}
+
+	/**
+	 * Get workFlowType
+	 * @return workFlowType
+	 **/
+	@javax.annotation.Nullable
+	public WorkFlowTypeEnum getWorkFlowType() {
+		return workFlowType;
+	}
+
+	public void setWorkFlowType(WorkFlowTypeEnum workFlowType) {
+		this.workFlowType = workFlowType;
 	}
 
 	public WorkFlowResponseDTO workStatus(WorkStatusEnum workStatus) {
@@ -299,7 +371,6 @@ public class WorkFlowResponseDTO {
 	 * @return workStatus
 	 **/
 	@javax.annotation.Nullable
-
 	public WorkStatusEnum getWorkStatus() {
 		return workStatus;
 	}
@@ -324,13 +395,14 @@ public class WorkFlowResponseDTO {
 				&& Objects.equals(this.startDate, workFlowResponseDTO.startDate)
 				&& Objects.equals(this.workFlowExecutionId, workFlowResponseDTO.workFlowExecutionId)
 				&& Objects.equals(this.workFlowName, workFlowResponseDTO.workFlowName)
+				&& Objects.equals(this.workFlowType, workFlowResponseDTO.workFlowType)
 				&& Objects.equals(this.workStatus, workFlowResponseDTO.workStatus);
 	}
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(additionalInfos, endDate, executeBy, projectId, startDate, workFlowExecutionId,
-				workFlowName, workStatus);
+				workFlowName, workFlowType, workStatus);
 	}
 
 	@Override
@@ -344,6 +416,7 @@ public class WorkFlowResponseDTO {
 		sb.append("    startDate: ").append(toIndentedString(startDate)).append("\n");
 		sb.append("    workFlowExecutionId: ").append(toIndentedString(workFlowExecutionId)).append("\n");
 		sb.append("    workFlowName: ").append(toIndentedString(workFlowName)).append("\n");
+		sb.append("    workFlowType: ").append(toIndentedString(workFlowType)).append("\n");
 		sb.append("    workStatus: ").append(toIndentedString(workStatus)).append("\n");
 		sb.append("}");
 		return sb.toString();
@@ -374,6 +447,7 @@ public class WorkFlowResponseDTO {
 		openapiFields.add("startDate");
 		openapiFields.add("workFlowExecutionId");
 		openapiFields.add("workFlowName");
+		openapiFields.add("workFlowType");
 		openapiFields.add("workStatus");
 
 		// a set of required properties/fields (JSON key names)
@@ -458,6 +532,12 @@ public class WorkFlowResponseDTO {
 			throw new IllegalArgumentException(String.format(
 					"Expected the field `workFlowName` to be a primitive type in the JSON string but got `%s`",
 					jsonObj.get("workFlowName").toString()));
+		}
+		if ((jsonObj.get("workFlowType") != null && !jsonObj.get("workFlowType").isJsonNull())
+				&& !jsonObj.get("workFlowType").isJsonPrimitive()) {
+			throw new IllegalArgumentException(String.format(
+					"Expected the field `workFlowType` to be a primitive type in the JSON string but got `%s`",
+					jsonObj.get("workFlowType").toString()));
 		}
 		if ((jsonObj.get("workStatus") != null && !jsonObj.get("workStatus").isJsonNull())
 				&& !jsonObj.get("workStatus").isJsonPrimitive()) {

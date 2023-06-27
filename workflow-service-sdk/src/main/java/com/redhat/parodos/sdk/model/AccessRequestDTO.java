@@ -113,7 +113,6 @@ public class AccessRequestDTO {
 	 * @return role
 	 **/
 	@javax.annotation.Nullable
-
 	public RoleEnum getRole() {
 		return role;
 	}
@@ -133,7 +132,6 @@ public class AccessRequestDTO {
 	 * @return username
 	 **/
 	@javax.annotation.Nullable
-
 	public String getUsername() {
 		return username;
 	}

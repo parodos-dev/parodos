@@ -8,7 +8,7 @@ All URIs are relative to *http://localhost:8080*
 | [**updateProjectAccessStatus**](ProjectAccessApi.md#updateProjectAccessStatus) | **POST** /api/v1/projects/access/{id}/status | Update status of a specified project access request |
 
 
-<a name="getProjectAccessStatus"></a>
+<a id="getProjectAccessStatus"></a>
 # **getProjectAccessStatus**
 > AccessStatusResponseDTO getProjectAccessStatus(id)
 
@@ -72,7 +72,7 @@ No authorization required
 | **404** | Not found |  -  |
 | **409** | Conflict |  -  |
 
-<a name="updateProjectAccessStatus"></a>
+<a id="updateProjectAccessStatus"></a>
 # **updateProjectAccessStatus**
 > updateProjectAccessStatus(id, accessStatusRequestDTO)
 

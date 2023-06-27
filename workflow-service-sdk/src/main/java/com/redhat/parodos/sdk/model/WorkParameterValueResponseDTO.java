@@ -45,7 +45,7 @@ public class WorkParameterValueResponseDTO {
 	public static final String SERIALIZED_NAME_OPTIONS = "options";
 
 	@SerializedName(SERIALIZED_NAME_OPTIONS)
-	private List<String> options = new ArrayList<>();
+	private List<String> options;
 
 	public static final String SERIALIZED_NAME_PROPERTY_PATH = "propertyPath";
 
@@ -71,7 +71,6 @@ public class WorkParameterValueResponseDTO {
 	 * @return key
 	 **/
 	@javax.annotation.Nullable
-
 	public String getKey() {
 		return key;
 	}
@@ -99,7 +98,6 @@ public class WorkParameterValueResponseDTO {
 	 * @return options
 	 **/
 	@javax.annotation.Nullable
-
 	public List<String> getOptions() {
 		return options;
 	}
@@ -119,7 +117,6 @@ public class WorkParameterValueResponseDTO {
 	 * @return propertyPath
 	 **/
 	@javax.annotation.Nullable
-
 	public String getPropertyPath() {
 		return propertyPath;
 	}
@@ -139,7 +136,6 @@ public class WorkParameterValueResponseDTO {
 	 * @return value
 	 **/
 	@javax.annotation.Nullable
-
 	public String getValue() {
 		return value;
 	}

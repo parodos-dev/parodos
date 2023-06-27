@@ -41,7 +41,7 @@ public class WorkFlowOptionsResponseDTO {
 	public static final String SERIALIZED_NAME_CONTINUATION_OPTIONS = "continuationOptions";
 
 	@SerializedName(SERIALIZED_NAME_CONTINUATION_OPTIONS)
-	private List<WorkFlowOption> continuationOptions = new ArrayList<>();
+	private List<WorkFlowOption> continuationOptions;
 
 	public static final String SERIALIZED_NAME_CURRENT_VERSION = "currentVersion";
 
@@ -51,22 +51,22 @@ public class WorkFlowOptionsResponseDTO {
 	public static final String SERIALIZED_NAME_MIGRATION_OPTIONS = "migrationOptions";
 
 	@SerializedName(SERIALIZED_NAME_MIGRATION_OPTIONS)
-	private List<WorkFlowOption> migrationOptions = new ArrayList<>();
+	private List<WorkFlowOption> migrationOptions;
 
 	public static final String SERIALIZED_NAME_NEW_OPTIONS = "newOptions";
 
 	@SerializedName(SERIALIZED_NAME_NEW_OPTIONS)
-	private List<WorkFlowOption> newOptions = new ArrayList<>();
+	private List<WorkFlowOption> newOptions;
 
 	public static final String SERIALIZED_NAME_OTHER_OPTIONS = "otherOptions";
 
 	@SerializedName(SERIALIZED_NAME_OTHER_OPTIONS)
-	private List<WorkFlowOption> otherOptions = new ArrayList<>();
+	private List<WorkFlowOption> otherOptions;
 
 	public static final String SERIALIZED_NAME_UPGRADE_OPTIONS = "upgradeOptions";
 
 	@SerializedName(SERIALIZED_NAME_UPGRADE_OPTIONS)
-	private List<WorkFlowOption> upgradeOptions = new ArrayList<>();
+	private List<WorkFlowOption> upgradeOptions;
 
 	public WorkFlowOptionsResponseDTO() {
 	}
@@ -90,7 +90,6 @@ public class WorkFlowOptionsResponseDTO {
 	 * @return continuationOptions
 	 **/
 	@javax.annotation.Nullable
-
 	public List<WorkFlowOption> getContinuationOptions() {
 		return continuationOptions;
 	}
@@ -110,7 +109,6 @@ public class WorkFlowOptionsResponseDTO {
 	 * @return currentVersion
 	 **/
 	@javax.annotation.Nullable
-
 	public WorkFlowOption getCurrentVersion() {
 		return currentVersion;
 	}
@@ -138,7 +136,6 @@ public class WorkFlowOptionsResponseDTO {
 	 * @return migrationOptions
 	 **/
 	@javax.annotation.Nullable
-
 	public List<WorkFlowOption> getMigrationOptions() {
 		return migrationOptions;
 	}
@@ -166,7 +163,6 @@ public class WorkFlowOptionsResponseDTO {
 	 * @return newOptions
 	 **/
 	@javax.annotation.Nullable
-
 	public List<WorkFlowOption> getNewOptions() {
 		return newOptions;
 	}
@@ -194,7 +190,6 @@ public class WorkFlowOptionsResponseDTO {
 	 * @return otherOptions
 	 **/
 	@javax.annotation.Nullable
-
 	public List<WorkFlowOption> getOtherOptions() {
 		return otherOptions;
 	}
@@ -222,7 +217,6 @@ public class WorkFlowOptionsResponseDTO {
 	 * @return upgradeOptions
 	 **/
 	@javax.annotation.Nullable
-
 	public List<WorkFlowOption> getUpgradeOptions() {
 		return upgradeOptions;
 	}

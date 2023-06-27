@@ -93,7 +93,7 @@ public class UserRoleResponseDTO {
 	public static final String SERIALIZED_NAME_ROLES = "roles";
 
 	@SerializedName(SERIALIZED_NAME_ROLES)
-	private Set<RolesEnum> roles = new LinkedHashSet<>();
+	private Set<RolesEnum> roles;
 
 	public static final String SERIALIZED_NAME_USERNAME = "username";
 
@@ -122,7 +122,6 @@ public class UserRoleResponseDTO {
 	 * @return roles
 	 **/
 	@javax.annotation.Nullable
-
 	public Set<RolesEnum> getRoles() {
 		return roles;
 	}
@@ -142,7 +141,6 @@ public class UserRoleResponseDTO {
 	 * @return username
 	 **/
 	@javax.annotation.Nullable
-
 	public String getUsername() {
 		return username;
 	}

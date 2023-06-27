@@ -113,7 +113,6 @@ public class AccessStatusRequestDTO {
 	 * @return comment
 	 **/
 	@javax.annotation.Nullable
-
 	public String getComment() {
 		return comment;
 	}
@@ -133,7 +132,6 @@ public class AccessStatusRequestDTO {
 	 * @return status
 	 **/
 	@javax.annotation.Nullable
-
 	public StatusEnum getStatus() {
 		return status;
 	}

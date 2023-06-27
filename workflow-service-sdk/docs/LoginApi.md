@@ -7,7 +7,7 @@ All URIs are relative to *http://localhost:8080*
 | [**login**](LoginApi.md#login) | **GET** /api/v1/login | Login |
 
 
-<a name="login"></a>
+<a id="login"></a>
 # **login**
 > login()
 

@@ -94,7 +94,7 @@ public class UserRoleRequestDTO {
 	public static final String SERIALIZED_NAME_ROLES = "roles";
 
 	@SerializedName(SERIALIZED_NAME_ROLES)
-	private List<RolesEnum> roles = new ArrayList<>();
+	private List<RolesEnum> roles;
 
 	public static final String SERIALIZED_NAME_USERNAME = "username";
 
@@ -123,7 +123,6 @@ public class UserRoleRequestDTO {
 	 * @return roles
 	 **/
 	@javax.annotation.Nullable
-
 	public List<RolesEnum> getRoles() {
 		return roles;
 	}
@@ -143,7 +142,6 @@ public class UserRoleRequestDTO {
 	 * @return username
 	 **/
 	@javax.annotation.Nullable
-
 	public String getUsername() {
 		return username;
 	}

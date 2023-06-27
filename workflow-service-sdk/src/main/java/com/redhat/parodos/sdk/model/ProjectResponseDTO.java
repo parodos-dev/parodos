@@ -91,7 +91,6 @@ public class ProjectResponseDTO {
 	 * @return accessRole
 	 **/
 	@javax.annotation.Nullable
-
 	public String getAccessRole() {
 		return accessRole;
 	}
@@ -111,7 +110,6 @@ public class ProjectResponseDTO {
 	 * @return createdBy
 	 **/
 	@javax.annotation.Nullable
-
 	public String getCreatedBy() {
 		return createdBy;
 	}
@@ -131,7 +129,6 @@ public class ProjectResponseDTO {
 	 * @return createdDate
 	 **/
 	@javax.annotation.Nullable
-
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -151,7 +148,6 @@ public class ProjectResponseDTO {
 	 * @return description
 	 **/
 	@javax.annotation.Nullable
-
 	public String getDescription() {
 		return description;
 	}
@@ -171,7 +167,6 @@ public class ProjectResponseDTO {
 	 * @return id
 	 **/
 	@javax.annotation.Nullable
-
 	public UUID getId() {
 		return id;
 	}
@@ -191,7 +186,6 @@ public class ProjectResponseDTO {
 	 * @return modifiedBy
 	 **/
 	@javax.annotation.Nullable
-
 	public String getModifiedBy() {
 		return modifiedBy;
 	}
@@ -211,7 +205,6 @@ public class ProjectResponseDTO {
 	 * @return modifiedDate
 	 **/
 	@javax.annotation.Nullable
-
 	public Date getModifiedDate() {
 		return modifiedDate;
 	}
@@ -231,7 +224,6 @@ public class ProjectResponseDTO {
 	 * @return name
 	 **/
 	@javax.annotation.Nullable
-
 	public String getName() {
 		return name;
 	}

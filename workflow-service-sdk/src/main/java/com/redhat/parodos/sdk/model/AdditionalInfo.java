@@ -59,7 +59,6 @@ public class AdditionalInfo {
 	 * @return key
 	 **/
 	@javax.annotation.Nullable
-
 	public String getKey() {
 		return key;
 	}
@@ -79,7 +78,6 @@ public class AdditionalInfo {
 	 * @return value
 	 **/
 	@javax.annotation.Nullable
-
 	public String getValue() {
 		return value;
 	}

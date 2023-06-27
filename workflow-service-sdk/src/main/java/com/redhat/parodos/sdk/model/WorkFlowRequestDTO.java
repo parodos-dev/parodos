@@ -42,7 +42,7 @@ public class WorkFlowRequestDTO {
 	public static final String SERIALIZED_NAME_ARGUMENTS = "arguments";
 
 	@SerializedName(SERIALIZED_NAME_ARGUMENTS)
-	private List<ArgumentRequestDTO> arguments = new ArrayList<>();
+	private List<ArgumentRequestDTO> arguments;
 
 	public static final String SERIALIZED_NAME_INVOKING_EXECUTION_ID = "invokingExecutionId";
 
@@ -62,7 +62,7 @@ public class WorkFlowRequestDTO {
 	public static final String SERIALIZED_NAME_WORKS = "works";
 
 	@SerializedName(SERIALIZED_NAME_WORKS)
-	private List<WorkRequestDTO> works = new ArrayList<>();
+	private List<WorkRequestDTO> works;
 
 	public WorkFlowRequestDTO() {
 	}
@@ -86,7 +86,6 @@ public class WorkFlowRequestDTO {
 	 * @return arguments
 	 **/
 	@javax.annotation.Nullable
-
 	public List<ArgumentRequestDTO> getArguments() {
 		return arguments;
 	}
@@ -106,7 +105,6 @@ public class WorkFlowRequestDTO {
 	 * @return invokingExecutionId
 	 **/
 	@javax.annotation.Nullable
-
 	public UUID getInvokingExecutionId() {
 		return invokingExecutionId;
 	}
@@ -126,7 +124,6 @@ public class WorkFlowRequestDTO {
 	 * @return projectId
 	 **/
 	@javax.annotation.Nullable
-
 	public UUID getProjectId() {
 		return projectId;
 	}
@@ -146,7 +143,6 @@ public class WorkFlowRequestDTO {
 	 * @return workFlowName
 	 **/
 	@javax.annotation.Nullable
-
 	public String getWorkFlowName() {
 		return workFlowName;
 	}
@@ -174,7 +170,6 @@ public class WorkFlowRequestDTO {
 	 * @return works
 	 **/
 	@javax.annotation.Nullable
-
 	public List<WorkRequestDTO> getWorks() {
 		return works;
 	}

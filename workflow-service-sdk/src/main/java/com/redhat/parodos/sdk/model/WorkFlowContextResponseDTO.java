@@ -60,7 +60,6 @@ public class WorkFlowContextResponseDTO {
 	 * @return workFlowExecutionId
 	 **/
 	@javax.annotation.Nullable
-
 	public UUID getWorkFlowExecutionId() {
 		return workFlowExecutionId;
 	}
@@ -80,7 +79,6 @@ public class WorkFlowContextResponseDTO {
 	 * @return workFlowOptions
 	 **/
 	@javax.annotation.Nullable
-
 	public WorkFlowOptionsResponseDTO getWorkFlowOptions() {
 		return workFlowOptions;
 	}

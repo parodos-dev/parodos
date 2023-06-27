@@ -1163,6 +1163,7 @@ components:
             details:
             - details
             - details
+            recommended: true
           - identifier: identifier
             workFlowName: workFlowName
             displayName: displayName
@@ -1170,6 +1171,7 @@ components:
             details:
             - details
             - details
+            recommended: true
           upgradeOptions:
           - identifier: identifier
             workFlowName: workFlowName
@@ -1178,6 +1180,7 @@ components:
             details:
             - details
             - details
+            recommended: true
           - identifier: identifier
             workFlowName: workFlowName
             displayName: displayName
@@ -1185,6 +1188,7 @@ components:
             details:
             - details
             - details
+            recommended: true
           newOptions:
           - identifier: identifier
             workFlowName: workFlowName
@@ -1193,6 +1197,7 @@ components:
             details:
             - details
             - details
+            recommended: true
           - identifier: identifier
             workFlowName: workFlowName
             displayName: displayName
@@ -1200,6 +1205,7 @@ components:
             details:
             - details
             - details
+            recommended: true
           migrationOptions:
           - identifier: identifier
             workFlowName: workFlowName
@@ -1208,6 +1214,7 @@ components:
             details:
             - details
             - details
+            recommended: true
           - identifier: identifier
             workFlowName: workFlowName
             displayName: displayName
@@ -1215,6 +1222,7 @@ components:
             details:
             - details
             - details
+            recommended: true
           otherOptions:
           - identifier: identifier
             workFlowName: workFlowName
@@ -1223,6 +1231,7 @@ components:
             details:
             - details
             - details
+            recommended: true
           - identifier: identifier
             workFlowName: workFlowName
             displayName: displayName
@@ -1230,6 +1239,7 @@ components:
             details:
             - details
             - details
+            recommended: true
           currentVersion:
             identifier: identifier
             workFlowName: workFlowName
@@ -1238,6 +1248,7 @@ components:
             details:
             - details
             - details
+            recommended: true
         workFlowExecutionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
       properties:
         workFlowExecutionId:
@@ -1358,6 +1369,7 @@ components:
         details:
         - details
         - details
+        recommended: true
       properties:
         description:
           type: string
@@ -1369,6 +1381,8 @@ components:
           type: string
         identifier:
           type: string
+        recommended:
+          type: boolean
         workFlowName:
           type: string
       type: object
@@ -1382,6 +1396,7 @@ components:
           details:
           - details
           - details
+          recommended: true
         - identifier: identifier
           workFlowName: workFlowName
           displayName: displayName
@@ -1389,6 +1404,7 @@ components:
           details:
           - details
           - details
+          recommended: true
         upgradeOptions:
         - identifier: identifier
           workFlowName: workFlowName
@@ -1397,6 +1413,7 @@ components:
           details:
           - details
           - details
+          recommended: true
         - identifier: identifier
           workFlowName: workFlowName
           displayName: displayName
@@ -1404,6 +1421,7 @@ components:
           details:
           - details
           - details
+          recommended: true
         newOptions:
         - identifier: identifier
           workFlowName: workFlowName
@@ -1412,6 +1430,7 @@ components:
           details:
           - details
           - details
+          recommended: true
         - identifier: identifier
           workFlowName: workFlowName
           displayName: displayName
@@ -1419,6 +1438,7 @@ components:
           details:
           - details
           - details
+          recommended: true
         migrationOptions:
         - identifier: identifier
           workFlowName: workFlowName
@@ -1427,6 +1447,7 @@ components:
           details:
           - details
           - details
+          recommended: true
         - identifier: identifier
           workFlowName: workFlowName
           displayName: displayName
@@ -1434,6 +1455,7 @@ components:
           details:
           - details
           - details
+          recommended: true
         otherOptions:
         - identifier: identifier
           workFlowName: workFlowName
@@ -1442,6 +1464,7 @@ components:
           details:
           - details
           - details
+          recommended: true
         - identifier: identifier
           workFlowName: workFlowName
           displayName: displayName
@@ -1449,6 +1472,7 @@ components:
           details:
           - details
           - details
+          recommended: true
         currentVersion:
           identifier: identifier
           workFlowName: workFlowName
@@ -1457,6 +1481,7 @@ components:
           details:
           - details
           - details
+          recommended: true
       properties:
         continuationOptions:
           items:
@@ -1543,6 +1568,7 @@ components:
         executeBy: executeBy
         endDate: endDate
         workFlowExecutionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        workFlowType: ASSESSMENT
         projectId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         startDate: startDate
       properties:
@@ -1563,6 +1589,13 @@ components:
           format: uuid
           type: string
         workFlowName:
+          type: string
+        workFlowType:
+          enum:
+          - ASSESSMENT
+          - CHECKER
+          - INFRASTRUCTURE
+          - ESCALATION
           type: string
         workStatus:
           enum:

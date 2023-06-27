@@ -14,7 +14,19 @@
 |**startDate** | **String** |  |  [optional] |
 |**workFlowExecutionId** | **UUID** |  |  [optional] |
 |**workFlowName** | **String** |  |  [optional] |
+|**workFlowType** | [**WorkFlowTypeEnum**](#WorkFlowTypeEnum) |  |  [optional] |
 |**workStatus** | [**WorkStatusEnum**](#WorkStatusEnum) |  |  [optional] |
+
+
+
+## Enum: WorkFlowTypeEnum
+
+| Name | Value |
+|---- | -----|
+| ASSESSMENT | &quot;ASSESSMENT&quot; |
+| CHECKER | &quot;CHECKER&quot; |
+| INFRASTRUCTURE | &quot;INFRASTRUCTURE&quot; |
+| ESCALATION | &quot;ESCALATION&quot; |
 
 
 
