@@ -115,7 +115,7 @@ public class WorkDefinitionResponseDTO {
 	public static final String SERIALIZED_NAME_OUTPUTS = "outputs";
 
 	@SerializedName(SERIALIZED_NAME_OUTPUTS)
-	private List<OutputsEnum> outputs = new ArrayList<>();
+	private List<OutputsEnum> outputs;
 
 	public static final String SERIALIZED_NAME_PARAMETERS = "parameters";
 
@@ -239,7 +239,7 @@ public class WorkDefinitionResponseDTO {
 	public static final String SERIALIZED_NAME_WORKS = "works";
 
 	@SerializedName(SERIALIZED_NAME_WORKS)
-	private List<WorkDefinitionResponseDTO> works = new ArrayList<>();
+	private List<WorkDefinitionResponseDTO> works;
 
 	public WorkDefinitionResponseDTO() {
 	}
@@ -255,7 +255,6 @@ public class WorkDefinitionResponseDTO {
 	 * @return author
 	 **/
 	@javax.annotation.Nullable
-
 	public String getAuthor() {
 		return author;
 	}
@@ -275,7 +274,6 @@ public class WorkDefinitionResponseDTO {
 	 * @return id
 	 **/
 	@javax.annotation.Nullable
-
 	public UUID getId() {
 		return id;
 	}
@@ -295,7 +293,6 @@ public class WorkDefinitionResponseDTO {
 	 * @return name
 	 **/
 	@javax.annotation.Nullable
-
 	public String getName() {
 		return name;
 	}
@@ -323,7 +320,6 @@ public class WorkDefinitionResponseDTO {
 	 * @return outputs
 	 **/
 	@javax.annotation.Nullable
-
 	public List<OutputsEnum> getOutputs() {
 		return outputs;
 	}
@@ -351,7 +347,6 @@ public class WorkDefinitionResponseDTO {
 	 * @return parameters
 	 **/
 	@javax.annotation.Nullable
-
 	public Map<String, Map<String, Object>> getParameters() {
 		return parameters;
 	}
@@ -371,7 +366,6 @@ public class WorkDefinitionResponseDTO {
 	 * @return processingType
 	 **/
 	@javax.annotation.Nullable
-
 	public ProcessingTypeEnum getProcessingType() {
 		return processingType;
 	}
@@ -391,7 +385,6 @@ public class WorkDefinitionResponseDTO {
 	 * @return workType
 	 **/
 	@javax.annotation.Nullable
-
 	public WorkTypeEnum getWorkType() {
 		return workType;
 	}
@@ -419,7 +412,6 @@ public class WorkDefinitionResponseDTO {
 	 * @return works
 	 **/
 	@javax.annotation.Nullable
-
 	public List<WorkDefinitionResponseDTO> getWorks() {
 		return works;
 	}

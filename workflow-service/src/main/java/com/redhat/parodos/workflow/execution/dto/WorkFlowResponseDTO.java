@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -54,6 +55,8 @@ public class WorkFlowResponseDTO {
 	private String executeBy;
 
 	private List<AdditionalInfo> additionalInfos;
+
+	private WorkFlowType workFlowType;
 
 	public record AdditionalInfo(String key, String value) {
 	}

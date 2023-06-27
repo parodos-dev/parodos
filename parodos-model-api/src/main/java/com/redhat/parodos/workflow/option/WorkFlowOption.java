@@ -61,12 +61,15 @@ public class WorkFlowOption {
 
 	private String workFlowName;
 
+	private boolean recommended;
+
 	private WorkFlowOption(Builder builder) {
 		this.description = builder.description;
 		this.details = builder.details;
 		this.identifier = builder.identifier;
 		this.workFlowName = builder.workFlowName;
 		this.displayName = builder.displayName;
+		this.recommended = builder.recommended;
 	}
 
 	public static class Builder {
@@ -82,6 +85,8 @@ public class WorkFlowOption {
 
 		// required
 		private String workFlowName;
+
+		private boolean recommended = false;
 
 		public Builder(String identifier, String workFlowName) {
 			this.identifier = identifier;
@@ -105,6 +110,11 @@ public class WorkFlowOption {
 
 		public Builder displayName(String displayName) {
 			this.displayName = displayName;
+			return this;
+		}
+
+		public Builder recommended(boolean recommended) {
+			this.recommended = recommended;
 			return this;
 		}
 

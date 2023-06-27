@@ -42,7 +42,7 @@ public class WorkRequestDTO {
 	public static final String SERIALIZED_NAME_ARGUMENTS = "arguments";
 
 	@SerializedName(SERIALIZED_NAME_ARGUMENTS)
-	private List<ArgumentRequestDTO> arguments = new ArrayList<>();
+	private List<ArgumentRequestDTO> arguments;
 
 	/**
 	 * Gets or Sets type
@@ -127,7 +127,6 @@ public class WorkRequestDTO {
 	 * @return arguments
 	 **/
 	@javax.annotation.Nullable
-
 	public List<ArgumentRequestDTO> getArguments() {
 		return arguments;
 	}
@@ -147,7 +146,6 @@ public class WorkRequestDTO {
 	 * @return type
 	 **/
 	@javax.annotation.Nullable
-
 	public TypeEnum getType() {
 		return type;
 	}
@@ -167,7 +165,6 @@ public class WorkRequestDTO {
 	 * @return workName
 	 **/
 	@javax.annotation.Nullable
-
 	public String getWorkName() {
 		return workName;
 	}

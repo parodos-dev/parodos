@@ -46,7 +46,7 @@ public class AccessResponseDTO {
 	public static final String SERIALIZED_NAME_APPROVAL_SENT_TO = "approvalSentTo";
 
 	@SerializedName(SERIALIZED_NAME_APPROVAL_SENT_TO)
-	private List<String> approvalSentTo = new ArrayList<>();
+	private List<String> approvalSentTo;
 
 	public static final String SERIALIZED_NAME_ESCALATION_SENT_TO = "escalationSentTo";
 
@@ -72,7 +72,6 @@ public class AccessResponseDTO {
 	 * @return accessRequestId
 	 **/
 	@javax.annotation.Nullable
-
 	public UUID getAccessRequestId() {
 		return accessRequestId;
 	}
@@ -100,7 +99,6 @@ public class AccessResponseDTO {
 	 * @return approvalSentTo
 	 **/
 	@javax.annotation.Nullable
-
 	public List<String> getApprovalSentTo() {
 		return approvalSentTo;
 	}
@@ -120,7 +118,6 @@ public class AccessResponseDTO {
 	 * @return escalationSentTo
 	 **/
 	@javax.annotation.Nullable
-
 	public String getEscalationSentTo() {
 		return escalationSentTo;
 	}
@@ -140,7 +137,6 @@ public class AccessResponseDTO {
 	 * @return project
 	 **/
 	@javax.annotation.Nullable
-
 	public ProjectDTO getProject() {
 		return project;
 	}

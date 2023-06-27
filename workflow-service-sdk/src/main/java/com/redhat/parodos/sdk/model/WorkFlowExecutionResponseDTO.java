@@ -118,7 +118,6 @@ public class WorkFlowExecutionResponseDTO {
 	 * @return workFlowExecutionId
 	 **/
 	@javax.annotation.Nullable
-
 	public UUID getWorkFlowExecutionId() {
 		return workFlowExecutionId;
 	}
@@ -138,7 +137,6 @@ public class WorkFlowExecutionResponseDTO {
 	 * @return workStatus
 	 **/
 	@javax.annotation.Nullable
-
 	public WorkStatusEnum getWorkStatus() {
 		return workStatus;
 	}

@@ -45,7 +45,7 @@ public class WorkFlowOption {
 	public static final String SERIALIZED_NAME_DETAILS = "details";
 
 	@SerializedName(SERIALIZED_NAME_DETAILS)
-	private List<String> details = new ArrayList<>();
+	private List<String> details;
 
 	public static final String SERIALIZED_NAME_DISPLAY_NAME = "displayName";
 
@@ -56,6 +56,11 @@ public class WorkFlowOption {
 
 	@SerializedName(SERIALIZED_NAME_IDENTIFIER)
 	private String identifier;
+
+	public static final String SERIALIZED_NAME_RECOMMENDED = "recommended";
+
+	@SerializedName(SERIALIZED_NAME_RECOMMENDED)
+	private Boolean recommended;
 
 	public static final String SERIALIZED_NAME_WORK_FLOW_NAME = "workFlowName";
 
@@ -76,7 +81,6 @@ public class WorkFlowOption {
 	 * @return description
 	 **/
 	@javax.annotation.Nullable
-
 	public String getDescription() {
 		return description;
 	}
@@ -104,7 +108,6 @@ public class WorkFlowOption {
 	 * @return details
 	 **/
 	@javax.annotation.Nullable
-
 	public List<String> getDetails() {
 		return details;
 	}
@@ -124,7 +127,6 @@ public class WorkFlowOption {
 	 * @return displayName
 	 **/
 	@javax.annotation.Nullable
-
 	public String getDisplayName() {
 		return displayName;
 	}
@@ -144,13 +146,31 @@ public class WorkFlowOption {
 	 * @return identifier
 	 **/
 	@javax.annotation.Nullable
-
 	public String getIdentifier() {
 		return identifier;
 	}
 
 	public void setIdentifier(String identifier) {
 		this.identifier = identifier;
+	}
+
+	public WorkFlowOption recommended(Boolean recommended) {
+
+		this.recommended = recommended;
+		return this;
+	}
+
+	/**
+	 * Get recommended
+	 * @return recommended
+	 **/
+	@javax.annotation.Nullable
+	public Boolean getRecommended() {
+		return recommended;
+	}
+
+	public void setRecommended(Boolean recommended) {
+		this.recommended = recommended;
 	}
 
 	public WorkFlowOption workFlowName(String workFlowName) {
@@ -164,7 +184,6 @@ public class WorkFlowOption {
 	 * @return workFlowName
 	 **/
 	@javax.annotation.Nullable
-
 	public String getWorkFlowName() {
 		return workFlowName;
 	}
@@ -186,12 +205,13 @@ public class WorkFlowOption {
 				&& Objects.equals(this.details, workFlowOption.details)
 				&& Objects.equals(this.displayName, workFlowOption.displayName)
 				&& Objects.equals(this.identifier, workFlowOption.identifier)
+				&& Objects.equals(this.recommended, workFlowOption.recommended)
 				&& Objects.equals(this.workFlowName, workFlowOption.workFlowName);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(description, details, displayName, identifier, workFlowName);
+		return Objects.hash(description, details, displayName, identifier, recommended, workFlowName);
 	}
 
 	@Override
@@ -202,6 +222,7 @@ public class WorkFlowOption {
 		sb.append("    details: ").append(toIndentedString(details)).append("\n");
 		sb.append("    displayName: ").append(toIndentedString(displayName)).append("\n");
 		sb.append("    identifier: ").append(toIndentedString(identifier)).append("\n");
+		sb.append("    recommended: ").append(toIndentedString(recommended)).append("\n");
 		sb.append("    workFlowName: ").append(toIndentedString(workFlowName)).append("\n");
 		sb.append("}");
 		return sb.toString();
@@ -229,6 +250,7 @@ public class WorkFlowOption {
 		openapiFields.add("details");
 		openapiFields.add("displayName");
 		openapiFields.add("identifier");
+		openapiFields.add("recommended");
 		openapiFields.add("workFlowName");
 
 		// a set of required properties/fields (JSON key names)

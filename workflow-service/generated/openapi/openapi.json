@@ -1554,6 +1554,9 @@
           "identifier" : {
             "type" : "string"
           },
+          "recommended" : {
+            "type" : "boolean"
+          },
           "workFlowName" : {
             "type" : "string"
           }
@@ -1661,6 +1664,10 @@
           },
           "workFlowName" : {
             "type" : "string"
+          },
+          "workFlowType" : {
+            "type" : "string",
+            "enum" : [ "ASSESSMENT", "CHECKER", "INFRASTRUCTURE", "ESCALATION" ]
           },
           "workStatus" : {
             "type" : "string",

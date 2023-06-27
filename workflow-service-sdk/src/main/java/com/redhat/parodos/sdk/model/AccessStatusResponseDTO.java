@@ -114,7 +114,6 @@ public class AccessStatusResponseDTO {
 	 * @return accessRequestId
 	 **/
 	@javax.annotation.Nullable
-
 	public UUID getAccessRequestId() {
 		return accessRequestId;
 	}
@@ -134,7 +133,6 @@ public class AccessStatusResponseDTO {
 	 * @return status
 	 **/
 	@javax.annotation.Nullable
-
 	public StatusEnum getStatus() {
 		return status;
 	}

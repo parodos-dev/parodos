@@ -204,7 +204,7 @@ public class WorkFlowDefinitionResponseDTO {
 	public static final String SERIALIZED_NAME_WORKS = "works";
 
 	@SerializedName(SERIALIZED_NAME_WORKS)
-	private List<WorkDefinitionResponseDTO> works = new ArrayList<>();
+	private List<WorkDefinitionResponseDTO> works;
 
 	public WorkFlowDefinitionResponseDTO() {
 	}
@@ -220,7 +220,6 @@ public class WorkFlowDefinitionResponseDTO {
 	 * @return author
 	 **/
 	@javax.annotation.Nullable
-
 	public String getAuthor() {
 		return author;
 	}
@@ -240,7 +239,6 @@ public class WorkFlowDefinitionResponseDTO {
 	 * @return createDate
 	 **/
 	@javax.annotation.Nullable
-
 	public Date getCreateDate() {
 		return createDate;
 	}
@@ -260,7 +258,6 @@ public class WorkFlowDefinitionResponseDTO {
 	 * @return id
 	 **/
 	@javax.annotation.Nullable
-
 	public UUID getId() {
 		return id;
 	}
@@ -280,7 +277,6 @@ public class WorkFlowDefinitionResponseDTO {
 	 * @return modifyDate
 	 **/
 	@javax.annotation.Nullable
-
 	public Date getModifyDate() {
 		return modifyDate;
 	}
@@ -300,7 +296,6 @@ public class WorkFlowDefinitionResponseDTO {
 	 * @return name
 	 **/
 	@javax.annotation.Nullable
-
 	public String getName() {
 		return name;
 	}
@@ -328,7 +323,6 @@ public class WorkFlowDefinitionResponseDTO {
 	 * @return parameters
 	 **/
 	@javax.annotation.Nullable
-
 	public Map<String, Map<String, Object>> getParameters() {
 		return parameters;
 	}
@@ -348,7 +342,6 @@ public class WorkFlowDefinitionResponseDTO {
 	 * @return processingType
 	 **/
 	@javax.annotation.Nullable
-
 	public ProcessingTypeEnum getProcessingType() {
 		return processingType;
 	}
@@ -368,7 +361,6 @@ public class WorkFlowDefinitionResponseDTO {
 	 * @return properties
 	 **/
 	@javax.annotation.Nullable
-
 	public WorkFlowPropertiesDefinitionDTO getProperties() {
 		return properties;
 	}
@@ -388,7 +380,6 @@ public class WorkFlowDefinitionResponseDTO {
 	 * @return rollbackWorkflow
 	 **/
 	@javax.annotation.Nullable
-
 	public String getRollbackWorkflow() {
 		return rollbackWorkflow;
 	}
@@ -408,7 +399,6 @@ public class WorkFlowDefinitionResponseDTO {
 	 * @return type
 	 **/
 	@javax.annotation.Nullable
-
 	public TypeEnum getType() {
 		return type;
 	}
@@ -436,7 +426,6 @@ public class WorkFlowDefinitionResponseDTO {
 	 * @return works
 	 **/
 	@javax.annotation.Nullable
-
 	public List<WorkDefinitionResponseDTO> getWorks() {
 		return works;
 	}

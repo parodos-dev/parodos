@@ -15,6 +15,7 @@
  */
 package com.redhat.parodos.examples.ocponboarding.task.assessment;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -57,7 +58,12 @@ public class OnboardingOcpAssessmentTask extends BaseAssessmentTask {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext);
 		}
 		WorkFlowOptions workFlowOptions = new WorkFlowOptions.Builder().build();
-		workFlowOptions.setNewOptions(getWorkFlowOptions());
+		List<WorkFlowOption> m2kWorkFlowOptions = getWorkFlowOptions().stream()
+				.filter(workFlowOption -> workFlowOption.getIdentifier().toLowerCase().contains("move2kube")).toList();
+		List<WorkFlowOption> newOptions = new ArrayList<>(getWorkFlowOptions());
+		newOptions.removeAll(m2kWorkFlowOptions);
+		workFlowOptions.setNewOptions(newOptions);
+		workFlowOptions.setMigrationOptions(m2kWorkFlowOptions);
 
 		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
 				WorkContextDelegate.Resource.WORKFLOW_OPTIONS,

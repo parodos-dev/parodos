@@ -12,7 +12,7 @@ All URIs are relative to *http://localhost:8080*
 | [**updateUserRolesToProject**](ProjectApi.md#updateUserRolesToProject) | **POST** /api/v1/projects/{id}/users | Update user roles in project |
 
 
-<a name="createAccessRequestToProject"></a>
+<a id="createAccessRequestToProject"></a>
 # **createAccessRequestToProject**
 > AccessResponseDTO createAccessRequestToProject(id, accessRequestDTO)
 
@@ -78,7 +78,7 @@ No authorization required
 | **404** | Not found |  -  |
 | **409** | Conflict |  -  |
 
-<a name="createProject"></a>
+<a id="createProject"></a>
 # **createProject**
 > ProjectResponseDTO createProject(projectRequestDTO)
 
@@ -142,7 +142,7 @@ No authorization required
 | **404** | Not Found |  -  |
 | **409** | Conflict |  -  |
 
-<a name="getProjectById"></a>
+<a id="getProjectById"></a>
 # **getProjectById**
 > ProjectResponseDTO getProjectById(id)
 
@@ -207,7 +207,7 @@ No authorization required
 | **404** | Not found |  -  |
 | **409** | Conflict |  -  |
 
-<a name="getProjects"></a>
+<a id="getProjects"></a>
 # **getProjects**
 > List&lt;ProjectResponseDTO&gt; getProjects()
 
@@ -269,7 +269,7 @@ No authorization required
 | **404** | Not Found |  -  |
 | **409** | Conflict |  -  |
 
-<a name="removeUsersFromProject"></a>
+<a id="removeUsersFromProject"></a>
 # **removeUsersFromProject**
 > ProjectUserRoleResponseDTO removeUsersFromProject(id, requestBody)
 
@@ -335,7 +335,7 @@ No authorization required
 | **404** | Not found |  -  |
 | **409** | Conflict |  -  |
 
-<a name="updateUserRolesToProject"></a>
+<a id="updateUserRolesToProject"></a>
 # **updateUserRolesToProject**
 > ProjectUserRoleResponseDTO updateUserRolesToProject(id, userRoleRequestDTO)
 

@@ -409,7 +409,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 												additionalInfo.getKey(), additionalInfo.getValue()))
 										.toList()))
 						.orElse(null))
-				.build();
+				.workFlowType(workflowExecution.getWorkFlowDefinition().getType()).build();
 	}
 
 }

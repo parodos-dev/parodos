@@ -64,7 +64,6 @@ public class WorkParameterValueRequestDTO {
 	 * @return key
 	 **/
 	@javax.annotation.Nonnull
-
 	public String getKey() {
 		return key;
 	}
@@ -84,7 +83,6 @@ public class WorkParameterValueRequestDTO {
 	 * @return value
 	 **/
 	@javax.annotation.Nullable
-
 	public String getValue() {
 		return value;
 	}
@@ -104,7 +102,6 @@ public class WorkParameterValueRequestDTO {
 	 * @return workName
 	 **/
 	@javax.annotation.Nullable
-
 	public String getWorkName() {
 		return workName;
 	}

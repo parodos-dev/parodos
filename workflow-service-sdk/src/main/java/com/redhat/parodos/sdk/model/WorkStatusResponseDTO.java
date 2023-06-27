@@ -175,7 +175,7 @@ public class WorkStatusResponseDTO {
 	public static final String SERIALIZED_NAME_WORKS = "works";
 
 	@SerializedName(SERIALIZED_NAME_WORKS)
-	private List<WorkStatusResponseDTO> works = new ArrayList<>();
+	private List<WorkStatusResponseDTO> works;
 
 	public WorkStatusResponseDTO() {
 	}
@@ -191,7 +191,6 @@ public class WorkStatusResponseDTO {
 	 * @return alertMessage
 	 **/
 	@javax.annotation.Nullable
-
 	public String getAlertMessage() {
 		return alertMessage;
 	}
@@ -211,7 +210,6 @@ public class WorkStatusResponseDTO {
 	 * @return message
 	 **/
 	@javax.annotation.Nullable
-
 	public String getMessage() {
 		return message;
 	}
@@ -231,7 +229,6 @@ public class WorkStatusResponseDTO {
 	 * @return name
 	 **/
 	@javax.annotation.Nullable
-
 	public String getName() {
 		return name;
 	}
@@ -251,7 +248,6 @@ public class WorkStatusResponseDTO {
 	 * @return status
 	 **/
 	@javax.annotation.Nullable
-
 	public StatusEnum getStatus() {
 		return status;
 	}
@@ -271,7 +267,6 @@ public class WorkStatusResponseDTO {
 	 * @return type
 	 **/
 	@javax.annotation.Nullable
-
 	public TypeEnum getType() {
 		return type;
 	}
@@ -299,7 +294,6 @@ public class WorkStatusResponseDTO {
 	 * @return works
 	 **/
 	@javax.annotation.Nullable
-
 	public List<WorkStatusResponseDTO> getWorks() {
 		return works;
 	}

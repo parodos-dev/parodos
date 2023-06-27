@@ -59,7 +59,6 @@ public class ProjectRequestDTO {
 	 * @return description
 	 **/
 	@javax.annotation.Nullable
-
 	public String getDescription() {
 		return description;
 	}
@@ -79,7 +78,6 @@ public class ProjectRequestDTO {
 	 * @return name
 	 **/
 	@javax.annotation.Nullable
-
 	public String getName() {
 		return name;
 	}

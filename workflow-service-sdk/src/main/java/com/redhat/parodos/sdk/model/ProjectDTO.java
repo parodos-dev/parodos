@@ -71,7 +71,6 @@ public class ProjectDTO {
 	 * @return createdBy
 	 **/
 	@javax.annotation.Nullable
-
 	public String getCreatedBy() {
 		return createdBy;
 	}
@@ -91,7 +90,6 @@ public class ProjectDTO {
 	 * @return createdDate
 	 **/
 	@javax.annotation.Nullable
-
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -111,7 +109,6 @@ public class ProjectDTO {
 	 * @return id
 	 **/
 	@javax.annotation.Nullable
-
 	public UUID getId() {
 		return id;
 	}
@@ -131,7 +128,6 @@ public class ProjectDTO {
 	 * @return name
 	 **/
 	@javax.annotation.Nullable
-
 	public String getName() {
 		return name;
 	}

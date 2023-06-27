@@ -112,7 +112,6 @@ public class WorkFlowCheckerTaskRequestDTO {
 	 * @return status
 	 **/
 	@javax.annotation.Nullable
-
 	public StatusEnum getStatus() {
 		return status;
 	}

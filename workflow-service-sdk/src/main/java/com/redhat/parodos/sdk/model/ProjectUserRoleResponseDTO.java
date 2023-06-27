@@ -52,7 +52,7 @@ public class ProjectUserRoleResponseDTO {
 	public static final String SERIALIZED_NAME_USER_RESPONSE_D_T_O_LIST = "userResponseDTOList";
 
 	@SerializedName(SERIALIZED_NAME_USER_RESPONSE_D_T_O_LIST)
-	private List<UserRoleResponseDTO> userResponseDTOList = new ArrayList<>();
+	private List<UserRoleResponseDTO> userResponseDTOList;
 
 	public ProjectUserRoleResponseDTO() {
 	}
@@ -68,7 +68,6 @@ public class ProjectUserRoleResponseDTO {
 	 * @return id
 	 **/
 	@javax.annotation.Nullable
-
 	public UUID getId() {
 		return id;
 	}
@@ -88,7 +87,6 @@ public class ProjectUserRoleResponseDTO {
 	 * @return projectName
 	 **/
 	@javax.annotation.Nullable
-
 	public String getProjectName() {
 		return projectName;
 	}
@@ -116,7 +114,6 @@ public class ProjectUserRoleResponseDTO {
 	 * @return userResponseDTOList
 	 **/
 	@javax.annotation.Nullable
-
 	public List<UserRoleResponseDTO> getUserResponseDTOList() {
 		return userResponseDTOList;
 	}

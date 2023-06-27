@@ -68,13 +68,6 @@ public class MigrationAssessmentWorkflow {
 	}
 
 	@Bean
-	WorkFlowOption move2kube() {
-		return new WorkFlowOption.Builder("move2kube", "move2KubeWorkFlow_INFRASTRUCTURE_WORKFLOW")
-				.addToDetails("Move2Kube").displayName("Migration to OCP")
-				.setDescription("This app is ready to be migrated to OCP. Click to migrate.").build();
-	}
-
-	@Bean
 	WorkFlowOption defaultOption() {
 		return new WorkFlowOption.Builder("defaultOption", "AnalyzeApplicationAssessment")
 				.addToDetails("Rerun Analysis").displayName("Run Migration Analysis")

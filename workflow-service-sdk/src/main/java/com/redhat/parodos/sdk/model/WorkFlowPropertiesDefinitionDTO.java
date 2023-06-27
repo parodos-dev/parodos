@@ -54,7 +54,6 @@ public class WorkFlowPropertiesDefinitionDTO {
 	 * @return version
 	 **/
 	@javax.annotation.Nullable
-
 	public String getVersion() {
 		return version;
 	}

@@ -41,10 +41,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 @Configuration
-@Profile("local")
 public class OcpOnboardingWorkFlowConfiguration {
 
 	// Assessment workflow
@@ -59,7 +57,7 @@ public class OcpOnboardingWorkFlowConfiguration {
 	WorkFlowOption move2kube() {
 		return new WorkFlowOption.Builder("move2kube", "move2KubeWorkFlow_INFRASTRUCTURE_WORKFLOW")
 				.addToDetails("Transform the application into a Kubernetes application.").displayName("move2kube")
-				.setDescription("Transform application using move2kube").build();
+				.setDescription("Transform application using move2kube").recommended(true).build();
 	}
 
 	@Bean
