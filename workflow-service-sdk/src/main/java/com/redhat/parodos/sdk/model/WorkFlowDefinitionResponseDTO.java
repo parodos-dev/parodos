@@ -13,11 +13,10 @@
 package com.redhat.parodos.sdk.model;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -57,6 +56,11 @@ public class WorkFlowDefinitionResponseDTO {
 
 	@SerializedName(SERIALIZED_NAME_FALLBACK_WORKFLOW)
 	private String fallbackWorkflow;
+
+	public static final String SERIALIZED_NAME_CRON_EXPRESSION = "cronExpression";
+
+	@SerializedName(SERIALIZED_NAME_CRON_EXPRESSION)
+	private String cronExpression;
 
 	public static final String SERIALIZED_NAME_ID = "id";
 
@@ -204,7 +208,7 @@ public class WorkFlowDefinitionResponseDTO {
 	public static final String SERIALIZED_NAME_WORKS = "works";
 
 	@SerializedName(SERIALIZED_NAME_WORKS)
-	private List<WorkDefinitionResponseDTO> works;
+	private Set<WorkDefinitionResponseDTO> works;
 
 	public WorkFlowDefinitionResponseDTO() {
 	}
@@ -264,6 +268,25 @@ public class WorkFlowDefinitionResponseDTO {
 
 	public void setFallbackWorkflow(String fallbackWorkflow) {
 		this.fallbackWorkflow = fallbackWorkflow;
+	}
+
+	public WorkFlowDefinitionResponseDTO cronExpression(String cronExpression) {
+
+		this.cronExpression = cronExpression;
+		return this;
+	}
+
+	/**
+	 * Get cronExpression
+	 * @return cronExpression
+	 **/
+	@javax.annotation.Nullable
+	public String getCronExpression() {
+		return cronExpression;
+	}
+
+	public void setCronExpression(String cronExpression) {
+		this.cronExpression = cronExpression;
 	}
 
 	public WorkFlowDefinitionResponseDTO id(UUID id) {
@@ -407,7 +430,7 @@ public class WorkFlowDefinitionResponseDTO {
 		this.type = type;
 	}
 
-	public WorkFlowDefinitionResponseDTO works(List<WorkDefinitionResponseDTO> works) {
+	public WorkFlowDefinitionResponseDTO works(Set<WorkDefinitionResponseDTO> works) {
 
 		this.works = works;
 		return this;
@@ -415,7 +438,7 @@ public class WorkFlowDefinitionResponseDTO {
 
 	public WorkFlowDefinitionResponseDTO addWorksItem(WorkDefinitionResponseDTO worksItem) {
 		if (this.works == null) {
-			this.works = new ArrayList<>();
+			this.works = new LinkedHashSet<>();
 		}
 		this.works.add(worksItem);
 		return this;
@@ -426,11 +449,11 @@ public class WorkFlowDefinitionResponseDTO {
 	 * @return works
 	 **/
 	@javax.annotation.Nullable
-	public List<WorkDefinitionResponseDTO> getWorks() {
+	public Set<WorkDefinitionResponseDTO> getWorks() {
 		return works;
 	}
 
-	public void setWorks(List<WorkDefinitionResponseDTO> works) {
+	public void setWorks(Set<WorkDefinitionResponseDTO> works) {
 		this.works = works;
 	}
 
@@ -445,6 +468,7 @@ public class WorkFlowDefinitionResponseDTO {
 		WorkFlowDefinitionResponseDTO workFlowDefinitionResponseDTO = (WorkFlowDefinitionResponseDTO) o;
 		return Objects.equals(this.author, workFlowDefinitionResponseDTO.author)
 				&& Objects.equals(this.createDate, workFlowDefinitionResponseDTO.createDate)
+				&& Objects.equals(this.cronExpression, workFlowDefinitionResponseDTO.cronExpression)
 				&& Objects.equals(this.fallbackWorkflow, workFlowDefinitionResponseDTO.fallbackWorkflow)
 				&& Objects.equals(this.id, workFlowDefinitionResponseDTO.id)
 				&& Objects.equals(this.modifyDate, workFlowDefinitionResponseDTO.modifyDate)
@@ -458,8 +482,8 @@ public class WorkFlowDefinitionResponseDTO {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(author, createDate, fallbackWorkflow, id, modifyDate, name, parameters, processingType,
-				properties, type, works);
+		return Objects.hash(author, createDate, cronExpression, id, modifyDate, name, parameters, processingType,
+				properties, rollbackWorkflow, type, works);
 	}
 
 	@Override
@@ -469,6 +493,7 @@ public class WorkFlowDefinitionResponseDTO {
 		sb.append("    author: ").append(toIndentedString(author)).append("\n");
 		sb.append("    createDate: ").append(toIndentedString(createDate)).append("\n");
 		sb.append("    fallbackWorkflow: ").append(toIndentedString(fallbackWorkflow)).append("\n");
+		sb.append("    cronExpression: ").append(toIndentedString(cronExpression)).append("\n");
 		sb.append("    id: ").append(toIndentedString(id)).append("\n");
 		sb.append("    modifyDate: ").append(toIndentedString(modifyDate)).append("\n");
 		sb.append("    name: ").append(toIndentedString(name)).append("\n");
@@ -501,6 +526,7 @@ public class WorkFlowDefinitionResponseDTO {
 		openapiFields = new HashSet<String>();
 		openapiFields.add("author");
 		openapiFields.add("createDate");
+		openapiFields.add("cronExpression");
 		openapiFields.add("fallbackWorkflow");
 		openapiFields.add("id");
 		openapiFields.add("modifyDate");
@@ -551,6 +577,12 @@ public class WorkFlowDefinitionResponseDTO {
 			throw new IllegalArgumentException(
 					String.format("Expected the field `author` to be a primitive type in the JSON string but got `%s`",
 							jsonObj.get("author").toString()));
+		}
+		if ((jsonObj.get("cronExpression") != null && !jsonObj.get("cronExpression").isJsonNull())
+				&& !jsonObj.get("cronExpression").isJsonPrimitive()) {
+			throw new IllegalArgumentException(String.format(
+					"Expected the field `cronExpression` to be a primitive type in the JSON string but got `%s`",
+					jsonObj.get("cronExpression").toString()));
 		}
 		if ((jsonObj.get("fallbackWorkflow") != null && !jsonObj.get("fallbackWorkflow").isJsonNull())
 				&& !jsonObj.get("fallbackWorkflow").isJsonPrimitive()) {

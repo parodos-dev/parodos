@@ -24,6 +24,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
+import com.redhat.parodos.workflow.definition.dto.WorkDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowCheckerDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
@@ -53,6 +54,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -248,10 +250,11 @@ class WorkFlowDefinitionServiceImplTest {
 
 		verify(this.workFlowDefinitionRepository, times(1)).findFirstByName(any());
 		when(this.workFlowDefinitionRepository.findFirstByName(any())).thenReturn(sampleWorkFlowDefinition(TEST));
-
+		Optional<WorkDefinitionResponseDTO> firstWork = result.getWorks().stream().findFirst();
+		assertTrue(firstWork.isPresent());
 		assertEquals(result.getWorks().size(), 1);
-		assertEquals(result.getWorks().get(0).getName(), "SubWorkFlow");
-		assertEquals(result.getWorks().get(0).getWorkType(), WorkType.WORKFLOW);
+		assertEquals(firstWork.get().getName(), "SubWorkFlow");
+		assertEquals(firstWork.get().getWorkType(), WorkType.WORKFLOW);
 	}
 
 	@Test

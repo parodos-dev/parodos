@@ -1289,11 +1289,13 @@ components:
           enum:
           - TASK
           - WORKFLOW
+          - CHECKER
           type: string
         works:
           items:
             $ref: '#/components/schemas/WorkDefinitionResponseDTO'
           type: array
+          uniqueItems: true
       type: object
     WorkFlowCheckerTaskRequestDTO:
       example:
@@ -1415,6 +1417,7 @@ components:
       type: object
     WorkFlowDefinitionResponseDTO:
       example:
+        cronExpression: cronExpression
         processingType: SEQUENTIAL
         works:
         - outputs:
@@ -1463,6 +1466,8 @@ components:
         createDate:
           format: date-time
           type: string
+        cronExpression:
+          type: string
         fallbackWorkflow:
           type: string
         id:
@@ -1498,6 +1503,7 @@ components:
           items:
             $ref: '#/components/schemas/WorkDefinitionResponseDTO'
           type: array
+          uniqueItems: true
       type: object
     WorkFlowExecutionResponseDTO:
       example:
@@ -1880,6 +1886,7 @@ components:
           enum:
           - TASK
           - WORKFLOW
+          - CHECKER
           type: string
         workName:
           type: string
@@ -1917,6 +1924,7 @@ components:
           enum:
           - TASK
           - WORKFLOW
+          - CHECKER
           type: string
         works:
           items:

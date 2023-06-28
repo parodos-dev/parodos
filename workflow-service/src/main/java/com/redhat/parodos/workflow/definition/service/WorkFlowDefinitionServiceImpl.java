@@ -19,11 +19,14 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Queue;
+import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.redhat.parodos.common.entity.AbstractEntity;
@@ -263,8 +266,11 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 				.map(WorkFlowWorkDefinition::getWorkFlowDefinition).orElse(null);
 	}
 
-	private void getWorksFromWorkDefinition(List<WorkFlowWorkDefinition> workFlowWorkDefinitions,
-			CopyOnWriteArrayList<WorkDefinitionResponseDTO> responseDTOs) {
+	private void getWorksFromWorkDefinition(WorkDefinitionResponseDTO workflow,
+			List<WorkFlowWorkDefinition> workFlowWorkDefinitions, Queue<WorkDefinitionResponseDTO> responseDTOs) {
+		if (workflow.getWorks() == null) {
+			workflow.setWorks(new HashSet<>());
+		}
 		workFlowWorkDefinitions.forEach(workFlowWorkDefinition -> {
 
 			WorkType workType = workFlowWorkDefinition.getWorkDefinitionType();
@@ -280,7 +286,22 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 								+ workFlowWorkDefinition.getWorkDefinitionId());
 						return;
 					}
-					responseDTOs.add(WorkDefinitionResponseDTO.fromWorkFlowTaskDefinition(wdt.get()));
+					WorkDefinitionResponseDTO work = WorkDefinitionResponseDTO.fromWorkFlowTaskDefinition(wdt.get());
+					workflow.getWorks().add(work);
+					responseDTOs.add(work);
+				}
+				case CHECKER -> {
+					Optional<WorkFlowCheckerMappingDefinition> wcd = workFlowCheckerMappingDefinitionRepository
+							.findById(workFlowWorkDefinition.getWorkDefinitionId());
+					if (wcd.isEmpty()) {
+						log.error("Cannot find the checker definition with id "
+								+ workFlowWorkDefinition.getWorkDefinitionId());
+						return;
+					}
+					WorkDefinitionResponseDTO work = WorkDefinitionResponseDTO
+							.fromWorkFlowCheckerMappingDefinition(wcd.get());
+					workflow.getWorks().add(work);
+					responseDTOs.add(work);
 				}
 				case WORKFLOW -> {
 					Optional<WorkFlowDefinition> wd = workFlowDefinitionRepository
@@ -292,8 +313,10 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 					}
 					List<WorkFlowWorkDefinition> wdWorkFlowWorkDependencies = workFlowWorkRepository
 							.findByWorkFlowDefinitionIdOrderByCreateDateAsc(wd.get().getId());
-					responseDTOs.add(WorkDefinitionResponseDTO.fromWorkFlowDefinitionEntity(wd.get(),
-							wdWorkFlowWorkDependencies));
+					WorkDefinitionResponseDTO work = WorkDefinitionResponseDTO.fromWorkFlowDefinitionEntity(wd.get(),
+							wdWorkFlowWorkDependencies);
+					workflow.getWorks().add(work);
+					responseDTOs.add(work);
 				}
 				default -> {
 				}
@@ -302,51 +325,65 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 
 	}
 
-	private List<WorkDefinitionResponseDTO> buildWorkFlowWorksDTOs(WorkFlowDefinition workFlowDefinition,
+	private Set<WorkDefinitionResponseDTO> buildWorkFlowWorksDTOs(WorkFlowDefinition workFlowDefinition,
 			List<WorkFlowWorkDefinition> workFlowWorkDefinitions) {
-		CopyOnWriteArrayList<WorkDefinitionResponseDTO> workDefinitionResponseDTOs = new CopyOnWriteArrayList<>();
-		Map<String, Integer> workFlowWorksStartIndex = new HashMap<>();
-
-		// add workflow
-		workDefinitionResponseDTOs
-				.add(WorkDefinitionResponseDTO.builder().id(workFlowDefinition.getId()).workType(WorkType.WORKFLOW)
-						.name(workFlowDefinition.getName()).parameterFromString(workFlowDefinition.getParameters())
-						.processingType(workFlowDefinition.getProcessingType()).works(new ArrayList<>())
-						.numberOfWorkUnits(workFlowWorkDefinitions.size()).build());
-		workFlowWorksStartIndex.put(workFlowDefinition.getName(), 1);
-
-		// add workflowWorkUnits
-		this.getWorksFromWorkDefinition(workFlowWorkDefinitions, workDefinitionResponseDTOs);
+		Queue<WorkDefinitionResponseDTO> workDefinitionResponseDTOs = new LinkedList<>();
+		WorkDefinitionResponseDTO rootWorkFlow = buildRootWorkFlow(workFlowDefinition, workFlowWorkDefinitions,
+				workDefinitionResponseDTOs);
 
 		// fill in subsequent workUnits
-		// this responseSize is like this because we modify the size of the
-		// workDefinitionResponseDTO
-		for (int i = 1; i < workDefinitionResponseDTOs.size(); i++) {
-			if (workDefinitionResponseDTOs.get(i).getWorkType() == WorkType.WORKFLOW) {
-				workFlowWorksStartIndex.put(workDefinitionResponseDTOs.get(i).getName(),
-						workDefinitionResponseDTOs.size());
+		// workDefinitionResponseDTOs.size() will grow as long as there are new works
+		populateWorkFlowWorksRecursive(workDefinitionResponseDTOs);
 
-				List<WorkFlowWorkDefinition> workFlowWorkUnits1Definition = workFlowWorkRepository
-						.findByWorkFlowDefinitionIdOrderByCreateDateAsc(workDefinitionResponseDTOs.get(i).getId())
-						.stream().sorted(Comparator.comparing(WorkFlowWorkDefinition::getCreateDate)).toList();
-				this.getWorksFromWorkDefinition(workFlowWorkUnits1Definition, workDefinitionResponseDTOs);
-			}
+		return rootWorkFlow.getWorks();
+	}
+
+	private WorkDefinitionResponseDTO buildRootWorkFlow(WorkFlowDefinition workFlowDefinition,
+			List<WorkFlowWorkDefinition> workFlowWorkDefinitions,
+			Queue<WorkDefinitionResponseDTO> workDefinitionResponseDTOs) {
+		WorkDefinitionResponseDTO rootWorkFlow = WorkDefinitionResponseDTO.builder().id(workFlowDefinition.getId())
+				.workType(workFlowDefinition.getType() == WorkFlowType.CHECKER ? WorkType.CHECKER : WorkType.WORKFLOW)
+				.name(workFlowDefinition.getName()).parameterFromString(workFlowDefinition.getParameters())
+				.processingType(workFlowDefinition.getProcessingType()).works(new HashSet<>())
+				.numberOfWorkUnits(workFlowWorkDefinitions.size()).build();
+		workDefinitionResponseDTOs.add(rootWorkFlow);
+		// add workflowWorkUnits
+		this.getWorksFromWorkDefinition(rootWorkFlow, workFlowWorkDefinitions, workDefinitionResponseDTOs);
+
+		return rootWorkFlow;
+	}
+
+	private void populateWorkFlowWorksRecursive(Queue<WorkDefinitionResponseDTO> workDefinitionResponseDTOs) {
+		if (workDefinitionResponseDTOs.isEmpty()) {
+			return;
 		}
+		WorkDefinitionResponseDTO workflow = workDefinitionResponseDTOs.poll();
+		List<WorkFlowWorkDefinition> workFlowWorkUnitsDefinition = workFlowWorkRepository
+				.findByWorkFlowDefinitionIdOrderByCreateDateAsc(workflow.getId()).stream()
+				.sorted(Comparator.comparing(WorkFlowWorkDefinition::getCreateDate)).toList();
 
-		for (int j = workDefinitionResponseDTOs.size() - 1; j >= 0; j--) {
-			if (workDefinitionResponseDTOs.get(j).getWorkType() == WorkType.WORKFLOW) {
-				List<WorkDefinitionResponseDTO> tmpList = new ArrayList<>();
-				for (int k = workFlowWorksStartIndex.get(workDefinitionResponseDTOs.get(j)
-						.getName()); k < workFlowWorksStartIndex.get(workDefinitionResponseDTOs.get(j).getName())
-								+ workDefinitionResponseDTOs.get(j).getNumberOfWorkUnits()
-								&& k < workDefinitionResponseDTOs.size(); k++) {
+		this.getWorksFromWorkDefinition(workflow, workFlowWorkUnitsDefinition, workDefinitionResponseDTOs);
+		this.getCheckerWorkFromWorkDefinition(workflow, workDefinitionResponseDTOs);
+		populateWorkFlowWorksRecursive(workDefinitionResponseDTOs);
+	}
 
-					tmpList.add(workDefinitionResponseDTOs.get(k));
-				}
-				workDefinitionResponseDTOs.get(j).setWorks(tmpList);
+	private void getCheckerWorkFromWorkDefinition(WorkDefinitionResponseDTO workflow,
+			Queue<WorkDefinitionResponseDTO> workDefinitionResponseDTOs) {
+		if (workflow.getCheckerWorkId() != null) {
+			WorkFlowDefinition checkerWorkflowDefinition = workFlowCheckerMappingDefinitionRepository
+					.findById(workflow.getCheckerWorkId()).get().getCheckWorkFlow();
+			WorkDefinitionResponseDTO checkerWorkflowDefinitionDTO = WorkDefinitionResponseDTO.builder()
+					.id(checkerWorkflowDefinition.getId()).workType(WorkType.CHECKER)
+					.name(checkerWorkflowDefinition.getName())
+					.parameterFromString(checkerWorkflowDefinition.getParameters())
+					.processingType(checkerWorkflowDefinition.getProcessingType()).works(new HashSet<>())
+					.numberOfWorkUnits(checkerWorkflowDefinition.getNumberOfWorks()).build();
+			workDefinitionResponseDTOs.add(checkerWorkflowDefinitionDTO);
+			if (workflow.getWorks() == null) {
+				workflow.setWorks(new HashSet<>());
 			}
+			workflow.getWorks().add(checkerWorkflowDefinitionDTO);
 		}
-		return workDefinitionResponseDTOs.get(0).getWorks();
 	}
 
 	public void cleanAllDefinitionMappings() {

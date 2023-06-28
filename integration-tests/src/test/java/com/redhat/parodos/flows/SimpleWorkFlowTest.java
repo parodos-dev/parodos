@@ -90,19 +90,18 @@ public class SimpleWorkFlowTest {
 
 			assertNotNull(workFlowDefinition.getWorks());
 			assertEquals(2, workFlowDefinition.getWorks().size());
-			assertEquals("restCallTask", workFlowDefinition.getWorks().get(0).getName());
-			assertEquals(WorkDefinitionResponseDTO.WorkTypeEnum.TASK,
-					workFlowDefinition.getWorks().get(0).getWorkType());
-			assertTrue(CollectionUtils.isEmpty(workFlowDefinition.getWorks().get(0).getWorks()));
-			assertNull(workFlowDefinition.getWorks().get(0).getProcessingType());
-			assertNotNull(workFlowDefinition.getWorks().get(0).getParameters());
+			List<WorkDefinitionResponseDTO> works = workFlowDefinition.getWorks().stream().toList();
+			assertEquals("restCallTask", works.get(0).getName());
+			assertEquals(WorkDefinitionResponseDTO.WorkTypeEnum.TASK, works.get(0).getWorkType());
+			assertTrue(CollectionUtils.isEmpty(works.get(0).getWorks()));
+			assertNull(works.get(0).getProcessingType());
+			assertNotNull(works.get(0).getParameters());
 
-			assertEquals("loggingTask", workFlowDefinition.getWorks().get(1).getName());
-			assertEquals(WorkDefinitionResponseDTO.WorkTypeEnum.TASK,
-					workFlowDefinition.getWorks().get(1).getWorkType());
-			assertTrue(CollectionUtils.isEmpty(workFlowDefinition.getWorks().get(1).getWorks()));
-			assertNull(workFlowDefinition.getWorks().get(1).getProcessingType());
-			assertNotNull(workFlowDefinition.getWorks().get(1).getParameters());
+			assertEquals("loggingTask", works.get(1).getName());
+			assertEquals(WorkDefinitionResponseDTO.WorkTypeEnum.TASK, works.get(1).getWorkType());
+			assertTrue(CollectionUtils.isEmpty(works.get(1).getWorks()));
+			assertNull(works.get(1).getProcessingType());
+			assertNotNull(works.get(1).getParameters());
 		};
 	}
 

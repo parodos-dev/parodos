@@ -9,6 +9,7 @@
 |------------ | ------------- | ------------- | -------------|
 |**author** | **String** |  |  [optional] |
 |**createDate** | **Date** |  |  [optional] |
+|**cronExpression** | **String** |  |  [optional] |
 |**fallbackWorkflow** | **String** |  |  [optional] |
 |**id** | **UUID** |  |  [optional] |
 |**modifyDate** | **Date** |  |  [optional] |
@@ -17,7 +18,7 @@
 |**processingType** | [**ProcessingTypeEnum**](#ProcessingTypeEnum) |  |  [optional] |
 |**properties** | [**WorkFlowPropertiesDefinitionDTO**](WorkFlowPropertiesDefinitionDTO.md) |  |  [optional] |
 |**type** | [**TypeEnum**](#TypeEnum) |  |  [optional] |
-|**works** | [**List&lt;WorkDefinitionResponseDTO&gt;**](WorkDefinitionResponseDTO.md) |  |  [optional] |
+|**works** | [**Set&lt;WorkDefinitionResponseDTO&gt;**](WorkDefinitionResponseDTO.md) |  |  [optional] |
 
 
 

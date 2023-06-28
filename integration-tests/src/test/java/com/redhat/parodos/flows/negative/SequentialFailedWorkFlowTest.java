@@ -1,5 +1,6 @@
 package com.redhat.parodos.flows.negative;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import com.redhat.parodos.flows.common.WorkFlowTestBuilder;
@@ -21,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 public class SequentialFailedWorkFlowTest {
@@ -74,12 +76,13 @@ public class SequentialFailedWorkFlowTest {
 
 			assertThat(workFlowDefinition.getWorks()).isNotNull();
 			assertThat(workFlowDefinition.getWorks()).hasSize(1);
-			assertThat(workFlowDefinition.getWorks().get(0).getName()).isEqualTo("failedWorkFlowTask");
-			assertThat(workFlowDefinition.getWorks().get(0).getWorkType())
-					.isEqualTo(WorkDefinitionResponseDTO.WorkTypeEnum.TASK);
-			assertThat(workFlowDefinition.getWorks().get(0).getWorks()).isNullOrEmpty();
-			assertThat(workFlowDefinition.getWorks().get(0).getProcessingType()).isNull();
-			assertThat(workFlowDefinition.getWorks().get(0).getParameters()).isNotNull();
+			Optional<WorkDefinitionResponseDTO> firstWork = workFlowDefinition.getWorks().stream().findFirst();
+			assertTrue(firstWork.isPresent());
+			assertThat(firstWork.get().getName()).isEqualTo("failedWorkFlowTask");
+			assertThat(firstWork.get().getWorkType()).isEqualTo(WorkDefinitionResponseDTO.WorkTypeEnum.TASK);
+			assertThat(firstWork.get().getWorks()).isNullOrEmpty();
+			assertThat(firstWork.get().getProcessingType()).isNull();
+			assertThat(firstWork.get().getParameters()).isNotNull();
 		};
 	}
 

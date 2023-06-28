@@ -2,6 +2,7 @@ package com.redhat.parodos.flows;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import com.redhat.parodos.flows.common.WorkFlowTestBuilder;
@@ -79,12 +80,13 @@ public class PrebuiltWorkFlowTest {
 
 			assertNotNull(workFlowDefinition.getWorks());
 			assertEquals(1, workFlowDefinition.getWorks().size());
-			assertEquals("notificationTask", workFlowDefinition.getWorks().get(0).getName());
-			assertEquals(WorkDefinitionResponseDTO.WorkTypeEnum.TASK,
-					workFlowDefinition.getWorks().get(0).getWorkType());
-			assertTrue(CollectionUtils.isEmpty(workFlowDefinition.getWorks().get(0).getWorks()));
-			assertNull(workFlowDefinition.getWorks().get(0).getProcessingType());
-			assertNotNull(workFlowDefinition.getWorks().get(0).getParameters());
+			Optional<WorkDefinitionResponseDTO> firstWork = workFlowDefinition.getWorks().stream().findFirst();
+			assertTrue(firstWork.isPresent());
+			assertEquals("notificationTask", firstWork.get().getName());
+			assertEquals(WorkDefinitionResponseDTO.WorkTypeEnum.TASK, firstWork.get().getWorkType());
+			assertTrue(CollectionUtils.isEmpty(firstWork.get().getWorks()));
+			assertNull(firstWork.get().getProcessingType());
+			assertNotNull(firstWork.get().getParameters());
 		};
 	}
 

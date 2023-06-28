@@ -1,5 +1,6 @@
 package com.redhat.parodos.flows.negative;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import com.redhat.parodos.flows.common.WorkFlowTestBuilder;
@@ -86,13 +87,13 @@ public class FailedWithAlertMessageWorkFlowTest {
 
 			assertThat(workFlowDefinition.getWorks()).isNotNull();
 			assertThat(workFlowDefinition.getWorks()).hasSize(2);
-			assertThat(workFlowDefinition.getWorks().get(1).getName()).isEqualTo("doNothingAgainWorkFlowTask");
-			assertThat(workFlowDefinition.getWorks().get(1).getWorkType())
-					.isEqualTo(WorkDefinitionResponseDTO.WorkTypeEnum.TASK);
-			assertThat(workFlowDefinition.getWorks().get(1).getWorks()).isNullOrEmpty();
-			assertThat(workFlowDefinition.getWorks().get(1).getProcessingType()).isNull();
-			assertThat(workFlowDefinition.getWorks().get(1).getParameters()).isNotNull();
-			assertThat(workFlowDefinition.getWorks().get(0).getName()).isEqualTo("failedWithAlertMessageWorkFlowTask");
+			List<WorkDefinitionResponseDTO> works = workFlowDefinition.getWorks().stream().toList();
+			assertThat(works.get(1).getName()).isEqualTo("doNothingAgainWorkFlowTask");
+			assertThat(works.get(1).getWorkType()).isEqualTo(WorkDefinitionResponseDTO.WorkTypeEnum.TASK);
+			assertThat(works.get(1).getWorks()).isNullOrEmpty();
+			assertThat(works.get(1).getProcessingType()).isNull();
+			assertThat(works.get(1).getParameters()).isNotNull();
+			assertThat(works.get(0).getName()).isEqualTo("failedWithAlertMessageWorkFlowTask");
 		};
 	}
 
