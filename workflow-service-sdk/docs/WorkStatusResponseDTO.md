@@ -34,6 +34,7 @@
 |---- | -----|
 | TASK | &quot;TASK&quot; |
 | WORKFLOW | &quot;WORKFLOW&quot; |
+| CHECKER | &quot;CHECKER&quot; |
 
 
 

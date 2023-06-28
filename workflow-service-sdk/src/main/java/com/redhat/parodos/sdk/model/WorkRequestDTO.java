@@ -52,7 +52,9 @@ public class WorkRequestDTO {
 
 		TASK("TASK"),
 
-		WORKFLOW("WORKFLOW");
+		WORKFLOW("WORKFLOW"),
+
+		CHECKER("CHECKER");
 
 		private String value;
 

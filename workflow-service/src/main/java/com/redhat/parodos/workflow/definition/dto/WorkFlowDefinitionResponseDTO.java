@@ -16,9 +16,9 @@
 package com.redhat.parodos.workflow.definition.dto;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -68,10 +68,13 @@ public class WorkFlowDefinitionResponseDTO {
 	private WorkFlowPropertiesDefinitionDTO properties;
 
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
-	private List<WorkDefinitionResponseDTO> works;
+	private Set<WorkDefinitionResponseDTO> works;
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private String fallbackWorkflow;
+
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private String cronExpression;
 
 	public static class WorkFlowDefinitionResponseDTOBuilder {
 
@@ -88,15 +91,20 @@ public class WorkFlowDefinitionResponseDTO {
 	}
 
 	public static WorkFlowDefinitionResponseDTO fromEntity(WorkFlowDefinition workFlowDefinition,
-			List<WorkDefinitionResponseDTO> works) {
-		return WorkFlowDefinitionResponseDTO.builder().id(workFlowDefinition.getId()).name(workFlowDefinition.getName())
+			Set<WorkDefinitionResponseDTO> works) {
+		WorkFlowDefinitionResponseDTOBuilder builder = WorkFlowDefinitionResponseDTO.builder()
+				.id(workFlowDefinition.getId()).name(workFlowDefinition.getName())
 				.properties(WorkFlowPropertiesDefinitionDTO.fromEntity(workFlowDefinition.getProperties()))
 				.parameterFromString(workFlowDefinition.getParameters()).author(workFlowDefinition.getAuthor())
 				.createDate(workFlowDefinition.getCreateDate()).modifyDate(workFlowDefinition.getModifyDate())
 				.type(workFlowDefinition.getType()).processingType(workFlowDefinition.getProcessingType()).works(works)
 				.fallbackWorkflow(Optional.ofNullable(workFlowDefinition.getFallbackWorkFlowDefinition())
-						.map(WorkFlowDefinition::getName).orElse(null))
-				.build();
+						.map(WorkFlowDefinition::getName).orElse(null));
+
+		if (workFlowDefinition.getCheckerWorkFlowDefinition() != null) {
+			builder = builder.cronExpression(workFlowDefinition.getCheckerWorkFlowDefinition().getCronExpression());
+		}
+		return builder.build();
 	}
 
 }

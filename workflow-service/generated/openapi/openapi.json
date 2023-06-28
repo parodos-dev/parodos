@@ -1688,7 +1688,7 @@
           },
           "workType" : {
             "type" : "string",
-            "enum" : [ "TASK", "WORKFLOW" ]
+            "enum" : [ "TASK", "WORKFLOW", "CHECKER" ]
           },
           "works" : {
             "type" : "array",
@@ -1729,6 +1729,9 @@
             "type" : "string",
             "format" : "date-time"
           },
+          "cronExpression" : {
+            "type" : "string"
+          },
           "fallbackWorkflow" : {
             "type" : "string"
           },
@@ -1764,6 +1767,7 @@
             "enum" : [ "ASSESSMENT", "CHECKER", "INFRASTRUCTURE", "ESCALATION" ]
           },
           "works" : {
+            "uniqueItems" : true,
             "type" : "array",
             "items" : {
               "$ref" : "#/components/schemas/WorkDefinitionResponseDTO"
@@ -2006,7 +2010,7 @@
           },
           "type" : {
             "type" : "string",
-            "enum" : [ "TASK", "WORKFLOW" ]
+            "enum" : [ "TASK", "WORKFLOW", "CHECKER" ]
           },
           "workName" : {
             "type" : "string"
@@ -2037,7 +2041,7 @@
           },
           "type" : {
             "type" : "string",
-            "enum" : [ "TASK", "WORKFLOW" ]
+            "enum" : [ "TASK", "WORKFLOW", "CHECKER" ]
           },
           "works" : {
             "type" : "array",

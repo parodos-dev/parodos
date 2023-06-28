@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import com.redhat.parodos.common.exceptions.IllegalWorkFlowStateException;
@@ -164,7 +165,7 @@ class WorkFlowServiceImplTest {
 		workFlowExecution.setId(UUID.randomUUID());
 		when(this.workFlowRepository.save(any())).thenReturn(workFlowExecution);
 		WorkFlowDefinitionResponseDTO workFlowDefinitionResponseDTO = WorkFlowDefinitionResponseDTO.builder()
-				.name(TEST_WORKFLOW_NAME).works(List.of()).build();
+				.name(TEST_WORKFLOW_NAME).works(Set.of()).build();
 		when(this.workFlowDefinitionService.getWorkFlowDefinitionByName(TEST_WORKFLOW_NAME))
 				.thenReturn(workFlowDefinitionResponseDTO);
 		when(this.userService.getUserEntityByUsername("test-user")).thenReturn(user);
@@ -206,7 +207,7 @@ class WorkFlowServiceImplTest {
 		UUID invokingExecutionId = UUID.randomUUID();
 		when(this.workFlowRepository.findById(invokingExecutionId)).thenReturn(Optional.empty());
 		WorkFlowDefinitionResponseDTO workFlowDefinitionResponseDTO = WorkFlowDefinitionResponseDTO.builder()
-				.name(TEST_WORKFLOW_NAME).works(List.of()).build();
+				.name(TEST_WORKFLOW_NAME).works(Set.of()).build();
 		when(this.workFlowDefinitionService.getWorkFlowDefinitionByName(TEST_WORKFLOW_NAME))
 				.thenReturn(workFlowDefinitionResponseDTO);
 		when(this.userService.getUserEntityByUsername("test-user")).thenReturn(user);
@@ -264,7 +265,7 @@ class WorkFlowServiceImplTest {
 		// @formatter:on
 		when(this.workFlowRepository.findById(invokingExecutionId)).thenReturn(Optional.of(invokingWorkFlowExecution));
 		WorkFlowDefinitionResponseDTO workFlowDefinitionResponseDTO = WorkFlowDefinitionResponseDTO.builder()
-				.name(TEST_WORKFLOW_NAME).works(List.of()).build();
+				.name(TEST_WORKFLOW_NAME).works(Set.of()).build();
 		when(this.workFlowDefinitionService.getWorkFlowDefinitionByName(TEST_WORKFLOW_NAME))
 				.thenReturn(workFlowDefinitionResponseDTO);
 		when(this.userService.getUserEntityByUsername("test-user")).thenReturn(user);
@@ -331,7 +332,7 @@ class WorkFlowServiceImplTest {
 		// @formatter:on
 		when(this.workFlowRepository.findById(invokingExecutionId)).thenReturn(Optional.of(invokingWorkFlowExecution));
 		WorkFlowDefinitionResponseDTO workFlowDefinitionResponseDTO = WorkFlowDefinitionResponseDTO.builder()
-				.name(TEST_WORKFLOW_NAME).works(List.of()).build();
+				.name(TEST_WORKFLOW_NAME).works(Set.of()).build();
 		when(this.workFlowDefinitionService.getWorkFlowDefinitionByName(TEST_WORKFLOW_NAME))
 				.thenReturn(workFlowDefinitionResponseDTO);
 		when(this.userService.getUserEntityByUsername("test-user")).thenReturn(user);

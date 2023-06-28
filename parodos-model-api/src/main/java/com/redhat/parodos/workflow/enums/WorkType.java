@@ -24,6 +24,6 @@ package com.redhat.parodos.workflow.enums;
  */
 public enum WorkType {
 
-	TASK, WORKFLOW
+	TASK, WORKFLOW, CHECKER
 
 }

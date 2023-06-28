@@ -1,6 +1,7 @@
 package com.redhat.parodos.workflow.definition.controller;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import com.redhat.parodos.ControllerMockClient;
@@ -167,7 +168,7 @@ class WorkFlowDefinitionControllerTest extends ControllerMockClient {
 		WorkFlowDefinitionResponseDTO workFlowDefinitionResponseDTO = new WorkFlowDefinitionResponseDTO();
 		workFlowDefinitionResponseDTO.setName(name);
 		workFlowDefinitionResponseDTO.setId(UUID.randomUUID());
-		workFlowDefinitionResponseDTO.setWorks(List.of(createSampleWorkFlowTaskDefinition("task1")));
+		workFlowDefinitionResponseDTO.setWorks(Set.of(createSampleWorkFlowTaskDefinition("task1")));
 		return workFlowDefinitionResponseDTO;
 	}
 

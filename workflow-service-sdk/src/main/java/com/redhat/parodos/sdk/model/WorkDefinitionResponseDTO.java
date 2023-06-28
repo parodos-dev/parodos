@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -188,7 +189,9 @@ public class WorkDefinitionResponseDTO {
 
 		TASK("TASK"),
 
-		WORKFLOW("WORKFLOW");
+		WORKFLOW("WORKFLOW"),
+
+		CHECKER("CHECKER");
 
 		private String value;
 
@@ -239,7 +242,7 @@ public class WorkDefinitionResponseDTO {
 	public static final String SERIALIZED_NAME_WORKS = "works";
 
 	@SerializedName(SERIALIZED_NAME_WORKS)
-	private List<WorkDefinitionResponseDTO> works;
+	private Set<WorkDefinitionResponseDTO> works;
 
 	public WorkDefinitionResponseDTO() {
 	}
@@ -393,7 +396,7 @@ public class WorkDefinitionResponseDTO {
 		this.workType = workType;
 	}
 
-	public WorkDefinitionResponseDTO works(List<WorkDefinitionResponseDTO> works) {
+	public WorkDefinitionResponseDTO works(Set<WorkDefinitionResponseDTO> works) {
 
 		this.works = works;
 		return this;
@@ -401,7 +404,7 @@ public class WorkDefinitionResponseDTO {
 
 	public WorkDefinitionResponseDTO addWorksItem(WorkDefinitionResponseDTO worksItem) {
 		if (this.works == null) {
-			this.works = new ArrayList<>();
+			this.works = new LinkedHashSet<>();
 		}
 		this.works.add(worksItem);
 		return this;
@@ -412,11 +415,11 @@ public class WorkDefinitionResponseDTO {
 	 * @return works
 	 **/
 	@javax.annotation.Nullable
-	public List<WorkDefinitionResponseDTO> getWorks() {
+	public Set<WorkDefinitionResponseDTO> getWorks() {
 		return works;
 	}
 
-	public void setWorks(List<WorkDefinitionResponseDTO> works) {
+	public void setWorks(Set<WorkDefinitionResponseDTO> works) {
 		this.works = works;
 	}
 

@@ -15,15 +15,17 @@
  */
 package com.redhat.parodos.workflow.definition.dto;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowWorkDefinition;
@@ -61,11 +63,14 @@ public class WorkDefinitionResponseDTO {
 
 	private String author;
 
-	private List<WorkDefinitionResponseDTO> works;
+	private Set<WorkDefinitionResponseDTO> works;
 
 	private Map<String, Map<String, Object>> parameters;
 
 	private List<WorkFlowTaskOutput> outputs;
+
+	@JsonIgnore
+	private UUID checkerWorkId;
 
 	@JsonIgnore
 	private Integer numberOfWorkUnits;
@@ -87,15 +92,26 @@ public class WorkDefinitionResponseDTO {
 	public static WorkDefinitionResponseDTO fromWorkFlowDefinitionEntity(WorkFlowDefinition wd,
 			List<WorkFlowWorkDefinition> dependencies) {
 		return WorkDefinitionResponseDTO.builder().id(wd.getId()).workType(WorkType.WORKFLOW).name(wd.getName())
-				.parameterFromString(wd.getParameters()).processingType(wd.getProcessingType()).works(new ArrayList<>())
+				.parameterFromString(wd.getParameters()).processingType(wd.getProcessingType()).works(new HashSet<>())
 				.numberOfWorkUnits(dependencies.size()).build();
 	}
 
 	public static WorkDefinitionResponseDTO fromWorkFlowTaskDefinition(WorkFlowTaskDefinition wdt) {
-		return WorkDefinitionResponseDTO.builder().id(wdt.getId()).workType(WorkType.TASK).name(wdt.getName())
-				.parameterFromString(wdt.getParameters())
+		WorkDefinitionResponseDTOBuilder builder = WorkDefinitionResponseDTO.builder().id(wdt.getId())
+				.workType(WorkType.TASK).name(wdt.getName()).parameterFromString(wdt.getParameters())
 				.outputs(WorkFlowDTOUtil.readStringAsObject(wdt.getOutputs(), new TypeReference<>() {
-				}, List.of())).build();
+				}, List.of())).numberOfWorkUnits(0);
+
+		if (wdt.getWorkFlowCheckerMappingDefinition() != null) {
+			builder = builder.checkerWorkId(wdt.getWorkFlowCheckerMappingDefinition().getId());
+		}
+
+		return builder.build();
+	}
+
+	public static WorkDefinitionResponseDTO fromWorkFlowCheckerMappingDefinition(WorkFlowCheckerMappingDefinition wcd) {
+		return WorkDefinitionResponseDTO.builder().workType(WorkType.CHECKER).numberOfWorkUnits(wcd.getTasks().size())
+				.checkerWorkId(wcd.getCheckWorkFlow().getCheckerWorkFlowDefinition().getId()).build();
 	}
 
 }
