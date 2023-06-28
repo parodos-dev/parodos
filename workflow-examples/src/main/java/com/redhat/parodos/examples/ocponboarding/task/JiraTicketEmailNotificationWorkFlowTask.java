@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.redhat.parodos.examples.ocponboarding.task.dto.email.MessageRequestDTO;
-import com.redhat.parodos.examples.utils.RestUtils;
+import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
@@ -35,7 +35,7 @@ import org.springframework.http.ResponseEntity;
 /**
  * An example of a task that send a Jira ticket email notification
  *
- * @author Annel Ketch (Github: anludke)
+ * @author Annel Ketcha (Github: anludke)
  */
 
 @Slf4j
@@ -66,7 +66,7 @@ public class JiraTicketEmailNotificationWorkFlowTask extends BaseInfrastructureW
 		// jira ticket url to extract from workContext
 		String jiraTicketUrl;
 		try {
-			jiraTicketUrl = getRequiredParameterValue(workContext, ISSUE_LINK_PARAMETER_NAME);
+			jiraTicketUrl = getRequiredParameterValue(ISSUE_LINK_PARAMETER_NAME);
 			log.info("Jira ticket url is: {}", jiraTicketUrl);
 		}
 		catch (MissingParameterException e) {

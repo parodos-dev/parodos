@@ -39,9 +39,11 @@ public interface WorkFlowRepository extends JpaRepository<WorkFlowExecution, UUI
 
 	List<WorkFlowExecution> findByMainWorkFlowExecution(WorkFlowExecution mainWorkFlowExecution);
 
+	List<WorkFlowExecution> findByMainWorkFlowExecutionId(UUID mainWorkFlowExecutionId);
+
 	List<WorkFlowExecution> findAllByProjectId(UUID projectId);
 
-	WorkFlowExecution findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(WorkFlowExecution mainWorkFlowExecution,
+	WorkFlowExecution findFirstByMainWorkFlowExecutionIdAndWorkFlowDefinitionId(UUID mainWorkFlowExecutionId,
 			UUID workFlowDefinitionId);
 
 	@Query("SELECT w FROM prds_workflow_execution w WHERE w.status IN :statuses AND w.mainWorkFlowExecution IS NULL")

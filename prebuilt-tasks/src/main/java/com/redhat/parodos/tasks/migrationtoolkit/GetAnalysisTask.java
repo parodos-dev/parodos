@@ -1,10 +1,13 @@
 package com.redhat.parodos.tasks.migrationtoolkit;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.Objects;
 
-import com.redhat.parodos.email.Message;
+import javax.inject.Inject;
+
+import com.redhat.parodos.infrastructure.Notifier;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
@@ -35,12 +38,13 @@ public class GetAnalysisTask extends BaseInfrastructureWorkFlowTask {
 
 	private URI serverUrl;
 
-	private final Consumer<Message> messageConsumer;
+	@Inject
+	private Notifier notificationSender;
 
-	public GetAnalysisTask(URI serverURL, String bearerToken, Consumer<Message> messageConsumer) {
+	public GetAnalysisTask(URI serverURL, String bearerToken, Notifier notifier) {
 		this.serverUrl = serverURL;
 		this.mtaClient = new MTAClient(serverURL, bearerToken);
-		this.messageConsumer = messageConsumer;
+		this.notificationSender = notifier;
 	}
 
 	@Override
@@ -62,8 +66,8 @@ public class GetAnalysisTask extends BaseInfrastructureWorkFlowTask {
 	@Override
 	public WorkReport execute(WorkContext workContext) {
 		if (mtaClient == null) {
-			serverUrl = URI.create(getOptionalParameterValue(workContext, "serverURL", null));
-			var bearerToken = getOptionalParameterValue(workContext, "bearerToken", null);
+			serverUrl = URI.create(getOptionalParameterValue("serverURL", null));
+			var bearerToken = getOptionalParameterValue("bearerToken", null);
 			if (serverUrl == null) {
 				log.error(
 						"serverURL is empty. Either pass it while creating the instance of the task or in the context");
@@ -74,7 +78,7 @@ public class GetAnalysisTask extends BaseInfrastructureWorkFlowTask {
 
 		int taskGroupID;
 		try {
-			taskGroupID = Integer.parseInt(getRequiredParameterValue(workContext, "taskGroupID"));
+			taskGroupID = Integer.parseInt(getRequiredParameterValue("taskGroupID"));
 		}
 		catch (MissingParameterException | NumberFormatException e) {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
@@ -83,38 +87,37 @@ public class GetAnalysisTask extends BaseInfrastructureWorkFlowTask {
 		Result<TaskGroup> result = mtaClient.get(taskGroupID);
 
 		if (result == null) {
+			taskLogger.logErrorWithSlf4j("MTA client returned empty result with no error.");
 			// unexpected
-			return new DefaultWorkReport(WorkStatus.FAILED, new WorkContext(),
+			return new DefaultWorkReport(WorkStatus.REJECTED, new WorkContext(),
 					new IllegalStateException("MTA client returned empty result with no error."));
 		}
 		else if (result instanceof Result.Failure<TaskGroup> failure) {
-			return new DefaultWorkReport(WorkStatus.FAILED, workContext, failure.t());
+			taskLogger.logErrorWithSlf4j("MTA client returned failed result");
+			return new DefaultWorkReport(WorkStatus.REJECTED, workContext, failure.t());
 		}
 		else if (result instanceof Result.Success<TaskGroup> success) {
 			if ("Ready".equals(success.value().state()) && success.value().tasks() != null
-					&& success.value().tasks()[0].state().equals("Succeeded")) {
-				String reportURL = String.format("%s/hub/applications/%d/bucket/%s", serverUrl,
+					&& "Succeeded".equals(success.value().tasks()[0].state())) {
+				String reportURL = "%s/hub/applications/%d/bucket%s".formatted(serverUrl,
 						success.value().tasks()[0].application().id(), success.value().data().output());
-				sendEmail(reportURL, getOptionalParameterValue(workContext, "email", null));
-				addParameter(workContext, "reportURL", reportURL);
+				taskLogger.logInfoWithSlf4j("MTA client returned success result with report url: {}", reportURL);
+				addParameter("reportURL", reportURL);
+				addAdditionInfo("MTA assessment report", reportURL);
+				notificationSender.send("Migration Analysis Report Completed",
+						"[Migration analysis report](%s) completed.".formatted(reportURL));
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 			}
-			else if ("Failed".equals(success.value().state())) {
-				return new DefaultWorkReport(WorkStatus.FAILED, workContext,
+			else if ("Failed".equals(success.value().state())
+					|| Arrays.stream(Objects.requireNonNull(success.value().tasks()))
+							.anyMatch(task -> "Failed".equals(task.state()))) {
+				taskLogger.logErrorWithSlf4j("The underlying task failed, the report will not be ready");
+				return new DefaultWorkReport(WorkStatus.REJECTED, workContext,
 						new Throwable("The underlying task failed, the report will not be ready"));
 			}
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext, new Throwable("The report is not ready yet."));
 		}
 		throw new IllegalArgumentException();
-	}
-
-	private void sendEmail(String reportURL, String recipient) {
-		if (recipient == null) {
-			return;
-		}
-		messageConsumer.accept(new Message(recipient, "parodos-task-notificaion+mailtrap@redhat.com",
-				"Parodos: Analysis report is done",
-				String.format("The analysis report is done. Find it here %s", reportURL)));
 	}
 
 }

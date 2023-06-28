@@ -47,19 +47,19 @@ public class ParallelFlowReportTest {
 		WorkContext workContext = new WorkContext();
 
 		completedParallelFlowReport = new ParallelFlowReport();
-		completedParallelFlowReport.add(new DefaultWorkReport(WorkStatus.COMPLETED, workContext));
-		completedParallelFlowReport.add(new DefaultWorkReport(WorkStatus.COMPLETED, workContext));
+		completedParallelFlowReport.add(new DefaultWorkReport(WorkStatus.COMPLETED, workContext, "alertMessage_1"));
+		completedParallelFlowReport.add(new DefaultWorkReport(WorkStatus.COMPLETED, workContext, "alertMessage_2"));
 
 		failedParallelFlowReport = new ParallelFlowReport();
 		failedParallelFlowReport.add(new DefaultWorkReport(WorkStatus.FAILED, workContext, exception));
-		failedParallelFlowReport.add(new DefaultWorkReport(WorkStatus.COMPLETED, workContext));
+		failedParallelFlowReport.add(new DefaultWorkReport(WorkStatus.COMPLETED, workContext, "alertMessage_1"));
 		failedParallelFlowReport.add(new DefaultWorkReport(WorkStatus.IN_PROGRESS, workContext));
 
 		progressParallelFlowReport = new ParallelFlowReport();
-		progressParallelFlowReport.add(new DefaultWorkReport(WorkStatus.COMPLETED, workContext));
-		progressParallelFlowReport.add(new DefaultWorkReport(WorkStatus.COMPLETED, workContext));
+		progressParallelFlowReport.add(new DefaultWorkReport(WorkStatus.COMPLETED, workContext, "alertMessage_1"));
+		progressParallelFlowReport.add(new DefaultWorkReport(WorkStatus.COMPLETED, workContext, "alertMessage_2"));
 		progressParallelFlowReport.add(new DefaultWorkReport(WorkStatus.IN_PROGRESS, workContext));
-		progressParallelFlowReport.add(new DefaultWorkReport(WorkStatus.COMPLETED, workContext));
+		progressParallelFlowReport.add(new DefaultWorkReport(WorkStatus.COMPLETED, workContext, "alertMessage_3"));
 	}
 
 	@Test
@@ -79,6 +79,13 @@ public class ParallelFlowReportTest {
 		assertThat(completedParallelFlowReport.getReports()).hasSize(2);
 		assertThat(failedParallelFlowReport.getReports()).hasSize(3);
 		assertThat(progressParallelFlowReport.getReports()).hasSize(4);
+	}
+
+	@Test
+	public void testGetAlertMessage() {
+		assertThat(completedParallelFlowReport.getAlertMessage()).isEqualTo("alertMessage_2");
+		assertThat(failedParallelFlowReport.getAlertMessage()).isNull();
+		assertThat(progressParallelFlowReport.getAlertMessage()).isEqualTo("alertMessage_3");
 	}
 
 }

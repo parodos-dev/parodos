@@ -3,68 +3,60 @@ package com.redhat.parodos.flows;
 import java.util.Arrays;
 import java.util.List;
 
-import com.redhat.parodos.flows.base.BaseIntegrationTest;
+import com.redhat.parodos.flows.common.WorkFlowTestBuilder;
+import com.redhat.parodos.flows.common.WorkFlowTestBuilder.TestComponents;
 import com.redhat.parodos.sdk.api.WorkflowApi;
 import com.redhat.parodos.sdk.api.WorkflowDefinitionApi;
 import com.redhat.parodos.sdk.invoker.ApiException;
 import com.redhat.parodos.sdk.model.ArgumentRequestDTO;
-import com.redhat.parodos.sdk.model.ProjectResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowContextResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
+import com.redhat.parodos.sdk.model.WorkFlowExecutionResponseDTO;
+import com.redhat.parodos.sdk.model.WorkFlowExecutionResponseDTO.WorkStatusEnum;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
-import com.redhat.parodos.sdk.model.WorkFlowResponseDTO;
-import com.redhat.parodos.sdk.model.WorkFlowResponseDTO.WorkStatusEnum;
 import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.sdk.model.WorkRequestDTO;
-import com.redhat.parodos.sdkutils.SdkUtils;
+import com.redhat.parodos.sdkutils.WorkFlowServiceUtils;
+import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
-import static com.redhat.parodos.sdkutils.SdkUtils.waitWorkflowStatusAsync;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
-/**
- * @author Gloria Ciavarrini (Github: gciavarrini)
- */
 @Slf4j
-public class ComplexWorkFlowTest extends BaseIntegrationTest {
+public class ComplexWorkFlowTest {
 
-	private static final String projectName = "project-1";
-
-	private static final String projectDescription = "an example project";
+	private static final String WORKFLOW_NAME = "onboardingComplexAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW;
 
 	@Test
 	public void runComplexWorkFlow() throws ApiException, InterruptedException {
-		log.info("Running complex flow");
-
-		ProjectResponseDTO testProject = SdkUtils.getProjectAsync(apiClient, projectName, projectDescription);
-
-		WorkflowApi workflowApi = new WorkflowApi();
-		log.info("******** Running The Complex WorkFlow ********");
-
-		log.info("Running the Assessment to see what WorkFlows are eligible for this situation:");
+		log.info("******** Running The Complex workFlow ********");
+		TestComponents components = new WorkFlowTestBuilder().withDefaultProject().withWorkFlowDefinition(WORKFLOW_NAME)
+				.build();
 
 		// Define WorkFlowRequest
 		WorkFlowRequestDTO workFlowRequestDTO = new WorkFlowRequestDTO();
-		workFlowRequestDTO.setProjectId(testProject.getId());
-		workFlowRequestDTO.setWorkFlowName("onboardingComplexAssessment_ASSESSMENT_WORKFLOW");
+		workFlowRequestDTO.setProjectId(components.project().getId());
+		workFlowRequestDTO.setWorkFlowName(WORKFLOW_NAME);
 		workFlowRequestDTO.setWorks(List.of(new WorkRequestDTO()
 				.arguments(List.of(new ArgumentRequestDTO().key("GIT_REPO_URL").value("git_repo_url")))));
 
-		WorkFlowResponseDTO workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
+		log.info("Running the Assessment to see what WorkFlows are eligible for this situation:");
+		WorkflowApi workflowApi = new WorkflowApi(components.apiClient());
+		WorkFlowExecutionResponseDTO workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
 		assertEquals(WorkStatusEnum.IN_PROGRESS, workFlowResponseDTO.getWorkStatus());
 		log.info("workflow submitted successfully with response: {}", workFlowResponseDTO);
 
 		// wait till assessment workflow is completed
-		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = waitWorkflowStatusAsync(workflowApi,
+		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = WorkFlowServiceUtils.waitWorkflowStatusAsync(workflowApi,
 				workFlowResponseDTO.getWorkFlowExecutionId());
 		assertNotNull(workFlowStatusResponseDTO);
-		if (workFlowStatusResponseDTO.getStatus() != WorkFlowStatusResponseDTO.StatusEnum.COMPLETED) {
-			fail("There is no valid INFRASTRUCTURE_OPTION");
-		}
+		assertThat(workFlowStatusResponseDTO.getStatus()).as("Assessment workflow should be completed")
+				.isEqualTo(WorkFlowStatusResponseDTO.StatusEnum.COMPLETED);
+
 		WorkFlowContextResponseDTO workflowOptions = workflowApi
 				.getWorkflowParameters(workFlowResponseDTO.getWorkFlowExecutionId(), List.of("WORKFLOW_OPTIONS"));
 		assertNotNull(workflowOptions);
@@ -102,16 +94,17 @@ public class ComplexWorkFlowTest extends BaseIntegrationTest {
 		work3.setArguments(Arrays.asList(new ArgumentRequestDTO().key("user-id").value("test-user-id"),
 				new ArgumentRequestDTO().key("api-server").value("api.com")));
 
-		workFlowRequestDTO.setProjectId(testProject.getId());
+		workFlowRequestDTO.setProjectId(components.project().getId());
 		workFlowRequestDTO.setWorkFlowName(workFlowDefinitions.get(0).getName());
 		workFlowRequestDTO.setWorks(Arrays.asList(work1, work2, work3));
 		workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
 
 		assertNotNull("There is no valid WorkFlowExecutionId", workFlowResponseDTO.getWorkFlowExecutionId());
-		assertEquals(workFlowResponseDTO.getWorkStatus(), WorkStatusEnum.IN_PROGRESS);
+		assertEquals(WorkStatusEnum.IN_PROGRESS, workFlowResponseDTO.getWorkStatus());
 		log.info("Onboarding workflow execution id: {}", workFlowResponseDTO.getWorkFlowExecutionId());
 
-		workFlowStatusResponseDTO = waitWorkflowStatusAsync(workflowApi, workFlowResponseDTO.getWorkFlowExecutionId());
+		workFlowStatusResponseDTO = WorkFlowServiceUtils.waitWorkflowStatusAsync(workflowApi,
+				workFlowResponseDTO.getWorkFlowExecutionId());
 
 		assertNotNull(workFlowStatusResponseDTO);
 		assertNotNull(workFlowStatusResponseDTO.getWorkFlowExecutionId());

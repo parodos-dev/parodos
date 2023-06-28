@@ -8,6 +8,7 @@
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
 |**arguments** | [**List&lt;ArgumentRequestDTO&gt;**](ArgumentRequestDTO.md) |  |  [optional] |
+|**invokingExecutionId** | **UUID** |  |  [optional] |
 |**projectId** | **UUID** |  |  [optional] |
 |**workFlowName** | **String** |  |  [optional] |
 |**works** | [**List&lt;WorkRequestDTO&gt;**](WorkRequestDTO.md) |  |  [optional] |

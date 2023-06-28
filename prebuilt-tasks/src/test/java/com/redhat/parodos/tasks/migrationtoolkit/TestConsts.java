@@ -8,4 +8,6 @@ public interface TestConsts {
 
 	String REPO_URL = "https://example.org/git/repo";
 
+	String REPO_BRANCH = "v0.1.0";
+
 }

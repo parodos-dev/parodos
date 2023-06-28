@@ -86,15 +86,13 @@ public class JSON {
 		gsonBuilder.registerTypeAdapter(java.sql.Date.class, sqlDateTypeAdapter);
 		gsonBuilder.registerTypeAdapter(byte[].class, byteArrayAdapter);
 		gsonBuilder.registerTypeAdapterFactory(
-				new com.redhat.parodos.notification.sdk.model.Link.CustomTypeAdapterFactory());
+				new com.redhat.parodos.notification.sdk.model.ErrorMessageDTO.CustomTypeAdapterFactory());
 		gsonBuilder.registerTypeAdapterFactory(
 				new com.redhat.parodos.notification.sdk.model.NotificationMessageCreateRequestDTO.CustomTypeAdapterFactory());
 		gsonBuilder.registerTypeAdapterFactory(
 				new com.redhat.parodos.notification.sdk.model.NotificationRecordResponseDTO.CustomTypeAdapterFactory());
 		gsonBuilder.registerTypeAdapterFactory(
 				new com.redhat.parodos.notification.sdk.model.PageNotificationRecordResponseDTO.CustomTypeAdapterFactory());
-		gsonBuilder.registerTypeAdapterFactory(
-				new com.redhat.parodos.notification.sdk.model.Pageable.CustomTypeAdapterFactory());
 		gsonBuilder.registerTypeAdapterFactory(
 				new com.redhat.parodos.notification.sdk.model.PageableObject.CustomTypeAdapterFactory());
 		gsonBuilder.registerTypeAdapterFactory(

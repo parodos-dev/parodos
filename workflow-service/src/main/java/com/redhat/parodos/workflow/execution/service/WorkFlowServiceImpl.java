@@ -26,16 +26,18 @@ import java.util.UUID;
 
 import javax.annotation.PreDestroy;
 
-import com.redhat.parodos.common.exceptions.IDType;
+import com.redhat.parodos.common.exceptions.IllegalWorkFlowStateException;
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 import com.redhat.parodos.common.exceptions.ResourceType;
-import com.redhat.parodos.project.dto.ProjectResponseDTO;
+import com.redhat.parodos.project.dto.response.ProjectResponseDTO;
 import com.redhat.parodos.project.service.ProjectService;
 import com.redhat.parodos.security.SecurityUtils;
 import com.redhat.parodos.user.entity.User;
 import com.redhat.parodos.user.service.UserService;
 import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
+import com.redhat.parodos.workflow.context.WorkContextDelegate.ProcessType;
+import com.redhat.parodos.workflow.context.WorkContextDelegate.Resource;
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
@@ -69,9 +71,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 
 import org.springframework.dao.DataAccessException;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 /**
  * Workflow execution service implementation
@@ -151,17 +151,36 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		WorkContext workContext = workFlowDelegate.initWorkFlowContext(workFlowRequestDTO,
 				workFlowDefinitionResponseDTO);
 
+		if (workFlowRequestDTO.getInvokingExecutionId() != null) {
+			mergeContextArgumentsFromExecution(workFlowRequestDTO.getInvokingExecutionId(), workContext);
+		}
+
 		// save workflow execution
-		String arguments = WorkFlowDTOUtil.writeObjectValueAsString(
-				WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-						workFlowDefinitionResponseDTO.getName(), WorkContextDelegate.Resource.ARGUMENTS));
+		String arguments = WorkFlowDTOUtil.writeObjectValueAsString(WorkContextDelegate.read(workContext,
+				ProcessType.WORKFLOW_EXECUTION, workFlowDefinitionResponseDTO.getName(), Resource.ARGUMENTS));
 		UUID projectId = workFlowRequestDTO.getProjectId();
 		WorkFlowExecution workFlowExecution = saveWorkFlow(projectId, user.getId(),
 				workFlowDefinitionRepository.findFirstByName(workflowName), WorkStatus.IN_PROGRESS, null, arguments);
 		WorkContextUtils.setMainExecutionId(workContext, workFlowExecution.getId());
-		workFlowExecutor.executeAsync(projectId, user.getId(), workflowName, workContext, workFlowExecution.getId(),
-				workFlowDefinitionResponseDTO.getRollbackWorkflow());
-		return new DefaultWorkReport(WorkStatus.IN_PROGRESS, workContext, null);
+		workFlowExecutor.execute(WorkFlowExecutor.ExecutionContext.builder().projectId(projectId).userId(user.getId())
+				.workFlowName(workflowName).workContext(workContext).executionId(workFlowExecution.getId())
+				.rollbackWorkFlowName(workFlowDefinitionResponseDTO.getRollbackWorkflow()).build());
+		return new DefaultWorkReport(WorkStatus.IN_PROGRESS, workContext);
+	}
+
+	/**
+	 * Merge the context of the previous execution into the top level of this current
+	 * context. Don't override in case of collisions.
+	 * @param executionId the execution context with the source context arguments
+	 * @param target target context to put arguments on
+	 */
+	private void mergeContextArgumentsFromExecution(UUID executionId, WorkContext target) {
+		Optional<WorkFlowExecution> invokedBy = workFlowRepository.findById(executionId);
+		if (invokedBy.isEmpty()) {
+			throw new ResourceNotFoundException(ResourceType.WORKFLOW_EXECUTION, executionId);
+		}
+
+		ContextArgumentsMerger.mergeArguments(invokedBy.get(), target);
 	}
 
 	@Override
@@ -179,7 +198,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 					.projectId(projectId).user(user).status(workStatus).startDate(new Date()).arguments(arguments)
 					.mainWorkFlowExecution(mainWorkFlowExecution).build());
 		}
-		catch (DataAccessException | IllegalArgumentException e) {
+		catch (DataAccessException e) {
 			log.error("failing persist workflow execution for: {} in main workflow execution: {}. error Message: {}",
 					workFlowDefinition.getId(), mainWorkFlowExecution.getId(), e.getMessage());
 			throw new WorkflowPersistenceFailedException(e.getMessage());
@@ -217,18 +236,17 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 	@Override
 	public WorkFlowStatusResponseDTO getWorkFlowStatus(UUID workFlowExecutionId) {
 		WorkFlowExecution workFlowExecution = workFlowRepository.findById(workFlowExecutionId).orElseThrow(() -> {
-			throw new ResourceNotFoundException(ResourceType.WORKFLOW_EXECUTION, IDType.ID, workFlowExecutionId);
+			throw new ResourceNotFoundException(ResourceType.WORKFLOW_EXECUTION, workFlowExecutionId);
 		});
 
 		WorkFlowDefinition workFlowDefinition = Optional.ofNullable(workFlowExecution.getWorkFlowDefinition())
 				.orElseThrow(() -> {
-					throw new ResourceNotFoundException(ResourceType.WORKFLOW_DEFINITION, IDType.ID,
-							workFlowExecution.getId());
+					throw new ResourceNotFoundException(ResourceType.WORKFLOW_DEFINITION, workFlowExecution.getId());
 				});
 
 		// check if it is not an inner workflow
 		if (workFlowExecution.getMainWorkFlowExecution() != null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+			throw new IllegalWorkFlowStateException(
 					String.format("workflow id: %s from workflow name: %s is an inner workflow!",
 							workFlowExecution.getId(), workFlowDefinition.getName()));
 		}
@@ -238,21 +256,19 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
 		return WorkFlowStatusResponseDTO.builder().workFlowExecutionId(workFlowExecution.getId())
 				.workFlowName(workFlowDefinition.getName()).status(workFlowExecution.getStatus())
-				.works(workFlowWorksStatusResponseDTOs).build();
+				.message(workFlowExecution.getMessage()).works(workFlowWorksStatusResponseDTOs).build();
 	}
 
 	@Override
-	public WorkFlowContextResponseDTO getWorkflowParameters(UUID workFlowExecutionId,
-			List<WorkContextDelegate.Resource> params) {
+	public WorkFlowContextResponseDTO getWorkflowParameters(UUID workFlowExecutionId, List<Resource> params) {
 		WorkFlowExecution workFlowExecution = workFlowRepository.findById(workFlowExecutionId).orElseThrow(() -> {
-			throw new ResourceNotFoundException(ResourceType.WORKFLOW_EXECUTION, IDType.ID, workFlowExecutionId);
+			throw new ResourceNotFoundException(ResourceType.WORKFLOW_EXECUTION, workFlowExecutionId);
 		});
 		Map options = Map.of();
-		if (params.contains(WorkContextDelegate.Resource.WORKFLOW_OPTIONS)) {
+		if (params.contains(Resource.WORKFLOW_OPTIONS)) {
 			options = Optional.ofNullable(
 					(Map) WorkContextDelegate.read(workFlowExecution.getWorkFlowExecutionContext().getWorkContext(),
-							WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
-							WorkContextDelegate.Resource.WORKFLOW_OPTIONS))
+							ProcessType.WORKFLOW_EXECUTION, Resource.WORKFLOW_OPTIONS))
 					.orElse(Map.of());
 		}
 
@@ -288,7 +304,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 					.workFlowTaskDefinitionId(workFlowTaskDefinitionId).arguments(arguments).status(workFlowTaskStatus)
 					.startDate(new Date()).build());
 		}
-		catch (DataAccessException | IllegalArgumentException e) {
+		catch (DataAccessException e) {
 			log.error("failing persist task execution for: {} in main workflow execution: {}. error Message: {}",
 					workFlowTaskDefinitionId, workFlowTaskDefinitionId, e.getMessage());
 			throw new WorkflowPersistenceFailedException(e.getMessage());
@@ -312,7 +328,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 			WorkStatus workFlowTaskStatus) {
 		// get main workflow associated to the execution id
 		WorkFlowExecution mainWorkFlowExecution = workFlowRepository.findById(workFlowExecutionId).orElseThrow(() -> {
-			throw new ResourceNotFoundException(ResourceType.WORKFLOW_EXECUTION, IDType.ID, workFlowExecutionId);
+			throw new ResourceNotFoundException(ResourceType.WORKFLOW_EXECUTION, workFlowExecutionId);
 		});
 		// get workflow checker task definition
 		WorkFlowTaskDefinition workFlowTaskDefinition = workFlowTaskDefinitionRepository
@@ -328,7 +344,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 				.filter(workFlowExecution -> workFlowExecution.getWorkFlowDefinition().getId()
 						.equals(workFlowTaskDefinition.getWorkFlowDefinition().getId()))
 				.max(Comparator.comparing(WorkFlowExecution::getStartDate)).orElseThrow(() -> {
-					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String
+					throw new IllegalWorkFlowStateException(String
 							.format("workflow checker associated to task: %s has not started!", workFlowTaskName));
 				});
 		// get the workflow checker task execution
@@ -336,7 +352,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 				.findByWorkFlowExecutionIdAndWorkFlowTaskDefinitionId(workFlowCheckerExecution.getId(),
 						workFlowTaskDefinition.getId())
 				.stream().findFirst().orElseThrow(() -> {
-					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					throw new IllegalWorkFlowStateException(
 							String.format("workflow checker task name: %s has not been executed!", workFlowTaskName));
 				});
 		// update workflow checker task status
@@ -382,7 +398,18 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 				.workStatus(WorkStatus.valueOf(workflowExecution.getStatus().name()))
 				.startDate(Optional.ofNullable(workflowExecution.getStartDate()).map(Date::toString).orElse(null))
 				.endDate(Optional.ofNullable(workflowExecution.getEndDate()).map(Date::toString).orElse(null))
-				.executeBy(workflowExecution.getUser().getUsername()).build();
+				.executeBy(workflowExecution.getUser().getUsername())
+				.additionalInfos(Optional.ofNullable(workflowExecution.getWorkFlowExecutionContext())
+						.flatMap(workFlowExecutionContext -> Optional
+								.ofNullable(
+										WorkContextUtils.getAdditionalInfo(workFlowExecutionContext.getWorkContext()))
+								.map(additionalInfoMap -> additionalInfoMap.entrySet().stream()
+										.sorted(Map.Entry.comparingByKey())
+										.map(additionalInfo -> new WorkFlowResponseDTO.AdditionalInfo(
+												additionalInfo.getKey(), additionalInfo.getValue()))
+										.toList()))
+						.orElse(null))
+				.build();
 	}
 
 }

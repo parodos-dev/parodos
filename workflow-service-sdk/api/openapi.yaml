@@ -18,6 +18,8 @@ tags:
   name: Project
 - description: Operations about workflow definition
   name: Workflow Definition
+- description: Operations about project access
+  name: Project Access
 paths:
   /api/v1/login:
     get:
@@ -61,6 +63,8 @@ paths:
                   $ref: '#/components/schemas/ProjectResponseDTO'
                 type: array
           description: Succeeded
+        "304":
+          description: Not Modified
         "400":
           content:
             '*/*':
@@ -127,6 +131,88 @@ paths:
       - Project
       x-content-type: application/json
       x-accepts: application/json
+  /api/v1/projects/access/{id}/status:
+    get:
+      operationId: getProjectAccessStatus
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessStatusResponseDTO'
+          description: Succeeded
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          content: {}
+          description: Not found
+        "409":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Conflict
+      summary: Returns status about a specified project access request
+      tags:
+      - Project Access
+      x-accepts: application/json
+    post:
+      operationId: updateProjectAccessStatus
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccessStatusRequestDTO'
+        required: true
+      responses:
+        "204":
+          description: Updated successfully
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          content: {}
+          description: Not found
+        "409":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Conflict
+      summary: Update status of a specified project access request
+      tags:
+      - Project Access
+      x-content-type: application/json
+      x-accepts: '*/*'
   /api/v1/projects/{id}:
     get:
       operationId: getProjectById
@@ -146,6 +232,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProjectResponseDTO'
           description: Succeeded
+        "304":
+          description: Not Modified
         "400":
           content:
             '*/*':
@@ -166,6 +254,53 @@ paths:
       summary: Returns information about a specified project
       tags:
       - Project
+      x-accepts: application/json
+  /api/v1/projects/{id}/access:
+    post:
+      operationId: createAccessRequestToProject
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccessRequestDTO'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessResponseDTO'
+          description: Succeeded
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          content: {}
+          description: Not found
+        "409":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Conflict
+      summary: Request user access to project
+      tags:
+      - Project
+      x-content-type: application/json
       x-accepts: application/json
   /api/v1/projects/{id}/users:
     delete:
@@ -477,7 +612,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WorkFlowResponseDTO'
+                $ref: '#/components/schemas/WorkFlowExecutionResponseDTO'
           description: Accepted
         "400":
           content:
@@ -588,6 +723,7 @@ paths:
             - STATUS
             - WORKFLOW_OPTIONS
             - PARENT_WORKFLOW
+            - ADDITIONAL_INFO
             type: string
           type: array
         style: form
@@ -624,6 +760,60 @@ paths:
       tags:
       - Workflow
       x-accepts: application/json
+  /api/v1/workflows/{workFlowExecutionId}/log:
+    get:
+      operationId: getLog
+      parameters:
+      - explode: false
+        in: path
+        name: workFlowExecutionId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - explode: true
+        in: query
+        name: taskName
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            text/plain:
+              schema:
+                type: string
+          description: Succeeded
+        "304":
+          description: Not Modified
+        "400":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Not Found
+        "409":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessageDTO'
+          description: Conflict
+      summary: Returns workflow execution log
+      tags:
+      - Workflow
+      x-accepts: "*/*,text/plain"
   /api/v1/workflows/{workFlowExecutionId}/status:
     get:
       operationId: getStatus
@@ -643,6 +833,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/WorkFlowStatusResponseDTO'
           description: Succeeded
+        "304":
+          description: Not Modified
         "400":
           content:
             '*/*':
@@ -671,6 +863,84 @@ paths:
       x-accepts: application/json
 components:
   schemas:
+    AccessRequestDTO:
+      example:
+        role: OWNER
+        username: username
+      properties:
+        role:
+          enum:
+          - OWNER
+          - DEVELOPER
+          - ADMIN
+          type: string
+        username:
+          type: string
+      type: object
+    AccessResponseDTO:
+      example:
+        approvalSentTo:
+        - approvalSentTo
+        - approvalSentTo
+        accessRequestId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        escalationSentTo: escalationSentTo
+        project:
+          createdDate: 2000-01-23T04:56:07.000+00:00
+          createdBy: createdBy
+          name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        accessRequestId:
+          format: uuid
+          type: string
+        approvalSentTo:
+          items:
+            type: string
+          type: array
+        escalationSentTo:
+          type: string
+        project:
+          $ref: '#/components/schemas/ProjectDTO'
+      type: object
+    AccessStatusRequestDTO:
+      example:
+        comment: comment
+        status: APPROVED
+      properties:
+        comment:
+          type: string
+        status:
+          enum:
+          - APPROVED
+          - PENDING
+          - REJECTED
+          type: string
+      type: object
+    AccessStatusResponseDTO:
+      example:
+        accessRequestId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        status: APPROVED
+      properties:
+        accessRequestId:
+          format: uuid
+          type: string
+        status:
+          enum:
+          - APPROVED
+          - PENDING
+          - REJECTED
+          type: string
+      type: object
+    AdditionalInfo:
+      example:
+        value: value
+        key: key
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+      type: object
     ArgumentRequestDTO:
       example:
         value: value
@@ -694,6 +964,24 @@ components:
           format: int32
           type: integer
       type: object
+    ProjectDTO:
+      example:
+        createdDate: 2000-01-23T04:56:07.000+00:00
+        createdBy: createdBy
+        name: name
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        createdBy:
+          type: string
+        createdDate:
+          format: date-time
+          type: string
+        id:
+          format: uuid
+          type: string
+        name:
+          type: string
+      type: object
     ProjectRequestDTO:
       example:
         name: name
@@ -706,13 +994,20 @@ components:
       type: object
     ProjectResponseDTO:
       example:
-        modifyDate: 2000-01-23T04:56:07.000+00:00
+        createdDate: 2000-01-23T04:56:07.000+00:00
+        createdBy: createdBy
+        accessRole: accessRole
+        modifiedDate: 2000-01-23T04:56:07.000+00:00
         name: name
         description: description
+        modifiedBy: modifiedBy
         id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        createDate: 2000-01-23T04:56:07.000+00:00
       properties:
-        createDate:
+        accessRole:
+          type: string
+        createdBy:
+          type: string
+        createdDate:
           format: date-time
           type: string
         description:
@@ -720,7 +1015,9 @@ components:
         id:
           format: uuid
           type: string
-        modifyDate:
+        modifiedBy:
+          type: string
+        modifiedDate:
           format: date-time
           type: string
         name:
@@ -1035,6 +1332,23 @@ components:
             $ref: '#/components/schemas/WorkDefinitionResponseDTO'
           type: array
       type: object
+    WorkFlowExecutionResponseDTO:
+      example:
+        workStatus: FAILED
+        workFlowExecutionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        workFlowExecutionId:
+          format: uuid
+          type: string
+        workStatus:
+          enum:
+          - FAILED
+          - COMPLETED
+          - IN_PROGRESS
+          - REJECTED
+          - PENDING
+          type: string
+      type: object
     WorkFlowOption:
       example:
         identifier: identifier
@@ -1177,6 +1491,7 @@ components:
     WorkFlowRequestDTO:
       example:
         workFlowName: workFlowName
+        invokingExecutionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         works:
         - arguments:
           - value: value
@@ -1203,6 +1518,9 @@ components:
           items:
             $ref: '#/components/schemas/ArgumentRequestDTO'
           type: array
+        invokingExecutionId:
+          format: uuid
+          type: string
         projectId:
           format: uuid
           type: string
@@ -1216,6 +1534,11 @@ components:
     WorkFlowResponseDTO:
       example:
         workStatus: FAILED
+        additionalInfos:
+        - value: value
+          key: key
+        - value: value
+          key: key
         workFlowName: workFlowName
         executeBy: executeBy
         endDate: endDate
@@ -1223,6 +1546,10 @@ components:
         projectId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         startDate: startDate
       properties:
+        additionalInfos:
+          items:
+            $ref: '#/components/schemas/AdditionalInfo'
+          type: array
         endDate:
           type: string
         executeBy:
@@ -1250,21 +1577,28 @@ components:
       example:
         workFlowName: workFlowName
         works:
-        - works:
+        - alertMessage: alertMessage
+          works:
           - null
           - null
           name: name
+          message: message
           type: TASK
           status: FAILED
-        - works:
+        - alertMessage: alertMessage
+          works:
           - null
           - null
           name: name
+          message: message
           type: TASK
           status: FAILED
         workFlowExecutionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        message: message
         status: FAILED
       properties:
+        message:
+          type: string
         status:
           enum:
           - FAILED
@@ -1342,13 +1676,19 @@ components:
       type: object
     WorkStatusResponseDTO:
       example:
+        alertMessage: alertMessage
         works:
         - null
         - null
         name: name
+        message: message
         type: TASK
         status: FAILED
       properties:
+        alertMessage:
+          type: string
+        message:
+          type: string
         name:
           type: string
         status:

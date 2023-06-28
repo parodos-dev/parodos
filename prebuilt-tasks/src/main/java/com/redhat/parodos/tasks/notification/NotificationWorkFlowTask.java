@@ -6,10 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.redhat.parodos.notification.sdk.api.ApiClient;
+import com.redhat.parodos.infrastructure.Notifier;
 import com.redhat.parodos.notification.sdk.api.ApiException;
-import com.redhat.parodos.notification.sdk.api.Configuration;
-import com.redhat.parodos.notification.sdk.api.NotificationMessageApi;
 import com.redhat.parodos.notification.sdk.model.NotificationMessageCreateRequestDTO;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.parameter.WorkParameter;
@@ -23,30 +21,15 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.util.CollectionUtils;
 
 @Slf4j
 public class NotificationWorkFlowTask extends BaseWorkFlowTask {
 
-	private final NotificationMessageApi apiInstance;
+	private final Notifier notifier;
 
-	public NotificationWorkFlowTask(String basePath, String auth) {
-		this(basePath, null, auth);
-	}
-
-	protected NotificationWorkFlowTask(String basePath, NotificationMessageApi apiInstance) {
-		this(basePath, apiInstance, null);
-	}
-
-	private NotificationWorkFlowTask(String basePath, NotificationMessageApi apiInstance, String auth) {
-		if (apiInstance == null) {
-			ApiClient apiClient = Configuration.getDefaultApiClient();
-			apiClient.addDefaultHeader(HttpHeaders.AUTHORIZATION, auth);
-			apiClient.setBasePath(basePath);
-			apiInstance = new NotificationMessageApi(apiClient);
-		}
-		this.apiInstance = apiInstance;
+	public NotificationWorkFlowTask(Notifier notifier) {
+		this.notifier = notifier;
 	}
 
 	@Override
@@ -81,11 +64,11 @@ public class NotificationWorkFlowTask extends BaseWorkFlowTask {
 		NotificationMessageCreateRequestDTO notificationMessageCreateRequestDTO = new NotificationMessageCreateRequestDTO();
 
 		try {
-			notificationMessageCreateRequestDTO.messageType(getRequiredParameterValue(workContext, "type"));
-			notificationMessageCreateRequestDTO.body(getRequiredParameterValue(workContext, "body"));
-			notificationMessageCreateRequestDTO.subject(getRequiredParameterValue(workContext, "subject"));
-			List<String> userNames = toList(getOptionalParameterValue(workContext, "userNames", null));
-			List<String> groupNames = toList(getOptionalParameterValue(workContext, "groupNames", null));
+			notificationMessageCreateRequestDTO.messageType(getRequiredParameterValue("type"));
+			notificationMessageCreateRequestDTO.body(getRequiredParameterValue("body"));
+			notificationMessageCreateRequestDTO.subject(getRequiredParameterValue("subject"));
+			List<String> userNames = toList(getOptionalParameterValue("userNames", null));
+			List<String> groupNames = toList(getOptionalParameterValue("groupNames", null));
 			if (CollectionUtils.isEmpty(userNames) && CollectionUtils.isEmpty(groupNames)) {
 				throw new MissingParameterException("User Names or Group Names must be provided");
 			}
@@ -98,7 +81,7 @@ public class NotificationWorkFlowTask extends BaseWorkFlowTask {
 		}
 
 		try {
-			this.apiInstance.create(notificationMessageCreateRequestDTO);
+			notifier.trySend(notificationMessageCreateRequestDTO);
 		}
 		catch (ApiException e) {
 			log.error("Exception when calling NotificationMessageApi#create:", e);

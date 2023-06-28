@@ -1,17 +1,13 @@
 package com.redhat.parodos.tasks.migrationtoolkit;
 
 import java.net.URI;
-import java.util.List;
 
 import com.redhat.parodos.workflow.exception.MissingParameterException;
-import com.redhat.parodos.workflow.parameter.WorkParameter;
-import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -36,22 +32,6 @@ public class GetApplicationTask extends BaseInfrastructureWorkFlowTask {
 		mtaClient = new MTAClient(serverURL, bearerToken);
 	}
 
-	@Override
-	public @NonNull List<WorkParameter> getWorkFlowTaskParameters() {
-		return List.of(
-				WorkParameter.builder().key("serverURL").type(WorkParameterType.TEXT).optional(true).description(
-						"Base URL of the MTA instance - e.g https://mta-openshift-mta.app.clustername.clusterdomain")
-						.build(),
-				WorkParameter.builder().key("bearerToken").type(WorkParameterType.TEXT).optional(true)
-						.description("Bearer token to authenticate server requests").build(),
-				WorkParameter.builder().key("applicationName").type(WorkParameterType.TEXT).optional(false).description(
-						"The application name as presented in the application hub. Can be generated from the repository name")
-						.build(),
-				WorkParameter.builder().key("sourceRepository").type(WorkParameterType.TEXT).optional(true).description(
-						"The application name as presented in the application hub. Can be generated from the repository name")
-						.build());
-	}
-
 	/**
 	 * @param workContext optional context values: serverURL, and bearerToken for the
 	 * mtaClient.
@@ -61,11 +41,11 @@ public class GetApplicationTask extends BaseInfrastructureWorkFlowTask {
 		String applicationName = "";
 		try {
 			if (mtaClient == null) {
-				var serverUrl = getOptionalParameterValue(workContext, "serverURL", null);
-				var bearerToken = getOptionalParameterValue(workContext, "bearerToken", null);
+				var serverUrl = getOptionalParameterValue("serverURL", null);
+				var bearerToken = getOptionalParameterValue("bearerToken", null);
 				mtaClient = new MTAClient(URI.create(serverUrl), bearerToken);
 			}
-			applicationName = getRequiredParameterValue(workContext, "applicationName");
+			applicationName = getRequiredParameterValue("applicationName");
 		}
 		catch (MissingParameterException e) {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
@@ -74,15 +54,19 @@ public class GetApplicationTask extends BaseInfrastructureWorkFlowTask {
 		Result<App> result = mtaClient.get(applicationName);
 
 		if (result == null) {
+			taskLogger.logErrorWithSlf4j("MTA client returned empty result with no error");
 			// unexpected
-			return new DefaultWorkReport(WorkStatus.FAILED, new WorkContext(),
+			return new DefaultWorkReport(WorkStatus.REJECTED, new WorkContext(),
 					new IllegalStateException("MTA client returned empty result with no error"));
 		}
 		else if (result instanceof Result.Failure<App> failure) {
+			taskLogger.logErrorWithSlf4j("MTA client returned failed result");
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext, failure.t());
 		}
 		else if (result instanceof Result.Success<App> success) {
-			addParameter(workContext, "applicationID", String.valueOf(success.value().id()));
+			addParameter("applicationID", String.valueOf(success.value().id()));
+			taskLogger.logInfoWithSlf4j("MTA client returned success result for getting application with id: {}",
+					String.valueOf(success.value().id()));
 			return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 		}
 		throw new IllegalArgumentException();

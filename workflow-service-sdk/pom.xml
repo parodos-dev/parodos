@@ -39,7 +39,7 @@
                 <executions>
                     <execution>
                         <id>skip-if-no-modifications</id>
-                        <phase>generate-test-sources</phase>
+                        <phase>validate</phase>
                         <goals>
                             <goal>run</goal>
                         </goals>
@@ -80,7 +80,7 @@
                     </execution>
                     <execution>
                         <id>auto-clean</id>
-                        <phase>process-test-sources</phase>
+                        <phase>initialize</phase>
                         <goals>
                             <goal>clean</goal>
                         </goals>
@@ -140,8 +140,8 @@
                                 <hideGenerationTimestamp>true</hideGenerationTimestamp>
                                 <basePackage>com.redhat.parodos.sdk</basePackage>
                                 <configPackage>com.redhat.parodos.sdk.configuration</configPackage>
-                                <parentArtifactId>parados-parent</parentArtifactId>
                                 <parentGroupId>dev.parodos</parentGroupId>
+                                <parentArtifactId>parados-parent</parentArtifactId>
                                 <parentVersion>${revision}</parentVersion>
                                 <artifactVersion>${revision}</artifactVersion>
                                 <dateLibrary>legacy</dateLibrary>

@@ -121,6 +121,32 @@ public abstract class WorkContextUtils {
 	}
 
 	/**
+	 * add additional info for the workflow, e.g. result links
+	 * @param workContext
+	 * @param key
+	 * @param value
+	 */
+	public static void addAdditionalInfo(WorkContext workContext, String key, String value) {
+		Map<String, String> additionalInfoMap = Optional
+				.ofNullable(new ObjectMapper().convertValue(
+						WorkContextDelegate.read(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+								WorkContextDelegate.Resource.ADDITIONAL_INFO),
+						new TypeReference<HashMap<String, String>>() {
+						}))
+				.orElse(new HashMap<>());
+		additionalInfoMap.put(key, value);
+		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ADDITIONAL_INFO, additionalInfoMap);
+	}
+
+	public static Map<String, String> getAdditionalInfo(WorkContext workContext) {
+		return new ObjectMapper().convertValue(WorkContextDelegate.read(workContext,
+				WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION, WorkContextDelegate.Resource.ADDITIONAL_INFO),
+				new TypeReference<>() {
+				});
+	}
+
+	/**
 	 * get all available parameters for a task
 	 * @param workContext work context
 	 * @param name task name

@@ -3,7 +3,7 @@ package com.redhat.parodos.examples.ocponboarding.task;
 import java.util.List;
 
 import com.redhat.parodos.examples.base.BaseInfrastructureWorkFlowTaskTest;
-import com.redhat.parodos.examples.utils.RestUtils;
+import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
@@ -51,7 +51,7 @@ public class JiraTicketEmailNotificationWorkFlowTaskTest extends BaseInfrastruct
 
 		try {
 			doReturn(JIRA_TICKET_URL_TEST).when(this.jiraTicketEmailNotificationWorkFlowTask)
-					.getRequiredParameterValue(any(WorkContext.class), eq(ISSUE_LINK_PARAMETER_NAME));
+					.getRequiredParameterValue(eq(ISSUE_LINK_PARAMETER_NAME));
 		}
 		catch (MissingParameterException e) {
 			throw new RuntimeException(e);

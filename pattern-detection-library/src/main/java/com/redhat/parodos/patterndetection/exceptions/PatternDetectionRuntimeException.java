@@ -16,8 +16,8 @@
 package com.redhat.parodos.patterndetection.exceptions;
 
 /**
- * A catch all thrown when when issues occur during the execution of scans in the WorkFlow
- * 
+ * A catch-all thrown when issues occur during the execution of scans in the WorkFlow
+ *
  * @author Luke Shannon (Github: lshannon)
  *
  */

@@ -15,6 +15,9 @@
  */
 package com.redhat.parodos.workflow.execution.aspect;
 
+import com.redhat.parodos.common.exceptions.IDType;
+import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
+import com.redhat.parodos.common.exceptions.ResourceType;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.definition.repository.WorkFlowDefinitionRepository;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
@@ -82,6 +85,10 @@ public class WorkFlowExecutionAspect {
 
 		/* get workflow definition entity */
 		WorkFlowDefinition workFlowDefinition = this.workFlowDefinitionRepository.findFirstByName(workflowName);
+		if (workFlowDefinition == null) {
+			return new DefaultWorkReport(WorkStatus.FAILED, workContext,
+					new ResourceNotFoundException(ResourceType.WORKFLOW_DEFINITION, IDType.NAME, workflowName));
+		}
 		WorkFlowExecutionInterceptor executionHandler = workFlowExecutionFactory
 				.createExecutionHandler(workFlowDefinition, workContext);
 		WorkFlowExecution workFlowExecution = executionHandler.handlePreWorkFlowExecution();
@@ -101,7 +108,7 @@ public class WorkFlowExecutionAspect {
 		}
 		catch (Throwable e) {
 			log.error("Workflow {} has failed! with error: {}", workflowName, e.getMessage());
-			report = new DefaultWorkReport(WorkStatus.FAILED, workContext);
+			report = new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
 		}
 
 		return executionHandler.handlePostWorkFlowExecution(report, (WorkFlow) proceedingJoinPoint.getTarget());

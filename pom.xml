@@ -42,7 +42,7 @@
         </developer>
     </developers>
     <properties>
-        <revision>1.0.12-SNAPSHOT</revision>
+        <revision>1.0.18-SNAPSHOT</revision>
         <flatten.version>1.3.0</flatten.version>
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -60,14 +60,13 @@
         <mockito.version>3.5.13</mockito.version>
         <assertj.version>3.17.2</assertj.version>
         <okhttp-version>4.9.2</okhttp-version>
-        <openapi.generator.version>6.4.0</openapi.generator.version>
+        <openapi.generator.version>6.6.0</openapi.generator.version>
         <gson-fire-version>1.8.5</gson-fire-version>
         <snakeyaml-version>1.28</snakeyaml-version>
     </properties>
     <modules>
         <module>workflow-engine</module>
         <module>parodos-model-api</module>
-        <module>external-dependencies</module>
         <module>notification-service</module>
         <module>notification-service-sdk</module>
         <module>prebuilt-tasks</module>
@@ -221,6 +220,37 @@
                             <inherited>true</inherited>
                             <goals>
                                 <goal>apply</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>3.1.1</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>9.3</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>io.spring.javaformat</groupId>
+                            <artifactId>spring-javaformat-checkstyle</artifactId>
+                            <version>0.0.38</version>
+                        </dependency>
+                    </dependencies>
+                    <executions>
+                        <execution>
+                            <id>checkstyle-validation</id>
+                            <phase>validate</phase>
+                            <inherited>true</inherited>
+                            <configuration>
+                                <configLocation>checkstyle.xml</configLocation>
+                                <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                            </configuration>
+                            <goals>
+                                <goal>check</goal>
                             </goals>
                         </execution>
                     </executions>

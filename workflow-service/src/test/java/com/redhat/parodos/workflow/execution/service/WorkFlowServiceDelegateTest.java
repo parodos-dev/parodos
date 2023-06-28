@@ -146,8 +146,8 @@ public class WorkFlowServiceDelegateTest {
 		when(this.workFlowDefinitionRepository.findById(eq(testSubWorkFlowDefinitionId1)))
 				.thenReturn(Optional.of(testSubWorkFlowDefinition1));
 
-		when(this.workFlowRepository.findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(eq(workFlowExecution),
-				eq(testSubWorkFlowDefinitionId1))).thenReturn(testSubWorkFlowExecution1);
+		when(this.workFlowRepository.findFirstByWorkFlowDefinitionIdAndMainWorkFlowExecution(
+				eq(testSubWorkFlowDefinitionId1), eq(workFlowExecution))).thenReturn(testSubWorkFlowExecution1);
 
 		when(this.workFlowTaskDefinitionRepository.findById(eq(testSubWorkFlowTaskDefinitionId1)))
 				.thenReturn(Optional.of(testSubWorkFlowTaskDefinition1));
@@ -277,8 +277,8 @@ public class WorkFlowServiceDelegateTest {
 			when(workFlowWorkRepository.findByWorkFlowDefinitionIdOrderByCreateDateAsc(checkerWorkFlowDefinitionId))
 					.thenReturn(List.of(checkerWorkflowWorkDefinition));
 
-			when(workFlowRepository.findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(
-					nullable(WorkFlowExecution.class), eq(checkerWorkFlowDefinitionId)))
+			when(workFlowRepository.findFirstByWorkFlowDefinitionIdAndMainWorkFlowExecution(
+					eq(checkerWorkFlowDefinitionId), nullable(WorkFlowExecution.class)))
 							.thenReturn(checkerWorkflowExecution);
 		}
 

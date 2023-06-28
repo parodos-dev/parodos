@@ -47,6 +47,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.data.util.Pair;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 /**
@@ -95,6 +96,7 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry {
 
 	@PostConstruct
 	void postInit() {
+		SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
 		workFlowDefinitionService.cleanAllDefinitionMappings();
 		saveWorkFlow();
 		saveChecker();
@@ -170,10 +172,12 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry {
 
 	private WorkFlowProcessingType getWorkFlowProcessingType(Object workFlowBean) {
 		String className = workFlowBean.getClass().getTypeName();
-		if (className.toUpperCase().contains(WorkFlowProcessingType.PARALLEL.name()))
+		if (className.toUpperCase().contains(WorkFlowProcessingType.PARALLEL.name())) {
 			return WorkFlowProcessingType.PARALLEL;
-		if (className.toUpperCase().contains(WorkFlowProcessingType.SEQUENTIAL.name()))
+		}
+		if (className.toUpperCase().contains(WorkFlowProcessingType.SEQUENTIAL.name())) {
 			return WorkFlowProcessingType.SEQUENTIAL;
+		}
 		return WorkFlowProcessingType.OTHER;
 	}
 

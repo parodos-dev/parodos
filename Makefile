@@ -85,7 +85,7 @@ install: clean
 deploy: clean ## push snapshot modules to maven central
 	$(MAVEN) deploy
 
-release: clean ## release and push modules to maven central
+release: ## release and push modules to maven central
 	$(MAVEN) deploy -P release
 
 fast-build: ARGS = $(FAST_BUILD_ARGS) ## Build all modules without running the tests and generate javadoc
@@ -128,7 +128,7 @@ fast-build-workflow-examples: ARGS = $(FAST_BUILD_ARGS) ## Fast build workflow e
 fast-build-workflow-examples: workflow-examples
 
 coverage: mvn-checks ## Build coverage
-	$(MAVEN) $(ARGS) -pl coverage
+	$(MAVEN) $(ARGS) verify -pl coverage
 
 fast-build-coverage: ARGS = $(FAST_BUILD_ARGS) ## Fast build coverage
 fast-build-coverage: coverage
@@ -144,16 +144,16 @@ tag-images: ## Tag docker images with git hash and branch name
 	$(DOCKER) tag docker-compose_workflow-service:latest $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(TAG)
 	$(DOCKER) tag docker-compose_notification-service:latest $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(TAG)
 
-	$(DOCKER) tag docker-compose_workflow-service:latest $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(TAG)
-	$(DOCKER) tag docker-compose_notification-service:latest $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(TAG)
+	$(DOCKER) tag docker-compose_workflow-service:latest $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(GIT_BRANCH)
+	$(DOCKER) tag docker-compose_notification-service:latest $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(GIT_BRANCH)
 
 push-images: ## Push docker images to quay.io registry
 	$(eval TAG?=$(GIT_HASH))
 	$(DOCKER) push  $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(TAG)
 	$(DOCKER) push  $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(TAG)
 
-	$(DOCKER) push  $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(TAG)
-	$(DOCKER) push  $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(TAG)
+	$(DOCKER) push  $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(GIT_BRANCH)
+	$(DOCKER) push  $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(GIT_BRANCH)
 
 push-images-to-kind: ## Push docker images to kind
 	$(DOCKER) tag docker-compose_workflow-service:latest $(ORG)$(WORKFLOW_SERVICE_IMAGE):test
@@ -194,6 +194,9 @@ git-tag: ## tag commit and prepare for image release
 
 release-all: update-version release git-release git-tag build-images tag-images push-images bump-version install bump-git-commit
 
+release-manifests:
+	./hack/scripts/release.sh $(RELEASE_VERSION)
+
 ##@ Run
 .PHONY: docker-run docker-stop
 
@@ -230,3 +233,13 @@ stop-postgres:
 format-files:
 	mvn spring-javaformat:apply
 	mvn impsort:sort
+
+.PHONY: install-kubernetes-dependencies-and-wait deploy-to-kind
+
+install-kubernetes-dependencies-and-wait: install-kubernetes-dependencies
+	sleep 10
+
+deploy-to-kind: install-kubernetes-dependencies-and-wait wait-kubernetes-dependencies build-images tag-images push-images-to-kind
+	kubectl kustomize hack/manifests/testing | kubectl apply -f -
+	kubectl wait --timeout=300s --for=condition=Ready pods --all -n default
+	kubectl get pods -A

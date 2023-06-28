@@ -56,7 +56,9 @@ public class WorkContextDelegate {
 
 		WORKFLOW_OPTIONS(Visibility.PUBLIC),
 
-		PARENT_WORKFLOW;
+		PARENT_WORKFLOW,
+
+		ADDITIONAL_INFO;
 		// @formatter:on
 
 		private final Visibility visibility;

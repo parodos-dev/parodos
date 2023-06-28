@@ -19,7 +19,7 @@ import java.util.List;
 
 import com.redhat.parodos.examples.ocponboarding.task.dto.jira.GetJiraTicketResponseDto;
 import com.redhat.parodos.examples.ocponboarding.task.dto.jira.GetJiraTicketResponseValue;
-import com.redhat.parodos.examples.utils.RestUtils;
+import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.checker.BaseWorkFlowCheckerTask;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
@@ -74,7 +74,7 @@ public class JiraTicketApprovalWorkFlowCheckerTask extends BaseWorkFlowCheckerTa
 		log.info("Start jiraTicketApprovalWorkFlowCheckerTask...");
 		try {
 			String urlString = jiraServiceBaseUrl + "/rest/servicedeskapi/request/";
-			String issueKey = getRequiredParameterValue(workContext, ISSUE_KEY);
+			String issueKey = getRequiredParameterValue(ISSUE_KEY);
 			log.info("Calling: urlString: {} username: {}", urlString, jiraUsername);
 
 			ResponseEntity<GetJiraTicketResponseDto> result = RestUtils.restExchange(urlString + issueKey, jiraUsername,
@@ -96,7 +96,7 @@ public class JiraTicketApprovalWorkFlowCheckerTask extends BaseWorkFlowCheckerTa
 								.orElseThrow(() -> new MissingParameterException(
 										"cluster token is not provided by approver!"))
 								.toString();
-						addParameter(workContext, CLUSTER_TOKEN, clusterToken);
+						addParameter(CLUSTER_TOKEN, clusterToken);
 						return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 					case DECLINED:
 						log.info("request {} is rejected", responseDto.getIssueKey());

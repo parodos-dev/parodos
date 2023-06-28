@@ -37,10 +37,20 @@ import com.redhat.parodos.sdk.invoker.JSON;
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class ProjectResponseDTO {
 
-	public static final String SERIALIZED_NAME_CREATE_DATE = "createDate";
+	public static final String SERIALIZED_NAME_ACCESS_ROLE = "accessRole";
 
-	@SerializedName(SERIALIZED_NAME_CREATE_DATE)
-	private Date createDate;
+	@SerializedName(SERIALIZED_NAME_ACCESS_ROLE)
+	private String accessRole;
+
+	public static final String SERIALIZED_NAME_CREATED_BY = "createdBy";
+
+	@SerializedName(SERIALIZED_NAME_CREATED_BY)
+	private String createdBy;
+
+	public static final String SERIALIZED_NAME_CREATED_DATE = "createdDate";
+
+	@SerializedName(SERIALIZED_NAME_CREATED_DATE)
+	private Date createdDate;
 
 	public static final String SERIALIZED_NAME_DESCRIPTION = "description";
 
@@ -52,10 +62,15 @@ public class ProjectResponseDTO {
 	@SerializedName(SERIALIZED_NAME_ID)
 	private UUID id;
 
-	public static final String SERIALIZED_NAME_MODIFY_DATE = "modifyDate";
+	public static final String SERIALIZED_NAME_MODIFIED_BY = "modifiedBy";
 
-	@SerializedName(SERIALIZED_NAME_MODIFY_DATE)
-	private Date modifyDate;
+	@SerializedName(SERIALIZED_NAME_MODIFIED_BY)
+	private String modifiedBy;
+
+	public static final String SERIALIZED_NAME_MODIFIED_DATE = "modifiedDate";
+
+	@SerializedName(SERIALIZED_NAME_MODIFIED_DATE)
+	private Date modifiedDate;
 
 	public static final String SERIALIZED_NAME_NAME = "name";
 
@@ -65,24 +80,64 @@ public class ProjectResponseDTO {
 	public ProjectResponseDTO() {
 	}
 
-	public ProjectResponseDTO createDate(Date createDate) {
+	public ProjectResponseDTO accessRole(String accessRole) {
 
-		this.createDate = createDate;
+		this.accessRole = accessRole;
 		return this;
 	}
 
 	/**
-	 * Get createDate
-	 * @return createDate
+	 * Get accessRole
+	 * @return accessRole
 	 **/
 	@javax.annotation.Nullable
 
-	public Date getCreateDate() {
-		return createDate;
+	public String getAccessRole() {
+		return accessRole;
 	}
 
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
+	public void setAccessRole(String accessRole) {
+		this.accessRole = accessRole;
+	}
+
+	public ProjectResponseDTO createdBy(String createdBy) {
+
+		this.createdBy = createdBy;
+		return this;
+	}
+
+	/**
+	 * Get createdBy
+	 * @return createdBy
+	 **/
+	@javax.annotation.Nullable
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public ProjectResponseDTO createdDate(Date createdDate) {
+
+		this.createdDate = createdDate;
+		return this;
+	}
+
+	/**
+	 * Get createdDate
+	 * @return createdDate
+	 **/
+	@javax.annotation.Nullable
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
 	}
 
 	public ProjectResponseDTO description(String description) {
@@ -125,24 +180,44 @@ public class ProjectResponseDTO {
 		this.id = id;
 	}
 
-	public ProjectResponseDTO modifyDate(Date modifyDate) {
+	public ProjectResponseDTO modifiedBy(String modifiedBy) {
 
-		this.modifyDate = modifyDate;
+		this.modifiedBy = modifiedBy;
 		return this;
 	}
 
 	/**
-	 * Get modifyDate
-	 * @return modifyDate
+	 * Get modifiedBy
+	 * @return modifiedBy
 	 **/
 	@javax.annotation.Nullable
 
-	public Date getModifyDate() {
-		return modifyDate;
+	public String getModifiedBy() {
+		return modifiedBy;
 	}
 
-	public void setModifyDate(Date modifyDate) {
-		this.modifyDate = modifyDate;
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+	public ProjectResponseDTO modifiedDate(Date modifiedDate) {
+
+		this.modifiedDate = modifiedDate;
+		return this;
+	}
+
+	/**
+	 * Get modifiedDate
+	 * @return modifiedDate
+	 **/
+	@javax.annotation.Nullable
+
+	public Date getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
 	}
 
 	public ProjectResponseDTO name(String name) {
@@ -174,26 +249,32 @@ public class ProjectResponseDTO {
 			return false;
 		}
 		ProjectResponseDTO projectResponseDTO = (ProjectResponseDTO) o;
-		return Objects.equals(this.createDate, projectResponseDTO.createDate)
+		return Objects.equals(this.accessRole, projectResponseDTO.accessRole)
+				&& Objects.equals(this.createdBy, projectResponseDTO.createdBy)
+				&& Objects.equals(this.createdDate, projectResponseDTO.createdDate)
 				&& Objects.equals(this.description, projectResponseDTO.description)
 				&& Objects.equals(this.id, projectResponseDTO.id)
-				&& Objects.equals(this.modifyDate, projectResponseDTO.modifyDate)
+				&& Objects.equals(this.modifiedBy, projectResponseDTO.modifiedBy)
+				&& Objects.equals(this.modifiedDate, projectResponseDTO.modifiedDate)
 				&& Objects.equals(this.name, projectResponseDTO.name);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(createDate, description, id, modifyDate, name);
+		return Objects.hash(accessRole, createdBy, createdDate, description, id, modifiedBy, modifiedDate, name);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("class ProjectResponseDTO {\n");
-		sb.append("    createDate: ").append(toIndentedString(createDate)).append("\n");
+		sb.append("    accessRole: ").append(toIndentedString(accessRole)).append("\n");
+		sb.append("    createdBy: ").append(toIndentedString(createdBy)).append("\n");
+		sb.append("    createdDate: ").append(toIndentedString(createdDate)).append("\n");
 		sb.append("    description: ").append(toIndentedString(description)).append("\n");
 		sb.append("    id: ").append(toIndentedString(id)).append("\n");
-		sb.append("    modifyDate: ").append(toIndentedString(modifyDate)).append("\n");
+		sb.append("    modifiedBy: ").append(toIndentedString(modifiedBy)).append("\n");
+		sb.append("    modifiedDate: ").append(toIndentedString(modifiedDate)).append("\n");
 		sb.append("    name: ").append(toIndentedString(name)).append("\n");
 		sb.append("}");
 		return sb.toString();
@@ -217,10 +298,13 @@ public class ProjectResponseDTO {
 	static {
 		// a set of all properties/fields (JSON key names)
 		openapiFields = new HashSet<String>();
-		openapiFields.add("createDate");
+		openapiFields.add("accessRole");
+		openapiFields.add("createdBy");
+		openapiFields.add("createdDate");
 		openapiFields.add("description");
 		openapiFields.add("id");
-		openapiFields.add("modifyDate");
+		openapiFields.add("modifiedBy");
+		openapiFields.add("modifiedDate");
 		openapiFields.add("name");
 
 		// a set of required properties/fields (JSON key names)
@@ -253,6 +337,18 @@ public class ProjectResponseDTO {
 						entry.getKey(), jsonObj.toString()));
 			}
 		}
+		if ((jsonObj.get("accessRole") != null && !jsonObj.get("accessRole").isJsonNull())
+				&& !jsonObj.get("accessRole").isJsonPrimitive()) {
+			throw new IllegalArgumentException(String.format(
+					"Expected the field `accessRole` to be a primitive type in the JSON string but got `%s`",
+					jsonObj.get("accessRole").toString()));
+		}
+		if ((jsonObj.get("createdBy") != null && !jsonObj.get("createdBy").isJsonNull())
+				&& !jsonObj.get("createdBy").isJsonPrimitive()) {
+			throw new IllegalArgumentException(String.format(
+					"Expected the field `createdBy` to be a primitive type in the JSON string but got `%s`",
+					jsonObj.get("createdBy").toString()));
+		}
 		if ((jsonObj.get("description") != null && !jsonObj.get("description").isJsonNull())
 				&& !jsonObj.get("description").isJsonPrimitive()) {
 			throw new IllegalArgumentException(String.format(
@@ -263,6 +359,12 @@ public class ProjectResponseDTO {
 			throw new IllegalArgumentException(
 					String.format("Expected the field `id` to be a primitive type in the JSON string but got `%s`",
 							jsonObj.get("id").toString()));
+		}
+		if ((jsonObj.get("modifiedBy") != null && !jsonObj.get("modifiedBy").isJsonNull())
+				&& !jsonObj.get("modifiedBy").isJsonPrimitive()) {
+			throw new IllegalArgumentException(String.format(
+					"Expected the field `modifiedBy` to be a primitive type in the JSON string but got `%s`",
+					jsonObj.get("modifiedBy").toString()));
 		}
 		if ((jsonObj.get("name") != null && !jsonObj.get("name").isJsonNull())
 				&& !jsonObj.get("name").isJsonPrimitive()) {

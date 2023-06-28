@@ -70,8 +70,8 @@ public class OcpAppDeploymentWorkFlowTask extends BaseInfrastructureWorkFlowTask
 	public WorkReport execute(WorkContext workContext) {
 		log.info("Start ocpAppDeploymentWorkFlowTask...");
 		try {
-			String namespace = getRequiredParameterValue(workContext, NAMESPACE);
-			String clusterToken = getRequiredParameterValue(workContext, CLUSTER_TOKEN);
+			String namespace = getRequiredParameterValue(NAMESPACE);
+			String clusterToken = getRequiredParameterValue(CLUSTER_TOKEN);
 
 			Config config = new ConfigBuilder().withMasterUrl(clusterApiUrl).withOauthToken(clusterToken).build();
 
@@ -103,7 +103,7 @@ public class OcpAppDeploymentWorkFlowTask extends BaseInfrastructureWorkFlowTask
 						.endSpec().build();
 				route = client.routes().inNamespace(namespace).resource(route).create();
 
-				addParameter(workContext, APP_LINK, String.format("%s%s", ROUTE_PROTOCOl, route.getSpec().getHost()));
+				addParameter(APP_LINK, String.format("%s%s", ROUTE_PROTOCOl, route.getSpec().getHost()));
 
 				log.info("deployment is successful");
 			}

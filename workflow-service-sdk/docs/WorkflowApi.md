@@ -5,6 +5,7 @@ All URIs are relative to *http://localhost:8080*
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
 | [**execute**](WorkflowApi.md#execute) | **POST** /api/v1/workflows | Executes a workflow |
+| [**getLog**](WorkflowApi.md#getLog) | **GET** /api/v1/workflows/{workFlowExecutionId}/log | Returns workflow execution log |
 | [**getStatus**](WorkflowApi.md#getStatus) | **GET** /api/v1/workflows/{workFlowExecutionId}/status | Returns a workflow status |
 | [**getStatusByProjectId**](WorkflowApi.md#getStatusByProjectId) | **GET** /api/v1/workflows | Returns workflows by project id |
 | [**getWorkflowParameters**](WorkflowApi.md#getWorkflowParameters) | **GET** /api/v1/workflows/{workFlowExecutionId}/context | Returns workflow context parameters |
@@ -13,7 +14,7 @@ All URIs are relative to *http://localhost:8080*
 
 <a name="execute"></a>
 # **execute**
-> WorkFlowResponseDTO execute(workFlowRequestDTO)
+> WorkFlowExecutionResponseDTO execute(workFlowRequestDTO)
 
 Executes a workflow
 
@@ -34,7 +35,7 @@ public class Example {
     WorkflowApi apiInstance = new WorkflowApi(defaultClient);
     WorkFlowRequestDTO workFlowRequestDTO = new WorkFlowRequestDTO(); // WorkFlowRequestDTO | 
     try {
-      WorkFlowResponseDTO result = apiInstance.execute(workFlowRequestDTO);
+      WorkFlowExecutionResponseDTO result = apiInstance.execute(workFlowRequestDTO);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling WorkflowApi#execute");
@@ -55,7 +56,7 @@ public class Example {
 
 ### Return type
 
-[**WorkFlowResponseDTO**](WorkFlowResponseDTO.md)
+[**WorkFlowExecutionResponseDTO**](WorkFlowExecutionResponseDTO.md)
 
 ### Authorization
 
@@ -70,6 +71,74 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **202** | Accepted |  -  |
+| **400** | Bad Request |  -  |
+| **401** | Unauthorized |  -  |
+| **403** | Forbidden |  -  |
+| **404** | Not Found |  -  |
+| **409** | Conflict |  -  |
+
+<a name="getLog"></a>
+# **getLog**
+> String getLog(workFlowExecutionId, taskName)
+
+Returns workflow execution log
+
+### Example
+```java
+// Import classes:
+import com.redhat.parodos.sdk.invoker.ApiClient;
+import com.redhat.parodos.sdk.invoker.ApiException;
+import com.redhat.parodos.sdk.invoker.Configuration;
+import com.redhat.parodos.sdk.invoker.models.*;
+import com.redhat.parodos.sdk.api.WorkflowApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("http://localhost:8080");
+
+    WorkflowApi apiInstance = new WorkflowApi(defaultClient);
+    UUID workFlowExecutionId = UUID.randomUUID(); // UUID | 
+    String taskName = "taskName_example"; // String | 
+    try {
+      String result = apiInstance.getLog(workFlowExecutionId, taskName);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling WorkflowApi#getLog");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **workFlowExecutionId** | **UUID**|  | |
+| **taskName** | **String**|  | [optional] |
+
+### Return type
+
+**String**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: text/plain, */*
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Succeeded |  -  |
+| **304** | Not Modified |  -  |
 | **400** | Bad Request |  -  |
 | **401** | Unauthorized |  -  |
 | **403** | Forbidden |  -  |
@@ -135,6 +204,7 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Succeeded |  -  |
+| **304** | Not Modified |  -  |
 | **400** | Bad Request |  -  |
 | **401** | Unauthorized |  -  |
 | **403** | Forbidden |  -  |
@@ -248,7 +318,7 @@ public class Example {
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **workFlowExecutionId** | **UUID**|  | |
-| **param** | [**List&lt;String&gt;**](String.md)|  | [enum: ID, NAME, PARAMETERS, ARGUMENTS, STATUS, WORKFLOW_OPTIONS, PARENT_WORKFLOW] |
+| **param** | [**List&lt;String&gt;**](String.md)|  | [enum: ID, NAME, PARAMETERS, ARGUMENTS, STATUS, WORKFLOW_OPTIONS, PARENT_WORKFLOW, ADDITIONAL_INFO] |
 
 ### Return type
 

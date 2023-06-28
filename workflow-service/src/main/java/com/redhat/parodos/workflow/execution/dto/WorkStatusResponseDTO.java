@@ -47,6 +47,10 @@ public class WorkStatusResponseDTO {
 
 	private WorkStatus status;
 
+	private String message;
+
+	private String alertMessage;
+
 	@JsonProperty("works")
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private List<WorkStatusResponseDTO> works;

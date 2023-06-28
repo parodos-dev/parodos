@@ -79,7 +79,6 @@ public class PageableObject {
 	 * @return offset
 	 **/
 	@javax.annotation.Nullable
-
 	public Long getOffset() {
 		return offset;
 	}
@@ -99,7 +98,6 @@ public class PageableObject {
 	 * @return pageNumber
 	 **/
 	@javax.annotation.Nullable
-
 	public Integer getPageNumber() {
 		return pageNumber;
 	}
@@ -119,7 +117,6 @@ public class PageableObject {
 	 * @return pageSize
 	 **/
 	@javax.annotation.Nullable
-
 	public Integer getPageSize() {
 		return pageSize;
 	}
@@ -139,7 +136,6 @@ public class PageableObject {
 	 * @return paged
 	 **/
 	@javax.annotation.Nullable
-
 	public Boolean getPaged() {
 		return paged;
 	}
@@ -159,7 +155,6 @@ public class PageableObject {
 	 * @return sort
 	 **/
 	@javax.annotation.Nullable
-
 	public Sort getSort() {
 		return sort;
 	}
@@ -179,7 +174,6 @@ public class PageableObject {
 	 * @return unpaged
 	 **/
 	@javax.annotation.Nullable
-
 	public Boolean getUnpaged() {
 		return unpaged;
 	}

@@ -39,7 +39,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>dev.parodos</groupId>
   <artifactId>notification-service-sdk</artifactId>
-  <version>1.0.12-SNAPSHOT</version>
+  <version>1.0.18-SNAPSHOT</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -55,7 +55,7 @@ Add this dependency to your project's build file:
   }
 
   dependencies {
-     implementation "dev.parodos:notification-service-sdk:1.0.12-SNAPSHOT"
+     implementation "dev.parodos:notification-service-sdk:1.0.18-SNAPSHOT"
   }
 ```
 
@@ -69,7 +69,7 @@ mvn clean package
 
 Then manually install the following JARs:
 
-* `target/notification-service-sdk-1.0.12-SNAPSHOT.jar`
+* `target/notification-service-sdk-1.0.18-SNAPSHOT.jar`
 * `target/lib/*.jar`
 
 ## Getting Started
@@ -113,7 +113,7 @@ All URIs are relative to *http://localhost:8080*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *NotificationMessageApi* | [**create**](docs/NotificationMessageApi.md#create) | **POST** /api/v1/messages | 
-*NotificationRecordApi* | [**countUnreadNotifications**](docs/NotificationRecordApi.md#countUnreadNotifications) | **GET** /api/v1/notifications/count | Return the number of the unread notification records for the user
+*NotificationRecordApi* | [**countUnreadNotifications**](docs/NotificationRecordApi.md#countUnreadNotifications) | **GET** /api/v1/notifications/count | Return the number of the notification records with given state for the user
 *NotificationRecordApi* | [**deleteNotification**](docs/NotificationRecordApi.md#deleteNotification) | **DELETE** /api/v1/notifications/{id} | Delete the specified notification record
 *NotificationRecordApi* | [**getNotifications**](docs/NotificationRecordApi.md#getNotifications) | **GET** /api/v1/notifications | Return a list of notification records for the user
 *NotificationRecordApi* | [**updateNotificationStatusById**](docs/NotificationRecordApi.md#updateNotificationStatusById) | **PUT** /api/v1/notifications/{id} | Update the specified notification record with user operation
@@ -121,19 +121,19 @@ Class | Method | HTTP request | Description
 
 ## Documentation for Models
 
- - [Link](docs/Link.md)
+ - [ErrorMessageDTO](docs/ErrorMessageDTO.md)
  - [NotificationMessageCreateRequestDTO](docs/NotificationMessageCreateRequestDTO.md)
  - [NotificationRecordResponseDTO](docs/NotificationRecordResponseDTO.md)
  - [PageNotificationRecordResponseDTO](docs/PageNotificationRecordResponseDTO.md)
- - [Pageable](docs/Pageable.md)
  - [PageableObject](docs/PageableObject.md)
  - [Sort](docs/Sort.md)
 
 
+<a id="documentation-for-authorization"></a>
 ## Documentation for Authorization
 
-All endpoints do not require authorization.
-Authentication schemes defined for the API:
+Endpoints do not require authorization.
+
 
 ## Recommendation
 

@@ -1,5 +1,6 @@
 package com.redhat.parodos.project.repository;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -38,8 +39,7 @@ class ProjectUserRoleRepositoryTest extends RepositoryTestBase {
 	public void init() {
 		Role role = roleRepository.findByNameIgnoreCase("developer").get();
 		user = entityManager.persistAndFlush(User.builder().username("test-user").build());
-		project = entityManager
-				.persistAndFlush(Project.builder().name("test-project").projectUserRoles(new HashSet<>()).build());
+		project = entityManager.persistAndFlush(createProject(user));
 		createProjectUserRole(user, project, role);
 	}
 
@@ -81,6 +81,13 @@ class ProjectUserRoleRepositoryTest extends RepositoryTestBase {
 				.build();
 		project.getProjectUserRoles().add(projectUserRole);
 		return entityManager.persistAndFlush(projectUserRole);
+	}
+
+	private Project createProject(User user) {
+		Project project = Project.builder().name("test-project").projectUserRoles(new HashSet<>()).build();
+		project.setCreatedDate(new Date());
+		project.setCreatedBy(user.getId());
+		return project;
 	}
 
 }

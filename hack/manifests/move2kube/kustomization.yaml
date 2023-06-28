@@ -1,0 +1,23 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+bases:
+- ../backstage/
+
+resources:
+- namespace.yaml
+- move2kube-deployment.yaml
+- client.yaml
+
+patchesStrategicMerge:
+- parodos-patch.yaml
+
+configMapGenerator:
+- name: move2kube-init-scrips
+  files:
+  - scripts/init.sh
+  - scripts/m2kconfig.yaml
+  - scripts/test_move2kube.sh
+- name: move2kube-keys
+  files:
+  - keys/id_rsa
+  - keys/id_rsa.pub

@@ -39,6 +39,16 @@ import com.redhat.parodos.sdk.invoker.JSON;
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkStatusResponseDTO {
 
+	public static final String SERIALIZED_NAME_ALERT_MESSAGE = "alertMessage";
+
+	@SerializedName(SERIALIZED_NAME_ALERT_MESSAGE)
+	private String alertMessage;
+
+	public static final String SERIALIZED_NAME_MESSAGE = "message";
+
+	@SerializedName(SERIALIZED_NAME_MESSAGE)
+	private String message;
+
 	public static final String SERIALIZED_NAME_NAME = "name";
 
 	@SerializedName(SERIALIZED_NAME_NAME)
@@ -170,6 +180,46 @@ public class WorkStatusResponseDTO {
 	public WorkStatusResponseDTO() {
 	}
 
+	public WorkStatusResponseDTO alertMessage(String alertMessage) {
+
+		this.alertMessage = alertMessage;
+		return this;
+	}
+
+	/**
+	 * Get alertMessage
+	 * @return alertMessage
+	 **/
+	@javax.annotation.Nullable
+
+	public String getAlertMessage() {
+		return alertMessage;
+	}
+
+	public void setAlertMessage(String alertMessage) {
+		this.alertMessage = alertMessage;
+	}
+
+	public WorkStatusResponseDTO message(String message) {
+
+		this.message = message;
+		return this;
+	}
+
+	/**
+	 * Get message
+	 * @return message
+	 **/
+	@javax.annotation.Nullable
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
 	public WorkStatusResponseDTO name(String name) {
 
 		this.name = name;
@@ -267,7 +317,9 @@ public class WorkStatusResponseDTO {
 			return false;
 		}
 		WorkStatusResponseDTO workStatusResponseDTO = (WorkStatusResponseDTO) o;
-		return Objects.equals(this.name, workStatusResponseDTO.name)
+		return Objects.equals(this.alertMessage, workStatusResponseDTO.alertMessage)
+				&& Objects.equals(this.message, workStatusResponseDTO.message)
+				&& Objects.equals(this.name, workStatusResponseDTO.name)
 				&& Objects.equals(this.status, workStatusResponseDTO.status)
 				&& Objects.equals(this.type, workStatusResponseDTO.type)
 				&& Objects.equals(this.works, workStatusResponseDTO.works);
@@ -275,13 +327,15 @@ public class WorkStatusResponseDTO {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(name, status, type, works);
+		return Objects.hash(alertMessage, message, name, status, type, works);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("class WorkStatusResponseDTO {\n");
+		sb.append("    alertMessage: ").append(toIndentedString(alertMessage)).append("\n");
+		sb.append("    message: ").append(toIndentedString(message)).append("\n");
 		sb.append("    name: ").append(toIndentedString(name)).append("\n");
 		sb.append("    status: ").append(toIndentedString(status)).append("\n");
 		sb.append("    type: ").append(toIndentedString(type)).append("\n");
@@ -308,6 +362,8 @@ public class WorkStatusResponseDTO {
 	static {
 		// a set of all properties/fields (JSON key names)
 		openapiFields = new HashSet<String>();
+		openapiFields.add("alertMessage");
+		openapiFields.add("message");
 		openapiFields.add("name");
 		openapiFields.add("status");
 		openapiFields.add("type");
@@ -343,6 +399,18 @@ public class WorkStatusResponseDTO {
 						"The field `%s` in the JSON string is not defined in the `WorkStatusResponseDTO` properties. JSON: %s",
 						entry.getKey(), jsonObj.toString()));
 			}
+		}
+		if ((jsonObj.get("alertMessage") != null && !jsonObj.get("alertMessage").isJsonNull())
+				&& !jsonObj.get("alertMessage").isJsonPrimitive()) {
+			throw new IllegalArgumentException(String.format(
+					"Expected the field `alertMessage` to be a primitive type in the JSON string but got `%s`",
+					jsonObj.get("alertMessage").toString()));
+		}
+		if ((jsonObj.get("message") != null && !jsonObj.get("message").isJsonNull())
+				&& !jsonObj.get("message").isJsonPrimitive()) {
+			throw new IllegalArgumentException(
+					String.format("Expected the field `message` to be a primitive type in the JSON string but got `%s`",
+							jsonObj.get("message").toString()));
 		}
 		if ((jsonObj.get("name") != null && !jsonObj.get("name").isJsonNull())
 				&& !jsonObj.get("name").isJsonPrimitive()) {

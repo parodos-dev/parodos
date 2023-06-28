@@ -4,17 +4,17 @@ All URIs are relative to *http://localhost:8080*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**countUnreadNotifications**](NotificationRecordApi.md#countUnreadNotifications) | **GET** /api/v1/notifications/count | Return the number of the unread notification records for the user |
+| [**countUnreadNotifications**](NotificationRecordApi.md#countUnreadNotifications) | **GET** /api/v1/notifications/count | Return the number of the notification records with given state for the user |
 | [**deleteNotification**](NotificationRecordApi.md#deleteNotification) | **DELETE** /api/v1/notifications/{id} | Delete the specified notification record |
 | [**getNotifications**](NotificationRecordApi.md#getNotifications) | **GET** /api/v1/notifications | Return a list of notification records for the user |
 | [**updateNotificationStatusById**](NotificationRecordApi.md#updateNotificationStatusById) | **PUT** /api/v1/notifications/{id} | Update the specified notification record with user operation |
 
 
-<a name="countUnreadNotifications"></a>
+<a id="countUnreadNotifications"></a>
 # **countUnreadNotifications**
 > Integer countUnreadNotifications(state)
 
-Return the number of the unread notification records for the user
+Return the number of the notification records with given state for the user
 
 ### Example
 ```java
@@ -69,10 +69,11 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Successfully retrieved the amount of notifications |  -  |
+| **400** | Bad Request |  -  |
 | **401** | Unauthorized |  -  |
-| **403** | Forbidden |  -  |
+| **404** | Not Found |  -  |
 
-<a name="deleteNotification"></a>
+<a id="deleteNotification"></a>
 # **deleteNotification**
 > deleteNotification(id)
 
@@ -124,18 +125,19 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: Not defined
+ - **Accept**: */*
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Successfully retrieved the amount of notifications |  -  |
+| **204** | Successfully Deleted |  -  |
+| **400** | Bad Request |  -  |
 | **401** | Unauthorized |  -  |
-| **403** | Forbidden |  -  |
+| **404** | Not Found |  -  |
 
-<a name="getNotifications"></a>
+<a id="getNotifications"></a>
 # **getNotifications**
-> PageNotificationRecordResponseDTO getNotifications(pageable, state, searchTerm)
+> PageNotificationRecordResponseDTO getNotifications(page, size, sort, state, searchTerm)
 
 Return a list of notification records for the user
 
@@ -154,11 +156,13 @@ public class Example {
     defaultClient.setBasePath("http://localhost:8080");
 
     NotificationRecordApi apiInstance = new NotificationRecordApi(defaultClient);
-    Pageable pageable = new HashMap(); // Pageable | 
+    Integer page = 0; // Integer | Zero-based page index (0..N)
+    Integer size = 100; // Integer | The size of the page to be returned
+    List<String> sort = Arrays.asList(); // List<String> | Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
     String state = "ARCHIVED"; // String | 
     String searchTerm = "searchTerm_example"; // String | 
     try {
-      PageNotificationRecordResponseDTO result = apiInstance.getNotifications(pageable, state, searchTerm);
+      PageNotificationRecordResponseDTO result = apiInstance.getNotifications(page, size, sort, state, searchTerm);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling NotificationRecordApi#getNotifications");
@@ -175,7 +179,9 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **pageable** | [**Pageable**](.md)|  | |
+| **page** | **Integer**| Zero-based page index (0..N) | [optional] [default to 0] |
+| **size** | **Integer**| The size of the page to be returned | [optional] [default to 100] |
+| **sort** | [**List&lt;String&gt;**](String.md)| Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported. | [optional] |
 | **state** | **String**|  | [optional] [enum: ARCHIVED, UNREAD] |
 | **searchTerm** | **String**|  | [optional] |
 
@@ -196,10 +202,11 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Successfully retrieved page of notifications |  -  |
+| **400** | Bad Request |  -  |
 | **401** | Unauthorized |  -  |
-| **403** | Forbidden |  -  |
+| **404** | Not Found |  -  |
 
-<a name="updateNotificationStatusById"></a>
+<a id="updateNotificationStatusById"></a>
 # **updateNotificationStatusById**
 > NotificationRecordResponseDTO updateNotificationStatusById(id, operation)
 
@@ -254,12 +261,13 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: */*
+ - **Accept**: application/json, */*
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Succeeded |  -  |
+| **200** | OK |  -  |
+| **400** | Bad Request |  -  |
 | **401** | Unauthorized |  -  |
 | **404** | Not found |  -  |
 

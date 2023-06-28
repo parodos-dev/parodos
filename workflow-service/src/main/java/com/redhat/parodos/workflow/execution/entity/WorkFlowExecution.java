@@ -29,7 +29,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import com.redhat.parodos.common.AbstractEntity;
+import com.redhat.parodos.common.entity.AbstractEntity;
 import com.redhat.parodos.user.entity.User;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflows.work.WorkStatus;
@@ -55,6 +55,8 @@ import lombok.Setter;
 public class WorkFlowExecution extends AbstractEntity {
 
 	private WorkStatus status;
+
+	private String message;
 
 	@Column(updatable = false)
 	private Date startDate;

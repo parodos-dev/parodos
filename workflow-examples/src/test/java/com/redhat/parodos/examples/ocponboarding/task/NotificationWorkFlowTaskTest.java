@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.redhat.parodos.examples.base.BaseInfrastructureWorkFlowTaskTest;
 import com.redhat.parodos.examples.ocponboarding.task.dto.notification.NotificationRequest;
-import com.redhat.parodos.examples.utils.RestUtils;
+import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
@@ -52,12 +52,10 @@ public class NotificationWorkFlowTaskTest extends BaseInfrastructureWorkFlowTask
 		this.notificationWorkFlowTask = spy((NotificationWorkFlowTask) getConcretePersonImplementation());
 		try {
 			doReturn(JIRA_TICKET_URL_WORKFLOW_TASK_PARAMETER_VALUE_TEST).when(this.notificationWorkFlowTask)
-					.getRequiredParameterValue(any(WorkContext.class),
-							eq(JIRA_TICKET_URL_WORKFLOW_TASK_PARAMETER_NAME_TEST));
+					.getRequiredParameterValue(eq(JIRA_TICKET_URL_WORKFLOW_TASK_PARAMETER_NAME_TEST));
 
 			doReturn(OCP_APP_LINK_WORKFLOW_TASK_PARAMETER_VALUE_TEST).when(this.notificationWorkFlowTask)
-					.getRequiredParameterValue(any(WorkContext.class),
-							eq(OCP_APP_LINK_WORKFLOW_TASK_PARAMETER_NAME_TEST));
+					.getRequiredParameterValue(eq(OCP_APP_LINK_WORKFLOW_TASK_PARAMETER_NAME_TEST));
 		}
 		catch (MissingParameterException e) {
 			throw new RuntimeException(e);

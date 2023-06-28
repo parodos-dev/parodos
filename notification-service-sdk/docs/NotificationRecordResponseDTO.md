@@ -12,7 +12,6 @@
 |**folder** | **String** |  |  [optional] |
 |**fromuser** | **String** |  |  [optional] |
 |**id** | **UUID** |  |  [optional] |
-|**links** | [**List&lt;Link&gt;**](Link.md) |  |  [optional] |
 |**messageType** | **String** |  |  [optional] |
 |**read** | **Boolean** |  |  [optional] |
 |**subject** | **String** |  |  [optional] |

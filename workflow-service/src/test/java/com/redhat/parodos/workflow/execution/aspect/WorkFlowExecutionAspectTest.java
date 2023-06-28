@@ -3,6 +3,7 @@ package com.redhat.parodos.workflow.execution.aspect;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 import com.redhat.parodos.user.entity.User;
 import com.redhat.parodos.workflow.WorkFlowDelegate;
 import com.redhat.parodos.workflow.definition.entity.WorkFlowCheckerMappingDefinition;
@@ -16,6 +17,7 @@ import com.redhat.parodos.workflow.execution.continuation.WorkFlowContinuationSe
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.scheduler.WorkFlowSchedulerServiceImpl;
+import com.redhat.parodos.workflow.execution.service.WorkFlowExecutor.ExecutionContext;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
@@ -30,6 +32,7 @@ import org.mockito.Mock;
 
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -123,7 +126,7 @@ class WorkFlowExecutionAspectTest {
 		when(workFlowRepository.findFirstByWorkFlowDefinitionIdAndMainWorkFlowExecution(any(), any()))
 				.thenReturn(workFlowExecution);
 		when(workFlowRepository.findById(any())).thenReturn(Optional.of(workFlowExecution));
-		doNothing().when(workFlowContinuationService).continueWorkFlow(any(), any(), any(), any(), any(), any());
+		doNothing().when(workFlowContinuationService).continueWorkFlow(any(ExecutionContext.class));
 		// when
 		WorkReport workReport = this.workFlowExecutionAspect.executeAroundAdvice(proceedingJoinPoint, workContext);
 
@@ -132,8 +135,33 @@ class WorkFlowExecutionAspectTest {
 		assertEquals(workReport.getStatus().toString(), COMPLETED);
 		assertEquals(workReport.getWorkContext().get(WORKFLOW_DEFINITION_NAME), TEST_WORK_FLOW);
 		assertEquals(workReport.getWorkContext().get(PROJECT_ID), projectID);
+		assertNull(workReport.getError());
 		verify(this.workFlowSchedulerService, times(1)).stop(any(), any(), any());
 		verify(this.workFlowService, times(1)).updateWorkFlow(argThat(w -> w.getStatus().toString().equals(COMPLETED)));
+	}
+
+	@Test
+	void ExecuteAroundAdviceWithInProgressWorkFlowTestWithoutWorkFlowDefinition() {
+		// given
+		WorkContext workContext = new WorkContext();
+		when(this.workFlowDefinitionRepository.findFirstByName(any())).thenReturn(null);
+		ProceedingJoinPoint proceedingJoinPoint = mock(ProceedingJoinPoint.class);
+		WorkFlow workFlow = mock(WorkFlow.class);
+		when(proceedingJoinPoint.getTarget()).thenReturn(workFlow);
+		when(workFlow.getName()).thenReturn(TEST_WORK_FLOW);
+
+		// when
+		WorkReport workReport = this.workFlowExecutionAspect.executeAroundAdvice(proceedingJoinPoint, workContext);
+
+		// then
+		assertNotNull(workReport);
+		assertEquals(workReport.getStatus().toString(), FAILED);
+		assertNotNull(workReport.getError());
+		assertThat(workReport.getError()).isInstanceOf(ResourceNotFoundException.class);
+		// To validate that is workflow definition with type Name and the correct name
+		assertThat(workReport.getError().getMessage())
+				.contains("Workflow definition with Name: testWorkFlow not found");
+		verify(this.workFlowDefinitionRepository, times(1)).findFirstByName(TEST_WORK_FLOW);
 	}
 
 	@Test

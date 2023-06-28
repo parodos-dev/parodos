@@ -3,17 +3,18 @@ package com.redhat.parodos.workflow.execution.service;
 import java.util.UUID;
 
 import com.redhat.parodos.workflows.work.WorkContext;
-import com.redhat.parodos.workflows.work.WorkReport;
+import lombok.Builder;
 
 import org.springframework.scheduling.annotation.Async;
 
 public interface WorkFlowExecutor {
 
 	@Async
-	void executeAsync(UUID projectId, UUID userId, String workflowName, WorkContext workContext, UUID executionId,
-			String rollbackWorkflowName);
+	void execute(ExecutionContext context);
 
-	WorkReport execute(UUID projectId, UUID userId, String workflowName, WorkContext workContext, UUID executionId,
-			String rollbackWorkflowName);
+	@Builder
+	record ExecutionContext(UUID projectId, UUID userId, String workFlowName, WorkContext workContext, UUID executionId,
+			String rollbackWorkFlowName) {
+	}
 
 }

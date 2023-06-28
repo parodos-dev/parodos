@@ -202,6 +202,10 @@ run_simple_flow() {
                   {
                     "key": "url",
                     "value": "http://localhost:8080/actuator/health"
+                  },
+                  {
+                    "key": "method",
+                    "value": "get"
                   }
               ]
           },

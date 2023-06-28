@@ -23,7 +23,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.TypeAdapter;
@@ -65,11 +64,6 @@ public class NotificationRecordResponseDTO {
 	@SerializedName(SERIALIZED_NAME_ID)
 	private UUID id;
 
-	public static final String SERIALIZED_NAME_LINKS = "links";
-
-	@SerializedName(SERIALIZED_NAME_LINKS)
-	private List<Link> links = new ArrayList<>();
-
 	public static final String SERIALIZED_NAME_MESSAGE_TYPE = "messageType";
 
 	@SerializedName(SERIALIZED_NAME_MESSAGE_TYPE)
@@ -88,7 +82,7 @@ public class NotificationRecordResponseDTO {
 	public static final String SERIALIZED_NAME_TAGS = "tags";
 
 	@SerializedName(SERIALIZED_NAME_TAGS)
-	private List<String> tags = new ArrayList<>();
+	private List<String> tags;
 
 	public NotificationRecordResponseDTO() {
 	}
@@ -104,7 +98,6 @@ public class NotificationRecordResponseDTO {
 	 * @return body
 	 **/
 	@javax.annotation.Nullable
-
 	public String getBody() {
 		return body;
 	}
@@ -124,7 +117,6 @@ public class NotificationRecordResponseDTO {
 	 * @return createdOn
 	 **/
 	@javax.annotation.Nullable
-
 	public Date getCreatedOn() {
 		return createdOn;
 	}
@@ -144,7 +136,6 @@ public class NotificationRecordResponseDTO {
 	 * @return folder
 	 **/
 	@javax.annotation.Nullable
-
 	public String getFolder() {
 		return folder;
 	}
@@ -164,7 +155,6 @@ public class NotificationRecordResponseDTO {
 	 * @return fromuser
 	 **/
 	@javax.annotation.Nullable
-
 	public String getFromuser() {
 		return fromuser;
 	}
@@ -184,41 +174,12 @@ public class NotificationRecordResponseDTO {
 	 * @return id
 	 **/
 	@javax.annotation.Nullable
-
 	public UUID getId() {
 		return id;
 	}
 
 	public void setId(UUID id) {
 		this.id = id;
-	}
-
-	public NotificationRecordResponseDTO links(List<Link> links) {
-
-		this.links = links;
-		return this;
-	}
-
-	public NotificationRecordResponseDTO addLinksItem(Link linksItem) {
-		if (this.links == null) {
-			this.links = new ArrayList<>();
-		}
-		this.links.add(linksItem);
-		return this;
-	}
-
-	/**
-	 * Get links
-	 * @return links
-	 **/
-	@javax.annotation.Nullable
-
-	public List<Link> getLinks() {
-		return links;
-	}
-
-	public void setLinks(List<Link> links) {
-		this.links = links;
 	}
 
 	public NotificationRecordResponseDTO messageType(String messageType) {
@@ -232,7 +193,6 @@ public class NotificationRecordResponseDTO {
 	 * @return messageType
 	 **/
 	@javax.annotation.Nullable
-
 	public String getMessageType() {
 		return messageType;
 	}
@@ -252,7 +212,6 @@ public class NotificationRecordResponseDTO {
 	 * @return read
 	 **/
 	@javax.annotation.Nullable
-
 	public Boolean getRead() {
 		return read;
 	}
@@ -272,7 +231,6 @@ public class NotificationRecordResponseDTO {
 	 * @return subject
 	 **/
 	@javax.annotation.Nullable
-
 	public String getSubject() {
 		return subject;
 	}
@@ -300,7 +258,6 @@ public class NotificationRecordResponseDTO {
 	 * @return tags
 	 **/
 	@javax.annotation.Nullable
-
 	public List<String> getTags() {
 		return tags;
 	}
@@ -323,7 +280,6 @@ public class NotificationRecordResponseDTO {
 				&& Objects.equals(this.folder, notificationRecordResponseDTO.folder)
 				&& Objects.equals(this.fromuser, notificationRecordResponseDTO.fromuser)
 				&& Objects.equals(this.id, notificationRecordResponseDTO.id)
-				&& Objects.equals(this.links, notificationRecordResponseDTO.links)
 				&& Objects.equals(this.messageType, notificationRecordResponseDTO.messageType)
 				&& Objects.equals(this.read, notificationRecordResponseDTO.read)
 				&& Objects.equals(this.subject, notificationRecordResponseDTO.subject)
@@ -332,7 +288,7 @@ public class NotificationRecordResponseDTO {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(body, createdOn, folder, fromuser, id, links, messageType, read, subject, tags);
+		return Objects.hash(body, createdOn, folder, fromuser, id, messageType, read, subject, tags);
 	}
 
 	@Override
@@ -344,7 +300,6 @@ public class NotificationRecordResponseDTO {
 		sb.append("    folder: ").append(toIndentedString(folder)).append("\n");
 		sb.append("    fromuser: ").append(toIndentedString(fromuser)).append("\n");
 		sb.append("    id: ").append(toIndentedString(id)).append("\n");
-		sb.append("    links: ").append(toIndentedString(links)).append("\n");
 		sb.append("    messageType: ").append(toIndentedString(messageType)).append("\n");
 		sb.append("    read: ").append(toIndentedString(read)).append("\n");
 		sb.append("    subject: ").append(toIndentedString(subject)).append("\n");
@@ -376,7 +331,6 @@ public class NotificationRecordResponseDTO {
 		openapiFields.add("folder");
 		openapiFields.add("fromuser");
 		openapiFields.add("id");
-		openapiFields.add("links");
 		openapiFields.add("messageType");
 		openapiFields.add("read");
 		openapiFields.add("subject");
@@ -439,23 +393,6 @@ public class NotificationRecordResponseDTO {
 			throw new IllegalArgumentException(
 					String.format("Expected the field `id` to be a primitive type in the JSON string but got `%s`",
 							jsonObj.get("id").toString()));
-		}
-		if (jsonObj.get("links") != null && !jsonObj.get("links").isJsonNull()) {
-			JsonArray jsonArraylinks = jsonObj.getAsJsonArray("links");
-			if (jsonArraylinks != null) {
-				// ensure the json data is an array
-				if (!jsonObj.get("links").isJsonArray()) {
-					throw new IllegalArgumentException(
-							String.format("Expected the field `links` to be an array in the JSON string but got `%s`",
-									jsonObj.get("links").toString()));
-				}
-
-				// validate the optional field `links` (array)
-				for (int i = 0; i < jsonArraylinks.size(); i++) {
-					Link.validateJsonObject(jsonArraylinks.get(i).getAsJsonObject());
-				}
-				;
-			}
 		}
 		if ((jsonObj.get("messageType") != null && !jsonObj.get("messageType").isJsonNull())
 				&& !jsonObj.get("messageType").isJsonPrimitive()) {

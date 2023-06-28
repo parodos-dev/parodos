@@ -25,10 +25,14 @@ import com.redhat.parodos.examples.ocponboarding.task.JiraTicketCreationWorkFlow
 import com.redhat.parodos.examples.ocponboarding.task.JiraTicketEmailNotificationWorkFlowTask;
 import com.redhat.parodos.examples.ocponboarding.task.NotificationWorkFlowTask;
 import com.redhat.parodos.examples.ocponboarding.task.OcpAppDeploymentWorkFlowTask;
+import com.redhat.parodos.examples.ocponboarding.task.assessment.OnboardingOcpAssessmentTask;
+import com.redhat.parodos.workflow.annotation.Assessment;
 import com.redhat.parodos.workflow.annotation.Checker;
 import com.redhat.parodos.workflow.annotation.Escalation;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
 import com.redhat.parodos.workflow.annotation.Parameter;
+import com.redhat.parodos.workflow.consts.WorkFlowConstants;
+import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
@@ -37,61 +41,83 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
+@Profile("local")
 public class OcpOnboardingWorkFlowConfiguration {
 
-	// // Assessment workflow
-	// @Bean
-	// WorkFlowOption onboardingOcpOption() {
-	// return new WorkFlowOption.Builder("ocpOnboarding", "ocpOnboardingWorkFlow")
-	// .addToDetails("this is for the app to deploy on OCP").displayName("Onboarding to
-	// OCP")
-	// .setDescription("this is for the app to deploy on OCP").build();
-	// }
-	//
-	// @Bean
-	// WorkFlowOption badRepoOption() {
-	// return new WorkFlowOption.Builder("badRepoOption",
-	// "simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
-	// .addToDetails("Container Fundamentals Training Required").displayName("Training
-	// Required")
-	// .setDescription("Container Fundamentals Training Required").build();
-	// }
-	//
-	// @Bean
-	// WorkFlowOption notSupportOption() {
-	// return new WorkFlowOption.Builder("notSupportOption",
-	// "simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
-	// .addToDetails("Non-Supported Workflow Steps").displayName("Not Supported")
-	// .setDescription("Non-Supported Workflow Steps").build();
-	// }
-	//
-	// // An AssessmentTask returns one or more WorkFlowOption wrapped in a
-	// WorkflowOptions
-	// @Bean
-	// OnboardingOcpAssessmentTask onboardingAssessmentTask(
-	// @Qualifier("onboardingOcpOption") WorkFlowOption onboardingOcpOption,
-	// @Qualifier("badRepoOption") WorkFlowOption badRepoOption,
-	// @Qualifier("notSupportOption") WorkFlowOption notSupportOption) {
-	// return new OnboardingOcpAssessmentTask(List.of(onboardingOcpOption, badRepoOption,
-	// notSupportOption));
-	// }
-	//
-	// // A Workflow designed to execute and return WorkflowOption(s) that can be executed
-	// // next. In this case there is only one.
-	// @Bean(name = "onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
-	// @Assessment
-	// WorkFlow assessmentWorkFlow(
-	// @Qualifier("onboardingAssessmentTask") OnboardingOcpAssessmentTask
-	// onboardingAssessmentTask) {
-//		// @formatter:off
-//        return SequentialFlow.Builder.aNewSequentialFlow()
-//                .named("onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
-//                .execute(onboardingAssessmentTask)
-//                .build();
-//        // @formatter:on
-	// }
+	// Assessment workflow
+	@Bean
+	WorkFlowOption onboardingOcpOption() {
+		return new WorkFlowOption.Builder("ocpOnboarding", "ocpOnboardingWorkFlow")
+				.addToDetails("this is for the app to deploy on OCP").displayName("Onboarding to OCP")
+				.setDescription("this is for the app to deploy on OCP").build();
+	}
+
+	@Bean
+	WorkFlowOption move2kube() {
+		return new WorkFlowOption.Builder("move2kube", "move2KubeWorkFlow_INFRASTRUCTURE_WORKFLOW")
+				.addToDetails("Transform the application into a Kubernetes application.").displayName("move2kube")
+				.setDescription("Transform application using move2kube").build();
+	}
+
+	@Bean
+	WorkFlowOption badRepoOption() {
+		return new WorkFlowOption.Builder("badRepoOption",
+				"simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+						.addToDetails("Container Fundamentals Training Required").displayName("Training Required")
+						.setDescription("Container Fundamentals Training Required").build();
+	}
+
+	@Bean
+	WorkFlowOption notSupportOption() {
+		return new WorkFlowOption.Builder("notSupportOption",
+				"simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+						.addToDetails("Non-Supported Workflow Steps").displayName("Not Supported")
+						.setDescription("Non-Supported Workflow Steps").build();
+	}
+
+	@Bean
+	WorkFlowOption analyzeOption() {
+		return new WorkFlowOption.Builder("analyzeOption", "AnalyzeApplicationAssessment")
+				.addToDetails("Analyze an application's source code before migrating it."
+						+ " Produces a containerization report by MTA")
+				.displayName("Migration Analysis").setDescription("Migration Analysis step").build();
+	}
+
+	@Bean
+	WorkFlowOption alertMessageOption() {
+		return new WorkFlowOption.Builder("alert message option", "failedWithAlertMessageWorkFlow")
+				.addToDetails("this is to show alert in workflow").displayName("workflow with alert message")
+				.setDescription("this is to show alert in workflow").build();
+	}
+
+	// An AssessmentTask returns one or more WorkFlowOption wrapped in a WorkflowOptions
+	@Bean
+	OnboardingOcpAssessmentTask onboardingAssessmentTask(
+			@Qualifier("onboardingOcpOption") WorkFlowOption onboardingOcpOption,
+			@Qualifier("badRepoOption") WorkFlowOption badRepoOption,
+			@Qualifier("notSupportOption") WorkFlowOption notSupportOption,
+			@Qualifier("move2kube") WorkFlowOption move2kube, @Qualifier("analyzeOption") WorkFlowOption analyzeOption,
+			@Qualifier("alertMessageOption") WorkFlowOption alertMessageOption) {
+		return new OnboardingOcpAssessmentTask(List.of(onboardingOcpOption, badRepoOption, notSupportOption, move2kube,
+				analyzeOption, alertMessageOption));
+	}
+
+	// A Workflow designed to execute and return WorkflowOption(s) that can be executed
+	// next. In this case there is only one.
+	@Bean(name = "onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
+	@Assessment
+	WorkFlow assessmentWorkFlow(
+			@Qualifier("onboardingAssessmentTask") OnboardingOcpAssessmentTask onboardingAssessmentTask) {
+		// @formatter:off
+        return SequentialFlow.Builder.aNewSequentialFlow()
+                .named("onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
+                .execute(onboardingAssessmentTask)
+                .build();
+        // @formatter:on
+	}
 
 	// WORKFLOW A - Sequential Flow:
 	// @formatter:off

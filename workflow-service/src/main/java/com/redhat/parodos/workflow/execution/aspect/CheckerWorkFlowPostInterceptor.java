@@ -9,6 +9,7 @@ import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.execution.continuation.WorkFlowContinuationServiceImpl;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.scheduler.WorkFlowSchedulerServiceImpl;
+import com.redhat.parodos.workflow.execution.service.WorkFlowExecutor.ExecutionContext;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -104,11 +105,15 @@ public class CheckerWorkFlowPostInterceptor implements WorkFlowPostInterceptor {
 		 * restart main workflow execution with same execution Id when there is no other
 		 * active checkers
 		 */
-		if (workFlowService.findRunningChecker(mainWorkFlowExecution).isEmpty())
-			workFlowContinuationServiceImpl.continueWorkFlow(projectId, userId, mainWorkFlowName, workContext,
-					mainWorkFlowExecution.getId(),
-					Optional.ofNullable(mainWorkFlowExecution.getWorkFlowDefinition().getRollbackWorkFlowDefinition())
-							.map(WorkFlowDefinition::getName).orElse(null));
+		if (workFlowService.findRunningChecker(mainWorkFlowExecution).isEmpty()) {
+			workFlowContinuationServiceImpl.continueWorkFlow(ExecutionContext.builder().projectId(projectId)
+					.userId(userId).workFlowName(mainWorkFlowName).workContext(workContext)
+					.executionId(mainWorkFlowExecution.getId())
+					.rollbackWorkFlowName(Optional
+							.ofNullable(mainWorkFlowExecution.getWorkFlowDefinition().getRollbackWorkFlowDefinition())
+							.map(WorkFlowDefinition::getName).orElse(null))
+					.build());
+		}
 	}
 
 }

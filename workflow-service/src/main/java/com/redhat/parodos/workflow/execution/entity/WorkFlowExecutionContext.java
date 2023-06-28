@@ -21,7 +21,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-import com.redhat.parodos.common.AbstractEntity;
+import com.redhat.parodos.common.entity.AbstractEntity;
 import com.redhat.parodos.workflow.execution.entity.converter.WorkContextConverter;
 import com.redhat.parodos.workflows.work.WorkContext;
 import lombok.AllArgsConstructor;

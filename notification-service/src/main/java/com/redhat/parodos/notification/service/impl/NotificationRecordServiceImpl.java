@@ -25,6 +25,7 @@ import com.redhat.parodos.notification.enums.SearchCriteria;
 import com.redhat.parodos.notification.enums.State;
 import com.redhat.parodos.notification.exceptions.NotificationRecordNotFoundException;
 import com.redhat.parodos.notification.exceptions.UnsupportedStateException;
+import com.redhat.parodos.notification.exceptions.UsernameNotFoundException;
 import com.redhat.parodos.notification.jpa.entity.NotificationMessage;
 import com.redhat.parodos.notification.jpa.entity.NotificationRecord;
 import com.redhat.parodos.notification.jpa.entity.NotificationUser;
@@ -33,13 +34,11 @@ import com.redhat.parodos.notification.jpa.repository.NotificationUserRepository
 import com.redhat.parodos.notification.service.NotificationRecordService;
 import com.redhat.parodos.notification.util.SearchUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpStatus;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 /**
  * @author Richard Wang (Github: RichardW98)
@@ -136,7 +135,7 @@ public class NotificationRecordServiceImpl implements NotificationRecordService 
 		Optional<NotificationUser> notificationsUser = this.notificationUserRepository.findByUsername(username);
 		if (notificationsUser.isEmpty()) {
 			log.error("Unable to find the username:{}", username);
-			throw new ResponseStatusException(HttpStatus.SC_NOT_FOUND, "Username not found: " + username, null);
+			throw new UsernameNotFoundException(username);
 		}
 		return notificationsUser.get();
 	}
@@ -156,8 +155,7 @@ public class NotificationRecordServiceImpl implements NotificationRecordService 
 	private Optional<NotificationRecord> findRecordById(UUID id) {
 		Optional<NotificationRecord> notificationsRecordOptional = this.notificationRecordRepository.findById(id);
 		if (notificationsRecordOptional.isEmpty()) {
-			throw new NotificationRecordNotFoundException(
-					String.format("Could not find NotificationRecord for id = %s", id));
+			throw new NotificationRecordNotFoundException(id);
 		}
 		return notificationsRecordOptional;
 	}

@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.redhat.parodos.examples.ocponboarding.task.dto.email.MessageRequestDTO;
-import com.redhat.parodos.examples.utils.RestUtils;
+import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
@@ -69,7 +69,7 @@ public class JiraTicketApprovalEscalationWorkFlowTask extends BaseInfrastructure
 		// jira ticket url to extract from workContext
 		String jiraTicketUrl;
 		try {
-			jiraTicketUrl = getRequiredParameterValue(workContext, ISSUE_LINK);
+			jiraTicketUrl = getRequiredParameterValue(ISSUE_LINK);
 			log.info("Jira ticket url is: {}", jiraTicketUrl);
 		}
 		catch (MissingParameterException e) {

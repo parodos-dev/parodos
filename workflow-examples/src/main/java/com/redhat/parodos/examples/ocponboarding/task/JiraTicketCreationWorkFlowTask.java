@@ -21,7 +21,7 @@ import java.util.Objects;
 import com.redhat.parodos.examples.ocponboarding.task.dto.jira.CreateJiraTicketRequestDto;
 import com.redhat.parodos.examples.ocponboarding.task.dto.jira.CreateJiraTicketResponseDto;
 import com.redhat.parodos.examples.ocponboarding.task.dto.jira.RequestFieldValues;
-import com.redhat.parodos.examples.utils.RestUtils;
+import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
@@ -70,13 +70,13 @@ public class JiraTicketCreationWorkFlowTask extends BaseInfrastructureWorkFlowTa
 	 * Executed by the InfrastructureTask engine as part of the Workflow
 	 */
 	public WorkReport execute(WorkContext workContext) {
-		log.info("Start jiraTicketCreationWorkFlowTask...");
+		taskLogger.logInfoWithSlf4j("Start {}...", "jiraTicketCreationWorkFlowTask");
 		try {
 			String urlString = jiraServiceBaseUrl + "/rest/servicedeskapi/request";
 			String serviceDeskId = "1";
 			String requestTypeId = "35";
 			String projectId = getProjectId(workContext).toString();
-			String namespace = getOptionalParameterValue(workContext, NAMESPACE, "demo");
+			String namespace = getOptionalParameterValue(NAMESPACE, "demo");
 			log.info("Calling: urlString: {} username: {}", urlString, jiraUsername);
 
 			CreateJiraTicketRequestDto request = CreateJiraTicketRequestDto.builder().serviceDeskId(serviceDeskId)
@@ -91,16 +91,17 @@ public class JiraTicketCreationWorkFlowTask extends BaseInfrastructureWorkFlowTa
 					jiraUsername, jiraPassword, CreateJiraTicketResponseDto.class);
 
 			if (response.getStatusCode().is2xxSuccessful()) {
-				log.info("Rest call completed: {}", Objects.requireNonNull(response.getBody()).getIssueId());
-				addParameter(workContext, ISSUE_KEY, Objects.requireNonNull(response.getBody()).getIssueKey());
-				addParameter(workContext, ISSUE_LINK,
-						Objects.requireNonNull(response.getBody()).getLinks().get(WEB_LINK));
+				taskLogger.logInfoWithSlf4j("Rest call completed! jira ticket is created with id: {}",
+						Objects.requireNonNull(response.getBody()).getIssueId());
+				addParameter(ISSUE_KEY, Objects.requireNonNull(response.getBody()).getIssueKey());
+				addParameter(ISSUE_LINK, Objects.requireNonNull(response.getBody()).getLinks().get(WEB_LINK));
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 			}
 			log.error("Call to the API was not successful. Response: {}", response.getStatusCode());
 		}
 		catch (Exception e) {
 			log.error("There was an issue with the REST call: {}", e.getMessage());
+			taskLogger.logError("jiraTicketCreationWorkFlowTask is Failed");
 		}
 		return new DefaultWorkReport(WorkStatus.FAILED, workContext);
 	}

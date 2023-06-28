@@ -3,9 +3,10 @@ package com.redhat.parodos.tasks.notification;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
+import com.redhat.parodos.infrastructure.Notifier;
 import com.redhat.parodos.notification.sdk.api.ApiException;
-import com.redhat.parodos.notification.sdk.api.NotificationMessageApi;
 import com.redhat.parodos.notification.sdk.model.NotificationMessageCreateRequestDTO;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
@@ -24,7 +25,7 @@ import static org.mockito.Mockito.verify;
 
 public class NotificationWorkFlowTaskTest {
 
-	private static NotificationMessageApi apiInstanceMock;
+	private Notifier mockNotifier;
 
 	private static NotificationWorkFlowTask underTest;
 
@@ -32,8 +33,8 @@ public class NotificationWorkFlowTaskTest {
 
 	@Before
 	public void setUp() {
-		apiInstanceMock = mock(NotificationMessageApi.class);
-		underTest = new NotificationWorkFlowTask("http://localhost:8080", apiInstanceMock);
+		mockNotifier = mock(Notifier.class);
+		underTest = new NotificationWorkFlowTask(mockNotifier);
 		underTest.setBeanName("notificationWorkFlowTask");
 		ctx = new WorkContext();
 	}
@@ -45,11 +46,11 @@ public class NotificationWorkFlowTaskTest {
 				"test-subject", Arrays.asList("test-user-1", "test-user-2"),
 				Arrays.asList("test-group-1", "test-group-2"));
 		putParamsToCtx(dto, ctx);
-
+		underTest.preExecute(ctx);
 		WorkReport result = underTest.execute(ctx);
 
 		assertEquals(WorkStatus.COMPLETED, result.getStatus());
-		verify(apiInstanceMock, times(1)).create(dto);
+		verify(mockNotifier, times(1)).trySend(dto);
 	}
 
 	@Test
@@ -60,13 +61,13 @@ public class NotificationWorkFlowTaskTest {
 				Arrays.asList("test-group-1", "test-group-2"));
 		putParamsToCtx(dto, ctx);
 
-		doThrow(ApiException.class).when(apiInstanceMock).create(dto);
-
+		doThrow(ApiException.class).when(mockNotifier).trySend(dto);
+		underTest.preExecute(ctx);
 		WorkReport result = underTest.execute(ctx);
 
 		assertEquals(WorkStatus.FAILED, result.getStatus());
 		assertEquals(ApiException.class, result.getError().getClass());
-		verify(apiInstanceMock, times(1)).create(dto);
+		verify(mockNotifier, times(1)).trySend(dto);
 	}
 
 	@Test
@@ -76,12 +77,12 @@ public class NotificationWorkFlowTaskTest {
 				"test-subject", Arrays.asList("test-user-1", "test-user-2"),
 				Arrays.asList("test-group-1", "test-group-2"));
 		putParamsToCtx(dto, ctx);
-
+		underTest.preExecute(ctx);
 		WorkReport result = underTest.execute(ctx);
 
 		assertEquals(WorkStatus.FAILED, result.getStatus());
 		assertEquals(MissingParameterException.class, result.getError().getClass());
-		verify(apiInstanceMock, times(0)).create(dto);
+		verify(mockNotifier, times(0)).trySend(dto);
 	}
 
 	@Test
@@ -91,12 +92,12 @@ public class NotificationWorkFlowTaskTest {
 				"test-subject", Arrays.asList("test-user-1", "test-user-2"),
 				Arrays.asList("test-group-1", "test-group-2"));
 		putParamsToCtx(dto, ctx);
-
+		underTest.preExecute(ctx);
 		WorkReport result = underTest.execute(ctx);
 
 		assertEquals(WorkStatus.FAILED, result.getStatus());
 		assertEquals(MissingParameterException.class, result.getError().getClass());
-		verify(apiInstanceMock, times(0)).create(dto);
+		verify(mockNotifier, times(0)).trySend(dto);
 	}
 
 	@Test
@@ -105,12 +106,12 @@ public class NotificationWorkFlowTaskTest {
 		NotificationMessageCreateRequestDTO dto = buildNotificationMessageCreateRequestDTO("test-type", "test-body",
 				null, Arrays.asList("test-user-1", "test-user-2"), Arrays.asList("test-group-1", "test-group-2"));
 		putParamsToCtx(dto, ctx);
-
+		underTest.preExecute(ctx);
 		WorkReport result = underTest.execute(ctx);
 
 		assertEquals(WorkStatus.FAILED, result.getStatus());
 		assertEquals(MissingParameterException.class, result.getError().getClass());
-		verify(apiInstanceMock, times(0)).create(dto);
+		verify(mockNotifier, times(0)).trySend(dto);
 	}
 
 	@Test
@@ -119,11 +120,11 @@ public class NotificationWorkFlowTaskTest {
 		NotificationMessageCreateRequestDTO dto = buildNotificationMessageCreateRequestDTO("test-type", "test-body",
 				"test-subject", null, Arrays.asList("test-group-1", "test-group-2"));
 		putParamsToCtx(dto, ctx);
-
+		underTest.preExecute(ctx);
 		WorkReport result = underTest.execute(ctx);
 
 		assertEquals(WorkStatus.COMPLETED, result.getStatus());
-		verify(apiInstanceMock, times(1)).create(dto);
+		verify(mockNotifier, times(1)).trySend(dto);
 	}
 
 	@Test
@@ -132,11 +133,11 @@ public class NotificationWorkFlowTaskTest {
 		NotificationMessageCreateRequestDTO dto = buildNotificationMessageCreateRequestDTO("test-type", "test-body",
 				"test-subject", Arrays.asList("test-user-1", "test-user-2"), null);
 		putParamsToCtx(dto, ctx);
-
+		underTest.preExecute(ctx);
 		WorkReport result = underTest.execute(ctx);
 
 		assertEquals(WorkStatus.COMPLETED, result.getStatus());
-		verify(apiInstanceMock, times(1)).create(dto);
+		verify(mockNotifier, times(1)).trySend(dto);
 	}
 
 	@Test
@@ -145,12 +146,12 @@ public class NotificationWorkFlowTaskTest {
 		NotificationMessageCreateRequestDTO dto = buildNotificationMessageCreateRequestDTO("test-type", "test-body",
 				"test-subject", null, null);
 		putParamsToCtx(dto, ctx);
-
+		underTest.preExecute(ctx);
 		WorkReport result = underTest.execute(ctx);
 
 		assertEquals(WorkStatus.FAILED, result.getStatus());
 		assertEquals(MissingParameterException.class, result.getError().getClass());
-		verify(apiInstanceMock, times(0)).create(dto);
+		verify(mockNotifier, times(0)).trySend(dto);
 	}
 
 	private NotificationMessageCreateRequestDTO buildNotificationMessageCreateRequestDTO(String type, String body,
@@ -179,6 +180,9 @@ public class NotificationWorkFlowTaskTest {
 
 		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION, underTest.getName(),
 				WorkContextDelegate.Resource.ARGUMENTS, map);
+
+		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
+				WorkContextDelegate.Resource.ID, UUID.randomUUID());
 	}
 
 	private void putInMap(HashMap<String, String> map, String key, String value) {

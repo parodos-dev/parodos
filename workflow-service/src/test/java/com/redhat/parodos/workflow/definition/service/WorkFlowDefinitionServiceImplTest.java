@@ -108,7 +108,7 @@ class WorkFlowDefinitionServiceImplTest {
 		WorkFlowDefinition workFlowDefinition = this.sampleWorkFlowDefinition(workFlowName);
 		WorkFlowTask workFlowTask = mock(WorkFlowTask.class);
 		WorkParameter workParameter = WorkParameter.builder().key("key").description("the key").optional(false)
-				.type(WorkParameterType.URL).build();
+				.type(WorkParameterType.URI).build();
 		when(workFlowTask.getName()).thenReturn(workFlowTaskName);
 		when(workFlowTask.getWorkFlowTaskParameters()).thenReturn(List.of(workParameter));
 		WorkFlowTaskDefinition workFlowTaskDefinition = this.sampleWorkFlowTaskDefinition(workFlowDefinition,
@@ -148,7 +148,7 @@ class WorkFlowDefinitionServiceImplTest {
 		workFlowDefinition.setParameters("{}");
 		WorkFlowTask workFlowTask = mock(WorkFlowTask.class);
 		WorkParameter workParameter = WorkParameter.builder().key("key").description("the key").optional(false)
-				.type(WorkParameterType.URL).build();
+				.type(WorkParameterType.URI).build();
 		when(workFlowTask.getName()).thenReturn(workFlowTaskName);
 		when(workFlowTask.getWorkFlowTaskParameters()).thenReturn(List.of(workParameter));
 		WorkFlowTaskDefinition workFlowTaskDefinition = this.sampleWorkFlowTaskDefinition(workFlowDefinition,
@@ -380,7 +380,7 @@ class WorkFlowDefinitionServiceImplTest {
 		// given
 		WorkFlowDefinition workFlowDefinition = this.sampleWorkFlowDefinition(workFlowName);
 		WorkParameter workParameter = WorkParameter.builder().key(KEY).description("the key").optional(false)
-				.type(WorkParameterType.URL).build();
+				.type(WorkParameterType.URI).build();
 		WorkFlowTaskDefinition workFlowTaskDefinition = this.sampleWorkFlowTaskDefinition(workFlowDefinition,
 				workFlowTaskName, workParameter);
 		workFlowDefinition.setWorkFlowTaskDefinitions(List.of(workFlowTaskDefinition));
@@ -404,7 +404,7 @@ class WorkFlowDefinitionServiceImplTest {
 		// given
 		WorkFlowDefinition workFlowDefinition = this.sampleWorkFlowDefinition(workFlowName);
 		WorkParameter workParameter = WorkParameter.builder().key("key").description("the key").optional(false)
-				.type(WorkParameterType.URL).build();
+				.type(WorkParameterType.URI).build();
 		WorkFlowTaskDefinition workFlowTaskDefinition = this.sampleWorkFlowTaskDefinition(workFlowDefinition,
 				workFlowTaskName, workParameter);
 		workFlowDefinition.setWorkFlowTaskDefinitions(List.of(workFlowTaskDefinition));

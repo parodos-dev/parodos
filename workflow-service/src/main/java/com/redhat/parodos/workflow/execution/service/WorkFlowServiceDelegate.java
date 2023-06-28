@@ -96,12 +96,12 @@ public class WorkFlowServiceDelegate {
 			CopyOnWriteArrayList<WorkStatusResponseDTO> workStatusResponseDTOList,
 			Map<String, Integer> workFlowWorkStartIndexMap) {
 		// build workflow status DTO
-		workStatusResponseDTOList.add(WorkStatusResponseDTO.builder().name(workFlowDefinition.getName())
-				.type(WorkType.WORKFLOW)
-				.status(WorkStatus.IN_PROGRESS.equals(workFlowExecution.getStatus()) ? WorkStatus.PENDING
-						: WorkStatus.valueOf(workFlowExecution.getStatus().name()))
-				.workExecution(workFlowExecution).numberOfWorks(workFlowDefinition.getNumberOfWorks())
-				.works(new ArrayList<>()).build());
+		workStatusResponseDTOList
+				.add(WorkStatusResponseDTO.builder().name(workFlowDefinition.getName()).type(WorkType.WORKFLOW)
+						.status(WorkStatus.IN_PROGRESS.equals(workFlowExecution.getStatus()) ? WorkStatus.PENDING
+								: WorkStatus.valueOf(workFlowExecution.getStatus().name()))
+						.message(workFlowExecution.getMessage()).workExecution(workFlowExecution)
+						.numberOfWorks(workFlowDefinition.getNumberOfWorks()).works(new ArrayList<>()).build());
 
 		// save the start index of the workflow's works
 		workFlowWorkStartIndexMap.put(workFlowDefinition.getName(), workStatusResponseDTOList.size());
@@ -110,12 +110,14 @@ public class WorkFlowServiceDelegate {
 		List<WorkFlowWorkDefinition> workFlowWorkDefinitions = workFlowWorkRepository
 				.findByWorkFlowDefinitionIdOrderByCreateDateAsc(workFlowDefinition.getId());
 		workFlowWorkDefinitions.forEach(workFlowWorkDefinition -> {
-			if (workFlowWorkDefinition.getWorkDefinitionType().equals(WorkType.WORKFLOW))
+			if (workFlowWorkDefinition.getWorkDefinitionType().equals(WorkType.WORKFLOW)) {
 				workStatusResponseDTOList
 						.add(getWorkStatusResponseDTOFromWorkFlow(workFlowWorkDefinition, workFlowExecution));
-			else
+			}
+			else {
 				workStatusResponseDTOList
 						.add(getWorkStatusResponseDTOFromWorkFlowTask(workFlowWorkDefinition, workFlowExecution));
+			}
 		});
 	}
 
@@ -131,12 +133,14 @@ public class WorkFlowServiceDelegate {
 				.findByWorkFlowDefinitionIdOrderByCreateDateAsc(workFlowExecution.getWorkFlowDefinition().getId());
 
 		workFlowWorksDefinitions.forEach(workFlowWorkDefinition -> {
-			if (workFlowWorkDefinition.getWorkDefinitionType().equals(WorkType.WORKFLOW))
+			if (workFlowWorkDefinition.getWorkDefinitionType().equals(WorkType.WORKFLOW)) {
 				workStatusResponseDTOList
 						.add(getWorkStatusResponseDTOFromWorkFlow(workFlowWorkDefinition, mainWorkFlowExecution));
-			else
+			}
+			else {
 				workStatusResponseDTOList
 						.add(getWorkStatusResponseDTOFromWorkFlowTask(workFlowWorkDefinition, workFlowExecution));
+			}
 		});
 	}
 
@@ -145,24 +149,25 @@ public class WorkFlowServiceDelegate {
 		WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository
 				.findById(workFlowWorkDefinition.getWorkDefinitionId()).get();
 
-		WorkFlowExecution workExecution = workFlowRepository.findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(
-				workFlowExecution, workFlowWorkDefinition.getWorkDefinitionId());
+		WorkFlowExecution workExecution = workFlowRepository.findFirstByWorkFlowDefinitionIdAndMainWorkFlowExecution(
+				workFlowWorkDefinition.getWorkDefinitionId(), workFlowExecution);
 
 		/*
 		 * the workflow execution might be null when there is pending checker before it
 		 */
 		WorkStatus workStatus;
-
+		String message = null;
 		if (workExecution == null) {
 			workStatus = WorkStatus.PENDING;
 		}
 		else {
 			workStatus = WorkStatus.valueOf(workExecution.getStatus().name());
+			message = workExecution.getMessage();
 		}
 
 		return WorkStatusResponseDTO.builder().name(workFlowDefinition.getName()).type(WorkType.WORKFLOW)
 				.status(workStatus).works(new ArrayList<>()).workExecution(workExecution)
-				.numberOfWorks(workFlowDefinition.getNumberOfWorks()).build();
+				.numberOfWorks(workFlowDefinition.getNumberOfWorks()).message(message).build();
 	}
 
 	private WorkStatusResponseDTO getWorkStatusResponseDTOFromWorkFlowTask(
@@ -178,16 +183,19 @@ public class WorkFlowServiceDelegate {
 				.max(Comparator.comparing(WorkFlowTaskExecution::getStartDate));
 
 		WorkStatus workStatus = WorkStatus.PENDING;
+		String message = null;
+		String alertMessage = null;
 
 		if (workFlowTaskExecutionOptional.isPresent()) {
+			message = workFlowTaskExecutionOptional.get().getMessage();
+			alertMessage = workFlowTaskExecutionOptional.get().getAlertMessage();
 			workStatus = WorkStatus.valueOf(workFlowTaskExecutionOptional.get().getStatus().name());
 			if (workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition() != null) {
 				workStatus = Optional
-						.ofNullable(workFlowRepository.findFirstByMainWorkFlowExecutionAndWorkFlowDefinitionId(
+						.ofNullable(workFlowRepository.findFirstByWorkFlowDefinitionIdAndMainWorkFlowExecution(
+								workFlowTaskDefinition.getWorkFlowCheckerMappingDefinition().getCheckWorkFlow().getId(),
 								Optional.ofNullable(workFlowExecution.getMainWorkFlowExecution())
-										.orElse(workFlowExecution),
-								workFlowTaskDefinition
-										.getWorkFlowCheckerMappingDefinition().getCheckWorkFlow().getId()))
+										.orElse(workFlowExecution)))
 						.map(WorkFlowExecution::getStatus)
 						.map(checkerStatus -> WorkStatus.FAILED.equals(checkerStatus) ? WorkStatus.IN_PROGRESS
 								: (WorkStatus.REJECTED.equals(checkerStatus) ? WorkStatus.REJECTED
@@ -197,7 +205,7 @@ public class WorkFlowServiceDelegate {
 		}
 
 		return WorkStatusResponseDTO.builder().name(workFlowTaskDefinition.getName()).type(WorkType.TASK)
-				.status(workStatus).build();
+				.status(workStatus).message(message).alertMessage(alertMessage).build();
 	}
 
 	private List<WorkStatusResponseDTO> nestWorkFlowWorksStatusDTO(

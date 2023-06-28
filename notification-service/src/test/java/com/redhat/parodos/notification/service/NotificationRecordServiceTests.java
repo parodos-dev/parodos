@@ -25,6 +25,7 @@ import com.redhat.parodos.notification.enums.State;
 import com.redhat.parodos.notification.exceptions.NotificationRecordNotFoundException;
 import com.redhat.parodos.notification.exceptions.SearchByStateAndTermNotSupportedException;
 import com.redhat.parodos.notification.exceptions.UnsupportedStateException;
+import com.redhat.parodos.notification.exceptions.UsernameNotFoundException;
 import com.redhat.parodos.notification.jpa.entity.NotificationMessage;
 import com.redhat.parodos.notification.jpa.entity.NotificationRecord;
 import com.redhat.parodos.notification.jpa.entity.NotificationUser;
@@ -39,7 +40,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -100,7 +100,7 @@ public class NotificationRecordServiceTests {
 
 		// Notification User doesn't exist
 		when(this.notificationUserRepository.findByUsername(userName)).thenReturn(emptyOptional);
-		Exception exception = assertThrows(ResponseStatusException.class, () -> {
+		Exception exception = assertThrows(UsernameNotFoundException.class, () -> {
 			this.notificationRecordServiceImpl.getNotificationRecords(pageable, userName, State.UNREAD, searchTerm);
 		});
 
@@ -203,7 +203,7 @@ public class NotificationRecordServiceTests {
 			Exception exception = assertThrows(NotificationRecordNotFoundException.class, () -> {
 				this.notificationRecordServiceImpl.updateNotificationStatus(uuid, operation);
 			});
-			assertEquals(String.format("Could not find NotificationRecord for id = %s", uuid), exception.getMessage());
+			assertEquals("Notification record not found: %s".formatted(uuid), exception.getMessage());
 		}
 
 		// Test READ operation and record exists

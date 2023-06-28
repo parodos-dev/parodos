@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import com.redhat.parodos.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -44,8 +45,7 @@ public class ProjectUserRole {
 
 	@Embeddable
 	@Builder
-	@Getter
-	@Setter
+	@Data
 	@AllArgsConstructor
 	@NoArgsConstructor
 	public static class Id implements Serializable {

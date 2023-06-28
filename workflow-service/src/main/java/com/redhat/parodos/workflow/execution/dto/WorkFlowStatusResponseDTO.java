@@ -44,6 +44,8 @@ public class WorkFlowStatusResponseDTO {
 
 	private WorkStatus status;
 
+	private String message;
+
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	private List<WorkStatusResponseDTO> works;
 

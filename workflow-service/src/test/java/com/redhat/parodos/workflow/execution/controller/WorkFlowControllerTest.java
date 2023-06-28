@@ -12,7 +12,9 @@ import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkStatusResponseDTO;
+import com.redhat.parodos.workflow.execution.service.WorkFlowLogServiceImpl;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
+import com.redhat.parodos.workflow.version.WorkFlowVersionService;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -55,6 +57,12 @@ class WorkFlowControllerTest extends ControllerMockClient {
 
 	@MockBean
 	private WorkFlowServiceImpl workFlowService;
+
+	@MockBean
+	private WorkFlowLogServiceImpl workFlowLogService;
+
+	@MockBean
+	private WorkFlowVersionService workFlowVersionService;
 
 	@Test
 	public void ExecuteWithoutAuth() throws Exception {
@@ -174,6 +182,68 @@ class WorkFlowControllerTest extends ControllerMockClient {
 	}
 
 	@Test
+	public void testGetStatusWithFailedWorkflowAndTask() throws Exception {
+		// given
+		UUID mainWorkFlowExecutionId = UUID.randomUUID();
+		String testMainWorkFlow = "testMainWorkFlow";
+		String testSubWorkFlow1 = "testSubWorkFlow1";
+		String testSubWorkFlowTask1 = "testSubWorkFlowTask1";
+		String testWorkFlowTask1 = "testWorkFlowTask1";
+		String testFailedWorkFlowTask1 = "testFailedWorkFlowTask1";
+		String errorMessageMainWorkflow = "Main workflow error message";
+		String errorMessage = "Error message";
+
+		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = WorkFlowStatusResponseDTO.builder()
+				.workFlowExecutionId(mainWorkFlowExecutionId).status(WorkStatus.FAILED).workFlowName(testMainWorkFlow)
+				.message(errorMessageMainWorkflow)
+				.works(List.of(
+						WorkStatusResponseDTO.builder().name(testSubWorkFlow1).status(WorkStatus.PENDING)
+								.type(WorkType.WORKFLOW).message("")
+								.works(List.of(WorkStatusResponseDTO.builder().name(testSubWorkFlowTask1)
+										.status(WorkStatus.PENDING).type(WorkType.TASK).build()))
+								.build(),
+						WorkStatusResponseDTO.builder().name(testWorkFlowTask1).status(WorkStatus.COMPLETED)
+								.type(WorkType.TASK).message("").build(),
+						WorkStatusResponseDTO.builder().name(testFailedWorkFlowTask1).status(WorkStatus.FAILED)
+								.message(errorMessage).type(WorkType.TASK).build()))
+				.build();
+		when(workFlowService.getWorkFlowStatus(mainWorkFlowExecutionId)).thenReturn(workFlowStatusResponseDTO);
+
+		// when
+		this.mockMvc
+				.perform(this.getRequestWithValidCredentials(
+						String.format("/api/v1/workflows/%s/status", mainWorkFlowExecutionId)))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.workFlowExecutionId",
+						Matchers.is(mainWorkFlowExecutionId.toString())))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.workFlowName", Matchers.is(testMainWorkFlow)))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(WorkStatus.FAILED.name())))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.message", Matchers.is(errorMessageMainWorkflow)))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.works[0].name", Matchers.is(testSubWorkFlow1)))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.works[0].type", Matchers.is(WorkType.WORKFLOW.name())))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.works[0].status", Matchers.is(WorkStatus.PENDING.name())))
+				.andExpect(
+						MockMvcResultMatchers.jsonPath("$.works[0].works[0].name", Matchers.is(testSubWorkFlowTask1)))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.works[0].works[0].status",
+						Matchers.is(WorkStatus.PENDING.name())))
+				.andExpect(
+						MockMvcResultMatchers.jsonPath("$.works[0].works[0].type", Matchers.is(WorkType.TASK.name())))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.works[1].name", Matchers.is(testWorkFlowTask1)))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.works[1].type", Matchers.is(WorkType.TASK.name())))
+				.andExpect(
+						MockMvcResultMatchers.jsonPath("$.works[1].status", Matchers.is(WorkStatus.COMPLETED.name())))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.works[1].message", Matchers.is("")))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.works[2].name", Matchers.is(testFailedWorkFlowTask1)))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.works[2].type", Matchers.is(WorkType.TASK.name())))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.works[2].status", Matchers.is(WorkStatus.FAILED.name())))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.works[2].message", Matchers.is(errorMessage)));
+
+		// then
+		verify(this.workFlowService, times(1)).getWorkFlowStatus(mainWorkFlowExecutionId);
+	}
+
+	@Test
 	public void updateWorkFlowCheckerTaskStatusWithValidData() throws Exception {
 		// given
 		UUID workFlowExecutionId = UUID.randomUUID();
@@ -230,11 +300,23 @@ class WorkFlowControllerTest extends ControllerMockClient {
 
 	@Test
 	public void TestGetStatusWithValidData() throws Exception {
-		// @TODO this test should be completed when the API is implemented
+		UUID mainWorkFlowExecutionId = UUID.randomUUID();
+		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = WorkFlowStatusResponseDTO.builder()
+				.workFlowExecutionId(mainWorkFlowExecutionId).status(WorkStatus.IN_PROGRESS).workFlowName("test")
+				.works(List.of(
+						WorkStatusResponseDTO.builder().name("test").status(WorkStatus.PENDING).type(WorkType.WORKFLOW)
+								.works(List.of(WorkStatusResponseDTO.builder().name("test").status(WorkStatus.PENDING)
+										.type(WorkType.TASK).build()))
+								.build(),
+						WorkStatusResponseDTO.builder().name("test").status(WorkStatus.COMPLETED).type(WorkType.TASK)
+								.build()))
+				.build();
+		when(workFlowService.getWorkFlowStatus(mainWorkFlowExecutionId)).thenReturn(workFlowStatusResponseDTO);
+
 		// when
 		this.mockMvc
 				.perform(this.getRequestWithValidCredentials(
-						String.format("/api/v1/workflows/%s/status", UUID.randomUUID())))
+						String.format("/api/v1/workflows/%s/status", mainWorkFlowExecutionId)))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -252,6 +334,21 @@ class WorkFlowControllerTest extends ControllerMockClient {
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(1))).andExpect(MockMvcResultMatchers
 						.jsonPath("$[0].workStatus", equalToIgnoringCase(WorkStatus.COMPLETED.name())));
+	}
+
+	@Test
+	void TestGetWorkFlowTaskLogWithValidData() throws Exception {
+		UUID workFlowExecutionId = UUID.randomUUID();
+		String taskName = "test-task";
+		String taskLog = "test-log";
+		when(workFlowLogService.getLog(workFlowExecutionId, taskName)).thenReturn(taskLog);
+		// when
+		this.mockMvc
+				.perform(this.getRequestWithValidCredentials("/api/v1/workflows/" + workFlowExecutionId + "/log")
+						.param("taskName", taskName))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=UTF-8"))
+				.andExpect(MockMvcResultMatchers.content().string(taskLog));
 	}
 
 	private String getWorkFlowCheckerTaskRequestDTOJsonPayload() throws JsonProcessingException {

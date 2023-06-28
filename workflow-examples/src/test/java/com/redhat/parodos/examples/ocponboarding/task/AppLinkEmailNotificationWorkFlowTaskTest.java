@@ -3,7 +3,7 @@ package com.redhat.parodos.examples.ocponboarding.task;
 import java.util.List;
 
 import com.redhat.parodos.examples.base.BaseInfrastructureWorkFlowTaskTest;
-import com.redhat.parodos.examples.utils.RestUtils;
+import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
@@ -50,7 +50,7 @@ public class AppLinkEmailNotificationWorkFlowTaskTest extends BaseInfrastructure
 				(AppLinkEmailNotificationWorkFlowTask) getConcretePersonImplementation());
 		try {
 			doReturn(APP_LINK_TEST).when(this.appLinkEmailNotificationWorkFlowTask)
-					.getRequiredParameterValue(any(WorkContext.class), eq(APP_LINK_PARAMETER_NAME));
+					.getRequiredParameterValue(eq(APP_LINK_PARAMETER_NAME));
 		}
 		catch (MissingParameterException e) {
 			throw new RuntimeException(e);

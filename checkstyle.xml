@@ -1,0 +1,59 @@
+<?xml version="1.0" ?>
+
+<!DOCTYPE module PUBLIC
+        "-//Checkstyle//DTD Checkstyle Configuration 1.2//EN"
+        "https://checkstyle.org/dtds/configuration_1_2.dtd">
+
+<module name="Checker">
+    <module name="TreeWalker">
+
+        <!-- No if/else/do/for/while without braces -->
+        <module name="NeedBraces"/>
+
+        <!-- No empty blocks -->
+        <module name="EmptyBlock"/>
+
+        <!-- Disallow unnecessary instantiation of Boolean, String -->
+        <module name="IllegalInstantiation">
+            <!-- property name="classes" value="java.lang.Boolean, java.lang.String"/ -->
+            <property name="classes" value="java.lang.Boolean"/>
+        </module>
+
+        <!--  Import should be explicit, really needed and only from pure java packages -->
+        <module name="AvoidStarImport" />
+        <module name="UnusedImports" />
+        <module name="IllegalImport" />
+
+        <!-- TODO: Find how to exclude spring application classes and uncomment -->
+        <!-- Check https://checkstyle.org/config_filters.html#SuppressionXpathSingleFilter -->
+        <!-- Utility class should not be instantiated, they must have a private constructor -->
+        <!-- module name="HideUtilityClassConstructor" /-->
+
+        <!-- No System.out.println() statements -->
+        <module name="Regexp">
+            <!-- no sysouts -->
+            <property name="format" value="System\.out\.println"/>
+            <property name="illegalPattern" value="true"/>
+        </module>
+
+        <!-- No trailing whitespace -->
+        <module name="Regexp">
+            <property name="format" value="[ \t]+$"/>
+            <property name="illegalPattern" value="true"/>
+            <property name="message" value="Trailing whitespace"/>
+        </module>
+
+        <!-- Use static import for mockito -->
+        <module name="Regexp">
+            <property name="format" value="^(?!import).*Mockito\."/>
+            <property name="illegalPattern" value="true"/>
+            <property name="message" value="Use static import for Mockito"/>
+        </module>
+
+        <module name="Regexp">
+            <property name="format" value="^(?!import).*Assertions\."/>
+            <property name="illegalPattern" value="true"/>
+            <property name="message" value="Use static import for Assertions"/>
+        </module>
+    </module>
+</module>

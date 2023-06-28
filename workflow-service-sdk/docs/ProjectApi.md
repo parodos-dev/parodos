@@ -4,12 +4,79 @@ All URIs are relative to *http://localhost:8080*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
+| [**createAccessRequestToProject**](ProjectApi.md#createAccessRequestToProject) | **POST** /api/v1/projects/{id}/access | Request user access to project |
 | [**createProject**](ProjectApi.md#createProject) | **POST** /api/v1/projects | Creates a new project |
 | [**getProjectById**](ProjectApi.md#getProjectById) | **GET** /api/v1/projects/{id} | Returns information about a specified project |
 | [**getProjects**](ProjectApi.md#getProjects) | **GET** /api/v1/projects | Returns a list of project |
 | [**removeUsersFromProject**](ProjectApi.md#removeUsersFromProject) | **DELETE** /api/v1/projects/{id}/users | Remove users from project |
 | [**updateUserRolesToProject**](ProjectApi.md#updateUserRolesToProject) | **POST** /api/v1/projects/{id}/users | Update user roles in project |
 
+
+<a name="createAccessRequestToProject"></a>
+# **createAccessRequestToProject**
+> AccessResponseDTO createAccessRequestToProject(id, accessRequestDTO)
+
+Request user access to project
+
+### Example
+```java
+// Import classes:
+import com.redhat.parodos.sdk.invoker.ApiClient;
+import com.redhat.parodos.sdk.invoker.ApiException;
+import com.redhat.parodos.sdk.invoker.Configuration;
+import com.redhat.parodos.sdk.invoker.models.*;
+import com.redhat.parodos.sdk.api.ProjectApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("http://localhost:8080");
+
+    ProjectApi apiInstance = new ProjectApi(defaultClient);
+    UUID id = UUID.randomUUID(); // UUID | 
+    AccessRequestDTO accessRequestDTO = new AccessRequestDTO(); // AccessRequestDTO | 
+    try {
+      AccessResponseDTO result = apiInstance.createAccessRequestToProject(id, accessRequestDTO);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling ProjectApi#createAccessRequestToProject");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **id** | **UUID**|  | |
+| **accessRequestDTO** | [**AccessRequestDTO**](AccessRequestDTO.md)|  | |
+
+### Return type
+
+[**AccessResponseDTO**](AccessResponseDTO.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json, */*
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Succeeded |  -  |
+| **400** | Bad Request |  -  |
+| **401** | Unauthorized |  -  |
+| **404** | Not found |  -  |
+| **409** | Conflict |  -  |
 
 <a name="createProject"></a>
 # **createProject**
@@ -134,6 +201,7 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Succeeded |  -  |
+| **304** | Not Modified |  -  |
 | **400** | Bad Request |  -  |
 | **401** | Unauthorized |  -  |
 | **404** | Not found |  -  |
@@ -194,6 +262,7 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Succeeded |  -  |
+| **304** | Not Modified |  -  |
 | **400** | Bad Request |  -  |
 | **401** | Unauthorized |  -  |
 | **403** | Forbidden |  -  |

@@ -16,9 +16,8 @@
 package com.redhat.parodos.notification.exceptions;
 
 /**
- * The StateNotFoundOrUnsupportedException wraps unchecked standard Java exception and
- * enriches them with a custom error code. You can use this execution when a Notification
- * State is not found or is unsupported.
+ * The UnsupportedStateException is used when a Notification State is not found or is
+ * unsupported.
  *
  * @author Gloria Ciavarrini (Github: gciavarrini)
  */

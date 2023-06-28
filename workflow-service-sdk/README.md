@@ -39,7 +39,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>dev.parodos</groupId>
   <artifactId>workflow-service-sdk</artifactId>
-  <version>1.0.12-SNAPSHOT</version>
+  <version>1.0.18-SNAPSHOT</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -55,7 +55,7 @@ Add this dependency to your project's build file:
   }
 
   dependencies {
-     implementation "dev.parodos:workflow-service-sdk:1.0.12-SNAPSHOT"
+     implementation "dev.parodos:workflow-service-sdk:1.0.18-SNAPSHOT"
   }
 ```
 
@@ -69,7 +69,7 @@ mvn clean package
 
 Then manually install the following JARs:
 
-* `target/workflow-service-sdk-1.0.12-SNAPSHOT.jar`
+* `target/workflow-service-sdk-1.0.18-SNAPSHOT.jar`
 * `target/lib/*.jar`
 
 ## Getting Started
@@ -112,12 +112,16 @@ All URIs are relative to *http://localhost:8080*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *LoginApi* | [**login**](docs/LoginApi.md#login) | **GET** /api/v1/login | Login
+*ProjectApi* | [**createAccessRequestToProject**](docs/ProjectApi.md#createAccessRequestToProject) | **POST** /api/v1/projects/{id}/access | Request user access to project
 *ProjectApi* | [**createProject**](docs/ProjectApi.md#createProject) | **POST** /api/v1/projects | Creates a new project
 *ProjectApi* | [**getProjectById**](docs/ProjectApi.md#getProjectById) | **GET** /api/v1/projects/{id} | Returns information about a specified project
 *ProjectApi* | [**getProjects**](docs/ProjectApi.md#getProjects) | **GET** /api/v1/projects | Returns a list of project
 *ProjectApi* | [**removeUsersFromProject**](docs/ProjectApi.md#removeUsersFromProject) | **DELETE** /api/v1/projects/{id}/users | Remove users from project
 *ProjectApi* | [**updateUserRolesToProject**](docs/ProjectApi.md#updateUserRolesToProject) | **POST** /api/v1/projects/{id}/users | Update user roles in project
+*ProjectAccessApi* | [**getProjectAccessStatus**](docs/ProjectAccessApi.md#getProjectAccessStatus) | **GET** /api/v1/projects/access/{id}/status | Returns status about a specified project access request
+*ProjectAccessApi* | [**updateProjectAccessStatus**](docs/ProjectAccessApi.md#updateProjectAccessStatus) | **POST** /api/v1/projects/access/{id}/status | Update status of a specified project access request
 *WorkflowApi* | [**execute**](docs/WorkflowApi.md#execute) | **POST** /api/v1/workflows | Executes a workflow
+*WorkflowApi* | [**getLog**](docs/WorkflowApi.md#getLog) | **GET** /api/v1/workflows/{workFlowExecutionId}/log | Returns workflow execution log
 *WorkflowApi* | [**getStatus**](docs/WorkflowApi.md#getStatus) | **GET** /api/v1/workflows/{workFlowExecutionId}/status | Returns a workflow status
 *WorkflowApi* | [**getStatusByProjectId**](docs/WorkflowApi.md#getStatusByProjectId) | **GET** /api/v1/workflows | Returns workflows by project id
 *WorkflowApi* | [**getWorkflowParameters**](docs/WorkflowApi.md#getWorkflowParameters) | **GET** /api/v1/workflows/{workFlowExecutionId}/context | Returns workflow context parameters
@@ -129,8 +133,14 @@ Class | Method | HTTP request | Description
 
 ## Documentation for Models
 
+ - [AccessRequestDTO](docs/AccessRequestDTO.md)
+ - [AccessResponseDTO](docs/AccessResponseDTO.md)
+ - [AccessStatusRequestDTO](docs/AccessStatusRequestDTO.md)
+ - [AccessStatusResponseDTO](docs/AccessStatusResponseDTO.md)
+ - [AdditionalInfo](docs/AdditionalInfo.md)
  - [ArgumentRequestDTO](docs/ArgumentRequestDTO.md)
  - [ErrorMessageDTO](docs/ErrorMessageDTO.md)
+ - [ProjectDTO](docs/ProjectDTO.md)
  - [ProjectRequestDTO](docs/ProjectRequestDTO.md)
  - [ProjectResponseDTO](docs/ProjectResponseDTO.md)
  - [ProjectUserRoleResponseDTO](docs/ProjectUserRoleResponseDTO.md)
@@ -140,6 +150,7 @@ Class | Method | HTTP request | Description
  - [WorkFlowCheckerTaskRequestDTO](docs/WorkFlowCheckerTaskRequestDTO.md)
  - [WorkFlowContextResponseDTO](docs/WorkFlowContextResponseDTO.md)
  - [WorkFlowDefinitionResponseDTO](docs/WorkFlowDefinitionResponseDTO.md)
+ - [WorkFlowExecutionResponseDTO](docs/WorkFlowExecutionResponseDTO.md)
  - [WorkFlowOption](docs/WorkFlowOption.md)
  - [WorkFlowOptionsResponseDTO](docs/WorkFlowOptionsResponseDTO.md)
  - [WorkFlowPropertiesDefinitionDTO](docs/WorkFlowPropertiesDefinitionDTO.md)

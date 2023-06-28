@@ -83,6 +83,32 @@ class MTAClient implements MTAApplicationClient, MTATaskGroupClient {
 		}
 	}
 
+	@Override
+	public Result<Identity> getIdentity(String name) {
+		// identities in MTA have unique constraints on name.
+		try {
+			HttpResponse<String> getAll = client.send(
+					HttpRequest.newBuilder().GET().uri(serverURI.resolve("/hub/identities")).build(),
+					HttpResponse.BodyHandlers.ofString());
+			if (getAll.statusCode() != HTTP_OK) {
+				return null;
+			}
+			List<Identity> identities = mapper.readValue(getAll.body(), new TypeReference<>() {
+			});
+
+			Optional<Identity> identity = identities.stream().filter(v -> v.name().equals(name)).findFirst();
+			if (identity.isPresent()) {
+				return new Result.Success<>(identity.get());
+			}
+			else {
+				return new Result.Failure<>(new NotFoundException("failed to find identity by name " + name));
+			}
+		}
+		catch (IOException | InterruptedException e) {
+			return new Result.Failure<>(e);
+		}
+	}
+
 	// TODO unknown if we need to create the app or expect the app to be already present
 	// in MTA
 	@Override

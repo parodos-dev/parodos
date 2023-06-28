@@ -25,7 +25,7 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 
 import com.nimbusds.jose.shaded.json.annotate.JsonIgnore;
-import com.redhat.parodos.common.AbstractEntity;
+import com.redhat.parodos.common.entity.AbstractEntity;
 import com.redhat.parodos.project.entity.ProjectUserRole;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import lombok.AllArgsConstructor;

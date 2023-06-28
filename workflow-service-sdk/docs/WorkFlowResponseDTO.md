@@ -7,6 +7,7 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
+|**additionalInfos** | [**List&lt;AdditionalInfo&gt;**](AdditionalInfo.md) |  |  [optional] |
 |**endDate** | **String** |  |  [optional] |
 |**executeBy** | **String** |  |  [optional] |
 |**projectId** | **UUID** |  |  [optional] |

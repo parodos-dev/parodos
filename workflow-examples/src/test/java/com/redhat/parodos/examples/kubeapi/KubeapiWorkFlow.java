@@ -12,15 +12,15 @@ import com.redhat.parodos.sdk.invoker.Configuration;
 import com.redhat.parodos.sdk.model.ArgumentRequestDTO;
 import com.redhat.parodos.sdk.model.ProjectResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
+import com.redhat.parodos.sdk.model.WorkFlowExecutionResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
-import com.redhat.parodos.sdk.model.WorkFlowResponseDTO;
 import com.redhat.parodos.sdk.model.WorkRequestDTO;
 import com.redhat.parodos.workflow.utils.CredUtils;
 import org.junit.Test;
 
 import org.springframework.http.HttpHeaders;
 
-import static com.redhat.parodos.sdkutils.SdkUtils.getProjectAsync;
+import static com.redhat.parodos.sdkutils.WorkFlowServiceUtils.getProjectAsync;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
@@ -103,7 +103,7 @@ public class KubeapiWorkFlow {
 
 			// 3 - Execute WorkFlowRequests
 			for (WorkFlowRequestDTO workFlowRequest : workFlowRequests) {
-				WorkFlowResponseDTO execute = workflowApi.execute(workFlowRequest);
+				WorkFlowExecutionResponseDTO execute = workflowApi.execute(workFlowRequest);
 
 				assertNotNull(execute.getWorkFlowExecutionId());
 			}

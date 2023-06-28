@@ -1,17 +1,20 @@
-bases:
-- ../base
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
 resources:
 - ingress.yaml
 - ldap.yaml
 - postgres.yaml
+- ../base
 
-patchesStrategicMerge:
-- parodos-patch.yaml
+patches:
+- path: parodos-patch-workflow-service.yaml
+- path: parodos-patch-workflow-service-config.yaml
+- path: parodos-patch-notification-service-config.yaml
 
 images:
 - name: quay.io/parodos-dev/workflow-service:main
   newTag: test
-
 - name: quay.io/parodos-dev/notification-service:main
   newTag: test
 

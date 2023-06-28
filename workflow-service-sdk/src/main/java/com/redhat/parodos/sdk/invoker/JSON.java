@@ -86,9 +86,20 @@ public class JSON {
 		gsonBuilder.registerTypeAdapter(java.sql.Date.class, sqlDateTypeAdapter);
 		gsonBuilder.registerTypeAdapter(byte[].class, byteArrayAdapter);
 		gsonBuilder.registerTypeAdapterFactory(
+				new com.redhat.parodos.sdk.model.AccessRequestDTO.CustomTypeAdapterFactory());
+		gsonBuilder.registerTypeAdapterFactory(
+				new com.redhat.parodos.sdk.model.AccessResponseDTO.CustomTypeAdapterFactory());
+		gsonBuilder.registerTypeAdapterFactory(
+				new com.redhat.parodos.sdk.model.AccessStatusRequestDTO.CustomTypeAdapterFactory());
+		gsonBuilder.registerTypeAdapterFactory(
+				new com.redhat.parodos.sdk.model.AccessStatusResponseDTO.CustomTypeAdapterFactory());
+		gsonBuilder
+				.registerTypeAdapterFactory(new com.redhat.parodos.sdk.model.AdditionalInfo.CustomTypeAdapterFactory());
+		gsonBuilder.registerTypeAdapterFactory(
 				new com.redhat.parodos.sdk.model.ArgumentRequestDTO.CustomTypeAdapterFactory());
 		gsonBuilder.registerTypeAdapterFactory(
 				new com.redhat.parodos.sdk.model.ErrorMessageDTO.CustomTypeAdapterFactory());
+		gsonBuilder.registerTypeAdapterFactory(new com.redhat.parodos.sdk.model.ProjectDTO.CustomTypeAdapterFactory());
 		gsonBuilder.registerTypeAdapterFactory(
 				new com.redhat.parodos.sdk.model.ProjectRequestDTO.CustomTypeAdapterFactory());
 		gsonBuilder.registerTypeAdapterFactory(
@@ -107,6 +118,8 @@ public class JSON {
 				new com.redhat.parodos.sdk.model.WorkFlowContextResponseDTO.CustomTypeAdapterFactory());
 		gsonBuilder.registerTypeAdapterFactory(
 				new com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO.CustomTypeAdapterFactory());
+		gsonBuilder.registerTypeAdapterFactory(
+				new com.redhat.parodos.sdk.model.WorkFlowExecutionResponseDTO.CustomTypeAdapterFactory());
 		gsonBuilder
 				.registerTypeAdapterFactory(new com.redhat.parodos.sdk.model.WorkFlowOption.CustomTypeAdapterFactory());
 		gsonBuilder.registerTypeAdapterFactory(

@@ -17,13 +17,12 @@ package com.redhat.parodos.workflow.execution.continuation;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import com.redhat.parodos.workflow.definition.entity.WorkFlowDefinition;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.execution.service.WorkFlowExecutor;
-import com.redhat.parodos.workflows.work.WorkContext;
+import com.redhat.parodos.workflow.execution.service.WorkFlowExecutor.ExecutionContext;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.extern.slf4j.Slf4j;
 
@@ -65,18 +64,20 @@ public class WorkFlowContinuationServiceImpl implements WorkFlowContinuationServ
 			WorkFlowDefinition workFlowDefinition = workFlowExecution.getWorkFlowDefinition();
 
 			// continue with the same execution id
-			continueWorkFlow(workFlowExecution.getProjectId(), workFlowExecution.getUser().getId(),
-					workFlowDefinition.getName(), workFlowExecution.getWorkFlowExecutionContext().getWorkContext(),
-					workFlowExecution.getId(), Optional.ofNullable(workFlowDefinition.getRollbackWorkFlowDefinition())
-							.map(WorkFlowDefinition::getName).orElse(null));
+			continueWorkFlow(ExecutionContext.builder().projectId(workFlowExecution.getProjectId())
+					.userId(workFlowExecution.getUser().getId()).workFlowName(workFlowDefinition.getName())
+					.workContext(workFlowExecution.getWorkFlowExecutionContext().getWorkContext())
+					.executionId(workFlowExecution.getId())
+					.rollbackWorkFlowName(Optional.ofNullable(workFlowDefinition.getRollbackWorkFlowDefinition())
+							.map(WorkFlowDefinition::getName).orElse(null))
+					.build());
 			// TODO: continue 'FAILED' Checkers in this main workflow execution
 		});
 	}
 
 	@Override
-	public void continueWorkFlow(UUID projectId, UUID userId, String workflowName, WorkContext workContext,
-			UUID executionId, String rollbackWorkflowName) {
-		workFlowExecutor.executeAsync(projectId, userId, workflowName, workContext, executionId, rollbackWorkflowName);
+	public void continueWorkFlow(ExecutionContext executionContext) {
+		workFlowExecutor.execute(executionContext);
 	}
 
 }

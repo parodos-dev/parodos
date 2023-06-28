@@ -18,10 +18,12 @@ package com.redhat.parodos.workflow.execution.entity;
 import java.util.Date;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 
-import com.redhat.parodos.common.AbstractEntity;
+import com.redhat.parodos.common.entity.AbstractEntity;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -56,11 +58,18 @@ public class WorkFlowTaskExecution extends AbstractEntity {
 
 	private WorkStatus status;
 
+	private String message;
+
+	private String alertMessage;
+
 	@Column(updatable = false)
 	private Date startDate;
 
 	private Date endDate;
 
 	private Date lastUpdateDate;
+
+	@OneToOne(mappedBy = "workFlowTaskExecution", cascade = { CascadeType.ALL })
+	private WorkFlowTaskExecutionLog workFlowTaskExecutionLog;
 
 }

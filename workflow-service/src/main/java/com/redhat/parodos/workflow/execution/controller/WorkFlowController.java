@@ -24,11 +24,13 @@ import javax.validation.constraints.NotEmpty;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowCheckerTaskRequestDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowContextResponseDTO;
+import com.redhat.parodos.workflow.execution.dto.WorkFlowExecutionResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.service.WorkFlowService;
 import com.redhat.parodos.workflow.execution.validation.PubliclyVisible;
+import com.redhat.parodos.workflow.task.log.service.WorkFlowLogService;
 import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
@@ -40,6 +42,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -67,24 +70,28 @@ public class WorkFlowController {
 
 	private final WorkFlowService workFlowService;
 
-	public WorkFlowController(WorkFlowService workFlowService) {
+	private final WorkFlowLogService workFlowLogService;
+
+	public WorkFlowController(WorkFlowService workFlowService, WorkFlowLogService workFlowLogService) {
 		this.workFlowService = workFlowService;
+		this.workFlowLogService = workFlowLogService;
 	}
 
 	@Operation(summary = "Executes a workflow")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "202", description = "Accepted",
 					content = { @Content(mediaType = "application/json",
-							schema = @Schema(implementation = WorkFlowResponseDTO.class)) }),
+							schema = @Schema(implementation = WorkFlowExecutionResponseDTO.class)) }),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content) })
 	@PostMapping
-	public ResponseEntity<WorkFlowResponseDTO> execute(@RequestBody @Valid WorkFlowRequestDTO workFlowRequestDTO) {
+	public ResponseEntity<WorkFlowExecutionResponseDTO> execute(
+			@RequestBody @Valid WorkFlowRequestDTO workFlowRequestDTO) {
 		WorkReport workReport = workFlowService.execute(workFlowRequestDTO);
 		if (workReport.getStatus() == WorkStatus.FAILED) {
 			return ResponseEntity.status(500).build();
 		}
-		return ResponseEntity.ok(WorkFlowResponseDTO.builder()
+		return ResponseEntity.ok(WorkFlowExecutionResponseDTO.builder()
 				.workFlowExecutionId(WorkContextUtils.getMainExecutionId(workReport.getWorkContext()))
 				.workStatus(workReport.getStatus()).build());
 	}
@@ -112,10 +119,13 @@ public class WorkFlowController {
 					content = { @Content(mediaType = "application/json",
 							schema = @Schema(implementation = WorkFlowStatusResponseDTO.class)) }),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
-			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content) })
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
+			@ApiResponse(responseCode = "304", description = "Not Modified", content = @Content) })
 	@GetMapping("/{workFlowExecutionId}/status")
 	public ResponseEntity<WorkFlowStatusResponseDTO> getStatus(@PathVariable UUID workFlowExecutionId) {
-		return ResponseEntity.ok(workFlowService.getWorkFlowStatus(workFlowExecutionId));
+		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = workFlowService.getWorkFlowStatus(workFlowExecutionId);
+		return ResponseEntity.ok().eTag(String.valueOf(workFlowStatusResponseDTO.hashCode()))
+				.body(workFlowStatusResponseDTO);
 	}
 
 	@Operation(summary = "Returns workflows by project id")
@@ -146,6 +156,21 @@ public class WorkFlowController {
 			@NotEmpty @RequestParam List<WorkContextDelegate.@PubliclyVisible Resource> param) {
 		WorkFlowContextResponseDTO responseDTO = workFlowService.getWorkflowParameters(workFlowExecutionId, param);
 		return ResponseEntity.ok(responseDTO);
+	}
+
+	@Operation(summary = "Returns workflow execution log")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Succeeded",
+					content = { @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
+							schema = @Schema(implementation = String.class)) }),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
+			@ApiResponse(responseCode = "304", description = "Not Modified", content = @Content) })
+	@GetMapping("/{workFlowExecutionId}/log")
+	public ResponseEntity<String> getLog(@PathVariable UUID workFlowExecutionId,
+			@RequestParam(required = false) String taskName) {
+		String log = workFlowLogService.getLog(workFlowExecutionId, taskName);
+		return ResponseEntity.ok().eTag(String.valueOf(log.hashCode())).body(log);
 	}
 
 }

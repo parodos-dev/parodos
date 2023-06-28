@@ -46,8 +46,8 @@ public class LoggingWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	public WorkReport execute(WorkContext workContext) {
 		log.info("Writing a message to the logs from: {}", getName());
 		try {
-			String userId = getRequiredParameterValue(workContext, "user-id");
-			String apiServer = getRequiredParameterValue(workContext, "api-server");
+			String userId = getRequiredParameterValue("user-id");
+			String apiServer = getRequiredParameterValue("api-server");
 			log.info("task parameter 'api-server' value in {} is {}", getName(), apiServer);
 			log.info("workflow parameter 'user-id' value in {} is {}", getName(), userId);
 			return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
@@ -61,7 +61,7 @@ public class LoggingWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	@Override
 	public List<WorkParameter> getWorkFlowTaskParameters() {
 		return List.of(
-				WorkParameter.builder().key("api-server").description("The api server").type(WorkParameterType.URL)
+				WorkParameter.builder().key("api-server").description("The api server").type(WorkParameterType.URI)
 						.optional(false).build(),
 				WorkParameter.builder().key("user-id").description("The user id").type(WorkParameterType.TEXT)
 						.optional(false).jsonSchemaOptions(Map.of("minLength", "1", "maxLength", "64")).build());

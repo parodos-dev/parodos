@@ -56,7 +56,8 @@ public class AssessmentInfrastructureWorkFlowPostInterceptor implements WorkFlow
 							.workContext(workContext).build()));
 		}
 
-		if (workFlowExecution.getStatus() == WorkStatus.FAILED) {
+		if (workFlowExecution.getStatus() == WorkStatus.FAILED
+				|| workFlowExecution.getStatus() == WorkStatus.REJECTED) {
 			workFlowService.updateWorkFlow(workFlowExecution);
 			return null;
 		}
@@ -73,7 +74,7 @@ public class AssessmentInfrastructureWorkFlowPostInterceptor implements WorkFlow
 						workFlowCheckerDefinition.getCheckWorkFlow().getId(), mainWorkFlowExecution))
 				.toList();
 
-		for (WorkFlowExecution checkerExecution : checkerExecutions)
+		for (WorkFlowExecution checkerExecution : checkerExecutions) {
 			if (checkerExecution != null && checkerExecution.getStatus() == WorkStatus.REJECTED) {
 				log.info("fail workflow: {} because it has declined checker(s)", workFlowDefinition.getName());
 				workFlowExecution.setStatus(WorkStatus.FAILED);
@@ -88,6 +89,7 @@ public class AssessmentInfrastructureWorkFlowPostInterceptor implements WorkFlow
 				workFlowExecution.setStatus(WorkStatus.IN_PROGRESS);
 				report = new DefaultWorkReport(WorkStatus.IN_PROGRESS, workContext);
 			}
+		}
 
 		workFlowService.updateWorkFlow(workFlowExecution);
 		return report;

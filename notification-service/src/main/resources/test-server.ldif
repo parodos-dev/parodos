@@ -59,10 +59,30 @@ objectclass: top
 objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
+uid: test
 cn: test
 sn: test
-uid: test
 userpassword: $2a$10$SeVolYcPl3zJJbq.ox9U0ug7fo624hpT49O7FjvCNH2Us5HQRuvBe
+
+dn: uid=user1,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: user1
+cn: user1
+sn: user1
+userpassword: $2a$12$VoTPdrYLAG6CXzL0vMvjIeFR9s5UDtK2G6Y8DnsTCQvRkAs2uBcg2
+
+dn: uid=user2,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: user2
+cn: user2
+sn: user2
+userpassword: $2a$12$jOxRGXplQAqSIlgeXifcYuOFE5wqLsF9SJcgPULDNGEooyBT2mW9W
 
 dn: uid=bob,ou=people,dc=springframework,dc=org
 objectclass: top

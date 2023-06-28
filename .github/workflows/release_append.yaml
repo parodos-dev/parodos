@@ -1,0 +1,32 @@
+name: Push manifest to release
+on:
+  release:
+    types: ["created"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Publish binaries
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup kubectl
+      uses: azure/setup-kubectl@v1
+      with:
+        version: 'v1.27.0'
+
+    - name: Build
+      run: |
+        make release-manifests
+
+    - name: Upload manifest to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        file: manifests.yaml
+        asset_name: manifests.yaml
+        tag: ${{ github.ref }}
+        overwrite: true

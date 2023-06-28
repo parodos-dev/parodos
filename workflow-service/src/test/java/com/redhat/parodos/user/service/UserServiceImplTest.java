@@ -1,14 +1,20 @@
 package com.redhat.parodos.user.service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 import com.redhat.parodos.user.dto.UserResponseDTO;
 import com.redhat.parodos.user.entity.User;
 import com.redhat.parodos.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.modelmapper.ModelMapper;
+
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,6 +26,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(SpringExtension.class)
 class UserServiceImplTest {
 
 	private UserRepository userRepository;
@@ -74,11 +81,12 @@ class UserServiceImplTest {
 		when(this.userRepository.findById(user.getId())).thenReturn(Optional.empty());
 
 		// when
-		Exception exception = assertThrows(RuntimeException.class, () -> this.service.getUserById(user.getId()));
+		Exception exception = assertThrows(ResourceNotFoundException.class,
+				() -> this.service.getUserById(user.getId()));
 
 		// then
 		assertNotNull(exception);
-		assertEquals(exception.getMessage(), format("User with id: %s not found", user.getId()));
+		assertEquals(exception.getMessage(), format("User with ID: %s not found", user.getId()));
 		verify(this.userRepository, times(1)).findById(any());
 	}
 
@@ -106,8 +114,23 @@ class UserServiceImplTest {
 		when(this.userRepository.findByUsername(user.getUsername())).thenReturn(Optional.empty());
 
 		// then
-		assertThrows(RuntimeException.class, () -> this.service.getUserByUsername(user.getUsername()));
+		assertThrows(ResourceNotFoundException.class, () -> this.service.getUserByUsername(user.getUsername()));
 		verify(this.userRepository, times(1)).findByUsername(any());
+	}
+
+	@Test
+	@WithMockUser("test")
+	void testSaveCurrentUser() {
+		String username = "test";
+
+		when(userRepository.findAllByUsernameIn(List.of(username))).thenReturn(List.of());
+		when(userRepository.save(any(User.class))).thenReturn(User.builder().username(username).build());
+		assertEquals(username, service.saveCurrentUser().getUsername());
+
+		// Then
+		verify(userRepository, times(1)).findAllByUsernameIn(any());
+		verify(userRepository, times(1)).save(any());
+
 	}
 
 	private User getSampleUser() {

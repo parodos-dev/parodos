@@ -2,7 +2,7 @@ FROM registry.access.redhat.com/ubi9/openjdk-17-runtime
 
 WORKDIR /app
 
-COPY workflow-service/target/*.jar ./workflow-service.jar
+COPY workflow-service/target/workflow-service-*.*.*[^a-z].jar ./workflow-service.jar
 COPY workflow-examples/target/*jar-with-dependencies.jar ./workflow-examples.jar
 
 EXPOSE 8080

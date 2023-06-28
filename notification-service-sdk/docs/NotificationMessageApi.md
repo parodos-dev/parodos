@@ -7,7 +7,7 @@ All URIs are relative to *http://localhost:8080*
 | [**create**](NotificationMessageApi.md#create) | **POST** /api/v1/messages |  |
 
 
-<a name="create"></a>
+<a id="create"></a>
 # **create**
 > create(notificationMessageCreateRequestDTO)
 
@@ -59,10 +59,12 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: Not defined
+ - **Accept**: */*
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **201** | Created |  -  |
+| **400** | Bad Request |  -  |
+| **404** | Not Found |  -  |
 

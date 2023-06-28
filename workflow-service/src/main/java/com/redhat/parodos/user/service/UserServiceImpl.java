@@ -22,9 +22,11 @@ import java.util.UUID;
 import com.redhat.parodos.common.exceptions.IDType;
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 import com.redhat.parodos.common.exceptions.ResourceType;
+import com.redhat.parodos.security.SecurityUtils;
 import com.redhat.parodos.user.dto.UserResponseDTO;
 import com.redhat.parodos.user.entity.User;
 import com.redhat.parodos.user.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 
 import org.springframework.stereotype.Service;
@@ -35,6 +37,7 @@ import org.springframework.stereotype.Service;
  * @author Annel Ketcha (Github: anludke)
  */
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
@@ -52,10 +55,21 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public UserResponseDTO saveCurrentUser() {
+		String username = SecurityUtils.getUsername();
+		UserResponseDTO userResponseDTO = null;
+		if (username != null && findAllUserEntitiesByUsernameIn(List.of(username)).isEmpty()) {
+			userResponseDTO = save(User.builder().username(username).firstName(SecurityUtils.getFirstname())
+					.lastName(SecurityUtils.getLastname()).email(SecurityUtils.getMail()).enabled(true).build());
+			log.info("new logged-in user: {} is added", username);
+		}
+		return userResponseDTO;
+	}
+
+	@Override
 	public UserResponseDTO getUserById(UUID id) {
 		return modelMapper.map(
-				userRepository.findById(id)
-						.orElseThrow(() -> new RuntimeException(String.format("User with id: %s not found", id))),
+				userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER, id)),
 				UserResponseDTO.class);
 	}
 
@@ -63,7 +77,7 @@ public class UserServiceImpl implements UserService {
 	public UserResponseDTO getUserByUsername(String username) {
 		Optional<User> user = userRepository.findByUsername(username);
 		if (!user.isPresent()) {
-			throw new RuntimeException(String.format("User with username: %s not found", username));
+			throw new ResourceNotFoundException(ResourceType.USER, IDType.NAME, username);
 		}
 		return modelMapper.map(user.get(), UserResponseDTO.class);
 	}
@@ -76,8 +90,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User getUserEntityById(UUID id) {
-		return userRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER, IDType.ID, id));
+		return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER, id));
 	}
 
 	@Override

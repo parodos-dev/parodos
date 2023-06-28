@@ -139,4 +139,15 @@ public class ParallelFlowReport implements WorkReport {
 		return workContext;
 	}
 
+	/**
+	 * Return the last alertMessage of partial reports, or null if there are no
+	 * alertMessage.
+	 * @return the last alertMessage
+	 */
+
+	@Override
+	public String getAlertMessage() {
+		return reports.stream().reduce((first, second) -> second).map(WorkReport::getAlertMessage).orElse(null);
+	}
+
 }

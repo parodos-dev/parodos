@@ -18,3 +18,15 @@ spring:
   lifecycle:
     timeout-per-shutdown-phase: "25s"
 
+notification:
+  url: "${NOTIFICATION_SERVER_URL:http://localhost:8081}"
+  auth:
+    basic:
+      user: test
+      password: test
+
+workflows:
+  mta:
+    url: "${MTA_URL:https://mta-openshift-mta.apps.parodos-dev.projects.ecosystem.sysdeseng.com}"
+  m2k:
+    url: "${M2K_URL:http://localhost:8081/api/v1}"

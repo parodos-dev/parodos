@@ -33,6 +33,26 @@
         "responses" : {
           "201" : {
             "description" : "Created"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "404" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Not Found"
           }
         },
         "tags" : [ "Notification Message" ]
@@ -42,11 +62,35 @@
       "get" : {
         "operationId" : "getNotifications",
         "parameters" : [ {
+          "description" : "Zero-based page index (0..N)",
           "in" : "query",
-          "name" : "pageable",
-          "required" : true,
+          "name" : "page",
+          "required" : false,
           "schema" : {
-            "$ref" : "#/components/schemas/Pageable"
+            "minimum" : 0,
+            "type" : "integer",
+            "default" : 0
+          }
+        }, {
+          "description" : "The size of the page to be returned",
+          "in" : "query",
+          "name" : "size",
+          "required" : false,
+          "schema" : {
+            "minimum" : 1,
+            "type" : "integer",
+            "default" : 100
+          }
+        }, {
+          "description" : "Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+          "in" : "query",
+          "name" : "sort",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
           }
         }, {
           "in" : "query",
@@ -75,6 +119,16 @@
             },
             "description" : "Successfully retrieved page of notifications"
           },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
           "401" : {
             "content" : {
               "*/*" : {
@@ -85,15 +139,15 @@
             },
             "description" : "Unauthorized"
           },
-          "403" : {
+          "404" : {
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/PageNotificationRecordResponseDTO"
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
                 }
               }
             },
-            "description" : "Forbidden"
+            "description" : "Not Found"
           }
         },
         "summary" : "Return a list of notification records for the user",
@@ -124,6 +178,16 @@
             },
             "description" : "Successfully retrieved the amount of notifications"
           },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
           "401" : {
             "content" : {
               "*/*" : {
@@ -135,19 +199,18 @@
             },
             "description" : "Unauthorized"
           },
-          "403" : {
+          "404" : {
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "type" : "integer",
-                  "format" : "int32"
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
                 }
               }
             },
-            "description" : "Forbidden"
+            "description" : "Not Found"
           }
         },
-        "summary" : "Return the number of the unread notification records for the user",
+        "summary" : "Return the number of the notification records with given state for the user",
         "tags" : [ "Notification Record" ]
       }
     },
@@ -164,14 +227,31 @@
           }
         } ],
         "responses" : {
-          "200" : {
-            "description" : "Successfully retrieved the amount of notifications"
+          "204" : {
+            "description" : "Successfully Deleted"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
           },
           "401" : {
             "description" : "Unauthorized"
           },
-          "403" : {
-            "description" : "Forbidden"
+          "404" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Not Found"
           }
         },
         "summary" : "Delete the specified notification record",
@@ -199,13 +279,23 @@
         "responses" : {
           "200" : {
             "content" : {
-              "*/*" : {
+              "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/NotificationRecordResponseDTO"
                 }
               }
             },
-            "description" : "Succeeded"
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
           },
           "401" : {
             "content" : {
@@ -221,7 +311,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/NotificationRecordResponseDTO"
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
                 }
               }
             },
@@ -235,34 +325,17 @@
   },
   "components" : {
     "schemas" : {
-      "Link" : {
+      "ErrorMessageDTO" : {
         "type" : "object",
         "properties" : {
-          "deprecation" : {
+          "date" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "description" : {
             "type" : "string"
           },
-          "href" : {
-            "type" : "string"
-          },
-          "hreflang" : {
-            "type" : "string"
-          },
-          "media" : {
-            "type" : "string"
-          },
-          "name" : {
-            "type" : "string"
-          },
-          "profile" : {
-            "type" : "string"
-          },
-          "rel" : {
-            "type" : "string"
-          },
-          "title" : {
-            "type" : "string"
-          },
-          "type" : {
+          "message" : {
             "type" : "string"
           }
         }
@@ -312,12 +385,6 @@
           "id" : {
             "type" : "string",
             "format" : "uuid"
-          },
-          "links" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Link"
-            }
           },
           "messageType" : {
             "type" : "string"
@@ -379,27 +446,6 @@
           "totalPages" : {
             "type" : "integer",
             "format" : "int32"
-          }
-        }
-      },
-      "Pageable" : {
-        "type" : "object",
-        "properties" : {
-          "page" : {
-            "minimum" : 0,
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "size" : {
-            "minimum" : 1,
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "sort" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
-            }
           }
         }
       },

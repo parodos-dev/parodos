@@ -22,7 +22,6 @@ import java.util.UUID;
 import com.google.gson.reflect.TypeToken;
 import com.redhat.parodos.notification.sdk.model.NotificationRecordResponseDTO;
 import com.redhat.parodos.notification.sdk.model.PageNotificationRecordResponseDTO;
-import com.redhat.parodos.notification.sdk.model.Pageable;
 
 public class NotificationRecordApi {
 
@@ -83,13 +82,18 @@ public class NotificationRecordApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
-	 * <td>403</td>
-	 * <td>Forbidden</td>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -157,7 +161,7 @@ public class NotificationRecordApi {
 	}
 
 	/**
-	 * Return the number of the unread notification records for the user
+	 * Return the number of the notification records with given state for the user
 	 * @param state (required)
 	 * @return Integer
 	 * @throws ApiException If fail to call the API, e.g. server error or cannot
@@ -175,13 +179,18 @@ public class NotificationRecordApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
-	 * <td>403</td>
-	 * <td>Forbidden</td>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -192,7 +201,7 @@ public class NotificationRecordApi {
 	}
 
 	/**
-	 * Return the number of the unread notification records for the user
+	 * Return the number of the notification records with given state for the user
 	 * @param state (required)
 	 * @return ApiResponse&lt;Integer&gt;
 	 * @throws ApiException If fail to call the API, e.g. server error or cannot
@@ -210,13 +219,18 @@ public class NotificationRecordApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
-	 * <td>403</td>
-	 * <td>Forbidden</td>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -229,7 +243,8 @@ public class NotificationRecordApi {
 	}
 
 	/**
-	 * Return the number of the unread notification records for the user (asynchronously)
+	 * Return the number of the notification records with given state for the user
+	 * (asynchronously)
 	 * @param state (required)
 	 * @param _callback The callback to be executed when the API call finishes
 	 * @return The request call
@@ -248,13 +263,18 @@ public class NotificationRecordApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
-	 * <td>403</td>
-	 * <td>Forbidden</td>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -283,8 +303,13 @@ public class NotificationRecordApi {
 	 * <td>Response Headers</td>
 	 * </tr>
 	 * <tr>
-	 * <td>200</td>
-	 * <td>Successfully retrieved the amount of notifications</td>
+	 * <td>204</td>
+	 * <td>Successfully Deleted</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -293,8 +318,8 @@ public class NotificationRecordApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
-	 * <td>403</td>
-	 * <td>Forbidden</td>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -327,7 +352,7 @@ public class NotificationRecordApi {
 		Map<String, String> localVarCookieParams = new HashMap<String, String>();
 		Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-		final String[] localVarAccepts = {};
+		final String[] localVarAccepts = { "*/*" };
 		final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
 		if (localVarAccept != null) {
 			localVarHeaderParams.put("Accept", localVarAccept);
@@ -370,8 +395,13 @@ public class NotificationRecordApi {
 	 * <td>Response Headers</td>
 	 * </tr>
 	 * <tr>
-	 * <td>200</td>
-	 * <td>Successfully retrieved the amount of notifications</td>
+	 * <td>204</td>
+	 * <td>Successfully Deleted</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -380,8 +410,8 @@ public class NotificationRecordApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
-	 * <td>403</td>
-	 * <td>Forbidden</td>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -404,8 +434,13 @@ public class NotificationRecordApi {
 	 * <td>Response Headers</td>
 	 * </tr>
 	 * <tr>
-	 * <td>200</td>
-	 * <td>Successfully retrieved the amount of notifications</td>
+	 * <td>204</td>
+	 * <td>Successfully Deleted</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -414,8 +449,8 @@ public class NotificationRecordApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
-	 * <td>403</td>
-	 * <td>Forbidden</td>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -440,8 +475,13 @@ public class NotificationRecordApi {
 	 * <td>Response Headers</td>
 	 * </tr>
 	 * <tr>
-	 * <td>200</td>
-	 * <td>Successfully retrieved the amount of notifications</td>
+	 * <td>204</td>
+	 * <td>Successfully Deleted</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -450,8 +490,8 @@ public class NotificationRecordApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
-	 * <td>403</td>
-	 * <td>Forbidden</td>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
@@ -465,7 +505,10 @@ public class NotificationRecordApi {
 
 	/**
 	 * Build call for getNotifications
-	 * @param pageable (required)
+	 * @param page Zero-based page index (0..N) (optional, default to 0)
+	 * @param size The size of the page to be returned (optional, default to 100)
+	 * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order
+	 * is ascending. Multiple sort criteria are supported. (optional)
 	 * @param state (optional)
 	 * @param searchTerm (optional)
 	 * @param _callback Callback for upload/download progress
@@ -484,19 +527,24 @@ public class NotificationRecordApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
-	 * <td>403</td>
-	 * <td>Forbidden</td>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
 	 */
-	public okhttp3.Call getNotificationsCall(Pageable pageable, String state, String searchTerm,
-			final ApiCallback _callback) throws ApiException {
+	public okhttp3.Call getNotificationsCall(Integer page, Integer size, List<String> sort, String state,
+			String searchTerm, final ApiCallback _callback) throws ApiException {
 		String basePath = null;
 		// Operation Servers
 		String[] localBasePaths = new String[] {};
@@ -523,8 +571,16 @@ public class NotificationRecordApi {
 		Map<String, String> localVarCookieParams = new HashMap<String, String>();
 		Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-		if (pageable != null) {
-			localVarQueryParams.addAll(localVarApiClient.parameterToPair("pageable", pageable));
+		if (page != null) {
+			localVarQueryParams.addAll(localVarApiClient.parameterToPair("page", page));
+		}
+
+		if (size != null) {
+			localVarQueryParams.addAll(localVarApiClient.parameterToPair("size", size));
+		}
+
+		if (sort != null) {
+			localVarCollectionQueryParams.addAll(localVarApiClient.parameterToPairs("multi", "sort", sort));
 		}
 
 		if (state != null) {
@@ -554,20 +610,18 @@ public class NotificationRecordApi {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private okhttp3.Call getNotificationsValidateBeforeCall(Pageable pageable, String state, String searchTerm,
-			final ApiCallback _callback) throws ApiException {
-		// verify the required parameter 'pageable' is set
-		if (pageable == null) {
-			throw new ApiException("Missing the required parameter 'pageable' when calling getNotifications(Async)");
-		}
-
-		return getNotificationsCall(pageable, state, searchTerm, _callback);
+	private okhttp3.Call getNotificationsValidateBeforeCall(Integer page, Integer size, List<String> sort, String state,
+			String searchTerm, final ApiCallback _callback) throws ApiException {
+		return getNotificationsCall(page, size, sort, state, searchTerm, _callback);
 
 	}
 
 	/**
 	 * Return a list of notification records for the user
-	 * @param pageable (required)
+	 * @param page Zero-based page index (0..N) (optional, default to 0)
+	 * @param size The size of the page to be returned (optional, default to 100)
+	 * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order
+	 * is ascending. Multiple sort criteria are supported. (optional)
 	 * @param state (optional)
 	 * @param searchTerm (optional)
 	 * @return PageNotificationRecordResponseDTO
@@ -586,27 +640,35 @@ public class NotificationRecordApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
-	 * <td>403</td>
-	 * <td>Forbidden</td>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
 	 */
-	public PageNotificationRecordResponseDTO getNotifications(Pageable pageable, String state, String searchTerm)
-			throws ApiException {
-		ApiResponse<PageNotificationRecordResponseDTO> localVarResp = getNotificationsWithHttpInfo(pageable, state,
-				searchTerm);
+	public PageNotificationRecordResponseDTO getNotifications(Integer page, Integer size, List<String> sort,
+			String state, String searchTerm) throws ApiException {
+		ApiResponse<PageNotificationRecordResponseDTO> localVarResp = getNotificationsWithHttpInfo(page, size, sort,
+				state, searchTerm);
 		return localVarResp.getData();
 	}
 
 	/**
 	 * Return a list of notification records for the user
-	 * @param pageable (required)
+	 * @param page Zero-based page index (0..N) (optional, default to 0)
+	 * @param size The size of the page to be returned (optional, default to 100)
+	 * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order
+	 * is ascending. Multiple sort criteria are supported. (optional)
 	 * @param state (optional)
 	 * @param searchTerm (optional)
 	 * @return ApiResponse&lt;PageNotificationRecordResponseDTO&gt;
@@ -625,20 +687,25 @@ public class NotificationRecordApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
-	 * <td>403</td>
-	 * <td>Forbidden</td>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
 	 */
-	public ApiResponse<PageNotificationRecordResponseDTO> getNotificationsWithHttpInfo(Pageable pageable, String state,
-			String searchTerm) throws ApiException {
-		okhttp3.Call localVarCall = getNotificationsValidateBeforeCall(pageable, state, searchTerm, null);
+	public ApiResponse<PageNotificationRecordResponseDTO> getNotificationsWithHttpInfo(Integer page, Integer size,
+			List<String> sort, String state, String searchTerm) throws ApiException {
+		okhttp3.Call localVarCall = getNotificationsValidateBeforeCall(page, size, sort, state, searchTerm, null);
 		Type localVarReturnType = new TypeToken<PageNotificationRecordResponseDTO>() {
 		}.getType();
 		return localVarApiClient.execute(localVarCall, localVarReturnType);
@@ -646,7 +713,10 @@ public class NotificationRecordApi {
 
 	/**
 	 * Return a list of notification records for the user (asynchronously)
-	 * @param pageable (required)
+	 * @param page Zero-based page index (0..N) (optional, default to 0)
+	 * @param size The size of the page to be returned (optional, default to 100)
+	 * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order
+	 * is ascending. Multiple sort criteria are supported. (optional)
 	 * @param state (optional)
 	 * @param searchTerm (optional)
 	 * @param _callback The callback to be executed when the API call finishes
@@ -666,21 +736,26 @@ public class NotificationRecordApi {
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
 	 * <td>401</td>
 	 * <td>Unauthorized</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
-	 * <td>403</td>
-	 * <td>Forbidden</td>
+	 * <td>404</td>
+	 * <td>Not Found</td>
 	 * <td>-</td>
 	 * </tr>
 	 * </table>
 	 */
-	public okhttp3.Call getNotificationsAsync(Pageable pageable, String state, String searchTerm,
-			final ApiCallback<PageNotificationRecordResponseDTO> _callback) throws ApiException {
+	public okhttp3.Call getNotificationsAsync(Integer page, Integer size, List<String> sort, String state,
+			String searchTerm, final ApiCallback<PageNotificationRecordResponseDTO> _callback) throws ApiException {
 
-		okhttp3.Call localVarCall = getNotificationsValidateBeforeCall(pageable, state, searchTerm, _callback);
+		okhttp3.Call localVarCall = getNotificationsValidateBeforeCall(page, size, sort, state, searchTerm, _callback);
 		Type localVarReturnType = new TypeToken<PageNotificationRecordResponseDTO>() {
 		}.getType();
 		localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
@@ -703,7 +778,12 @@ public class NotificationRecordApi {
 	 * </tr>
 	 * <tr>
 	 * <td>200</td>
-	 * <td>Succeeded</td>
+	 * <td>OK</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -751,7 +831,7 @@ public class NotificationRecordApi {
 			localVarQueryParams.addAll(localVarApiClient.parameterToPair("operation", operation));
 		}
 
-		final String[] localVarAccepts = { "*/*" };
+		final String[] localVarAccepts = { "application/json", "*/*" };
 		final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
 		if (localVarAccept != null) {
 			localVarHeaderParams.put("Accept", localVarAccept);
@@ -804,7 +884,12 @@ public class NotificationRecordApi {
 	 * </tr>
 	 * <tr>
 	 * <td>200</td>
-	 * <td>Succeeded</td>
+	 * <td>OK</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -841,7 +926,12 @@ public class NotificationRecordApi {
 	 * </tr>
 	 * <tr>
 	 * <td>200</td>
-	 * <td>Succeeded</td>
+	 * <td>OK</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>
@@ -881,7 +971,12 @@ public class NotificationRecordApi {
 	 * </tr>
 	 * <tr>
 	 * <td>200</td>
-	 * <td>Succeeded</td>
+	 * <td>OK</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
 	 * <td>-</td>
 	 * </tr>
 	 * <tr>

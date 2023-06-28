@@ -2,14 +2,16 @@ package com.redhat.parodos.tasks.git;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.UUID;
 import java.util.stream.Stream;
 
+import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.InitCommand;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +20,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 @Slf4j
 public class GitCloneTaskTest {
@@ -34,12 +35,20 @@ public class GitCloneTaskTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 		gitCloneTask = new GitCloneTask();
+		gitCloneTask.setBeanName("GitCloneTask");
 		tempDir = Files.createTempDirectory("git-repo");
 
 		gitRepoPath = tempDir.resolve(".git");
 
-		this.repository = FileRepositoryBuilder.create(gitRepoPath.toFile());
-		this.repository.create();
+		InitCommand command = new InitCommand();
+		command.setInitialBranch("main");
+		command.setDirectory(tempDir.toFile());
+		Git git = command.call();
+		assertNotNull(git);
+		assertEquals(git.getRepository().getFullBranch(), "refs/heads/main");
+		assertEquals(git.getRepository().getBranch(), "main");
+		repository = git.getRepository();
+
 		log.info("Created a new repository at '{}'", this.repository.getDirectory());
 		this.createSingleFileInRepo();
 	}
@@ -59,54 +68,57 @@ public class GitCloneTaskTest {
 	@Test
 	public void testWithValidClone() {
 		// given
-		WorkContext workContext = new WorkContext();
-		workContext.put("uri", this.repository.getDirectory().toString());
-		workContext.put("branch", "master");
+		WorkContext workContext = getSampleContext();
+		WorkContextUtils.addParameter(workContext, "uri", tempDir.toString());
+		WorkContextUtils.addParameter(workContext, "branch", "main");
 
 		// then
-		var result = this.gitCloneTask.execute(workContext);
+		gitCloneTask.preExecute(workContext);
+		var result = gitCloneTask.execute(workContext);
 
 		// when
-		assertNull(result.getError());
-		assertEquals(result.getStatus(), WorkStatus.COMPLETED);
-		assertNotNull(result.getWorkContext().get("gitDestination"));
-		assertNotNull(result.getWorkContext().get("gitUri"));
+		assertThat(result.getError()).isNull();
+		assertThat(result.getStatus()).isEqualTo(WorkStatus.COMPLETED);
+		assertThat(result.getWorkContext().get("gitDestination")).isNotNull();
+		assertThat(result.getWorkContext().get("gitUri")).isNotNull();
 	}
 
 	@Test
 	public void testWithInValidClone() {
 		// given
-		WorkContext workContext = new WorkContext();
-		workContext.put("uri", "InvalidFolder");
-		workContext.put("branch", "master");
+		WorkContext workContext = getSampleContext();
+		WorkContextUtils.addParameter(workContext, "uri", "invalidFolder");
+		WorkContextUtils.addParameter(workContext, "branch", "main");
 
 		// then
-		var result = this.gitCloneTask.execute(workContext);
+		gitCloneTask.preExecute(workContext);
+		var result = gitCloneTask.execute(workContext);
 
 		// when
-		assertNotNull(result.getError());
-		assertThat(result.getError().toString()).contains("Remote repository InvalidFolder is not available");
-		assertEquals(result.getStatus(), WorkStatus.FAILED);
-		assertNull(result.getWorkContext().get("gitDestination"));
-		assertNull(result.getWorkContext().get("gitUri"));
+		assertThat(result.getError()).isNotNull();
+		assertThat(result.getError().toString()).contains("Remote repository invalidFolder is not available");
+		assertThat(result.getStatus()).isEqualTo(WorkStatus.FAILED);
+		assertThat(result.getWorkContext().get("gitDestination")).isNull();
+		assertThat(result.getWorkContext().get("gitUri")).isNull();
 	}
 
 	@Test
 	public void testWithInValidBranch() {
 		// given
-		WorkContext workContext = new WorkContext();
-		workContext.put("uri", this.repository.getDirectory().toString());
-		workContext.put("branch", "fooBranch");
+		WorkContext workContext = getSampleContext();
+		WorkContextUtils.addParameter(workContext, "uri", tempDir.toString());
+		WorkContextUtils.addParameter(workContext, "branch", "fooBranch");
 
 		// then
-		var result = this.gitCloneTask.execute(workContext);
+		gitCloneTask.preExecute(workContext);
+		var result = gitCloneTask.execute(workContext);
 
 		// when
-		assertNotNull(result.getError());
+		assertThat(result.getError()).isNotNull();
 		assertThat(result.getError().toString()).contains("cannot connect to the repository server");
-		assertEquals(result.getStatus(), WorkStatus.FAILED);
-		assertNull(result.getWorkContext().get("gitDestination"));
-		assertNull(result.getWorkContext().get("gitUri"));
+		assertThat(result.getStatus()).isEqualTo(WorkStatus.FAILED);
+		assertThat(result.getWorkContext().get("gitDestination")).isNull();
+		assertThat(result.getWorkContext().get("gitUri")).isNull();
 	}
 
 	private void createSingleFileInRepo() {
@@ -117,7 +129,12 @@ public class GitCloneTaskTest {
 			git.add().addFilepattern(".").call();
 			git.commit().setMessage("Initial commit").setSign(false).call();
 		});
+	}
 
+	private WorkContext getSampleContext() {
+		WorkContext context = new WorkContext();
+		WorkContextUtils.setMainExecutionId(context, UUID.randomUUID());
+		return context;
 	}
 
 }

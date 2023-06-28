@@ -1,0 +1,61 @@
+name: Release new version
+
+on:
+  workflow_dispatch:
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: "Git config"
+        run: |
+          git config user.name 'Parodos bot'
+          git config user.email 'parodos@redhat.com'
+
+      - name: Configure Maven settings
+        run: |
+          mkdir -p ~/.m2/
+          echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.MAVEN_USER }}</username><password>${{ secrets.MAVEN_PASSWORD }}</password></server></servers></settings>" > ~/.m2/settings.xml
+
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          registry: "quay.io"
+          username: "${{ secrets.QUAY_GITHUB_USER }}"
+          password: "${{ secrets.QUAY_GITHUB_TOKEN }}"
+
+      - name: Import GPG secret key
+        run: |
+          mkdir -p ~/.gnupg/
+          echo "${{ secrets.GPG }}" | base64 --decode > ~/.gnupg/private.key
+          gpg --batch --import ~/.gnupg/private.key
+
+      - name: "Do the release"
+        run: |
+          make release-all
+
+      - name: "Commit the new changes"
+        run: |
+          export KEY=$(date +%y%m%d)
+          git add .
+          git commit -m "NON-issue: bump version on $KEY"
+
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          title: "NON-issue: bump version"

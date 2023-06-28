@@ -12,7 +12,7 @@
     <description>Compute aggregated test code coverage</description>
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
-        <revision>1.0.12-SNAPSHOT</revision>
+        <revision>1.0.18-SNAPSHOT</revision>
     </properties>
 
     <dependencies>
@@ -62,6 +62,7 @@
                     <excludes>${project.parent.basedir}/workflow-service-sdk/*</excludes>
                     <excludes>${project.parent.basedir}/notification-service-sdk/*</excludes>
                     <excludes>${project.parent.basedir}/integration-tests/*</excludes>
+                    <excludes>com/redhat/parodos/examples/negative/**/*</excludes>
                 </configuration>
             </plugin>
         </plugins>

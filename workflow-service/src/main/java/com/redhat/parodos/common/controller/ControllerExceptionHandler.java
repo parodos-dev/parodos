@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
+import com.redhat.parodos.common.exceptions.IllegalWorkFlowStateException;
+import com.redhat.parodos.common.exceptions.OperationDeniedException;
 import com.redhat.parodos.common.exceptions.ResourceAlreadyExistsException;
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 
@@ -47,6 +49,21 @@ public class ControllerExceptionHandler {
 	@ResponseStatus(value = HttpStatus.CONFLICT)
 	public ErrorMessageDTO resourceAlreadyExistsException(ResourceAlreadyExistsException ex, WebRequest request) {
 		return new ErrorMessageDTO(HttpStatus.CONFLICT.value(), new Date(), ex.getMessage(), "Resource already exists");
+	}
+
+	@ExceptionHandler(value = { OperationDeniedException.class })
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	public ErrorMessageDTO operationDeniedException(OperationDeniedException ex, WebRequest request) {
+		return new ErrorMessageDTO(HttpStatus.BAD_REQUEST.value(), new Date(), ex.getMessage(), "Operation denied");
+	}
+
+	@ExceptionHandler(value = { IllegalWorkFlowStateException.class })
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	public ErrorMessageDTO illegalWorkFlowStateException(IllegalWorkFlowStateException ex, WebRequest request) {
+		return new ErrorMessageDTO(HttpStatus.BAD_REQUEST.value(), new Date(), ex.getMessage(),
+				"Illegal workflow state");
 	}
 
 	record ErrorMessageDTO(int status, Date date, String message, String description) {

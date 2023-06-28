@@ -26,7 +26,7 @@ import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.redhat.parodos.common.AbstractEntity;
+import com.redhat.parodos.common.entity.AbstractEntity;
 import com.redhat.parodos.common.exceptions.IDType;
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 import com.redhat.parodos.common.exceptions.ResourceType;
@@ -92,8 +92,9 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 	private HashMap<String, Map<String, Object>> convertWorkParameters(List<WorkParameter> workParameters) {
 		HashMap<String, Map<String, Object>> result = new HashMap<>();
 		for (WorkParameter workParameter : workParameters) {
-			if (workParameter == null)
+			if (workParameter == null) {
 				continue;
+			}
 
 			result.put(workParameter.getKey(), workParameter.getAsJsonSchema());
 		}
@@ -196,7 +197,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 	@Override
 	public WorkFlowDefinitionResponseDTO getWorkFlowDefinitionById(UUID id) {
 		WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.WORKFLOW_DEFINITION, IDType.ID, id));
+				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.WORKFLOW_DEFINITION, id));
 		List<WorkFlowWorkDefinition> workFlowWorkDependencies = workFlowWorkRepository
 				.findByWorkFlowDefinitionIdOrderByCreateDateAsc(workFlowDefinition.getId()).stream()
 				.sorted(Comparator.comparing(WorkFlowWorkDefinition::getCreateDate)).toList();
