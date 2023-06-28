@@ -15,13 +15,13 @@ bases:
 
 images:
 - name: quay.io/parodos-dev/workflow-service:main
-  newTag: "$VERSION"
+  newTag: "v$VERSION"
 
 - name: quay.io/parodos-dev/notification-service:main
-  newTag: "$VERSION"
+  newTag: "v$VERSION"
 
 - name: quay.io/parodos-dev/backstage-parodos:latest-openshift
-  newTag: "$VERSION-openshift"
+  newTag: "v$VERSION-openshift"
 EOF
 
 
