@@ -2,9 +2,9 @@ package com.redhat.parodos.examples.vmonboarding.task;
 
 import java.util.Map;
 
-import com.redhat.parodos.examples.utils.RestUtils;
 import com.redhat.parodos.examples.vmonboarding.dto.AapGetJobResponseDto;
 import com.redhat.parodos.examples.vmonboarding.dto.AapJobLaunchRequestDto;
+import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
@@ -39,7 +39,7 @@ public class AapLaunchJobWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 		log.info("Start ServiceNowTicketCreationWorkFlowTask...");
 		try {
 			String urlString = aapUrl + String.format(JOB_LAUNCH_CONTEXT_PATH, jobTemplateId);
-			String vmIp = getRequiredParameterValue(workContext, "IP");
+			String vmIp = getRequiredParameterValue("IP");
 
 			log.info("vm ip: {}", vmIp);
 
@@ -52,7 +52,7 @@ public class AapLaunchJobWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 			if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
 				String jobId = response.getBody().getJobId();
 				log.info("Rest call completed, job id: {}", jobId);
-				addParameter(workContext, "JOB_ID", jobId);
+				addParameter("JOB_ID", jobId);
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 			}
 			log.error("Call to the API was not successful. Response: {}", response.getStatusCode());
