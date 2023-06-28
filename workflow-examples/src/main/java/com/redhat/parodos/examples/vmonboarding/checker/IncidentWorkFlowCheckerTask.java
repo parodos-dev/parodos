@@ -1,7 +1,7 @@
 package com.redhat.parodos.examples.vmonboarding.checker;
 
-import com.redhat.parodos.examples.utils.RestUtils;
 import com.redhat.parodos.examples.vmonboarding.dto.ServiceNowResponseDto;
+import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.checker.BaseWorkFlowCheckerTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
@@ -41,7 +41,7 @@ public class IncidentWorkFlowCheckerTask extends BaseWorkFlowCheckerTask {
 	public WorkReport checkWorkFlowStatus(WorkContext workContext) {
 		log.info("Start IncidentWorkFlowCheckerTask...");
 		try {
-			String incidentId = getRequiredParameterValue(workContext, "INCIDENT_ID");
+			String incidentId = getRequiredParameterValue("INCIDENT_ID");
 			log.info("INCIDENT id: {}", incidentId);
 			String urlString = serviceNowUrl + "/api/now/table/incident/" + incidentId;
 
@@ -63,7 +63,7 @@ public class IncidentWorkFlowCheckerTask extends BaseWorkFlowCheckerTask {
 				log.info("incident completed: {}", responseDto.getResult().getState());
 				String ip = responseDto.getResult().getIp();
 				if (ip != null && !ip.isEmpty()) {
-					addParameter(workContext, "IP", ip);
+					addParameter("IP", ip);
 					return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 				}
 			}
