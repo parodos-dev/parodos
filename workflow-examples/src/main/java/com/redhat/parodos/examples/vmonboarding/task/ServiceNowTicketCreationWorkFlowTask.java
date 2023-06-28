@@ -1,8 +1,8 @@
 package com.redhat.parodos.examples.vmonboarding.task;
 
-import com.redhat.parodos.examples.utils.RestUtils;
 import com.redhat.parodos.examples.vmonboarding.dto.ServiceNowRequestDto;
 import com.redhat.parodos.examples.vmonboarding.dto.ServiceNowResponseDto;
+import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
@@ -40,7 +40,7 @@ public class ServiceNowTicketCreationWorkFlowTask extends BaseInfrastructureWork
 		log.info("Start ServiceNowTicketCreationWorkFlowTask...");
 		try {
 			String urlString = serviceNowUrl + CREATE_INCIDENT_CONTEXT_PATH;
-			String vmName = getOptionalParameterValue(workContext, "hostname", "snowrhel");
+			String vmName = getOptionalParameterValue("hostname", "snowrhel");
 
 			log.info("vm name: {}", vmName);
 
@@ -54,7 +54,7 @@ public class ServiceNowTicketCreationWorkFlowTask extends BaseInfrastructureWork
 				String sysId = response.getBody().getResult().getSysId();
 				String number = response.getBody().getResult().getNumber();
 				log.info("Rest call completed, sys id: {}, incident number: {}", sysId, number);
-				addParameter(workContext, "INCIDENT_ID", sysId);
+				addParameter("INCIDENT_ID", sysId);
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 			}
 			log.error("Call to the API was not successful. Response: {}", response.getStatusCode());

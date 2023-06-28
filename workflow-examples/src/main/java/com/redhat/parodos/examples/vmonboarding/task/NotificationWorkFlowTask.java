@@ -18,7 +18,7 @@ package com.redhat.parodos.examples.vmonboarding.task;
 import java.util.List;
 
 import com.redhat.parodos.examples.ocponboarding.task.dto.notification.NotificationRequest;
-import com.redhat.parodos.examples.utils.RestUtils;
+import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
@@ -62,7 +62,7 @@ public class NotificationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 		try {
 			NotificationRequest request;
 			if (notificationSubject.equalsIgnoreCase("IP Address")) { // IP Address
-				String ip = getRequiredParameterValue(workContext, "IP");
+				String ip = getRequiredParameterValue("IP");
 				request = NotificationRequest.builder().usernames(List.of(NOTIFICATION_USERNAME))
 						.subject(NOTIFICATION_SUBJECT_PREF + notificationSubject).body(buildMessage(ip)).build();
 			}

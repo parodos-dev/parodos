@@ -1,7 +1,7 @@
 package com.redhat.parodos.examples.vmonboarding.checker;
 
-import com.redhat.parodos.examples.utils.RestUtils;
 import com.redhat.parodos.examples.vmonboarding.dto.AapGetJobResponseDto;
+import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.checker.BaseWorkFlowCheckerTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
@@ -41,7 +41,7 @@ public class AnsibleCompletionWorkFlowCheckerTask extends BaseWorkFlowCheckerTas
 	public WorkReport checkWorkFlowStatus(WorkContext workContext) {
 		log.info("Start AnsibleCompletionWorkFlowCheckerTask...");
 		try {
-			String jobId = getRequiredParameterValue(workContext, "JOB_ID");
+			String jobId = getRequiredParameterValue("JOB_ID");
 			log.info("job id: {}", jobId);
 			String urlString = aapUrl + "/api/v2/jobs/" + jobId;
 
