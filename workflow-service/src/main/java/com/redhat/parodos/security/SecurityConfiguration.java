@@ -27,10 +27,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.ldap.userdetails.InetOrgPersonContextMapper;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.stereotype.Component;
 
 /**
@@ -45,7 +44,7 @@ import org.springframework.stereotype.Component;
 @Configuration
 @Profile("!local")
 @DependsOn("org.springframework.boot.context.properties.ConfigurationPropertiesBindingPostProcessor")
-public class SecurityConfiguration {
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private LdapConnectionProperties ldapConnectionProperties;
@@ -53,11 +52,12 @@ public class SecurityConfiguration {
 	@Autowired
 	private SecurityProperties securityProperties;
 
-	public HttpSecurity setHttpSecurity(HttpSecurity http) throws Exception {
-		http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http.csrf().disable().cors().disable();
 
 		if (!this.securityProperties.getAuthentication()) {
-			return http;
+			return;
 		}
 
 		// @formatter:off
@@ -75,22 +75,21 @@ public class SecurityConfiguration {
                 .logout()
                 .logoutSuccessUrl("/login").permitAll();
         // @formatter:on
-		return http;
 	}
 
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		HttpSecurity httpSec = this.setHttpSecurity(http);
-		return httpSec.build();
+	public InetOrgPersonContextMapper userContextMapper() {
+		return new InetOrgPersonContextMapper();
 	}
 
-	@Autowired
+	@Override
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
 		if (!this.securityProperties.getAuthentication()) {
 			return;
 		}
 		// @formatter:off
-        auth.ldapAuthentication()
+		auth
+				.ldapAuthentication()
                 .userDetailsContextMapper(userContextMapper())
                 .userDnPatterns(this.ldapConnectionProperties.getUserDNPatterns())
                 .groupSearchBase(this.ldapConnectionProperties.getGroupSearchBase()).contextSource()
@@ -102,11 +101,6 @@ public class SecurityConfiguration {
                 .passwordEncoder(new BCryptPasswordEncoder())
                 .passwordAttribute(this.ldapConnectionProperties.getPasswordAttribute());
         // @formatter:on
-	}
-
-	@Bean
-	public InetOrgPersonContextMapper userContextMapper() {
-		return new InetOrgPersonContextMapper();
 	}
 
 }
