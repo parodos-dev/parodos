@@ -18,7 +18,6 @@ package com.redhat.parodos.security;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * Turn off security for Local testing only. Do not enable this profile in production
@@ -31,11 +30,9 @@ import org.springframework.security.web.SecurityFilterChain;
 public class LocalSecurityConfiguration extends SecurityConfiguration {
 
 	@Override
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		HttpSecurity httpSec = this.setHttpSecurity(http);
-		httpSec.cors().disable();
-		httpSec.csrf().disable();
-		return httpSec.build();
+	protected void configure(HttpSecurity http) throws Exception {
+		http.cors().disable().csrf().disable();
+		super.configure(http);
 	}
 
 }

@@ -31,6 +31,8 @@
         <jgit-version>6.5.0.202303070854-r</jgit-version>
         <common.io.version>2.11.0</common.io.version>
         <model.mapper.version>3.1.1</model.mapper.version>
+        <spring-cloud.version>2021.0.7</spring-cloud.version>
+        <springdoc-openapi-ui.version>1.6.4</springdoc-openapi-ui.version>
         <hypersistence-utils.version>3.1.0</hypersistence-utils.version>
     </properties>
 
@@ -79,6 +81,10 @@
         <dependency>
             <groupId>org.springframework.ldap</groupId>
             <artifactId>spring-ldap-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-ldap</artifactId>
         </dependency>
         <dependency>
             <groupId>com.unboundid</groupId>
