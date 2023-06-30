@@ -45,14 +45,15 @@ public class AnsibleCompletionWorkFlowCheckerTask extends BaseWorkFlowCheckerTas
 			log.info("job id: {}", jobId);
 			String urlString = aapUrl + "/api/v2/jobs/" + jobId;
 
-			ResponseEntity<AapGetJobResponseDTO> result = RestUtils.restExchange(urlString, username, password,
-					AapGetJobResponseDTO.class);
+			ResponseEntity<AapGetJobResponseDTO> result = RestUtils.restExchange(
+					RestUtils.ignoreSSLVerifyRestTemplate(), urlString, username, password, AapGetJobResponseDTO.class);
 			AapGetJobResponseDTO responseDto = result.getBody();
 
 			if (!result.getStatusCode().is2xxSuccessful() || responseDto == null) {
 				log.error("Call to the API was not successful. Response: {} ", result.getStatusCode());
 			}
-			else if ("running".equalsIgnoreCase(responseDto.getStatus())) {
+			else if ("pending".equalsIgnoreCase(responseDto.getStatus())
+					|| "running".equalsIgnoreCase(responseDto.getStatus())) {
 				log.error("job is not completed.  Status: {}", responseDto.getStatus());
 			}
 			else if ("successful".equalsIgnoreCase(responseDto.getStatus())) {
@@ -60,7 +61,7 @@ public class AnsibleCompletionWorkFlowCheckerTask extends BaseWorkFlowCheckerTas
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 			}
 			else {
-				log.error("job is failed. Status: {}", responseDto.getStatus());
+				log.error("job is failed.  Status: {}", responseDto.getStatus());
 				return new DefaultWorkReport(WorkStatus.REJECTED, workContext);
 			}
 		}

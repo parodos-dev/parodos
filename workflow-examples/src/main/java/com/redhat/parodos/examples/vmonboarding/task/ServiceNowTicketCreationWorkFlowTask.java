@@ -41,11 +41,11 @@ public class ServiceNowTicketCreationWorkFlowTask extends BaseInfrastructureWork
 		try {
 			String urlString = serviceNowUrl + CREATE_INCIDENT_CONTEXT_PATH;
 			String vmName = getOptionalParameterValue("hostname", "snowrhel");
-
+			String vmType = getRequiredParameterValue("VM_TYPE");
 			log.info("vm name: {}", vmName);
 
 			ServiceNowRequestDTO request = ServiceNowRequestDTO.builder().callerId(username)
-					.shortDescription("Azure linux Vm Onboarding").build();
+					.shortDescription(String.format("Azure %s Vm Onboarding", vmType)).build();
 
 			ResponseEntity<ServiceNowResponseDTO> response = RestUtils.executePost(urlString, request, username,
 					password, ServiceNowResponseDTO.class);

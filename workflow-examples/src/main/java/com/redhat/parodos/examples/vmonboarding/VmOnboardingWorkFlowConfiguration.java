@@ -3,16 +3,13 @@ package com.redhat.parodos.examples.vmonboarding;
 import java.util.List;
 
 import com.redhat.parodos.examples.vmonboarding.checker.AnsibleCompletionWorkFlowCheckerTask;
-import com.redhat.parodos.examples.vmonboarding.checker.IncidentWorkFlowCheckerTask;
+import com.redhat.parodos.examples.vmonboarding.checker.ServiceNowTicketApprovalWorkFlowCheckerTask;
 import com.redhat.parodos.examples.vmonboarding.task.AapLaunchJobWorkFlowTask;
 import com.redhat.parodos.examples.vmonboarding.task.NotificationWorkFlowTask;
-import com.redhat.parodos.examples.vmonboarding.task.OnboardingVmAssessmentTask;
 import com.redhat.parodos.examples.vmonboarding.task.ServiceNowTicketCreationWorkFlowTask;
-import com.redhat.parodos.workflow.annotation.Assessment;
 import com.redhat.parodos.workflow.annotation.Checker;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
 import com.redhat.parodos.workflow.annotation.Parameter;
-import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
@@ -42,19 +39,19 @@ public class VmOnboardingWorkFlowConfiguration {
 	// @formatter:on
 
 	@Bean(name = "incidentWorkFlowCheckerTask")
-	IncidentWorkFlowCheckerTask incidentWorkFlowCheckerTask(
+	ServiceNowTicketApprovalWorkFlowCheckerTask incidentWorkFlowCheckerTask(
 			@Value("${SERVICE_NOW_URL:service-now}") String serviceNowUrl,
 			@Value("${SERVICE_NOW_USERNAME:service-now-username}") String username,
 			@Value("${SERVICE_NOW_PASSWORD:service-now-password}") String password) {
-		return new IncidentWorkFlowCheckerTask(serviceNowUrl, username, password);
+		return new ServiceNowTicketApprovalWorkFlowCheckerTask(serviceNowUrl, username, password);
 	}
 
 	@Bean(name = "incidentWorkFlowChecker")
 	@Checker(cronExpression = "*/10 * * * * ?")
 	WorkFlow incidentWorkFlowChecker(
-			@Qualifier("incidentWorkFlowCheckerTask") IncidentWorkFlowCheckerTask incidentWorkFlowCheckerTask) {
+			@Qualifier("incidentWorkFlowCheckerTask") ServiceNowTicketApprovalWorkFlowCheckerTask serviceNowTicketApprovalWorkFlowCheckerTask) {
 		return SequentialFlow.Builder.aNewSequentialFlow().named("incidentWorkFlowChecker")
-				.execute(incidentWorkFlowCheckerTask).build();
+				.execute(serviceNowTicketApprovalWorkFlowCheckerTask).build();
 	}
 
 	@Bean(name = "ansibleCompletionWorkFlowCheckerTask")
@@ -76,7 +73,7 @@ public class VmOnboardingWorkFlowConfiguration {
 	ServiceNowTicketCreationWorkFlowTask serviceNowTicketCreationWorkFlowTask(
 			@Qualifier("incidentWorkFlowChecker") WorkFlow incidentWorkFlowChecker,
 			@Value("${SERVICE_NOW_URL:service-now}") String serviceNowUrl,
-			@Value("${SERVICE_NOW_USER_NAME:service-now-user}") String username,
+			@Value("${SERVICE_NOW_USERNAME:service-now-user}") String username,
 			@Value("${SERVICE_NOW_PASSWORD:service-now-password}") String password) {
 		ServiceNowTicketCreationWorkFlowTask serviceNowTicketCreationWorkFlowTask = new ServiceNowTicketCreationWorkFlowTask(
 				serviceNowUrl, username, password);
@@ -98,9 +95,11 @@ public class VmOnboardingWorkFlowConfiguration {
 	AapLaunchJobWorkFlowTask aapLaunchJobWorkFlowTask(
 			@Qualifier("ansibleCompletionWorkFlowChecker") WorkFlow ansibleCompletionWorkFlowChecker,
 			@Value("${AAP_URL:aap-url}") String aapUrl, @Value("${AAP_USER_NAME:aap-user}") String username,
-			@Value("${AAP_PASSWORD:aap-password}") String password) {
-		AapLaunchJobWorkFlowTask aapLaunchJobWorkFlowTask = new AapLaunchJobWorkFlowTask(aapUrl, "20", username,
-				password);
+			@Value("${AAP_PASSWORD:aap-password}") String password,
+			@Value("${AAP_WINDOWS_JOB_ID:windows-job-id}") String windowsJobTemplateId,
+			@Value("${AAP_RHEL_JOB_ID:rhel-job-id}") String rhelJobTemplateId) {
+		AapLaunchJobWorkFlowTask aapLaunchJobWorkFlowTask = new AapLaunchJobWorkFlowTask(aapUrl, windowsJobTemplateId,
+				rhelJobTemplateId, username, password);
 		aapLaunchJobWorkFlowTask.setWorkFlowCheckers(List.of(ansibleCompletionWorkFlowChecker));
 		return aapLaunchJobWorkFlowTask;
 	}
@@ -125,45 +124,6 @@ public class VmOnboardingWorkFlowConfiguration {
 		return new WorkFlowOption.Builder("vmOnboarding", "vmOnboardingWorkFlow")
 				.addToDetails("this is for creating vm").displayName("VM Onboarding")
 				.setDescription("this is for creating vm").build();
-	}
-
-	@Bean
-	WorkFlowOption badRepoOption() {
-		return new WorkFlowOption.Builder("badRepoOption",
-				"simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
-						.addToDetails("Container Fundamentals Training Required").displayName("Training Required")
-						.setDescription("Container Fundamentals Training Required").build();
-	}
-
-	@Bean
-	WorkFlowOption notSupportOption() {
-		return new WorkFlowOption.Builder("notSupportOption",
-				"simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
-						.addToDetails("Non-Supported Workflow Steps").displayName("Not Supported")
-						.setDescription("Non-Supported Workflow Steps").build();
-	}
-
-	// An AssessmentTask returns one or more WorkFlowOption wrapped in a WorkflowOptions
-	@Bean
-	OnboardingVmAssessmentTask onboardingAssessmentTask(
-			@Qualifier("onboardingOcpOption") WorkFlowOption onboardingOcpOption,
-			@Qualifier("badRepoOption") WorkFlowOption badRepoOption,
-			@Qualifier("notSupportOption") WorkFlowOption notSupportOption) {
-		return new OnboardingVmAssessmentTask(List.of(onboardingOcpOption, badRepoOption, notSupportOption));
-	}
-
-	// A Workflow designed to execute and return WorkflowOption(s) that can be executed
-	// next. In this case there is only one.
-	@Bean(name = "onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
-	@Assessment
-	WorkFlow assessmentWorkFlow(
-			@Qualifier("onboardingAssessmentTask") OnboardingVmAssessmentTask onboardingAssessmentTask) {
-		// @formatter:off
-		return SequentialFlow.Builder.aNewSequentialFlow()
-				.named("onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
-				.execute(onboardingAssessmentTask)
-				.build();
-		// @formatter:on
 	}
 
 }
