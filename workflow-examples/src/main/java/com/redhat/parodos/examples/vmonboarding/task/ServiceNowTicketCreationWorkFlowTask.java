@@ -1,12 +1,7 @@
 package com.redhat.parodos.examples.vmonboarding.task;
 
-<<<<<<< HEAD
 import com.redhat.parodos.examples.vmonboarding.dto.ServiceNowRequestDTO;
 import com.redhat.parodos.examples.vmonboarding.dto.ServiceNowResponseDTO;
-=======
-import com.redhat.parodos.examples.vmonboarding.dto.ServiceNowRequestDto;
-import com.redhat.parodos.examples.vmonboarding.dto.ServiceNowResponseDto;
->>>>>>> 55f9b932 (fix merge conflicts)
 import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
@@ -46,11 +41,7 @@ public class ServiceNowTicketCreationWorkFlowTask extends BaseInfrastructureWork
 		try {
 			String urlString = serviceNowUrl + CREATE_INCIDENT_CONTEXT_PATH;
 			String vmName = getOptionalParameterValue("hostname", "snowrhel");
-<<<<<<< HEAD
 			String vmType = getRequiredParameterValue("VM_TYPE");
-=======
-
->>>>>>> 55f9b932 (fix merge conflicts)
 			log.info("vm name: {}", vmName);
 
 			ServiceNowRequestDTO request = ServiceNowRequestDTO.builder().callerId(username)

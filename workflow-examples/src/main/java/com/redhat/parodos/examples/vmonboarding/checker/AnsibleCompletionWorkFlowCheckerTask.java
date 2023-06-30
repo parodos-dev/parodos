@@ -61,7 +61,7 @@ public class AnsibleCompletionWorkFlowCheckerTask extends BaseWorkFlowCheckerTas
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 			}
 			else {
-				log.error("job is failed.  Status: {}", responseDto.getStatus());
+				log.error("job is failed. Status: {}", responseDto.getStatus());
 				return new DefaultWorkReport(WorkStatus.REJECTED, workContext);
 			}
 		}
