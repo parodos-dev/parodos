@@ -1,5 +1,6 @@
 package com.redhat.parodos.examples.vmonboarding.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +22,7 @@ public class ServiceNowResponseResult {
 	private String state;
 
 	@JsonProperty("description")
-	private String ip;
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	private String description;
 
 }

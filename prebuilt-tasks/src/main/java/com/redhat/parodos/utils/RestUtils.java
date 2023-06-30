@@ -1,13 +1,24 @@
 package com.redhat.parodos.utils;
 
 import java.net.URI;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -26,10 +37,10 @@ public abstract class RestUtils {
 	/**
 	 * Create a new resource by POSTing the given payload to the URL, and returns the
 	 * response as ResponseEntity.
-	 * @see org.springframework.web.client.RestTemplate#postForEntity(URI, Object, Class)
 	 * @param urlString the URL
 	 * @param payload object to post
 	 * @return @see org.springframework.http.ResponseEntity
+	 * @see org.springframework.web.client.RestTemplate#postForEntity(URI, Object, Class)
 	 */
 	public static ResponseEntity<String> executePost(String urlString, String payload) {
 		RestTemplate restTemplate = new RestTemplate();
@@ -39,10 +50,10 @@ public abstract class RestUtils {
 	/**
 	 * Create a new resource by POSTing the given requestEntity to the URL, and returns
 	 * the response as String.
-	 * @see org.springframework.web.client.RestTemplate#postForEntity(URI, Object, Class)
 	 * @param urlString the URL
 	 * @param requestEntity object to post
 	 * @return the response as string
+	 * @see org.springframework.web.client.RestTemplate#postForEntity(URI, Object, Class)
 	 */
 	public static ResponseEntity<String> executePost(String urlString, HttpEntity<?> requestEntity) {
 		RestTemplate restTemplate = new RestTemplate();
@@ -53,6 +64,12 @@ public abstract class RestUtils {
 			Class<E> responseType) {
 		HttpEntity<T> request = getRequestWithHeaders(requestDto, username, password);
 		RestTemplate restTemplate = new RestTemplate();
+		return restTemplate.postForEntity(urlString, request, responseType);
+	}
+
+	public static <T, E> ResponseEntity<E> executePost(RestTemplate restTemplate, String urlString, T requestDto,
+			String username, String password, Class<E> responseType) {
+		HttpEntity<T> request = getRequestWithHeaders(requestDto, username, password);
 		return restTemplate.postForEntity(urlString, request, responseType);
 	}
 
@@ -69,13 +86,12 @@ public abstract class RestUtils {
 	/**
 	 * Execute the GET HTTP method to the given URL, writing the given request entity to
 	 * the request, and returns the response as ResponseEntity.
-	 *
-	 * @see org.springframework.web.client.RestTemplate#exchange(String, HttpMethod,
-	 * HttpEntity, Class, Object...)
 	 * @param urlString the URL
 	 * @param username the username
 	 * @param password the password
 	 * @return @see org.springframework.http.ResponseEntity
+	 * @see org.springframework.web.client.RestTemplate#exchange(String, HttpMethod,
+	 * HttpEntity, Class, Object...)
 	 */
 	public static ResponseEntity<String> restExchange(String urlString, String username, String password) {
 		RestTemplate restTemplate = new RestTemplate();
@@ -88,6 +104,29 @@ public abstract class RestUtils {
 		RestTemplate restTemplate = new RestTemplate();
 		return restTemplate.exchange(urlString, HttpMethod.GET, getRequestWithHeaders(username, password),
 				responseType);
+	}
+
+	public static <E> ResponseEntity<E> restExchange(RestTemplate restTemplate, String urlString, String username,
+			String password, Class<E> responseType) {
+		return restTemplate.exchange(urlString, HttpMethod.GET, getRequestWithHeaders(username, password),
+				responseType);
+	}
+
+	public static RestTemplate ignoreSSLVerifyRestTemplate() {
+		try {
+			SSLConnectionSocketFactory scsf = new SSLConnectionSocketFactory(
+					SSLContexts.custom().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build(),
+					NoopHostnameVerifier.INSTANCE);
+			CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(scsf).build();
+
+			HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+
+			requestFactory.setHttpClient(httpClient);
+			return new RestTemplate(requestFactory);
+		}
+		catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
+			return new RestTemplate();
+		}
 	}
 
 	/**

@@ -20,7 +20,7 @@ import org.springframework.web.client.RestClientException;
  */
 
 @Slf4j
-public class IncidentWorkFlowCheckerTask extends BaseWorkFlowCheckerTask {
+public class ServiceNowTicketApprovalWorkFlowCheckerTask extends BaseWorkFlowCheckerTask {
 
 	private final String serviceNowUrl;
 
@@ -28,7 +28,7 @@ public class IncidentWorkFlowCheckerTask extends BaseWorkFlowCheckerTask {
 
 	private final String password;
 
-	public IncidentWorkFlowCheckerTask(String serviceNowUrl, String username, String password) {
+	public ServiceNowTicketApprovalWorkFlowCheckerTask(String serviceNowUrl, String username, String password) {
 		this.serviceNowUrl = serviceNowUrl;
 		this.username = username;
 		this.password = password;
@@ -61,11 +61,7 @@ public class IncidentWorkFlowCheckerTask extends BaseWorkFlowCheckerTask {
 			}
 			else {
 				log.info("incident completed: {}", responseDto.getResult().getState());
-				String ip = responseDto.getResult().getIp();
-				if (ip != null && !ip.isEmpty()) {
-					addParameter("IP", ip);
-					return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
-				}
+				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 			}
 		}
 		catch (RestClientException e) {
