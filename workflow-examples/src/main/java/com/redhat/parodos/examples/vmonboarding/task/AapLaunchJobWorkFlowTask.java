@@ -1,10 +1,8 @@
 package com.redhat.parodos.examples.vmonboarding.task;
 
-import java.util.Map;
-
 import com.redhat.parodos.examples.vmonboarding.dto.AapGetJobResponseDTO;
-import com.redhat.parodos.examples.vmonboarding.dto.AapJobLaunchRequestDTO;
 import com.redhat.parodos.utils.RestUtils;
+import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
@@ -23,31 +21,39 @@ public class AapLaunchJobWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
 	private final String password;
 
-	private final String jobTemplateId;
+	private final String windowsJobTemplateId;
+
+	private final String rhelJobTemplateId;
 
 	private static final String JOB_LAUNCH_CONTEXT_PATH = "/api/v2/job_templates/%s/launch/";
 
-	public AapLaunchJobWorkFlowTask(String aapUrl, String jobTemplateId, String username, String password) {
+	public AapLaunchJobWorkFlowTask(String aapUrl, String windowsJobTemplateId, String rhelJobTemplateId,
+			String username, String password) {
 		this.aapUrl = aapUrl;
-		this.jobTemplateId = jobTemplateId;
+		this.windowsJobTemplateId = windowsJobTemplateId;
+		this.rhelJobTemplateId = rhelJobTemplateId;
 		this.username = username;
 		this.password = password;
 	}
 
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		log.info("Start aapLaunchJobWorkFlowTask...");
+		log.info("Start ServiceNowTicketCreationWorkFlowTask...");
+		String vmType;
 		try {
-			String urlString = aapUrl + String.format(JOB_LAUNCH_CONTEXT_PATH, jobTemplateId);
-			String vmIp = getRequiredParameterValue("IP");
+			vmType = getRequiredParameterValue("VM_TYPE");
+		}
+		catch (MissingParameterException e) {
+			log.error("parameter VM_TYPE was not found");
+			return new DefaultWorkReport(WorkStatus.FAILED, workContext);
+		}
+		try {
+			String urlString = aapUrl + String.format(JOB_LAUNCH_CONTEXT_PATH,
+					"WINDOWS".equalsIgnoreCase(vmType) ? windowsJobTemplateId : rhelJobTemplateId);
 
-			log.info("vm ip: {}", vmIp);
-
-			AapJobLaunchRequestDTO request = AapJobLaunchRequestDTO.builder().limit(vmIp)
-					.extraVars(Map.of("my_var", "my_answer")).build();
-
-			ResponseEntity<AapGetJobResponseDTO> response = RestUtils.executePost(urlString, request, username,
-					password, AapGetJobResponseDTO.class);
+			ResponseEntity<AapGetJobResponseDTO> response = RestUtils.executePost(
+					RestUtils.ignoreSSLVerifyRestTemplate(), urlString, "{}", username, password,
+					AapGetJobResponseDTO.class);
 
 			if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
 				String jobId = response.getBody().getJobId();
