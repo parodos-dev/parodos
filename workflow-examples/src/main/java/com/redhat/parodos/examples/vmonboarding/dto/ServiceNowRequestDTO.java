@@ -21,7 +21,7 @@ import lombok.Data;
 
 @Builder
 @Data
-public class ServiceNowRequestDto {
+public class ServiceNowRequestDTO {
 
 	@JsonProperty("short_description")
 	private String shortDescription;
