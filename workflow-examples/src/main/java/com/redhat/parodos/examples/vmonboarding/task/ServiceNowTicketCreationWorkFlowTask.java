@@ -1,7 +1,7 @@
 package com.redhat.parodos.examples.vmonboarding.task;
 
-import com.redhat.parodos.examples.vmonboarding.dto.ServiceNowRequestDto;
-import com.redhat.parodos.examples.vmonboarding.dto.ServiceNowResponseDto;
+import com.redhat.parodos.examples.vmonboarding.dto.ServiceNowRequestDTO;
+import com.redhat.parodos.examples.vmonboarding.dto.ServiceNowResponseDTO;
 import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
@@ -44,11 +44,11 @@ public class ServiceNowTicketCreationWorkFlowTask extends BaseInfrastructureWork
 
 			log.info("vm name: {}", vmName);
 
-			ServiceNowRequestDto request = ServiceNowRequestDto.builder().callerId(username)
+			ServiceNowRequestDTO request = ServiceNowRequestDTO.builder().callerId(username)
 					.shortDescription("Azure linux Vm Onboarding").build();
 
-			ResponseEntity<ServiceNowResponseDto> response = RestUtils.executePost(urlString, request, username,
-					password, ServiceNowResponseDto.class);
+			ResponseEntity<ServiceNowResponseDTO> response = RestUtils.executePost(urlString, request, username,
+					password, ServiceNowResponseDTO.class);
 
 			if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
 				String sysId = response.getBody().getResult().getSysId();

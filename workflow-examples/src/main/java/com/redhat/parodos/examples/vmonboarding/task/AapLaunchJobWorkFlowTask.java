@@ -2,8 +2,8 @@ package com.redhat.parodos.examples.vmonboarding.task;
 
 import java.util.Map;
 
-import com.redhat.parodos.examples.vmonboarding.dto.AapGetJobResponseDto;
-import com.redhat.parodos.examples.vmonboarding.dto.AapJobLaunchRequestDto;
+import com.redhat.parodos.examples.vmonboarding.dto.AapGetJobResponseDTO;
+import com.redhat.parodos.examples.vmonboarding.dto.AapJobLaunchRequestDTO;
 import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
@@ -36,18 +36,18 @@ public class AapLaunchJobWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		log.info("Start ServiceNowTicketCreationWorkFlowTask...");
+		log.info("Start aapLaunchJobWorkFlowTask...");
 		try {
 			String urlString = aapUrl + String.format(JOB_LAUNCH_CONTEXT_PATH, jobTemplateId);
 			String vmIp = getRequiredParameterValue("IP");
 
 			log.info("vm ip: {}", vmIp);
 
-			AapJobLaunchRequestDto request = AapJobLaunchRequestDto.builder().limit(vmIp)
+			AapJobLaunchRequestDTO request = AapJobLaunchRequestDTO.builder().limit(vmIp)
 					.extraVars(Map.of("my_var", "my_answer")).build();
 
-			ResponseEntity<AapGetJobResponseDto> response = RestUtils.executePost(urlString, request, username,
-					password, AapGetJobResponseDto.class);
+			ResponseEntity<AapGetJobResponseDTO> response = RestUtils.executePost(urlString, request, username,
+					password, AapGetJobResponseDTO.class);
 
 			if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
 				String jobId = response.getBody().getJobId();
