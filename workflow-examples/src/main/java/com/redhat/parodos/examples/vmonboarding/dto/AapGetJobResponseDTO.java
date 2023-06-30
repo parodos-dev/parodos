@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AapGetJobResponseDto {
+public class AapGetJobResponseDTO {
 
 	@JsonProperty("job")
 	private String jobId;

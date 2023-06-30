@@ -1,6 +1,6 @@
 package com.redhat.parodos.examples.vmonboarding.checker;
 
-import com.redhat.parodos.examples.vmonboarding.dto.AapGetJobResponseDto;
+import com.redhat.parodos.examples.vmonboarding.dto.AapGetJobResponseDTO;
 import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.checker.BaseWorkFlowCheckerTask;
@@ -45,9 +45,9 @@ public class AnsibleCompletionWorkFlowCheckerTask extends BaseWorkFlowCheckerTas
 			log.info("job id: {}", jobId);
 			String urlString = aapUrl + "/api/v2/jobs/" + jobId;
 
-			ResponseEntity<AapGetJobResponseDto> result = RestUtils.restExchange(urlString, username, password,
-					AapGetJobResponseDto.class);
-			AapGetJobResponseDto responseDto = result.getBody();
+			ResponseEntity<AapGetJobResponseDTO> result = RestUtils.restExchange(urlString, username, password,
+					AapGetJobResponseDTO.class);
+			AapGetJobResponseDTO responseDto = result.getBody();
 
 			if (!result.getStatusCode().is2xxSuccessful() || responseDto == null) {
 				log.error("Call to the API was not successful. Response: {} ", result.getStatusCode());
@@ -60,7 +60,7 @@ public class AnsibleCompletionWorkFlowCheckerTask extends BaseWorkFlowCheckerTas
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 			}
 			else {
-				log.error("job is failed.  Status: {}", responseDto.getStatus());
+				log.error("job is failed. Status: {}", responseDto.getStatus());
 				return new DefaultWorkReport(WorkStatus.REJECTED, workContext);
 			}
 		}

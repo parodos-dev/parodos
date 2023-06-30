@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AapJobLaunchRequestDto {
+public class AapJobLaunchRequestDTO {
 
 	private String limit;
 
