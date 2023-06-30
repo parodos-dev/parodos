@@ -1,6 +1,6 @@
 package com.redhat.parodos.examples.vmonboarding.checker;
 
-import com.redhat.parodos.examples.vmonboarding.dto.ServiceNowResponseDto;
+import com.redhat.parodos.examples.vmonboarding.dto.ServiceNowResponseDTO;
 import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.checker.BaseWorkFlowCheckerTask;
@@ -45,9 +45,9 @@ public class IncidentWorkFlowCheckerTask extends BaseWorkFlowCheckerTask {
 			log.info("INCIDENT id: {}", incidentId);
 			String urlString = serviceNowUrl + "/api/now/table/incident/" + incidentId;
 
-			ResponseEntity<ServiceNowResponseDto> result = RestUtils.restExchange(urlString, username, password,
-					ServiceNowResponseDto.class);
-			ServiceNowResponseDto responseDto = result.getBody();
+			ResponseEntity<ServiceNowResponseDTO> result = RestUtils.restExchange(urlString, username, password,
+					ServiceNowResponseDTO.class);
+			ServiceNowResponseDTO responseDto = result.getBody();
 
 			if (!result.getStatusCode().is2xxSuccessful() || responseDto == null) {
 				log.error("Call to the API was not successful. Response: {} ", result.getStatusCode());
