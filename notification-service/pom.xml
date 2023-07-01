@@ -23,8 +23,6 @@
         <url>http://github.com/parodos-dev/parodos/tree/main</url>
     </scm>
     <properties>
-        <spring-cloud.version>2020.0.6</spring-cloud.version>
-        <springdoc-openapi-ui.version>1.6.4</springdoc-openapi-ui.version>
         <gson-fire-version>1.8.5</gson-fire-version>
         <swagger-core-version>1.6.3</swagger-core-version>
         <jackson-databind-nullable-version>0.2.2</jackson-databind-nullable-version>
