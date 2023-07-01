@@ -31,8 +31,6 @@
         <jgit-version>6.5.0.202303070854-r</jgit-version>
         <common.io.version>2.11.0</common.io.version>
         <model.mapper.version>3.1.1</model.mapper.version>
-        <spring-cloud.version>2020.0.6</spring-cloud.version>
-        <springdoc-openapi-ui.version>1.6.4</springdoc-openapi-ui.version>
         <hypersistence-utils.version>3.1.0</hypersistence-utils.version>
     </properties>
 
