@@ -2,7 +2,7 @@ spring:
   application:
     name: parodos-notification-service
     title: Parodos Notification Service
-    version: 1.0.18
+    version: 1.0.19-SNAPSHOT
   jackson:
     default-property-inclusion: non_null
   main:
