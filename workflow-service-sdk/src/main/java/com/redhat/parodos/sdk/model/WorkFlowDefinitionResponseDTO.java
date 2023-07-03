@@ -52,15 +52,15 @@ public class WorkFlowDefinitionResponseDTO {
 	@SerializedName(SERIALIZED_NAME_CREATE_DATE)
 	private Date createDate;
 
-	public static final String SERIALIZED_NAME_FALLBACK_WORKFLOW = "fallbackWorkflow";
-
-	@SerializedName(SERIALIZED_NAME_FALLBACK_WORKFLOW)
-	private String fallbackWorkflow;
-
 	public static final String SERIALIZED_NAME_CRON_EXPRESSION = "cronExpression";
 
 	@SerializedName(SERIALIZED_NAME_CRON_EXPRESSION)
 	private String cronExpression;
+
+	public static final String SERIALIZED_NAME_FALLBACK_WORKFLOW = "fallbackWorkflow";
+
+	@SerializedName(SERIALIZED_NAME_FALLBACK_WORKFLOW)
+	private String fallbackWorkflow;
 
 	public static final String SERIALIZED_NAME_ID = "id";
 
@@ -251,25 +251,6 @@ public class WorkFlowDefinitionResponseDTO {
 		this.createDate = createDate;
 	}
 
-	public WorkFlowDefinitionResponseDTO fallbackWorkflow(String fallbackWorkflow) {
-
-		this.fallbackWorkflow = fallbackWorkflow;
-		return this;
-	}
-
-	/**
-	 * Get fallbackWorkflow
-	 * @return fallbackWorkflow
-	 **/
-	@javax.annotation.Nullable
-	public String getFallbackWorkflow() {
-		return fallbackWorkflow;
-	}
-
-	public void setFallbackWorkflow(String fallbackWorkflow) {
-		this.fallbackWorkflow = fallbackWorkflow;
-	}
-
 	public WorkFlowDefinitionResponseDTO cronExpression(String cronExpression) {
 
 		this.cronExpression = cronExpression;
@@ -287,6 +268,25 @@ public class WorkFlowDefinitionResponseDTO {
 
 	public void setCronExpression(String cronExpression) {
 		this.cronExpression = cronExpression;
+	}
+
+	public WorkFlowDefinitionResponseDTO fallbackWorkflow(String fallbackWorkflow) {
+
+		this.fallbackWorkflow = fallbackWorkflow;
+		return this;
+	}
+
+	/**
+	 * Get fallbackWorkflow
+	 * @return fallbackWorkflow
+	 **/
+	@javax.annotation.Nullable
+	public String getFallbackWorkflow() {
+		return fallbackWorkflow;
+	}
+
+	public void setFallbackWorkflow(String fallbackWorkflow) {
+		this.fallbackWorkflow = fallbackWorkflow;
 	}
 
 	public WorkFlowDefinitionResponseDTO id(UUID id) {
@@ -482,8 +482,8 @@ public class WorkFlowDefinitionResponseDTO {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(author, createDate, cronExpression, id, modifyDate, name, parameters, processingType,
-				properties, rollbackWorkflow, type, works);
+		return Objects.hash(author, createDate, cronExpression, fallbackWorkflow, id, modifyDate, name, parameters,
+				processingType, properties, type, works);
 	}
 
 	@Override
@@ -492,8 +492,8 @@ public class WorkFlowDefinitionResponseDTO {
 		sb.append("class WorkFlowDefinitionResponseDTO {\n");
 		sb.append("    author: ").append(toIndentedString(author)).append("\n");
 		sb.append("    createDate: ").append(toIndentedString(createDate)).append("\n");
-		sb.append("    fallbackWorkflow: ").append(toIndentedString(fallbackWorkflow)).append("\n");
 		sb.append("    cronExpression: ").append(toIndentedString(cronExpression)).append("\n");
+		sb.append("    fallbackWorkflow: ").append(toIndentedString(fallbackWorkflow)).append("\n");
 		sb.append("    id: ").append(toIndentedString(id)).append("\n");
 		sb.append("    modifyDate: ").append(toIndentedString(modifyDate)).append("\n");
 		sb.append("    name: ").append(toIndentedString(name)).append("\n");

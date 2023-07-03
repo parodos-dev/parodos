@@ -1659,6 +1659,9 @@
           "author" : {
             "type" : "string"
           },
+          "cronExpression" : {
+            "type" : "string"
+          },
           "id" : {
             "type" : "string",
             "format" : "uuid"
@@ -1686,11 +1689,16 @@
             "type" : "string",
             "enum" : [ "SEQUENTIAL", "PARALLEL", "OTHER" ]
           },
+          "workFlowCheckerMappingDefinitionId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
           "workType" : {
             "type" : "string",
             "enum" : [ "TASK", "WORKFLOW", "CHECKER" ]
           },
           "works" : {
+            "uniqueItems" : true,
             "type" : "array",
             "items" : {
               "$ref" : "#/components/schemas/WorkDefinitionResponseDTO"

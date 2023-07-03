@@ -16,6 +16,7 @@
 package com.redhat.parodos.workflow.definition.dto.converter;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -35,11 +36,11 @@ import org.modelmapper.spi.MappingContext;
  */
 
 public class WorkFlowTaskDefinitionDTOConverter
-		implements Converter<List<WorkFlowTaskDefinition>, List<WorkDefinitionResponseDTO>> {
+		implements Converter<List<WorkFlowTaskDefinition>, Set<WorkDefinitionResponseDTO>> {
 
 	@Override
-	public List<WorkDefinitionResponseDTO> convert(
-			MappingContext<List<WorkFlowTaskDefinition>, List<WorkDefinitionResponseDTO>> context) {
+	public Set<WorkDefinitionResponseDTO> convert(
+			MappingContext<List<WorkFlowTaskDefinition>, Set<WorkDefinitionResponseDTO>> context) {
 		ObjectMapper objectMapper = new ObjectMapper();
 		List<WorkFlowTaskDefinition> source = context.getSource();
 		return source.stream().map(workFlowTaskDefinition -> {
@@ -52,7 +53,7 @@ public class WorkFlowTaskDefinitionDTOConverter
 			catch (JsonProcessingException e) {
 				throw new WorkflowDefinitionException(e);
 			}
-		}).collect(Collectors.toList());
+		}).collect(Collectors.toSet());
 	}
 
 }

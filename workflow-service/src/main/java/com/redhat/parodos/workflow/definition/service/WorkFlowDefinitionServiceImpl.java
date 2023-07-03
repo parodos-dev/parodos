@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -269,7 +269,8 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 	private void getWorksFromWorkDefinition(WorkDefinitionResponseDTO workflow,
 			List<WorkFlowWorkDefinition> workFlowWorkDefinitions, Queue<WorkDefinitionResponseDTO> responseDTOs) {
 		if (workflow.getWorks() == null) {
-			workflow.setWorks(new HashSet<>());
+			// LinkedHashSet to keep insertion order
+			workflow.setWorks(new LinkedHashSet<>());
 		}
 		workFlowWorkDefinitions.forEach(workFlowWorkDefinition -> {
 
@@ -342,13 +343,11 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 			List<WorkFlowWorkDefinition> workFlowWorkDefinitions,
 			Queue<WorkDefinitionResponseDTO> workDefinitionResponseDTOs) {
 		WorkDefinitionResponseDTO rootWorkFlow = WorkDefinitionResponseDTO.builder().id(workFlowDefinition.getId())
-				.workType(workFlowDefinition.getType() == WorkFlowType.CHECKER ? WorkType.CHECKER : WorkType.WORKFLOW)
-				.name(workFlowDefinition.getName()).parameterFromString(workFlowDefinition.getParameters())
-				.processingType(workFlowDefinition.getProcessingType()).works(new HashSet<>())
+				.workType(WorkType.WORKFLOW).name(workFlowDefinition.getName())
+				.parameterFromString(workFlowDefinition.getParameters())
+				.processingType(workFlowDefinition.getProcessingType()).works(new LinkedHashSet<>())
 				.numberOfWorkUnits(workFlowWorkDefinitions.size()).build();
 		workDefinitionResponseDTOs.add(rootWorkFlow);
-		// add workflowWorkUnits
-		this.getWorksFromWorkDefinition(rootWorkFlow, workFlowWorkDefinitions, workDefinitionResponseDTOs);
 
 		return rootWorkFlow;
 	}
@@ -369,20 +368,22 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 
 	private void getCheckerWorkFromWorkDefinition(WorkDefinitionResponseDTO workflow,
 			Queue<WorkDefinitionResponseDTO> workDefinitionResponseDTOs) {
-		if (workflow.getCheckerWorkId() != null) {
-			WorkFlowDefinition checkerWorkflowDefinition = workFlowCheckerMappingDefinitionRepository
-					.findById(workflow.getCheckerWorkId()).get().getCheckWorkFlow();
-			WorkDefinitionResponseDTO checkerWorkflowDefinitionDTO = WorkDefinitionResponseDTO.builder()
-					.id(checkerWorkflowDefinition.getId()).workType(WorkType.CHECKER)
-					.name(checkerWorkflowDefinition.getName())
-					.parameterFromString(checkerWorkflowDefinition.getParameters())
-					.processingType(checkerWorkflowDefinition.getProcessingType()).works(new HashSet<>())
-					.numberOfWorkUnits(checkerWorkflowDefinition.getNumberOfWorks()).build();
-			workDefinitionResponseDTOs.add(checkerWorkflowDefinitionDTO);
-			if (workflow.getWorks() == null) {
-				workflow.setWorks(new HashSet<>());
+		if (workflow.getWorkFlowCheckerMappingDefinitionId() != null) {
+			Optional<WorkFlowCheckerMappingDefinition> checkerMappingDefinition = workFlowCheckerMappingDefinitionRepository
+					.findById(workflow.getWorkFlowCheckerMappingDefinitionId());
+			if (checkerMappingDefinition.isPresent()) {
+				WorkDefinitionResponseDTO checkerWorkflowDefinitionDTO = WorkDefinitionResponseDTO
+						.fromWorkFlowCheckerMappingDefinition(checkerMappingDefinition.get());
+				workDefinitionResponseDTOs.add(checkerWorkflowDefinitionDTO);
+				if (workflow.getWorks() == null) {
+					workflow.setWorks(new LinkedHashSet<>());
+				}
+				workflow.getWorks().add(checkerWorkflowDefinitionDTO);
 			}
-			workflow.getWorks().add(checkerWorkflowDefinitionDTO);
+			else {
+				log.error("WorkFlowCheckerMappingDefinition %s associated with WorkDefinition %s not found"
+						.formatted(workflow.getWorkFlowCheckerMappingDefinitionId(), workflow.getId()));
+			}
 		}
 	}
 

@@ -1242,10 +1242,12 @@ components:
       type: object
     WorkDefinitionResponseDTO:
       example:
+        cronExpression: cronExpression
         outputs:
         - EXCEPTION
         - EXCEPTION
         processingType: SEQUENTIAL
+        workFlowCheckerMappingDefinitionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         works:
         - null
         - null
@@ -1258,6 +1260,8 @@ components:
             key: "{}"
       properties:
         author:
+          type: string
+        cronExpression:
           type: string
         id:
           format: uuid
@@ -1284,6 +1288,9 @@ components:
           - SEQUENTIAL
           - PARALLEL
           - OTHER
+          type: string
+        workFlowCheckerMappingDefinitionId:
+          format: uuid
           type: string
         workType:
           enum:
@@ -1420,10 +1427,12 @@ components:
         cronExpression: cronExpression
         processingType: SEQUENTIAL
         works:
-        - outputs:
+        - cronExpression: cronExpression
+          outputs:
           - EXCEPTION
           - EXCEPTION
           processingType: SEQUENTIAL
+          workFlowCheckerMappingDefinitionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           works:
           - null
           - null
@@ -1434,10 +1443,12 @@ components:
           parameters:
             key:
               key: "{}"
-        - outputs:
+        - cronExpression: cronExpression
+          outputs:
           - EXCEPTION
           - EXCEPTION
           processingType: SEQUENTIAL
+          workFlowCheckerMappingDefinitionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           works:
           - null
           - null

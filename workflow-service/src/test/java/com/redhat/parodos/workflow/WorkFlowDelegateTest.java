@@ -16,8 +16,8 @@
 package com.redhat.parodos.workflow;
 
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -113,14 +113,13 @@ class WorkFlowDelegateTest {
 	}
 
 	private WorkFlowDefinitionResponseDTO sampleWorkflowDefinitionResponse() {
-		return WorkFlowDefinitionResponseDTO
-				.builder().name(
-						TEST_WORKFLOW_NAME)
-				.works(Set.of(WorkDefinitionResponseDTO.builder().name(TEST_SUB_WORKFLOW_NAME)
-						.workType(WorkType.WORKFLOW).works(Set.of(WorkDefinitionResponseDTO.builder()
-								.name(TEST_TASK_NAME).workType(WorkType.TASK).build()))
-						.build()))
-				.build();
+		LinkedHashSet<WorkDefinitionResponseDTO> workFlowWorks = new LinkedHashSet<>();
+		LinkedHashSet<WorkDefinitionResponseDTO> taskWorks = new LinkedHashSet<>();
+
+		taskWorks.add(WorkDefinitionResponseDTO.builder().name(TEST_TASK_NAME).workType(WorkType.TASK).build());
+		workFlowWorks.add(WorkDefinitionResponseDTO.builder().name(TEST_SUB_WORKFLOW_NAME).workType(WorkType.WORKFLOW)
+				.works(taskWorks).build());
+		return WorkFlowDefinitionResponseDTO.builder().name(TEST_WORKFLOW_NAME).works(workFlowWorks).build();
 	}
 
 }

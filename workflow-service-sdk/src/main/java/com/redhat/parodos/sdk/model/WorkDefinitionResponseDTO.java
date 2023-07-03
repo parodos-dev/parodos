@@ -48,6 +48,11 @@ public class WorkDefinitionResponseDTO {
 	@SerializedName(SERIALIZED_NAME_AUTHOR)
 	private String author;
 
+	public static final String SERIALIZED_NAME_CRON_EXPRESSION = "cronExpression";
+
+	@SerializedName(SERIALIZED_NAME_CRON_EXPRESSION)
+	private String cronExpression;
+
 	public static final String SERIALIZED_NAME_ID = "id";
 
 	@SerializedName(SERIALIZED_NAME_ID)
@@ -181,6 +186,11 @@ public class WorkDefinitionResponseDTO {
 	@SerializedName(SERIALIZED_NAME_PROCESSING_TYPE)
 	private ProcessingTypeEnum processingType;
 
+	public static final String SERIALIZED_NAME_WORK_FLOW_CHECKER_MAPPING_DEFINITION_ID = "workFlowCheckerMappingDefinitionId";
+
+	@SerializedName(SERIALIZED_NAME_WORK_FLOW_CHECKER_MAPPING_DEFINITION_ID)
+	private UUID workFlowCheckerMappingDefinitionId;
+
 	/**
 	 * Gets or Sets workType
 	 */
@@ -264,6 +274,25 @@ public class WorkDefinitionResponseDTO {
 
 	public void setAuthor(String author) {
 		this.author = author;
+	}
+
+	public WorkDefinitionResponseDTO cronExpression(String cronExpression) {
+
+		this.cronExpression = cronExpression;
+		return this;
+	}
+
+	/**
+	 * Get cronExpression
+	 * @return cronExpression
+	 **/
+	@javax.annotation.Nullable
+	public String getCronExpression() {
+		return cronExpression;
+	}
+
+	public void setCronExpression(String cronExpression) {
+		this.cronExpression = cronExpression;
 	}
 
 	public WorkDefinitionResponseDTO id(UUID id) {
@@ -377,6 +406,25 @@ public class WorkDefinitionResponseDTO {
 		this.processingType = processingType;
 	}
 
+	public WorkDefinitionResponseDTO workFlowCheckerMappingDefinitionId(UUID workFlowCheckerMappingDefinitionId) {
+
+		this.workFlowCheckerMappingDefinitionId = workFlowCheckerMappingDefinitionId;
+		return this;
+	}
+
+	/**
+	 * Get workFlowCheckerMappingDefinitionId
+	 * @return workFlowCheckerMappingDefinitionId
+	 **/
+	@javax.annotation.Nullable
+	public UUID getWorkFlowCheckerMappingDefinitionId() {
+		return workFlowCheckerMappingDefinitionId;
+	}
+
+	public void setWorkFlowCheckerMappingDefinitionId(UUID workFlowCheckerMappingDefinitionId) {
+		this.workFlowCheckerMappingDefinitionId = workFlowCheckerMappingDefinitionId;
+	}
+
 	public WorkDefinitionResponseDTO workType(WorkTypeEnum workType) {
 
 		this.workType = workType;
@@ -433,18 +481,22 @@ public class WorkDefinitionResponseDTO {
 		}
 		WorkDefinitionResponseDTO workDefinitionResponseDTO = (WorkDefinitionResponseDTO) o;
 		return Objects.equals(this.author, workDefinitionResponseDTO.author)
+				&& Objects.equals(this.cronExpression, workDefinitionResponseDTO.cronExpression)
 				&& Objects.equals(this.id, workDefinitionResponseDTO.id)
 				&& Objects.equals(this.name, workDefinitionResponseDTO.name)
 				&& Objects.equals(this.outputs, workDefinitionResponseDTO.outputs)
 				&& Objects.equals(this.parameters, workDefinitionResponseDTO.parameters)
 				&& Objects.equals(this.processingType, workDefinitionResponseDTO.processingType)
+				&& Objects.equals(this.workFlowCheckerMappingDefinitionId,
+						workDefinitionResponseDTO.workFlowCheckerMappingDefinitionId)
 				&& Objects.equals(this.workType, workDefinitionResponseDTO.workType)
 				&& Objects.equals(this.works, workDefinitionResponseDTO.works);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(author, id, name, outputs, parameters, processingType, workType, works);
+		return Objects.hash(author, cronExpression, id, name, outputs, parameters, processingType,
+				workFlowCheckerMappingDefinitionId, workType, works);
 	}
 
 	@Override
@@ -452,11 +504,14 @@ public class WorkDefinitionResponseDTO {
 		StringBuilder sb = new StringBuilder();
 		sb.append("class WorkDefinitionResponseDTO {\n");
 		sb.append("    author: ").append(toIndentedString(author)).append("\n");
+		sb.append("    cronExpression: ").append(toIndentedString(cronExpression)).append("\n");
 		sb.append("    id: ").append(toIndentedString(id)).append("\n");
 		sb.append("    name: ").append(toIndentedString(name)).append("\n");
 		sb.append("    outputs: ").append(toIndentedString(outputs)).append("\n");
 		sb.append("    parameters: ").append(toIndentedString(parameters)).append("\n");
 		sb.append("    processingType: ").append(toIndentedString(processingType)).append("\n");
+		sb.append("    workFlowCheckerMappingDefinitionId: ")
+				.append(toIndentedString(workFlowCheckerMappingDefinitionId)).append("\n");
 		sb.append("    workType: ").append(toIndentedString(workType)).append("\n");
 		sb.append("    works: ").append(toIndentedString(works)).append("\n");
 		sb.append("}");
@@ -482,11 +537,13 @@ public class WorkDefinitionResponseDTO {
 		// a set of all properties/fields (JSON key names)
 		openapiFields = new HashSet<String>();
 		openapiFields.add("author");
+		openapiFields.add("cronExpression");
 		openapiFields.add("id");
 		openapiFields.add("name");
 		openapiFields.add("outputs");
 		openapiFields.add("parameters");
 		openapiFields.add("processingType");
+		openapiFields.add("workFlowCheckerMappingDefinitionId");
 		openapiFields.add("workType");
 		openapiFields.add("works");
 
@@ -530,6 +587,12 @@ public class WorkDefinitionResponseDTO {
 					String.format("Expected the field `author` to be a primitive type in the JSON string but got `%s`",
 							jsonObj.get("author").toString()));
 		}
+		if ((jsonObj.get("cronExpression") != null && !jsonObj.get("cronExpression").isJsonNull())
+				&& !jsonObj.get("cronExpression").isJsonPrimitive()) {
+			throw new IllegalArgumentException(String.format(
+					"Expected the field `cronExpression` to be a primitive type in the JSON string but got `%s`",
+					jsonObj.get("cronExpression").toString()));
+		}
 		if ((jsonObj.get("id") != null && !jsonObj.get("id").isJsonNull()) && !jsonObj.get("id").isJsonPrimitive()) {
 			throw new IllegalArgumentException(
 					String.format("Expected the field `id` to be a primitive type in the JSON string but got `%s`",
@@ -552,6 +615,13 @@ public class WorkDefinitionResponseDTO {
 			throw new IllegalArgumentException(String.format(
 					"Expected the field `processingType` to be a primitive type in the JSON string but got `%s`",
 					jsonObj.get("processingType").toString()));
+		}
+		if ((jsonObj.get("workFlowCheckerMappingDefinitionId") != null
+				&& !jsonObj.get("workFlowCheckerMappingDefinitionId").isJsonNull())
+				&& !jsonObj.get("workFlowCheckerMappingDefinitionId").isJsonPrimitive()) {
+			throw new IllegalArgumentException(String.format(
+					"Expected the field `workFlowCheckerMappingDefinitionId` to be a primitive type in the JSON string but got `%s`",
+					jsonObj.get("workFlowCheckerMappingDefinitionId").toString()));
 		}
 		if ((jsonObj.get("workType") != null && !jsonObj.get("workType").isJsonNull())
 				&& !jsonObj.get("workType").isJsonPrimitive()) {
