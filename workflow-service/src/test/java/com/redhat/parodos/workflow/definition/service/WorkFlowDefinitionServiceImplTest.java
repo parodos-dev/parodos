@@ -18,6 +18,7 @@ package com.redhat.parodos.workflow.definition.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -51,6 +52,7 @@ import org.modelmapper.ModelMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -313,9 +315,39 @@ class WorkFlowDefinitionServiceImplTest {
 	@Test
 	public void getWorkFlowDefinitionsWithData() {
 		// given
-		when(this.workFlowDefinitionRepository.findByTypeIsNot(WorkFlowType.CHECKER)).thenReturn(
-				Arrays.asList(sampleWorkFlowDefinition("workFLowOne"), sampleWorkFlowDefinition("workFLowTwo")));
+		WorkFlowDefinition workFlowOne = sampleWorkFlowDefinition("workFLowOne");
+		WorkFlowDefinition checker = sampleCheckerWorkFlowDefinition("checker");
 
+		WorkParameter workParameter = WorkParameter.builder().key("key").description("the key").optional(false)
+				.type(WorkParameterType.URI).build();
+		WorkFlowCheckerMappingDefinition workFlowCheckerMappingDefinition = WorkFlowCheckerMappingDefinition.builder()
+				.checkWorkFlow(checker).cronExpression("* * * * *")
+				.tasks(Collections.singletonList(sampleWorkFlowTaskDefinition(checker, "taskOfChecker", workParameter)))
+				.build();
+		workFlowCheckerMappingDefinition.setId(UUID.randomUUID());
+		WorkFlowTaskDefinition task01 = sampleWorkFlowTaskDefinitionWithChecker(workFlowOne, "task01", workParameter,
+				workFlowCheckerMappingDefinition);
+		WorkFlowTaskDefinition task02 = sampleWorkFlowTaskDefinition(workFlowOne, "task02", workParameter);
+
+		WorkFlowWorkDefinition taskDefinition = WorkFlowWorkDefinition.builder().workFlowDefinition(workFlowOne)
+				.workDefinitionId(UUID.randomUUID()).workDefinitionType(WorkType.TASK).createDate(new Date()).build();
+		taskDefinition.setId(UUID.randomUUID());
+		WorkFlowWorkDefinition taskDefinition02 = WorkFlowWorkDefinition.builder().workFlowDefinition(workFlowOne)
+				.workDefinitionId(UUID.randomUUID()).workDefinitionType(WorkType.TASK).createDate(new Date()).build();
+		taskDefinition02.setId(UUID.randomUUID());
+
+		workFlowOne.setNumberOfWorks(1);
+
+		when(this.workFlowCheckerMappingDefinitionRepository.findById(workFlowCheckerMappingDefinition.getId()))
+				.thenReturn(Optional.of(workFlowCheckerMappingDefinition));
+		when(this.workFlowTaskDefinitionRepository.findById(taskDefinition.getWorkDefinitionId()))
+				.thenReturn(Optional.of(task01));
+		when(this.workFlowTaskDefinitionRepository.findById(taskDefinition02.getWorkDefinitionId()))
+				.thenReturn(Optional.of(task02));
+		when(this.workFlowDefinitionRepository.findByTypeIsNot(WorkFlowType.CHECKER))
+				.thenReturn(Arrays.asList(workFlowOne, sampleWorkFlowDefinition("workFLowTwo")));
+		when(this.workFlowWorkRepository.findByWorkFlowDefinitionIdOrderByCreateDateAsc(workFlowOne.getId()))
+				.thenReturn(List.of(taskDefinition, taskDefinition02));
 		// when
 		List<WorkFlowDefinitionResponseDTO> workFlowDefinitionResponseDTOs = this.workFlowDefinitionService
 				.getWorkFlowDefinitions();
@@ -323,8 +355,36 @@ class WorkFlowDefinitionServiceImplTest {
 		// then
 		assertNotNull(workFlowDefinitionResponseDTOs);
 		assertEquals(workFlowDefinitionResponseDTOs.size(), 2);
-		assertEquals(workFlowDefinitionResponseDTOs.get(0).getName(), "workFLowOne");
-		assertEquals(workFlowDefinitionResponseDTOs.get(0).getProperties().getVersion(), "1.0.0");
+
+		// check root WorkFlow
+		WorkFlowDefinitionResponseDTO workFlowOneResponseDTO = workFlowDefinitionResponseDTOs.get(0);
+		assertEquals(workFlowOneResponseDTO.getName(), "workFLowOne");
+		assertEquals(workFlowOneResponseDTO.getType(), workFlowOne.getType());
+		assertEquals(workFlowOneResponseDTO.getProcessingType(), workFlowOne.getProcessingType());
+		assertNull(workFlowOneResponseDTO.getCronExpression());
+		assertEquals(workFlowDefinitionResponseDTOs.get(1).getName(), "workFLowTwo");
+		assertEquals(workFlowOneResponseDTO.getProperties().getVersion(), "1.0.0");
+		assertFalse(workFlowOneResponseDTO.getWorks().isEmpty());
+
+		// check associated tasks
+		ArrayList<WorkDefinitionResponseDTO> tasks = new ArrayList<>(workFlowOneResponseDTO.getWorks());
+		WorkDefinitionResponseDTO taskWorkUnit = tasks.get(0);
+		assertEquals(taskWorkUnit.getWorkFlowCheckerMappingDefinitionId(), workFlowCheckerMappingDefinition.getId());
+		assertEquals(taskWorkUnit.getParameters().get(workParameter.getKey()), workParameter.getAsJsonSchema());
+		assertEquals(taskWorkUnit.getName(), task01.getName());
+		WorkDefinitionResponseDTO taskWorkUnit02 = tasks.get(1);
+		assertEquals(taskWorkUnit02.getName(), task02.getName());
+		assertNull(taskWorkUnit02.getWorkFlowCheckerMappingDefinitionId());
+		assertEquals(taskWorkUnit.getParameters().get(workParameter.getKey()), workParameter.getAsJsonSchema());
+
+		// check checker of task01
+		WorkDefinitionResponseDTO checkerWorkUnit = taskWorkUnit.getWorks().stream().findFirst().get();
+		assertEquals(checkerWorkUnit.getWorkType(), WorkType.CHECKER);
+		assertEquals(checkerWorkUnit.getName(), checker.getName());
+		assertEquals(checkerWorkUnit.getProcessingType(), checker.getProcessingType());
+		assertEquals(checkerWorkUnit.getCronExpression(), workFlowCheckerMappingDefinition.getCronExpression());
+		assertEquals(checkerWorkUnit.getId(), checker.getId());
+
 		verify(this.workFlowDefinitionRepository, times(1)).findByTypeIsNot(WorkFlowType.CHECKER);
 	}
 
@@ -453,13 +513,39 @@ class WorkFlowDefinitionServiceImplTest {
 		return workFlowDefinition;
 	}
 
+	private WorkFlowDefinition sampleCheckerWorkFlowDefinition(String name) {
+		com.redhat.parodos.workflow.parameter.WorkParameter workParameter = com.redhat.parodos.workflow.parameter.WorkParameter
+				.builder().key(KEY).description(KEY_DESCRIPTION).optional(false)
+				.type(com.redhat.parodos.workflow.parameter.WorkParameterType.TEXT).build();
+
+		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(name).type(WorkFlowType.CHECKER)
+				.properties(WorkFlowPropertiesDefinition.builder().version("1.0.0").build())
+				.processingType(WorkFlowProcessingType.SEQUENTIAL)
+				.parameters(WorkFlowDTOUtil
+						.writeObjectValueAsString(Map.of(workParameter.getKey(), workParameter.getAsJsonSchema())))
+				.numberOfWorks(1).build();
+		workFlowDefinition.setId(UUID.randomUUID());
+		return workFlowDefinition;
+	}
+
 	private WorkFlowTaskDefinition sampleWorkFlowTaskDefinition(WorkFlowDefinition workFlowDefinition,
 			String workFlowTaskName, WorkParameter workParameter) {
 		WorkFlowTaskDefinition workFlowTaskDefinition = WorkFlowTaskDefinition.builder()
 				.workFlowDefinition(workFlowDefinition).name(workFlowTaskName)
 				.parameters(WorkFlowDTOUtil
 						.writeObjectValueAsString(Map.of(workParameter.getKey(), workParameter.getAsJsonSchema())))
-				.build();
+				.outputs("[]").build();
+		workFlowTaskDefinition.setId(UUID.randomUUID());
+		return workFlowTaskDefinition;
+	}
+
+	private WorkFlowTaskDefinition sampleWorkFlowTaskDefinitionWithChecker(WorkFlowDefinition workFlowDefinition,
+			String workFlowTaskName, WorkParameter workParameter, WorkFlowCheckerMappingDefinition checker) {
+		WorkFlowTaskDefinition workFlowTaskDefinition = WorkFlowTaskDefinition.builder()
+				.workFlowDefinition(workFlowDefinition).name(workFlowTaskName)
+				.parameters(WorkFlowDTOUtil
+						.writeObjectValueAsString(Map.of(workParameter.getKey(), workParameter.getAsJsonSchema())))
+				.workFlowCheckerMappingDefinition(checker).outputs("[]").build();
 		workFlowTaskDefinition.setId(UUID.randomUUID());
 		return workFlowTaskDefinition;
 	}
