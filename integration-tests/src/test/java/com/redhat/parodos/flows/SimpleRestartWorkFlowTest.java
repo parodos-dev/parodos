@@ -40,7 +40,7 @@ public class SimpleRestartWorkFlowTest {
 	private static final String WORKFLOW_NAME = "onboardingComplexAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW;
 
 	@Test
-	public void runRestartNotExistingWorkFlow() {
+	public void runRestartNotExistingWorkFlow() throws InterruptedException {
 		TestComponents components = new WorkFlowTestBuilder().withDefaultProject().withWorkFlowDefinition(WORKFLOW_NAME)
 				.build();
 		WorkflowApi workflowApi = new WorkflowApi(components.apiClient());
@@ -49,11 +49,12 @@ public class SimpleRestartWorkFlowTest {
 		assertThat(assertThrows(ApiException.class, () -> workflowApi.restartWorkFlow(execId)))
 				.hasMessageContaining(String.format("Workflow execution with ID: %s not found", execId))
 				.hasMessageContaining("HTTP response code: 404");
+		Thread.sleep(2000);
 
 	}
 
 	@Test
-	public void runRestartWorkFlow() throws ApiException {
+	public void runRestartWorkFlow() throws ApiException, InterruptedException {
 		log.info("******** Running the assessment workFlow ********");
 		TestComponents components = new WorkFlowTestBuilder().withDefaultProject().withWorkFlowDefinition(WORKFLOW_NAME)
 				.build();
@@ -87,11 +88,12 @@ public class SimpleRestartWorkFlowTest {
 		log.info("The Following Option Is Available after restart: {}", infrastructureOptionRestarted);
 
 		assertEquals(infrastructureOption, infrastructureOptionRestarted);
+		Thread.sleep(2000);
 
 	}
 
 	@Test
-	public void runRestartWorkFlowComplex() throws ApiException {
+	public void runRestartWorkFlowComplex() throws ApiException, InterruptedException {
 		log.info("******** Running The Complex workFlow ********");
 		TestComponents components = new WorkFlowTestBuilder().withDefaultProject().withWorkFlowDefinition(WORKFLOW_NAME)
 				.build();
@@ -218,6 +220,7 @@ public class SimpleRestartWorkFlowTest {
 		WorkFlowStatusResponseDTO restartedWorkflowStatus = workflowApi
 				.getStatus(restartedWorkFlowStatusResponseDTO.getWorkFlowExecutionId());
 		assertEquals(workFlowResponseDTO.getWorkFlowExecutionId(), restartedWorkflowStatus.getOriginalExecutionId());
+		Thread.sleep(2000);
 	}
 
 	@Test
@@ -355,6 +358,7 @@ public class SimpleRestartWorkFlowTest {
 			assertEquals(workFlowResponseDTO.getWorkFlowExecutionId(),
 					restartedWorkflowStatus.getOriginalExecutionId());
 		}
+		Thread.sleep(2000);
 	}
 
 	@Test

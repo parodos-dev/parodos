@@ -150,7 +150,8 @@ public abstract class WorkFlowServiceUtils {
 				}
 				if (status.getStatus() != expectedStatus) {
 					throw new WrongStatusException(
-							"Workflow status is not %s, it is %s ".formatted(expectedStatus, status.getStatus()));
+							"Workflow is finished and its status is %s while was expecting it to be %s"
+									.formatted(status.getStatus(), expectedStatus));
 				}
 				return status;
 			};
