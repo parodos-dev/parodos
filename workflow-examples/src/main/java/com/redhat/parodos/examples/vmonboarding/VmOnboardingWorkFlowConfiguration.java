@@ -126,4 +126,42 @@ public class VmOnboardingWorkFlowConfiguration {
 				.setDescription("this is for creating vm").build();
 	}
 
+	@Bean
+	WorkFlowOption badRepoOption() {
+		return new WorkFlowOption.Builder("badRepoOption",
+				"simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+						.addToDetails("Container Fundamentals Training Required").displayName("Training Required")
+						.setDescription("Container Fundamentals Training Required").build();
+	}
+
+	@Bean
+	WorkFlowOption notSupportOption() {
+		return new WorkFlowOption.Builder("notSupportOption",
+				"simpleSequentialWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+						.addToDetails("Non-Supported Workflow Steps").displayName("Not Supported")
+						.setDescription("Non-Supported Workflow Steps").build();
+	}
+
+	// An AssessmentTask returns one or more WorkFlowOption wrapped in a WorkflowOptions
+	@Bean
+	OnboardingVmAssessmentTask onboardingAssessmentTask(
+			@Qualifier("onboardingOcpOption") WorkFlowOption onboardingOcpOption,
+			@Qualifier("badRepoOption") WorkFlowOption badRepoOption,
+			@Qualifier("notSupportOption") WorkFlowOption notSupportOption) {
+		return new OnboardingVmAssessmentTask(List.of(onboardingOcpOption, badRepoOption, notSupportOption));
+	}
+
+	// A Workflow designed to execute and return WorkflowOption(s) that can be executed
+	// next. In this case there is only one.
+	@Bean(name = "onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
+	@Assessment
+	WorkFlow assessmentWorkFlow(
+			@Qualifier("onboardingAssessmentTask") OnboardingVmAssessmentTask onboardingAssessmentTask) {
+		// @formatter:off
+		return SequentialFlow.Builder.aNewSequentialFlow()
+				.named("onboardingAssessment" + WorkFlowConstants.ASSESSMENT_WORKFLOW)
+				.execute(onboardingAssessmentTask)
+				.build();
+		// @formatter:on
+	}
 }
