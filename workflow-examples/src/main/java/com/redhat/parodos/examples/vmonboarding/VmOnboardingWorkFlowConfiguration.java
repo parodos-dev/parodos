@@ -167,4 +167,5 @@ public class VmOnboardingWorkFlowConfiguration {
 				.build();
 		// @formatter:on
 	}
+
 }
