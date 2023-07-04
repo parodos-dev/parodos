@@ -6,13 +6,10 @@ import com.redhat.parodos.examples.vmonboarding.checker.AnsibleCompletionWorkFlo
 import com.redhat.parodos.examples.vmonboarding.checker.ServiceNowTicketApprovalWorkFlowCheckerTask;
 import com.redhat.parodos.examples.vmonboarding.task.AapLaunchJobWorkFlowTask;
 import com.redhat.parodos.examples.vmonboarding.task.NotificationWorkFlowTask;
-import com.redhat.parodos.examples.vmonboarding.task.OnboardingVmAssessmentTask;
 import com.redhat.parodos.examples.vmonboarding.task.ServiceNowTicketCreationWorkFlowTask;
-import com.redhat.parodos.workflow.annotation.Assessment;
 import com.redhat.parodos.workflow.annotation.Checker;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
 import com.redhat.parodos.workflow.annotation.Parameter;
-import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
