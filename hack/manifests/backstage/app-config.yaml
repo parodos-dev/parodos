@@ -35,8 +35,8 @@ backend:
     connection:
       host: ${POSTGRES_SERVICE_HOST}
       port: 5432
-      user: admin
-      password: admin
+      user: parodos
+      password: parodos
   cache:
     store: memory
   # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
@@ -59,7 +59,7 @@ proxy:
   #   target: 'https://example.com'
   #   changeOrigin: true
   '/parodos':
-    target: 'http://workflow-service.default.svc.cluster.local:8080/api/v1'
+    target: 'http://workflow-service:8080/api/v1'
     changeOrigin: true
     redirect: follow
     cache: 'no-cache'
@@ -69,7 +69,7 @@ proxy:
       Authorization: 'Basic dGVzdDp0ZXN0'
 
   '/parodos-notifications':
-    target: 'http://notification-service.default.svc.cluster.local:8080/api/v1'
+    target: 'http://notification-service:8080/api/v1'
     changeOrigin: true
     redirect: follow
     cache: 'no-cache'
