@@ -190,6 +190,11 @@
             <version>${fabric8.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.fabric8</groupId>
+            <artifactId>generator-annotations</artifactId>
+            <version>${fabric8.version}</version>
+        </dependency>
 
         <!-- This specific version is needed for openshift server mock -->
         <dependency>
