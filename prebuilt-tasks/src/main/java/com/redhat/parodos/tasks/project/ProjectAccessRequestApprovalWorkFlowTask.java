@@ -82,8 +82,8 @@ public class ProjectAccessRequestApprovalWorkFlowTask extends BaseWorkFlowTask {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
 		}
 
-		String projectAccessRequestStatusUrl = String.format("http://%s:%s/api/v1/projects/access/%s", serviceUrl,
-				servicePort, accessRequestId);
+		String projectAccessRequestStatusUrl = String.format("%s:%s/api/v1/projects/access/%s", serviceUrl, servicePort,
+				accessRequestId);
 		NotificationRequest request = NotificationRequest.builder()
 				.usernames(Arrays.stream(approvalUsernames.split(",")).toList())
 				.subject(NOTIFICATION_SUBJECT_ACCESS_REQUEST_APPROVAL).body(getMessage(projectAccessRequestStatusUrl))
@@ -91,7 +91,7 @@ public class ProjectAccessRequestApprovalWorkFlowTask extends BaseWorkFlowTask {
 		HttpEntity<NotificationRequest> notificationRequestHttpEntity = RestUtils.getRequestWithHeaders(request,
 				notificationServiceAccountName, notificationServiceAccountPassword);
 
-		String url = String.format("http://%s:%s/api/v1/messages", notificationServiceUrl, notificationServicePort);
+		String url = String.format("%s:%s/api/v1/messages", notificationServiceUrl, notificationServicePort);
 		ResponseEntity<String> response = RestUtils.executePost(url, notificationRequestHttpEntity);
 		try {
 			if (response.getStatusCode().is2xxSuccessful()) {

@@ -71,7 +71,7 @@ public class ProjectAccessRequestWorkFlowTask extends BaseWorkFlowTask {
 		}
 
 		try {
-			String url = String.format("http://%s:%s/api/v1/projects/%s/access", serviceUrl, servicePort,
+			String url = String.format("%s:%s/api/v1/projects/%s/access", serviceUrl, servicePort,
 					getProjectId(workContext));
 			log.info("url: {}", url);
 			AccessRequestDTO requestDTO = AccessRequestDTO.builder().username(username)

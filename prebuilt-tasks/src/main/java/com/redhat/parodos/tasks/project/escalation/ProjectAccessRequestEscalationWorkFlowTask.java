@@ -82,8 +82,8 @@ public class ProjectAccessRequestEscalationWorkFlowTask extends BaseWorkFlowTask
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
 		}
 
-		String projectAccessRequestStatusUrl = String.format("http://%s:%s/api/v1/projects/access/%s/status",
-				serviceUrl, servicePort, accessRequestId);
+		String projectAccessRequestStatusUrl = String.format("%s:%s/api/v1/projects/access/%s/status", serviceUrl,
+				servicePort, accessRequestId);
 		NotificationRequest request = NotificationRequest.builder().usernames(List.of(escalationUsername))
 				.subject(NOTIFICATION_SUBJECT_ACCESS_REQUEST_ESCALATION).body(getMessage(projectAccessRequestStatusUrl))
 				.build();
@@ -91,7 +91,7 @@ public class ProjectAccessRequestEscalationWorkFlowTask extends BaseWorkFlowTask
 				notificationServiceAccountName, notificationServiceAccountPassword);
 
 		ResponseEntity<String> response = RestUtils.executePost(
-				String.format("http://%s:%s/api/v1/messages", notificationServiceUrl, notificationServicePort),
+				String.format("%s:%s/api/v1/messages", notificationServiceUrl, notificationServicePort),
 				notificationRequestHttpEntity);
 		try {
 			if (response.getStatusCode().is2xxSuccessful()) {
