@@ -1,7 +1,6 @@
 package com.redhat.parodos.examples.vmonboarding.task;
 
 import com.redhat.parodos.examples.base.BaseInfrastructureWorkFlowTaskTest;
-import com.redhat.parodos.examples.vmonboarding.dto.ServiceNowRequestDTO;
 import com.redhat.parodos.examples.vmonboarding.dto.ServiceNowResponseDTO;
 import com.redhat.parodos.examples.vmonboarding.dto.ServiceNowResponseResult;
 import com.redhat.parodos.utils.RestUtils;
@@ -107,9 +106,8 @@ public class ServiceNowTicketCreationWorkFlowTaskTest extends BaseInfrastructure
 		// given
 		WorkContext workContext = mock(WorkContext.class);
 		try (MockedStatic<RestUtils> restUtilsMockedStatic = mockStatic(RestUtils.class)) {
-			restUtilsMockedStatic
-					.when(() -> RestUtils.executePost(any(String.class), eq(ServiceNowRequestDTO.class),
-							any(String.class), any(String.class), eq(ServiceNowResponseDTO.class)))
+			restUtilsMockedStatic.when(
+					() -> RestUtils.executePost(any(String.class), any(), any(String.class), any(String.class), any()))
 					.thenReturn(ResponseEntity.internalServerError().build());
 
 			// when
