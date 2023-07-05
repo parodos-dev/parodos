@@ -14,6 +14,9 @@ spring:
   security:
     authentication: ${PARODOS_AUTH:true}
 
+server:
+  forward-headers-strategy: framework
+
 springdoc:
   writer-with-order-by-keys: true
   writer-with-default-pretty-printer: true
