@@ -26,6 +26,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class VmOnboardingWorkFlowConfiguration {
 
+	private static final String NOTIFICATION_SERVICE_NOW_TICKET_APPROVED = "Ticket Approved";
+
+	private static final String NOTIFICATION_SERVICE_NOW_VM_CREATED = "VM Created";
+
 	// WORKFLOW - Sequential Flow:
 	// @formatter:off
 		// (1)- ServiceNowTicketCreationWorkFlowTask
@@ -86,12 +90,12 @@ public class VmOnboardingWorkFlowConfiguration {
 
 	@Bean(name = "notificationTicketApprovalWorkFlowTask")
 	NotificationWorkFlowTask notificationTicketApprovalWorkFlowTask() {
-		return new NotificationWorkFlowTask("Ticket Approved");
+		return new NotificationWorkFlowTask(NOTIFICATION_SERVICE_NOW_TICKET_APPROVED);
 	}
 
 	@Bean(name = "notificationVmCreatedWorkFlowTask")
 	NotificationWorkFlowTask notificationVmCreatedWorkFlowTask() {
-		return new NotificationWorkFlowTask("VM Created");
+		return new NotificationWorkFlowTask(NOTIFICATION_SERVICE_NOW_VM_CREATED);
 	}
 
 	@Bean(name = "aapLaunchJobWorkFlowTask")

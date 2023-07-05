@@ -38,7 +38,7 @@ public class AapLaunchJobWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		log.info("Start ServiceNowTicketCreationWorkFlowTask...");
+		log.info("Start AapLaunchJobWorkFlowTask...");
 		String vmType;
 		try {
 			vmType = getRequiredParameterValue("VM_TYPE");
