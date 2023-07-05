@@ -64,7 +64,7 @@ import org.springframework.stereotype.Component;
 public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry {
 
 	// constants
-	private static final String ROLLBACK_WORKFLOW = "rollbackWorkflow";
+	private static final String ROLLBACK_WORKFLOW = "fallbackWorkflow";
 
 	private static final String PARAMETERS = "parameters";
 
@@ -113,7 +113,7 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry {
 				.map(workFlowName -> new AbstractMap.SimpleEntry<>(workFlowName,
 						getWorkFlowTypeDetails(workFlowName,
 								List.of(Assessment.class, Checker.class, Infrastructure.class, Escalation.class))))
-				// sort to ensure main workflows to be saved after rollback workflows
+				// sort to ensure main workflows to be saved after fallback workflows
 				.sorted(Comparator.comparing(e -> String.valueOf(e.getValue().getSecond().get(ROLLBACK_WORKFLOW)),
 						Comparator.naturalOrder()))
 				.forEachOrdered(workFlowAnnotationEntry -> {
@@ -127,11 +127,11 @@ public class BeanWorkFlowRegistryImpl implements WorkFlowRegistry {
 					// workflow parameters from annotation attributes
 					List<WorkParameter> workParameters = WorkFlowRegistryDelegate.getWorkParameters(
 							(AnnotationAttributes[]) workFlowTypeDetailsPair.getSecond().get(PARAMETERS));
-					String rollbackWorkflowName = (String) workFlowTypeDetailsPair.getSecond().get(ROLLBACK_WORKFLOW);
+					String fallbackWorkFlowName = (String) workFlowTypeDetailsPair.getSecond().get(ROLLBACK_WORKFLOW);
 					workFlowDefinitionService.save(workFlowAnnotationEntry.getKey(), workFlowType,
 							workFlows.get(workFlowAnnotationEntry.getKey()).getProperties(), workParameters, works,
 							getWorkFlowProcessingType(workFlows.get(workFlowAnnotationEntry.getKey())),
-							rollbackWorkflowName);
+							fallbackWorkFlowName);
 				});
 	}
 

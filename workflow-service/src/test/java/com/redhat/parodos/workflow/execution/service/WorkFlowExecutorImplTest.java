@@ -31,7 +31,7 @@ class WorkFlowExecutorImplTest {
 
 	private static final String workflowName = "test-workflow";
 
-	private static final String rollbackWorkflowName = "test-rollback-workflow";
+	private static final String fallbackWorkFlowName = "test-fallback-workflow";
 
 	private static final UUID projectId = UUID.randomUUID();
 
@@ -51,54 +51,54 @@ class WorkFlowExecutorImplTest {
 	private WorkFlow mainWorkFlow;
 
 	@Mock
-	private WorkFlow rollbackWorkFlow;
+	private WorkFlow fallbackWorkFlow;
 
 	private WorkFlowExecutorImpl workFlowExecutor;
 
 	@BeforeEach
 	public void init() {
 		when(workFlowDelegate.getWorkFlowByName(workflowName)).thenReturn(mainWorkFlow);
-		when(workFlowDelegate.getWorkFlowByName(rollbackWorkflowName)).thenReturn(rollbackWorkFlow);
+		when(workFlowDelegate.getWorkFlowByName(fallbackWorkFlowName)).thenReturn(fallbackWorkFlow);
 		when(workFlowRepository.findById(executionId)).thenReturn(Optional.of(workFlowExecution));
-		when(rollbackWorkFlow.execute(any())).thenReturn(new DefaultWorkReport(WorkStatus.COMPLETED, workContext));
+		when(fallbackWorkFlow.execute(any())).thenReturn(new DefaultWorkReport(WorkStatus.COMPLETED, workContext));
 		when(mainWorkFlow.execute(any())).thenReturn(new DefaultWorkReport(WorkStatus.FAILED, workContext));
 		workFlowExecutor = new WorkFlowExecutorImpl(workFlowDelegate, workFlowRepository);
 	}
 
 	@Test
-	void execute_when_mainWorkflowIsFailed_and_rollbackIsFound_then_executeRollback() {
+	void execute_when_mainWorkflowIsFailed_and_fallbackIsFound_then_executeFallback() {
 		workFlowExecution.setStatus(WorkStatus.FAILED);
 		ExecutionContext executionContext = ExecutionContext.builder().projectId(projectId).userId(userId)
 				.workFlowName(workflowName).workContext(workContext).executionId(executionId)
-				.rollbackWorkFlowName(rollbackWorkflowName).build();
+				.fallbackWorkFlowName(fallbackWorkFlowName).build();
 		workFlowExecutor.execute(executionContext);
 
 		verify(mainWorkFlow, times(1)).execute(any(WorkContext.class));
-		verify(rollbackWorkFlow, times(1)).execute(any(WorkContext.class));
+		verify(fallbackWorkFlow, times(1)).execute(any(WorkContext.class));
 
 	}
 
 	@Test
-	void execute_when_mainWorkflowIsFailed_and_rollbackIsNotFound_then_notExecuteRollback() {
+	void execute_when_mainWorkflowIsFailed_and_fallbackIsNotFound_then_notExecuteFallback() {
 		workFlowExecution.setStatus(WorkStatus.FAILED);
 		ExecutionContext executionContext = ExecutionContext.builder().projectId(projectId).userId(userId)
 				.workFlowName(workflowName).workContext(workContext).executionId(executionId).build();
 		workFlowExecutor.execute(executionContext);
 
 		verify(mainWorkFlow, times(1)).execute(any(WorkContext.class));
-		verify(rollbackWorkFlow, never()).execute(any(WorkContext.class));
+		verify(fallbackWorkFlow, never()).execute(any(WorkContext.class));
 	}
 
 	@Test
-	void execute_when_mainWorkflowIsCompleted_then_notExecuteRollback() {
+	void execute_when_mainWorkflowIsCompleted_then_notExecuteFallback() {
 		workFlowExecution.setStatus(WorkStatus.COMPLETED);
 		ExecutionContext executionContext = ExecutionContext.builder().projectId(projectId).userId(userId)
 				.workFlowName(workflowName).workContext(workContext).executionId(executionId)
-				.rollbackWorkFlowName(rollbackWorkflowName).build();
+				.fallbackWorkFlowName(fallbackWorkFlowName).build();
 		workFlowExecutor.execute(executionContext);
 
 		verify(mainWorkFlow, times(1)).execute(any(WorkContext.class));
-		verify(rollbackWorkFlow, never()).execute(any(WorkContext.class));
+		verify(fallbackWorkFlow, never()).execute(any(WorkContext.class));
 	}
 
 }

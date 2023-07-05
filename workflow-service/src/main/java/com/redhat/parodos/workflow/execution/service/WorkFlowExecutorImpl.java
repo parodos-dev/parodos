@@ -35,29 +35,29 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor {
 		if (isExecutionFailed(context)) {
 			log.error("Workflow {} (ID: {}) failed. Check the logs for errors coming from the tasks in this workflow.",
 					context.workFlowName(), context.executionId());
-			executeRollbackWorkFlowIfNeeded(context);
+			executeFallbackWorkFlowIfNeeded(context);
 		}
 	}
 
-	private void executeRollbackWorkFlowIfNeeded(ExecutionContext context) {
-		if (context.rollbackWorkFlowName() == null) {
+	private void executeFallbackWorkFlowIfNeeded(ExecutionContext context) {
+		if (context.fallbackWorkFlowName() == null) {
 			return;
 		}
 
-		WorkFlow rollbackWorkFlow = workFlowDelegate.getWorkFlowByName(context.rollbackWorkFlowName());
-		if (rollbackWorkFlow == null) {
-			log.error("A rollback workflow {} could not be found for failed workflow {} (ID: {})",
-					context.rollbackWorkFlowName(), context.workFlowName(), context.executionId());
+		WorkFlow fallbackWorkFlow = workFlowDelegate.getWorkFlowByName(context.fallbackWorkFlowName());
+		if (fallbackWorkFlow == null) {
+			log.error("A fallback workflow {} could not be found for failed workflow {} (ID: {})",
+					context.fallbackWorkFlowName(), context.workFlowName(), context.executionId());
 			return;
 		}
 
-		log.info("execute rollback workflow {} for workflow {} (ID: {})", context.rollbackWorkFlowName(),
+		log.info("execute fallback workflow {} for workflow {} (ID: {})", context.fallbackWorkFlowName(),
 				context.workFlowName(), context.executionId());
-		WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(rollbackWorkFlow, context.workContext());
+		WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(fallbackWorkFlow, context.workContext());
 	}
 
 	private boolean isExecutionFailed(ExecutionContext context) {
-		// need to use the status from db to avoid of repetitive execution on rollback
+		// need to use the status from db to avoid of repetitive execution on fallback
 		return workFlowRepository.findById(context.executionId())
 				.map(execution -> execution.getStatus() == WorkStatus.FAILED).orElse(false);
 	}

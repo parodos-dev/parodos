@@ -14,7 +14,7 @@ public interface WorkFlowExecutor {
 
 	@Builder
 	record ExecutionContext(UUID projectId, UUID userId, String workFlowName, WorkContext workContext, UUID executionId,
-			String rollbackWorkFlowName) {
+			String fallbackWorkFlowName) {
 	}
 
 }

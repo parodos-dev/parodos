@@ -38,7 +38,7 @@ public interface WorkFlowDefinitionService {
 
 	WorkFlowDefinitionResponseDTO save(String workFlowName, WorkFlowType workFlowType,
 			WorkFlowPropertiesMetadata workFlowPropertiesMetadata, List<WorkParameter> workParameters, List<Work> works,
-			WorkFlowProcessingType workFlowProcessingType, String rollbackWorkflowName);
+			WorkFlowProcessingType workFlowProcessingType, String fallbackWorkFlowName);
 
 	WorkFlowDefinitionResponseDTO getWorkFlowDefinitionByName(String name);
 

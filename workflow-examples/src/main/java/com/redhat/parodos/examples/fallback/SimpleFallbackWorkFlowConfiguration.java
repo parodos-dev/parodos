@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.examples.rollback;
+package com.redhat.parodos.examples.fallback;
 
-import com.redhat.parodos.examples.complex.rollback.RollbackWorkFlowTask;
-import com.redhat.parodos.examples.rollback.task.SimpleFailedWorkFlowTask;
+import com.redhat.parodos.examples.complex.fallback.FallbackWorkFlowTask;
+import com.redhat.parodos.examples.fallback.task.SimpleFailedWorkFlowTask;
 import com.redhat.parodos.workflow.annotation.Infrastructure;
 import com.redhat.parodos.workflow.annotation.WorkFlowProperties;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
@@ -38,7 +38,7 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @Slf4j
 @PropertySource("classpath:git.properties")
-public class SimpleRollbackWorkFlowConfiguration {
+public class SimpleFallbackWorkFlowConfiguration {
 
 	// START Sequential Example (WorkflowTasks and Workflow Definitions)
 	@Bean
@@ -47,7 +47,7 @@ public class SimpleRollbackWorkFlowConfiguration {
 	}
 
 	@Bean(name = "simpleFailedWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
-	@Infrastructure(rollbackWorkflow = "simpleRollbackWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+	@Infrastructure(fallbackWorkflow = "simpleFallbackWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
 	@WorkFlowProperties(version = "${git.commit.id}")
 	WorkFlow simpleFailedWorkFlow(
 			@Qualifier("simpleFailedWorkFlowTask") SimpleFailedWorkFlowTask simpleFailedWorkFlowTask) {
@@ -63,18 +63,18 @@ public class SimpleRollbackWorkFlowConfiguration {
 	// END Sequential Example (WorkflowTasks and Workflow Definitions)
 
 	@Bean
-	RollbackWorkFlowTask rollbackWorkFlowTask() {
-		return new RollbackWorkFlowTask();
+	FallbackWorkFlowTask fallbackWorkFlowTask() {
+		return new FallbackWorkFlowTask();
 	}
 
-	@Bean("simpleRollbackWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+	@Bean("simpleFallbackWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
 	@Infrastructure
-	WorkFlow simpleRollbackWorkFlow(@Qualifier("rollbackWorkFlowTask") RollbackWorkFlowTask rollbackWorkFlowTask) {
+	WorkFlow simpleFallbackWorkFlow(@Qualifier("fallbackWorkFlowTask") FallbackWorkFlowTask fallbackWorkFlowTask) {
 		// @formatter:off
 		return SequentialFlow
 				.Builder.aNewSequentialFlow()
-				.named("simpleRollbackWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
-				.execute(rollbackWorkFlowTask)
+				.named("simpleFallbackWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW)
+				.execute(fallbackWorkFlowTask)
 				.build();
 		// @formatter:on
 	}

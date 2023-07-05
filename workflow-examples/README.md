@@ -358,22 +358,22 @@ hours (or even days). As all state is persisted, when the workflow-service is re
 
 WorkflowCheckers can be used to determine if required manual processes, outside the scope of Parodos, have completed.
 
-#### Workflow rollback
+#### Workflow fallback
 
-Rollback workflow is a type of workflow that will be triggered once the main workflow is failed. To set up a rollback workflow:
-1. define a rollback workflow with tasks to be executed for the rollback purpose
-2. add the reference of rollback workflow's name to the field `rollbackWorkflow` in `@Infrastructure` annotation of the main workflow. In the example below, a rollback workflow `complexRollbackWorkFlow` is assigned to `complexWorkFlow`:
+Fallback workflow is a type of workflow that will be triggered once the main workflow is failed. To set up a fallback workflow:
+1. define a fallback workflow with tasks to be executed for the fallback purpose
+2. add the reference of fallback workflow's name to the field `fallbackWorkflow` in `@Infrastructure` annotation of the main workflow. In the example below, a fallback workflow `complexFallbackWorkFlow` is assigned to `complexWorkFlow`:
 ```java
 	@Bean(name = "complexWorkFlow")
 	@Infrastructure(parameters = { ... }, 
-            rollbackWorkflow = "complexRollbackWorkFlow")
+            fallbackWorkflow = "complexFallbackWorkFlow")
 	WorkFlow complexWorkFlow(@Qualifier("subWorkFlowThree") WorkFlow subWorkFlowThree,
 			@Qualifier("subWorkFlowFour") WorkFlow subWorkFlowFour) {
 		return SequentialFlow.Builder.aNewSequentialFlow().named("complexWorkFlow").execute(subWorkFlowThree)
 				.then(subWorkFlowFour).build();
 	}
 ```
-The property `rollbackWorkflow` in `@Infrastructure` can be removed in order to remove the rollback workflow. By default, there will be no rollback for any workflows.
+The property `fallbackWorkflow` in `@Infrastructure` can be removed in order to remove the fallback workflow. By default, there will be no fallback for any workflows.
 
 #### A Note On Defining WorkflowTasks for Usage In A Workflow
 

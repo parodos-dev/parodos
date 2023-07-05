@@ -1211,7 +1211,7 @@ class WorkFlowServiceImplTest {
 		UUID projectId = UUID.randomUUID();
 		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow().named("test").execute(work).build();
 		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(TEST_WORKFLOW_NAME)
-				.rollbackWorkFlowDefinition(WorkFlowDefinition.builder().name("Rollback_" + TEST_WORKFLOW_NAME).build())
+				.fallbackWorkFlowDefinition(WorkFlowDefinition.builder().name("Fallback_" + TEST_WORKFLOW_NAME).build())
 				.build();
 
 		WorkFlowExecution restartedWorkFlowExecution = WorkFlowExecution.builder().status(WorkStatus.COMPLETED)
@@ -1226,7 +1226,7 @@ class WorkFlowServiceImplTest {
 		when(this.userService.getUserEntityByUsername("test-user")).thenReturn(user);
 		when(this.workFlowRepository.findById(executionID)).thenReturn(Optional.of(invokingWorkFlowExecution));
 		when(this.workFlowDefinitionService.getWorkFlowDefinitionByName(TEST_WORKFLOW_NAME))
-				.thenReturn(WorkFlowDefinitionResponseDTO.builder().rollbackWorkflow("rollback").build());
+				.thenReturn(WorkFlowDefinitionResponseDTO.builder().fallbackWorkflow("fallback").build());
 		assertThat(assertThrows(IllegalWorkFlowStateException.class, () -> this.workFlowService.restart(executionID)))
 				.hasMessage(String.format(
 						"workflow id: %s from workflow name: %s has not Workflow Execution Context saved in the database, cannot restart it!",
@@ -1247,7 +1247,7 @@ class WorkFlowServiceImplTest {
 		UUID projectId = UUID.randomUUID();
 		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow().named("test").execute(work).build();
 		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(TEST_WORKFLOW_NAME)
-				.rollbackWorkFlowDefinition(WorkFlowDefinition.builder().name("Rollback_" + TEST_WORKFLOW_NAME).build())
+				.fallbackWorkFlowDefinition(WorkFlowDefinition.builder().name("Fallback_" + TEST_WORKFLOW_NAME).build())
 				.build();
 
 		WorkContext invokingWorkContext = new WorkContext();
@@ -1272,7 +1272,7 @@ class WorkFlowServiceImplTest {
 		when(this.workFlowRepository.findById(executionID)).thenReturn(Optional.of(invokingWorkFlowExecution));
 		when(this.workFlowDelegate.getWorkFlowByName(TEST_WORKFLOW_NAME)).thenReturn(workFlow);
 		when(this.workFlowDefinitionService.getWorkFlowDefinitionByName(TEST_WORKFLOW_NAME))
-				.thenReturn(WorkFlowDefinitionResponseDTO.builder().rollbackWorkflow("rollback").build());
+				.thenReturn(WorkFlowDefinitionResponseDTO.builder().fallbackWorkflow("fallback").build());
 		WorkReport report = this.workFlowService.restart(executionID);
 
 		// then
@@ -1298,7 +1298,7 @@ class WorkFlowServiceImplTest {
 		UUID projectId = UUID.randomUUID();
 		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow().named("test").execute(work).build();
 		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(TEST_WORKFLOW_NAME)
-				.rollbackWorkFlowDefinition(WorkFlowDefinition.builder().name("Rollback_" + TEST_WORKFLOW_NAME).build())
+				.fallbackWorkFlowDefinition(WorkFlowDefinition.builder().name("Fallback_" + TEST_WORKFLOW_NAME).build())
 				.build();
 
 		WorkFlowExecution restartedWorkFlowExecution = WorkFlowExecution.builder().status(WorkStatus.COMPLETED)
@@ -1320,7 +1320,7 @@ class WorkFlowServiceImplTest {
 		when(this.workFlowRepository.findById(executionID)).thenReturn(Optional.of(invokingWorkFlowExecution));
 		when(this.workFlowDelegate.getWorkFlowByName(TEST_WORKFLOW_NAME)).thenReturn(workFlow);
 		when(this.workFlowDefinitionService.getWorkFlowDefinitionByName(TEST_WORKFLOW_NAME))
-				.thenReturn(WorkFlowDefinitionResponseDTO.builder().rollbackWorkflow("rollback").build());
+				.thenReturn(WorkFlowDefinitionResponseDTO.builder().fallbackWorkflow("fallback").build());
 		WorkReport report = this.workFlowService.restart(executionID);
 
 		// then
@@ -1346,7 +1346,7 @@ class WorkFlowServiceImplTest {
 		UUID projectId = UUID.randomUUID();
 		SequentialFlow workFlow = SequentialFlow.Builder.aNewSequentialFlow().named("test").execute(work).build();
 		WorkFlowDefinition workFlowDefinition = WorkFlowDefinition.builder().name(TEST_WORKFLOW_NAME)
-				.rollbackWorkFlowDefinition(WorkFlowDefinition.builder().name("Rollback_" + TEST_WORKFLOW_NAME).build())
+				.fallbackWorkFlowDefinition(WorkFlowDefinition.builder().name("Fallback_" + TEST_WORKFLOW_NAME).build())
 				.build();
 
 		WorkContext invokingWorkContext = new WorkContext();
@@ -1376,7 +1376,7 @@ class WorkFlowServiceImplTest {
 		when(this.workFlowRepository.findById(executionID)).thenReturn(Optional.of(invokingWorkFlowExecution));
 		when(this.workFlowDelegate.getWorkFlowByName(TEST_WORKFLOW_NAME)).thenReturn(workFlow);
 		when(this.workFlowDefinitionService.getWorkFlowDefinitionByName(TEST_WORKFLOW_NAME))
-				.thenReturn(WorkFlowDefinitionResponseDTO.builder().rollbackWorkflow("rollback").build());
+				.thenReturn(WorkFlowDefinitionResponseDTO.builder().fallbackWorkflow("fallback").build());
 		WorkReport report = this.workFlowService.restart(executionID);
 
 		// then
