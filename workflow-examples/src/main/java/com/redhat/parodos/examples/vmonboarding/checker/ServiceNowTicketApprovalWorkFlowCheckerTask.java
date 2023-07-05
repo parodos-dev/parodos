@@ -39,7 +39,7 @@ public class ServiceNowTicketApprovalWorkFlowCheckerTask extends BaseWorkFlowChe
 	 */
 	@Override
 	public WorkReport checkWorkFlowStatus(WorkContext workContext) {
-		log.info("Start ServiceNowTicketCreationWorkFlowTask...");
+		log.info("Start ServiceNowTicketApprovalWorkFlowCheckerTask...");
 		try {
 			String incidentId = getRequiredParameterValue("INCIDENT_ID");
 			log.info("INCIDENT id: {}", incidentId);
