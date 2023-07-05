@@ -111,6 +111,11 @@ jobs:
       - name: Upload image
         uses: ishworkh/docker-image-artifact-upload@v1
         with:
+          image: "docker-compose_examples-service:latest"
+
+      - name: Upload image
+        uses: ishworkh/docker-image-artifact-upload@v1
+        with:
           image: "docker-compose_workflow-service:latest"
 
       - name: Upload image
@@ -175,6 +180,11 @@ jobs:
         with:
           image: "docker-compose_workflow-service:latest"
 
+      - name: Download images
+        uses: ishworkh/docker-image-artifact-download@v1
+        with:
+          image: "docker-compose_examples-service:latest"
+
       - name: Load images inside kind
         run: |
           make push-images-to-kind
@@ -185,6 +195,7 @@ jobs:
           kubectl wait --timeout=600s --for=condition=Ready pods --all -n default || {
             echo "Timeout waiting for Parodos services to be ready";
             kubectl get pods --all-namespaces;
+            kubectl describe pods
             echo "************ workflow-service logs ***************";
             kubectl logs -l app=workflow-service --tail=40;
             echo "************ notification-service logs ***************";
