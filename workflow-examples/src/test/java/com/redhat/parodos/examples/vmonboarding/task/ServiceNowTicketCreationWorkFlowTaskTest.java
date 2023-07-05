@@ -78,7 +78,6 @@ public class ServiceNowTicketCreationWorkFlowTaskTest extends BaseInfrastructure
 	public void executeSuccess() {
 		// given
 		WorkContext workContext = mock(WorkContext.class);
-		serviceNowTicketCreationWorkFlowTask.setBeanName("test");
 		try (MockedStatic<RestUtils> restUtilsMockedStatic = mockStatic(RestUtils.class)) {
 			restUtilsMockedStatic.when(
 					() -> RestUtils.executePost(any(String.class), any(), any(String.class), any(String.class), any()))
