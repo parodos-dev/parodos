@@ -21,3 +21,9 @@ services:
       - SPRING_PROFILES_ACTIVE=local
     depends_on:
       - notification-service
+
+  examples-service:
+    build:
+      context: ../
+      dockerfile: ./integration-tests/Dockerfile
+    container_name: examples-service

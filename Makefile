@@ -17,6 +17,7 @@ MAVEN ?= /usr/bin/mvn
 ORG=quay.io/parodos-dev/
 WORKFLOW_SERVICE_IMAGE=workflow-service
 NOTIFICATION_SERVICE_IMAGE=notification-service
+EXAMPLES_SERVICE_IMAGE=examples-service
 
 # get version from pom
 VERSION = $(shell sed -n "s/<revision>\(.*\)<\/revision>/\1/p" $(PWD)/pom.xml | sed 's/\ *//g')
@@ -145,9 +146,11 @@ tag-images: ## Tag docker images with git hash and branch name
 	$(eval TAG?=$(GIT_HASH))
 	$(DOCKER) tag docker-compose_workflow-service:latest $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(TAG)
 	$(DOCKER) tag docker-compose_notification-service:latest $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(TAG)
+	$(DOCKER) tag docker-compose_examples-service:latest $(ORG)$(EXAMPLES_SERVICE_IMAGE):$(TAG)
 
 	$(DOCKER) tag docker-compose_workflow-service:latest $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(GIT_BRANCH)
 	$(DOCKER) tag docker-compose_notification-service:latest $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(GIT_BRANCH)
+	$(DOCKER) tag docker-compose_examples-service:latest $(ORG)$(EXAMPLES_SERVICE_IMAGE):$(GIT_BRANCH)
 
 deploy-local-registry:
 ifneq ($(shell $(DOCKER) container inspect -f '{{.State.Running}}' registry 2> /dev/null), true)
@@ -228,14 +231,18 @@ push-images: ## Push docker images to quay.io registry
 	$(eval TAG?=$(GIT_HASH))
 	$(DOCKER) push  $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(TAG)
 	$(DOCKER) push  $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(TAG)
+	$(DOCKER) push  $(ORG)$(EXAMPLES_SERVICE_IMAGE):$(TAG)
 
 	$(DOCKER) push  $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(GIT_BRANCH)
 	$(DOCKER) push  $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(GIT_BRANCH)
+	$(DOCKER) push  $(ORG)$(EXAMPLES_SERVICE_IMAGE):$(GIT_BRANCH)
 
 push-images-to-kind: ## Push docker images to kind
 	$(DOCKER) tag docker-compose_workflow-service:latest $(ORG)$(WORKFLOW_SERVICE_IMAGE):test
+	$(DOCKER) tag docker-compose_examples-service:latest $(ORG)$(EXAMPLES_SERVICE_IMAGE):test
 	$(DOCKER) tag docker-compose_notification-service:latest $(ORG)$(NOTIFICATION_SERVICE_IMAGE):test
 	kind load docker-image $(ORG)$(WORKFLOW_SERVICE_IMAGE):test
+	kind load docker-image $(ORG)$(EXAMPLES_SERVICE_IMAGE):test
 	kind load docker-image $(ORG)$(NOTIFICATION_SERVICE_IMAGE):test
 
 install-nginx: ## Install nginx

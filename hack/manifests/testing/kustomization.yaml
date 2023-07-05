@@ -14,6 +14,7 @@ patches:
 
 images:
 - name: quay.io/parodos-dev/workflow-service:main
+  newName: quay.io/parodos-dev/examples-service
   newTag: test
 - name: quay.io/parodos-dev/notification-service:main
   newTag: test
