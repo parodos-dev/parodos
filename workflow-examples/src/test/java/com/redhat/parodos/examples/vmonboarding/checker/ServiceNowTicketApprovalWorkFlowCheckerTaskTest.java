@@ -35,8 +35,6 @@ public class ServiceNowTicketApprovalWorkFlowCheckerTaskTest extends BaseWorkFlo
 
 	public static final String INCIDENT_ID_PARAMETER_VALUE_TEST = "incident-id-test";
 
-	public static final String SERVICE_NOW_RESPONSE_RESULT_SYS_ID_TEST = "sys-id-test";
-
 	public static final String SERVICE_NOW_RESPONSE_RESULT_STATE_SUCCESS_TEST = "success-test";
 
 	public static final String SERVICE_NOW_RESPONSE_RESULT_STATE_NON_APPROVED_TEST = "1";
@@ -67,7 +65,6 @@ public class ServiceNowTicketApprovalWorkFlowCheckerTaskTest extends BaseWorkFlo
 	public void executeSuccess() {
 		// given
 		WorkContext workContext = mock(WorkContext.class);
-		serviceNowTicketApprovalWorkFlowCheckerTask.setBeanName("test");
 		try (MockedStatic<RestUtils> restUtilsMockedStatic = mockStatic(RestUtils.class)) {
 			restUtilsMockedStatic
 					.when(() -> RestUtils.restExchange(any(String.class), any(String.class), any(String.class), any()))
@@ -89,7 +86,6 @@ public class ServiceNowTicketApprovalWorkFlowCheckerTaskTest extends BaseWorkFlo
 	public void executeRejected() {
 		// given
 		WorkContext workContext = mock(WorkContext.class);
-		serviceNowTicketApprovalWorkFlowCheckerTask.setBeanName("test");
 		try (MockedStatic<RestUtils> restUtilsMockedStatic = mockStatic(RestUtils.class)) {
 			restUtilsMockedStatic
 					.when(() -> RestUtils.restExchange(any(String.class), any(String.class), any(String.class), any()))
@@ -111,7 +107,6 @@ public class ServiceNowTicketApprovalWorkFlowCheckerTaskTest extends BaseWorkFlo
 	public void executeNonApproved() {
 		// given
 		WorkContext workContext = mock(WorkContext.class);
-		serviceNowTicketApprovalWorkFlowCheckerTask.setBeanName("test");
 		try (MockedStatic<RestUtils> restUtilsMockedStatic = mockStatic(RestUtils.class)) {
 			restUtilsMockedStatic
 					.when(() -> RestUtils.restExchange(any(String.class), any(String.class), any(String.class), any()))
