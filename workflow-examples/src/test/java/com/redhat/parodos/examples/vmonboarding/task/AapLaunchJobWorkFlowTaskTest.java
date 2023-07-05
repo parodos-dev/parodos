@@ -66,7 +66,6 @@ public class AapLaunchJobWorkFlowTaskTest extends BaseInfrastructureWorkFlowTask
 	public void executeSuccess() {
 		// given
 		WorkContext workContext = mock(WorkContext.class);
-		aapLaunchJobWorkFlowTask.setBeanName("test");
 		try (MockedStatic<RestUtils> restUtilsMockedStatic = mockStatic(RestUtils.class)) {
 			restUtilsMockedStatic
 					.when(() -> RestUtils.executePost(any(), any(String.class), any(), any(String.class),
