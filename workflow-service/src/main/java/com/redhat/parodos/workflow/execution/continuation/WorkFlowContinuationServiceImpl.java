@@ -68,7 +68,7 @@ public class WorkFlowContinuationServiceImpl implements WorkFlowContinuationServ
 					.userId(workFlowExecution.getUser().getId()).workFlowName(workFlowDefinition.getName())
 					.workContext(workFlowExecution.getWorkFlowExecutionContext().getWorkContext())
 					.executionId(workFlowExecution.getId())
-					.rollbackWorkFlowName(Optional.ofNullable(workFlowDefinition.getRollbackWorkFlowDefinition())
+					.fallbackWorkFlowName(Optional.ofNullable(workFlowDefinition.getFallbackWorkFlowDefinition())
 							.map(WorkFlowDefinition::getName).orElse(null))
 					.build());
 			// TODO: continue 'FAILED' Checkers in this main workflow execution

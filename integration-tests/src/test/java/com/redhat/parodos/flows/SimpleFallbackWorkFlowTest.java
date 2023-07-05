@@ -15,7 +15,6 @@ import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.sdkutils.WorkFlowServiceUtils;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -25,12 +24,12 @@ import static org.junit.Assert.assertNotNull;
  * @author Richard Wang (Github: richrdW98)
  */
 @Slf4j
-public class SimpleRollbackWorkFlowTest {
+public class SimpleFallbackWorkFlowTest {
 
 	private static final String WORKFLOW_NAME = "simpleFailedWorkFlow" + WorkFlowConstants.INFRASTRUCTURE_WORKFLOW;
 
 	@Test
-	public void runRollbackWorkFlow() throws ApiException {
+	public void runFallbackWorkFlow() throws ApiException {
 		log.info("******** Running The Simple WorkFlow ********");
 		TestComponents components = new WorkFlowTestBuilder().withDefaultProject()
 				.withWorkFlowDefinition(WORKFLOW_NAME, getWorkFlowDefinitionResponseConsumer()).build();
@@ -60,7 +59,6 @@ public class SimpleRollbackWorkFlowTest {
 		log.info("******** Simple Failed Flow Completed ********");
 	}
 
-	@NotNull
 	private static Consumer<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitionResponseConsumer() {
 		return workFlowDefinition -> {
 			assertNotNull(workFlowDefinition.getId());

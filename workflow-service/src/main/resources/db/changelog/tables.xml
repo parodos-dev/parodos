@@ -261,14 +261,14 @@
             </column>
         </createTable>
 
-        <!-- Workflow Rollback join Table -->
-        <createTable tableName="prds_workflow_rollback_mapping">
-            <column name="workflow_rollback_definition_id" type="${uuidType}">
-                <constraints nullable="false" foreignKeyName="fk_workflow_rollback_definition_mapping_workflow_rollback_definition_id"
+        <!-- Workflow Fallback join Table -->
+        <createTable tableName="prds_workflow_fallback_mapping">
+            <column name="workflow_fallback_definition_id" type="${uuidType}">
+                <constraints nullable="false" foreignKeyName="fk_workflow_fallback_definition_mapping_workflow_fallback_definition_id"
                              referencedTableName="prds_workflow_definition" referencedColumnNames="id"/>
             </column>
             <column name="workflow_definition_id" type="${uuidType}">
-                <constraints nullable="false" foreignKeyName="fk_workflow_rollback_definition_mapping_workflow_definition_id"
+                <constraints nullable="false" foreignKeyName="fk_workflow_fallback_definition_mapping_workflow_definition_id"
                              referencedTableName="prds_workflow_definition" referencedColumnNames="id"/>
             </column>
         </createTable>

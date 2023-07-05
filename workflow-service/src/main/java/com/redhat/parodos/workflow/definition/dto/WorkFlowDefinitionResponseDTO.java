@@ -71,7 +71,7 @@ public class WorkFlowDefinitionResponseDTO {
 	private List<WorkDefinitionResponseDTO> works;
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private String rollbackWorkflow;
+	private String fallbackWorkflow;
 
 	public static class WorkFlowDefinitionResponseDTOBuilder {
 
@@ -94,7 +94,7 @@ public class WorkFlowDefinitionResponseDTO {
 				.parameterFromString(workFlowDefinition.getParameters()).author(workFlowDefinition.getAuthor())
 				.createDate(workFlowDefinition.getCreateDate()).modifyDate(workFlowDefinition.getModifyDate())
 				.type(workFlowDefinition.getType()).processingType(workFlowDefinition.getProcessingType()).works(works)
-				.rollbackWorkflow(Optional.ofNullable(workFlowDefinition.getRollbackWorkFlowDefinition())
+				.fallbackWorkflow(Optional.ofNullable(workFlowDefinition.getFallbackWorkFlowDefinition())
 						.map(WorkFlowDefinition::getName).orElse(null))
 				.build();
 	}

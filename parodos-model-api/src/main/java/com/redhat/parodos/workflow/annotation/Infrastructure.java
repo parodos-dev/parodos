@@ -35,6 +35,6 @@ public @interface Infrastructure {
 
 	Parameter[] parameters() default {};
 
-	String rollbackWorkflow() default "";
+	String fallbackWorkflow() default "";
 
 }

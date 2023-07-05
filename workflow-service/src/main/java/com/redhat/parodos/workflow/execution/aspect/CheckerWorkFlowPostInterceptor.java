@@ -109,8 +109,8 @@ public class CheckerWorkFlowPostInterceptor implements WorkFlowPostInterceptor {
 			workFlowContinuationServiceImpl.continueWorkFlow(ExecutionContext.builder().projectId(projectId)
 					.userId(userId).workFlowName(mainWorkFlowName).workContext(workContext)
 					.executionId(mainWorkFlowExecution.getId())
-					.rollbackWorkFlowName(Optional
-							.ofNullable(mainWorkFlowExecution.getWorkFlowDefinition().getRollbackWorkFlowDefinition())
+					.fallbackWorkFlowName(Optional
+							.ofNullable(mainWorkFlowExecution.getWorkFlowDefinition().getFallbackWorkFlowDefinition())
 							.map(WorkFlowDefinition::getName).orElse(null))
 					.build());
 		}

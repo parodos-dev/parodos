@@ -1,4 +1,4 @@
-package com.redhat.parodos.examples.rollback.rollback;
+package com.redhat.parodos.examples.complex.fallback;
 
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
@@ -8,11 +8,11 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class RollbackWorkFlowTask extends BaseInfrastructureWorkFlowTask {
+public class FallbackWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		log.info("RollbackWorkFlowTask");
+		log.info("FallbackWorkFlowTask");
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 

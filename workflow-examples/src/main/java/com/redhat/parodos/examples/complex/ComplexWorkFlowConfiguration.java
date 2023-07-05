@@ -5,8 +5,8 @@ import java.util.concurrent.Executors;
 
 import com.redhat.parodos.examples.complex.checker.NamespaceApprovalWorkFlowCheckerTask;
 import com.redhat.parodos.examples.complex.checker.SslCertificationApprovalWorkFlowCheckerTask;
+import com.redhat.parodos.examples.complex.fallback.FallbackWorkFlowTask;
 import com.redhat.parodos.examples.complex.parameter.ComplexWorkParameterValueProvider;
-import com.redhat.parodos.examples.complex.rollback.RollbackWorkFlowTask;
 import com.redhat.parodos.examples.complex.task.AdGroupsWorkFlowTask;
 import com.redhat.parodos.examples.complex.task.LoadBalancerWorkFlowTask;
 import com.redhat.parodos.examples.complex.task.NamespaceWorkFlowTask;
@@ -182,12 +182,12 @@ public class ComplexWorkFlowConfiguration {
 				.build();
 	}
 
-	// rollback workflow
-	@Bean(name = "complexRollbackWorkFlow")
+	// fallback workflow
+	@Bean(name = "complexFallbackWorkFlow")
 	@Infrastructure()
-	WorkFlow complexRollbackWorkFlow(RollbackWorkFlowTask rollbackWorkFlowTask) {
-		return SequentialFlow.Builder.aNewSequentialFlow().named("complexRollbackWorkFlow")
-				.execute(rollbackWorkFlowTask).build();
+	WorkFlow complexFallbackWorkFlow(FallbackWorkFlowTask fallbackWorkFlowTask) {
+		return SequentialFlow.Builder.aNewSequentialFlow().named("complexFallbackWorkFlow")
+				.execute(fallbackWorkFlowTask).build();
 	}
 
 	// USER WORKFLOW
@@ -208,7 +208,7 @@ public class ComplexWorkFlowConfiguration {
 					type = WorkParameterType.MULTI_SELECT, optional = true),
 			@Parameter(key = "DYNAMIC_TEXT_SAMPLE", description = "dynamic text sample", type = WorkParameterType.TEXT,
 					optional = true) },
-			rollbackWorkflow = "complexRollbackWorkFlow")
+			fallbackWorkflow = "complexFallbackWorkFlow")
 	WorkFlow complexWorkFlow(@Qualifier("subWorkFlowThree") WorkFlow subWorkFlowThree,
 			@Qualifier("subWorkFlowFour") WorkFlow subWorkFlowFour) {
 		return SequentialFlow.Builder.aNewSequentialFlow().named("complexWorkFlow").execute(subWorkFlowThree)
@@ -221,8 +221,8 @@ public class ComplexWorkFlowConfiguration {
 	}
 
 	@Bean
-	RollbackWorkFlowTask rollbackWorkFlowTask() {
-		return new RollbackWorkFlowTask();
+	FallbackWorkFlowTask fallbackWorkFlowTask() {
+		return new FallbackWorkFlowTask();
 	}
 
 }

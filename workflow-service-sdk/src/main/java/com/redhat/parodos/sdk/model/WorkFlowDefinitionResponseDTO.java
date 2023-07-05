@@ -53,6 +53,11 @@ public class WorkFlowDefinitionResponseDTO {
 	@SerializedName(SERIALIZED_NAME_CREATE_DATE)
 	private Date createDate;
 
+	public static final String SERIALIZED_NAME_FALLBACK_WORKFLOW = "fallbackWorkflow";
+
+	@SerializedName(SERIALIZED_NAME_FALLBACK_WORKFLOW)
+	private String fallbackWorkflow;
+
 	public static final String SERIALIZED_NAME_ID = "id";
 
 	@SerializedName(SERIALIZED_NAME_ID)
@@ -135,11 +140,6 @@ public class WorkFlowDefinitionResponseDTO {
 
 	@SerializedName(SERIALIZED_NAME_PROPERTIES)
 	private WorkFlowPropertiesDefinitionDTO properties;
-
-	public static final String SERIALIZED_NAME_ROLLBACK_WORKFLOW = "rollbackWorkflow";
-
-	@SerializedName(SERIALIZED_NAME_ROLLBACK_WORKFLOW)
-	private String rollbackWorkflow;
 
 	/**
 	 * Gets or Sets type
@@ -245,6 +245,25 @@ public class WorkFlowDefinitionResponseDTO {
 
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
+	}
+
+	public WorkFlowDefinitionResponseDTO fallbackWorkflow(String fallbackWorkflow) {
+
+		this.fallbackWorkflow = fallbackWorkflow;
+		return this;
+	}
+
+	/**
+	 * Get fallbackWorkflow
+	 * @return fallbackWorkflow
+	 **/
+	@javax.annotation.Nullable
+	public String getFallbackWorkflow() {
+		return fallbackWorkflow;
+	}
+
+	public void setFallbackWorkflow(String fallbackWorkflow) {
+		this.fallbackWorkflow = fallbackWorkflow;
 	}
 
 	public WorkFlowDefinitionResponseDTO id(UUID id) {
@@ -369,25 +388,6 @@ public class WorkFlowDefinitionResponseDTO {
 		this.properties = properties;
 	}
 
-	public WorkFlowDefinitionResponseDTO rollbackWorkflow(String rollbackWorkflow) {
-
-		this.rollbackWorkflow = rollbackWorkflow;
-		return this;
-	}
-
-	/**
-	 * Get rollbackWorkflow
-	 * @return rollbackWorkflow
-	 **/
-	@javax.annotation.Nullable
-	public String getRollbackWorkflow() {
-		return rollbackWorkflow;
-	}
-
-	public void setRollbackWorkflow(String rollbackWorkflow) {
-		this.rollbackWorkflow = rollbackWorkflow;
-	}
-
 	public WorkFlowDefinitionResponseDTO type(TypeEnum type) {
 
 		this.type = type;
@@ -445,21 +445,21 @@ public class WorkFlowDefinitionResponseDTO {
 		WorkFlowDefinitionResponseDTO workFlowDefinitionResponseDTO = (WorkFlowDefinitionResponseDTO) o;
 		return Objects.equals(this.author, workFlowDefinitionResponseDTO.author)
 				&& Objects.equals(this.createDate, workFlowDefinitionResponseDTO.createDate)
+				&& Objects.equals(this.fallbackWorkflow, workFlowDefinitionResponseDTO.fallbackWorkflow)
 				&& Objects.equals(this.id, workFlowDefinitionResponseDTO.id)
 				&& Objects.equals(this.modifyDate, workFlowDefinitionResponseDTO.modifyDate)
 				&& Objects.equals(this.name, workFlowDefinitionResponseDTO.name)
 				&& Objects.equals(this.parameters, workFlowDefinitionResponseDTO.parameters)
 				&& Objects.equals(this.processingType, workFlowDefinitionResponseDTO.processingType)
 				&& Objects.equals(this.properties, workFlowDefinitionResponseDTO.properties)
-				&& Objects.equals(this.rollbackWorkflow, workFlowDefinitionResponseDTO.rollbackWorkflow)
 				&& Objects.equals(this.type, workFlowDefinitionResponseDTO.type)
 				&& Objects.equals(this.works, workFlowDefinitionResponseDTO.works);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(author, createDate, id, modifyDate, name, parameters, processingType, properties,
-				rollbackWorkflow, type, works);
+		return Objects.hash(author, createDate, fallbackWorkflow, id, modifyDate, name, parameters, processingType,
+				properties, type, works);
 	}
 
 	@Override
@@ -468,13 +468,13 @@ public class WorkFlowDefinitionResponseDTO {
 		sb.append("class WorkFlowDefinitionResponseDTO {\n");
 		sb.append("    author: ").append(toIndentedString(author)).append("\n");
 		sb.append("    createDate: ").append(toIndentedString(createDate)).append("\n");
+		sb.append("    fallbackWorkflow: ").append(toIndentedString(fallbackWorkflow)).append("\n");
 		sb.append("    id: ").append(toIndentedString(id)).append("\n");
 		sb.append("    modifyDate: ").append(toIndentedString(modifyDate)).append("\n");
 		sb.append("    name: ").append(toIndentedString(name)).append("\n");
 		sb.append("    parameters: ").append(toIndentedString(parameters)).append("\n");
 		sb.append("    processingType: ").append(toIndentedString(processingType)).append("\n");
 		sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
-		sb.append("    rollbackWorkflow: ").append(toIndentedString(rollbackWorkflow)).append("\n");
 		sb.append("    type: ").append(toIndentedString(type)).append("\n");
 		sb.append("    works: ").append(toIndentedString(works)).append("\n");
 		sb.append("}");
@@ -501,13 +501,13 @@ public class WorkFlowDefinitionResponseDTO {
 		openapiFields = new HashSet<String>();
 		openapiFields.add("author");
 		openapiFields.add("createDate");
+		openapiFields.add("fallbackWorkflow");
 		openapiFields.add("id");
 		openapiFields.add("modifyDate");
 		openapiFields.add("name");
 		openapiFields.add("parameters");
 		openapiFields.add("processingType");
 		openapiFields.add("properties");
-		openapiFields.add("rollbackWorkflow");
 		openapiFields.add("type");
 		openapiFields.add("works");
 
@@ -552,6 +552,12 @@ public class WorkFlowDefinitionResponseDTO {
 					String.format("Expected the field `author` to be a primitive type in the JSON string but got `%s`",
 							jsonObj.get("author").toString()));
 		}
+		if ((jsonObj.get("fallbackWorkflow") != null && !jsonObj.get("fallbackWorkflow").isJsonNull())
+				&& !jsonObj.get("fallbackWorkflow").isJsonPrimitive()) {
+			throw new IllegalArgumentException(String.format(
+					"Expected the field `fallbackWorkflow` to be a primitive type in the JSON string but got `%s`",
+					jsonObj.get("fallbackWorkflow").toString()));
+		}
 		if ((jsonObj.get("id") != null && !jsonObj.get("id").isJsonNull()) && !jsonObj.get("id").isJsonPrimitive()) {
 			throw new IllegalArgumentException(
 					String.format("Expected the field `id` to be a primitive type in the JSON string but got `%s`",
@@ -572,12 +578,6 @@ public class WorkFlowDefinitionResponseDTO {
 		// validate the optional field `properties`
 		if (jsonObj.get("properties") != null && !jsonObj.get("properties").isJsonNull()) {
 			WorkFlowPropertiesDefinitionDTO.validateJsonObject(jsonObj.getAsJsonObject("properties"));
-		}
-		if ((jsonObj.get("rollbackWorkflow") != null && !jsonObj.get("rollbackWorkflow").isJsonNull())
-				&& !jsonObj.get("rollbackWorkflow").isJsonPrimitive()) {
-			throw new IllegalArgumentException(String.format(
-					"Expected the field `rollbackWorkflow` to be a primitive type in the JSON string but got `%s`",
-					jsonObj.get("rollbackWorkflow").toString()));
 		}
 		if ((jsonObj.get("type") != null && !jsonObj.get("type").isJsonNull())
 				&& !jsonObj.get("type").isJsonPrimitive()) {

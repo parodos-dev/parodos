@@ -1729,6 +1729,9 @@
             "type" : "string",
             "format" : "date-time"
           },
+          "fallbackWorkflow" : {
+            "type" : "string"
+          },
           "id" : {
             "type" : "string",
             "format" : "uuid"
@@ -1755,9 +1758,6 @@
           },
           "properties" : {
             "$ref" : "#/components/schemas/WorkFlowPropertiesDefinitionDTO"
-          },
-          "rollbackWorkflow" : {
-            "type" : "string"
           },
           "type" : {
             "type" : "string",

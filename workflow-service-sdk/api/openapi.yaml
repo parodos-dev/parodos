@@ -1416,7 +1416,6 @@ components:
     WorkFlowDefinitionResponseDTO:
       example:
         processingType: SEQUENTIAL
-        rollbackWorkflow: rollbackWorkflow
         works:
         - outputs:
           - EXCEPTION
@@ -1448,6 +1447,7 @@ components:
               key: "{}"
         modifyDate: 2000-01-23T04:56:07.000+00:00
         author: author
+        fallbackWorkflow: fallbackWorkflow
         name: name
         id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         type: ASSESSMENT
@@ -1462,6 +1462,8 @@ components:
           type: string
         createDate:
           format: date-time
+          type: string
+        fallbackWorkflow:
           type: string
         id:
           format: uuid
@@ -1485,8 +1487,6 @@ components:
           type: string
         properties:
           $ref: '#/components/schemas/WorkFlowPropertiesDefinitionDTO'
-        rollbackWorkflow:
-          type: string
         type:
           enum:
           - ASSESSMENT

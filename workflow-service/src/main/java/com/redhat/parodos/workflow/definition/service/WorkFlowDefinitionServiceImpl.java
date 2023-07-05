@@ -104,7 +104,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 	@Override
 	public WorkFlowDefinitionResponseDTO save(String workFlowName, WorkFlowType workFlowType,
 			WorkFlowPropertiesMetadata properties, List<WorkParameter> workParameters, List<Work> works,
-			WorkFlowProcessingType workFlowProcessingType, String rollbackWorkflowName) {
+			WorkFlowProcessingType workFlowProcessingType, String fallbackWorkFlowName) {
 
 		String stringifyParameters = WorkFlowDTOUtil.writeObjectValueAsString(convertWorkParameters(workParameters));
 
@@ -126,9 +126,9 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 		workFlowDefinition.setProperties(propertiesDefinition);
 		workFlowDefinition.setProcessingType(workFlowProcessingType);
 		workFlowDefinition.setNumberOfWorks(works.size());
-		if (!StringUtils.isEmpty(rollbackWorkflowName)) {
+		if (!StringUtils.isEmpty(fallbackWorkFlowName)) {
 			workFlowDefinition
-					.setRollbackWorkFlowDefinition(workFlowDefinitionRepository.findFirstByName(rollbackWorkflowName));
+					.setFallbackWorkFlowDefinition(workFlowDefinitionRepository.findFirstByName(fallbackWorkFlowName));
 		}
 
 		workFlowDefinition = workFlowDefinitionRepository.save(workFlowDefinition);
@@ -352,7 +352,7 @@ public class WorkFlowDefinitionServiceImpl implements WorkFlowDefinitionService 
 	public void cleanAllDefinitionMappings() {
 		workFlowCheckerMappingDefinitionRepository.deleteAll();
 		workFlowWorkRepository.deleteAll();
-		workFlowDefinitionRepository.deleteAllFromRollbackMapping();
+		workFlowDefinitionRepository.deleteAllFromFallbackMapping();
 	}
 
 }

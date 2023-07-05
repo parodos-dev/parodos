@@ -99,9 +99,9 @@ public class WorkFlowDefinition extends AbstractEntity {
 	private WorkFlowCheckerMappingDefinition checkerWorkFlowDefinition;
 
 	@OneToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.EAGER)
-	@JoinTable(name = "prds_workflow_rollback_mapping", joinColumns = @JoinColumn(name = "workflow_definition_id"),
-			inverseJoinColumns = @JoinColumn(name = "workflow_rollback_definition_id"))
-	private WorkFlowDefinition rollbackWorkFlowDefinition;
+	@JoinTable(name = "prds_workflow_fallback_mapping", joinColumns = @JoinColumn(name = "workflow_definition_id"),
+			inverseJoinColumns = @JoinColumn(name = "workflow_fallback_definition_id"))
+	private WorkFlowDefinition fallbackWorkFlowDefinition;
 
 	private String commitId;
 

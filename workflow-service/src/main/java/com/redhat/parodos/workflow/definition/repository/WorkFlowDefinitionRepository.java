@@ -38,9 +38,9 @@ public interface WorkFlowDefinitionRepository extends JpaRepository<WorkFlowDefi
 
 	List<WorkFlowDefinition> findByTypeIsNot(WorkFlowType type);
 
-	@Query(value = "delete from prds_workflow_rollback_mapping", nativeQuery = true)
+	@Query(value = "delete from prds_workflow_fallback_mapping", nativeQuery = true)
 	@Modifying
 	@Transactional
-	void deleteAllFromRollbackMapping();
+	void deleteAllFromFallbackMapping();
 
 }

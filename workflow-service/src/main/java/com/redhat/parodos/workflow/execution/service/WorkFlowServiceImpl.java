@@ -168,7 +168,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		workFlowExecution = this.workFlowRepository.save(workFlowExecution);
 		workFlowExecutor.execute(WorkFlowExecutor.ExecutionContext.builder().projectId(projectId).userId(user.getId())
 				.workFlowName(workflowName).workContext(workContext).executionId(workFlowExecution.getId())
-				.rollbackWorkFlowName(workFlowDefinitionResponseDTO.getRollbackWorkflow()).build());
+				.fallbackWorkFlowName(workFlowDefinitionResponseDTO.getFallbackWorkflow()).build());
 		return new DefaultWorkReport(WorkStatus.IN_PROGRESS, workContext);
 	}
 
@@ -209,7 +209,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 				WorkFlowExecutor.ExecutionContext.builder().projectId(restartedWorkFlowExecution.getProjectId())
 						.userId(user.getId()).workFlowName(workFlowDefinition.getName()).workContext(context)
 						.executionId(restartedWorkFlowExecution.getId())
-						.rollbackWorkFlowName(workFlowDefinitionResponseDTO.getRollbackWorkflow()).build());
+						.fallbackWorkFlowName(workFlowDefinitionResponseDTO.getFallbackWorkflow()).build());
 
 		return new DefaultWorkReport(WorkStatus.IN_PROGRESS, context);
 	}
