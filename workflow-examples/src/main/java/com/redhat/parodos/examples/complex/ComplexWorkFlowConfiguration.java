@@ -185,7 +185,8 @@ public class ComplexWorkFlowConfiguration {
 	// fallback workflow
 	@Bean(name = "complexFallbackWorkFlow")
 	@Infrastructure()
-	WorkFlow complexFallbackWorkFlow(FallbackWorkFlowTask fallbackWorkFlowTask) {
+	WorkFlow complexFallbackWorkFlow(
+			@Qualifier("complexFallbackWorkFlowTask") FallbackWorkFlowTask fallbackWorkFlowTask) {
 		return SequentialFlow.Builder.aNewSequentialFlow().named("complexFallbackWorkFlow")
 				.execute(fallbackWorkFlowTask).build();
 	}
@@ -221,7 +222,7 @@ public class ComplexWorkFlowConfiguration {
 	}
 
 	@Bean
-	FallbackWorkFlowTask fallbackWorkFlowTask() {
+	FallbackWorkFlowTask complexFallbackWorkFlowTask() {
 		return new FallbackWorkFlowTask();
 	}
 

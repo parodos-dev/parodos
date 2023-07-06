@@ -1926,6 +1926,10 @@
       "WorkFlowStatusResponseDTO" : {
         "type" : "object",
         "properties" : {
+          "fallbackExecutionId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
           "message" : {
             "type" : "string"
           },

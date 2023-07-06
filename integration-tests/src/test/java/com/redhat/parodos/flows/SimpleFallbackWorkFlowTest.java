@@ -19,6 +19,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * @author Richard Wang (Github: richrdW98)
@@ -54,8 +55,26 @@ public class SimpleFallbackWorkFlowTest {
 
 		assertNotNull(workFlowStatusResponseDTO.getWorkFlowExecutionId());
 		assertNotNull(workFlowStatusResponseDTO.getStatus());
+		assertNotNull(workFlowStatusResponseDTO.getFallbackExecutionId());
 		assertEquals(WorkFlowStatusResponseDTO.StatusEnum.FAILED, workFlowStatusResponseDTO.getStatus());
 		log.info("workflow finished successfully with response: {}", workFlowResponseDTO);
+		log.info("******** Waiting for fallback workflow {} to be Completed ********",
+				workFlowStatusResponseDTO.getFallbackExecutionId());
+		WorkFlowStatusResponseDTO fallbackWorkFlowStatusResponseDTO = WorkFlowServiceUtils.waitWorkflowStatusAsync(
+				workflowApi, workFlowStatusResponseDTO.getFallbackExecutionId(),
+				WorkFlowStatusResponseDTO.StatusEnum.COMPLETED);
+		log.info("fallback workflow finished successfully with response: {}", fallbackWorkFlowStatusResponseDTO);
+		workFlowStatusResponseDTO = workflowApi.getStatus(workFlowResponseDTO.getWorkFlowExecutionId());
+		assertNotNull(fallbackWorkFlowStatusResponseDTO.getWorkFlowExecutionId());
+		assertNotNull(fallbackWorkFlowStatusResponseDTO.getStatus());
+		assertEquals(fallbackWorkFlowStatusResponseDTO.getOriginalExecutionId(),
+				workFlowResponseDTO.getWorkFlowExecutionId());
+		assertNull(fallbackWorkFlowStatusResponseDTO.getFallbackExecutionId());
+		assertEquals(WorkFlowStatusResponseDTO.StatusEnum.COMPLETED, fallbackWorkFlowStatusResponseDTO.getStatus());
+		// Fallback execution are NOT restarts
+		assertEquals(fallbackWorkFlowStatusResponseDTO.getRestartedCount().intValue(), 0);
+		assertEquals(workFlowStatusResponseDTO.getRestartedCount().intValue(), 0);
+
 		log.info("******** Simple Failed Flow Completed ********");
 	}
 

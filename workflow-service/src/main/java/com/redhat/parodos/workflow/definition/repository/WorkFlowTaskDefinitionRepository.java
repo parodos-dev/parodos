@@ -15,6 +15,7 @@
  */
 package com.redhat.parodos.workflow.definition.repository;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.redhat.parodos.workflow.definition.entity.WorkFlowTaskDefinition;
@@ -31,6 +32,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface WorkFlowTaskDefinitionRepository extends JpaRepository<WorkFlowTaskDefinition, UUID> {
 
 	WorkFlowTaskDefinition findFirstByName(String name);
+
+	List<WorkFlowTaskDefinition> findByName(String name);
 
 	WorkFlowTaskDefinition findFirstByNameAndWorkFlowDefinitionType(String name, WorkFlowType workFlowType);
 

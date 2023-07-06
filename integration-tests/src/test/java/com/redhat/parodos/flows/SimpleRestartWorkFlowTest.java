@@ -49,7 +49,6 @@ public class SimpleRestartWorkFlowTest {
 		assertThat(assertThrows(ApiException.class, () -> workflowApi.restartWorkFlow(execId)))
 				.hasMessageContaining(String.format("Workflow execution with ID: %s not found", execId))
 				.hasMessageContaining("HTTP response code: 404");
-		Thread.sleep(2000);
 
 	}
 
@@ -88,7 +87,6 @@ public class SimpleRestartWorkFlowTest {
 		log.info("The Following Option Is Available after restart: {}", infrastructureOptionRestarted);
 
 		assertEquals(infrastructureOption, infrastructureOptionRestarted);
-		Thread.sleep(2000);
 
 	}
 
@@ -220,7 +218,7 @@ public class SimpleRestartWorkFlowTest {
 		WorkFlowStatusResponseDTO restartedWorkflowStatus = workflowApi
 				.getStatus(restartedWorkFlowStatusResponseDTO.getWorkFlowExecutionId());
 		assertEquals(workFlowResponseDTO.getWorkFlowExecutionId(), restartedWorkflowStatus.getOriginalExecutionId());
-		Thread.sleep(2000);
+
 	}
 
 	@Test
@@ -358,7 +356,7 @@ public class SimpleRestartWorkFlowTest {
 			assertEquals(workFlowResponseDTO.getWorkFlowExecutionId(),
 					restartedWorkflowStatus.getOriginalExecutionId());
 		}
-		Thread.sleep(2000);
+
 	}
 
 	@Test
@@ -463,8 +461,16 @@ public class SimpleRestartWorkFlowTest {
 		assertEquals(WorkFlowStatusResponseDTO.StatusEnum.FAILED, workFlowStatusResponseDTO.getStatus());
 		log.info("Onboarding workflow execution completed with status {}", workFlowStatusResponseDTO.getStatus());
 
+		log.info("******** Waiting for fallback workflow {} to be Completed for original workflow ********",
+				workFlowStatusResponseDTO.getFallbackExecutionId());
+		WorkFlowStatusResponseDTO fallbackWorkFlowStatusResponseDTO = WorkFlowServiceUtils.waitWorkflowStatusAsync(
+				workflowApi, workFlowStatusResponseDTO.getFallbackExecutionId(),
+				WorkFlowStatusResponseDTO.StatusEnum.COMPLETED);
+		log.info("original fallback workflow finished successfully with response: {}",
+				fallbackWorkFlowStatusResponseDTO);
+
 		log.info("Restarting the onboarding WorkFlow");
-		Thread.sleep(2000);
+
 		WorkFlowExecutionResponseDTO restartedWorkFlowResponseDTO = workflowApi
 				.restartWorkFlow(workFlowResponseDTO.getWorkFlowExecutionId());
 		assertEquals(WorkStatusEnum.IN_PROGRESS, restartedWorkFlowResponseDTO.getWorkStatus());
@@ -493,7 +499,12 @@ public class SimpleRestartWorkFlowTest {
 		WorkFlowStatusResponseDTO restartedWorkflowStatus = workflowApi
 				.getStatus(restartedWorkFlowStatusResponseDTO.getWorkFlowExecutionId());
 		assertEquals(workFlowResponseDTO.getWorkFlowExecutionId(), restartedWorkflowStatus.getOriginalExecutionId());
-		Thread.sleep(2000);
+		log.info("******** Waiting for fallback workflow {} to be Completed for restarted workflow ********",
+				workFlowStatusResponseDTO.getFallbackExecutionId());
+		fallbackWorkFlowStatusResponseDTO = WorkFlowServiceUtils.waitWorkflowStatusAsync(workflowApi,
+				restartedWorkflowStatus.getFallbackExecutionId(), WorkFlowStatusResponseDTO.StatusEnum.COMPLETED);
+		log.info("restarted fallback workflow finished successfully with response: {}",
+				fallbackWorkFlowStatusResponseDTO);
 	}
 
 	private static WorkFlowContextResponseDTO assertAssessmentWorkflowExecutionSuccess(WorkflowApi workflowApi,

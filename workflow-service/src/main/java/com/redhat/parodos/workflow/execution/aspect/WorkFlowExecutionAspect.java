@@ -107,6 +107,7 @@ public class WorkFlowExecutionAspect {
 			log.info("Workflow {} is {}!", workflowName, report.getStatus().name());
 		}
 		catch (Throwable e) {
+			e.printStackTrace();
 			log.error("Workflow {} has failed! with error: {}", workflowName, e.getMessage());
 			report = new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
 		}

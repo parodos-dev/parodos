@@ -7,6 +7,7 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
+|**fallbackExecutionId** | **UUID** |  |  [optional] |
 |**message** | **String** |  |  [optional] |
 |**originalExecutionId** | **UUID** |  |  [optional] |
 |**restartedCount** | **Integer** |  |  [optional] |
