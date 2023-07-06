@@ -48,6 +48,8 @@ public class WorkFlowStatusResponseDTO {
 
 	private UUID originalExecutionId;
 
+	private UUID fallbackExecutionId;
+
 	private int restartedCount;
 
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)

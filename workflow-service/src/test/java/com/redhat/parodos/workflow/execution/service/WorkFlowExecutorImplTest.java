@@ -19,6 +19,8 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -55,6 +57,8 @@ class WorkFlowExecutorImplTest {
 
 	private WorkFlowExecutorImpl workFlowExecutor;
 
+	private WorkFlowServiceImpl workFlowService;
+
 	@BeforeEach
 	public void init() {
 		when(workFlowDelegate.getWorkFlowByName(workflowName)).thenReturn(mainWorkFlow);
@@ -63,6 +67,7 @@ class WorkFlowExecutorImplTest {
 		when(fallbackWorkFlow.execute(any())).thenReturn(new DefaultWorkReport(WorkStatus.COMPLETED, workContext));
 		when(mainWorkFlow.execute(any())).thenReturn(new DefaultWorkReport(WorkStatus.FAILED, workContext));
 		workFlowExecutor = new WorkFlowExecutorImpl(workFlowDelegate, workFlowRepository);
+		this.workFlowService = mock(WorkFlowServiceImpl.class);
 	}
 
 	@Test
@@ -71,10 +76,10 @@ class WorkFlowExecutorImplTest {
 		ExecutionContext executionContext = ExecutionContext.builder().projectId(projectId).userId(userId)
 				.workFlowName(workflowName).workContext(workContext).executionId(executionId)
 				.fallbackWorkFlowName(fallbackWorkFlowName).build();
-		workFlowExecutor.execute(executionContext);
+		workFlowExecutor.execute(executionContext, this.workFlowService);
 
 		verify(mainWorkFlow, times(1)).execute(any(WorkContext.class));
-		verify(fallbackWorkFlow, times(1)).execute(any(WorkContext.class));
+		verify(workFlowService, times(1)).executeFallbackWorkFlow(eq(fallbackWorkFlowName), any(UUID.class));
 
 	}
 
@@ -83,7 +88,7 @@ class WorkFlowExecutorImplTest {
 		workFlowExecution.setStatus(WorkStatus.FAILED);
 		ExecutionContext executionContext = ExecutionContext.builder().projectId(projectId).userId(userId)
 				.workFlowName(workflowName).workContext(workContext).executionId(executionId).build();
-		workFlowExecutor.execute(executionContext);
+		workFlowExecutor.execute(executionContext, workFlowService);
 
 		verify(mainWorkFlow, times(1)).execute(any(WorkContext.class));
 		verify(fallbackWorkFlow, never()).execute(any(WorkContext.class));
@@ -95,7 +100,7 @@ class WorkFlowExecutorImplTest {
 		ExecutionContext executionContext = ExecutionContext.builder().projectId(projectId).userId(userId)
 				.workFlowName(workflowName).workContext(workContext).executionId(executionId)
 				.fallbackWorkFlowName(fallbackWorkFlowName).build();
-		workFlowExecutor.execute(executionContext);
+		workFlowExecutor.execute(executionContext, workFlowService);
 
 		verify(mainWorkFlow, times(1)).execute(any(WorkContext.class));
 		verify(fallbackWorkFlow, never()).execute(any(WorkContext.class));

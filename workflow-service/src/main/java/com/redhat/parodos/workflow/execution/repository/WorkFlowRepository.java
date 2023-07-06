@@ -16,6 +16,7 @@
 package com.redhat.parodos.workflow.execution.repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
@@ -55,8 +56,11 @@ public interface WorkFlowRepository extends JpaRepository<WorkFlowExecution, UUI
 	@Query("SELECT w FROM prds_workflow_execution w WHERE w.mainWorkFlowExecution.id = :mainWorkflowId and EXISTS (SELECT f.type FROM prds_workflow_definition f WHERE f.id = w.workFlowDefinition.id AND f.type = com.redhat.parodos.workflow.enums.WorkFlowType.CHECKER)")
 	List<WorkFlowExecution> findCheckers(@Param("mainWorkflowId") UUID mainWorkflowId);
 
-	@Query("SELECT COUNT(*) FROM prds_workflow_execution o JOIN prds_workflow_execution restarted ON o.id = restarted.originalWorkFlowExecution.id WHERE o.id = :originalWorkflowId")
+	@Query("SELECT COUNT(*) FROM prds_workflow_execution o JOIN prds_workflow_execution restarted ON o.id = restarted.originalWorkFlowExecution.id WHERE o.id = :originalWorkflowId AND restarted.workFlowDefinition.id = o.workFlowDefinition.id")
 	Integer countRestartedWorkflow(@Param("originalWorkflowId") UUID originalWorkflowId);
+
+	@Query("SELECT fallback FROM prds_workflow_execution o JOIN prds_workflow_execution fallback ON o.id = fallback.originalWorkFlowExecution.id WHERE o.id = :originalWorkflowId AND fallback.workFlowDefinition.id != o.workFlowDefinition.id")
+	Optional<WorkFlowExecution> findFallbackWorkFlowExecution(@Param("originalWorkflowId") UUID originalWorkflowId);
 
 	WorkFlowExecution findFirstByProjectIdAndMainWorkFlowExecutionIsNullOrderByStartDateDesc(UUID projectId);
 

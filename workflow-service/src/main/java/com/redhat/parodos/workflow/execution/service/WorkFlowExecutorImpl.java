@@ -25,7 +25,7 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor {
 	}
 
 	@Override
-	public void execute(ExecutionContext context) {
+	public void execute(ExecutionContext context, WorkFlowService workFlowService) {
 		WorkFlow workFlow = workFlowDelegate.getWorkFlowByName(context.workFlowName());
 		log.info("Execute workflow {} (ID: {})", context.workFlowName(), context.executionId());
 		WorkContextUtils.updateWorkContextPartially(context.workContext(), context.projectId(), context.userId(),
@@ -35,25 +35,18 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor {
 		if (isExecutionFailed(context)) {
 			log.error("Workflow {} (ID: {}) failed. Check the logs for errors coming from the tasks in this workflow.",
 					context.workFlowName(), context.executionId());
-			executeFallbackWorkFlowIfNeeded(context);
+			executeFallbackWorkFlowIfNeeded(context, workFlowService);
 		}
 	}
 
-	private void executeFallbackWorkFlowIfNeeded(ExecutionContext context) {
+	private void executeFallbackWorkFlowIfNeeded(ExecutionContext context, WorkFlowService workFlowService) {
 		if (context.fallbackWorkFlowName() == null) {
-			return;
-		}
-
-		WorkFlow fallbackWorkFlow = workFlowDelegate.getWorkFlowByName(context.fallbackWorkFlowName());
-		if (fallbackWorkFlow == null) {
-			log.error("A fallback workflow {} could not be found for failed workflow {} (ID: {})",
-					context.fallbackWorkFlowName(), context.workFlowName(), context.executionId());
 			return;
 		}
 
 		log.info("execute fallback workflow {} for workflow {} (ID: {})", context.fallbackWorkFlowName(),
 				context.workFlowName(), context.executionId());
-		WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(fallbackWorkFlow, context.workContext());
+		workFlowService.executeFallbackWorkFlow(context.fallbackWorkFlowName(), context.executionId());
 	}
 
 	private boolean isExecutionFailed(ExecutionContext context) {

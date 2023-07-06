@@ -1792,8 +1792,12 @@ components:
         workFlowExecutionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         restartedCount: 0
         message: message
+        fallbackExecutionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         status: FAILED
       properties:
+        fallbackExecutionId:
+          format: uuid
+          type: string
         message:
           type: string
         originalExecutionId:

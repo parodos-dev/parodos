@@ -41,14 +41,16 @@ public interface WorkFlowService {
 
 	WorkReport restart(UUID workFlowExecutionId);
 
+	WorkReport executeFallbackWorkFlow(String fallbackWorkFlowName, UUID originalWorkFlowExecutionId);
+
 	WorkFlowExecution getWorkFlowById(UUID workFlowExecutionId);
 
 	WorkFlowExecution saveWorkFlow(UUID projectId, UUID userId, WorkFlowDefinition workFlowDefinition,
 			WorkStatus workStatus, WorkFlowExecution mainWorkFlowExecution, String arguments);
 
-	WorkFlowExecution saveRestartedWorkFlow(UUID projectId, UUID userId, WorkFlowDefinition workFlowDefinition,
-			WorkStatus workStatus, WorkFlowExecution mainWorkFlowExecution, String arguments,
-			WorkFlowExecution originalWorkflowExecution);
+	WorkFlowExecution savedWorkFlowWithOriginalWorkFlow(UUID projectId, UUID userId,
+			WorkFlowDefinition workFlowDefinition, WorkStatus workStatus, WorkFlowExecution mainWorkFlowExecution,
+			String arguments, WorkFlowExecution originalWorkflowExecution);
 
 	WorkFlowExecution updateWorkFlow(WorkFlowExecution workFlowExecution);
 
