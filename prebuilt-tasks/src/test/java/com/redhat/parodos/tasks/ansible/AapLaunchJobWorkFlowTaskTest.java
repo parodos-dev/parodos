@@ -1,10 +1,9 @@
-package com.redhat.parodos.examples.vmonboarding.task;
+package com.redhat.parodos.tasks.ansible;
 
-import com.redhat.parodos.examples.base.BaseInfrastructureWorkFlowTaskTest;
-import com.redhat.parodos.examples.vmonboarding.dto.AapGetJobResponseDTO;
+import java.util.UUID;
+
 import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
-import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -24,7 +23,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.spy;
 
-public class AapLaunchJobWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest {
+public class AapLaunchJobWorkFlowTaskTest {
 
 	private static final String AAP_URL_TEST = "aap-url-test";
 
@@ -34,19 +33,19 @@ public class AapLaunchJobWorkFlowTaskTest extends BaseInfrastructureWorkFlowTask
 
 	private static final String USERNAME_TEST = "username-test";
 
-	public static final String PASSWORD_TEST = "password-test";
+	private static final String PASSWORD_TEST = "password-test";
 
-	public static final String VM_TYPE_PARAMETER_NAME = "VM_TYPE";
+	private static final String VM_TYPE_PARAMETER_NAME = "VM_TYPE";
 
-	public static final String VM_TYPE_PARAMETER_VALUE_TEST = "vm-type-test";
+	private static final String VM_TYPE_PARAMETER_VALUE_TEST = "vm-type-test";
 
-	public static final String AAP_GET_JOB_RESPONSE_DTO_JOB_ID_TEST = "job-id-test";
+	private static final String AAP_GET_JOB_RESPONSE_DTO_JOB_ID_TEST = "job-id-test";
 
 	private AapLaunchJobWorkFlowTask aapLaunchJobWorkFlowTask;
 
 	@Before
 	public void setUp() {
-		this.aapLaunchJobWorkFlowTask = spy((AapLaunchJobWorkFlowTask) getConcretePersonImplementation());
+		this.aapLaunchJobWorkFlowTask = spy(new AapLaunchJobWorkFlowTask(AAP_URL_TEST, USERNAME_TEST, PASSWORD_TEST));
 		try {
 			doReturn(VM_TYPE_PARAMETER_VALUE_TEST).when(this.aapLaunchJobWorkFlowTask)
 					.getRequiredParameterValue(eq(VM_TYPE_PARAMETER_NAME));
@@ -54,12 +53,6 @@ public class AapLaunchJobWorkFlowTaskTest extends BaseInfrastructureWorkFlowTask
 		catch (MissingParameterException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	@Override
-	protected BaseInfrastructureWorkFlowTask getConcretePersonImplementation() {
-		return new AapLaunchJobWorkFlowTask(AAP_URL_TEST, WINDOWS_JOB_TEMPLATE_ID_TEST, RHEL_JOB_TEMPLATE_ID_TEST,
-				USERNAME_TEST, PASSWORD_TEST);
 	}
 
 	@Test
@@ -88,12 +81,16 @@ public class AapLaunchJobWorkFlowTaskTest extends BaseInfrastructureWorkFlowTask
 	@Test
 	public void executeFail() {
 		// given
-		WorkContext workContext = mock(WorkContext.class);
 		try (MockedStatic<RestUtils> restUtilsMockedStatic = mockStatic(RestUtils.class)) {
 			restUtilsMockedStatic.when(() -> RestUtils.executePost(any(), any(String.class), any(), any(String.class),
 					any(String.class), any())).thenReturn(ResponseEntity.internalServerError().build());
 
 			// when
+			WorkContext workContext = new WorkContext();
+			WorkContextUtils.setMainExecutionId(workContext, UUID.randomUUID());
+			aapLaunchJobWorkFlowTask.setBeanName("test");
+			aapLaunchJobWorkFlowTask.preExecute(workContext);
+
 			WorkReport workReport = aapLaunchJobWorkFlowTask.execute(workContext);
 
 			// then

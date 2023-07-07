@@ -54,7 +54,9 @@ public class NotificationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 	}
 
 	private String buildMessage(String subject) {
-		return "Task %s completed with success.".formatted(subject);
+		String message = getOptionalParameterValue("NOTIFICATION_MESSAGE", "");
+		taskLogger.logInfoWithSlf4j(message);
+		return "Task %s completed with success. %n".formatted(subject) + message;
 	}
 
 }

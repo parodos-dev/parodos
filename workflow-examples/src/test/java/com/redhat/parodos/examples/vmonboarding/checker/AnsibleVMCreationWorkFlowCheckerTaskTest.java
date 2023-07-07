@@ -1,10 +1,14 @@
 package com.redhat.parodos.examples.vmonboarding.checker;
 
+import java.util.UUID;
+
 import com.redhat.parodos.examples.base.BaseWorkFlowCheckerTaskTest;
-import com.redhat.parodos.examples.vmonboarding.dto.AapGetJobResponseDTO;
+import com.redhat.parodos.tasks.ansible.AapGetJobResponseArtifacts;
+import com.redhat.parodos.tasks.ansible.AapGetJobResponseDTO;
 import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.checker.BaseWorkFlowCheckerTask;
+import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
@@ -22,30 +26,34 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.spy;
 
-public class AnsibleCompletionWorkFlowCheckerTaskTest extends BaseWorkFlowCheckerTaskTest {
+public class AnsibleVMCreationWorkFlowCheckerTaskTest extends BaseWorkFlowCheckerTaskTest {
 
 	private static final String SERVICE_URL_TEST = "service-url-test";
 
 	private static final String USERNAME_TEST = "username-test";
 
-	public static final String PASSWORD_TEST = "password-test";
+	private static final String PASSWORD_TEST = "password-test";
 
-	public static final String JOB_ID_PARAMETER_NAME = "JOB_ID";
+	private static final String JOB_ID_PARAMETER_NAME = "JOB_ID";
 
-	public static final String JOB_ID_PARAMETER_VALUE_TEST = "job-id-test";
+	private static final String VM_TYPE_PARAMETER_NAME = "VM_TYPE";
 
-	public static final String AAP_GET_JOB_RESPONSE_DTO_STATUS_SUCCESSFUL_TEST = "successful";
+	private static final String JOB_ID_PARAMETER_VALUE_TEST = "job-id-test";
 
-	public static final String AAP_GET_JOB_RESPONSE_DTO_STATUS_PENDING_TEST = "pending";
+	private static final String VM_TYPE_PARAMETER_VALUE_TEST = "windows";
 
-	private AnsibleCompletionWorkFlowCheckerTask ansibleCompletionWorkFlowCheckerTask;
+	private static final String AAP_GET_JOB_RESPONSE_DTO_STATUS_SUCCESSFUL_TEST = "successful";
+
+	private static final String AAP_GET_JOB_RESPONSE_DTO_STATUS_PENDING_TEST = "pending";
+
+	private AnsibleVMCreationWorkFlowCheckerTask ansibleVMCreationWorkFlowCheckerTask;
 
 	@Before
 	public void setUp() {
-		this.ansibleCompletionWorkFlowCheckerTask = spy(
-				(AnsibleCompletionWorkFlowCheckerTask) getConcretePersonImplementation());
+		this.ansibleVMCreationWorkFlowCheckerTask = spy(
+				(AnsibleVMCreationWorkFlowCheckerTask) getConcretePersonImplementation());
 		try {
-			doReturn(JOB_ID_PARAMETER_VALUE_TEST).when(this.ansibleCompletionWorkFlowCheckerTask)
+			doReturn(JOB_ID_PARAMETER_VALUE_TEST).when(this.ansibleVMCreationWorkFlowCheckerTask)
 					.getRequiredParameterValue(eq(JOB_ID_PARAMETER_NAME));
 		}
 		catch (MissingParameterException e) {
@@ -55,23 +63,39 @@ public class AnsibleCompletionWorkFlowCheckerTaskTest extends BaseWorkFlowChecke
 
 	@Override
 	protected BaseWorkFlowCheckerTask getConcretePersonImplementation() {
-		return new AnsibleCompletionWorkFlowCheckerTask(SERVICE_URL_TEST, USERNAME_TEST, PASSWORD_TEST);
+		return new AnsibleVMCreationWorkFlowCheckerTask(SERVICE_URL_TEST, USERNAME_TEST, PASSWORD_TEST);
 	}
 
 	@Test
 	public void executeSuccess() {
 		// given
-		WorkContext workContext = mock(WorkContext.class);
 		try (MockedStatic<RestUtils> restUtilsMockedStatic = mockStatic(RestUtils.class)) {
+			AapGetJobResponseDTO aapGetJobResponseDTO = AapGetJobResponseDTO.builder()
+					.status(AAP_GET_JOB_RESPONSE_DTO_STATUS_SUCCESSFUL_TEST)
+					.extraVars("{\"rhel_admin_user\": \"test\"}")
+					.artifacts(AapGetJobResponseArtifacts.builder().azureVmPublicIp("test-ip").build()).build();
 			restUtilsMockedStatic.when(
 					() -> RestUtils.restExchange(any(), any(String.class), any(String.class), any(String.class), any()))
-					.thenReturn(ResponseEntity.ok(AapGetJobResponseDTO.builder()
-							.status(AAP_GET_JOB_RESPONSE_DTO_STATUS_SUCCESSFUL_TEST).build()));
+					.thenReturn(ResponseEntity.ok(aapGetJobResponseDTO));
 			// when
-			WorkReport workReport = ansibleCompletionWorkFlowCheckerTask.checkWorkFlowStatus(workContext);
-
+			WorkContext workContext = new WorkContext();
+			WorkContextUtils.setMainExecutionId(workContext, UUID.randomUUID());
+			ansibleVMCreationWorkFlowCheckerTask.setBeanName("test");
+			ansibleVMCreationWorkFlowCheckerTask.preExecute(workContext);
+			WorkReport workReport = ansibleVMCreationWorkFlowCheckerTask.checkWorkFlowStatus(workContext);
 			// then
 			assertEquals(WorkStatus.COMPLETED, workReport.getStatus());
+
+			aapGetJobResponseDTO.setExtraVars("\"win_admin_user\": \"test\", \"win_admin_password\": \"test\"");
+
+			doReturn(VM_TYPE_PARAMETER_VALUE_TEST).when(this.ansibleVMCreationWorkFlowCheckerTask)
+					.getRequiredParameterValue(eq(VM_TYPE_PARAMETER_NAME));
+			workReport = ansibleVMCreationWorkFlowCheckerTask.checkWorkFlowStatus(workContext);
+			// then
+			assertEquals(WorkStatus.COMPLETED, workReport.getStatus());
+		}
+		catch (MissingParameterException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -85,7 +109,7 @@ public class AnsibleCompletionWorkFlowCheckerTaskTest extends BaseWorkFlowChecke
 					.thenReturn(ResponseEntity.ok(AapGetJobResponseDTO.builder()
 							.status(AAP_GET_JOB_RESPONSE_DTO_STATUS_PENDING_TEST).build()));
 			// when
-			WorkReport workReport = ansibleCompletionWorkFlowCheckerTask.checkWorkFlowStatus(workContext);
+			WorkReport workReport = ansibleVMCreationWorkFlowCheckerTask.checkWorkFlowStatus(workContext);
 
 			// then
 			assertEquals(WorkStatus.FAILED, workReport.getStatus());
@@ -101,7 +125,7 @@ public class AnsibleCompletionWorkFlowCheckerTaskTest extends BaseWorkFlowChecke
 					() -> RestUtils.restExchange(any(), any(String.class), any(String.class), any(String.class), any()))
 					.thenReturn(ResponseEntity.ok(AapGetJobResponseDTO.builder().status("").build()));
 			// when
-			WorkReport workReport = ansibleCompletionWorkFlowCheckerTask.checkWorkFlowStatus(workContext);
+			WorkReport workReport = ansibleVMCreationWorkFlowCheckerTask.checkWorkFlowStatus(workContext);
 
 			// then
 			assertEquals(WorkStatus.REJECTED, workReport.getStatus());
@@ -118,7 +142,7 @@ public class AnsibleCompletionWorkFlowCheckerTaskTest extends BaseWorkFlowChecke
 					.thenReturn(ResponseEntity.internalServerError().build());
 
 			// when
-			WorkReport workReport = ansibleCompletionWorkFlowCheckerTask.checkWorkFlowStatus(workContext);
+			WorkReport workReport = ansibleVMCreationWorkFlowCheckerTask.checkWorkFlowStatus(workContext);
 
 			// then
 			assertEquals(WorkStatus.FAILED, workReport.getStatus());

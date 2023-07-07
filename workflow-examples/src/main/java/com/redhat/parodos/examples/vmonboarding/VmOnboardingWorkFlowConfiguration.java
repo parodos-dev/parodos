@@ -2,9 +2,11 @@ package com.redhat.parodos.examples.vmonboarding;
 
 import java.util.List;
 
-import com.redhat.parodos.examples.vmonboarding.checker.AnsibleCompletionWorkFlowCheckerTask;
+import com.redhat.parodos.examples.vmonboarding.checker.AnsibleJobCompletionWorkFlowCheckerTask;
+import com.redhat.parodos.examples.vmonboarding.checker.AnsibleVMCreationWorkFlowCheckerTask;
 import com.redhat.parodos.examples.vmonboarding.checker.ServiceNowTicketApprovalWorkFlowCheckerTask;
-import com.redhat.parodos.examples.vmonboarding.task.AapLaunchJobWorkFlowTask;
+import com.redhat.parodos.examples.vmonboarding.task.AapCreateVMWorkFlowTask;
+import com.redhat.parodos.examples.vmonboarding.task.AapInstallToolsWorkFlowTask;
 import com.redhat.parodos.examples.vmonboarding.task.NotificationWorkFlowTask;
 import com.redhat.parodos.examples.vmonboarding.task.ServiceNowTicketCreationWorkFlowTask;
 import com.redhat.parodos.workflow.annotation.Checker;
@@ -58,21 +60,6 @@ public class VmOnboardingWorkFlowConfiguration {
 				.execute(serviceNowTicketApprovalWorkFlowCheckerTask).build();
 	}
 
-	@Bean(name = "ansibleCompletionWorkFlowCheckerTask")
-	AnsibleCompletionWorkFlowCheckerTask ansibleCompletionWorkFlowCheckerTask(
-			@Value("${AAP_URL:aap-url}") String aapUrl, @Value("${AAP_USER_NAME:aap-user}") String username,
-			@Value("${AAP_PASSWORD:aap-password}") String password) {
-		return new AnsibleCompletionWorkFlowCheckerTask(aapUrl, username, password);
-	}
-
-	@Bean(name = "ansibleCompletionWorkFlowChecker")
-	@Checker(cronExpression = "*/10 * * * * ?")
-	WorkFlow ansibleCompletionWorkFlowChecker(
-			@Qualifier("ansibleCompletionWorkFlowCheckerTask") AnsibleCompletionWorkFlowCheckerTask ansibleCompletionWorkFlowCheckerTask) {
-		return SequentialFlow.Builder.aNewSequentialFlow().named("ansibleCompletionWorkFlowChecker")
-				.execute(ansibleCompletionWorkFlowCheckerTask).build();
-	}
-
 	@Bean(name = "serviceNowTicketCreationWorkFlowTask")
 	ServiceNowTicketCreationWorkFlowTask serviceNowTicketCreationWorkFlowTask(
 			@Qualifier("incidentWorkFlowChecker") WorkFlow incidentWorkFlowChecker,
@@ -95,17 +82,59 @@ public class VmOnboardingWorkFlowConfiguration {
 		return new NotificationWorkFlowTask(NOTIFICATION_SERVICE_NOW_VM_CREATED);
 	}
 
-	@Bean(name = "aapLaunchJobWorkFlowTask")
-	AapLaunchJobWorkFlowTask aapLaunchJobWorkFlowTask(
-			@Qualifier("ansibleCompletionWorkFlowChecker") WorkFlow ansibleCompletionWorkFlowChecker,
+	@Bean(name = "ansibleVMCreationWorkFlowCheckerTask")
+	AnsibleVMCreationWorkFlowCheckerTask ansibleVMCreationWorkFlowCheckerTask(
+			@Value("${AAP_URL:aap-url}") String aapUrl, @Value("${AAP_USER_NAME:aap-user}") String username,
+			@Value("${AAP_PASSWORD:aap-password}") String password) {
+		return new AnsibleVMCreationWorkFlowCheckerTask(aapUrl, username, password);
+	}
+
+	@Bean(name = "ansibleVMCreationWorkFlowChecker")
+	@Checker(cronExpression = "*/10 * * * * ?")
+	WorkFlow ansibleVMCreationWorkFlowChecker(
+			@Qualifier("ansibleVMCreationWorkFlowCheckerTask") AnsibleVMCreationWorkFlowCheckerTask ansibleVMCreationWorkFlowCheckerTask) {
+		return SequentialFlow.Builder.aNewSequentialFlow().named("ansibleVMCreationWorkFlowChecker")
+				.execute(ansibleVMCreationWorkFlowCheckerTask).build();
+	}
+
+	@Bean(name = "aapCreateVMWorkFlowTask")
+	AapCreateVMWorkFlowTask aapCreateVMWorkFlowTask(
+			@Qualifier("ansibleVMCreationWorkFlowChecker") WorkFlow ansibleVMCreationWorkFlowChecker,
 			@Value("${AAP_URL:aap-url}") String aapUrl, @Value("${AAP_USER_NAME:aap-user}") String username,
 			@Value("${AAP_PASSWORD:aap-password}") String password,
 			@Value("${AAP_WINDOWS_JOB_ID:windows-job-id}") String windowsJobTemplateId,
 			@Value("${AAP_RHEL_JOB_ID:rhel-job-id}") String rhelJobTemplateId) {
-		AapLaunchJobWorkFlowTask aapLaunchJobWorkFlowTask = new AapLaunchJobWorkFlowTask(aapUrl, windowsJobTemplateId,
+		AapCreateVMWorkFlowTask aapCreateVMWorkFlowTask = new AapCreateVMWorkFlowTask(aapUrl, windowsJobTemplateId,
 				rhelJobTemplateId, username, password);
-		aapLaunchJobWorkFlowTask.setWorkFlowCheckers(List.of(ansibleCompletionWorkFlowChecker));
-		return aapLaunchJobWorkFlowTask;
+		aapCreateVMWorkFlowTask.setWorkFlowCheckers(List.of(ansibleVMCreationWorkFlowChecker));
+		return aapCreateVMWorkFlowTask;
+	}
+
+	@Bean(name = "ansibleJobCompletionWorkFlowCheckerTask")
+	AnsibleJobCompletionWorkFlowCheckerTask ansibleJobCompletionWorkFlowCheckerTask(
+			@Value("${AAP_URL:aap-url}") String aapUrl, @Value("${AAP_USER_NAME:aap-user}") String username,
+			@Value("${AAP_PASSWORD:aap-password}") String password) {
+		return new AnsibleJobCompletionWorkFlowCheckerTask(aapUrl, username, password);
+	}
+
+	@Bean(name = "ansibleJobCompletionWorkFlowChecker")
+	@Checker(cronExpression = "*/10 * * * * ?")
+	WorkFlow ansibleJobCompletionWorkFlowChecker(
+			@Qualifier("ansibleJobCompletionWorkFlowCheckerTask") AnsibleVMCreationWorkFlowCheckerTask ansibleJobCompletionWorkFlowCheckerTask) {
+		return SequentialFlow.Builder.aNewSequentialFlow().named("ansibleJobCompletionWorkFlowChecker")
+				.execute(ansibleJobCompletionWorkFlowCheckerTask).build();
+	}
+
+	@Bean(name = "aapInstallToolsWorkFlowTask")
+	AapInstallToolsWorkFlowTask aapInstallToolsWorkFlowTask(
+			@Qualifier("ansibleJobCompletionWorkFlowChecker") WorkFlow ansibleJobCompletionWorkFlowChecker,
+			@Value("${AAP_URL:aap-url}") String aapUrl, @Value("${AAP_USER_NAME:aap-user}") String username,
+			@Value("${AAP_PASSWORD:aap-password}") String password,
+			@Value("${AAP_PATCH_JOB_ID:tools-job-id}") String installToolsJobTemplateId) {
+		AapInstallToolsWorkFlowTask aapInstallToolsWorkFlowTask = new AapInstallToolsWorkFlowTask(aapUrl,
+				installToolsJobTemplateId, username, password);
+		aapInstallToolsWorkFlowTask.setWorkFlowCheckers(List.of(ansibleJobCompletionWorkFlowChecker));
+		return aapInstallToolsWorkFlowTask;
 	}
 
 	// VM ONBOARDING WORKFLOW - Sequential Flow:
@@ -115,11 +144,13 @@ public class VmOnboardingWorkFlowConfiguration {
 	WorkFlow vmOnboardingWorkFlow(
 			@Qualifier("serviceNowTicketCreationWorkFlowTask") ServiceNowTicketCreationWorkFlowTask serviceNowTicketCreationWorkFlowTask,
 			@Qualifier("notificationTicketApprovalWorkFlowTask") NotificationWorkFlowTask notificationTicketApprovalWorkFlowTask,
-			@Qualifier("aapLaunchJobWorkFlowTask") AapLaunchJobWorkFlowTask aapLaunchJobWorkFlowTask,
-			@Qualifier("notificationVmCreatedWorkFlowTask") NotificationWorkFlowTask notificationVmCreatedWorkFlowTask) {
+			@Qualifier("aapCreateVMWorkFlowTask") AapCreateVMWorkFlowTask aapCreateVMWorkFlowTask,
+			@Qualifier("notificationVmCreatedWorkFlowTask") NotificationWorkFlowTask notificationVmCreatedWorkFlowTask,
+			@Qualifier("aapInstallToolsWorkFlowTask") AapInstallToolsWorkFlowTask aapInstallToolsWorkFlowTask) {
 		return SequentialFlow.Builder.aNewSequentialFlow().named("vmOnboardingWorkFlow")
 				.execute(serviceNowTicketCreationWorkFlowTask).then(notificationTicketApprovalWorkFlowTask)
-				.then(aapLaunchJobWorkFlowTask).then(notificationVmCreatedWorkFlowTask).build();
+				.then(aapCreateVMWorkFlowTask).then(notificationVmCreatedWorkFlowTask).then(aapInstallToolsWorkFlowTask)
+				.build();
 	}
 
 	// Assessment workflow
