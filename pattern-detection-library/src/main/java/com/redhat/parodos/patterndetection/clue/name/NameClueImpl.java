@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.patterndetection.clue;
+package com.redhat.parodos.patterndetection.clue.name;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,7 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import com.redhat.parodos.patterndetection.clue.client.ContentInputStreamClientConfiguration;
+
+import com.redhat.parodos.patterndetection.clue.content.stream.ContentInputStreamClientConfiguration;
+import com.redhat.parodos.patterndetection.clue.content.stream.InputStreamWrapper;
 import com.redhat.parodos.patterndetection.context.PatternDetectionWorkContextDelegate;
 import com.redhat.parodos.patterndetection.exceptions.ClueConfigurationException;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;

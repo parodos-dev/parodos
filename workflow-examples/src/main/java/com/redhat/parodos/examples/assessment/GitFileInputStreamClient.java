@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.kohsuke.github.GitHub;
 
-import com.redhat.parodos.patterndetection.clue.client.ContentInputStreamClient;
+import com.redhat.parodos.patterndetection.clue.content.stream.ContentInputStreamClient;
 
 import lombok.extern.slf4j.Slf4j;
 

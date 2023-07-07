@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.patterndetection.clue;
+package com.redhat.parodos.patterndetection.clue.content.stream;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import com.redhat.parodos.patterndetection.clue.client.ContentInputStreamClientConfiguration;
-import com.redhat.parodos.patterndetection.clue.delegate.ContentsDelegate;
+import com.redhat.parodos.patterndetection.clue.content.ContentsClueImpl;
+import com.redhat.parodos.patterndetection.clue.content.ContentsClueImplDelegateBase;
+import com.redhat.parodos.patterndetection.clue.content.ContentsDelegate;
 import com.redhat.parodos.patterndetection.context.PatternDetectionWorkContextDelegate;
 import com.redhat.parodos.patterndetection.exceptions.PatternDetectionRuntimeException;
 import com.redhat.parodos.workflows.work.WorkContext;
@@ -73,7 +74,7 @@ public class ContentsClueImplContentClientDelegate extends ContentsClueImplDeleg
 					try (InputStream stream = inputStreamClientConfig.getContentClient().getContentIfRequired(path,
 							inputStreamClientConfig.getParametersForClient())) {
 						if (stream != null) {
-							fileContent = ContentsDelegate.inputStreamToList(stream);
+							fileContent = ContentsDelegate.getInstance().inputStreamToList(stream);
 							processContentsForMatch(workContext, file.getName(), fileContent, clue);
 						}
 					}

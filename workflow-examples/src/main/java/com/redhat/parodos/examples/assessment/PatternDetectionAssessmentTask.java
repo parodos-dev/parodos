@@ -25,10 +25,10 @@ import java.util.Map.Entry;
 import org.kohsuke.github.GitHub;
 
 import com.redhat.parodos.patterndetection.PatternDetector;
-import com.redhat.parodos.patterndetection.clue.ContentsClueImpl;
 import com.redhat.parodos.patterndetection.clue.NameClueImpl;
-import com.redhat.parodos.patterndetection.clue.client.ContentInputStreamClientConfiguration;
-import com.redhat.parodos.patterndetection.context.PatternDetectionWorkContextDelegate;
+import com.redhat.parodos.patterndetection.clue.content.ContentsClueImpl;
+import com.redhat.parodos.patterndetection.clue.content.stream.ContentInputStreamClientConfiguration;
+import com.redhat.parodos.patterndetection.context.PatternDetectionContextBuilder;
 import com.redhat.parodos.patterndetection.pattern.BasicPatternImpl;
 import com.redhat.parodos.patterndetection.results.DetectionResults;
 import com.redhat.parodos.tasks.github.GithubPatternDetectionTask;
@@ -137,8 +137,7 @@ public class PatternDetectionAssessmentTask extends GithubPatternDetectionTask {
 			BasicPatternImpl ocpTargetApp) {
 		return
 		// @formatter:off
-				PatternDetectionWorkContextDelegate
-				.WorkContextBuilder.builder()
+				new PatternDetectionContextBuilder()
 				.addThisToDesiredPatterns(ocpTargetApp)
 				.addContentInputStreamClientAndPaths(
 						ContentInputStreamClientConfiguration.builder()

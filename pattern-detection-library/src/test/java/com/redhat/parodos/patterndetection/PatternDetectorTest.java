@@ -24,8 +24,8 @@ import java.io.File;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import com.redhat.parodos.patterndetection.clue.ContentsClueImpl;
 import com.redhat.parodos.patterndetection.clue.NameClueImpl;
+import com.redhat.parodos.patterndetection.clue.content.ContentsClueImpl;
 import com.redhat.parodos.patterndetection.context.PatternDetectionContextBuilder;
 import com.redhat.parodos.patterndetection.exceptions.PatternDetectionConfigurationException;
 import com.redhat.parodos.patterndetection.pattern.BasicPatternImpl;

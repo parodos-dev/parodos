@@ -13,13 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.patterndetection.clue;
+package com.redhat.parodos.patterndetection.clue.content;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import com.redhat.parodos.patterndetection.clue.delegate.ContentsDelegate;
+import com.redhat.parodos.patterndetection.context.PatternDetectionConstants;
 import com.redhat.parodos.patterndetection.context.PatternDetectionWorkContextDelegate;
 import com.redhat.parodos.patterndetection.exceptions.PatternDetectionRuntimeException;
 import com.redhat.parodos.workflows.work.WorkContext;
@@ -44,7 +52,8 @@ public class ContentsClueImplFileDelegate extends ContentsClueImplDelegateBase {
 	/*
 	 * Get Files to scan (local) and process their content
 	 */
-	 void getFilesToScan(WorkContext workContext) {
+	 void processFiles(WorkContext workContext) {
+		//handle predefined file list
 		List<File> filesToScan = PatternDetectionWorkContextDelegate.getInstance().getFilesToScan(workContext);
 		if (clue.continueToRunIfDetected || !PatternDetectionWorkContextDelegate.getInstance().isThisClueDetected(clue, workContext) &&  (filesToScan != null)) {
 				filesToScan.stream().forEach(thisFile -> {
@@ -59,12 +68,59 @@ public class ContentsClueImplFileDelegate extends ContentsClueImplDelegateBase {
 				});
 			
 		}
+		Set<File> localDirectoryFiles = getFilesAndDirectoriesFromRoot(workContext);
+		if (clue.continueToRunIfDetected || !PatternDetectionWorkContextDelegate.getInstance().isThisClueDetected(clue, workContext) &&  (filesToScan != null)) {
+			localDirectoryFiles.stream().forEach(thisFile -> {
+				try {
+					extractFileContent(workContext, thisFile);
+				} catch (IOException e) {
+					log.error("Unable to execute Scan of {} clue on File: {}", clue.name,
+							thisFile.getAbsolutePath(), e);
+					throw new PatternDetectionRuntimeException(
+							"Error getting content from files on local File system", e);
+				}
+			});
+		
 	}
+	}
+	 
+	 private Set<File> getFilesAndDirectoriesFromRoot(WorkContext context) {
+			Set<File> fileList = new HashSet<>();
+			try {
+				Files.walkFileTree(Paths.get(((String) context.get(PatternDetectionConstants.START_DIRECTORY.toString()))),
+						new CollectFiles(fileList));
+			}
+			catch (IOException e) {
+				log.error("Unable to get the folders and files to process. Start Directory: {}",
+						context.get(PatternDetectionConstants.START_DIRECTORY.toString()), e);
+			}
+			return fileList;
+		}
+	 
+	 /*
+		 * Internal class to be used by the File Walker to collect the files
+		 */
+		class CollectFiles extends SimpleFileVisitor<Path> {
+
+			Set<File> fileList;
+
+			public CollectFiles(Set<File> fileList) {
+				super();
+				this.fileList = fileList;
+			}
+
+			@Override
+			public FileVisitResult visitFile(Path file, BasicFileAttributes attr) {
+				fileList.add(file.toFile());
+				return FileVisitResult.CONTINUE;
+			}
+
+		}
 
 	void extractFileContent(WorkContext workContext, File thisFile) throws IOException {
 		List<String> fileContent;
 		if (clue.nameMatchingDelegate.isThisATargetFileExtension(thisFile.getAbsolutePath())) {
-			fileContent = ContentsDelegate.fileContentsToList(thisFile);
+			fileContent = ContentsDelegate.getInstance().fileContentsToList(thisFile);
 			processContentsForMatch(workContext, thisFile.getAbsolutePath(), fileContent, clue);
 		}
 		

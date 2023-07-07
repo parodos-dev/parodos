@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.patterndetection.clue;
+package com.redhat.parodos.patterndetection.clue.content;
 
 import java.util.List;
 

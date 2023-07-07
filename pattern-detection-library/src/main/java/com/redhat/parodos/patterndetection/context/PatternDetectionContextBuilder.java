@@ -13,9 +13,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
 import com.redhat.parodos.patterndetection.clue.Clue;
-import com.redhat.parodos.patterndetection.clue.InputStreamWrapper;
-import com.redhat.parodos.patterndetection.clue.client.ContentInputStreamClientConfiguration;
+import com.redhat.parodos.patterndetection.clue.content.stream.ContentInputStreamClientConfiguration;
+import com.redhat.parodos.patterndetection.clue.content.stream.InputStreamWrapper;
 import com.redhat.parodos.patterndetection.exceptions.PatternDetectionConfigurationException;
 import com.redhat.parodos.patterndetection.pattern.Pattern;
 import com.redhat.parodos.workflows.work.WorkContext;

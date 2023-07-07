@@ -13,10 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.patterndetection.clue;
+package com.redhat.parodos.patterndetection.clue.content;
 
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+
+import com.redhat.parodos.patterndetection.clue.AbstractClue;
+import com.redhat.parodos.patterndetection.clue.AbstractClue.Builder;
+import com.redhat.parodos.patterndetection.clue.content.stream.ContentsClueImpInputStreamDelegate;
+import com.redhat.parodos.patterndetection.clue.content.stream.ContentsClueImplContentClientDelegate;
 import com.redhat.parodos.patterndetection.context.PatternDetectionWorkContextDelegate;
 import com.redhat.parodos.patterndetection.exceptions.PatternDetectionConfigurationException;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
@@ -61,7 +66,7 @@ public class ContentsClueImpl extends AbstractClue {
 	void processContent(WorkContext workContext) {
 		contentsClueImplContentClientDelegate.getContentClientConfigurations(workContext);
 		contentsClueImpInputStreamDelegate.getInputStreamWrappers(workContext);
-		contentsClueImplFileDelegate.getFilesToScan(workContext);
+		contentsClueImplFileDelegate.processFiles(workContext);
 	}
 
 

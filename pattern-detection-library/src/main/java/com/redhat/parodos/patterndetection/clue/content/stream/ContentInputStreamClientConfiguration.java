@@ -13,24 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.patterndetection.clue.client;
+package com.redhat.parodos.patterndetection.clue.content.stream;
 
-import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 
+import lombok.Builder;
+import lombok.Data;
+
 /**
- *
- * It might be an expensive operation to obtain an InputStream for Detection. An
- * implementation of this can provide an opportunity during the Detection phase to do
- * something extra (or even skip) obtaining content for a resource
+ * A wrapping class to contain a ContentInputStreamClient and all the paths it might need
+ * to process and configuration to operate
  *
  * @author Luke Shannon (Github: lshannon)
+ *
  */
+@Data
+@Builder
+public class ContentInputStreamClientConfiguration {
 
-public interface ContentInputStreamClient {
+	private String name;
 
-	InputStream getContentIfRequired(String path, Map<String, Object> map);
+	private List<String> pathsToProcessForContent;
 
-	String getName();
+	private Map<String, Object> parametersForClient;
+
+	private ContentInputStreamClient contentClient;
 
 }

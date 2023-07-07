@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.patterndetection.clue;
+package com.redhat.parodos.patterndetection.clue.content.stream;
 
 import java.io.IOException;
 import java.util.List;
 
-import com.redhat.parodos.patterndetection.clue.delegate.ContentsDelegate;
+import com.redhat.parodos.patterndetection.clue.content.ContentsClueImpl;
+import com.redhat.parodos.patterndetection.clue.content.ContentsClueImplDelegateBase;
+import com.redhat.parodos.patterndetection.clue.content.ContentsDelegate;
 import com.redhat.parodos.patterndetection.context.PatternDetectionWorkContextDelegate;
 import com.redhat.parodos.patterndetection.exceptions.PatternDetectionRuntimeException;
 import com.redhat.parodos.workflows.work.WorkContext;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Contains the logic for the ContentsClueImpl to process InputStreams
+ * Contains the logic for the ContentsClueImpl to process a collection of InputStreams that have been placed in the WorkContext
  * 
  * @author Luke Shannon (Github: lshannon)
  *
@@ -69,7 +71,7 @@ public class ContentsClueImpInputStreamDelegate extends ContentsClueImplDelegate
 			throws IOException {
 		List<String> fileContent;
 		if (clue.nameMatchingDelegate.isThisATargetFileExtension(inputStreamWrapper.getFileName())) {
-			fileContent = ContentsDelegate.inputStreamToList(inputStreamWrapper.getInputStream());
+			fileContent = ContentsDelegate.getInstance().inputStreamToList(inputStreamWrapper.getInputStream());
 			processContentsForMatch(workContext, inputStreamWrapper.getFileName(), fileContent, clue);
 		}
 
