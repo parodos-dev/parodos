@@ -60,7 +60,7 @@ public interface WorkFlowRepository extends JpaRepository<WorkFlowExecution, UUI
 	Integer countRestartedWorkflow(@Param("originalWorkflowId") UUID originalWorkflowId);
 
 	@Query("SELECT fallback FROM prds_workflow_execution o JOIN prds_workflow_execution fallback ON o.id = fallback.originalWorkFlowExecution.id WHERE o.id = :originalWorkflowId AND fallback.workFlowDefinition.id != o.workFlowDefinition.id")
-	Optional<WorkFlowExecution> findFirstFallbackWorkFlowExecution(@Param("originalWorkflowId") UUID originalWorkflowId);
+	Optional<WorkFlowExecution> findFallbackWorkFlowExecution(@Param("originalWorkflowId") UUID originalWorkflowId);
 
 	WorkFlowExecution findFirstByProjectIdAndMainWorkFlowExecutionIsNullOrderByStartDateDesc(UUID projectId);
 

@@ -391,7 +391,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 				.workFlowName(workFlowDefinition.getName()).status(workFlowExecution.getStatus())
 				.message(workFlowExecution.getMessage()).works(workFlowWorksStatusResponseDTOs)
 				.restartedCount(workFlowRepository.countRestartedWorkflow(workFlowExecution.getId()))
-				.fallbackExecutionId(workFlowRepository.findFirstFallbackWorkFlowExecution(workFlowExecution.getId())
+				.fallbackExecutionId(workFlowRepository.findFallbackWorkFlowExecution(workFlowExecution.getId())
 						.orElse(new WorkFlowExecution()).getId())
 				.originalExecutionId(Optional.ofNullable(workFlowExecution.getOriginalWorkFlowExecution())
 						.orElse(new WorkFlowExecution()).getId())
