@@ -1,4 +1,4 @@
-package com.redhat.parodos.examples.vmonboarding.dto;
+package com.redhat.parodos.tasks.ansible;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

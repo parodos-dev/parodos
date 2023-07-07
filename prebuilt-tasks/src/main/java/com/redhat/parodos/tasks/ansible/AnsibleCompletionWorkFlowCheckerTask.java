@@ -1,8 +1,6 @@
-package com.redhat.parodos.examples.vmonboarding.checker;
+package com.redhat.parodos.tasks.ansible;
 
-import com.redhat.parodos.examples.vmonboarding.dto.AapGetJobResponseDTO;
 import com.redhat.parodos.utils.RestUtils;
-import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.checker.BaseWorkFlowCheckerTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
@@ -28,6 +26,8 @@ public class AnsibleCompletionWorkFlowCheckerTask extends BaseWorkFlowCheckerTas
 
 	private final String password;
 
+	protected String jobId;
+
 	public AnsibleCompletionWorkFlowCheckerTask(String aapUrl, String username, String password) {
 		this.aapUrl = aapUrl;
 		this.username = username;
@@ -39,10 +39,7 @@ public class AnsibleCompletionWorkFlowCheckerTask extends BaseWorkFlowCheckerTas
 	 */
 	@Override
 	public WorkReport checkWorkFlowStatus(WorkContext workContext) {
-		log.info("Start AnsibleCompletionWorkFlowCheckerTask...");
 		try {
-			String jobId = getRequiredParameterValue("JOB_ID");
-			log.info("job id: {}", jobId);
 			String urlString = aapUrl + "/api/v2/jobs/" + jobId;
 
 			ResponseEntity<AapGetJobResponseDTO> result = RestUtils.restExchange(
@@ -58,6 +55,7 @@ public class AnsibleCompletionWorkFlowCheckerTask extends BaseWorkFlowCheckerTas
 			}
 			else if ("successful".equalsIgnoreCase(responseDto.getStatus())) {
 				log.info("Rest call completed: {}", responseDto.getStatus());
+				responseAction(responseDto);
 				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 			}
 			else {
@@ -68,10 +66,10 @@ public class AnsibleCompletionWorkFlowCheckerTask extends BaseWorkFlowCheckerTas
 		catch (RestClientException e) {
 			log.error("There was an issue with the REST call: {}", e.getMessage());
 		}
-		catch (MissingParameterException e) {
-			log.error("There was an error getting parameter(s): {}", e.getMessage());
-		}
 		return new DefaultWorkReport(WorkStatus.FAILED, workContext);
+	}
+
+	protected void responseAction(AapGetJobResponseDTO responseDTO) {
 	}
 
 }

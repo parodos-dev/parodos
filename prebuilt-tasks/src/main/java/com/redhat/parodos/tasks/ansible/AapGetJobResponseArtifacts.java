@@ -1,6 +1,4 @@
-package com.redhat.parodos.examples.vmonboarding.dto;
-
-import java.util.Map;
+package com.redhat.parodos.tasks.ansible;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -12,11 +10,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AapJobLaunchRequestDTO {
+public class AapGetJobResponseArtifacts {
 
-	private String limit;
-
-	@JsonProperty("extra_vars")
-	private Map<String, String> extraVars;
+	@JsonProperty("azure_vm_public_ip")
+	private String azureVmPublicIp;
 
 }
