@@ -459,6 +459,7 @@ public class SimpleRestartWorkFlowTest {
 		assertNotNull(workFlowStatusResponseDTO);
 		assertNotNull(workFlowStatusResponseDTO.getWorkFlowExecutionId());
 		assertEquals(WorkFlowStatusResponseDTO.StatusEnum.FAILED, workFlowStatusResponseDTO.getStatus());
+		assertNotEquals(workFlowStatusResponseDTO.getWorkFlowExecutionId(),  workFlowStatusResponseDTO.getFallbackExecutionId());
 		log.info("Onboarding workflow execution completed with status {}", workFlowStatusResponseDTO.getStatus());
 
 		log.info("******** Waiting for fallback workflow {} to be Completed for original workflow ********",
