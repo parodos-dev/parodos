@@ -1,6 +1,9 @@
 package com.redhat.parodos.workflow.execution.service;
 
+import java.util.Optional;
+
 import com.redhat.parodos.workflow.WorkFlowDelegate;
+import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
 import com.redhat.parodos.workflow.execution.repository.WorkFlowRepository;
 import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.engine.WorkFlowEngineBuilder;
@@ -32,7 +35,7 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor {
 				context.workFlowName(), context.executionId());
 		WorkReport report = WorkFlowEngineBuilder.aNewWorkFlowEngine().build().run(workFlow, context.workContext());
 		log.info("Work report for {} (ID: {}): {}", context.workFlowName(), context.executionId(), report);
-		if (isExecutionFailed(context)) {
+		if (isFallbackExecutionNeeded(context)) {
 			log.error("Workflow {} (ID: {}) failed. Check the logs for errors coming from the tasks in this workflow.",
 					context.workFlowName(), context.executionId());
 			executeFallbackWorkFlowIfNeeded(context, workFlowService);
@@ -49,10 +52,15 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor {
 		workFlowService.executeFallbackWorkFlow(context.fallbackWorkFlowName(), context.executionId());
 	}
 
-	private boolean isExecutionFailed(ExecutionContext context) {
+	private boolean isFallbackExecutionNeeded(ExecutionContext context) {
 		// need to use the status from db to avoid of repetitive execution on fallback
-		return workFlowRepository.findById(context.executionId())
-				.map(execution -> execution.getStatus() == WorkStatus.FAILED).orElse(false);
+		Optional<WorkFlowExecution> workflow = workFlowRepository.findById(context.executionId());
+		if (workflow.isEmpty()) {
+			return false;
+		}
+		Optional<WorkFlowExecution> fallbackWorkflow = workFlowRepository
+				.findFallbackWorkFlowExecution(context.executionId());
+		return workflow.get().getStatus() == WorkStatus.FAILED && fallbackWorkflow.isEmpty();
 	}
 
 }
