@@ -19,13 +19,13 @@ public abstract class BaseWorkFlowCheckerTaskTest {
 
 	@Before
 	public void setUp() {
-		this.baseWorkFlowCheckerTask = getConcretePersonImplementation();
+		this.baseWorkFlowCheckerTask = getTaskUnderTest();
 	}
 
 	/**
 	 * @return new instance of non-abstract class extending BaseWorkFlowCheckerTaskTest
 	 */
-	protected abstract BaseWorkFlowCheckerTask getConcretePersonImplementation();
+	protected abstract BaseWorkFlowCheckerTask getTaskUnderTest();
 
 	public WorkFlowTaskType getType() {
 		return WorkFlowTaskType.CHECKER;

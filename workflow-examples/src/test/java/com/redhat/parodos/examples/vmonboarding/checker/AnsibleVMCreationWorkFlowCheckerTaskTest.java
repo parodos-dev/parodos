@@ -62,7 +62,7 @@ public class AnsibleVMCreationWorkFlowCheckerTaskTest extends BaseWorkFlowChecke
 	}
 
 	@Override
-	protected BaseWorkFlowCheckerTask getConcretePersonImplementation() {
+	protected BaseWorkFlowCheckerTask getTaskUnderTest() {
 		return new AnsibleVMCreationWorkFlowCheckerTask(SERVICE_URL_TEST, USERNAME_TEST, PASSWORD_TEST);
 	}
 

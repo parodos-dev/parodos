@@ -59,7 +59,7 @@ public class AapCreateVMWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskT
 	}
 
 	@Override
-	protected BaseInfrastructureWorkFlowTask getConcretePersonImplementation() {
+	protected BaseInfrastructureWorkFlowTask getConcreteImplementation() {
 		return new AapCreateVMWorkFlowTask(AAP_URL_TEST, WINDOWS_JOB_TEMPLATE_ID_TEST, RHEL_JOB_TEMPLATE_ID_TEST,
 				USERNAME_TEST, PASSWORD_TEST);
 	}
