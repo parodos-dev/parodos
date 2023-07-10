@@ -48,13 +48,6 @@ jobs:
         run: |
           make release-all
 
-      - name: "Commit the new changes"
-        run: |
-          export KEY=$(date +%y%m%d)
-          git add .
-          git commit -m "NON-issue: bump version on $KEY"
-
-
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
