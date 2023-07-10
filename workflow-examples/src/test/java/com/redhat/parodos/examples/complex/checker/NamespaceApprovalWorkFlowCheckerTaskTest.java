@@ -30,12 +30,11 @@ public class NamespaceApprovalWorkFlowCheckerTaskTest extends BaseWorkFlowChecke
 
 	@Before
 	public void setUp() {
-		namespaceApprovalWorkFlowCheckerTask = spy(
-				(NamespaceApprovalWorkFlowCheckerTask) getConcretePersonImplementation());
+		namespaceApprovalWorkFlowCheckerTask = spy((NamespaceApprovalWorkFlowCheckerTask) getTaskUnderTest());
 	}
 
 	@Override
-	protected BaseWorkFlowCheckerTask getConcretePersonImplementation() {
+	protected BaseWorkFlowCheckerTask getTaskUnderTest() {
 		return new NamespaceApprovalWorkFlowCheckerTask();
 	}
 

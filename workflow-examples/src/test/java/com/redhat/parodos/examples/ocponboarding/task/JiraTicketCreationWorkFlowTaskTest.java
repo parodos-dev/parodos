@@ -64,14 +64,14 @@ public class JiraTicketCreationWorkFlowTaskTest extends BaseInfrastructureWorkFl
 
 	@Before
 	public void setUp() {
-		this.jiraTicketCreationWorkFlowTask = spy((JiraTicketCreationWorkFlowTask) getConcretePersonImplementation());
+		this.jiraTicketCreationWorkFlowTask = spy((JiraTicketCreationWorkFlowTask) getConcreteImplementation());
 		WorkFlowLogService workFlowLogService = mock(WorkFlowLogService.class);
 		doNothing().when(workFlowLogService).writeLog(any(), any(), any());
 		ReflectionTestUtils.setField(jiraTicketCreationWorkFlowTask, "workFlowLogService", workFlowLogService);
 	}
 
 	@Override
-	protected BaseInfrastructureWorkFlowTask getConcretePersonImplementation() {
+	protected BaseInfrastructureWorkFlowTask getConcreteImplementation() {
 		return new JiraTicketCreationWorkFlowTask(JIRA_SERVICE_BASE_URL_TEST, JIRA_USERNAME_TEST, JIRA_PASSWORD_TEST,
 				APPROVER_ID_TEST);
 	}

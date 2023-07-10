@@ -19,13 +19,13 @@ public abstract class BaseAssessmentTaskTest {
 
 	@Before
 	public void setUp() {
-		this.baseAssessmentTask = getConcretePersonImplementation();
+		this.baseAssessmentTask = getConcreteImplementation();
 	}
 
 	/**
 	 * @return new instance of non-abstract class extending BaseInfrastructureWorkFlowTask
 	 */
-	protected abstract BaseAssessmentTask getConcretePersonImplementation();
+	protected abstract BaseAssessmentTask getConcreteImplementation();
 
 	public List<WorkFlowOption> getWorkFlowOptions() {
 		return workflowOptions;

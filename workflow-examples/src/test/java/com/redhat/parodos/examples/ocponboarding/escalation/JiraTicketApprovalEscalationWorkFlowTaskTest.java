@@ -47,7 +47,7 @@ public class JiraTicketApprovalEscalationWorkFlowTaskTest extends BaseInfrastruc
 	@Before
 	public void setUp() {
 		this.jiraTicketApprovalEscalationWorkFlowTask = spy(
-				(JiraTicketApprovalEscalationWorkFlowTask) getConcretePersonImplementation());
+				(JiraTicketApprovalEscalationWorkFlowTask) getConcreteImplementation());
 
 		try {
 			doReturn(JIRA_TICKET_URL_TEST).when(this.jiraTicketApprovalEscalationWorkFlowTask)
@@ -59,7 +59,7 @@ public class JiraTicketApprovalEscalationWorkFlowTaskTest extends BaseInfrastruc
 	}
 
 	@Override
-	protected BaseInfrastructureWorkFlowTask getConcretePersonImplementation() {
+	protected BaseInfrastructureWorkFlowTask getConcreteImplementation() {
 		return new JiraTicketApprovalEscalationWorkFlowTask(MAIL_SERVICE_URL_TEST, MAIL_SERVICE_SITE_NAME_TEST);
 	}
 

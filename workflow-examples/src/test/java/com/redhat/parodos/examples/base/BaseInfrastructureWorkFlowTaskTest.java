@@ -18,14 +18,14 @@ public abstract class BaseInfrastructureWorkFlowTaskTest {
 
 	@Before
 	public void setUp() {
-		this.baseInfrastructureWorkFlowTask = getConcretePersonImplementation();
+		this.baseInfrastructureWorkFlowTask = getConcreteImplementation();
 	}
 
 	/**
 	 * Each test class based on this abstract class will implement this function
 	 * @return new instance of non-abstract class extending BaseInfrastructureWorkFlowTask
 	 */
-	protected abstract BaseInfrastructureWorkFlowTask getConcretePersonImplementation();
+	protected abstract BaseInfrastructureWorkFlowTask getConcreteImplementation();
 
 	public List<WorkFlow> getWorkFlowCheckers() {
 		WorkFlow testWorkflow1 = mock(WorkFlow.class);

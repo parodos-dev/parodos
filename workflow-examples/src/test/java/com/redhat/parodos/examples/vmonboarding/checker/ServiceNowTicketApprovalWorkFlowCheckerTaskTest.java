@@ -46,7 +46,7 @@ public class ServiceNowTicketApprovalWorkFlowCheckerTaskTest extends BaseWorkFlo
 	@Before
 	public void setUp() {
 		this.serviceNowTicketApprovalWorkFlowCheckerTask = spy(
-				(ServiceNowTicketApprovalWorkFlowCheckerTask) getConcretePersonImplementation());
+				(ServiceNowTicketApprovalWorkFlowCheckerTask) getTaskUnderTest());
 		try {
 			doReturn(INCIDENT_ID_PARAMETER_VALUE_TEST).when(this.serviceNowTicketApprovalWorkFlowCheckerTask)
 					.getRequiredParameterValue(eq(INCIDENT_ID_PARAMETER_NAME));
@@ -57,7 +57,7 @@ public class ServiceNowTicketApprovalWorkFlowCheckerTaskTest extends BaseWorkFlo
 	}
 
 	@Override
-	protected BaseWorkFlowCheckerTask getConcretePersonImplementation() {
+	protected BaseWorkFlowCheckerTask getTaskUnderTest() {
 		return new ServiceNowTicketApprovalWorkFlowCheckerTask(SERVICE_URL_TEST, USERNAME_TEST, PASSWORD_TEST);
 	}
 
