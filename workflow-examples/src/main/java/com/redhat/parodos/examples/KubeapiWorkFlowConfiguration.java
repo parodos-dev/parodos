@@ -10,7 +10,6 @@ import com.redhat.parodos.workflows.workflow.WorkFlow;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 /**
  *
@@ -18,7 +17,6 @@ import org.springframework.context.annotation.Profile;
  *
  */
 @Configuration
-@Profile("kubeapi")
 public class KubeapiWorkFlowConfiguration {
 
 	@Bean

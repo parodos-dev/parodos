@@ -201,7 +201,10 @@ jobs:
 
       - name: Run integration tests
         run: |
-          WORKFLOW_SERVICE_HOST=workflow-service.parodos-dev NOTIFICATION_SERVICE_HOST=notification-service.parodos-dev SERVER_PORT=80 mvn verify -pl integration-tests -P integration-test
+          kubectl create ns test
+          kubectl config view --flatten --minify -o json > /tmp/kubeconfig.json
+          sed -i 's/https:\/\/127.0.0.1:[0-9]*/https:\/\/kubernetes.default.svc:443/g' /tmp/kubeconfig.json
+          KUBECONFIG_JSON=/tmp/kubeconfig.json WORKFLOW_SERVICE_HOST=workflow-service.parodos-dev NOTIFICATION_SERVICE_HOST=notification-service.parodos-dev SERVER_PORT=80 mvn verify -pl integration-tests -P integration-test
 
       - name: Collect logs
         if: ${{ failure() }}

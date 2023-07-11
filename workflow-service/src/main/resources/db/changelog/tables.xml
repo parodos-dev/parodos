@@ -162,7 +162,7 @@
             <column name="message" type="varchar(4000)"/>
             <column name="start_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="end_date" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
-            <column name="arguments" type="varchar(4000)"/>
+            <column name="arguments" type="varchar(10000))"/>
             <column name="workflow_definition_id" type="${uuidType}">
                 <constraints nullable="false" foreignKeyName="fk_workflow_execution_workflow_definition"
                              references="prds_workflow_definition(id)"/>
@@ -197,7 +197,7 @@
                 <constraints nullable="false" foreignKeyName="fk_workflow_task_execution_workflow_task_definition"
                              references="prds_workflow_task_definition(id)"/>
             </column>
-            <column name="arguments" type="varchar(4000)"/>
+            <column name="arguments" type="varchar(10000)"/>
             <column name="results" type="varchar(4000)"/>
             <column name="status" type="varchar(255)"/>
             <column name="message" type="varchar(4000)"/>
