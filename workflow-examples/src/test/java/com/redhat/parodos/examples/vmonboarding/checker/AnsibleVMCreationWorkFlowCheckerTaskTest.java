@@ -50,8 +50,7 @@ public class AnsibleVMCreationWorkFlowCheckerTaskTest extends BaseWorkFlowChecke
 
 	@Before
 	public void setUp() {
-		this.ansibleVMCreationWorkFlowCheckerTask = spy(
-				(AnsibleVMCreationWorkFlowCheckerTask) getConcretePersonImplementation());
+		this.ansibleVMCreationWorkFlowCheckerTask = spy((AnsibleVMCreationWorkFlowCheckerTask) getTaskUnderTest());
 		try {
 			doReturn(JOB_ID_PARAMETER_VALUE_TEST).when(this.ansibleVMCreationWorkFlowCheckerTask)
 					.getRequiredParameterValue(eq(JOB_ID_PARAMETER_NAME));

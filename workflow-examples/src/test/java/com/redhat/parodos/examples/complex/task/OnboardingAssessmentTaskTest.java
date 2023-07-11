@@ -39,11 +39,11 @@ public class OnboardingAssessmentTaskTest extends BaseAssessmentTaskTest {
 		workflowOption = new WorkFlowOption.Builder("identifier", "workflowName")
 				.setDescription("a test workflow option").displayName("WorkflowOption_A").addToDetails("Other details")
 				.build();
-		onboardingAssessmentTask = spy((OnboardingAssessmentTask) getConcreteImplementation());
+		onboardingAssessmentTask = spy((OnboardingAssessmentTask) getTaskUnderTest());
 	}
 
 	@Override
-	protected BaseAssessmentTask getConcreteImplementation() {
+	protected BaseAssessmentTask getTaskUnderTest() {
 		return new OnboardingAssessmentTask(workflowOption);
 	}
 

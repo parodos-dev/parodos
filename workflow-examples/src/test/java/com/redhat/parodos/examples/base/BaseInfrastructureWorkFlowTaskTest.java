@@ -18,14 +18,40 @@ public abstract class BaseInfrastructureWorkFlowTaskTest {
 
 	@Before
 	public void setUp() {
-		this.baseInfrastructureWorkFlowTask = getConcreteImplementation();
+		this.baseInfrastructureWorkFlowTask = getTaskUnderTest();
 	}
 
 	/**
-	 * Each test class based on this abstract class will implement this function
-	 * @return new instance of non-abstract class extending BaseInfrastructureWorkFlowTask
-	 */
-	protected abstract BaseInfrastructureWorkFlowTask getConcreteImplementation();
+	 * Provides a real implementation of the class to be tested. This method should be
+	 * used when extending {@link BaseInfrastructureWorkFlowTaskTest} to create a test
+	 * class, such as
+	 * {@link com.redhat.parodos.examples.simple.task.LoggingWorkFlowTaskTest}. Example
+	 * usage: <pre> {@code
+	 *     private MyTaskClass myTaskClass;
+	 *
+	 *     &#64;Before
+	 *     public void setUp() {
+	 *         this.myTaskClass = spy((MyTaskClass) getTaskUnderTest());
+	 *         try {
+	 *              // Set up a mocked return value for the 'getRequiredParameterValue' method
+	 * 				doReturn("a_value").when(this.myTaskClass).getRequiredParameterValue(eq("a_param"));
+	 *         }
+	 * 		   catch (MissingParameterException e) {
+	 * 			throw new RuntimeException(e);
+	 *        }
+	 *     }
+	 *
+	 *     &#64;Test
+	 *     public void exampleTest() {
+	 *         // Test implementation here
+	 *         // ...
+	 *
+	 *         // Invoke the real implementation of 'checkWorkFlowStatus' method
+	 *         WorkReport workReport = myTaskClass.checkWorkFlowStatus(workContext);
+	 *     }
+	 * }</pre>
+	 **/
+	protected abstract BaseInfrastructureWorkFlowTask getTaskUnderTest();
 
 	public List<WorkFlow> getWorkFlowCheckers() {
 		WorkFlow testWorkflow1 = mock(WorkFlow.class);

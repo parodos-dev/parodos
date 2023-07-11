@@ -47,7 +47,7 @@ public class LoggingWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 	@SuppressWarnings("serial")
 	@Before
 	public void setUp() {
-		loggingWorkFlowTask = getConcreteImplementation();
+		loggingWorkFlowTask = getTaskUnderTest();
 		workContext = new WorkContext();
 		WorkContextDelegate.write(workContext, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
 				WorkContextDelegate.Resource.ID, UUID.randomUUID());
@@ -108,7 +108,7 @@ public class LoggingWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest 
 	}
 
 	@Override
-	protected BaseInfrastructureWorkFlowTask getConcreteImplementation() {
+	protected BaseInfrastructureWorkFlowTask getTaskUnderTest() {
 		LoggingWorkFlowTask loggingWorkFlowTask = new LoggingWorkFlowTask();
 		loggingWorkFlowTask.setBeanName(WORKFLOW_TASK_NAME);
 		return loggingWorkFlowTask;

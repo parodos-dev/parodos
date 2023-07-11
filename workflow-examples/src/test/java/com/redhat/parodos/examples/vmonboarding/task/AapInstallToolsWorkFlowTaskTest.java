@@ -46,7 +46,7 @@ public class AapInstallToolsWorkFlowTaskTest extends BaseInfrastructureWorkFlowT
 
 	@Before
 	public void setUp() {
-		this.aapCreateVMWorkFlowTask = spy((AapInstallToolsWorkFlowTask) getConcretePersonImplementation());
+		this.aapCreateVMWorkFlowTask = spy((AapInstallToolsWorkFlowTask) getTaskUnderTest());
 		try {
 			doReturn(VM_TYPE_PARAMETER_VALUE_TEST).when(this.aapCreateVMWorkFlowTask)
 					.getRequiredParameterValue(eq(VM_TYPE_PARAMETER_NAME));
@@ -57,7 +57,7 @@ public class AapInstallToolsWorkFlowTaskTest extends BaseInfrastructureWorkFlowT
 	}
 
 	@Override
-	protected BaseInfrastructureWorkFlowTask getConcretePersonImplementation() {
+	protected BaseInfrastructureWorkFlowTask getTaskUnderTest() {
 		return new AapInstallToolsWorkFlowTask(AAP_URL_TEST, JOB_TEMPLATE_ID_TEST, USERNAME_TEST, PASSWORD_TEST);
 	}
 

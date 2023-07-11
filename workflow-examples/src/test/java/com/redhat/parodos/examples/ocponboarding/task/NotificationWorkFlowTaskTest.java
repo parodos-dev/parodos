@@ -49,7 +49,7 @@ public class NotificationWorkFlowTaskTest extends BaseInfrastructureWorkFlowTask
 
 	@Before
 	public void setUp() {
-		this.notificationWorkFlowTask = spy((NotificationWorkFlowTask) getConcreteImplementation());
+		this.notificationWorkFlowTask = spy((NotificationWorkFlowTask) getTaskUnderTest());
 		try {
 			doReturn(JIRA_TICKET_URL_WORKFLOW_TASK_PARAMETER_VALUE_TEST).when(this.notificationWorkFlowTask)
 					.getRequiredParameterValue(eq(JIRA_TICKET_URL_WORKFLOW_TASK_PARAMETER_NAME_TEST));
@@ -63,7 +63,7 @@ public class NotificationWorkFlowTaskTest extends BaseInfrastructureWorkFlowTask
 	}
 
 	@Override
-	protected BaseInfrastructureWorkFlowTask getConcreteImplementation() {
+	protected BaseInfrastructureWorkFlowTask getTaskUnderTest() {
 		return new NotificationWorkFlowTask(NOTIFICATION_SERVICE_URL);
 	}
 
