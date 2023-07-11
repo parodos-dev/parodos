@@ -47,7 +47,7 @@ public class JiraTicketEmailNotificationWorkFlowTaskTest extends BaseInfrastruct
 	@Before
 	public void setUp() {
 		this.jiraTicketEmailNotificationWorkFlowTask = spy(
-				(JiraTicketEmailNotificationWorkFlowTask) getConcreteImplementation());
+				(JiraTicketEmailNotificationWorkFlowTask) getTaskUnderTest());
 
 		try {
 			doReturn(JIRA_TICKET_URL_TEST).when(this.jiraTicketEmailNotificationWorkFlowTask)
@@ -59,7 +59,7 @@ public class JiraTicketEmailNotificationWorkFlowTaskTest extends BaseInfrastruct
 	}
 
 	@Override
-	protected BaseInfrastructureWorkFlowTask getConcreteImplementation() {
+	protected BaseInfrastructureWorkFlowTask getTaskUnderTest() {
 		return new JiraTicketEmailNotificationWorkFlowTask(MAIL_SERVICE_URL_TEST, MAIL_SERVICE_SITE_NAME_TEST);
 	}
 

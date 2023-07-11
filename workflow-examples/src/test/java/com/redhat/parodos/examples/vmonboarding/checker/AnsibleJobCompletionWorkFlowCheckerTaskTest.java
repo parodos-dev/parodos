@@ -43,7 +43,7 @@ public class AnsibleJobCompletionWorkFlowCheckerTaskTest extends BaseWorkFlowChe
 	@Before
 	public void setUp() {
 		this.ansibleJobCompletionWorkFlowCheckerTask = spy(
-				(AnsibleJobCompletionWorkFlowCheckerTask) getConcretePersonImplementation());
+				(AnsibleJobCompletionWorkFlowCheckerTask) getTaskUnderTest());
 		try {
 			doReturn(JOB_ID_PARAMETER_VALUE_TEST).when(this.ansibleJobCompletionWorkFlowCheckerTask)
 					.getRequiredParameterValue(eq(JOB_ID_PARAMETER_NAME));
@@ -54,7 +54,7 @@ public class AnsibleJobCompletionWorkFlowCheckerTaskTest extends BaseWorkFlowChe
 	}
 
 	@Override
-	protected BaseWorkFlowCheckerTask getConcretePersonImplementation() {
+	protected BaseWorkFlowCheckerTask getTaskUnderTest() {
 		return new AnsibleJobCompletionWorkFlowCheckerTask(SERVICE_URL_TEST, USERNAME_TEST, PASSWORD_TEST);
 	}
 

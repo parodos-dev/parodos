@@ -55,8 +55,7 @@ public class ServiceNowTicketCreationWorkFlowTaskTest extends BaseInfrastructure
 
 	@Before
 	public void setUp() {
-		this.serviceNowTicketCreationWorkFlowTask = spy(
-				(ServiceNowTicketCreationWorkFlowTask) getConcreteImplementation());
+		this.serviceNowTicketCreationWorkFlowTask = spy((ServiceNowTicketCreationWorkFlowTask) getTaskUnderTest());
 		try {
 			doReturn(VM_NAME_PARAMETER_VALUE_TEST).when(this.serviceNowTicketCreationWorkFlowTask)
 					.getOptionalParameterValue(eq(VM_NAME_PARAMETER_NAME), eq(VM_NAME_PARAMETER_DEFAULT_VALUE_TEST));
@@ -70,7 +69,7 @@ public class ServiceNowTicketCreationWorkFlowTaskTest extends BaseInfrastructure
 	}
 
 	@Override
-	protected BaseInfrastructureWorkFlowTask getConcreteImplementation() {
+	protected BaseInfrastructureWorkFlowTask getTaskUnderTest() {
 		return new ServiceNowTicketCreationWorkFlowTask(SERVICE_URL_TEST, USERNAME_TEST, PASSWORD_TEST);
 	}
 

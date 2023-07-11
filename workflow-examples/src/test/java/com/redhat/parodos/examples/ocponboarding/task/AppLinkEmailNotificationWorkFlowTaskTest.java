@@ -46,8 +46,7 @@ public class AppLinkEmailNotificationWorkFlowTaskTest extends BaseInfrastructure
 
 	@Before
 	public void setUp() {
-		this.appLinkEmailNotificationWorkFlowTask = spy(
-				(AppLinkEmailNotificationWorkFlowTask) getConcreteImplementation());
+		this.appLinkEmailNotificationWorkFlowTask = spy((AppLinkEmailNotificationWorkFlowTask) getTaskUnderTest());
 		try {
 			doReturn(APP_LINK_TEST).when(this.appLinkEmailNotificationWorkFlowTask)
 					.getRequiredParameterValue(eq(APP_LINK_PARAMETER_NAME));
@@ -58,7 +57,7 @@ public class AppLinkEmailNotificationWorkFlowTaskTest extends BaseInfrastructure
 	}
 
 	@Override
-	protected BaseInfrastructureWorkFlowTask getConcreteImplementation() {
+	protected BaseInfrastructureWorkFlowTask getTaskUnderTest() {
 		return new AppLinkEmailNotificationWorkFlowTask(MAIL_SERVICE_URL_TEST, MAIL_SERVICE_SITE_NAME_TEST);
 	}
 
