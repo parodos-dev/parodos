@@ -23,6 +23,8 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.steppschuh.markdowngenerator.text.TextBuilder;
 
+import org.springframework.beans.factory.annotation.Value;
+
 @Slf4j
 public class TransformChecker extends BaseWorkFlowCheckerTask {
 
@@ -42,6 +44,9 @@ public class TransformChecker extends BaseWorkFlowCheckerTask {
 		client.setBasePath(server);
 		this.server = server;
 	}
+
+	@Value("${workflows.m2k.public_url}")
+	private String publicUrl;
 
 	@Override
 	public WorkReport checkWorkFlowStatus(WorkContext workContext) {
@@ -90,9 +95,14 @@ public class TransformChecker extends BaseWorkFlowCheckerTask {
 	}
 
 	private String getMessage(String workspaceID, String projectID, String transformId) {
+
+		String serverURL = server;
+		if (this.publicUrl != null && !this.publicUrl.isEmpty()) {
+			serverURL = this.publicUrl;
+		}
 		String path;
 		try {
-			path = Move2KubeUtils.getPath(this.server, workspaceID, projectID, transformId);
+			path = Move2KubeUtils.getPath(serverURL, workspaceID, projectID, transformId);
 		}
 		catch (URISyntaxException e) {
 			path = "Cannot parse move2kube url " + server;

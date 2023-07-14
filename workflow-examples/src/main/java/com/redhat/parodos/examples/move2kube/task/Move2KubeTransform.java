@@ -17,6 +17,8 @@ import dev.parodos.move2kube.client.model.StartTransformation202Response;
 import dev.parodos.move2kube.client.model.StartTransformationRequest;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.beans.factory.annotation.Value;
+
 @Slf4j
 public class Move2KubeTransform extends Move2KubeBase {
 
@@ -29,6 +31,9 @@ public class Move2KubeTransform extends Move2KubeBase {
 	private String plan;
 
 	private String server;
+
+	@Value("${workflows.m2k.public_url}")
+	private String publicUrl;
 
 	public Move2KubeTransform(String serverUrl, Notifier notifier) {
 		super();
@@ -82,8 +87,14 @@ public class Move2KubeTransform extends Move2KubeBase {
 
 	private String sendNotification(String workspaceID, String projectID, String outputID) {
 		String message;
+
+		String serverURL = server;
+		if (this.publicUrl != null && !this.publicUrl.isEmpty()) {
+			serverURL = this.publicUrl;
+		}
+
 		try {
-			String url = Move2KubeUtils.getPath(server, workspaceID, projectID, outputID);
+			String url = Move2KubeUtils.getPath(serverURL, workspaceID, projectID, outputID);
 			message = String.format(
 					"You need to complete some information for your transformation in the following [url](%s)", url);
 
