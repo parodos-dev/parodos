@@ -1,4 +1,4 @@
-package com.redhat.parodos.examples.ocponboarding.escalation;
+package com.redhat.parodos.examples.ocponboarding.task;
 
 import com.redhat.parodos.examples.base.BaseInfrastructureWorkFlowTaskTest;
 import com.redhat.parodos.infrastructure.Notifier;
@@ -22,13 +22,11 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 
 @RunWith(MockitoJUnitRunner.class)
-public class JiraTicketApprovalEscalationWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest {
+public class JiraTicketUpdateNotificationWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest {
 
 	private static final String ISSUE_LINK_PARAMETER_NAME = "ISSUE_LINK";
 
 	private static final String JIRA_TICKET_URL_TEST = "jira-ticket-url-test";
-
-	private static final String ESCALATION_USER_ID_TEST = "escalation-user-id-test";
 
 	@Mock
 	private Notifier notifier;
@@ -36,38 +34,38 @@ public class JiraTicketApprovalEscalationWorkFlowTaskTest extends BaseInfrastruc
 	@Mock
 	private WorkContext workContext;
 
-	private JiraTicketApprovalEscalationWorkFlowTask jiraTicketApprovalEscalationWorkFlowTask;
+	private JiraTicketUpdateNotificationWorkFlowTask jiraTicketUpdateNotificationWorkFlowTask;
 
 	@Before
 	public void setUp() {
-		this.jiraTicketApprovalEscalationWorkFlowTask = Mockito
-				.spy((JiraTicketApprovalEscalationWorkFlowTask) getTaskUnderTest());
+		this.jiraTicketUpdateNotificationWorkFlowTask = Mockito
+				.spy((JiraTicketUpdateNotificationWorkFlowTask) getTaskUnderTest());
 	}
 
 	@Override
 	protected BaseInfrastructureWorkFlowTask getTaskUnderTest() {
-		return new JiraTicketApprovalEscalationWorkFlowTask(notifier, ESCALATION_USER_ID_TEST);
+		return new JiraTicketUpdateNotificationWorkFlowTask(notifier);
 	}
 
 	@Test
 	public void executeSuccess() {
 		try {
-			doReturn(JIRA_TICKET_URL_TEST).when(this.jiraTicketApprovalEscalationWorkFlowTask)
+			doReturn(JIRA_TICKET_URL_TEST).when(this.jiraTicketUpdateNotificationWorkFlowTask)
 					.getRequiredParameterValue(eq(ISSUE_LINK_PARAMETER_NAME));
 		}
 		catch (MissingParameterException e) {
 			throw new RuntimeException(e);
 		}
-		doNothing().when(notifier).send(any());
-		WorkReport workReport = jiraTicketApprovalEscalationWorkFlowTask.execute(workContext);
+		doNothing().when(notifier).send(any(), any());
+		WorkReport workReport = jiraTicketUpdateNotificationWorkFlowTask.execute(workContext);
 		assertEquals(WorkStatus.COMPLETED, workReport.getStatus());
 	}
 
 	@Test
 	public void executeFail() throws MissingParameterException {
-		doThrow(MissingParameterException.class).when(this.jiraTicketApprovalEscalationWorkFlowTask)
+		doThrow(MissingParameterException.class).when(this.jiraTicketUpdateNotificationWorkFlowTask)
 				.getRequiredParameterValue(eq(ISSUE_LINK_PARAMETER_NAME));
-		WorkReport workReport = jiraTicketApprovalEscalationWorkFlowTask.execute(workContext);
+		WorkReport workReport = jiraTicketUpdateNotificationWorkFlowTask.execute(workContext);
 		assertEquals(WorkStatus.FAILED, workReport.getStatus());
 	}
 

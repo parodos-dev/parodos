@@ -20,12 +20,12 @@ import java.util.List;
 
 import com.redhat.parodos.examples.ocponboarding.checker.JiraTicketApprovalWorkFlowCheckerTask;
 import com.redhat.parodos.examples.ocponboarding.escalation.JiraTicketApprovalEscalationWorkFlowTask;
-import com.redhat.parodos.examples.ocponboarding.task.AppLinkEmailNotificationWorkFlowTask;
+import com.redhat.parodos.examples.ocponboarding.task.AppLinkNotificationWorkFlowTask;
 import com.redhat.parodos.examples.ocponboarding.task.JiraTicketCreationWorkFlowTask;
-import com.redhat.parodos.examples.ocponboarding.task.JiraTicketEmailNotificationWorkFlowTask;
-import com.redhat.parodos.examples.ocponboarding.task.NotificationWorkFlowTask;
+import com.redhat.parodos.examples.ocponboarding.task.JiraTicketUpdateNotificationWorkFlowTask;
 import com.redhat.parodos.examples.ocponboarding.task.OcpAppDeploymentWorkFlowTask;
 import com.redhat.parodos.examples.ocponboarding.task.assessment.OnboardingOcpAssessmentTask;
+import com.redhat.parodos.infrastructure.Notifier;
 import com.redhat.parodos.workflow.annotation.Assessment;
 import com.redhat.parodos.workflow.annotation.Checker;
 import com.redhat.parodos.workflow.annotation.Escalation;
@@ -120,14 +120,13 @@ public class OcpOnboardingWorkFlowConfiguration {
 	// WORKFLOW A - Sequential Flow:
 	// @formatter:off
 	// - JiraTicketCreationWorkFlowTask -> JiraTicketApprovalWorkFlowCheckerTask -> JiraTicketApprovalEscalationWorkFlowTask
-	// - JiraTicketEmailNotificationWorkFlowTask
+	// - JiraTicketUpdateNotificationWorkFlowTask
 	// @formatter:on
 
 	@Bean
-	JiraTicketApprovalEscalationWorkFlowTask jiraTicketApprovalEscalationWorkFlowTask(
-			@Value("${MAIL_SERVICE_URL:service}") String mailServiceUrl,
-			@Value("${MAIL_SERVICE_SITE_NAME_ESCALATION:site}") String mailServiceSiteName) {
-		return new JiraTicketApprovalEscalationWorkFlowTask(mailServiceUrl, mailServiceSiteName);
+	JiraTicketApprovalEscalationWorkFlowTask jiraTicketApprovalEscalationWorkFlowTask(Notifier notifier,
+			@Value("${ESCALATION_USER_ID:test}") String escalationUserId) {
+		return new JiraTicketApprovalEscalationWorkFlowTask(notifier, escalationUserId);
 	}
 
 	@Bean(name = "jiraTicketApprovalEscalationWorkFlow")
@@ -167,25 +166,23 @@ public class OcpOnboardingWorkFlowConfiguration {
 	}
 
 	@Bean
-	JiraTicketEmailNotificationWorkFlowTask jiraTicketEmailNotificationWorkFlowTask(
-			@Value("${MAIL_SERVICE_URL:service}") String mailServiceUrl,
-			@Value("${MAIL_SERVICE_SITE_NAME_JIRA:site}") String mailServiceSiteName) {
-		return new JiraTicketEmailNotificationWorkFlowTask(mailServiceUrl, mailServiceSiteName);
+	JiraTicketUpdateNotificationWorkFlowTask jiraTicketUpdateNotificationWorkFlowTask(Notifier notifier) {
+		return new JiraTicketUpdateNotificationWorkFlowTask(notifier);
 	}
 
 	@Bean(name = "workFlowA")
 	@Infrastructure
 	WorkFlow workFlowA(
 			@Qualifier("jiraTicketCreationWorkFlowTask") JiraTicketCreationWorkFlowTask jiraTicketCreationWorkFlowTask,
-			@Qualifier("jiraTicketEmailNotificationWorkFlowTask") JiraTicketEmailNotificationWorkFlowTask jiraTicketEmailNotificationWorkFlowTask) {
+			@Qualifier("jiraTicketUpdateNotificationWorkFlowTask") JiraTicketUpdateNotificationWorkFlowTask jiraTicketUpdateNotificationWorkFlowTask) {
 		return SequentialFlow.Builder.aNewSequentialFlow().named("workFlowA").execute(jiraTicketCreationWorkFlowTask)
-				.then(jiraTicketEmailNotificationWorkFlowTask).build();
+				.then(jiraTicketUpdateNotificationWorkFlowTask).build();
 	}
 
 	// WORKFLOW B - Sequential Flow:
-	// - OcpAppDeploymentWorkFlowTask
-	// - NotificationWorkFlowTask
-	// - AppLinkEmailNotificationWorkFlowTask
+	// - OcpAppDeploymentWorkFlowTask -> AppLinkNotificationWorkFlowTask -
+	// CompletionNotificationWorkFlowTask
+
 	@Bean
 	OcpAppDeploymentWorkFlowTask ocpAppDeploymentWorkFlowTask(
 			@Value("${CLUSTER_API_URL:cluster}") String clusterApiUrl) {
@@ -193,26 +190,17 @@ public class OcpOnboardingWorkFlowConfiguration {
 	}
 
 	@Bean
-	NotificationWorkFlowTask notificationWorkFlowTask(
-			@Value("${NOTIFICATION_SERVER_URL:test}") String notificationServiceUrl) {
-		return new NotificationWorkFlowTask(notificationServiceUrl);
-	}
-
-	@Bean
-	AppLinkEmailNotificationWorkFlowTask appLinkEmailNotificationWorkFlowTask(
-			@Value("${MAIL_SERVICE_URL:service}") String mailServiceUrl,
-			@Value("${MAIL_SERVICE_SITE_NAME_APP:site}") String mailServiceSiteName) {
-		return new AppLinkEmailNotificationWorkFlowTask(mailServiceUrl, mailServiceSiteName);
+	AppLinkNotificationWorkFlowTask appLinkNotificationWorkFlowTask(Notifier notifier) {
+		return new AppLinkNotificationWorkFlowTask(notifier);
 	}
 
 	@Bean(name = "workFlowB")
 	@Infrastructure
 	WorkFlow workFlowB(
 			@Qualifier("ocpAppDeploymentWorkFlowTask") OcpAppDeploymentWorkFlowTask ocpAppDeploymentWorkFlowTask,
-			@Qualifier("notificationWorkFlowTask") NotificationWorkFlowTask notificationWorkFlowTask,
-			@Qualifier("appLinkEmailNotificationWorkFlowTask") AppLinkEmailNotificationWorkFlowTask appLinkEmailNotificationWorkFlowTask) {
+			@Qualifier("appLinkNotificationWorkFlowTask") AppLinkNotificationWorkFlowTask appLinkNotificationWorkFlowTask) {
 		return SequentialFlow.Builder.aNewSequentialFlow().named("workFlowB").execute(ocpAppDeploymentWorkFlowTask)
-				.then(notificationWorkFlowTask).then(appLinkEmailNotificationWorkFlowTask).build();
+				.then(appLinkNotificationWorkFlowTask).build();
 	}
 
 	// OCP ONBOARDING WORKFLOW - Sequential Flow:
