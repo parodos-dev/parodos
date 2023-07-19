@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.examples.ocponboarding.escalation;
+package com.redhat.parodos.examples.ocponboarding.task;
 
 import com.redhat.parodos.infrastructure.Notifier;
-import com.redhat.parodos.notification.sdk.model.NotificationMessageCreateRequestDTO;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
@@ -26,50 +25,42 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * An example of a task that send an escalation email notification for a pending Jira
- * ticket review and approval
+ * An example of a task that send a Jira ticket email notification
  *
  * @author Annel Ketcha (Github: anludke)
  */
 
 @Slf4j
-public class JiraTicketApprovalEscalationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
+public class JiraTicketUpdateNotificationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
-	private static final String ISSUE_LINK = "ISSUE_LINK";
+	private static final String ISSUE_LINK_PARAMETER_NAME = "ISSUE_LINK";
 
-	private static final String NOTIFICATION_SUBJECT = "Jira ticket approval escalation";
-
-	private final String escalationUserId;
+	private static final String NOTIFICATION_SUBJECT = "Jira ticket update notification";
 
 	private final Notifier notifier;
 
-	public JiraTicketApprovalEscalationWorkFlowTask(Notifier notifier, String escalationUserId) {
+	public JiraTicketUpdateNotificationWorkFlowTask(Notifier notifier) {
 		super();
 		this.notifier = notifier;
-		this.escalationUserId = escalationUserId;
 	}
 
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		log.info("Start jiraTicketApprovalEscalationWorkFlowTask...");
+		log.info("Start jiraTicketUpdateNotificationWorkFlowTask...");
 		String jiraTicketUrl;
 		try {
-			jiraTicketUrl = getRequiredParameterValue(ISSUE_LINK);
+			jiraTicketUrl = getRequiredParameterValue(ISSUE_LINK_PARAMETER_NAME);
 		}
 		catch (MissingParameterException e) {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext);
 		}
-		NotificationMessageCreateRequestDTO notificationMessageCreateRequestDTO = new NotificationMessageCreateRequestDTO();
-		notificationMessageCreateRequestDTO.addUsernamesItem(escalationUserId);
-		notificationMessageCreateRequestDTO.setBody(buildMessage(jiraTicketUrl));
-		notificationMessageCreateRequestDTO.setSubject(NOTIFICATION_SUBJECT);
-		notifier.send(notificationMessageCreateRequestDTO);
+		notifier.send(NOTIFICATION_SUBJECT, buildMessage(jiraTicketUrl));
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
 	private String buildMessage(String jiraTicketUrl) {
-		return "Hi there," + "\n" + "The jira ticket below has been escalated due to pending review and approval."
-				+ "\n" + "Jira ticket url: " + jiraTicketUrl + "\n" + "Thank you," + "\n" + "The Parodos Team";
+		return "Hi there," + "\n" + "The jira ticket with updates of your request is provided below." + "\n"
+				+ "Jira ticket url: " + jiraTicketUrl + "\n" + "Thank you," + "\n" + "The Parodos Team";
 	}
 
 }
