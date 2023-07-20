@@ -52,7 +52,13 @@ public class Move2KubePlan extends Move2KubeBase {
 			planApi.startPlanning(workspaceID, projectID);
 
 			for (int i = 1; i <= 10; ++i) {
-				GetPlan200Response plan = planApi.getPlan(workspaceID, projectID);
+				GetPlan200Response plan = null;
+				try {
+					plan = planApi.getPlan(workspaceID, projectID);
+				}
+				catch (IllegalArgumentException e) {
+					log.error(e.getMessage());
+				}
 				if (plan == null) {
 					try {
 						sleep(i * this.sleepTime);
