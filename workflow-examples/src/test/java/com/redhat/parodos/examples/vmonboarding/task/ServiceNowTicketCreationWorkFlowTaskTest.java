@@ -31,25 +31,25 @@ public class ServiceNowTicketCreationWorkFlowTaskTest extends BaseInfrastructure
 
 	private static final String USERNAME_TEST = "username-test";
 
-	public static final String PASSWORD_TEST = "password-test";
+	private static final String PASSWORD_TEST = "password-test";
 
-	public static final String VM_NAME_PARAMETER_NAME = "hostname";
+	private static final String VM_NAME_PARAMETER_NAME = "hostname";
 
-	public static final String VM_NAME_PARAMETER_VALUE_TEST = "hostname-test";
+	private static final String VM_NAME_PARAMETER_VALUE_TEST = "hostname-test";
 
-	public static final String VM_NAME_PARAMETER_DEFAULT_VALUE_TEST = "snowrhel";
+	private static final String VM_NAME_PARAMETER_DEFAULT_VALUE_TEST = "snowrhel";
 
-	public static final String VM_TYPE_PARAMETER_NAME = "VM_TYPE";
+	private static final String VM_TYPE_PARAMETER_NAME = "VM_TYPE";
 
-	public static final String VM_TYPE_PARAMETER_VALUE_TEST = "vm-type-test";
+	private static final String VM_TYPE_PARAMETER_VALUE_TEST = "vm-type-test";
 
-	public static final String SERVICE_NOW_RESPONSE_RESULT_SYS_ID_TEST = "sys-id-test";
+	private static final String SERVICE_NOW_RESPONSE_RESULT_SYS_ID_TEST = "sys-id-test";
 
-	public static final String SERVICE_NOW_RESPONSE_RESULT_NUMBER = "number-test";
+	private static final String SERVICE_NOW_RESPONSE_RESULT_NUMBER = "number-test";
 
-	public static final String SERVICE_NOW_RESPONSE_RESULT_STATE_TEST = "state-test";
+	private static final String SERVICE_NOW_RESPONSE_RESULT_STATE_TEST = "state-test";
 
-	public static final String SERVICE_NOW_RESPONSE_RESULT_DESCRIPTION_TEST = "description-test";
+	private static final String SERVICE_NOW_RESPONSE_RESULT_DESCRIPTION_TEST = "description-test";
 
 	private ServiceNowTicketCreationWorkFlowTask serviceNowTicketCreationWorkFlowTask;
 

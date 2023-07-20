@@ -29,17 +29,17 @@ public class ServiceNowTicketApprovalWorkFlowCheckerTaskTest extends BaseWorkFlo
 
 	private static final String USERNAME_TEST = "username-test";
 
-	public static final String PASSWORD_TEST = "password-test";
+	private static final String PASSWORD_TEST = "password-test";
 
-	public static final String INCIDENT_ID_PARAMETER_NAME = "INCIDENT_ID";
+	private static final String INCIDENT_ID_PARAMETER_NAME = "INCIDENT_ID";
 
-	public static final String INCIDENT_ID_PARAMETER_VALUE_TEST = "incident-id-test";
+	private static final String INCIDENT_ID_PARAMETER_VALUE_TEST = "incident-id-test";
 
-	public static final String SERVICE_NOW_RESPONSE_RESULT_STATE_SUCCESS_TEST = "success-test";
+	private static final String SERVICE_NOW_RESPONSE_RESULT_STATE_SUCCESS_TEST = "success-test";
 
-	public static final String SERVICE_NOW_RESPONSE_RESULT_STATE_NON_APPROVED_TEST = "1";
+	private static final String SERVICE_NOW_RESPONSE_RESULT_STATE_NON_APPROVED_TEST = "1";
 
-	public static final String SERVICE_NOW_RESPONSE_RESULT_STATE_REJECTED_TEST = "8";
+	private static final String SERVICE_NOW_RESPONSE_RESULT_STATE_REJECTED_TEST = "8";
 
 	private ServiceNowTicketApprovalWorkFlowCheckerTask serviceNowTicketApprovalWorkFlowCheckerTask;
 

@@ -45,7 +45,7 @@ public class AppLinkNotificationWorkFlowTask extends BaseInfrastructureWorkFlowT
 
 	private final static String TEMPLATE_BASE_PACKAGE_PATH = "templates";
 
-	private final static String TEMPLATE_NAME = "appLinkEmailNotification.ftlh";
+	private final static String TEMPLATE_NAME = "appLinkNotification.ftlh";
 
 	private static final String JIRA_TICKET_URL_WORKFLOW_TASK_PARAMETER_NAME = "ISSUE_LINK";
 
@@ -64,25 +64,15 @@ public class AppLinkNotificationWorkFlowTask extends BaseInfrastructureWorkFlowT
 	public WorkReport execute(WorkContext workContext) {
 		log.info("Start appLinkNotificationWorkFlowTask...");
 		Map<String, Object> messageData = new HashMap<>();
-		String jiraTicketUrl, appLink;
+		String jiraTicketUrl, appLink, message;
 		try {
 			jiraTicketUrl = getRequiredParameterValue(JIRA_TICKET_URL_WORKFLOW_TASK_PARAMETER_NAME);
+			messageData.put("jiraTicketUrl", jiraTicketUrl);
 			appLink = getRequiredParameterValue(OCP_APP_LINK_WORKFLOW_TASK_PARAMETER_NAME);
-		}
-		catch (MissingParameterException e) {
-			return new DefaultWorkReport(WorkStatus.FAILED, workContext);
-		}
-
-		messageData.put("jiraTicketUrl", jiraTicketUrl);
-		messageData.put("appLink", appLink);
-		String message = "";
-		try {
+			messageData.put("appLink", appLink);
 			message = getMessage(messageData);
 		}
-		catch (IOException | TemplateException e) {
-			log.error("Error occurred when building message: {}", e.getMessage());
-		}
-		if (message.isBlank()) {
+		catch (MissingParameterException | IOException | TemplateException e) {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext);
 		}
 		notifier.send(NOTIFICATION_SUBJECT, message);
