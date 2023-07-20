@@ -11,6 +11,7 @@ import java.util.zip.ZipOutputStream;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
+import dev.parodos.move2kube.ApiException;
 import dev.parodos.move2kube.api.PlanApi;
 import dev.parodos.move2kube.api.ProjectInputsApi;
 import org.junit.Before;
@@ -36,10 +37,12 @@ public class Move2KubePlanTest {
 
 	private ProjectInputsApi projectInputsApi;
 
+	private PlanApi planApi;
+
 	@Before
 	public void setup() {
 		projectInputsApi = mock(ProjectInputsApi.class);
-		PlanApi planApi = mock(PlanApi.class);
+		planApi = mock(PlanApi.class);
 
 		task = new Move2KubePlan("http://localhost:8080", planApi, projectInputsApi);
 		task.setSleepTime(1);
@@ -51,13 +54,13 @@ public class Move2KubePlanTest {
 	}
 
 	@Test
-	public void testExecute() {
+	public void testExecute() throws ApiException {
 		// given
 		WorkContext context = getWorkContext();
 		assertDoesNotThrow(() -> {
 			when(projectInputsApi.createProjectInput(any(), any(), any(), any(), any(), any())).thenReturn(null);
 		});
-
+		when(planApi.getPlan(any(), any())).thenThrow(IllegalArgumentException.class);
 		// when
 		WorkReport report = task.execute(context);
 
@@ -69,6 +72,21 @@ public class Move2KubePlanTest {
 			verify(projectInputsApi, times(1)).createProjectInput(eq(WORKSPACE), eq(PROJECT), eq("sources"), eq("Id"),
 					anyString(), any());
 		});
+	}
+
+	@Test
+	public void testExecuteFail() throws ApiException {
+		// given
+		WorkContext context = getWorkContext();
+		assertDoesNotThrow(() -> {
+			when(projectInputsApi.createProjectInput(any(), any(), any(), any(), any(), any())).thenReturn(null);
+		});
+		when(planApi.getPlan(any(), any())).thenThrow(ApiException.class);
+		// when
+		WorkReport report = task.execute(context);
+
+		// then
+		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
 	}
 
 	WorkContext getWorkContext() {
