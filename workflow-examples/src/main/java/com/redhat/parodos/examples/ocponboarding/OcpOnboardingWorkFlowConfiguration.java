@@ -47,7 +47,7 @@ public class OcpOnboardingWorkFlowConfiguration {
 
 	// Assessment workflow
 	@Bean
-	WorkFlowOption onboardingOcpOption() {
+	WorkFlowOption ocpOnboardingOption() {
 		return new WorkFlowOption.Builder("ocpOnboarding", "ocpOnboardingWorkFlow")
 				.addToDetails("this is for the app to deploy on OCP").displayName("Onboarding to OCP")
 				.setDescription("this is for the app to deploy on OCP").build();
@@ -94,13 +94,14 @@ public class OcpOnboardingWorkFlowConfiguration {
 	// An AssessmentTask returns one or more WorkFlowOption wrapped in a WorkflowOptions
 	@Bean
 	OnboardingOcpAssessmentTask onboardingAssessmentTask(
-			@Qualifier("onboardingOcpOption") WorkFlowOption onboardingOcpOption,
+			@Qualifier("ocpOnboardingOption") WorkFlowOption ocpOnboardingOption,
 			@Qualifier("badRepoOption") WorkFlowOption badRepoOption,
 			@Qualifier("notSupportOption") WorkFlowOption notSupportOption,
 			@Qualifier("move2kube") WorkFlowOption move2kube, @Qualifier("analyzeOption") WorkFlowOption analyzeOption,
-			@Qualifier("alertMessageOption") WorkFlowOption alertMessageOption) {
-		return new OnboardingOcpAssessmentTask(List.of(onboardingOcpOption, badRepoOption, notSupportOption, move2kube,
-				analyzeOption, alertMessageOption));
+			@Qualifier("alertMessageOption") WorkFlowOption alertMessageOption,
+			@Qualifier("vmOnboardingOption") WorkFlowOption vmOnboardingOption) {
+		return new OnboardingOcpAssessmentTask(List.of(ocpOnboardingOption, badRepoOption, notSupportOption, move2kube,
+				analyzeOption, alertMessageOption, vmOnboardingOption));
 	}
 
 	// A Workflow designed to execute and return WorkflowOption(s) that can be executed

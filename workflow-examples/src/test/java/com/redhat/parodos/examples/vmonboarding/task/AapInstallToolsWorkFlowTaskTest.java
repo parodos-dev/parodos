@@ -34,13 +34,13 @@ public class AapInstallToolsWorkFlowTaskTest extends BaseInfrastructureWorkFlowT
 
 	private static final String USERNAME_TEST = "username-test";
 
-	public static final String PASSWORD_TEST = "password-test";
+	private static final String PASSWORD_TEST = "password-test";
 
-	public static final String VM_TYPE_PARAMETER_NAME = "VM_TYPE";
+	private static final String VM_TYPE_PARAMETER_NAME = "VM_TYPE";
 
-	public static final String VM_TYPE_PARAMETER_VALUE_TEST = "vm-type-test";
+	private static final String VM_TYPE_PARAMETER_VALUE_TEST = "vm-type-test";
 
-	public static final String AAP_GET_JOB_RESPONSE_DTO_JOB_ID_TEST = "job-id-test";
+	private static final String AAP_GET_JOB_RESPONSE_DTO_JOB_ID_TEST = "job-id-test";
 
 	private AapInstallToolsWorkFlowTask aapCreateVMWorkFlowTask;
 

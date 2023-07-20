@@ -155,7 +155,7 @@ public class VmOnboardingWorkFlowConfiguration {
 
 	// Assessment workflow
 	@Bean
-	WorkFlowOption onboardingOcpOption() {
+	WorkFlowOption vmOnboardingOption() {
 		return new WorkFlowOption.Builder("vmOnboarding", "vmOnboardingWorkFlow")
 				.addToDetails("this is for creating vm").displayName("VM Onboarding")
 				.setDescription("this is for creating vm").build();
