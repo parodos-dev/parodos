@@ -38,6 +38,7 @@ import io.fabric8.openshift.api.model.Route;
 import io.fabric8.openshift.api.model.RouteBuilder;
 import io.fabric8.openshift.api.model.RoutePortBuilder;
 import io.fabric8.openshift.api.model.RouteTargetReferenceBuilder;
+import io.fabric8.openshift.api.model.TLSConfigBuilder;
 import io.fabric8.openshift.client.OpenShiftClient;
 import lombok.extern.slf4j.Slf4j;
 
@@ -99,6 +100,7 @@ public class OcpAppDeploymentWorkFlowTask extends BaseInfrastructureWorkFlowTask
 				// Route
 				Route route = new RouteBuilder().withNewMetadata().withName(NGINX).endMetadata().withNewSpec()
 						.withTo(new RouteTargetReferenceBuilder().withKind("Service").withName(NGINX).build())
+						.withTls(new TLSConfigBuilder().withTermination("edge").build())
 						.withPort(new RoutePortBuilder().withTargetPort(new IntOrString(CONTAINER_PORT)).build())
 						.endSpec().build();
 				route = client.routes().inNamespace(namespace).resource(route).create();
@@ -126,7 +128,7 @@ public class OcpAppDeploymentWorkFlowTask extends BaseInfrastructureWorkFlowTask
 					.endMetadata().withDescription(namespace).withDisplayName(namespace).build());
 		}
 		catch (KubernetesClientException e) {
-			log.info("project {} already exists: {}", namespace, e.getClass().getSimpleName());
+			log.info("creating project {} is failed: {}, {}", namespace, e.getClass().getSimpleName(), e.getMessage());
 		}
 	}
 
