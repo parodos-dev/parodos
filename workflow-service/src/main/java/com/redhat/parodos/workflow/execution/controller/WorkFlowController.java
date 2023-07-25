@@ -22,7 +22,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
-import com.redhat.parodos.workflow.exceptions.WorkflowExecutionException;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowCheckerTaskRequestDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowContextResponseDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowExecutionResponseDTO;
@@ -34,7 +33,6 @@ import com.redhat.parodos.workflow.execution.validation.PubliclyVisible;
 import com.redhat.parodos.workflow.task.log.service.WorkFlowLogService;
 import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.WorkReport;
-import com.redhat.parodos.workflows.work.WorkStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -89,10 +87,6 @@ public class WorkFlowController {
 	public ResponseEntity<WorkFlowExecutionResponseDTO> execute(
 			@RequestBody @Valid WorkFlowRequestDTO workFlowRequestDTO) {
 		WorkReport workReport = workFlowService.execute(workFlowRequestDTO);
-		if (workReport.getStatus() == WorkStatus.FAILED) {
-			throw new WorkflowExecutionException(
-					"Workflow execution for %s failed".formatted(workFlowRequestDTO.getWorkFlowName()));
-		}
 		return ResponseEntity.ok(WorkFlowExecutionResponseDTO.builder()
 				.workFlowExecutionId(WorkContextUtils.getMainExecutionId(workReport.getWorkContext()))
 				.workStatus(workReport.getStatus()).build());
@@ -126,10 +120,6 @@ public class WorkFlowController {
 	@PostMapping("/{workFlowExecutionId}/restart")
 	public ResponseEntity<WorkFlowExecutionResponseDTO> restartWorkFlow(@PathVariable UUID workFlowExecutionId) {
 		WorkReport workReport = workFlowService.restart(workFlowExecutionId);
-		if (workReport.getStatus() == WorkStatus.FAILED) {
-			throw new WorkflowExecutionException(
-					"Restart of workflow execution %s failed".formatted(workFlowExecutionId));
-		}
 		return ResponseEntity.ok(WorkFlowExecutionResponseDTO.builder()
 				.workFlowExecutionId(WorkContextUtils.getMainExecutionId(workReport.getWorkContext()))
 				.workStatus(workReport.getStatus()).build());

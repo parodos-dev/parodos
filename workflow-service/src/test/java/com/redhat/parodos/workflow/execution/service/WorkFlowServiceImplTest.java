@@ -9,6 +9,9 @@ import java.util.UUID;
 
 import com.redhat.parodos.common.exceptions.IllegalWorkFlowStateException;
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
+import com.redhat.parodos.common.exceptions.UnregisteredWorkFlowException;
+import com.redhat.parodos.common.exceptions.WorkFlowNotFoundException;
+import com.redhat.parodos.common.exceptions.WorkFlowWrongTypeException;
 import com.redhat.parodos.project.dto.response.ProjectResponseDTO;
 import com.redhat.parodos.project.service.ProjectService;
 import com.redhat.parodos.user.entity.User;
@@ -128,15 +131,10 @@ class WorkFlowServiceImplTest {
 		when(this.workFlowDelegate.getWorkFlowByName(any())).thenReturn(null);
 
 		// when
-		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId(UUID.randomUUID())
-				.works(List.of()).workFlowName(TEST_WORKFLOW_NAME).build());
-
-		// then
-		assertNotNull(report);
-		assertEquals(report.getStatus().toString(), "FAILED");
-		assertNotNull(report.getError());
-
-		assertNotNull(report.getWorkContext());
+		assertThat(assertThrows(WorkFlowNotFoundException.class,
+				() -> this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId(UUID.randomUUID())
+						.works(List.of()).workFlowName(TEST_WORKFLOW_NAME).build())))
+								.hasMessage("workflow '%s' cannot be found!".formatted(TEST_WORKFLOW_NAME));
 
 		verify(this.workFlowDelegate, times(1)).getWorkFlowByName(any());
 		verify(this.workFlowDelegate, times(0)).initWorkFlowContext(any(), any());
@@ -377,15 +375,11 @@ class WorkFlowServiceImplTest {
 		when(this.workFlowDelegate.getWorkFlowByName(TEST_WORKFLOW_NAME)).thenReturn(workFlow);
 
 		// when
-		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId(UUID.randomUUID())
-				.works(List.of()).workFlowName(TEST_WORKFLOW_NAME).build());
-
+		assertThat(assertThrows(WorkFlowWrongTypeException.class,
+				() -> this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId(UUID.randomUUID())
+						.works(List.of()).workFlowName(TEST_WORKFLOW_NAME).build())))
+								.hasMessage("workflow '%s' is not main workflow!".formatted(TEST_WORKFLOW_NAME));
 		// then
-		assertNotNull(report);
-		assertEquals(report.getStatus().toString(), "FAILED");
-		assertNotNull(report.getError());
-
-		assertNotNull(report.getWorkContext());
 
 		verify(this.workFlowDelegate, times(1)).getWorkFlowByName(any());
 		verify(this.workFlowDelegate, times(0)).initWorkFlowContext(any(), any());
@@ -402,15 +396,10 @@ class WorkFlowServiceImplTest {
 		when(this.workFlowDelegate.getWorkFlowByName(TEST_WORKFLOW_NAME)).thenReturn(workFlow);
 
 		// when
-		WorkReport report = this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId(UUID.randomUUID())
-				.works(List.of()).workFlowName(TEST_WORKFLOW_NAME).build());
-
-		// then
-		assertNotNull(report);
-		assertEquals(report.getStatus().toString(), "FAILED");
-		assertNotNull(report.getError());
-
-		assertNotNull(report.getWorkContext());
+		assertThat(assertThrows(UnregisteredWorkFlowException.class,
+				() -> this.workFlowService.execute(WorkFlowRequestDTO.builder().projectId(UUID.randomUUID())
+						.works(List.of()).workFlowName(TEST_WORKFLOW_NAME).build())))
+								.hasMessage("workflow '%s' is not registered!".formatted(TEST_WORKFLOW_NAME));
 
 		verify(this.workFlowDelegate, times(1)).getWorkFlowByName(any());
 		verify(this.workFlowDelegate, never()).initWorkFlowContext(any(), any());

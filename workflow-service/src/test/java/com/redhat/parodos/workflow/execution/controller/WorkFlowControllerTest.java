@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.parodos.ControllerMockClient;
+import com.redhat.parodos.common.exceptions.WorkFlowNotFoundException;
 import com.redhat.parodos.workflow.enums.WorkType;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowCheckerTaskRequestDTO;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowRequestDTO;
@@ -15,7 +16,6 @@ import com.redhat.parodos.workflow.execution.dto.WorkStatusResponseDTO;
 import com.redhat.parodos.workflow.execution.service.WorkFlowLogServiceImpl;
 import com.redhat.parodos.workflow.execution.service.WorkFlowServiceImpl;
 import com.redhat.parodos.workflow.version.WorkFlowVersionService;
-import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
@@ -110,12 +110,12 @@ class WorkFlowControllerTest extends ControllerMockClient {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = objectMapper.writeValueAsString(workFlowRequestDTO);
 
-		WorkReport workReport = new DefaultWorkReport(WorkStatus.FAILED, new WorkContext(), new Throwable());
-		when(this.workFlowService.execute(any())).thenReturn(workReport);
+		// Mock the validation of the WorkFlow: not found error is thrown
+		when(this.workFlowService.execute(any())).thenThrow(new WorkFlowNotFoundException("Test"));
 
 		// when
 		this.mockMvc.perform(this.postRequestWithValidCredentials("/api/v1/workflows").content(json))
-				.andExpect(MockMvcResultMatchers.status().isInternalServerError());
+				.andExpect(MockMvcResultMatchers.status().isNotFound());
 
 		// then
 		verify(this.workFlowService, times(1)).execute(any());
