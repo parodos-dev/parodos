@@ -11,6 +11,9 @@ import com.redhat.parodos.common.exceptions.IllegalWorkFlowStateException;
 import com.redhat.parodos.common.exceptions.OperationDeniedException;
 import com.redhat.parodos.common.exceptions.ResourceAlreadyExistsException;
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
+import com.redhat.parodos.common.exceptions.UnregisteredWorkFlowException;
+import com.redhat.parodos.common.exceptions.WorkFlowNotFoundException;
+import com.redhat.parodos.common.exceptions.WorkFlowWrongTypeException;
 import com.redhat.parodos.workflow.exceptions.WorkflowExecutionException;
 
 import org.springframework.http.HttpStatus;
@@ -73,6 +76,30 @@ public class ControllerExceptionHandler {
 	public ErrorMessageDTO workflowExecutionException(WorkflowExecutionException ex, WebRequest request) {
 		return new ErrorMessageDTO(HttpStatus.INTERNAL_SERVER_ERROR.value(), new Date(), ex.getMessage(),
 				"Workflow execution exception");
+	}
+
+	@ExceptionHandler(value = { WorkFlowWrongTypeException.class })
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	public ErrorMessageDTO workFlowWrongTypeException(WorkFlowWrongTypeException ex, WebRequest request) {
+		return new ErrorMessageDTO(HttpStatus.BAD_REQUEST.value(), new Date(), ex.getMessage(),
+				"Workflow wrong type exception");
+	}
+
+	@ExceptionHandler(value = { UnregisteredWorkFlowException.class })
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	public ErrorMessageDTO unregisteredWorkFlowException(UnregisteredWorkFlowException ex, WebRequest request) {
+		return new ErrorMessageDTO(HttpStatus.BAD_REQUEST.value(), new Date(), ex.getMessage(),
+				"Un-registered Workflow exception");
+	}
+
+	@ExceptionHandler(value = { WorkFlowNotFoundException.class })
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.NOT_FOUND)
+	public ErrorMessageDTO workFlowNotFoundException(WorkFlowNotFoundException ex, WebRequest request) {
+		return new ErrorMessageDTO(HttpStatus.NOT_FOUND.value(), new Date(), ex.getMessage(),
+				"Workflow not found exception");
 	}
 
 	record ErrorMessageDTO(int status, Date date, String message, String description) {

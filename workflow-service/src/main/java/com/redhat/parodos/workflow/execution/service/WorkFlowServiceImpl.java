@@ -29,6 +29,9 @@ import javax.annotation.PreDestroy;
 import com.redhat.parodos.common.exceptions.IllegalWorkFlowStateException;
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 import com.redhat.parodos.common.exceptions.ResourceType;
+import com.redhat.parodos.common.exceptions.UnregisteredWorkFlowException;
+import com.redhat.parodos.common.exceptions.WorkFlowNotFoundException;
+import com.redhat.parodos.common.exceptions.WorkFlowWrongTypeException;
 import com.redhat.parodos.project.dto.response.ProjectResponseDTO;
 import com.redhat.parodos.project.service.ProjectService;
 import com.redhat.parodos.security.SecurityUtils;
@@ -142,10 +145,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		User user = userService.getUserEntityByUsername(SecurityUtils.getUsername());
 		String workflowName = workFlowRequestDTO.getWorkFlowName();
 		WorkFlow workFlow = workFlowDelegate.getWorkFlowByName(workflowName);
-		String validationFailedMsg = validateWorkflow(workflowName, workFlow);
-		if (validationFailedMsg != null) {
-			return new DefaultWorkReport(WorkStatus.FAILED, new WorkContext(), new Throwable(validationFailedMsg));
-		}
+		validateWorkflow(workflowName, workFlow);
 
 		WorkFlowDefinitionResponseDTO workFlowDefinitionResponseDTO = workFlowDefinitionService
 				.getWorkFlowDefinitionByName(workflowName);
@@ -503,26 +503,25 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		return workFlowRepository.findRunningCheckersById(mainWorkFlow.getId());
 	}
 
-	private String validateWorkflow(String workflowName, WorkFlow workFlow) {
+	private void validateWorkflow(String workflowName, WorkFlow workFlow) {
 		// validate if workflow exists
 		if (workFlow == null) {
 			log.error("workflow '{}' is not found!", workflowName);
-			return String.format("workflow '%s' cannot be found!", workflowName);
+			throw new WorkFlowNotFoundException(String.format("workflow '%s' cannot be found!", workflowName));
 		}
 
 		// validate if workflow is main
 		WorkFlowDefinition workFlowDefinition = workFlowDefinitionRepository.findFirstByName(workflowName);
 		if (workFlowDefinition == null) {
-			return String.format("workflow '%s' is not registered!", workflowName);
+			throw new UnregisteredWorkFlowException(String.format("workflow '%s' is not registered!", workflowName));
 		}
 
 		if (workFlowWorkRepository.findFirstByWorkDefinitionId(workFlowDefinition.getId()) != null) {
 			log.error("workflow '{}' is not main workflow!", workflowName);
-			return String.format("workflow '%s' is not main workflow!", workflowName);
+			throw new WorkFlowWrongTypeException(String.format("workflow '%s' is not main workflow!", workflowName));
 		}
 
 		// TODO: validate required parameters from definition
-		return null;
 	}
 
 	@PreDestroy
