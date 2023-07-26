@@ -196,6 +196,7 @@ release-all: update-version release git-release git-tag build-images tag-images 
 
 release-manifests:
 	./hack/scripts/release.sh $(RELEASE_VERSION)
+	./hack/scripts/stable_images.sh v$(RELEASE_VERSION)
 
 ##@ Run
 .PHONY: docker-run docker-stop
