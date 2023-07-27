@@ -26,6 +26,7 @@ import java.util.UUID;
 
 import javax.annotation.PreDestroy;
 
+import com.redhat.parodos.common.entity.AbstractEntity;
 import com.redhat.parodos.common.exceptions.IllegalWorkFlowStateException;
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 import com.redhat.parodos.common.exceptions.ResourceType;
@@ -537,6 +538,8 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 				.startDate(Optional.ofNullable(workflowExecution.getStartDate()).map(Date::toString).orElse(null))
 				.endDate(Optional.ofNullable(workflowExecution.getEndDate()).map(Date::toString).orElse(null))
 				.executeBy(workflowExecution.getUser().getUsername())
+				.originalExecutionId(Optional.ofNullable(workflowExecution.getOriginalWorkFlowExecution())
+						.map(AbstractEntity::getId).orElse(null))
 				.additionalInfos(Optional.ofNullable(workflowExecution.getWorkFlowExecutionContext())
 						.flatMap(workFlowExecutionContext -> Optional
 								.ofNullable(

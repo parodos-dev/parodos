@@ -1899,6 +1899,10 @@
           "executeBy" : {
             "type" : "string"
           },
+          "originalExecutionId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
           "projectId" : {
             "type" : "string",
             "format" : "uuid"
