@@ -1083,6 +1083,9 @@ class WorkFlowServiceImplTest {
 				.status(WorkStatus.COMPLETED).workFlowDefinition(workFlowDefinition)
 				.workFlowExecutionContext(WorkFlowExecutionContext.builder().workContext(workContext).build()).build();
 		workFlowExecution.setId(workflowExecutionId);
+		WorkFlowExecution originalWorkFlowExecution = new WorkFlowExecution();
+		originalWorkFlowExecution.setId(UUID.randomUUID());
+		workFlowExecution.setOriginalWorkFlowExecution(originalWorkFlowExecution);
 
 		when(workFlowRepository.findAllByProjectId(projectId)).thenReturn(List.of(workFlowExecution));
 		when(projectService.getProjectByIdAndUserId(eq(projectId), eq(userId)))
@@ -1094,6 +1097,7 @@ class WorkFlowServiceImplTest {
 		assertThat(workFlowService.getWorkFlowsByProjectId(projectId)).hasSize(1).satisfies(workflowStatus -> {
 			assertEquals(workflowStatus.get(0).getAdditionalInfos().get(0),
 					new WorkFlowResponseDTO.AdditionalInfo(TEST_ADDITIONAL_INFO_KEY, TEST_ADDITIONAL_INFO_VALUE));
+			assertEquals(workflowStatus.get(0).getOriginalExecutionId(), originalWorkFlowExecution.getId());
 			assertEquals(WorkStatus.COMPLETED, workflowStatus.get(0).getWorkStatus());
 		});
 	}

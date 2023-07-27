@@ -56,6 +56,8 @@ public class WorkFlowResponseDTO {
 
 	private List<AdditionalInfo> additionalInfos;
 
+	private UUID originalExecutionId;
+
 	private WorkFlowType workFlowType;
 
 	public record AdditionalInfo(String key, String value) {
