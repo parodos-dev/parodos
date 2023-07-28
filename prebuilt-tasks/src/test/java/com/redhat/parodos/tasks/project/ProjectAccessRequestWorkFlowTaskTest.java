@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.redhat.parodos.infrastructure.ProjectRequester;
 import com.redhat.parodos.sdk.model.AccessResponseDTO;
+import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -20,6 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
@@ -85,6 +87,15 @@ public class ProjectAccessRequestWorkFlowTaskTest {
 				.getRequiredParameterValue(eq(USERNAME_PARAMETER_NAME));
 		doReturn(INVALID_ROLE_VALUE_TEST).when(this.projectAccessRequestWorkFlowTask)
 				.getOptionalParameterValue(eq(ROLE_PARAMETER_NAME), eq(ROLE_DEFAULT_VALUE), eq(false));
+		WorkReport workReport = projectAccessRequestWorkFlowTask.execute(workContext);
+		assertEquals(WorkStatus.FAILED, workReport.getStatus());
+	}
+
+	@Test
+	@SneakyThrows
+	public void executeFailForMissingRequiredParameter() {
+		doThrow(MissingParameterException.class).when(this.projectAccessRequestWorkFlowTask)
+				.getRequiredParameterValue(eq(USERNAME_PARAMETER_NAME));
 		WorkReport workReport = projectAccessRequestWorkFlowTask.execute(workContext);
 		assertEquals(WorkStatus.FAILED, workReport.getStatus());
 	}
