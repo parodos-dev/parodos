@@ -2,8 +2,8 @@ package com.redhat.parodos.project.entity;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 
 import com.redhat.parodos.common.entity.AbstractEntity;
 import lombok.AllArgsConstructor;

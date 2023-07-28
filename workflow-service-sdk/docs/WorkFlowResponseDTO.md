@@ -10,6 +10,7 @@
 |**additionalInfos** | [**List&lt;AdditionalInfo&gt;**](AdditionalInfo.md) |  |  [optional] |
 |**endDate** | **String** |  |  [optional] |
 |**executeBy** | **String** |  |  [optional] |
+|**originalExecutionId** | **UUID** |  |  [optional] |
 |**projectId** | **UUID** |  |  [optional] |
 |**startDate** | **String** |  |  [optional] |
 |**workFlowExecutionId** | **UUID** |  |  [optional] |

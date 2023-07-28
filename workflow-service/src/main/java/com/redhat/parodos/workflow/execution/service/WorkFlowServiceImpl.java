@@ -24,7 +24,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PreDestroy;
 
 import com.redhat.parodos.common.entity.AbstractEntity;
 import com.redhat.parodos.common.exceptions.IllegalWorkFlowStateException;

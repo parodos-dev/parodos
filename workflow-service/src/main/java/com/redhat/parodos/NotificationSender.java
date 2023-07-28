@@ -3,7 +3,7 @@ package com.redhat.parodos;
 import java.util.Base64;
 import java.util.List;
 
-import javax.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.HttpHeaders;
 
 import com.redhat.parodos.infrastructure.Notifier;
 import com.redhat.parodos.notification.sdk.api.ApiClient;

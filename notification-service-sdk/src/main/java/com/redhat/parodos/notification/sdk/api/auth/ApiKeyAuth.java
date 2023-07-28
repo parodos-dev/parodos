@@ -19,7 +19,7 @@ import java.util.Map;
 import com.redhat.parodos.notification.sdk.api.ApiException;
 import com.redhat.parodos.notification.sdk.api.Pair;
 
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class ApiKeyAuth implements Authentication {
 
 	private final String location;

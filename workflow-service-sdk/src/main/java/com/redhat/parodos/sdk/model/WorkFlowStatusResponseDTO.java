@@ -37,7 +37,7 @@ import com.redhat.parodos.sdk.invoker.JSON;
 /**
  * WorkFlowStatusResponseDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowStatusResponseDTO {
 
 	public static final String SERIALIZED_NAME_FALLBACK_EXECUTION_ID = "fallbackExecutionId";
@@ -150,7 +150,7 @@ public class WorkFlowStatusResponseDTO {
 	 * Get fallbackExecutionId
 	 * @return fallbackExecutionId
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public UUID getFallbackExecutionId() {
 		return fallbackExecutionId;
 	}
@@ -169,7 +169,7 @@ public class WorkFlowStatusResponseDTO {
 	 * Get message
 	 * @return message
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getMessage() {
 		return message;
 	}
@@ -188,7 +188,7 @@ public class WorkFlowStatusResponseDTO {
 	 * Get originalExecutionId
 	 * @return originalExecutionId
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public UUID getOriginalExecutionId() {
 		return originalExecutionId;
 	}
@@ -207,7 +207,7 @@ public class WorkFlowStatusResponseDTO {
 	 * Get restartedCount
 	 * @return restartedCount
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Integer getRestartedCount() {
 		return restartedCount;
 	}
@@ -226,7 +226,7 @@ public class WorkFlowStatusResponseDTO {
 	 * Get status
 	 * @return status
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public StatusEnum getStatus() {
 		return status;
 	}
@@ -245,7 +245,7 @@ public class WorkFlowStatusResponseDTO {
 	 * Get workFlowExecutionId
 	 * @return workFlowExecutionId
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public UUID getWorkFlowExecutionId() {
 		return workFlowExecutionId;
 	}
@@ -264,7 +264,7 @@ public class WorkFlowStatusResponseDTO {
 	 * Get workFlowName
 	 * @return workFlowName
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getWorkFlowName() {
 		return workFlowName;
 	}
@@ -291,7 +291,7 @@ public class WorkFlowStatusResponseDTO {
 	 * Get works
 	 * @return works
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public List<WorkStatusResponseDTO> getWorks() {
 		return works;
 	}

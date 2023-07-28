@@ -18,10 +18,10 @@ package com.redhat.parodos.workflow.execution.entity;
 import java.util.Date;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
 
 import com.redhat.parodos.common.entity.AbstractEntity;
 import com.redhat.parodos.workflows.work.WorkStatus;

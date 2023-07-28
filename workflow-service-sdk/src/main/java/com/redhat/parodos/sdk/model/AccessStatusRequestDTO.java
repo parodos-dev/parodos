@@ -33,7 +33,7 @@ import com.redhat.parodos.sdk.invoker.JSON;
 /**
  * AccessStatusRequestDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class AccessStatusRequestDTO {
 
 	public static final String SERIALIZED_NAME_COMMENT = "comment";
@@ -112,7 +112,7 @@ public class AccessStatusRequestDTO {
 	 * Get comment
 	 * @return comment
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getComment() {
 		return comment;
 	}
@@ -131,7 +131,7 @@ public class AccessStatusRequestDTO {
 	 * Get status
 	 * @return status
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public StatusEnum getStatus() {
 		return status;
 	}

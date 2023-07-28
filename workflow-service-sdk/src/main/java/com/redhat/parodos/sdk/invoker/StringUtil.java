@@ -15,7 +15,7 @@ package com.redhat.parodos.sdk.invoker;
 import java.util.Collection;
 import java.util.Iterator;
 
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class StringUtil {
 
 	/**

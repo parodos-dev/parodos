@@ -37,6 +37,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -163,6 +164,7 @@ class NotificationRecordControllerTests extends BaseControllerTests {
 	}
 
 	@Test
+	@WithMockUser
 	public void failCountMissingState() throws Exception {
 		// given
 		int count = 4;

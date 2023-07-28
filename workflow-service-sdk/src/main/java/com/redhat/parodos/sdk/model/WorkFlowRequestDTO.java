@@ -36,7 +36,7 @@ import com.redhat.parodos.sdk.invoker.JSON;
 /**
  * WorkFlowRequestDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowRequestDTO {
 
 	public static final String SERIALIZED_NAME_ARGUMENTS = "arguments";
@@ -85,7 +85,7 @@ public class WorkFlowRequestDTO {
 	 * Get arguments
 	 * @return arguments
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public List<ArgumentRequestDTO> getArguments() {
 		return arguments;
 	}
@@ -104,7 +104,7 @@ public class WorkFlowRequestDTO {
 	 * Get invokingExecutionId
 	 * @return invokingExecutionId
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public UUID getInvokingExecutionId() {
 		return invokingExecutionId;
 	}
@@ -123,7 +123,7 @@ public class WorkFlowRequestDTO {
 	 * Get projectId
 	 * @return projectId
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public UUID getProjectId() {
 		return projectId;
 	}
@@ -142,7 +142,7 @@ public class WorkFlowRequestDTO {
 	 * Get workFlowName
 	 * @return workFlowName
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getWorkFlowName() {
 		return workFlowName;
 	}
@@ -169,7 +169,7 @@ public class WorkFlowRequestDTO {
 	 * Get works
 	 * @return works
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public List<WorkRequestDTO> getWorks() {
 		return works;
 	}

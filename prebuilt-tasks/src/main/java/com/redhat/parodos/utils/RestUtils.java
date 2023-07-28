@@ -121,7 +121,7 @@ public abstract class RestUtils {
 
 			HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
 
-			requestFactory.setHttpClient(httpClient);
+			// requestFactory.setHttpClient(httpClient);
 			return new RestTemplate(requestFactory);
 		}
 		catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {

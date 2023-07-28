@@ -1,8 +1,8 @@
 {
   "openapi" : "3.0.1",
   "info" : {
-    "title" : "Parodos Workflow Service API",
     "description" : "This is the API documentation for the Parodos Workflow Service. It provides operations to execute assessments to determine infrastructure options (tooling + environments). Also executes infrastructure task workflows to call downstream systems to stand-up an infrastructure option.",
+    "title" : "Parodos Workflow Service API",
     "version" : "v1.0.0"
   },
   "servers" : [ {

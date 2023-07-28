@@ -80,8 +80,7 @@ public class WorkFlowRepositoryTest extends RepositoryTestBase {
 		assertNotNull(flowExecution.getWorkFlowExecutionContext().getWorkContext());
 		assertEquals("test_value", flowExecution.getWorkFlowExecutionContext().getWorkContext().get("test_key"));
 		assertEquals(testList, flowExecution.getWorkFlowExecutionContext().getWorkContext().get("test_list"));
-		assertEquals(testUUID.toString(),
-				flowExecution.getWorkFlowExecutionContext().getWorkContext().get("test_uuid"));
+		assertEquals(testUUID, flowExecution.getWorkFlowExecutionContext().getWorkContext().get("test_uuid"));
 	}
 
 	@Test

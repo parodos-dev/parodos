@@ -1,8 +1,8 @@
 {
   "openapi" : "3.0.1",
   "info" : {
-    "title" : "Parodos Notification Service API",
     "description" : "This is the API documentation for the Parodos Notification Service. It provides operations to send out and check notification. The endpoints are secured with oAuth2/OpenID and cannot be accessed without a valid token.",
+    "title" : "Parodos Notification Service API",
     "version" : "v1.0.0"
   },
   "servers" : [ {
@@ -82,7 +82,7 @@
             "default" : 100
           }
         }, {
-          "description" : "Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+          "description" : "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
           "in" : "query",
           "name" : "sort",
           "required" : false,
@@ -437,7 +437,7 @@
             "format" : "int32"
           },
           "sort" : {
-            "$ref" : "#/components/schemas/Sort"
+            "$ref" : "#/components/schemas/SortObject"
           },
           "totalElements" : {
             "type" : "integer",
@@ -468,14 +468,14 @@
             "type" : "boolean"
           },
           "sort" : {
-            "$ref" : "#/components/schemas/Sort"
+            "$ref" : "#/components/schemas/SortObject"
           },
           "unpaged" : {
             "type" : "boolean"
           }
         }
       },
-      "Sort" : {
+      "SortObject" : {
         "type" : "object",
         "properties" : {
           "empty" : {

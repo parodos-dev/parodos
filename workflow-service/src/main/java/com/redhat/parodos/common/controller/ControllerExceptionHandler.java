@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 
 import com.redhat.parodos.common.exceptions.IllegalWorkFlowStateException;
 import com.redhat.parodos.common.exceptions.OperationDeniedException;

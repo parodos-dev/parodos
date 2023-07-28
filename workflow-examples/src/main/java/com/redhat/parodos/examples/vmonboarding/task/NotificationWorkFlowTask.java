@@ -15,7 +15,7 @@
  */
 package com.redhat.parodos.examples.vmonboarding.task;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import com.redhat.parodos.infrastructure.Notifier;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;

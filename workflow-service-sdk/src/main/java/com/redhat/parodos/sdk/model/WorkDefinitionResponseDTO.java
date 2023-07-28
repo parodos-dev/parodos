@@ -40,7 +40,7 @@ import com.redhat.parodos.sdk.invoker.JSON;
 /**
  * WorkDefinitionResponseDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkDefinitionResponseDTO {
 
 	public static final String SERIALIZED_NAME_AUTHOR = "author";
@@ -267,7 +267,7 @@ public class WorkDefinitionResponseDTO {
 	 * Get author
 	 * @return author
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getAuthor() {
 		return author;
 	}
@@ -286,7 +286,7 @@ public class WorkDefinitionResponseDTO {
 	 * Get cronExpression
 	 * @return cronExpression
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getCronExpression() {
 		return cronExpression;
 	}
@@ -305,7 +305,7 @@ public class WorkDefinitionResponseDTO {
 	 * Get id
 	 * @return id
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public UUID getId() {
 		return id;
 	}
@@ -324,7 +324,7 @@ public class WorkDefinitionResponseDTO {
 	 * Get name
 	 * @return name
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getName() {
 		return name;
 	}
@@ -351,7 +351,7 @@ public class WorkDefinitionResponseDTO {
 	 * Get outputs
 	 * @return outputs
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public List<OutputsEnum> getOutputs() {
 		return outputs;
 	}
@@ -378,7 +378,7 @@ public class WorkDefinitionResponseDTO {
 	 * Get parameters
 	 * @return parameters
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Map<String, Map<String, Object>> getParameters() {
 		return parameters;
 	}
@@ -397,7 +397,7 @@ public class WorkDefinitionResponseDTO {
 	 * Get processingType
 	 * @return processingType
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public ProcessingTypeEnum getProcessingType() {
 		return processingType;
 	}
@@ -416,7 +416,7 @@ public class WorkDefinitionResponseDTO {
 	 * Get workFlowCheckerMappingDefinitionId
 	 * @return workFlowCheckerMappingDefinitionId
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public UUID getWorkFlowCheckerMappingDefinitionId() {
 		return workFlowCheckerMappingDefinitionId;
 	}
@@ -435,7 +435,7 @@ public class WorkDefinitionResponseDTO {
 	 * Get workType
 	 * @return workType
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public WorkTypeEnum getWorkType() {
 		return workType;
 	}
@@ -462,7 +462,7 @@ public class WorkDefinitionResponseDTO {
 	 * Get works
 	 * @return works
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Set<WorkDefinitionResponseDTO> getWorks() {
 		return works;
 	}

@@ -71,7 +71,7 @@ public class ProjectControllerTest extends ControllerMockClient {
 		when(projectService.createProject(eq(project1DTO))).thenReturn(response);
 
 		// When
-		mockMvc.perform(this.postRequestWithValidCredentials("/api/v1/projects/").content(jsonPayload)
+		mockMvc.perform(this.postRequestWithValidCredentials("/api/v1/projects").content(jsonPayload)
 				.contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isCreated())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(response.getId().toString())))
@@ -102,7 +102,7 @@ public class ProjectControllerTest extends ControllerMockClient {
 		when(projectService.getProjects()).thenReturn(List.of(project1DTO, project2DTO));
 
 		// When
-		mockMvc.perform(this.getRequestWithValidCredentials("/api/v1/projects/"))
+		mockMvc.perform(this.getRequestWithValidCredentials("/api/v1/projects"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)))
@@ -122,7 +122,7 @@ public class ProjectControllerTest extends ControllerMockClient {
 		when(projectService.getProjects()).thenReturn(List.of(project1DTO, project2DTO));
 		String etagValue = String.valueOf(List.of(project1DTO, project2DTO).hashCode());
 		// When
-		mockMvc.perform(this.getRequestWithValidCredentials("/api/v1/projects/").header("If-None-Match",
+		mockMvc.perform(this.getRequestWithValidCredentials("/api/v1/projects").header("If-None-Match",
 				"\"" + etagValue + "\"")).andExpect(MockMvcResultMatchers.status().isNotModified());
 
 		// Then

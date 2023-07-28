@@ -34,7 +34,7 @@ import com.redhat.parodos.sdk.invoker.JSON;
 /**
  * ProjectDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class ProjectDTO {
 
 	public static final String SERIALIZED_NAME_CREATED_BY = "createdBy";
@@ -70,7 +70,7 @@ public class ProjectDTO {
 	 * Get createdBy
 	 * @return createdBy
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getCreatedBy() {
 		return createdBy;
 	}
@@ -89,7 +89,7 @@ public class ProjectDTO {
 	 * Get createdDate
 	 * @return createdDate
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -108,7 +108,7 @@ public class ProjectDTO {
 	 * Get id
 	 * @return id
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public UUID getId() {
 		return id;
 	}
@@ -127,7 +127,7 @@ public class ProjectDTO {
 	 * Get name
 	 * @return name
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getName() {
 		return name;
 	}
