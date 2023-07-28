@@ -47,8 +47,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static com.redhat.parodos.notification.jpa.NotificationsDataCreator.USER_A_1;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -108,8 +109,7 @@ public class NotificationMessageControllerTests extends AbstractControllerTests 
 				.andExpect(status().isCreated());
 
 		List<NotificationMessage> notificationMessages = this.notificationMessageRepository.findAll();
-		assertThat(notificationMessages).isNotEmpty();
-		assertThat(notificationMessages).hasSize(1);
+		assertThat(notificationMessages, hasSize(1));
 		NotificationMessage notificationMessage = notificationMessages.get(0);
 		assertThat(notificationMessage.getFromuser()).isEqualTo(USER_A_1); // default user
 																			// from

@@ -15,13 +15,14 @@
  */
 package com.redhat.parodos.workflow.option;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 
 public class WorkFlowOptionsTest {
 
@@ -31,90 +32,84 @@ public class WorkFlowOptionsTest {
 	@Test
 	public void verifyInfraOptions() {
 		WorkFlowOptions options = new WorkFlowOptions.Builder().addNewOption(option).build();
-
-		assertEquals(1, options.getNewOptions().size());
-		assertEquals(option, options.getNewOptions().get(0));
-		assertFalse(options.isOptionsAvailable());
+		assertThat(options.getNewOptions(), hasSize(1));
+		assertThat(options.getNewOptions().get(0), equalTo(option));
+		assertThat(options.isOptionsAvailable(), is(false));
 	}
 
 	@Test
 	public void checkOptionAvailability() {
 		WorkFlowOptions options = new WorkFlowOptions.Builder().addNewOption(option).addContinuationOption(option)
 				.addMigrationOption(option).addUpgradeOption(option).build();
-
-		assertEquals(1, options.getContinuationOptions().size());
-		assertEquals(1, options.getMigrationOptions().size());
-		assertEquals(1, options.getNewOptions().size());
-		assertEquals(1, options.getUpgradeOptions().size());
-		assertTrue(options.isOptionsAvailable());
+		assertThat(options.getContinuationOptions(), hasSize(1));
+		assertThat(options.getMigrationOptions(), hasSize(1));
+		assertThat(options.getNewOptions(), hasSize(1));
+		assertThat(options.getUpgradeOptions(), hasSize(1));
+		assertThat(options.isOptionsAvailable(), is(true));
 	}
 
 	@Test
 	public void verifyContinuation() {
 		WorkFlowOptions options = new WorkFlowOptions.Builder().build();
-
-		assertEquals(0, options.getContinuationOptions().size());
-		assertFalse(options.hasIncompleteWorkFlow());
+		assertThat(options.getContinuationOptions(), hasSize(0));
+		assertThat(options.hasIncompleteWorkFlow(), is(false));
 
 		options.addContinuationOption(option);
 
-		assertEquals(1, options.getContinuationOptions().size());
-		assertTrue(options.hasIncompleteWorkFlow());
+		assertThat(options.getContinuationOptions(), hasSize(1));
+		assertThat(options.hasIncompleteWorkFlow(), is(true));
+
 	}
 
 	@Test
 	public void verifyMigration() {
 		WorkFlowOptions options = new WorkFlowOptions.Builder().build();
-
-		assertEquals(0, options.getMigrationOptions().size());
+		assertThat(options.getMigrationOptions(), hasSize(0));
 
 		options.addMigrationOption(option);
 
-		assertEquals(1, options.getMigrationOptions().size());
+		assertThat(options.getMigrationOptions(), hasSize(1));
 	}
 
 	@Test
 	public void verifyUpgrade() {
 		WorkFlowOptions options = new WorkFlowOptions.Builder().build();
-
-		assertEquals(0, options.getUpgradeOptions().size());
+		assertThat(options.getUpgradeOptions(), hasSize(0));
 
 		options.addUpgradeOption(option);
 
-		assertEquals(1, options.getUpgradeOptions().size());
+		assertThat(options.getUpgradeOptions(), hasSize(1));
 	}
 
 	@Test
 	public void verifyOtherOptions() {
 		WorkFlowOptions options = new WorkFlowOptions.Builder().build();
-
-		assertEquals(0, options.getOtherOptions().size());
+		assertThat(options.getOtherOptions(), hasSize(0));
 
 		options.addOtherOption(option);
-
-		assertEquals(1, options.getOtherOptions().size());
+		assertThat(options.getOtherOptions(), hasSize(1));
 	}
 
 	@Test
 	public void checkInfra() {
 		WorkFlowOptions options = new WorkFlowOptions.Builder().setCurrentInfrastructure(option).build();
 
-		assertFalse(options.hasInfrastructure());
+		assertThat(options.hasInfrastructure(), is(false));
 
 		options.addNewInfrastrutureOption(option);
 
-		assertEquals(1, options.getNewOptions().size());
+		assertThat(options.getNewOptions(), hasSize(1));
 	}
 
 	@Test
 	public void checkCurrent() {
 		WorkFlowOptions options = new WorkFlowOptions.Builder().build();
-
-		assertNull(options.getCurrentVersion());
+		assertThat(options.getCurrentVersion(), is(nullValue()));
 
 		options.setCurrentVersion(option);
 
-		assertNotNull(options.getCurrentVersion());
+		assertThat(options.getCurrentVersion(), is(notNullValue()));
+
 	}
 
 }

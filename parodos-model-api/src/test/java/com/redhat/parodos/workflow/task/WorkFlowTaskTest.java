@@ -31,12 +31,15 @@ import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import lombok.NonNull;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class WorkFlowTaskTest {
 
@@ -99,7 +102,7 @@ public class WorkFlowTaskTest {
 		assertEquals("test", task.getRequiredParameterValue("username"));
 	}
 
-	@Test(expected = MissingParameterException.class)
+	@Test
 	public void noParameters() throws MissingParameterException {
 		WorkContext context = new WorkContext();
 		WorkContextDelegate.write(context, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION, "Test",
@@ -114,7 +117,11 @@ public class WorkFlowTaskTest {
 		BaseWorkFlowTask flowTask = new TestTask();
 		flowTask.preExecute(context);
 		flowTask.setBeanName("Test");
-		assertEquals("Test", flowTask.getRequiredParameterValue("username"));
+		Throwable thrown = assertThrows(MissingParameterException.class, () -> {
+			String username = flowTask.getRequiredParameterValue("username");
+			assertThat("Test", equalTo(username));
+		});
+		assertThat("missing parameter(s) for ParameterName: username", equalTo(thrown.getMessage()));
 	}
 
 	@Test
@@ -133,8 +140,8 @@ public class WorkFlowTaskTest {
 		assertEquals(WorkParameterType.SELECT, params.get(1).getType());
 
 		HashMap<String, Map<String, Object>> jsonSchema = task.getAsJsonSchema();
-		assertThat(jsonSchema.get(params.get(1).getKey()).get("enum")).isInstanceOf(List.class)
-				.isEqualTo(List.of("test1", "test2"));
+		assertThat(jsonSchema.get(params.get(1).getKey()).get("enum"), instanceOf(List.class));
+		assertThat((List) jsonSchema.get(params.get(1).getKey()).get("enum"), equalTo(List.of("test1", "test2")));
 	}
 
 }
