@@ -137,6 +137,8 @@
                             <addCompileSourceRoot>true</addCompileSourceRoot>
                             <enablePostProcessFile>true</enablePostProcessFile>
                             <configOptions>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <useJakartaEe>true</useJakartaEe>
                                 <hideGenerationTimestamp>true</hideGenerationTimestamp>
                                 <basePackage>com.redhat.parodos.sdk</basePackage>
                                 <configPackage>com.redhat.parodos.sdk.configuration</configPackage>
@@ -176,8 +178,9 @@
             <version>${gson-fire-version}</version>
         </dependency>
         <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.ws.rs</groupId>

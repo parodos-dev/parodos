@@ -21,7 +21,7 @@ import java.util.Map;
  * </p>
  */
 @SuppressWarnings("serial")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class ApiException extends Exception {
 
 	private int code = 0;

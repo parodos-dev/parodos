@@ -34,7 +34,7 @@ import com.redhat.parodos.sdk.invoker.JSON;
 /**
  * WorkFlowExecutionResponseDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowExecutionResponseDTO {
 
 	public static final String SERIALIZED_NAME_WORK_FLOW_EXECUTION_ID = "workFlowExecutionId";
@@ -117,7 +117,7 @@ public class WorkFlowExecutionResponseDTO {
 	 * Get workFlowExecutionId
 	 * @return workFlowExecutionId
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public UUID getWorkFlowExecutionId() {
 		return workFlowExecutionId;
 	}
@@ -136,7 +136,7 @@ public class WorkFlowExecutionResponseDTO {
 	 * Get workStatus
 	 * @return workStatus
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public WorkStatusEnum getWorkStatus() {
 		return workStatus;
 	}

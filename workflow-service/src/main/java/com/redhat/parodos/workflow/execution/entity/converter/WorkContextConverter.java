@@ -18,8 +18,8 @@ package com.redhat.parodos.workflow.execution.entity.converter;
 import java.util.Map;
 import java.util.Set;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.redhat.parodos.workflow.util.WorkFlowDTOUtil;

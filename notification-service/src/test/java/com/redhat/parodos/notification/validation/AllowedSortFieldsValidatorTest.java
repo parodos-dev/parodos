@@ -1,6 +1,6 @@
 package com.redhat.parodos.notification.validation;
 
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidatorContext;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -2,7 +2,7 @@ package com.redhat.parodos.notification.validation;
 
 import java.util.List;
 
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidatorContext;
 
 import com.redhat.parodos.notification.dto.NotificationMessageCreateRequestDTO;
 import org.junit.Before;

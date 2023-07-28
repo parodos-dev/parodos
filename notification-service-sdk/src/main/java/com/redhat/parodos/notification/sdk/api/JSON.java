@@ -96,7 +96,7 @@ public class JSON {
 		gsonBuilder.registerTypeAdapterFactory(
 				new com.redhat.parodos.notification.sdk.model.PageableObject.CustomTypeAdapterFactory());
 		gsonBuilder.registerTypeAdapterFactory(
-				new com.redhat.parodos.notification.sdk.model.Sort.CustomTypeAdapterFactory());
+				new com.redhat.parodos.notification.sdk.model.SortObject.CustomTypeAdapterFactory());
 		gson = gsonBuilder.create();
 	}
 

@@ -54,17 +54,17 @@
         <maven.plugins.jacoco.version>0.8.8</maven.plugins.jacoco.version>
         <maven.plugins.gpg.version>1.5</maven.plugins.gpg.version>
         <maven.plugin.source>3.2.1</maven.plugin.source>
-        <springframework.boot.version>2.7.13</springframework.boot.version>
+        <springframework.boot.version>3.1.0</springframework.boot.version>
         <spring.javaformat.version>0.0.34</spring.javaformat.version>
         <junit.version>4.13.1</junit.version>
         <mockito.version>3.5.13</mockito.version>
         <assertj.version>3.17.2</assertj.version>
         <okhttp-version>4.9.2</okhttp-version>
         <openapi.generator.version>6.6.0</openapi.generator.version>
-        <springdoc-openapi-ui.version>1.6.5</springdoc-openapi-ui.version>
-        <spring-cloud.version>2020.0.6</spring-cloud.version>
+        <springdoc-openapi-ui.version>2.1.0</springdoc-openapi-ui.version>
+        <spring-cloud.version>2022.0.3</spring-cloud.version>
         <gson-fire-version>1.8.5</gson-fire-version>
-        <snakeyaml-version>1.28</snakeyaml-version>
+        <snakeyaml-version>2.0</snakeyaml-version>
     </properties>
     <modules>
         <module>workflow-engine</module>

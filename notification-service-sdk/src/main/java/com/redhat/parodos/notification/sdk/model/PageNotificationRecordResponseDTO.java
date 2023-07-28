@@ -35,7 +35,7 @@ import com.redhat.parodos.notification.sdk.api.JSON;
 /**
  * PageNotificationRecordResponseDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class PageNotificationRecordResponseDTO {
 
 	public static final String SERIALIZED_NAME_CONTENT = "content";
@@ -81,7 +81,7 @@ public class PageNotificationRecordResponseDTO {
 	public static final String SERIALIZED_NAME_SORT = "sort";
 
 	@SerializedName(SERIALIZED_NAME_SORT)
-	private Sort sort;
+	private SortObject sort;
 
 	public static final String SERIALIZED_NAME_TOTAL_ELEMENTS = "totalElements";
 
@@ -114,7 +114,7 @@ public class PageNotificationRecordResponseDTO {
 	 * Get content
 	 * @return content
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public List<NotificationRecordResponseDTO> getContent() {
 		return content;
 	}
@@ -133,7 +133,7 @@ public class PageNotificationRecordResponseDTO {
 	 * Get empty
 	 * @return empty
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Boolean getEmpty() {
 		return empty;
 	}
@@ -152,7 +152,7 @@ public class PageNotificationRecordResponseDTO {
 	 * Get first
 	 * @return first
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Boolean getFirst() {
 		return first;
 	}
@@ -171,7 +171,7 @@ public class PageNotificationRecordResponseDTO {
 	 * Get last
 	 * @return last
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Boolean getLast() {
 		return last;
 	}
@@ -190,7 +190,7 @@ public class PageNotificationRecordResponseDTO {
 	 * Get number
 	 * @return number
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Integer getNumber() {
 		return number;
 	}
@@ -209,7 +209,7 @@ public class PageNotificationRecordResponseDTO {
 	 * Get numberOfElements
 	 * @return numberOfElements
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Integer getNumberOfElements() {
 		return numberOfElements;
 	}
@@ -228,7 +228,7 @@ public class PageNotificationRecordResponseDTO {
 	 * Get pageable
 	 * @return pageable
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public PageableObject getPageable() {
 		return pageable;
 	}
@@ -247,7 +247,7 @@ public class PageNotificationRecordResponseDTO {
 	 * Get size
 	 * @return size
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Integer getSize() {
 		return size;
 	}
@@ -256,7 +256,7 @@ public class PageNotificationRecordResponseDTO {
 		this.size = size;
 	}
 
-	public PageNotificationRecordResponseDTO sort(Sort sort) {
+	public PageNotificationRecordResponseDTO sort(SortObject sort) {
 
 		this.sort = sort;
 		return this;
@@ -266,12 +266,12 @@ public class PageNotificationRecordResponseDTO {
 	 * Get sort
 	 * @return sort
 	 **/
-	@javax.annotation.Nullable
-	public Sort getSort() {
+	@jakarta.annotation.Nullable
+	public SortObject getSort() {
 		return sort;
 	}
 
-	public void setSort(Sort sort) {
+	public void setSort(SortObject sort) {
 		this.sort = sort;
 	}
 
@@ -285,7 +285,7 @@ public class PageNotificationRecordResponseDTO {
 	 * Get totalElements
 	 * @return totalElements
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Long getTotalElements() {
 		return totalElements;
 	}
@@ -304,7 +304,7 @@ public class PageNotificationRecordResponseDTO {
 	 * Get totalPages
 	 * @return totalPages
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Integer getTotalPages() {
 		return totalPages;
 	}
@@ -448,7 +448,7 @@ public class PageNotificationRecordResponseDTO {
 		}
 		// validate the optional field `sort`
 		if (jsonObj.get("sort") != null && !jsonObj.get("sort").isJsonNull()) {
-			Sort.validateJsonObject(jsonObj.getAsJsonObject("sort"));
+			SortObject.validateJsonObject(jsonObj.getAsJsonObject("sort"));
 		}
 	}
 

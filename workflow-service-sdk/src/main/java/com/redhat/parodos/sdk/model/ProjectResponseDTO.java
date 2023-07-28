@@ -34,7 +34,7 @@ import com.redhat.parodos.sdk.invoker.JSON;
 /**
  * ProjectResponseDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class ProjectResponseDTO {
 
 	public static final String SERIALIZED_NAME_ACCESS_ROLE = "accessRole";
@@ -90,7 +90,7 @@ public class ProjectResponseDTO {
 	 * Get accessRole
 	 * @return accessRole
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getAccessRole() {
 		return accessRole;
 	}
@@ -109,7 +109,7 @@ public class ProjectResponseDTO {
 	 * Get createdBy
 	 * @return createdBy
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getCreatedBy() {
 		return createdBy;
 	}
@@ -128,7 +128,7 @@ public class ProjectResponseDTO {
 	 * Get createdDate
 	 * @return createdDate
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -147,7 +147,7 @@ public class ProjectResponseDTO {
 	 * Get description
 	 * @return description
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getDescription() {
 		return description;
 	}
@@ -166,7 +166,7 @@ public class ProjectResponseDTO {
 	 * Get id
 	 * @return id
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public UUID getId() {
 		return id;
 	}
@@ -185,7 +185,7 @@ public class ProjectResponseDTO {
 	 * Get modifiedBy
 	 * @return modifiedBy
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getModifiedBy() {
 		return modifiedBy;
 	}
@@ -204,7 +204,7 @@ public class ProjectResponseDTO {
 	 * Get modifiedDate
 	 * @return modifiedDate
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Date getModifiedDate() {
 		return modifiedDate;
 	}
@@ -223,7 +223,7 @@ public class ProjectResponseDTO {
 	 * Get name
 	 * @return name
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getName() {
 		return name;
 	}

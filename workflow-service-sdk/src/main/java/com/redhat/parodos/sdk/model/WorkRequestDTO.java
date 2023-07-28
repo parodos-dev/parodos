@@ -36,7 +36,7 @@ import com.redhat.parodos.sdk.invoker.JSON;
 /**
  * WorkRequestDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkRequestDTO {
 
 	public static final String SERIALIZED_NAME_ARGUMENTS = "arguments";
@@ -133,7 +133,7 @@ public class WorkRequestDTO {
 	 * Get arguments
 	 * @return arguments
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public List<ArgumentRequestDTO> getArguments() {
 		return arguments;
 	}
@@ -152,7 +152,7 @@ public class WorkRequestDTO {
 	 * Get type
 	 * @return type
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public TypeEnum getType() {
 		return type;
 	}
@@ -171,7 +171,7 @@ public class WorkRequestDTO {
 	 * Get workName
 	 * @return workName
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getWorkName() {
 		return workName;
 	}
@@ -198,7 +198,7 @@ public class WorkRequestDTO {
 	 * Get works
 	 * @return works
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public List<WorkRequestDTO> getWorks() {
 		return works;
 	}

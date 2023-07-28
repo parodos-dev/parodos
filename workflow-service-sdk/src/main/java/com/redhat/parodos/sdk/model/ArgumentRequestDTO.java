@@ -32,7 +32,7 @@ import com.redhat.parodos.sdk.invoker.JSON;
 /**
  * ArgumentRequestDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class ArgumentRequestDTO {
 
 	public static final String SERIALIZED_NAME_KEY = "key";
@@ -58,7 +58,7 @@ public class ArgumentRequestDTO {
 	 * Get key
 	 * @return key
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getKey() {
 		return key;
 	}
@@ -77,7 +77,7 @@ public class ArgumentRequestDTO {
 	 * Get value
 	 * @return value
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getValue() {
 		return value;
 	}

@@ -18,8 +18,8 @@ package com.redhat.parodos.workflow.execution.controller;
 import java.util.List;
 import java.util.UUID;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.execution.dto.WorkFlowCheckerTaskRequestDTO;

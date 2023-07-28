@@ -15,7 +15,7 @@
 |**numberOfElements** | **Integer** |  |  [optional] |
 |**pageable** | [**PageableObject**](PageableObject.md) |  |  [optional] |
 |**size** | **Integer** |  |  [optional] |
-|**sort** | [**Sort**](Sort.md) |  |  [optional] |
+|**sort** | [**SortObject**](SortObject.md) |  |  [optional] |
 |**totalElements** | **Long** |  |  [optional] |
 |**totalPages** | **Integer** |  |  [optional] |
 

@@ -36,7 +36,7 @@ import com.redhat.parodos.sdk.invoker.JSON;
 /**
  * WorkStatusResponseDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkStatusResponseDTO {
 
 	public static final String SERIALIZED_NAME_ALERT_MESSAGE = "alertMessage";
@@ -192,7 +192,7 @@ public class WorkStatusResponseDTO {
 	 * Get alertMessage
 	 * @return alertMessage
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getAlertMessage() {
 		return alertMessage;
 	}
@@ -211,7 +211,7 @@ public class WorkStatusResponseDTO {
 	 * Get message
 	 * @return message
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getMessage() {
 		return message;
 	}
@@ -230,7 +230,7 @@ public class WorkStatusResponseDTO {
 	 * Get name
 	 * @return name
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getName() {
 		return name;
 	}
@@ -249,7 +249,7 @@ public class WorkStatusResponseDTO {
 	 * Get status
 	 * @return status
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public StatusEnum getStatus() {
 		return status;
 	}
@@ -268,7 +268,7 @@ public class WorkStatusResponseDTO {
 	 * Get type
 	 * @return type
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public TypeEnum getType() {
 		return type;
 	}
@@ -295,7 +295,7 @@ public class WorkStatusResponseDTO {
 	 * Get works
 	 * @return works
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public List<WorkStatusResponseDTO> getWorks() {
 		return works;
 	}

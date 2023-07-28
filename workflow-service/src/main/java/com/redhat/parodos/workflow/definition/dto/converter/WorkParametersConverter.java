@@ -17,8 +17,8 @@ package com.redhat.parodos.workflow.definition.dto.converter;
 
 import java.util.List;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.redhat.parodos.workflow.parameter.WorkParameter;

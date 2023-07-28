@@ -32,7 +32,7 @@ import com.redhat.parodos.sdk.invoker.JSON;
 /**
  * WorkFlowPropertiesDefinitionDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowPropertiesDefinitionDTO {
 
 	public static final String SERIALIZED_NAME_VERSION = "version";
@@ -53,7 +53,7 @@ public class WorkFlowPropertiesDefinitionDTO {
 	 * Get version
 	 * @return version
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getVersion() {
 		return version;
 	}

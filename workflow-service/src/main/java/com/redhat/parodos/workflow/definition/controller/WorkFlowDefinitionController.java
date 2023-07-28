@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import com.redhat.parodos.workflow.definition.dto.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.workflow.definition.dto.WorkParameterValueRequestDTO;

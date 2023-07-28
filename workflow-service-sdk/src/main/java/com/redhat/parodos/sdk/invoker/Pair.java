@@ -12,7 +12,7 @@
 
 package com.redhat.parodos.sdk.invoker;
 
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class Pair {
 
 	private String name = "";

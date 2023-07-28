@@ -34,7 +34,7 @@ import com.redhat.parodos.notification.sdk.api.JSON;
 /**
  * NotificationMessageCreateRequestDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class NotificationMessageCreateRequestDTO {
 
 	public static final String SERIALIZED_NAME_BODY = "body";
@@ -75,7 +75,7 @@ public class NotificationMessageCreateRequestDTO {
 	 * Get body
 	 * @return body
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getBody() {
 		return body;
 	}
@@ -102,7 +102,7 @@ public class NotificationMessageCreateRequestDTO {
 	 * Get groupNames
 	 * @return groupNames
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public List<String> getGroupNames() {
 		return groupNames;
 	}
@@ -121,7 +121,7 @@ public class NotificationMessageCreateRequestDTO {
 	 * Get messageType
 	 * @return messageType
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getMessageType() {
 		return messageType;
 	}
@@ -140,7 +140,7 @@ public class NotificationMessageCreateRequestDTO {
 	 * Get subject
 	 * @return subject
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getSubject() {
 		return subject;
 	}
@@ -167,7 +167,7 @@ public class NotificationMessageCreateRequestDTO {
 	 * Get usernames
 	 * @return usernames
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public List<String> getUsernames() {
 		return usernames;
 	}

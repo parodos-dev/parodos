@@ -27,9 +27,11 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.ldap.userdetails.InetOrgPersonContextMapper;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.stereotype.Component;
 
 /**
@@ -44,47 +46,52 @@ import org.springframework.stereotype.Component;
 @Configuration
 @Profile("!local")
 @DependsOn("org.springframework.boot.context.properties.ConfigurationPropertiesBindingPostProcessor")
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class SecurityConfiguration {
 
-	@Autowired
-	private LdapConnectionProperties ldapConnectionProperties;
+	private final LdapConnectionProperties ldapConnectionProperties;
 
-	@Autowired
-	private SecurityProperties securityProperties;
+	private final SecurityProperties securityProperties;
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable().cors().disable();
+	public SecurityConfiguration(LdapConnectionProperties ldapConnectionProperties,
+			SecurityProperties securityProperties) {
+		this.ldapConnectionProperties = ldapConnectionProperties;
+		this.securityProperties = securityProperties;
+	}
 
-		if (!this.securityProperties.getAuthentication()) {
-			return;
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http.csrf(AbstractHttpConfigurer::disable).cors(AbstractHttpConfigurer::disable);
+
+		if (!this.securityProperties.isAuthentication()) {
+			return http.build();
 		}
 
 		// @formatter:off
         http
-                .authorizeRequests()
-                .mvcMatchers(HttpMethod.OPTIONS, "/**")
-                .permitAll()
-                .mvcMatchers("/api/**", "/actuator/shutdown")
-                .fullyAuthenticated()
-                .and()
+                .authorizeHttpRequests(auth ->
+                        auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**")
+                        .permitAll()
+                        .requestMatchers("/api/**", "/actuator/shutdown")
+                        .fullyAuthenticated()
+						.anyRequest().permitAll())
                 .httpBasic(Customizer.withDefaults())
-                .headers().frameOptions().disable()
-                .and()
+                .headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .formLogin(form -> form.loginProcessingUrl("/login"))
-                .logout()
-                .logoutSuccessUrl("/login").permitAll();
+                .logout(httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer
+                .logoutSuccessUrl("/login").permitAll());
         // @formatter:on
+		return http.build();
 	}
 
-	@Bean
+	// @Bean
 	public InetOrgPersonContextMapper userContextMapper() {
 		return new InetOrgPersonContextMapper();
 	}
 
-	@Override
+	@Autowired
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
-		if (!this.securityProperties.getAuthentication()) {
+		if (!this.securityProperties.isAuthentication()) {
 			return;
 		}
 		// @formatter:off

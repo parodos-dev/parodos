@@ -158,7 +158,7 @@ public class Example {
     NotificationRecordApi apiInstance = new NotificationRecordApi(defaultClient);
     Integer page = 0; // Integer | Zero-based page index (0..N)
     Integer size = 100; // Integer | The size of the page to be returned
-    List<String> sort = Arrays.asList(); // List<String> | Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
+    List<String> sort = Arrays.asList(); // List<String> | Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
     String state = "ARCHIVED"; // String | 
     String searchTerm = "searchTerm_example"; // String | 
     try {
@@ -181,7 +181,7 @@ public class Example {
 |------------- | ------------- | ------------- | -------------|
 | **page** | **Integer**| Zero-based page index (0..N) | [optional] [default to 0] |
 | **size** | **Integer**| The size of the page to be returned | [optional] [default to 100] |
-| **sort** | [**List&lt;String&gt;**](String.md)| Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported. | [optional] |
+| **sort** | [**List&lt;String&gt;**](String.md)| Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported. | [optional] |
 | **state** | **String**|  | [optional] [enum: ARCHIVED, UNREAD] |
 | **searchTerm** | **String**|  | [optional] |
 

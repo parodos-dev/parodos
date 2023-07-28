@@ -32,7 +32,7 @@ import com.redhat.parodos.notification.sdk.api.JSON;
 /**
  * SortObject
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class SortObject {
 
 	public static final String SERIALIZED_NAME_EMPTY = "empty";
@@ -63,7 +63,7 @@ public class SortObject {
 	 * Get empty
 	 * @return empty
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Boolean getEmpty() {
 		return empty;
 	}
@@ -82,7 +82,7 @@ public class SortObject {
 	 * Get sorted
 	 * @return sorted
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Boolean getSorted() {
 		return sorted;
 	}
@@ -101,7 +101,7 @@ public class SortObject {
 	 * Get unsorted
 	 * @return unsorted
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Boolean getUnsorted() {
 		return unsorted;
 	}

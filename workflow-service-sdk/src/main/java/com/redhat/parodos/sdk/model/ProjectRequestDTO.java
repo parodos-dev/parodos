@@ -32,7 +32,7 @@ import com.redhat.parodos.sdk.invoker.JSON;
 /**
  * ProjectRequestDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class ProjectRequestDTO {
 
 	public static final String SERIALIZED_NAME_DESCRIPTION = "description";
@@ -58,7 +58,7 @@ public class ProjectRequestDTO {
 	 * Get description
 	 * @return description
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getDescription() {
 		return description;
 	}
@@ -77,7 +77,7 @@ public class ProjectRequestDTO {
 	 * Get name
 	 * @return name
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getName() {
 		return name;
 	}

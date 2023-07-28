@@ -35,7 +35,7 @@ import com.redhat.parodos.sdk.invoker.JSON;
 /**
  * AccessResponseDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class AccessResponseDTO {
 
 	public static final String SERIALIZED_NAME_ACCESS_REQUEST_ID = "accessRequestId";
@@ -71,7 +71,7 @@ public class AccessResponseDTO {
 	 * Get accessRequestId
 	 * @return accessRequestId
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public UUID getAccessRequestId() {
 		return accessRequestId;
 	}
@@ -98,7 +98,7 @@ public class AccessResponseDTO {
 	 * Get approvalSentTo
 	 * @return approvalSentTo
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public List<String> getApprovalSentTo() {
 		return approvalSentTo;
 	}
@@ -117,7 +117,7 @@ public class AccessResponseDTO {
 	 * Get escalationSentTo
 	 * @return escalationSentTo
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getEscalationSentTo() {
 		return escalationSentTo;
 	}
@@ -136,7 +136,7 @@ public class AccessResponseDTO {
 	 * Get project
 	 * @return project
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public ProjectDTO getProject() {
 		return project;
 	}

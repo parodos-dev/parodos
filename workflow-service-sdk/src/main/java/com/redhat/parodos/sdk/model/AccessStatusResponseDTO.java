@@ -34,7 +34,7 @@ import com.redhat.parodos.sdk.invoker.JSON;
 /**
  * AccessStatusResponseDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class AccessStatusResponseDTO {
 
 	public static final String SERIALIZED_NAME_ACCESS_REQUEST_ID = "accessRequestId";
@@ -113,7 +113,7 @@ public class AccessStatusResponseDTO {
 	 * Get accessRequestId
 	 * @return accessRequestId
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public UUID getAccessRequestId() {
 		return accessRequestId;
 	}
@@ -132,7 +132,7 @@ public class AccessStatusResponseDTO {
 	 * Get status
 	 * @return status
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public StatusEnum getStatus() {
 		return status;
 	}
