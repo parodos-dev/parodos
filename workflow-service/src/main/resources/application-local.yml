@@ -9,12 +9,12 @@ spring:
       base-dn: dc=springframework,dc=org
       port: 8389
     connection:
-      userDNPatterns: "uid={0},ou=people"
-      groupSearchBase: "ou=groups"
-      url: "ldap://localhost:8389/dc=springframework,dc=org"
-      passwordAttribute: "userPassword"
-      managerDN: null
-      managerPassword: null
+      userDNPatterns: "${LDAP_USERDNPATTERNS:uid={0},ou=people}"
+      groupSearchBase: "${LDAP_GROUP_SEARCH_BASE:ou=groups}"
+      url: "${LDAP_URL:ldap://localhost:8389/dc=springframework,dc=org}"
+      passwordAttribute: "${LDAP_PASSWORD_ATTRIBUTE:userPassword}"
+      managerDN: "${LDAP_MANAGER_DN:}"
+      managerPassword: "${LDAP_MANAGER_PASSWORD:}"
   lifecycle:
     timeout-per-shutdown-phase: "25s"
   cloud:
