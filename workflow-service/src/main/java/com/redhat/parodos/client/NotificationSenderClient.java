@@ -1,4 +1,4 @@
-package com.redhat.parodos;
+package com.redhat.parodos.client;
 
 import java.util.Base64;
 import java.util.List;
@@ -18,11 +18,11 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class NotificationSender implements Notifier {
+public class NotificationSenderClient implements Notifier {
 
 	private final NotificationMessageApi client;
 
-	public NotificationSender(@Value("${notification.url}") String url,
+	public NotificationSenderClient(@Value("${notification.url}") String url,
 			@Value("${notification.auth.basic.user}") String user,
 			@Value("${notification.auth.basic.password}") String password) {
 		ApiClient apiClient = new com.redhat.parodos.notification.sdk.api.ApiClient().setBasePath(url).addDefaultHeader(
