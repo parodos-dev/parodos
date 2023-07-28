@@ -54,11 +54,14 @@
         <maven.plugins.jacoco.version>0.8.8</maven.plugins.jacoco.version>
         <maven.plugins.gpg.version>1.5</maven.plugins.gpg.version>
         <maven.plugin.source>3.2.1</maven.plugin.source>
+        <maven.plugin.enforcer.version>3.3.0</maven.plugin.enforcer.version>
         <springframework.boot.version>3.1.0</springframework.boot.version>
         <spring.javaformat.version>0.0.34</spring.javaformat.version>
-        <junit.version>4.13.1</junit.version>
-        <mockito.version>3.5.13</mockito.version>
-        <assertj.version>3.17.2</assertj.version>
+        <junit.version>5.10.0</junit.version>
+        <hamcrest.version>2.2</hamcrest.version>
+        <mockito.version>5.2.0</mockito.version>
+        <byte.buddy.version>1.14.5</byte.buddy.version>
+        <assertj.version>3.24.2</assertj.version>
         <okhttp-version>4.9.2</okhttp-version>
         <openapi.generator.version>6.6.0</openapi.generator.version>
         <springdoc-openapi-ui.version>2.1.0</springdoc-openapi-ui.version>
@@ -92,9 +95,15 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
                 <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest</artifactId>
+                <version>${hamcrest.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -108,6 +117,17 @@
                 <artifactId>mockito-inline</artifactId>
                 <version>${mockito.version}</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-junit-jupiter</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.bytebuddy</groupId>
+                <artifactId>byte-buddy</artifactId>
+                <version>${byte.buddy.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.assertj</groupId>
@@ -131,8 +151,27 @@
                 <artifactId>snakeyaml</artifactId>
                 <version>${snakeyaml-version}</version>
             </dependency>
+            <!-- Exclude JUnit 4 -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>junit</groupId>
+                        <artifactId>junit-dep</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
         </dependencies>
     </dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <version>${hamcrest.version}</version>
+        </dependency>
+    </dependencies>
     <build>
         <pluginManagement>
             <plugins>
@@ -253,6 +292,28 @@
                             </configuration>
                             <goals>
                                 <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>${maven.plugin.enforcer.version}</version>
+                    <executions>
+                        <execution>
+                            <id>enforce</id>
+                            <configuration>
+                                <rules>
+                                    <bannedDependencies>
+                                        <excludes>
+                                            <exclude>junit:junit</exclude>
+                                        </excludes>
+                                    </bannedDependencies>
+                                </rules>
+                            </configuration>
+                            <goals>
+                                <goal>enforce</goal>
                             </goals>
                         </execution>
                     </executions>
