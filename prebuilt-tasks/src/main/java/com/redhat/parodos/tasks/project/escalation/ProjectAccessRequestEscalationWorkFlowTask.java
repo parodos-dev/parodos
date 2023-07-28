@@ -15,11 +15,11 @@
  */
 package com.redhat.parodos.tasks.project.escalation;
 
-import java.util.List;
 import java.util.UUID;
 
-import com.redhat.parodos.tasks.project.dto.NotificationRequest;
-import com.redhat.parodos.utils.RestUtils;
+import com.redhat.parodos.infrastructure.Notifier;
+import com.redhat.parodos.infrastructure.ProjectRequester;
+import com.redhat.parodos.notification.sdk.model.NotificationMessageCreateRequestDTO;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
@@ -27,9 +27,6 @@ import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.http.HttpEntity;
-import org.springframework.http.ResponseEntity;
 
 import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_ESCALATION_USERNAME;
 import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_ID;
@@ -44,28 +41,14 @@ import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConsta
 @Slf4j
 public class ProjectAccessRequestEscalationWorkFlowTask extends BaseWorkFlowTask {
 
-	private final String serviceUrl;
+	private final ProjectRequester projectRequester;
 
-	private final String servicePort;
+	private final Notifier notifier;
 
-	private final String notificationServiceUrl;
-
-	private final String notificationServicePort;
-
-	private final String notificationServiceAccountName;
-
-	private final String notificationServiceAccountPassword;
-
-	public ProjectAccessRequestEscalationWorkFlowTask(String serviceUrl, String servicePort,
-			String notificationServiceUrl, String notificationServicePort, String notificationServiceAccountName,
-			String notificationServiceAccountPassword) {
+	public ProjectAccessRequestEscalationWorkFlowTask(ProjectRequester projectRequester, Notifier notifier) {
 		super();
-		this.serviceUrl = serviceUrl;
-		this.servicePort = servicePort;
-		this.notificationServiceUrl = notificationServiceUrl;
-		this.notificationServicePort = notificationServicePort;
-		this.notificationServiceAccountName = notificationServiceAccountName;
-		this.notificationServiceAccountPassword = notificationServiceAccountPassword;
+		this.projectRequester = projectRequester;
+		this.notifier = notifier;
 	}
 
 	@Override
@@ -81,29 +64,13 @@ public class ProjectAccessRequestEscalationWorkFlowTask extends BaseWorkFlowTask
 			log.error("Exception when trying to get required parameter(s): {}", e.getMessage());
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
 		}
-
-		String projectAccessRequestStatusUrl = String.format("%s:%s/api/v1/projects/access/%s/status", serviceUrl,
-				servicePort, accessRequestId);
-		NotificationRequest request = NotificationRequest.builder().usernames(List.of(escalationUsername))
-				.subject(NOTIFICATION_SUBJECT_ACCESS_REQUEST_ESCALATION).body(getMessage(projectAccessRequestStatusUrl))
-				.build();
-		HttpEntity<NotificationRequest> notificationRequestHttpEntity = RestUtils.getRequestWithHeaders(request,
-				notificationServiceAccountName, notificationServiceAccountPassword);
-
-		ResponseEntity<String> response = RestUtils.executePost(
-				String.format("%s:%s/api/v1/messages", notificationServiceUrl, notificationServicePort),
-				notificationRequestHttpEntity);
-		try {
-			if (response.getStatusCode().is2xxSuccessful()) {
-				log.info("Rest call completed: {}", response.getBody());
-				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
-			}
-			log.error("Call to the API was not successful. Response: {}", response.getStatusCode());
-		}
-		catch (Exception e) {
-			log.error("There was an issue with the REST call: {}", e.getMessage());
-		}
-		return new DefaultWorkReport(WorkStatus.FAILED, workContext);
+		NotificationMessageCreateRequestDTO notificationMessageCreateRequestDTO = new NotificationMessageCreateRequestDTO();
+		notificationMessageCreateRequestDTO.setSubject(NOTIFICATION_SUBJECT_ACCESS_REQUEST_ESCALATION);
+		notificationMessageCreateRequestDTO.addUsernamesItem(escalationUsername);
+		notificationMessageCreateRequestDTO.setBody(getMessage(
+				String.format("%s/api/v1/projects/access/%s/status", projectRequester.getBasePath(), accessRequestId)));
+		notifier.send(notificationMessageCreateRequestDTO);
+		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
 	private String getMessage(String url) {
