@@ -27,10 +27,6 @@ public class AapLaunchJobWorkFlowTaskTest {
 
 	private static final String AAP_URL_TEST = "aap-url-test";
 
-	private static final String WINDOWS_JOB_TEMPLATE_ID_TEST = "windows-job-template-id-test";
-
-	private static final String RHEL_JOB_TEMPLATE_ID_TEST = "rhel-job-template-id-test";
-
 	private static final String USERNAME_TEST = "username-test";
 
 	private static final String PASSWORD_TEST = "password-test";
