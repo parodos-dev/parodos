@@ -15,8 +15,6 @@
  */
 package com.redhat.parodos.examples.vmonboarding.task;
 
-import javax.inject.Inject;
-
 import com.redhat.parodos.infrastructure.Notifier;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
@@ -35,13 +33,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class NotificationWorkFlowTask extends BaseInfrastructureWorkFlowTask {
 
+	private final Notifier notifier;
+
 	private final String subject;
 
-	@Inject
-	private Notifier notifier;
-
-	public NotificationWorkFlowTask(String subject) {
+	public NotificationWorkFlowTask(Notifier notifier, String subject) {
 		super();
+		this.notifier = notifier;
 		this.subject = subject;
 	}
 
