@@ -35,7 +35,7 @@ import com.redhat.parodos.sdk.invoker.JSON;
 /**
  * WorkFlowOptionsResponseDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowOptionsResponseDTO {
 
 	public static final String SERIALIZED_NAME_CONTINUATION_OPTIONS = "continuationOptions";
@@ -89,7 +89,7 @@ public class WorkFlowOptionsResponseDTO {
 	 * Get continuationOptions
 	 * @return continuationOptions
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public List<WorkFlowOption> getContinuationOptions() {
 		return continuationOptions;
 	}
@@ -108,7 +108,7 @@ public class WorkFlowOptionsResponseDTO {
 	 * Get currentVersion
 	 * @return currentVersion
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public WorkFlowOption getCurrentVersion() {
 		return currentVersion;
 	}
@@ -135,7 +135,7 @@ public class WorkFlowOptionsResponseDTO {
 	 * Get migrationOptions
 	 * @return migrationOptions
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public List<WorkFlowOption> getMigrationOptions() {
 		return migrationOptions;
 	}
@@ -162,7 +162,7 @@ public class WorkFlowOptionsResponseDTO {
 	 * Get newOptions
 	 * @return newOptions
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public List<WorkFlowOption> getNewOptions() {
 		return newOptions;
 	}
@@ -189,7 +189,7 @@ public class WorkFlowOptionsResponseDTO {
 	 * Get otherOptions
 	 * @return otherOptions
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public List<WorkFlowOption> getOtherOptions() {
 		return otherOptions;
 	}
@@ -216,7 +216,7 @@ public class WorkFlowOptionsResponseDTO {
 	 * Get upgradeOptions
 	 * @return upgradeOptions
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public List<WorkFlowOption> getUpgradeOptions() {
 		return upgradeOptions;
 	}

@@ -50,7 +50,7 @@ public interface NotificationRecordRepository extends JpaRepository<Notification
 			+ " (LOWER(notificationRecord.notificationMessage.body) LIKE %:searchTerm% OR "
 			+ " LOWER(notificationRecord.notificationMessage.messageType) LIKE %:searchTerm% OR "
 			+ " LOWER(notificationRecord.notificationMessage.subject) LIKE %:searchTerm%) AND "
-			+ " :user member notificationRecord.notificationUserList ")
+			+ " :user IN (notificationRecord.notificationUserList) ")
 	Page<NotificationRecord> search(@Param("user") NotificationUser user, @Param("searchTerm") String searchTerm,
 			Pageable pageable);
 

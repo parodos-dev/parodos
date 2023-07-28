@@ -15,14 +15,14 @@ package com.redhat.parodos.notification.sdk.model;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.GenericType;
 
 //import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * Abstract class for oneOf,anyOf schemas defined in OpenAPI spec
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public abstract class AbstractOpenApiSchema {
 
 	// store the actual instance of the schema/object

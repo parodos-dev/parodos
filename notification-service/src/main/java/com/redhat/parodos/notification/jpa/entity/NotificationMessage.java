@@ -18,12 +18,12 @@ package com.redhat.parodos.notification.jpa.entity;
 import java.time.Instant;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 import com.redhat.parodos.notification.jpa.entity.base.AbstractEntity;
 import lombok.Getter;

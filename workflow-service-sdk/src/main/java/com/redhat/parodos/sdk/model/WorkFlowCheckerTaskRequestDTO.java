@@ -33,7 +33,7 @@ import com.redhat.parodos.sdk.invoker.JSON;
 /**
  * WorkFlowCheckerTaskRequestDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowCheckerTaskRequestDTO {
 
 	/**
@@ -111,7 +111,7 @@ public class WorkFlowCheckerTaskRequestDTO {
 	 * Get status
 	 * @return status
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public StatusEnum getStatus() {
 		return status;
 	}

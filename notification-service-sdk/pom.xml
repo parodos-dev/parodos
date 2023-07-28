@@ -136,6 +136,8 @@
                             <addCompileSourceRoot>true</addCompileSourceRoot>
                             <enablePostProcessFile>true</enablePostProcessFile>
                             <configOptions>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <useJakartaEe>true</useJakartaEe>
                                 <hideGenerationTimestamp>true</hideGenerationTimestamp>
                                 <basePackage>com.redhat.parodos.notification.sdk</basePackage>
                                 <configPackage>com.redhat.parodos.notification.sdk.configuration</configPackage>

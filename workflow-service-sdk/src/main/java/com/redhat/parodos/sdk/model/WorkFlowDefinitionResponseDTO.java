@@ -39,7 +39,7 @@ import com.redhat.parodos.sdk.invoker.JSON;
 /**
  * WorkFlowDefinitionResponseDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowDefinitionResponseDTO {
 
 	public static final String SERIALIZED_NAME_AUTHOR = "author";
@@ -223,7 +223,7 @@ public class WorkFlowDefinitionResponseDTO {
 	 * Get author
 	 * @return author
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getAuthor() {
 		return author;
 	}
@@ -242,7 +242,7 @@ public class WorkFlowDefinitionResponseDTO {
 	 * Get createDate
 	 * @return createDate
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Date getCreateDate() {
 		return createDate;
 	}
@@ -261,7 +261,7 @@ public class WorkFlowDefinitionResponseDTO {
 	 * Get cronExpression
 	 * @return cronExpression
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getCronExpression() {
 		return cronExpression;
 	}
@@ -280,7 +280,7 @@ public class WorkFlowDefinitionResponseDTO {
 	 * Get fallbackWorkflow
 	 * @return fallbackWorkflow
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getFallbackWorkflow() {
 		return fallbackWorkflow;
 	}
@@ -299,7 +299,7 @@ public class WorkFlowDefinitionResponseDTO {
 	 * Get id
 	 * @return id
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public UUID getId() {
 		return id;
 	}
@@ -318,7 +318,7 @@ public class WorkFlowDefinitionResponseDTO {
 	 * Get modifyDate
 	 * @return modifyDate
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Date getModifyDate() {
 		return modifyDate;
 	}
@@ -337,7 +337,7 @@ public class WorkFlowDefinitionResponseDTO {
 	 * Get name
 	 * @return name
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getName() {
 		return name;
 	}
@@ -364,7 +364,7 @@ public class WorkFlowDefinitionResponseDTO {
 	 * Get parameters
 	 * @return parameters
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Map<String, Map<String, Object>> getParameters() {
 		return parameters;
 	}
@@ -383,7 +383,7 @@ public class WorkFlowDefinitionResponseDTO {
 	 * Get processingType
 	 * @return processingType
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public ProcessingTypeEnum getProcessingType() {
 		return processingType;
 	}
@@ -402,7 +402,7 @@ public class WorkFlowDefinitionResponseDTO {
 	 * Get properties
 	 * @return properties
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public WorkFlowPropertiesDefinitionDTO getProperties() {
 		return properties;
 	}
@@ -421,7 +421,7 @@ public class WorkFlowDefinitionResponseDTO {
 	 * Get type
 	 * @return type
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public TypeEnum getType() {
 		return type;
 	}
@@ -448,7 +448,7 @@ public class WorkFlowDefinitionResponseDTO {
 	 * Get works
 	 * @return works
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Set<WorkDefinitionResponseDTO> getWorks() {
 		return works;
 	}

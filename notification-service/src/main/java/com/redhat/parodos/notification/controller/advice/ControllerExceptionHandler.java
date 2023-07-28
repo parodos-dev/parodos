@@ -4,9 +4,9 @@ import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 
 import com.redhat.parodos.notification.exceptions.NotificationRecordNotFoundException;
 import com.redhat.parodos.notification.exceptions.UnsupportedStateException;

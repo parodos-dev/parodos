@@ -2,7 +2,7 @@ package com.redhat.parodos.user.repository;
 
 import java.util.UUID;
 
-import javax.persistence.PersistenceException;
+import jakarta.persistence.PersistenceException;
 
 import com.redhat.parodos.repository.RepositoryTestBase;
 import com.redhat.parodos.user.entity.User;

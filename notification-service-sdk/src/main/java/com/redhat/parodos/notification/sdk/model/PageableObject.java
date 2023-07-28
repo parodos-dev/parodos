@@ -32,7 +32,7 @@ import com.redhat.parodos.notification.sdk.api.JSON;
 /**
  * PageableObject
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class PageableObject {
 
 	public static final String SERIALIZED_NAME_OFFSET = "offset";
@@ -58,7 +58,7 @@ public class PageableObject {
 	public static final String SERIALIZED_NAME_SORT = "sort";
 
 	@SerializedName(SERIALIZED_NAME_SORT)
-	private Sort sort;
+	private SortObject sort;
 
 	public static final String SERIALIZED_NAME_UNPAGED = "unpaged";
 
@@ -78,7 +78,7 @@ public class PageableObject {
 	 * Get offset
 	 * @return offset
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Long getOffset() {
 		return offset;
 	}
@@ -97,7 +97,7 @@ public class PageableObject {
 	 * Get pageNumber
 	 * @return pageNumber
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Integer getPageNumber() {
 		return pageNumber;
 	}
@@ -116,7 +116,7 @@ public class PageableObject {
 	 * Get pageSize
 	 * @return pageSize
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Integer getPageSize() {
 		return pageSize;
 	}
@@ -135,7 +135,7 @@ public class PageableObject {
 	 * Get paged
 	 * @return paged
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Boolean getPaged() {
 		return paged;
 	}
@@ -144,7 +144,7 @@ public class PageableObject {
 		this.paged = paged;
 	}
 
-	public PageableObject sort(Sort sort) {
+	public PageableObject sort(SortObject sort) {
 
 		this.sort = sort;
 		return this;
@@ -154,12 +154,12 @@ public class PageableObject {
 	 * Get sort
 	 * @return sort
 	 **/
-	@javax.annotation.Nullable
-	public Sort getSort() {
+	@jakarta.annotation.Nullable
+	public SortObject getSort() {
 		return sort;
 	}
 
-	public void setSort(Sort sort) {
+	public void setSort(SortObject sort) {
 		this.sort = sort;
 	}
 
@@ -173,7 +173,7 @@ public class PageableObject {
 	 * Get unpaged
 	 * @return unpaged
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Boolean getUnpaged() {
 		return unpaged;
 	}
@@ -273,7 +273,7 @@ public class PageableObject {
 		}
 		// validate the optional field `sort`
 		if (jsonObj.get("sort") != null && !jsonObj.get("sort").isJsonNull()) {
-			Sort.validateJsonObject(jsonObj.getAsJsonObject("sort"));
+			SortObject.validateJsonObject(jsonObj.getAsJsonObject("sort"));
 		}
 	}
 

@@ -36,7 +36,7 @@ import com.redhat.parodos.notification.sdk.api.JSON;
 /**
  * NotificationRecordResponseDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class NotificationRecordResponseDTO {
 
 	public static final String SERIALIZED_NAME_BODY = "body";
@@ -97,7 +97,7 @@ public class NotificationRecordResponseDTO {
 	 * Get body
 	 * @return body
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getBody() {
 		return body;
 	}
@@ -116,7 +116,7 @@ public class NotificationRecordResponseDTO {
 	 * Get createdOn
 	 * @return createdOn
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Date getCreatedOn() {
 		return createdOn;
 	}
@@ -135,7 +135,7 @@ public class NotificationRecordResponseDTO {
 	 * Get folder
 	 * @return folder
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getFolder() {
 		return folder;
 	}
@@ -154,7 +154,7 @@ public class NotificationRecordResponseDTO {
 	 * Get fromuser
 	 * @return fromuser
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getFromuser() {
 		return fromuser;
 	}
@@ -173,7 +173,7 @@ public class NotificationRecordResponseDTO {
 	 * Get id
 	 * @return id
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public UUID getId() {
 		return id;
 	}
@@ -192,7 +192,7 @@ public class NotificationRecordResponseDTO {
 	 * Get messageType
 	 * @return messageType
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getMessageType() {
 		return messageType;
 	}
@@ -211,7 +211,7 @@ public class NotificationRecordResponseDTO {
 	 * Get read
 	 * @return read
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Boolean getRead() {
 		return read;
 	}
@@ -230,7 +230,7 @@ public class NotificationRecordResponseDTO {
 	 * Get subject
 	 * @return subject
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getSubject() {
 		return subject;
 	}
@@ -257,7 +257,7 @@ public class NotificationRecordResponseDTO {
 	 * Get tags
 	 * @return tags
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public List<String> getTags() {
 		return tags;
 	}

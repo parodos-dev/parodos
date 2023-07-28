@@ -19,29 +19,28 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 import com.redhat.parodos.common.entity.AbstractEntity;
 import com.redhat.parodos.workflow.enums.WorkFlowProcessingType;
 import com.redhat.parodos.workflow.enums.WorkFlowType;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;
-import io.hypersistence.utils.hibernate.type.json.JsonType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 /**
  * Workflow definition entity
@@ -57,7 +56,6 @@ import org.hibernate.annotations.TypeDef;
 @AllArgsConstructor
 @Getter
 @Setter
-@TypeDef(name = "json", typeClass = JsonType.class)
 public class WorkFlowDefinition extends AbstractEntity {
 
 	@Column(nullable = false, unique = true)
@@ -83,7 +81,7 @@ public class WorkFlowDefinition extends AbstractEntity {
 	private Integer numberOfWorks;
 
 	@Column(columnDefinition = "jsonb")
-	@Type(type = "json")
+	@JdbcTypeCode(SqlTypes.JSON)
 	private WorkFlowPropertiesDefinition properties;
 
 	@OneToMany(mappedBy = "workFlowDefinition", fetch = FetchType.EAGER,

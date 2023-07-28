@@ -33,7 +33,7 @@ import com.redhat.parodos.sdk.invoker.JSON;
 /**
  * AccessRequestDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class AccessRequestDTO {
 
 	/**
@@ -112,7 +112,7 @@ public class AccessRequestDTO {
 	 * Get role
 	 * @return role
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public RoleEnum getRole() {
 		return role;
 	}
@@ -131,7 +131,7 @@ public class AccessRequestDTO {
 	 * Get username
 	 * @return username
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getUsername() {
 		return username;
 	}

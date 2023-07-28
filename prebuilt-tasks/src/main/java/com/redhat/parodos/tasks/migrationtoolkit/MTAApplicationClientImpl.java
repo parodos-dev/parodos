@@ -16,7 +16,8 @@ import java.util.Optional;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import javax.ws.rs.NotFoundException;
+
+import jakarta.ws.rs.NotFoundException;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;

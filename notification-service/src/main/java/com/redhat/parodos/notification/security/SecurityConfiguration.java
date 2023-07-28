@@ -26,9 +26,11 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.ldap.userdetails.InetOrgPersonContextMapper;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.stereotype.Component;
 
 /**
@@ -37,7 +39,6 @@ import org.springframework.stereotype.Component;
  * application.yml file
  *
  * @author Luke Shannon (Github: lshannon)
- *
  */
 
 @Component
@@ -52,41 +53,39 @@ public class SecurityConfiguration {
 	@Autowired
 	private SecurityProperties securityProperties;
 
-	public HttpSecurity setHttpSecurity(HttpSecurity http) throws Exception {
-		// @formatter:off
-		http
-			.csrf()
-			.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-		if (!securityProperties.getAuthentication()) {
-			return http;
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http.csrf(AbstractHttpConfigurer::disable).cors(AbstractHttpConfigurer::disable);
+
+		if (!this.securityProperties.isAuthentication()) {
+			return http.build();
 		}
 
+		// @formatter:off
 		http
-			.authorizeRequests()
-			.mvcMatchers(HttpMethod.OPTIONS, "/**")
-			.permitAll()
-			.mvcMatchers("/api/**")
-			.fullyAuthenticated()
-			.and()
-			.httpBasic(Customizer.withDefaults())
-			.headers().frameOptions().disable()
-			.and()
-			.formLogin(form -> form.loginProcessingUrl("/login"))
-			.logout()
-			.logoutSuccessUrl("/login").permitAll();
+				.authorizeHttpRequests(auth ->auth
+						.requestMatchers(HttpMethod.OPTIONS, "/**")
+						.permitAll()
+						.requestMatchers("/api/**")
+						.fullyAuthenticated()
+						.anyRequest().permitAll())
+				.httpBasic(Customizer.withDefaults())
+				.headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+				.formLogin(form -> form.loginProcessingUrl("/login"))
+				.logout(httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer
+						.logoutSuccessUrl("/login").permitAll());
 		// @formatter:on
-		return http;
+		return http.build();
 	}
 
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		HttpSecurity httpSec = this.setHttpSecurity(http);
-		return httpSec.build();
+	public InetOrgPersonContextMapper userContextMapper() {
+		return new InetOrgPersonContextMapper();
 	}
 
 	@Autowired
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
-		if (!securityProperties.getAuthentication()) {
+		if (!securityProperties.isAuthentication()) {
 			return;
 		}
 		// @formatter:off

@@ -31,9 +31,7 @@
         <jgit-version>6.5.0.202303070854-r</jgit-version>
         <common.io.version>2.11.0</common.io.version>
         <model.mapper.version>3.1.1</model.mapper.version>
-        <spring-cloud.version>2021.0.7</spring-cloud.version>
-        <springdoc-openapi-ui.version>1.6.4</springdoc-openapi-ui.version>
-        <hypersistence-utils.version>3.1.0</hypersistence-utils.version>
+        <hypersistence-utils.version>3.5.0</hypersistence-utils.version>
     </properties>
 
     <dependencies>
@@ -110,7 +108,7 @@
         </dependency>
         <dependency>
             <groupId>io.hypersistence</groupId>
-            <artifactId>hypersistence-utils-hibernate-52</artifactId>
+            <artifactId>hypersistence-utils-hibernate-62</artifactId>
             <version>${hypersistence-utils.version}</version>
         </dependency>
         <!-- END Spring Data Mongodb Dependencies -->
@@ -138,7 +136,7 @@
         <!-- START API Documentation Dependencies -->
         <dependency>
             <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-ui</artifactId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>${springdoc-openapi-ui.version}</version>
         </dependency>
         <!-- END API Documentation Dependencies -->

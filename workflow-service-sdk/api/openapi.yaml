@@ -1737,6 +1737,7 @@ components:
       type: object
     WorkFlowResponseDTO:
       example:
+        originalExecutionId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         workStatus: FAILED
         additionalInfos:
         - value: value
@@ -1758,6 +1759,9 @@ components:
         endDate:
           type: string
         executeBy:
+          type: string
+        originalExecutionId:
+          format: uuid
           type: string
         projectId:
           format: uuid

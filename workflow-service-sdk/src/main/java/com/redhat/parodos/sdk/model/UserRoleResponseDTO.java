@@ -34,7 +34,7 @@ import com.redhat.parodos.sdk.invoker.JSON;
 /**
  * UserRoleResponseDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class UserRoleResponseDTO {
 
 	/**
@@ -121,7 +121,7 @@ public class UserRoleResponseDTO {
 	 * Get roles
 	 * @return roles
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Set<RolesEnum> getRoles() {
 		return roles;
 	}
@@ -140,7 +140,7 @@ public class UserRoleResponseDTO {
 	 * Get username
 	 * @return username
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getUsername() {
 		return username;
 	}

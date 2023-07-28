@@ -19,12 +19,12 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
 
-import com.nimbusds.jose.shaded.json.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.redhat.parodos.common.entity.AbstractEntity;
 import com.redhat.parodos.project.entity.ProjectUserRole;
 import com.redhat.parodos.workflow.execution.entity.WorkFlowExecution;

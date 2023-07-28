@@ -507,7 +507,7 @@ public class NotificationRecordApi {
 	 * Build call for getNotifications
 	 * @param page Zero-based page index (0..N) (optional, default to 0)
 	 * @param size The size of the page to be returned (optional, default to 100)
-	 * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order
+	 * @param sort Sorting criteria in the format: property,(asc|desc). Default sort order
 	 * is ascending. Multiple sort criteria are supported. (optional)
 	 * @param state (optional)
 	 * @param searchTerm (optional)
@@ -620,7 +620,7 @@ public class NotificationRecordApi {
 	 * Return a list of notification records for the user
 	 * @param page Zero-based page index (0..N) (optional, default to 0)
 	 * @param size The size of the page to be returned (optional, default to 100)
-	 * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order
+	 * @param sort Sorting criteria in the format: property,(asc|desc). Default sort order
 	 * is ascending. Multiple sort criteria are supported. (optional)
 	 * @param state (optional)
 	 * @param searchTerm (optional)
@@ -667,7 +667,7 @@ public class NotificationRecordApi {
 	 * Return a list of notification records for the user
 	 * @param page Zero-based page index (0..N) (optional, default to 0)
 	 * @param size The size of the page to be returned (optional, default to 100)
-	 * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order
+	 * @param sort Sorting criteria in the format: property,(asc|desc). Default sort order
 	 * is ascending. Multiple sort criteria are supported. (optional)
 	 * @param state (optional)
 	 * @param searchTerm (optional)
@@ -715,7 +715,7 @@ public class NotificationRecordApi {
 	 * Return a list of notification records for the user (asynchronously)
 	 * @param page Zero-based page index (0..N) (optional, default to 0)
 	 * @param size The size of the page to be returned (optional, default to 100)
-	 * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order
+	 * @param sort Sorting criteria in the format: property,(asc|desc). Default sort order
 	 * is ascending. Multiple sort criteria are supported. (optional)
 	 * @param state (optional)
 	 * @param searchTerm (optional)

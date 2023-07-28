@@ -1,5 +1,7 @@
 package com.redhat.parodos.workflow.definition.entity;
 
+import java.io.Serializable;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class WorkFlowPropertiesDefinition {
+public class WorkFlowPropertiesDefinition implements Serializable {
 
 	@Getter
 	@Setter

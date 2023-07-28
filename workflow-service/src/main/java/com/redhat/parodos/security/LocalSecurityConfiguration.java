@@ -15,9 +15,15 @@
  */
 package com.redhat.parodos.security;
 
+import com.redhat.parodos.config.properties.LdapConnectionProperties;
+import com.redhat.parodos.config.properties.SecurityProperties;
+
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * Turn off security for Local testing only. Do not enable this profile in production
@@ -29,10 +35,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 @Configuration
 public class LocalSecurityConfiguration extends SecurityConfiguration {
 
+	public LocalSecurityConfiguration(LdapConnectionProperties ldapConnectionProperties,
+			SecurityProperties securityProperties) {
+		super(ldapConnectionProperties, securityProperties);
+	}
+
 	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.cors().disable().csrf().disable();
-		super.configure(http);
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http.csrf(AbstractHttpConfigurer::disable).cors(AbstractHttpConfigurer::disable);
+		return super.filterChain(http);
 	}
 
 }

@@ -66,7 +66,7 @@ paths:
           minimum: 1
           type: integer
         style: form
-      - description: "Sorting criteria in the format: property(,asc|desc). Default\
+      - description: "Sorting criteria in the format: property,(asc|desc). Default\
           \ sort order is ascending. Multiple sort criteria are supported."
         explode: true
         in: query
@@ -398,7 +398,7 @@ components:
           format: int32
           type: integer
         sort:
-          $ref: '#/components/schemas/Sort'
+          $ref: '#/components/schemas/SortObject'
         totalElements:
           format: int64
           type: integer
@@ -430,11 +430,11 @@ components:
         paged:
           type: boolean
         sort:
-          $ref: '#/components/schemas/Sort'
+          $ref: '#/components/schemas/SortObject'
         unpaged:
           type: boolean
       type: object
-    Sort:
+    SortObject:
       example:
         unsorted: true
         sorted: true

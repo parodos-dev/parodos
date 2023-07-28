@@ -126,7 +126,7 @@ Class | Method | HTTP request | Description
  - [NotificationRecordResponseDTO](docs/NotificationRecordResponseDTO.md)
  - [PageNotificationRecordResponseDTO](docs/PageNotificationRecordResponseDTO.md)
  - [PageableObject](docs/PageableObject.md)
- - [Sort](docs/Sort.md)
+ - [SortObject](docs/SortObject.md)
 
 
 <a id="documentation-for-authorization"></a>

@@ -34,7 +34,7 @@ import com.redhat.parodos.sdk.invoker.JSON;
 /**
  * WorkFlowOption
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowOption {
 
 	public static final String SERIALIZED_NAME_DESCRIPTION = "description";
@@ -80,7 +80,7 @@ public class WorkFlowOption {
 	 * Get description
 	 * @return description
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getDescription() {
 		return description;
 	}
@@ -107,7 +107,7 @@ public class WorkFlowOption {
 	 * Get details
 	 * @return details
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public List<String> getDetails() {
 		return details;
 	}
@@ -126,7 +126,7 @@ public class WorkFlowOption {
 	 * Get displayName
 	 * @return displayName
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getDisplayName() {
 		return displayName;
 	}
@@ -145,7 +145,7 @@ public class WorkFlowOption {
 	 * Get identifier
 	 * @return identifier
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getIdentifier() {
 		return identifier;
 	}
@@ -164,7 +164,7 @@ public class WorkFlowOption {
 	 * Get recommended
 	 * @return recommended
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Boolean getRecommended() {
 		return recommended;
 	}
@@ -183,7 +183,7 @@ public class WorkFlowOption {
 	 * Get workFlowName
 	 * @return workFlowName
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getWorkFlowName() {
 		return workFlowName;
 	}

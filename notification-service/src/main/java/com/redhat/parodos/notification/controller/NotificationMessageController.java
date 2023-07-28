@@ -15,7 +15,7 @@
  */
 package com.redhat.parodos.notification.controller;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import com.redhat.parodos.notification.dto.NotificationMessageCreateRequestDTO;
 import com.redhat.parodos.notification.service.NotificationMessageService;

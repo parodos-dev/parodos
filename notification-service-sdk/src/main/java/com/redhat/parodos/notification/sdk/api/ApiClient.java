@@ -28,20 +28,42 @@ import java.security.SecureRandom;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
 import java.text.DateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.net.ssl.*;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 import com.redhat.parodos.notification.sdk.api.auth.ApiKeyAuth;
 import com.redhat.parodos.notification.sdk.api.auth.Authentication;
 import com.redhat.parodos.notification.sdk.api.auth.HttpBasicAuth;
-import okhttp3.*;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Headers;
+import okhttp3.Interceptor;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import okhttp3.internal.http.HttpMethod;
 import okhttp3.internal.tls.OkHostnameVerifier;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -499,10 +521,9 @@ public class ApiClient {
 	 * The path of temporary folder used to store downloaded files from endpoints with
 	 * file response. The default value is <code>null</code>, i.e. using the system's
 	 * default temporary folder.
-	 *
+	 * @return Temporary folder path
 	 * @see <a href=
 	 * "https://docs.oracle.com/javase/7/docs/api/java/nio/file/Files.html#createTempFile(java.lang.String,%20java.lang.String,%20java.nio.file.attribute.FileAttribute...)">createTempFile</a>
-	 * @return Temporary folder path
 	 */
 	public String getTempFolderPath() {
 		return tempFolderPath;
@@ -607,7 +628,7 @@ public class ApiClient {
 	/**
 	 * Formats the specified query parameter to a list containing a single {@code Pair}
 	 * object.
-	 *
+	 * <p>
 	 * Note that {@code value} must not be a collection.
 	 * @param name The name of the parameter.
 	 * @param value The value of the parameter.
@@ -628,7 +649,7 @@ public class ApiClient {
 	/**
 	 * Formats the specified collection query parameters to a list of {@code Pair}
 	 * objects.
-	 *
+	 * <p>
 	 * Note that the values of each of the returned Pair objects are percent-encoded.
 	 * @param collectionFormat The collection format of the parameter.
 	 * @param name The name of the parameter.
@@ -897,9 +918,9 @@ public class ApiClient {
 	/**
 	 * Download file from the given response.
 	 * @param response An instance of the Response object
+	 * @return Downloaded file
 	 * @throws com.redhat.parodos.notification.sdk.api.ApiException If fail to read file
 	 * content from response and write to disk
-	 * @return Downloaded file
 	 */
 	public File downloadFileFromResponse(Response response) throws ApiException {
 		try {

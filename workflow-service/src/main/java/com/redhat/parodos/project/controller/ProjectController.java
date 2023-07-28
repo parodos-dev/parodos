@@ -19,8 +19,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 
 import com.redhat.parodos.project.dto.request.AccessRequestDTO;
 import com.redhat.parodos.project.dto.request.ProjectRequestDTO;

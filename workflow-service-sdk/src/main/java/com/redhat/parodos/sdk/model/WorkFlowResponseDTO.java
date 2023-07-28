@@ -37,7 +37,7 @@ import com.redhat.parodos.sdk.invoker.JSON;
 /**
  * WorkFlowResponseDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkFlowResponseDTO {
 
 	public static final String SERIALIZED_NAME_ADDITIONAL_INFOS = "additionalInfos";
@@ -54,6 +54,11 @@ public class WorkFlowResponseDTO {
 
 	@SerializedName(SERIALIZED_NAME_EXECUTE_BY)
 	private String executeBy;
+
+	public static final String SERIALIZED_NAME_ORIGINAL_EXECUTION_ID = "originalExecutionId";
+
+	@SerializedName(SERIALIZED_NAME_ORIGINAL_EXECUTION_ID)
+	private UUID originalExecutionId;
 
 	public static final String SERIALIZED_NAME_PROJECT_ID = "projectId";
 
@@ -218,7 +223,7 @@ public class WorkFlowResponseDTO {
 	 * Get additionalInfos
 	 * @return additionalInfos
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public List<AdditionalInfo> getAdditionalInfos() {
 		return additionalInfos;
 	}
@@ -237,7 +242,7 @@ public class WorkFlowResponseDTO {
 	 * Get endDate
 	 * @return endDate
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getEndDate() {
 		return endDate;
 	}
@@ -256,13 +261,32 @@ public class WorkFlowResponseDTO {
 	 * Get executeBy
 	 * @return executeBy
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getExecuteBy() {
 		return executeBy;
 	}
 
 	public void setExecuteBy(String executeBy) {
 		this.executeBy = executeBy;
+	}
+
+	public WorkFlowResponseDTO originalExecutionId(UUID originalExecutionId) {
+
+		this.originalExecutionId = originalExecutionId;
+		return this;
+	}
+
+	/**
+	 * Get originalExecutionId
+	 * @return originalExecutionId
+	 **/
+	@jakarta.annotation.Nullable
+	public UUID getOriginalExecutionId() {
+		return originalExecutionId;
+	}
+
+	public void setOriginalExecutionId(UUID originalExecutionId) {
+		this.originalExecutionId = originalExecutionId;
 	}
 
 	public WorkFlowResponseDTO projectId(UUID projectId) {
@@ -275,7 +299,7 @@ public class WorkFlowResponseDTO {
 	 * Get projectId
 	 * @return projectId
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public UUID getProjectId() {
 		return projectId;
 	}
@@ -294,7 +318,7 @@ public class WorkFlowResponseDTO {
 	 * Get startDate
 	 * @return startDate
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getStartDate() {
 		return startDate;
 	}
@@ -313,7 +337,7 @@ public class WorkFlowResponseDTO {
 	 * Get workFlowExecutionId
 	 * @return workFlowExecutionId
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public UUID getWorkFlowExecutionId() {
 		return workFlowExecutionId;
 	}
@@ -332,7 +356,7 @@ public class WorkFlowResponseDTO {
 	 * Get workFlowName
 	 * @return workFlowName
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getWorkFlowName() {
 		return workFlowName;
 	}
@@ -351,7 +375,7 @@ public class WorkFlowResponseDTO {
 	 * Get workFlowType
 	 * @return workFlowType
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public WorkFlowTypeEnum getWorkFlowType() {
 		return workFlowType;
 	}
@@ -370,7 +394,7 @@ public class WorkFlowResponseDTO {
 	 * Get workStatus
 	 * @return workStatus
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public WorkStatusEnum getWorkStatus() {
 		return workStatus;
 	}
@@ -391,6 +415,7 @@ public class WorkFlowResponseDTO {
 		return Objects.equals(this.additionalInfos, workFlowResponseDTO.additionalInfos)
 				&& Objects.equals(this.endDate, workFlowResponseDTO.endDate)
 				&& Objects.equals(this.executeBy, workFlowResponseDTO.executeBy)
+				&& Objects.equals(this.originalExecutionId, workFlowResponseDTO.originalExecutionId)
 				&& Objects.equals(this.projectId, workFlowResponseDTO.projectId)
 				&& Objects.equals(this.startDate, workFlowResponseDTO.startDate)
 				&& Objects.equals(this.workFlowExecutionId, workFlowResponseDTO.workFlowExecutionId)
@@ -401,8 +426,8 @@ public class WorkFlowResponseDTO {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(additionalInfos, endDate, executeBy, projectId, startDate, workFlowExecutionId,
-				workFlowName, workFlowType, workStatus);
+		return Objects.hash(additionalInfos, endDate, executeBy, originalExecutionId, projectId, startDate,
+				workFlowExecutionId, workFlowName, workFlowType, workStatus);
 	}
 
 	@Override
@@ -412,6 +437,7 @@ public class WorkFlowResponseDTO {
 		sb.append("    additionalInfos: ").append(toIndentedString(additionalInfos)).append("\n");
 		sb.append("    endDate: ").append(toIndentedString(endDate)).append("\n");
 		sb.append("    executeBy: ").append(toIndentedString(executeBy)).append("\n");
+		sb.append("    originalExecutionId: ").append(toIndentedString(originalExecutionId)).append("\n");
 		sb.append("    projectId: ").append(toIndentedString(projectId)).append("\n");
 		sb.append("    startDate: ").append(toIndentedString(startDate)).append("\n");
 		sb.append("    workFlowExecutionId: ").append(toIndentedString(workFlowExecutionId)).append("\n");
@@ -443,6 +469,7 @@ public class WorkFlowResponseDTO {
 		openapiFields.add("additionalInfos");
 		openapiFields.add("endDate");
 		openapiFields.add("executeBy");
+		openapiFields.add("originalExecutionId");
 		openapiFields.add("projectId");
 		openapiFields.add("startDate");
 		openapiFields.add("workFlowExecutionId");
@@ -508,6 +535,12 @@ public class WorkFlowResponseDTO {
 			throw new IllegalArgumentException(String.format(
 					"Expected the field `executeBy` to be a primitive type in the JSON string but got `%s`",
 					jsonObj.get("executeBy").toString()));
+		}
+		if ((jsonObj.get("originalExecutionId") != null && !jsonObj.get("originalExecutionId").isJsonNull())
+				&& !jsonObj.get("originalExecutionId").isJsonPrimitive()) {
+			throw new IllegalArgumentException(String.format(
+					"Expected the field `originalExecutionId` to be a primitive type in the JSON string but got `%s`",
+					jsonObj.get("originalExecutionId").toString()));
 		}
 		if ((jsonObj.get("projectId") != null && !jsonObj.get("projectId").isJsonNull())
 				&& !jsonObj.get("projectId").isJsonPrimitive()) {

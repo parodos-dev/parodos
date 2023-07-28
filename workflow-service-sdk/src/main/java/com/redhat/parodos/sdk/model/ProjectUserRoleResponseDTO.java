@@ -36,7 +36,7 @@ import com.redhat.parodos.sdk.invoker.JSON;
 /**
  * ProjectUserRoleResponseDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class ProjectUserRoleResponseDTO {
 
 	public static final String SERIALIZED_NAME_ID = "id";
@@ -67,7 +67,7 @@ public class ProjectUserRoleResponseDTO {
 	 * Get id
 	 * @return id
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public UUID getId() {
 		return id;
 	}
@@ -86,7 +86,7 @@ public class ProjectUserRoleResponseDTO {
 	 * Get projectName
 	 * @return projectName
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getProjectName() {
 		return projectName;
 	}
@@ -113,7 +113,7 @@ public class ProjectUserRoleResponseDTO {
 	 * Get userResponseDTOList
 	 * @return userResponseDTOList
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public List<UserRoleResponseDTO> getUserResponseDTOList() {
 		return userResponseDTOList;
 	}

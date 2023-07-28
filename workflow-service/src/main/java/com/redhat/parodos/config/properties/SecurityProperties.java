@@ -10,6 +10,6 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 @Data
 public class SecurityProperties {
 
-	Boolean authentication;
+	private boolean authentication;
 
 }

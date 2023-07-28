@@ -32,7 +32,7 @@ import com.redhat.parodos.sdk.invoker.JSON;
 /**
  * WorkParameterValueRequestDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class WorkParameterValueRequestDTO {
 
 	public static final String SERIALIZED_NAME_KEY = "key";
@@ -63,7 +63,7 @@ public class WorkParameterValueRequestDTO {
 	 * Get key
 	 * @return key
 	 **/
-	@javax.annotation.Nonnull
+	@jakarta.annotation.Nonnull
 	public String getKey() {
 		return key;
 	}
@@ -82,7 +82,7 @@ public class WorkParameterValueRequestDTO {
 	 * Get value
 	 * @return value
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getValue() {
 		return value;
 	}
@@ -101,7 +101,7 @@ public class WorkParameterValueRequestDTO {
 	 * Get workName
 	 * @return workName
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getWorkName() {
 		return workName;
 	}

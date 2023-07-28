@@ -18,7 +18,7 @@ package com.redhat.parodos.user.dto;
 import java.util.Date;
 import java.util.UUID;
 
-import javax.validation.constraints.Email;
+import jakarta.validation.constraints.Email;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

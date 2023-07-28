@@ -33,7 +33,7 @@ import com.redhat.parodos.notification.sdk.api.JSON;
 /**
  * ErrorMessageDTO
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class ErrorMessageDTO {
 
 	public static final String SERIALIZED_NAME_DATE = "date";
@@ -64,7 +64,7 @@ public class ErrorMessageDTO {
 	 * Get date
 	 * @return date
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public Date getDate() {
 		return date;
 	}
@@ -83,7 +83,7 @@ public class ErrorMessageDTO {
 	 * Get description
 	 * @return description
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getDescription() {
 		return description;
 	}
@@ -102,7 +102,7 @@ public class ErrorMessageDTO {
 	 * Get message
 	 * @return message
 	 **/
-	@javax.annotation.Nullable
+	@jakarta.annotation.Nullable
 	public String getMessage() {
 		return message;
 	}
