@@ -69,13 +69,13 @@ public class ProjectAccessRequestApprovalWorkFlowTask extends BaseWorkFlowTask {
 		NotificationMessageCreateRequestDTO notificationMessageCreateRequestDTO = new NotificationMessageCreateRequestDTO();
 		notificationMessageCreateRequestDTO.setSubject(NOTIFICATION_SUBJECT_ACCESS_REQUEST_APPROVAL);
 		notificationMessageCreateRequestDTO.setUsernames(Arrays.stream(approvalUsernames.split(",")).toList());
-		notificationMessageCreateRequestDTO.setBody(buildMessage(
+		notificationMessageCreateRequestDTO.setBody(getMessage(
 				String.format("%s/api/v1/projects/access/%s", projectRequester.getBasePath(), accessRequestId)));
 		notifier.send(notificationMessageCreateRequestDTO);
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
-	private String buildMessage(String url) {
+	private String getMessage(String url) {
 		return "Hi there," + "\n"
 				+ "A project request awaits your approval. Use the url below to approve or reject the request." + "\n"
 				+ "Url: " + url + "\n" + "Thank you," + "\n" + "The Parodos Team";

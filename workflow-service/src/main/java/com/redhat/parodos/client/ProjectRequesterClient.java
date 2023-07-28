@@ -25,9 +25,9 @@ public class ProjectRequesterClient implements ProjectRequester {
 
 	private final ProjectAccessApi projectAccessApi;
 
-	public ProjectRequesterClient(@Value("${workflow.url}") String url,
-			@Value("${workflow.auth.basic.user}") String user,
-			@Value("${workflow.auth.basic.password}") String password) {
+	public ProjectRequesterClient(@Value("${workflow.url:test}") String url,
+			@Value("${workflow.auth.basic.user:test}") String user,
+			@Value("${workflow.auth.basic.password:test}") String password) {
 		ApiClient apiClient = new ApiClient().setBasePath(url).addDefaultHeader(HttpHeaders.AUTHORIZATION,
 				"Basic " + Base64.getEncoder().encodeToString((user + ":" + password).getBytes()));
 		projectApi = new ProjectApi(apiClient);
