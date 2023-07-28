@@ -26,10 +26,14 @@ package com.redhat.parodos.workflows.workflow;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.junit.MatcherAssert.assertThat;
 
 public class ParallelFlowReportTest {
 
@@ -41,7 +45,7 @@ public class ParallelFlowReportTest {
 
 	private ParallelFlowReport progressParallelFlowReport;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		exception = new Exception("test exception");
 		WorkContext workContext = new WorkContext();
@@ -64,28 +68,28 @@ public class ParallelFlowReportTest {
 
 	@Test
 	public void testGetStatus() {
-		assertThat(completedParallelFlowReport.getStatus()).isEqualTo(WorkStatus.COMPLETED);
-		assertThat(failedParallelFlowReport.getStatus()).isEqualTo(WorkStatus.FAILED);
-		assertThat(progressParallelFlowReport.getStatus()).isEqualTo(WorkStatus.IN_PROGRESS);
+		assertThat(completedParallelFlowReport.getStatus(), equalTo(WorkStatus.COMPLETED));
+		assertThat(failedParallelFlowReport.getStatus(), equalTo(WorkStatus.FAILED));
+		assertThat(progressParallelFlowReport.getStatus(), equalTo(WorkStatus.IN_PROGRESS));
 	}
 
 	@Test
 	public void testGetError() {
-		assertThat(failedParallelFlowReport.getError()).isEqualTo(exception);
+		assertThat(failedParallelFlowReport.getError(), equalTo(exception));
 	}
 
 	@Test
 	public void testGetReports() {
-		assertThat(completedParallelFlowReport.getReports()).hasSize(2);
-		assertThat(failedParallelFlowReport.getReports()).hasSize(3);
-		assertThat(progressParallelFlowReport.getReports()).hasSize(4);
+		assertThat(completedParallelFlowReport.getReports(), hasSize(2));
+		assertThat(failedParallelFlowReport.getReports(), hasSize(3));
+		assertThat(progressParallelFlowReport.getReports(), hasSize(4));
 	}
 
 	@Test
 	public void testGetAlertMessage() {
-		assertThat(completedParallelFlowReport.getAlertMessage()).isEqualTo("alertMessage_2");
-		assertThat(failedParallelFlowReport.getAlertMessage()).isNull();
-		assertThat(progressParallelFlowReport.getAlertMessage()).isEqualTo("alertMessage_3");
+		assertThat(completedParallelFlowReport.getAlertMessage(), equalTo("alertMessage_2"));
+		assertThat(failedParallelFlowReport.getAlertMessage(), is(nullValue()));
+		assertThat(progressParallelFlowReport.getAlertMessage(), equalTo("alertMessage_3"));
 	}
 
 }
