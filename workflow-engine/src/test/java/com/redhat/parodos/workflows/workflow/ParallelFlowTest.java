@@ -30,7 +30,8 @@ import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.work.WorkContext;
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.junit.MatcherAssert.assertThat;
+import static org.mockito.ArgumentMatchers.isNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -50,7 +51,7 @@ public class ParallelFlowTest {
 		ParallelFlowReport parallelFlowReport = parallelFlow.execute(workContext);
 
 		// then
-		assertThat(parallelFlowReport).isNotNull();
+		assertThat(parallelFlowReport, isNotNull());
 		verify(parallelFlowExecutor).executeInParallel(works, workContext);
 	}
 

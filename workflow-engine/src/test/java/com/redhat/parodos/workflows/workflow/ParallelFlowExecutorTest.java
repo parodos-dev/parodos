@@ -33,9 +33,11 @@ import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.junit.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 
 public class ParallelFlowExecutorTest {
@@ -55,9 +57,9 @@ public class ParallelFlowExecutorTest {
 		executorService.shutdown();
 
 		// then
-		assertThat(workReports).hasSize(2);
-		assertThat(work1.isExecuted()).isTrue();
-		assertThat(work2.isExecuted()).isTrue();
+		assertThat(workReports, hasSize(2));
+		assertThat(work1.isExecuted(), is(true));
+		assertThat(work2.isExecuted(), is(true));
 	}
 
 	static class HelloWorldWork implements Work {

@@ -46,7 +46,8 @@ import static com.redhat.parodos.workflows.workflow.ConditionalFlow.Builder.aNew
 import static com.redhat.parodos.workflows.workflow.ParallelFlow.Builder.aNewParallelFlow;
 import static com.redhat.parodos.workflows.workflow.RepeatFlow.Builder.aNewRepeatFlow;
 import static com.redhat.parodos.workflows.workflow.SequentialFlow.Builder.aNewSequentialFlow;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.junit.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -95,7 +96,7 @@ public class WorkFlowEngineImplTest {
 		WorkContext workContext = new WorkContext();
 		WorkReport workReport = workFlowEngine.run(sequentialFlow, workContext);
 		executorService.shutdown();
-		assertThat(workReport.getStatus()).isEqualTo(WorkStatus.COMPLETED);
+		assertThat(workReport.getStatus(), equalTo(WorkStatus.COMPLETED));
 		System.out.println("workflow report = " + workReport);
 	}
 
@@ -118,7 +119,7 @@ public class WorkFlowEngineImplTest {
 		WorkContext workContext = new WorkContext();
 		WorkReport workReport = workFlowEngine.run(workflow, workContext);
 		executorService.shutdown();
-		assertThat(workReport.getStatus()).isEqualTo(WorkStatus.COMPLETED);
+		assertThat(workReport.getStatus(), equalTo(WorkStatus.COMPLETED));
 		System.out.println("workflow report = " + workReport);
 	}
 
@@ -139,7 +140,7 @@ public class WorkFlowEngineImplTest {
 		workContext.put("partition2", "hello bar");
 		WorkReport workReport = workFlowEngine.run(workflow, workContext);
 		executorService.shutdown();
-		assertThat(workReport.getStatus()).isEqualTo(WorkStatus.COMPLETED);
+		assertThat(workReport.getStatus(), equalTo(WorkStatus.COMPLETED));
 	}
 
 	static class PrintMessageWork implements Work {
