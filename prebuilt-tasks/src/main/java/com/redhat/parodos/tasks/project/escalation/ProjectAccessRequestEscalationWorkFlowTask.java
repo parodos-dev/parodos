@@ -67,13 +67,13 @@ public class ProjectAccessRequestEscalationWorkFlowTask extends BaseWorkFlowTask
 		NotificationMessageCreateRequestDTO notificationMessageCreateRequestDTO = new NotificationMessageCreateRequestDTO();
 		notificationMessageCreateRequestDTO.setSubject(NOTIFICATION_SUBJECT_ACCESS_REQUEST_ESCALATION);
 		notificationMessageCreateRequestDTO.addUsernamesItem(escalationUsername);
-		notificationMessageCreateRequestDTO.setBody(buildMessage(
+		notificationMessageCreateRequestDTO.setBody(getMessage(
 				String.format("%s/api/v1/projects/access/%s/status", projectRequester.getBasePath(), accessRequestId)));
 		notifier.send(notificationMessageCreateRequestDTO);
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
-	private String buildMessage(String url) {
+	private String getMessage(String url) {
 		return "Hi there," + "\n" + "A project request below has been escalated as being pending for a while." + "\n"
 				+ "Url: " + url + "\n" + "Thank you," + "\n" + "The Parodos Team";
 	}
