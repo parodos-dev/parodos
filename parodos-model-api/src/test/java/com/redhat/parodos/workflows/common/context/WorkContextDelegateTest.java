@@ -18,10 +18,11 @@ package com.redhat.parodos.workflows.common.context;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflows.work.WorkContext;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static java.util.UUID.randomUUID;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class WorkContextDelegateTest {
 
@@ -60,11 +61,12 @@ public class WorkContextDelegateTest {
 		assertEquals(UUID, value);
 	}
 
-	@Test(expected = MissingParameterException.class)
+	@Test
 	public void failToGetValue() throws MissingParameterException {
 		WorkContext workContext = new WorkContext();
 
-		WorkContextDelegate.getRequiredValueFromRequestParams(workContext, KEY);
+		assertThrows(MissingParameterException.class,
+				() -> WorkContextDelegate.getRequiredValueFromRequestParams(workContext, KEY));
 	}
 
 	@Test
