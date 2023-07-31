@@ -14,10 +14,10 @@ import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.SneakyThrows;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -31,7 +31,7 @@ public class NotificationWorkFlowTaskTest {
 
 	private static WorkContext ctx;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		mockNotifier = mock(Notifier.class);
 		underTest = new NotificationWorkFlowTask(mockNotifier);

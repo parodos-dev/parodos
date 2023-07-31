@@ -34,7 +34,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @Slf4j
@@ -141,9 +145,9 @@ public class GitPushTaskWithSshTest {
 		command.setBare(true);
 		command.setDirectory(path.toFile());
 		Git git = command.call();
-		assertThat(git).isNotNull();
-		assertThat(git.getRepository().getFullBranch()).isEqualTo("refs/heads/main");
-		assertThat(git.getRepository().getBranch()).isEqualTo("main");
+		assertThat(git, is(notNullValue()));
+		assertThat(git.getRepository().getFullBranch(), equalTo("refs/heads/main"));
+		assertThat(git.getRepository().getBranch(), equalTo("main"));
 
 		return git.getRepository();
 	}
@@ -173,8 +177,8 @@ public class GitPushTaskWithSshTest {
 		WorkReport report = task.execute(ctx);
 
 		// given
-		assertThat(report.getError()).isNull();
-		assertThat(report.getStatus()).isEqualTo(WorkStatus.COMPLETED);
+		assertThat(report.getError(), is(nullValue()));
+		assertThat(report.getStatus(), equalTo(WorkStatus.COMPLETED));
 	}
 
 	@Test
@@ -192,8 +196,8 @@ public class GitPushTaskWithSshTest {
 		WorkReport report = task.execute(ctx);
 
 		// given
-		assertThat(report.getError()).isNotNull();
-		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
+		assertThat(report.getError(), is(notNullValue()));
+		assertThat(report.getStatus(), equalTo(WorkStatus.FAILED));
 	}
 
 	private WorkContext getSampleContext() {

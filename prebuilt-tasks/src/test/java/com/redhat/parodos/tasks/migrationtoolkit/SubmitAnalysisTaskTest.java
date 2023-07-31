@@ -9,20 +9,22 @@ import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import static com.redhat.parodos.workflows.workflow.WorkContextAssert.assertThat;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
 public class SubmitAnalysisTaskTest {
 
 	SubmitAnalysisTask underTest;
@@ -32,10 +34,11 @@ public class SubmitAnalysisTaskTest {
 
 	WorkContext ctx;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		underTest = new SubmitAnalysisTask();
 		underTest.mtaClient = mockClient;
+		underTest.setBeanName("SubmitAnalysisTask");
 		ctx = new WorkContext();
 	}
 
@@ -47,9 +50,9 @@ public class SubmitAnalysisTaskTest {
 		underTest.preExecute(ctx);
 		WorkReport execute = underTest.execute(ctx);
 
-		assertThat(execute.getError()).isInstanceOf(MissingParameterException.class);
-		assertThat(execute.getStatus()).isEqualTo(WorkStatus.FAILED);
-		assertThat(execute.getWorkContext().get("taskGroup")).isNull();
+		assertThat(execute.getError(), is(instanceOf(MissingParameterException.class)));
+		assertThat(execute.getStatus(), equalTo(WorkStatus.FAILED));
+		assertThat(execute.getWorkContext().get("taskGroup"), is(nullValue()));
 		verify(mockClient, times(0)).create(anyInt());
 	}
 
@@ -63,10 +66,10 @@ public class SubmitAnalysisTaskTest {
 		underTest.preExecute(ctx);
 		WorkReport execute = underTest.execute(ctx);
 
-		assertThat(execute.getError()).isNotInstanceOf(MissingParameterException.class);
-		assertThat(execute.getError()).isInstanceOf(Exception.class);
-		assertThat(execute.getStatus()).isEqualTo(WorkStatus.FAILED);
-		assertThat(execute.getWorkContext().get("taskGroup")).isNull();
+		assertThat(execute.getError(), is(not(instanceOf(MissingParameterException.class))));
+		assertThat(execute.getError(), is(instanceOf(Exception.class)));
+		assertThat(execute.getStatus(), equalTo(WorkStatus.FAILED));
+		assertThat(execute.getWorkContext().get("taskGroup"), is(nullValue()));
 		verify(mockClient, times(1)).create(anyInt());
 	}
 
@@ -82,10 +85,10 @@ public class SubmitAnalysisTaskTest {
 		underTest.preExecute(ctx);
 		WorkReport execute = underTest.execute(ctx);
 
-		assertThat(execute.getError()).isNull();
-		assertThat(execute.getStatus()).isEqualTo(WorkStatus.COMPLETED);
+		assertThat(execute.getError(), is(nullValue()));
+		assertThat(execute.getStatus(), equalTo(WorkStatus.COMPLETED));
 		assertThat(execute.getWorkContext()).hasEntryKey("analysisTaskGroup");
-		assertThat(((TaskGroup) execute.getWorkContext().get("analysisTaskGroup")).id()).isEqualTo(taskGroupID);
+		assertThat(((TaskGroup) execute.getWorkContext().get("analysisTaskGroup")).id(), equalTo(taskGroupID));
 		verify(mockClient, times(1)).create(appID);
 	}
 

@@ -21,13 +21,13 @@ import io.fabric8.kubernetes.client.dsl.MixedOperation;
 import io.fabric8.kubernetes.client.dsl.Resource;
 import io.fabric8.openshift.client.OpenShiftClient;
 import io.fabric8.openshift.client.server.mock.OpenShiftServer;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.BDDAssertions.then;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
@@ -48,7 +48,7 @@ public class VmMigrationWorkFlowTaskTest {
 
 	private List<WorkFlowOption> vmOptions;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 
 		this.vmOptions = List.of(new WorkFlowOption.Builder("vmMigrationOption",
@@ -76,7 +76,7 @@ public class VmMigrationWorkFlowTaskTest {
 				eq(Constants.KUBERNETES_CA_CERT_PARAMETER_NAME));
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		mockServer.after();
 	}

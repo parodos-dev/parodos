@@ -32,8 +32,17 @@ import static com.redhat.parodos.tasks.deploy.DeployConstants.APPLICATION_HOSTNA
 import static com.redhat.parodos.tasks.deploy.DeployConstants.KUBECONFIG;
 import static com.redhat.parodos.tasks.deploy.DeployConstants.MANIFESTS_PATH;
 import static com.redhat.parodos.tasks.deploy.DeployConstants.NAMESPACE;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 
 public class DeployApplicationTaskTest {
 
@@ -54,9 +63,10 @@ public class DeployApplicationTaskTest {
 		List<WorkParameter> params = underTest.getWorkFlowTaskParameters();
 
 		// then
-		assertThat(params).isNotNull();
-		assertThat(params.size()).isEqualTo(3);
-		assertThat(params.stream().map(WorkParameter::getKey).toList()).contains(KUBECONFIG, NAMESPACE, MANIFESTS_PATH);
+		assertThat(params, is(notNullValue()));
+		assertThat(params, hasSize(3));
+		assertThat(params.stream().map(WorkParameter::getKey).toList(),
+				hasItems(KUBECONFIG, NAMESPACE, MANIFESTS_PATH));
 	}
 
 	@Test
@@ -69,10 +79,10 @@ public class DeployApplicationTaskTest {
 		WorkReport report = underTest.execute(workContext);
 
 		// then
-		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
-		assertThat(report.getError()).isNotNull();
-		assertThat(report.getError()).isInstanceOf(MissingParameterException.class);
-		assertThat(report.getError().getMessage()).contains(MANIFESTS_PATH);
+		assertThat(report.getStatus(), equalTo(WorkStatus.FAILED));
+		assertThat(report.getError(), is(notNullValue()));
+		assertThat(report.getError(), is(instanceOf(MissingParameterException.class)));
+		assertThat(report.getError().getMessage(), containsString(MANIFESTS_PATH));
 	}
 
 	@Test
@@ -86,11 +96,11 @@ public class DeployApplicationTaskTest {
 		WorkReport report = underTest.execute(workContext);
 
 		// then
-		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
-		assertThat(report.getError()).isNotNull();
-		assertThat(report.getError()).isInstanceOf(RuntimeException.class);
-		assertThat(report.getError().getMessage()).contains("Failed to read manifest files from path")
-				.contains(manifestsPath);
+		assertThat(report.getStatus(), equalTo(WorkStatus.FAILED));
+		assertThat(report.getError(), is(notNullValue()));
+		assertThat(report.getError(), is(instanceOf(RuntimeException.class)));
+		assertThat(report.getError().getMessage(), containsString("Failed to read manifest files from path"));
+		assertThat(report.getError().getMessage(), containsString(manifestsPath));
 	}
 
 	@SneakyThrows(IOException.class)
@@ -107,10 +117,11 @@ public class DeployApplicationTaskTest {
 		WorkReport report = underTest.execute(workContext);
 
 		// then
-		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
-		assertThat(report.getError()).isNotNull();
-		assertThat(report.getError()).isInstanceOf(RuntimeException.class);
-		assertThat(report.getError().getMessage()).contains("No manifest files found in path").contains(manifestsPath);
+		assertThat(report.getStatus(), equalTo(WorkStatus.FAILED));
+		assertThat(report.getError(), is(notNullValue()));
+		assertThat(report.getError(), is(instanceOf(RuntimeException.class)));
+		assertThat(report.getError().getMessage(), containsString("No manifest files found in path"));
+		assertThat(report.getError().getMessage(), containsString(manifestsPath));
 
 		// cleanup
 		assertThatNoException().isThrownBy(() -> {
@@ -148,10 +159,10 @@ public class DeployApplicationTaskTest {
 			WorkReport report = underTest.execute(workContext);
 
 			// then
-			assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
-			assertThat(report.getError()).isNotNull();
-			assertThat(report.getError()).isInstanceOf(RuntimeException.class);
-			assertThat(report.getError().getMessage()).contains("Failed to create OpenShift client with error");
+			assertThat(report.getStatus(), equalTo(WorkStatus.FAILED));
+			assertThat(report.getError(), is(notNullValue()));
+			assertThat(report.getError(), is(instanceOf(RuntimeException.class)));
+			assertThat(report.getError().getMessage(), containsString("Failed to create OpenShift client with error"));
 		}
 
 	}
@@ -226,15 +237,16 @@ public class DeployApplicationTaskTest {
 			WorkReport report = underTest.execute(workContext);
 
 			// then
-			assertThat(report.getStatus()).isEqualTo(WorkStatus.COMPLETED);
-			assertThat(report.getError()).isNull();
-			assertThat(report.getWorkContext().getContext()).isNotNull();
+			assertThat(report.getStatus(), equalTo(WorkStatus.COMPLETED));
+			assertThat(report.getError(), is(nullValue()));
+			assertThat(report.getWorkContext().getContext(), is(notNullValue()));
 			Object appHostnames = report.getWorkContext().getContext().get(APPLICATION_HOSTNAMES);
-			assertThat(appHostnames).isNotNull();
-			assertThat(appHostnames).isInstanceOf(List.class);
+			assertThat(appHostnames, is(notNullValue()));
+			assertThat(appHostnames, is(instanceOf(List.class)));
 			@SuppressWarnings("unchecked")
 			List<String> appHostnamesList = (List<String>) appHostnames;
-			assertThat(appHostnamesList).containsExactly("my-host");
+			assertThat(appHostnamesList, hasSize(1));
+			assertThat(appHostnamesList, hasItem("my-host"));
 		}
 
 		@Test
@@ -247,10 +259,11 @@ public class DeployApplicationTaskTest {
 			WorkReport report = underTest.execute(workContext);
 
 			// then
-			assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
-			assertThat(report.getError()).isNotNull();
-			assertThat(report.getError()).isInstanceOf(ManifestDeployException.class);
-			assertThat(report.getError().getMessage()).contains("Failed to create manifest");
+			assertThat(report.getStatus(), equalTo(WorkStatus.FAILED));
+			assertThat(report.getError(), is(notNullValue()));
+			assertThat(report.getError(), is(instanceOf(ManifestDeployException.class)));
+			assertThat(report.getError().getMessage(), containsString("Failed to create manifest"));
+			assertThat(report.getError().getMessage(), containsString("Failed to create manifest"));
 		}
 
 		@Test
@@ -287,9 +300,9 @@ public class DeployApplicationTaskTest {
 			WorkReport report = underTest.execute(workContext);
 
 			// then
-			assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
-			assertThat(report.getError()).isNotNull();
-			assertThat(report.getError()).isInstanceOf(ManifestDeployException.class);
+			assertThat(report.getStatus(), equalTo(WorkStatus.FAILED));
+			assertThat(report.getError(), is(notNullValue()));
+			assertThat(report.getError(), is(instanceOf(ManifestDeployException.class)));
 		}
 
 		@Test
@@ -332,10 +345,11 @@ public class DeployApplicationTaskTest {
 			WorkReport report = underTest.execute(workContext);
 
 			// then
-			assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
-			assertThat(report.getError()).isNotNull();
-			assertThat(report.getError()).isInstanceOf(ManifestDeployException.class);
-			assertThat(report.getError().getMessage()).contains("Failed to get route").contains("default/my-route");
+			assertThat(report.getStatus(), equalTo(WorkStatus.FAILED));
+			assertThat(report.getError(), is(notNullValue()));
+			assertThat(report.getError(), is(instanceOf(ManifestDeployException.class)));
+			assertThat(report.getError().getMessage(), containsString("Failed to get route"));
+			assertThat(report.getError().getMessage(), containsString("default/my-route"));
 		}
 
 		@Test
@@ -378,10 +392,11 @@ public class DeployApplicationTaskTest {
 			WorkReport report = underTest.execute(workContext);
 
 			// then
-			assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
-			assertThat(report.getError()).isNotNull();
-			assertThat(report.getError()).isInstanceOf(ManifestDeployException.class);
-			assertThat(report.getError().getMessage()).contains("not found").contains("default/my-route");
+			assertThat(report.getStatus(), equalTo(WorkStatus.FAILED));
+			assertThat(report.getError(), is(notNullValue()));
+			assertThat(report.getError(), is(instanceOf(ManifestDeployException.class)));
+			assertThat(report.getError().getMessage(), containsString("not found"));
+			assertThat(report.getError().getMessage(), containsString("default/my-route"));
 		}
 
 	}
