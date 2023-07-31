@@ -7,7 +7,11 @@ import com.redhat.parodos.workflow.execution.entity.WorkFlowExecutionContext;
 import com.redhat.parodos.workflows.work.WorkContext;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.hasEntry;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -36,10 +40,10 @@ class ContextArgumentsMergerTest {
 
 		// then
 		Object workflowExecutionArguments = targetContext.getContext().get("WORKFLOW_EXECUTION_ARGUMENTS");
-		assertThat(workflowExecutionArguments).isInstanceOf(Map.class);
+		assertThat(workflowExecutionArguments, is(instanceOf(Map.class)));
 		Map<String, String> workflowExecutionArgumentsMap;
 		workflowExecutionArgumentsMap = (Map) workflowExecutionArguments;
-		assertThat(workflowExecutionArgumentsMap).containsAllEntriesOf(Map.of("key1", "valueY", "key2", "value2"));
+		assertThat(workflowExecutionArgumentsMap, allOf(hasEntry("key1", "valueY"), hasEntry("key2", "value2")));
 	}
 
 	@Test
@@ -63,10 +67,10 @@ class ContextArgumentsMergerTest {
 
 		// then
 		Object workflowExecutionArguments = targetContext.getContext().get("WORKFLOW_EXECUTION_ARGUMENTS");
-		assertThat(workflowExecutionArguments).isInstanceOf(Map.class);
+		assertThat(workflowExecutionArguments, is(instanceOf(Map.class)));
 		Map<String, String> workflowExecutionArgumentsMap;
 		workflowExecutionArgumentsMap = (Map) workflowExecutionArguments;
-		assertThat(workflowExecutionArgumentsMap).containsAllEntriesOf(Map.of("key1", "value1"));
+		assertThat(workflowExecutionArgumentsMap, allOf(hasEntry("key1", "value1")));
 	}
 
 }

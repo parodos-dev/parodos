@@ -23,7 +23,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -195,9 +196,9 @@ class WorkFlowContinuationServiceImplTest {
 	private void verifyAsyncExecution(WorkFlowExecution workFlowExecution) {
 		var argument = ArgumentCaptor.forClass(ExecutionContext.class);
 		verify(this.workFlowExecutor, times(1)).execute(argument.capture(), any());
-		assertThat(argument.getValue().projectId()).isEqualTo(workFlowExecution.getProjectId());
-		assertThat(argument.getValue().userId()).isEqualTo(workFlowExecution.getUser().getId());
-		assertThat(argument.getValue().workFlowName()).isEqualTo(TEST_WORKFLOW);
+		assertThat(argument.getValue().projectId(), equalTo(workFlowExecution.getProjectId()));
+		assertThat(argument.getValue().userId(), equalTo(workFlowExecution.getUser().getId()));
+		assertThat(argument.getValue().workFlowName(), equalTo(TEST_WORKFLOW));
 	}
 
 }
