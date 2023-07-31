@@ -14,10 +14,14 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import dev.parodos.move2kube.ApiException;
 import dev.parodos.move2kube.api.PlanApi;
 import dev.parodos.move2kube.api.ProjectInputsApi;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -39,7 +43,7 @@ public class Move2KubePlanTest {
 
 	private PlanApi planApi;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		projectInputsApi = mock(ProjectInputsApi.class);
 		planApi = mock(PlanApi.class);
@@ -50,7 +54,7 @@ public class Move2KubePlanTest {
 
 	@Test
 	public void testParameters() {
-		assertThat(task.getWorkFlowTaskParameters().size()).isEqualTo(0);
+		assertThat(task.getWorkFlowTaskParameters(), hasSize(0));
 	}
 
 	@Test
@@ -65,8 +69,8 @@ public class Move2KubePlanTest {
 		WorkReport report = task.execute(context);
 
 		// then
-		assertThat(report.getError()).isNull();
-		assertThat(report.getStatus()).isEqualTo(WorkStatus.COMPLETED);
+		assertThat(report.getError(), is(nullValue()));
+		assertThat(report.getStatus(), equalTo(WorkStatus.COMPLETED));
 
 		assertDoesNotThrow(() -> {
 			verify(projectInputsApi, times(1)).createProjectInput(eq(WORKSPACE), eq(PROJECT), eq("sources"), eq("Id"),
@@ -86,7 +90,7 @@ public class Move2KubePlanTest {
 		WorkReport report = task.execute(context);
 
 		// then
-		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
+		assertThat(report.getStatus(), equalTo(WorkStatus.FAILED));
 	}
 
 	WorkContext getWorkContext() {
@@ -112,9 +116,9 @@ public class Move2KubePlanTest {
 		for (String fileName : fileNames) {
 			File file = new File("%s%s".formatted(tempDir, fileName));
 			if (file.getParentFile() != null && !file.getParentFile().exists()) {
-				assertThat(file.getParentFile().mkdirs()).isTrue();
+				assertThat(file.getParentFile().mkdirs(), is(true));
 			}
-			assertThat(file.createNewFile()).isTrue();
+			assertThat(file.createNewFile(), is(true));
 
 			ZipEntry zipEntry = new ZipEntry(fileName);
 			zos.putNextEntry(zipEntry);

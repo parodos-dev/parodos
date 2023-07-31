@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 import static org.mockito.Mockito.mock;
 
@@ -16,7 +16,7 @@ public abstract class BaseInfrastructureWorkFlowTaskTest {
 	@SuppressWarnings("unused")
 	private BaseInfrastructureWorkFlowTask baseInfrastructureWorkFlowTask;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.baseInfrastructureWorkFlowTask = getTaskUnderTest();
 	}

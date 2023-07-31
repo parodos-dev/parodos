@@ -15,10 +15,15 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import dev.parodos.move2kube.ApiException;
 import dev.parodos.move2kube.api.ProjectOutputsApi;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -39,7 +44,7 @@ public class Move2KubeRetrieveTest {
 
 	private Move2KubeRetrieve task;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		output = mock(ProjectOutputsApi.class);
 		task = new Move2KubeRetrieve("http://localhost/", output);
@@ -56,17 +61,17 @@ public class Move2KubeRetrieveTest {
 		WorkReport report = task.execute(context);
 
 		// then
-		assertThat(report.getError()).isNull();
-		assertThat(report.getStatus()).isEqualTo(WorkStatus.COMPLETED);
+		assertThat(report.getError(), is(nullValue()));
+		assertThat(report.getStatus(), equalTo(WorkStatus.COMPLETED));
 
 		String path = (String) context.get(GIT_DESTINATION_CONTEXT_KEY);
-		assertThat(path).isNotNull();
+		assertThat(path, is(notNullValue()));
 		File gitPath = new File(path);
 
 		String[] fileNames = { "test.txt", "deploy/bar.txt", "deploy/foo.txt", "scripts/bar.sh", "scripts/foo.sh" };
 
 		for (String fileName : fileNames) {
-			assertThat(gitPath.toPath().resolve(fileName).toFile().exists()).isTrue();
+			assertThat(gitPath.toPath().resolve(fileName).toFile().exists(), is(true));
 		}
 	}
 
@@ -83,9 +88,9 @@ public class Move2KubeRetrieveTest {
 		WorkReport report = task.execute(context);
 
 		// then
-		assertThat(report.getError()).isNotNull();
-		assertThat(report.getError()).isInstanceOf(ApiException.class);
-		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
+		assertThat(report.getError(), is(notNullValue()));
+		assertThat(report.getError(), is(instanceOf(ApiException.class)));
+		assertThat(report.getStatus(), equalTo(WorkStatus.FAILED));
 	}
 
 	@Test
@@ -101,9 +106,9 @@ public class Move2KubeRetrieveTest {
 		WorkReport report = task.execute(context);
 
 		// then
-		assertThat(report.getError()).isNotNull();
-		assertThat(report.getError()).isInstanceOf(RuntimeException.class);
-		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
+		assertThat(report.getError(), is(notNullValue()));
+		assertThat(report.getError(), is(instanceOf(RuntimeException.class)));
+		assertThat(report.getStatus(), equalTo(WorkStatus.FAILED));
 	}
 
 	public WorkContext getSampleWorkContext() {
@@ -135,9 +140,9 @@ public class Move2KubeRetrieveTest {
 		for (String fileName : fileNames) {
 			File file = new File("%s%s".formatted(tempDir, fileName));
 			if (file.getParentFile() != null && !file.getParentFile().exists()) {
-				assertThat(file.getParentFile().mkdirs()).isTrue();
+				assertThat(file.getParentFile().mkdirs(), is(true));
 			}
-			assertThat(file.createNewFile()).isTrue();
+			assertThat(file.createNewFile(), is(true));
 			ZipEntry zipEntry = new ZipEntry(fileName);
 			zos.putNextEntry(zipEntry);
 

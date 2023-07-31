@@ -2,15 +2,18 @@ package com.redhat.parodos.examples.move2kube.task;
 
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 public class Move2KubeBaseTest {
 
 	@Test
 	public void testOutputs() {
-		assertThat(new Move2KubeBase().getWorkFlowTaskOutputs().size()).isEqualTo(0);
+		assertThat(new Move2KubeBase().getWorkFlowTaskOutputs(), hasSize(0));
 	}
 
 	@Test
@@ -22,7 +25,7 @@ public class Move2KubeBaseTest {
 		// when
 		WorkReport report = task.execute(new WorkContext());
 		// then
-		assertThat(report).isNull();
+		assertThat(report, is(nullValue()));
 	}
 
 }

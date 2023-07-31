@@ -12,14 +12,18 @@ import dev.parodos.move2kube.api.PlanApi;
 import dev.parodos.move2kube.api.ProjectOutputsApi;
 import dev.parodos.move2kube.client.model.GetPlan200Response;
 import dev.parodos.move2kube.client.model.StartTransformation202Response;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -43,7 +47,7 @@ public class Move2KubeTransformTest {
 
 	private ProjectOutputsApi projectOutputsApi;
 
-	@Before
+	@BeforeEach
 	public void setup() throws Exception {
 		planApi = mock(PlanApi.class);
 		projectOutputsApi = mock(ProjectOutputsApi.class);
@@ -53,7 +57,7 @@ public class Move2KubeTransformTest {
 
 	@Test
 	public void testParameters() {
-		assertThat(this.task.getWorkFlowTaskParameters().size()).isEqualTo(0);
+		assertThat(this.task.getWorkFlowTaskParameters(), hasSize(0));
 	}
 
 	@Test
@@ -80,8 +84,8 @@ public class Move2KubeTransformTest {
 			WorkReport report = this.task.execute(context);
 
 			// then
-			assertThat(report.getError()).isNull();
-			assertThat(report.getStatus()).isEqualTo(WorkStatus.COMPLETED);
+			assertThat(report.getError(), is(nullValue()));
+			assertThat(report.getStatus(), equalTo(WorkStatus.COMPLETED));
 		}
 
 		assertDoesNotThrow(() -> {
