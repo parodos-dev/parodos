@@ -31,9 +31,8 @@ import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.InOrder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -52,7 +51,7 @@ public class SequentialFlowTest {
 
 	private Work[] works;
 
-	@Before
+	@BeforeEach
 	public void initWorks() {
 		works = new Work[] { mock(Work.class), mock(Work.class), mock(Work.class), mock(Work.class) };
 	}
@@ -146,7 +145,7 @@ public class SequentialFlowTest {
 	}
 
 	private void validateWorks(Work[] works, int failureWork) {
-		InOrder inOrder = inOrder(works);
+		var inOrder = inOrder(works);
 		for (int i = 0; i < works.length; i++) {
 			int runCount = 1;
 			if (failureWork >= 0 && failureWork < i) {
