@@ -42,10 +42,6 @@
             <artifactId>spring-beans</artifactId>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-        <dependency>
             <groupId>dev.parodos</groupId>
             <artifactId>workflow-engine</artifactId>
             <version>${revision}</version>
