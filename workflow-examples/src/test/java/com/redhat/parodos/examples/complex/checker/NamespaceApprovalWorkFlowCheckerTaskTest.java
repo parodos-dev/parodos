@@ -9,14 +9,17 @@ import com.redhat.parodos.workflow.task.enums.WorkFlowTaskOutput;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 /**
  * Namespace Approval WorkFlow Checker Task execution test
@@ -24,12 +27,14 @@ import static org.mockito.Mockito.spy;
  * @author Gloria Ciavarrini (Github: gciavarrini)
  * @author Richard Wang(Github: richardw98)
  */
+@ExtendWith(MockitoExtension.class)
 public class NamespaceApprovalWorkFlowCheckerTaskTest extends BaseWorkFlowCheckerTaskTest {
 
 	NamespaceApprovalWorkFlowCheckerTask namespaceApprovalWorkFlowCheckerTask;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
+		openMocks(this);
 		namespaceApprovalWorkFlowCheckerTask = spy((NamespaceApprovalWorkFlowCheckerTask) getTaskUnderTest());
 	}
 

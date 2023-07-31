@@ -1,8 +1,9 @@
 package com.redhat.parodos.examples.prebuilt.migrationtoolkit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 public class MTAAnalysisReportTest {
 
@@ -23,7 +24,7 @@ public class MTAAnalysisReportTest {
 	@Test
 	public void canExtractJS() throws Exception {
 		MTAAnalysisReport.AnalysisIncidents incidents = MTAAnalysisReport.extractIncidents(validJS);
-		assertThat(incidents).isEqualTo(new MTAAnalysisReport.AnalysisIncidents(1, 1, 0, 2, 1, 1));
+		assertThat(incidents, equalTo(new MTAAnalysisReport.AnalysisIncidents(1, 1, 0, 2, 1, 1)));
 	}
 
 }

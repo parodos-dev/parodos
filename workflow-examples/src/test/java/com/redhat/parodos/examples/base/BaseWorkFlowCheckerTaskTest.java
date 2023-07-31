@@ -5,7 +5,7 @@ import java.util.List;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflow.task.checker.BaseWorkFlowCheckerTask;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskType;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 public abstract class BaseWorkFlowCheckerTaskTest {
 
@@ -17,7 +17,7 @@ public abstract class BaseWorkFlowCheckerTaskTest {
 	@SuppressWarnings("unused")
 	private BaseWorkFlowCheckerTask baseWorkFlowCheckerTask;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.baseWorkFlowCheckerTask = getTaskUnderTest();
 	}

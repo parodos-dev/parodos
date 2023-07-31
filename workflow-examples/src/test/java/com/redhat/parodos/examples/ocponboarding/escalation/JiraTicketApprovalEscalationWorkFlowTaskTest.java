@@ -7,21 +7,19 @@ import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlo
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.MockitoAnnotations.openMocks;
 
-@RunWith(MockitoJUnitRunner.class)
 public class JiraTicketApprovalEscalationWorkFlowTaskTest extends BaseInfrastructureWorkFlowTaskTest {
 
 	private static final String ISSUE_LINK_PARAMETER_NAME = "ISSUE_LINK";
@@ -38,8 +36,9 @@ public class JiraTicketApprovalEscalationWorkFlowTaskTest extends BaseInfrastruc
 
 	private JiraTicketApprovalEscalationWorkFlowTask jiraTicketApprovalEscalationWorkFlowTask;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
+		openMocks(this);
 		this.jiraTicketApprovalEscalationWorkFlowTask = Mockito
 				.spy((JiraTicketApprovalEscalationWorkFlowTask) getTaskUnderTest());
 	}

@@ -18,11 +18,15 @@ import dev.parodos.move2kube.client.model.CreateProject201Response;
 import dev.parodos.move2kube.client.model.ProjectInputsValue;
 import dev.parodos.move2kube.client.model.Workspace;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
@@ -45,7 +49,7 @@ public class Move2KubeTaskTest {
 
 	private static final String MOVE2KUBE_PROJECT_ID = "move2KubeProjectID";
 
-	@Before
+	@BeforeEach
 	public void BeforeEach() {
 		workspacesApi = mock(WorkspacesApi.class);
 		projectsApi = mock(ProjectsApi.class);
@@ -55,7 +59,7 @@ public class Move2KubeTaskTest {
 		log.error("Move2KubeTask BeforeEach");
 	}
 
-	@After
+	@AfterEach
 	public void AfterEach() {
 		log.error("Move2KubeTask AfterEach");
 	}
@@ -80,10 +84,10 @@ public class Move2KubeTaskTest {
 		WorkReport report = task.execute(workContext);
 
 		// then
-		assertThat(report.getError()).isNull();
-		assertThat(report.getStatus()).isEqualTo(WorkStatus.COMPLETED);
-		assertThat(report.getWorkContext().get(MOVE2KUBE_WORKSPACE_ID)).isNotNull();
-		assertThat(report.getWorkContext().get(MOVE2KUBE_PROJECT_ID)).isNotNull();
+		assertThat(report.getError(), is(nullValue()));
+		assertThat(report.getStatus(), equalTo(WorkStatus.COMPLETED));
+		assertThat(report.getWorkContext().get(MOVE2KUBE_WORKSPACE_ID), is(notNullValue()));
+		assertThat(report.getWorkContext().get(MOVE2KUBE_PROJECT_ID), is(notNullValue()));
 
 		assertDoesNotThrow(() -> {
 			verify(workspacesApi, times(1)).getWorkspaces();
@@ -105,10 +109,11 @@ public class Move2KubeTaskTest {
 		WorkReport report = task.execute(workContext);
 
 		// then
-		assertThat(report.getError()).isNotNull();
-		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
-		assertThat(report.getWorkContext().get(MOVE2KUBE_WORKSPACE_ID)).isNull();
-		assertThat(report.getWorkContext().get(MOVE2KUBE_PROJECT_ID)).isNull();
+		assertThat(report.getError(), is(notNullValue()));
+		;
+		assertThat(report.getStatus(), equalTo(WorkStatus.FAILED));
+		assertThat(report.getWorkContext().get(MOVE2KUBE_WORKSPACE_ID), is(nullValue()));
+		assertThat(report.getWorkContext().get(MOVE2KUBE_PROJECT_ID), is(nullValue()));
 
 		assertDoesNotThrow(() -> {
 			verify(workspacesApi, times(1)).getWorkspaces();
@@ -129,10 +134,10 @@ public class Move2KubeTaskTest {
 		WorkReport report = task.execute(workContext);
 
 		// then
-		assertThat(report.getError()).isNotNull();
-		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
-		assertThat(report.getWorkContext().get(MOVE2KUBE_WORKSPACE_ID)).isNotNull();
-		assertThat(report.getWorkContext().get(MOVE2KUBE_PROJECT_ID)).isNull();
+		assertThat(report.getError(), is(notNullValue()));
+		assertThat(report.getStatus(), equalTo(WorkStatus.FAILED));
+		assertThat(report.getWorkContext().get(MOVE2KUBE_WORKSPACE_ID), is(notNullValue()));
+		assertThat(report.getWorkContext().get(MOVE2KUBE_PROJECT_ID), is(nullValue()));
 
 		assertDoesNotThrow(() -> {
 			verify(workspacesApi, times(1)).getWorkspaces();

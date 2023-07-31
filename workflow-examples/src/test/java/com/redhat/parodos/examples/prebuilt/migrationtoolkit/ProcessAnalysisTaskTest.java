@@ -14,19 +14,20 @@ import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.SneakyThrows;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.MockitoAnnotations.openMocks;
 
-@RunWith(MockitoJUnitRunner.class)
 public class ProcessAnalysisTaskTest {
 
 	ProcessAnalysisTask underTest;
@@ -42,8 +43,9 @@ public class ProcessAnalysisTaskTest {
 	@Mock
 	Notifier notifier;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
+		openMocks(this);
 		ctx = new WorkContext();
 	}
 
@@ -70,8 +72,8 @@ public class ProcessAnalysisTaskTest {
 
 		WorkReport execute = underTest.execute(ctx);
 
-		assertThat(execute.getError()).isNull();
-		assertThat(execute.getStatus()).isEqualTo(WorkStatus.COMPLETED);
+		assertThat(execute.getError(), is(nullValue()));
+		assertThat(execute.getStatus(), equalTo(WorkStatus.COMPLETED));
 		verify(notifier, times(1)).send(eq(passCriteria.getDisplayName()), anyString());
 	}
 

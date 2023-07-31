@@ -5,7 +5,7 @@ import java.util.List;
 import com.redhat.parodos.workflow.option.WorkFlowOption;
 import com.redhat.parodos.workflow.task.assessment.BaseAssessmentTask;
 import com.redhat.parodos.workflow.task.enums.WorkFlowTaskType;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 public abstract class BaseAssessmentTaskTest {
 
@@ -17,7 +17,7 @@ public abstract class BaseAssessmentTaskTest {
 	@SuppressWarnings("unused")
 	private BaseAssessmentTask baseAssessmentTask;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.baseAssessmentTask = getTaskUnderTest();
 	}

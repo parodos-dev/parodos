@@ -4,15 +4,14 @@ import java.util.Locale;
 
 import jdk.javadoc.doclet.DocletEnvironment;
 import jdk.javadoc.doclet.Reporter;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
+import static org.mockito.MockitoAnnotations.openMocks;
 
-@RunWith(MockitoJUnitRunner.class)
 public class MarkdownTest {
 
 	@Mock
@@ -20,6 +19,11 @@ public class MarkdownTest {
 
 	@Mock
 	DocletEnvironment docletEnvironment;
+
+	@BeforeEach
+	public void setUp() {
+		openMocks(this);
+	}
 
 	@Test
 	public void canRunDoclet() {
