@@ -18,7 +18,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @Slf4j
@@ -46,9 +52,9 @@ class GitBranchTaskTest {
 		command.setInitialBranch("main");
 		command.setDirectory(tempDir.toFile());
 		Git git = command.call();
-		assertThat(git).isNotNull();
-		assertThat(git.getRepository().getFullBranch()).isEqualTo("refs/heads/main");
-		assertThat(git.getRepository().getBranch()).isEqualTo("main");
+		assertThat(git, is(notNullValue()));
+		assertThat(git.getRepository().getFullBranch(), equalTo("refs/heads/main"));
+		assertThat(git.getRepository().getBranch(), equalTo("main"));
 		repository = git.getRepository();
 
 		log.info("Created a new repository at '{}'", this.repository.getDirectory());
@@ -81,13 +87,13 @@ class GitBranchTaskTest {
 		var result = gitBranchTask.execute(workContext);
 
 		// then
-		assertThat(result.getError()).isNull();
-		assertThat(result.getStatus()).isEqualTo(WorkStatus.COMPLETED);
+		assertThat(result.getError(), is(nullValue()));
+		assertThat(result.getStatus(), equalTo(WorkStatus.COMPLETED));
 
 		assertDoesNotThrow(() -> {
 			Ref branchRef = repository.findRef("newBranch");
-			assertThat(branchRef).isNotNull();
-			assertThat(repository.getBranch()).isEqualTo("newBranch");
+			assertThat(branchRef, is(notNullValue()));
+			assertThat(repository.getBranch(), equalTo("newBranch"));
 		});
 	}
 
@@ -97,7 +103,7 @@ class GitBranchTaskTest {
 		createSingleFileInRepo();
 
 		assertDoesNotThrow(() -> {
-			assertThat(repository.getBranch()).isEqualTo(defaultBranch);
+			assertThat(repository.getBranch(), equalTo(defaultBranch));
 		});
 		WorkContext workContext = getSampleContext();
 		workContext.put("path", tempDir.toString());
@@ -108,8 +114,8 @@ class GitBranchTaskTest {
 		var result = gitBranchTask.execute(workContext);
 
 		// then
-		assertThat(result.getError()).isNotNull();
-		assertThat(result.getStatus()).isEqualTo(WorkStatus.FAILED);
+		assertThat(result.getError(), is(notNullValue()));
+		assertThat(result.getStatus(), equalTo(WorkStatus.FAILED));
 	}
 
 	@Test
@@ -122,9 +128,9 @@ class GitBranchTaskTest {
 		var result = gitBranchTask.execute(workContext);
 
 		// then
-		assertThat(result.getError()).isNotNull();
-		assertThat(result.getStatus()).isEqualTo(WorkStatus.FAILED);
-		assertThat(result.getError()).isInstanceOf(MissingParameterException.class);
+		assertThat(result.getError(), is(notNullValue()));
+		assertThat(result.getStatus(), equalTo(WorkStatus.FAILED));
+		assertThat(result.getError(), is(instanceOf(MissingParameterException.class)));
 	}
 
 	@Test
@@ -138,9 +144,9 @@ class GitBranchTaskTest {
 		var result = gitBranchTask.execute(workContext);
 
 		// then
-		assertThat(result.getError()).isNotNull();
-		assertThat(result.getStatus()).isEqualTo(WorkStatus.FAILED);
-		assertThat(result.getError()).isInstanceOf(IllegalArgumentException.class);
+		assertThat(result.getError(), is(notNullValue()));
+		assertThat(result.getStatus(), equalTo(WorkStatus.FAILED));
+		assertThat(result.getError(), is(instanceOf(IllegalArgumentException.class)));
 	}
 
 	@Test
@@ -155,10 +161,10 @@ class GitBranchTaskTest {
 		var result = gitBranchTask.execute(workContext);
 
 		// then
-		assertThat(result.getError()).isNotNull();
-		assertThat(result.getError()).isInstanceOf(RuntimeException.class);
-		assertThat(result.getError().toString()).contains("Ref HEAD cannot be resolved");
-		assertThat(result.getStatus()).isEqualTo(WorkStatus.FAILED);
+		assertThat(result.getError(), is(notNullValue()));
+		assertThat(result.getError(), is(instanceOf(RuntimeException.class)));
+		assertThat(result.getError().toString(), containsString("Ref HEAD cannot be resolved"));
+		assertThat(result.getStatus(), equalTo(WorkStatus.FAILED));
 	}
 
 	private void createSingleFileInRepo() {

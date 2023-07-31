@@ -21,7 +21,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @Slf4j
@@ -71,9 +76,9 @@ public class GitArchiveTaskTest {
 		var result = this.gitArchiveTask.execute(workContext);
 
 		// then
-		assertThat(result.getError()).isNull();
-		assertThat(result.getStatus()).isEqualTo(WorkStatus.COMPLETED);
-		assertThat(result.getWorkContext().get("gitArchivePath").toString()).contains("output.zip");
+		assertThat(result.getError(), is(nullValue()));
+		assertThat(result.getStatus(), equalTo(WorkStatus.COMPLETED));
+		assertThat(result.getWorkContext().get("gitArchivePath").toString(), containsString("output.zip"));
 		try {
 			listFilesInZip(result.getWorkContext().get("gitArchivePath").toString());
 		}
@@ -104,9 +109,9 @@ public class GitArchiveTaskTest {
 		var result = this.gitArchiveTask.execute(workContext);
 
 		// then
-		assertThat(result.getError()).isNull();
-		assertThat(result.getStatus()).isEqualTo(WorkStatus.COMPLETED);
-		assertThat(result.getWorkContext().get("gitArchivePath").toString()).contains("output.zip");
+		assertThat(result.getError(), is(nullValue()));
+		assertThat(result.getStatus(), equalTo(WorkStatus.COMPLETED));
+		assertThat(result.getWorkContext().get("gitArchivePath").toString(), containsString("output.zip"));
 	}
 
 	@Test
@@ -120,9 +125,9 @@ public class GitArchiveTaskTest {
 		var result = this.gitArchiveTask.execute(workContext);
 
 		// then
-		assertThat(result.getError()).isNotNull();
-		assertThat(result.getStatus()).isEqualTo(WorkStatus.FAILED);
-		assertThat(result.getError().toString()).contains("The path parameter cannot be null or empty");
+		assertThat(result.getError(), is(notNullValue()));
+		assertThat(result.getStatus(), equalTo(WorkStatus.FAILED));
+		assertThat(result.getError().toString(), containsString("The path parameter cannot be null or empty"));
 
 	}
 
@@ -138,9 +143,9 @@ public class GitArchiveTaskTest {
 		var result = this.gitArchiveTask.execute(workContext);
 
 		// then
-		assertThat(result.getError()).isNotNull();
-		assertThat(result.getStatus()).isEqualTo(WorkStatus.FAILED);
-		assertThat(result.getError().toString()).contains("Cannot archive the repository");
+		assertThat(result.getError(), is(notNullValue()));
+		assertThat(result.getStatus(), equalTo(WorkStatus.FAILED));
+		assertThat(result.getError().toString(), containsString("Cannot archive the repository"));
 	}
 
 	private void createSingleFileInRepo() {

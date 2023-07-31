@@ -6,32 +6,34 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.SneakyThrows;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
 public class JiraTaskTest {
 
 	JiraTask underTest;
 
-	@Mock
 	JiraTask.JiraClient mockClient;
 
 	WorkContext ctx;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
+		this.mockClient = mock(JiraTask.JiraClient.class);
 		underTest = new JiraTask();
 		underTest.setBeanName("jiraTask");
 		underTest.jiraClient = mockClient;
@@ -46,8 +48,8 @@ public class JiraTaskTest {
 
 		WorkReport execute = underTest.execute(ctx);
 
-		assertThat(execute.getError()).isInstanceOf(Exception.class);
-		assertThat(execute.getStatus()).isEqualTo(WorkStatus.FAILED);
+		assertThat(execute.getError(), is(instanceOf(Exception.class)));
+		assertThat(execute.getStatus(), equalTo(WorkStatus.FAILED));
 		verify(mockClient, times(1)).get(anyString());
 		verify(mockClient, times(0)).update(anyString(), anyString(), anyString(), anyString());
 		verify(mockClient, times(0)).create(anyString(), anyString(), anyString());
@@ -61,8 +63,8 @@ public class JiraTaskTest {
 				.thenThrow(new Exception("Missing mandatory params to create a ticket"));
 		WorkReport execute = underTest.execute(ctx);
 
-		assertThat(execute.getError()).isInstanceOf(Exception.class);
-		assertThat(execute.getStatus()).isEqualTo(WorkStatus.FAILED);
+		assertThat(execute.getError(), is(instanceOf(Exception.class)));
+		assertThat(execute.getStatus(), equalTo(WorkStatus.FAILED));
 		verify(mockClient, times(0)).get(anyString());
 		verify(mockClient, times(0)).update(anyString(), anyString(), anyString(), anyString());
 		verify(mockClient, times(1)).create(anyString(), anyString(), anyString());
@@ -80,9 +82,9 @@ public class JiraTaskTest {
 
 		WorkReport execute = underTest.execute(ctx);
 
-		assertThat(execute.getError()).isInstanceOf(Exception.class);
-		assertThat(execute.getError()).isNotInstanceOf(JSONException.class);
-		assertThat(execute.getStatus()).isEqualTo(WorkStatus.FAILED);
+		assertThat(execute.getError(), is(instanceOf(Exception.class)));
+		assertThat(execute.getError(), is(not(instanceOf(JSONException.class))));
+		assertThat(execute.getStatus(), equalTo(WorkStatus.FAILED));
 		verify(mockClient, times(1)).get(anyString());
 		verify(mockClient, times(1)).update(anyString(), anyString(), anyString(), anyString());
 		verify(mockClient, times(0)).create(anyString(), anyString(), anyString());
@@ -99,8 +101,8 @@ public class JiraTaskTest {
 
 		WorkReport execute = underTest.execute(ctx);
 
-		assertThat(execute.getError()).isNull();
-		assertThat(execute.getStatus()).isEqualTo(WorkStatus.COMPLETED);
+		assertThat(execute.getError(), is(nullValue()));
+		assertThat(execute.getStatus(), equalTo(WorkStatus.COMPLETED));
 		verify(mockClient, times(1)).get(anyString());
 		verify(mockClient, times(0)).update(anyString(), anyString(), anyString(), anyString());
 		verify(mockClient, times(0)).create(anyString(), anyString(), anyString());
@@ -117,8 +119,8 @@ public class JiraTaskTest {
 
 		WorkReport execute = underTest.execute(ctx);
 
-		assertThat(execute.getError()).isNull();
-		assertThat(execute.getStatus()).isEqualTo(WorkStatus.COMPLETED);
+		assertThat(execute.getError(), is(nullValue()));
+		assertThat(execute.getStatus(), equalTo(WorkStatus.COMPLETED));
 		verify(mockClient, times(0)).get(anyString());
 		verify(mockClient, times(0)).update(anyString(), anyString(), anyString(), anyString());
 		verify(mockClient, times(1)).create(anyString(), anyString(), anyString());
@@ -136,9 +138,9 @@ public class JiraTaskTest {
 
 		WorkReport execute = underTest.execute(ctx);
 
-		assertThat(execute.getError()).isInstanceOf(Exception.class);
-		assertThat(execute.getError()).isNotInstanceOf(JSONException.class);
-		assertThat(execute.getStatus()).isEqualTo(WorkStatus.FAILED);
+		assertThat(execute.getError(), is(instanceOf(Exception.class)));
+		assertThat(execute.getError(), is(not(instanceOf(JSONException.class))));
+		assertThat(execute.getStatus(), equalTo(WorkStatus.FAILED));
 		verify(mockClient, times(1)).get(anyString());
 		verify(mockClient, times(1)).update(anyString(), anyString(), anyString(), anyString());
 		verify(mockClient, times(0)).create(anyString(), anyString(), anyString());
@@ -157,8 +159,8 @@ public class JiraTaskTest {
 
 		WorkReport execute = underTest.execute(ctx);
 
-		assertThat(execute.getError()).isNull();
-		assertThat(execute.getStatus()).isEqualTo(WorkStatus.COMPLETED);
+		assertThat(execute.getError(), is(nullValue()));
+		assertThat(execute.getStatus(), equalTo(WorkStatus.COMPLETED));
 		verify(mockClient, times(1)).get("123");
 		verify(mockClient, times(1)).addComment("123", "new comment");
 		verify(mockClient, times(0)).create(anyString(), anyString(), anyString());

@@ -16,7 +16,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -77,10 +82,11 @@ public class GitCloneTaskTest {
 		var result = gitCloneTask.execute(workContext);
 
 		// when
-		assertThat(result.getError()).isNull();
-		assertThat(result.getStatus()).isEqualTo(WorkStatus.COMPLETED);
-		assertThat(result.getWorkContext().get("gitDestination")).isNotNull();
-		assertThat(result.getWorkContext().get("gitUri")).isNotNull();
+		assertThat(result.getError(), is(nullValue()));
+		assertThat(result.getStatus(), equalTo(WorkStatus.COMPLETED));
+		assertThat(result.getWorkContext().get("gitDestination"), is(notNullValue()));
+		assertThat(result.getWorkContext().get("gitDestination"), is(notNullValue()));
+		assertThat(result.getWorkContext().get("gitUri"), is(notNullValue()));
 	}
 
 	@Test
@@ -95,11 +101,11 @@ public class GitCloneTaskTest {
 		var result = gitCloneTask.execute(workContext);
 
 		// when
-		assertThat(result.getError()).isNotNull();
-		assertThat(result.getError().toString()).contains("Remote repository invalidFolder is not available");
-		assertThat(result.getStatus()).isEqualTo(WorkStatus.FAILED);
-		assertThat(result.getWorkContext().get("gitDestination")).isNull();
-		assertThat(result.getWorkContext().get("gitUri")).isNull();
+		assertThat(result.getError(), is(notNullValue()));
+		assertThat(result.getError().toString(), containsString("Remote repository invalidFolder is not available"));
+		assertThat(result.getStatus(), equalTo(WorkStatus.FAILED));
+		assertThat(result.getWorkContext().get("gitDestination"), is(nullValue()));
+		assertThat(result.getWorkContext().get("gitUri"), is(nullValue()));
 	}
 
 	@Test
@@ -114,11 +120,11 @@ public class GitCloneTaskTest {
 		var result = gitCloneTask.execute(workContext);
 
 		// when
-		assertThat(result.getError()).isNotNull();
-		assertThat(result.getError().toString()).contains("cannot connect to the repository server");
-		assertThat(result.getStatus()).isEqualTo(WorkStatus.FAILED);
-		assertThat(result.getWorkContext().get("gitDestination")).isNull();
-		assertThat(result.getWorkContext().get("gitUri")).isNull();
+		assertThat(result.getError(), is(notNullValue()));
+		assertThat(result.getError().toString(), containsString("cannot connect to the repository server"));
+		assertThat(result.getStatus(), equalTo(WorkStatus.FAILED));
+		assertThat(result.getWorkContext().get("gitDestination"), is(nullValue()));
+		assertThat(result.getWorkContext().get("gitUri"), is(nullValue()));
 	}
 
 	private void createSingleFileInRepo() {

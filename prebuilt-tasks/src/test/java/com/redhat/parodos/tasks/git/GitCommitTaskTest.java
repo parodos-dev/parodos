@@ -23,7 +23,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @Slf4j
@@ -78,12 +84,12 @@ class GitCommitTaskTest {
 		WorkReport report = gitCommitTask.execute(workContext);
 
 		// then
-		assertThat(report.getError()).isNull();
-		assertThat(report.getStatus()).isEqualTo(WorkStatus.COMPLETED);
+		assertThat(report.getError(), is(nullValue()));
+		assertThat(report.getStatus(), equalTo(WorkStatus.COMPLETED));
 
 		assertDoesNotThrow(() -> {
 			RevCommit commit = getLastCommit();
-			assertThat(commit.getFullMessage()).isEqualTo(message);
+			assertThat(commit.getFullMessage(), equalTo(message));
 		});
 	}
 
@@ -98,9 +104,9 @@ class GitCommitTaskTest {
 		WorkReport report = gitCommitTask.execute(workContext);
 
 		// then
-		assertThat(report.getError()).isNotNull();
-		assertThat(report.getError()).isInstanceOf(MissingParameterException.class);
-		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
+		assertThat(report.getError(), is(notNullValue()));
+		assertThat(report.getError(), is(instanceOf(MissingParameterException.class)));
+		assertThat(report.getStatus(), equalTo(WorkStatus.FAILED));
 	}
 
 	@Test
@@ -114,9 +120,9 @@ class GitCommitTaskTest {
 		WorkReport report = gitCommitTask.execute(workContext);
 
 		// then
-		assertThat(report.getError()).isNotNull();
-		assertThat(report.getError()).isInstanceOf(IllegalArgumentException.class);
-		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
+		assertThat(report.getError(), is(notNullValue()));
+		assertThat(report.getError(), is(instanceOf(IllegalArgumentException.class)));
+		assertThat(report.getStatus(), equalTo(WorkStatus.FAILED));
 	}
 
 	@Test
@@ -131,9 +137,9 @@ class GitCommitTaskTest {
 		WorkReport report = gitCommitTask.execute(workContext);
 
 		// then
-		assertThat(report.getError()).isNotNull();
-		assertThat(report.getError()).isInstanceOf(IllegalArgumentException.class);
-		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
+		assertThat(report.getError(), is(notNullValue()));
+		assertThat(report.getError(), is(instanceOf(IllegalArgumentException.class)));
+		assertThat(report.getStatus(), equalTo(WorkStatus.FAILED));
 	}
 
 	@Test
@@ -148,10 +154,11 @@ class GitCommitTaskTest {
 		WorkReport report = gitCommitTask.execute(workContext);
 
 		// then
-		assertThat(report.getError()).isNotNull();
-		assertThat(report.getError()).isInstanceOf(Exception.class);
-		assertThat(report.getError().getMessage()).contains("Commit on repo without HEAD currently not supported");
-		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
+		assertThat(report.getError(), is(notNullValue()));
+		assertThat(report.getError(), is(instanceOf(Exception.class)));
+		assertThat(report.getError().getMessage(),
+				containsString("Commit on repo without HEAD currently not supported"));
+		assertThat(report.getStatus(), equalTo(WorkStatus.FAILED));
 	}
 
 	private void createSingleFileInRepo() {
@@ -168,14 +175,14 @@ class GitCommitTaskTest {
 
 		Ref head = repository.exactRef("HEAD");
 		ObjectId headId = head.getObjectId();
-		assertThat(headId).isNotNull();
+		assertThat(headId, is(notNullValue()));
 		// Create a RevWalk instance to walk through commits
 		RevWalk revWalk = new RevWalk(repository);
-		assertThat(revWalk).isNotNull();
+		assertThat(revWalk, is(notNullValue()));
 
 		// Parse the HEAD commit
 		RevCommit headCommit = revWalk.parseCommit(headId);
-		assertThat(headCommit).isNotNull();
+		assertThat(headCommit, is(notNullValue()));
 		return headCommit;
 	}
 

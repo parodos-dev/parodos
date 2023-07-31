@@ -8,13 +8,13 @@ import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.SneakyThrows;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.spy;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ProjectAccessRequestEscalationWorkFlowTaskTest {
 
 	private static final String SERVICE_URL_TEST = "service-url-test";
@@ -40,7 +40,7 @@ public class ProjectAccessRequestEscalationWorkFlowTaskTest {
 
 	private ProjectAccessRequestEscalationWorkFlowTask projectAccessRequestEscalationWorkFlowTask;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.projectAccessRequestEscalationWorkFlowTask = spy(
 				new ProjectAccessRequestEscalationWorkFlowTask(SERVICE_URL_TEST, notifier));

@@ -11,15 +11,15 @@ import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.SneakyThrows;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.springframework.http.ResponseEntity;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.spy;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ProjectAccessRequestWorkFlowTaskTest {
 
 	private static final String SERVICE_URL_TEST = "service-url-test";
@@ -57,7 +57,7 @@ public class ProjectAccessRequestWorkFlowTaskTest {
 
 	private ProjectAccessRequestWorkFlowTask projectAccessRequestWorkFlowTask;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.projectAccessRequestWorkFlowTask = spy(
 				new ProjectAccessRequestWorkFlowTask(SERVICE_URL_TEST, SERVICE_USERNAME_TEST, SERVICE_PASSWORD_TEST));

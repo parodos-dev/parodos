@@ -28,7 +28,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @Slf4j
@@ -78,9 +85,9 @@ public class GitPushTaskTest {
 		List<WorkParameter> params = task.getWorkFlowTaskParameters();
 
 		// then
-		assertThat(params).isNotNull();
-		assertThat(params.size()).isEqualTo(3);
-		assertThat(params.get(0).getKey()).isEqualTo("path");
+		assertThat(params, is(notNullValue()));
+		assertThat(params, hasSize(3));
+		assertThat(params.get(0).getKey(), equalTo("path"));
 	}
 
 	@Test
@@ -100,11 +107,11 @@ public class GitPushTaskTest {
 		WorkReport report = task.execute(ctx);
 
 		// given
-		assertThat(report.getError()).isNull();
+		assertThat(report.getError(), is(nullValue()));
 		assertDoesNotThrow(() -> {
 			RevCommit remoteCommit = getLastCommit(remoteRepository);
 			RevCommit repoCommit = getLastCommit(repository);
-			assertThat(repoCommit.getId()).isEqualTo(remoteCommit.getId());
+			assertThat(repoCommit.getId(), equalTo(remoteCommit.getId()));
 		});
 	}
 
@@ -123,10 +130,11 @@ public class GitPushTaskTest {
 		WorkReport report = task.execute(ctx);
 
 		// given
-		assertThat(report.getError()).isNotNull();
-		assertThat(report.getError()).isInstanceOf(RuntimeException.class);
-		assertThat(report.getError().getMessage()).contains("Cannot push to the remote noValid: noValid: not found");
-		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
+		assertThat(report.getError(), is(notNullValue()));
+		assertThat(report.getError(), is(instanceOf(RuntimeException.class)));
+		assertThat(report.getError().getMessage(),
+				containsString("Cannot push to the remote noValid: noValid: not found"));
+		assertThat(report.getStatus(), equalTo(WorkStatus.FAILED));
 	}
 
 	@Test
@@ -140,10 +148,10 @@ public class GitPushTaskTest {
 		WorkReport report = task.execute(ctx);
 
 		// given
-		assertThat(report.getError()).isNotNull();
-		assertThat(report.getError()).isInstanceOf(MissingParameterException.class);
-		assertThat(report.getError().getMessage()).contains("ParameterName: remote");
-		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
+		assertThat(report.getError(), is(notNullValue()));
+		assertThat(report.getError(), is(instanceOf(MissingParameterException.class)));
+		assertThat(report.getError().getMessage(), containsString("ParameterName: remote"));
+		assertThat(report.getStatus(), equalTo(WorkStatus.FAILED));
 	}
 
 	@Test
@@ -162,10 +170,11 @@ public class GitPushTaskTest {
 		WorkReport report = task.execute(ctx);
 
 		// given
-		assertThat(report.getError()).isNotNull();
-		assertThat(report.getError()).isInstanceOf(RuntimeException.class);
-		assertThat(report.getError().getMessage()).contains("Cannot push to the remote origin");
-		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
+		assertThat(report.getError(), is(notNullValue()));
+		;
+		assertThat(report.getError(), is(instanceOf(RuntimeException.class)));
+		assertThat(report.getError().getMessage(), containsString("Cannot push to the remote origin"));
+		assertThat(report.getStatus(), equalTo(WorkStatus.FAILED));
 	}
 
 	@Test
@@ -178,16 +187,16 @@ public class GitPushTaskTest {
 		WorkReport report = task.execute(ctx);
 
 		// given
-		assertThat(report.getError()).isNotNull();
-		assertThat(report.getError()).isInstanceOf(IllegalArgumentException.class);
-		assertThat(report.getStatus()).isEqualTo(WorkStatus.FAILED);
+		assertThat(report.getError(), is(notNullValue()));
+		assertThat(report.getError(), is(instanceOf(IllegalArgumentException.class)));
+		assertThat(report.getStatus(), equalTo(WorkStatus.FAILED));
 	}
 
 	private void addRemote(Path remotePath, String remote)
 			throws IOException, URISyntaxException, GitAPIException, URISyntaxException {
 		Git git = new Git(repository);
 		git.remoteAdd().setName(remote).setUri(new URIish(remotePath.toFile().toURI().toString())).call();
-		assertThat(git.remoteList().call().size()).isEqualTo(1);
+		assertThat(git.remoteList().call().size(), equalTo(1));
 	}
 
 	private void createSingleFileInRepo() {
@@ -205,14 +214,17 @@ public class GitPushTaskTest {
 
 		Ref head = repo.exactRef(GitConstants.GIT_HEAD);
 		ObjectId headId = head.getObjectId();
-		assertThat(headId).isNotNull();
+		assertThat(headId, is(notNullValue()));
+		;
 		// Create a RevWalk instance to walk through commits
 		RevWalk revWalk = new RevWalk(repo);
-		assertThat(revWalk).isNotNull();
+		assertThat(revWalk, is(notNullValue()));
+		;
 
 		// Parse the HEAD commit
 		RevCommit headCommit = revWalk.parseCommit(headId);
-		assertThat(headCommit).isNotNull();
+		assertThat(headCommit, is(notNullValue()));
+		;
 		return headCommit;
 	}
 
@@ -222,9 +234,10 @@ public class GitPushTaskTest {
 		command.setBare(true);
 		command.setDirectory(path.toFile());
 		Git git = command.call();
-		assertThat(git).isNotNull();
-		assertThat(git.getRepository().getFullBranch()).isEqualTo("refs/heads/main");
-		assertThat(git.getRepository().getBranch()).isEqualTo("main");
+		assertThat(git, is(notNullValue()));
+		;
+		assertThat(git.getRepository().getFullBranch(), equalTo("refs/heads/main"));
+		assertThat(git.getRepository().getBranch(), equalTo("main"));
 		return git.getRepository();
 	}
 
