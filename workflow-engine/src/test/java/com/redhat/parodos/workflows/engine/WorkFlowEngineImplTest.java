@@ -38,7 +38,7 @@ import com.redhat.parodos.workflows.workflow.ParallelFlow;
 import com.redhat.parodos.workflows.workflow.RepeatFlow;
 import com.redhat.parodos.workflows.workflow.SequentialFlow;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.redhat.parodos.workflows.engine.WorkFlowEngineBuilder.aNewWorkFlowEngine;
 import static com.redhat.parodos.workflows.work.WorkReportPredicate.COMPLETED;
@@ -46,8 +46,8 @@ import static com.redhat.parodos.workflows.workflow.ConditionalFlow.Builder.aNew
 import static com.redhat.parodos.workflows.workflow.ParallelFlow.Builder.aNewParallelFlow;
 import static com.redhat.parodos.workflows.workflow.RepeatFlow.Builder.aNewRepeatFlow;
 import static com.redhat.parodos.workflows.workflow.SequentialFlow.Builder.aNewSequentialFlow;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.junit.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 

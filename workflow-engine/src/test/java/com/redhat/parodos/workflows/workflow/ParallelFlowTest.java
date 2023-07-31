@@ -28,10 +28,11 @@ import java.util.List;
 
 import com.redhat.parodos.workflows.work.Work;
 import com.redhat.parodos.workflows.work.WorkContext;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.junit.MatcherAssert.assertThat;
-import static org.mockito.ArgumentMatchers.isNotNull;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -51,7 +52,7 @@ public class ParallelFlowTest {
 		ParallelFlowReport parallelFlowReport = parallelFlow.execute(workContext);
 
 		// then
-		assertThat(parallelFlowReport, isNotNull());
+		assertThat(parallelFlowReport, is(notNullValue()));
 		verify(parallelFlowExecutor).executeInParallel(works, workContext);
 	}
 
