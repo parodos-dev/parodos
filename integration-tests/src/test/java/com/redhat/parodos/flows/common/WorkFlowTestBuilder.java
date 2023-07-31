@@ -10,7 +10,13 @@ import com.redhat.parodos.sdk.model.ProjectResponseDTO;
 import com.redhat.parodos.sdk.model.WorkFlowDefinitionResponseDTO;
 import com.redhat.parodos.sdkutils.WorkFlowServiceUtils;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.blankOrNullString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
 
 public class WorkFlowTestBuilder {
 
@@ -37,8 +43,8 @@ public class WorkFlowTestBuilder {
 	}
 
 	public WorkFlowTestBuilder withProject(String projectName, String projectDescription) {
-		assertThat(projectName).isNotBlank();
-		assertThat(projectDescription).isNotBlank();
+		assertThat(projectName, is(not(blankOrNullString())));
+		assertThat(projectDescription, is(not(blankOrNullString())));
 		this.projectName = projectName;
 		this.projectDescription = projectDescription;
 		return this;
@@ -46,7 +52,7 @@ public class WorkFlowTestBuilder {
 
 	private void setupProject() throws ApiException {
 		this.testProject = WorkFlowServiceUtils.getProjectAsync(apiClient, projectName, projectDescription);
-		assertThat(testProject).isNotNull();
+		assertThat(testProject, is(notNullValue()));
 	}
 
 	public TestComponents build() {
@@ -70,10 +76,10 @@ public class WorkFlowTestBuilder {
 		// Get workflow definition by name
 		List<WorkFlowDefinitionResponseDTO> workFlowDefinitions = workflowDefinitionApi
 				.getWorkFlowDefinitions(this.workFlowName);
-		assertThat(workFlowDefinitions.size()).isEqualTo(1);
-		assertThat(workFlowDefinitions.get(0)).isNotNull();
-		assertThat(workFlowDefinitions.get(0).getName()).isEqualTo(this.workFlowName);
-		assertThat(workFlowDefinitions.get(0).getId()).isNotNull();
+		assertThat(workFlowDefinitions, hasSize(1));
+		assertThat(workFlowDefinitions.get(0), is(notNullValue()));
+		assertThat(workFlowDefinitions.get(0).getName(), equalTo(this.workFlowName));
+		assertThat(workFlowDefinitions.get(0).getId(), is(notNullValue()));
 
 		// Get workflow definition by ID
 		WorkFlowDefinitionResponseDTO workFlowDefinition = workflowDefinitionApi
@@ -84,23 +90,23 @@ public class WorkFlowTestBuilder {
 
 	private void setupClient() throws InterruptedException, ApiException {
 		this.apiClient = WorkFlowServiceUtils.getParodosAPiClient();
-		assertThat(apiClient).isNotNull();
+		assertThat(apiClient, is(notNullValue()));
 	}
 
 	public WorkFlowTestBuilder withWorkFlowDefinition(String workflowName,
 			Consumer<WorkFlowDefinitionResponseDTO> consumer) {
-		assertThat(workflowName).isNotBlank();
+		assertThat(workflowName, is(not(blankOrNullString())));
 		this.workFlowName = workflowName;
 		this.workFlowDefinitionConsumer = consumer;
 		return this;
 	}
 
 	public WorkFlowTestBuilder withWorkFlowDefinition(String workFlowName) {
-		assertThat(workFlowName).isNotBlank();
+		assertThat(workFlowName, is(not(blankOrNullString())));
 		this.workFlowName = workFlowName;
 		this.workFlowDefinitionConsumer = (workFlowDefinition) -> {
-			assertThat(workFlowDefinition.getId()).isNotNull();
-			assertThat(workFlowDefinition.getName()).isEqualTo(this.workFlowName);
+			assertThat(workFlowDefinition.getId(), is(notNullValue()));
+			assertThat(workFlowDefinition.getName(), equalTo(this.workFlowName));
 		};
 		return this;
 	}

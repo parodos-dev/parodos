@@ -13,12 +13,15 @@ import com.redhat.parodos.notification.sdk.model.NotificationMessageCreateReques
 import com.redhat.parodos.notification.sdk.model.NotificationRecordResponseDTO;
 import com.redhat.parodos.notification.sdk.model.PageNotificationRecordResponseDTO;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.http.HttpHeaders;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -35,7 +38,7 @@ public class NotificationRecordTest {
 
 	private int countNotificationsExpectedCount = 0;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		NotificationTestBuilder.TestComponents components = new NotificationTestBuilder().build();
 		log.info("CHECK NotificationWorkFlowTask basePath: {}", components.apiClient().getBasePath());
@@ -55,14 +58,14 @@ public class NotificationRecordTest {
 
 			countNotificationRecord(testName);
 			PageNotificationRecordResponseDTO notificationsAfterCreation = listNotificationRecord(testName, null);
-			assertThat(notificationsAfterCreation.getContent()).isNotNull();
+			assertThat(notificationsAfterCreation.getContent(), is(notNullValue()));
 			NotificationRecordResponseDTO notificationRecord1 = notificationsAfterCreation.getContent().get(0);
 			logTestStep(testName, "Update one Notification Record as \"READ\"");
 			updateNotificationRecord(testName, notificationRecord1.getId(), "READ");
 
 			countNotificationRecord(testName);
 			PageNotificationRecordResponseDTO notificationsAfterUpdate = listNotificationRecord(testName, null);
-			assertThat(notificationsAfterUpdate.getContent()).isNotNull();
+			assertThat(notificationsAfterUpdate.getContent(), is(notNullValue()));
 			NotificationRecordResponseDTO notificationRecord2 = notificationsAfterUpdate.getContent().get(1);
 			deleteNotificationRecord(testName, notificationRecord2.getId());
 
@@ -78,7 +81,7 @@ public class NotificationRecordTest {
 		ApiException e = assertThrows(ApiException.class, () -> {
 			createNotificationMessage(testName, "type0", "body0", "subject0", null);
 		});
-		assertThat(e.getCode()).isEqualTo(400);
+		assertThat(e.getCode(), equalTo(400));
 	}
 
 	@Test
@@ -88,7 +91,7 @@ public class NotificationRecordTest {
 		ApiException e = assertThrows(ApiException.class, () -> {
 			listNotificationRecord(testName, List.of(user));
 		});
-		assertThat(e.getCode()).isEqualTo(400);
+		assertThat(e.getCode(), equalTo(400));
 	}
 
 	@Test
@@ -109,7 +112,7 @@ public class NotificationRecordTest {
 		ApiException e = assertThrows(ApiException.class, () -> {
 			createNotificationMessage(testName, "type0", "body0", "subject0", new ArrayList<>());
 		});
-		assertThat(e.getCode()).isEqualTo(400);
+		assertThat(e.getCode(), equalTo(400));
 	}
 
 	@Test
@@ -123,7 +126,7 @@ public class NotificationRecordTest {
 		ApiException e = assertThrows(ApiException.class, () -> {
 			createNotificationMessage(testName, "type0", "body0", "subject0", List.of(user));
 		});
-		assertThat(e.getCode()).isEqualTo(401);
+		assertThat(e.getCode(), equalTo(401));
 	}
 
 	@Test
@@ -136,7 +139,7 @@ public class NotificationRecordTest {
 		ApiException e = assertThrows(ApiException.class, () -> {
 			listNotificationRecord(testName, null);
 		});
-		assertThat(e.getCode()).isEqualTo(401);
+		assertThat(e.getCode(), equalTo(401));
 
 	}
 
@@ -150,7 +153,7 @@ public class NotificationRecordTest {
 		ApiException e = assertThrows(ApiException.class, () -> {
 			countNotificationRecord(testName);
 		});
-		assertThat(e.getCode()).isEqualTo(401);
+		assertThat(e.getCode(), equalTo(401));
 	}
 
 	@Test
@@ -163,7 +166,7 @@ public class NotificationRecordTest {
 		ApiException e = assertThrows(ApiException.class, () -> {
 			deleteNotificationRecord(testName, UUID.randomUUID());
 		});
-		assertThat(e.getCode()).isEqualTo(401);
+		assertThat(e.getCode(), equalTo(401));
 	}
 
 	@Test
@@ -176,7 +179,7 @@ public class NotificationRecordTest {
 		ApiException e = assertThrows(ApiException.class, () -> {
 			updateNotificationRecord(testName, UUID.randomUUID(), "READ");
 		});
-		assertThat(e.getCode()).isEqualTo(401);
+		assertThat(e.getCode(), equalTo(401));
 	}
 
 	// Helper functions
@@ -208,7 +211,7 @@ public class NotificationRecordTest {
 		logTestStep(testName, "Count Notification Records for the user");
 		Integer count = this.recordApiInstance.countUnreadNotifications("UNREAD");
 		log.info("Found {} notification records for the user", count);
-		assertThat(countNotificationsExpectedCount).isEqualTo(count.intValue());
+		assertThat(countNotificationsExpectedCount, equalTo(count.intValue()));
 	}
 
 	private PageNotificationRecordResponseDTO listNotificationRecord(String testName, List<String> sort)
@@ -216,9 +219,9 @@ public class NotificationRecordTest {
 		logTestStep(testName, "List Notification Records for the user");
 		PageNotificationRecordResponseDTO result = this.recordApiInstance.getNotifications(0, 10, sort, null, null);
 		List<NotificationRecordResponseDTO> content = result.getContent();
-		assertThat(content).isNotNull();
+		assertThat(content, is(notNullValue()));
 		log.info(content.toString());
-		assertThat(listNotificationsExpectedCount).isEqualTo(content.size());
+		assertThat(listNotificationsExpectedCount, equalTo(content.size()));
 		return result;
 	}
 

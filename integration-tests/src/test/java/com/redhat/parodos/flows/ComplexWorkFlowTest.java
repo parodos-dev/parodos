@@ -21,12 +21,16 @@ import com.redhat.parodos.sdk.model.WorkRequestDTO;
 import com.redhat.parodos.sdkutils.WorkFlowServiceUtils;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.describedAs;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Slf4j
 public class ComplexWorkFlowTest {
@@ -56,8 +60,8 @@ public class ComplexWorkFlowTest {
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = WorkFlowServiceUtils.waitWorkflowStatusAsync(workflowApi,
 				workFlowResponseDTO.getWorkFlowExecutionId());
 		assertNotNull(workFlowStatusResponseDTO);
-		assertThat(workFlowStatusResponseDTO.getStatus()).as("Assessment workflow should be completed")
-				.isEqualTo(WorkFlowStatusResponseDTO.StatusEnum.COMPLETED);
+		assertThat(workFlowStatusResponseDTO.getStatus(), describedAs("Assessment workflow should be completed",
+				equalTo(WorkFlowStatusResponseDTO.StatusEnum.COMPLETED)));
 
 		WorkFlowContextResponseDTO workflowOptions = workflowApi
 				.getWorkflowParameters(workFlowResponseDTO.getWorkFlowExecutionId(), List.of("WORKFLOW_OPTIONS"));
@@ -74,10 +78,11 @@ public class ComplexWorkFlowTest {
 				.getWorkFlowDefinitions(infrastructureOption);
 
 		assertNotNull(workFlowDefinitions);
-		assertTrue(workFlowDefinitions.size() > 0);
-		assertNotNull("There is no valid Onboarding workflow id", workFlowDefinitions.get(0).getId());
-		assertEquals("There is no valid Onboarding workflow name", workFlowDefinitions.get(0).getName(),
-				infrastructureOption);
+		assertThat(workFlowDefinitions.size(), greaterThan(0));
+		assertThat(workFlowDefinitions.get(0).getId(),
+				describedAs("There is no valid Onboarding workflow id", is(notNullValue())));
+		assertThat(workFlowDefinitions.get(0).getName(),
+				describedAs("There is no valid Onboarding workflow name", equalTo(infrastructureOption)));
 		log.info("Onboarding workflow id {}", workFlowDefinitions.get(0).getId());
 		log.info("Onboarding workflow name {}", workFlowDefinitions.get(0).getName());
 
@@ -129,7 +134,9 @@ public class ComplexWorkFlowTest {
 				namespaceWorkFlowTask, sslCertificationWorkFlowTask));
 		workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
 
-		assertNotNull("There is no valid WorkFlowExecutionId", workFlowResponseDTO.getWorkFlowExecutionId());
+		assertThat(workFlowResponseDTO.getWorkFlowExecutionId(),
+				describedAs("There is no valid WorkFlowExecutionId", is(notNullValue())));
+
 		assertEquals(WorkStatusEnum.IN_PROGRESS, workFlowResponseDTO.getWorkStatus());
 		log.info("Onboarding workflow execution id: {}", workFlowResponseDTO.getWorkFlowExecutionId());
 

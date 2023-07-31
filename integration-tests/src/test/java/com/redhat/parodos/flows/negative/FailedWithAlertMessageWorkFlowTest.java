@@ -19,9 +19,17 @@ import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO.StatusEnum;
 import com.redhat.parodos.sdk.model.WorkStatusResponseDTO;
 import com.redhat.parodos.sdkutils.WorkFlowServiceUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 
 @Slf4j
 public class FailedWithAlertMessageWorkFlowTest {
@@ -42,37 +50,37 @@ public class FailedWithAlertMessageWorkFlowTest {
 		WorkflowApi workflowApi = new WorkflowApi(components.apiClient());
 		WorkFlowExecutionResponseDTO workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
 
-		assertThat(workFlowResponseDTO.getWorkFlowExecutionId()).isNotNull();
-		assertThat(workFlowResponseDTO.getWorkStatus()).isEqualTo(WorkStatusEnum.IN_PROGRESS);
+		assertThat(workFlowResponseDTO.getWorkFlowExecutionId(), is(notNullValue()));
+		assertThat(workFlowResponseDTO.getWorkStatus(), equalTo(WorkStatusEnum.IN_PROGRESS));
 
 		log.info("FailedWithAlertMessageWorkFlow execution id: {}", workFlowResponseDTO.getWorkFlowExecutionId());
 
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = WorkFlowServiceUtils.waitWorkflowStatusAsync(workflowApi,
 				workFlowResponseDTO.getWorkFlowExecutionId(), StatusEnum.FAILED);
 
-		assertThat(workFlowStatusResponseDTO.getWorkFlowExecutionId()).isNotNull();
-		assertThat(workFlowStatusResponseDTO.getStatus()).isEqualTo(StatusEnum.FAILED);
-		assertThat(workFlowStatusResponseDTO.getMessage()).isNull();
+		assertThat(workFlowStatusResponseDTO.getWorkFlowExecutionId(), is(notNullValue()));
+		assertThat(workFlowStatusResponseDTO.getStatus(), equalTo(StatusEnum.FAILED));
+		assertThat(workFlowStatusResponseDTO.getMessage(), is(nullValue()));
 
 		// verify the task status and message
-		assertThat(workFlowStatusResponseDTO.getWorks()).isNotNull();
-		assertThat(workFlowStatusResponseDTO.getWorks()).hasSize(2);
+		assertThat(workFlowStatusResponseDTO.getWorks(), is(notNullValue()));
+		assertThat(workFlowStatusResponseDTO.getWorks(), hasSize(2));
 
 		// first task - doNothingWorkFlowTask (fetched in reversed order)
-		assertThat(workFlowStatusResponseDTO.getWorks().get(1).getName()).isEqualTo("doNothingAgainWorkFlowTask");
-		assertThat(workFlowStatusResponseDTO.getWorks().get(1).getStatus())
-				.isEqualTo(WorkStatusResponseDTO.StatusEnum.COMPLETED);
-		assertThat(workFlowStatusResponseDTO.getWorks().get(1).getMessage()).isNull();
-		assertThat(workFlowStatusResponseDTO.getWorks().get(1).getAlertMessage()).isNull();
+		assertThat(workFlowStatusResponseDTO.getWorks().get(1).getName(), equalTo("doNothingAgainWorkFlowTask"));
+		assertThat(workFlowStatusResponseDTO.getWorks().get(1).getStatus(),
+				equalTo(WorkStatusResponseDTO.StatusEnum.COMPLETED));
+		assertThat(workFlowStatusResponseDTO.getWorks().get(1).getMessage(), is(nullValue()));
+		assertThat(workFlowStatusResponseDTO.getWorks().get(1).getAlertMessage(), is(nullValue()));
 
 		// second task - failedWithAlertMessageWorkFlowTask
-		assertThat(workFlowStatusResponseDTO.getWorks().get(0).getName())
-				.isEqualTo("failedWithAlertMessageWorkFlowTask");
-		assertThat(workFlowStatusResponseDTO.getWorks().get(0).getStatus())
-				.isEqualTo(WorkStatusResponseDTO.StatusEnum.FAILED);
-		assertThat(workFlowStatusResponseDTO.getWorks().get(0).getMessage()).isNull();
-		assertThat(workFlowStatusResponseDTO.getWorks().get(0).getAlertMessage())
-				.contains("[link](http://localhost:8080)");
+		assertThat(workFlowStatusResponseDTO.getWorks().get(0).getName(),
+				equalTo("failedWithAlertMessageWorkFlowTask"));
+		assertThat(workFlowStatusResponseDTO.getWorks().get(0).getStatus(),
+				equalTo(WorkStatusResponseDTO.StatusEnum.FAILED));
+		assertThat(workFlowStatusResponseDTO.getWorks().get(0).getMessage(), is(nullValue()));
+		assertThat(workFlowStatusResponseDTO.getWorks().get(0).getAlertMessage(),
+				containsString("[link](http://localhost:8080)"));
 
 		log.info("******** FailedWithAlertMessageWorkFlow successfully ended: {} ********",
 				workFlowStatusResponseDTO.getStatus());
@@ -80,20 +88,20 @@ public class FailedWithAlertMessageWorkFlowTest {
 
 	private static Consumer<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitionResponseConsumer() {
 		return workFlowDefinition -> {
-			assertThat(workFlowDefinition.getId()).isNotNull();
-			assertThat(WORKFLOW_NAME).isEqualTo(workFlowDefinition.getName());
-			assertThat(workFlowDefinition.getProcessingType()).isEqualTo(ProcessingTypeEnum.SEQUENTIAL);
-			assertThat(workFlowDefinition.getType()).isEqualTo(TypeEnum.INFRASTRUCTURE);
+			assertThat(workFlowDefinition.getId(), is(notNullValue()));
+			assertThat(WORKFLOW_NAME, equalTo(workFlowDefinition.getName()));
+			assertThat(workFlowDefinition.getProcessingType(), equalTo(ProcessingTypeEnum.SEQUENTIAL));
+			assertThat(workFlowDefinition.getType(), equalTo(TypeEnum.INFRASTRUCTURE));
 
-			assertThat(workFlowDefinition.getWorks()).isNotNull();
-			assertThat(workFlowDefinition.getWorks()).hasSize(2);
+			assertThat(workFlowDefinition.getWorks(), is(notNullValue()));
+			assertThat(workFlowDefinition.getWorks(), hasSize(2));
 			List<WorkDefinitionResponseDTO> works = workFlowDefinition.getWorks().stream().toList();
-			assertThat(works.get(1).getName()).isEqualTo("doNothingAgainWorkFlowTask");
-			assertThat(works.get(1).getWorkType()).isEqualTo(WorkDefinitionResponseDTO.WorkTypeEnum.TASK);
-			assertThat(works.get(1).getWorks()).isNullOrEmpty();
-			assertThat(works.get(1).getProcessingType()).isNull();
-			assertThat(works.get(1).getParameters()).isNotNull();
-			assertThat(works.get(0).getName()).isEqualTo("failedWithAlertMessageWorkFlowTask");
+			assertThat(works.get(1).getName(), equalTo("doNothingAgainWorkFlowTask"));
+			assertThat(works.get(1).getWorkType(), equalTo(WorkDefinitionResponseDTO.WorkTypeEnum.TASK));
+			assertThat(works.get(1).getWorks(), anyOf(nullValue(), empty()));
+			assertThat(works.get(1).getProcessingType(), nullValue());
+			assertThat(works.get(1).getParameters(), is(notNullValue()));
+			assertThat(works.get(0).getName(), equalTo("failedWithAlertMessageWorkFlowTask"));
 		};
 	}
 

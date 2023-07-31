@@ -24,15 +24,22 @@ import com.redhat.parodos.sdk.model.WorkStatusResponseDTO;
 import com.redhat.parodos.sdkutils.WorkFlowServiceUtils;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.describedAs;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 public class SimpleRestartWorkFlowTest {
@@ -46,10 +53,10 @@ public class SimpleRestartWorkFlowTest {
 		WorkflowApi workflowApi = new WorkflowApi(components.apiClient());
 		log.info("Restarting not existing WorkFlow");
 		UUID execId = UUID.randomUUID();
-		assertThat(assertThrows(ApiException.class, () -> workflowApi.restartWorkFlow(execId)))
-				.hasMessageContaining(String.format("Workflow execution with ID: %s not found", execId))
-				.hasMessageContaining("HTTP response code: 404");
-
+		assertThat(assertThrows(ApiException.class, () -> workflowApi.restartWorkFlow(execId)).getMessage(),
+				containsString(String.format("Workflow execution with ID: %s not found", execId)));
+		assertThat(assertThrows(ApiException.class, () -> workflowApi.restartWorkFlow(execId)).getMessage(),
+				containsString("HTTP response code: 404"));
 	}
 
 	@Test
@@ -123,10 +130,11 @@ public class SimpleRestartWorkFlowTest {
 				.getWorkFlowDefinitions(infrastructureOption);
 
 		assertNotNull(workFlowDefinitions);
-		assertTrue(workFlowDefinitions.size() > 0);
-		assertNotNull("There is no valid Onboarding workflow id", workFlowDefinitions.get(0).getId());
-		assertEquals("There is no valid Onboarding workflow name", workFlowDefinitions.get(0).getName(),
-				infrastructureOption);
+		assertThat(workFlowDefinitions.size(), greaterThan(0));
+		assertThat(workFlowDefinitions.get(0).getId(),
+				describedAs("There is no valid Onboarding workflow id", is(notNullValue())));
+		assertThat(workFlowDefinitions.get(0).getName(),
+				describedAs("There is no valid Onboarding workflow name", equalTo(infrastructureOption)));
 		log.info("Onboarding workflow id {}", workFlowDefinitions.get(0).getId());
 		log.info("Onboarding workflow name {}", workFlowDefinitions.get(0).getName());
 
@@ -178,7 +186,8 @@ public class SimpleRestartWorkFlowTest {
 				namespaceWorkFlowTask, sslCertificationWorkFlowTask));
 		workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
 
-		assertNotNull("There is no valid WorkFlowExecutionId", workFlowResponseDTO.getWorkFlowExecutionId());
+		assertThat(workFlowResponseDTO.getWorkFlowExecutionId(),
+				describedAs("There is no valid WorkFlowExecutionId", is(notNullValue())));
 		assertEquals(WorkStatusEnum.IN_PROGRESS, workFlowResponseDTO.getWorkStatus());
 		log.info("Onboarding workflow execution id: {}", workFlowResponseDTO.getWorkFlowExecutionId());
 
@@ -255,9 +264,10 @@ public class SimpleRestartWorkFlowTest {
 
 		assertNotNull(workFlowDefinitions);
 		assertTrue(workFlowDefinitions.size() > 0);
-		assertNotNull("There is no valid Onboarding workflow id", workFlowDefinitions.get(0).getId());
-		assertEquals("There is no valid Onboarding workflow name", workFlowDefinitions.get(0).getName(),
-				infrastructureOption);
+		assertThat(workFlowResponseDTO.getWorkFlowExecutionId(),
+				describedAs("There is no valid WorkFlowExecutionId", is(notNullValue())));
+		assertThat(workFlowDefinitions.get(0).getName(),
+				describedAs("There is no valid Onboarding workflow name", equalTo(infrastructureOption)));
 		log.info("Onboarding workflow id {}", workFlowDefinitions.get(0).getId());
 		log.info("Onboarding workflow name {}", workFlowDefinitions.get(0).getName());
 
@@ -309,7 +319,8 @@ public class SimpleRestartWorkFlowTest {
 				namespaceWorkFlowTask, sslCertificationWorkFlowTask));
 		workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
 
-		assertNotNull("There is no valid WorkFlowExecutionId", workFlowResponseDTO.getWorkFlowExecutionId());
+		assertThat(workFlowResponseDTO.getWorkFlowExecutionId(),
+				describedAs("There is no valid WorkFlowExecutionId", is(notNullValue())));
 		assertEquals(WorkStatusEnum.IN_PROGRESS, workFlowResponseDTO.getWorkStatus());
 		log.info("Onboarding workflow execution id: {}", workFlowResponseDTO.getWorkFlowExecutionId());
 
@@ -330,8 +341,10 @@ public class SimpleRestartWorkFlowTest {
 			log.info("restarted workflow submitted successfully with response: {}", restartedWorkFlowResponseDTO);
 			assertNotEquals(workFlowResponseDTO.getWorkFlowExecutionId(),
 					restartedWorkFlowResponseDTO.getWorkFlowExecutionId());
-			assertFalse("Newly restarted execution ID shall not be in the list of already restarted execution ID",
-					restartedIds.contains(restartedWorkFlowResponseDTO.getWorkFlowExecutionId()));
+			assertThat(restartedIds,
+					describedAs(
+							"Newly restarted execution ID shall not be in the list of already restarted execution ID",
+							not(hasItem(restartedWorkFlowResponseDTO.getWorkFlowExecutionId()))));
 			restartedIds.add(restartedWorkFlowResponseDTO.getWorkFlowExecutionId());
 			WorkFlowStatusResponseDTO restartedWorkFlowStatusResponseDTO = WorkFlowServiceUtils
 					.waitWorkflowStatusAsync(workflowApi, restartedWorkFlowResponseDTO.getWorkFlowExecutionId());
@@ -394,9 +407,10 @@ public class SimpleRestartWorkFlowTest {
 
 		assertNotNull(workFlowDefinitions);
 		assertTrue(workFlowDefinitions.size() > 0);
-		assertNotNull("There is no valid Onboarding workflow id", workFlowDefinitions.get(0).getId());
-		assertEquals("There is no valid Onboarding workflow name", workFlowDefinitions.get(0).getName(),
-				infrastructureOption);
+		assertThat(workFlowDefinitions.get(0).getId(),
+				describedAs("There is no valid Onboarding workflow id", is(notNullValue())));
+		assertThat(workFlowDefinitions.get(0).getName(),
+				describedAs("There is no valid Onboarding workflow name", equalTo(infrastructureOption)));
 		log.info("Onboarding workflow id {}", workFlowDefinitions.get(0).getId());
 		log.info("Onboarding workflow name {}", workFlowDefinitions.get(0).getName());
 
@@ -449,7 +463,8 @@ public class SimpleRestartWorkFlowTest {
 				namespaceWorkFlowTask, sslCertificationWorkFlowTask));
 		workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
 
-		assertNotNull("There is no valid WorkFlowExecutionId", workFlowResponseDTO.getWorkFlowExecutionId());
+		assertThat(workFlowResponseDTO.getWorkFlowExecutionId(),
+				describedAs("There is no valid WorkFlowExecutionId", is(notNullValue())));
 		assertEquals(WorkStatusEnum.IN_PROGRESS, workFlowResponseDTO.getWorkStatus());
 		log.info("Onboarding workflow execution id: {}", workFlowResponseDTO.getWorkFlowExecutionId());
 
@@ -516,7 +531,7 @@ public class SimpleRestartWorkFlowTest {
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = WorkFlowServiceUtils.waitWorkflowStatusAsync(workflowApi,
 				workFlowResponseDTO.getWorkFlowExecutionId());
 		assertNotNull(workFlowStatusResponseDTO);
-		assertThat(workFlowStatusResponseDTO.getStatus()).isEqualTo(expectedStatus);
+		assertThat(workFlowStatusResponseDTO.getStatus(), equalTo(expectedStatus));
 
 		WorkFlowContextResponseDTO workflowOptions = workflowApi
 				.getWorkflowParameters(workFlowResponseDTO.getWorkFlowExecutionId(), List.of("WORKFLOW_OPTIONS"));
