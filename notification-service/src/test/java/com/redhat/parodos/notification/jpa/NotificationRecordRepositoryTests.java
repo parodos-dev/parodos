@@ -20,10 +20,13 @@ import java.util.Optional;
 
 import com.redhat.parodos.notification.controller.AbstractNotificationsIntegrationTest;
 import com.redhat.parodos.notification.jpa.entity.NotificationRecord;
+import com.redhat.parodos.notification.jpa.entity.NotificationUser;
 import com.redhat.parodos.notification.jpa.repository.NotificationRecordRepository;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,6 +64,23 @@ public class NotificationRecordRepositoryTests extends AbstractNotificationsInte
 
 		Optional<NotificationRecord> r2 = this.notificationRecordRepository.findById(r.get().getId());
 		assertThat(r2.isEmpty());
+	}
+
+	@Test
+	void test_search() {
+		NotificationUser notificationUser = NotificationsDataCreator
+				.createNotificationsRecord(notificationRecordRepository, "test-subject", "test-message", "test");
+
+		Page<NotificationRecord> records = this.notificationRecordRepository.search(notificationUser, "test",
+				PageRequest.of(0, 10));
+
+		assertThat(records.getContent()).isNotNull();
+		assertThat(records.getContent()).hasSize(1);
+
+		records = this.notificationRecordRepository.search(notificationUser, "invalid-test-test",
+				PageRequest.of(0, 10));
+		assertThat(records.getContent()).isNotNull();
+		assertThat(records.getContent()).isEmpty();
 	}
 
 }
