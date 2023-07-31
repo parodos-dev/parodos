@@ -120,6 +120,22 @@ public final class NotificationsDataCreator {
 		notificationRecordRepository.save(record);
 	}
 
+	public static NotificationUser createNotificationsRecord(NotificationRecordRepository notificationRecordRepository,
+			String subject, String messageBody, String username) {
+		NotificationRecord record = new NotificationRecord();
+		record.setRead(false);
+		record.setFolder(ARCHIVE_FOLDER);
+		record.setTags(NotificationsDataCreator.getTags());
+		NotificationMessage notificationMessage = new NotificationMessage();
+		notificationMessage.setBody(messageBody);
+		notificationMessage.setSubject(subject);
+		NotificationUser notificationUser = new NotificationUser();
+		notificationUser.setUsername(username);
+		record.getNotificationUserList().add(notificationUser);
+		record.setNotificationMessage(notificationMessage);
+		return notificationRecordRepository.save(record).getNotificationUserList().get(0);
+	}
+
 	public static void createAndSaveNotificationsMessage(NotificationMessageRepository notificationMessageRepository) {
 		notificationMessageRepository.save(createNotificationsMessage());
 	}
