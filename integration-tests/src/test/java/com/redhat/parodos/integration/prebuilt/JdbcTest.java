@@ -11,10 +11,12 @@ import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
 import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.sdk.model.WorkRequestDTO;
 import com.redhat.parodos.sdkutils.WorkFlowServiceUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 public class JdbcTest {
 
@@ -68,17 +70,18 @@ public class JdbcTest {
 		for (WorkFlowRequestDTO workFlowRequest : workFlowRequests) {
 			WorkFlowExecutionResponseDTO workFlowResponseDTO = workflowApi.execute(workFlowRequest);
 
-			assertNotNull(workFlowResponseDTO.getWorkFlowExecutionId());
-			assertNotNull(workFlowResponseDTO.getWorkStatus());
-			assertEquals(WorkFlowExecutionResponseDTO.WorkStatusEnum.IN_PROGRESS, workFlowResponseDTO.getWorkStatus());
+			assertThat(workFlowResponseDTO.getWorkFlowExecutionId(), is(notNullValue()));
+			assertThat(workFlowResponseDTO.getWorkStatus(), is(notNullValue()));
+			assertThat(workFlowResponseDTO.getWorkStatus(),
+					equalTo(WorkFlowExecutionResponseDTO.WorkStatusEnum.IN_PROGRESS));
 
 			WorkFlowStatusResponseDTO workFlowStatusResponseDTO = WorkFlowServiceUtils
 					.waitWorkflowStatusAsync(workflowApi, workFlowResponseDTO.getWorkFlowExecutionId());
 
-			assertNotNull(workFlowStatusResponseDTO);
-			assertNotNull(workFlowStatusResponseDTO.getWorkFlowExecutionId());
-			assertNotNull(workFlowStatusResponseDTO.getStatus());
-			assertEquals(WorkFlowStatusResponseDTO.StatusEnum.COMPLETED, workFlowStatusResponseDTO.getStatus());
+			assertThat(workFlowStatusResponseDTO, is(notNullValue()));
+			assertThat(workFlowStatusResponseDTO.getWorkFlowExecutionId(), is(notNullValue()));
+			assertThat(workFlowStatusResponseDTO.getStatus(), is(notNullValue()));
+			assertThat(workFlowStatusResponseDTO.getStatus(), equalTo(WorkFlowStatusResponseDTO.StatusEnum.COMPLETED));
 		}
 	}
 

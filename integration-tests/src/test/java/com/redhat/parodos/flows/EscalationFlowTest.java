@@ -9,11 +9,15 @@ import com.redhat.parodos.sdk.model.WorkFlowRequestDTO;
 import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO;
 import com.redhat.parodos.sdkutils.WorkFlowServiceUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.redhat.parodos.sdk.model.WorkFlowExecutionResponseDTO.WorkStatusEnum;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.describedAs;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * @author Gloria Ciavarrini (Github: gciavarrini)
@@ -38,7 +42,8 @@ public class EscalationFlowTest {
 		WorkflowApi workflowApi = new WorkflowApi(components.apiClient());
 		WorkFlowExecutionResponseDTO workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
 
-		assertNotNull("There is no valid WorkFlowExecutionId", workFlowResponseDTO.getWorkFlowExecutionId());
+		assertThat(workFlowResponseDTO.getWorkFlowExecutionId(),
+				describedAs("There is no valid WorkFlowExecutionId", is(notNullValue())));
 		assertEquals(workFlowResponseDTO.getWorkStatus(), WorkStatusEnum.IN_PROGRESS);
 		log.info("Escalation workflow execution id: {}", workFlowResponseDTO.getWorkFlowExecutionId());
 		log.info("Escalation workFlow {}", workFlowResponseDTO.getWorkStatus());

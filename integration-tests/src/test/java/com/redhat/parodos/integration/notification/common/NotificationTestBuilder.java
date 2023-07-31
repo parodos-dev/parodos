@@ -7,7 +7,10 @@ import com.redhat.parodos.notification.sdk.model.NotificationRecordResponseDTO;
 import com.redhat.parodos.notification.sdk.model.PageNotificationRecordResponseDTO;
 import com.redhat.parodos.sdkutils.NotificationServiceUtils;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 public class NotificationTestBuilder {
 
@@ -36,14 +39,14 @@ public class NotificationTestBuilder {
 				notificationRecordApi.deleteNotification(record.getId());
 			}
 			notifications = notificationRecordApi.getNotifications(0, 50, null, null, null);
-			assertThat(notifications.getContent()).isNotNull();
-			assertThat(notifications.getContent().size()).isEqualTo(0);
+			assertThat(notifications.getContent(), is(notNullValue()));
+			assertThat(notifications.getContent(), hasSize(0));
 		}
 	}
 
 	private void setupClient() throws InterruptedException, ApiException {
 		apiClient = NotificationServiceUtils.getParodosAPiClient();
-		assertThat(apiClient).isNotNull();
+		assertThat(apiClient, is(notNullValue()));
 	}
 
 	public record TestComponents(ApiClient apiClient) {

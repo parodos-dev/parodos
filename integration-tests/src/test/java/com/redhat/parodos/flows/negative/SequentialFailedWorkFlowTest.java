@@ -19,9 +19,16 @@ import com.redhat.parodos.sdk.model.WorkFlowStatusResponseDTO.StatusEnum;
 import com.redhat.parodos.sdk.model.WorkStatusResponseDTO;
 import com.redhat.parodos.sdkutils.WorkFlowServiceUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
@@ -43,25 +50,25 @@ public class SequentialFailedWorkFlowTest {
 		WorkflowApi workflowApi = new WorkflowApi(components.apiClient());
 		WorkFlowExecutionResponseDTO workFlowResponseDTO = workflowApi.execute(workFlowRequestDTO);
 
-		assertThat(workFlowResponseDTO.getWorkFlowExecutionId()).isNotNull();
-		assertThat(workFlowResponseDTO.getWorkStatus()).isEqualTo(WorkStatusEnum.IN_PROGRESS);
+		assertThat(workFlowResponseDTO.getWorkFlowExecutionId(), is(notNullValue()));
+		assertThat(workFlowResponseDTO.getWorkStatus(), equalTo(WorkStatusEnum.IN_PROGRESS));
 
 		log.info("Sequential Failed WorkFlow execution id: {}", workFlowResponseDTO.getWorkFlowExecutionId());
 
 		WorkFlowStatusResponseDTO workFlowStatusResponseDTO = WorkFlowServiceUtils.waitWorkflowStatusAsync(workflowApi,
 				workFlowResponseDTO.getWorkFlowExecutionId(), StatusEnum.FAILED);
 
-		assertThat(workFlowStatusResponseDTO.getWorkFlowExecutionId()).isNotNull();
-		assertThat(workFlowStatusResponseDTO.getStatus()).isEqualTo(StatusEnum.FAILED);
-		assertThat(workFlowStatusResponseDTO.getMessage()).isEqualTo("FailedWorkFlowTask failure");
+		assertThat(workFlowStatusResponseDTO.getWorkFlowExecutionId(), is(notNullValue()));
+		assertThat(workFlowStatusResponseDTO.getStatus(), equalTo(StatusEnum.FAILED));
+		assertThat(workFlowStatusResponseDTO.getMessage(), equalTo("FailedWorkFlowTask failure"));
 
 		// verify the task status and message
-		assertThat(workFlowStatusResponseDTO.getWorks()).isNotNull();
-		assertThat(workFlowStatusResponseDTO.getWorks()).hasSize(1);
-		assertThat(workFlowStatusResponseDTO.getWorks().get(0).getName()).isEqualTo("failedWorkFlowTask");
-		assertThat(workFlowStatusResponseDTO.getWorks().get(0).getStatus())
-				.isEqualTo(WorkStatusResponseDTO.StatusEnum.FAILED);
-		assertThat(workFlowStatusResponseDTO.getWorks().get(0).getMessage()).isEqualTo("FailedWorkFlowTask failure");
+		assertThat(workFlowStatusResponseDTO.getWorks(), is(notNullValue()));
+		assertThat(workFlowStatusResponseDTO.getWorks(), hasSize(1));
+		assertThat(workFlowStatusResponseDTO.getWorks().get(0).getName(), equalTo("failedWorkFlowTask"));
+		assertThat(workFlowStatusResponseDTO.getWorks().get(0).getStatus(),
+				equalTo(WorkStatusResponseDTO.StatusEnum.FAILED));
+		assertThat(workFlowStatusResponseDTO.getWorks().get(0).getMessage(), equalTo("FailedWorkFlowTask failure"));
 
 		log.info("******** Sequential Failed WorkFlow successfully failed: {} ********",
 				workFlowStatusResponseDTO.getStatus());
@@ -69,20 +76,20 @@ public class SequentialFailedWorkFlowTest {
 
 	private static Consumer<WorkFlowDefinitionResponseDTO> getWorkFlowDefinitionResponseConsumer() {
 		return workFlowDefinition -> {
-			assertThat(workFlowDefinition.getId()).isNotNull();
-			assertThat(WORKFLOW_NAME).isEqualTo(workFlowDefinition.getName());
-			assertThat(workFlowDefinition.getProcessingType()).isEqualTo(ProcessingTypeEnum.SEQUENTIAL);
-			assertThat(workFlowDefinition.getType()).isEqualTo(TypeEnum.INFRASTRUCTURE);
+			assertThat(workFlowDefinition.getId(), is(notNullValue()));
+			assertThat(WORKFLOW_NAME, equalTo(workFlowDefinition.getName()));
+			assertThat(workFlowDefinition.getProcessingType(), equalTo(ProcessingTypeEnum.SEQUENTIAL));
+			assertThat(workFlowDefinition.getType(), equalTo(TypeEnum.INFRASTRUCTURE));
 
-			assertThat(workFlowDefinition.getWorks()).isNotNull();
-			assertThat(workFlowDefinition.getWorks()).hasSize(1);
+			assertThat(workFlowDefinition.getWorks(), is(notNullValue()));
+			assertThat(workFlowDefinition.getWorks(), hasSize(1));
 			Optional<WorkDefinitionResponseDTO> firstWork = workFlowDefinition.getWorks().stream().findFirst();
 			assertTrue(firstWork.isPresent());
-			assertThat(firstWork.get().getName()).isEqualTo("failedWorkFlowTask");
-			assertThat(firstWork.get().getWorkType()).isEqualTo(WorkDefinitionResponseDTO.WorkTypeEnum.TASK);
-			assertThat(firstWork.get().getWorks()).isNullOrEmpty();
-			assertThat(firstWork.get().getProcessingType()).isNull();
-			assertThat(firstWork.get().getParameters()).isNotNull();
+			assertThat(firstWork.get().getName(), equalTo("failedWorkFlowTask"));
+			assertThat(firstWork.get().getWorkType(), equalTo(WorkDefinitionResponseDTO.WorkTypeEnum.TASK));
+			assertThat(firstWork.get().getWorks(), anyOf(nullValue(), empty()));
+			assertThat(firstWork.get().getProcessingType(), is(nullValue()));
+			assertThat(firstWork.get().getParameters(), is(notNullValue()));
 		};
 	}
 
