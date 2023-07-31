@@ -38,7 +38,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasSize;
 
 /**
  * unit test for WorkFlowDefinitionService Database operation
@@ -97,17 +99,17 @@ class WorkFlowDefinitionServiceDataTest {
 
 	@Test
 	void cleanAllDefinitionMappings_should_returnEmpty_when_MappingTableIsCleaned() {
-		assertThat(workFlowDefinitionRepository.findAll()).hasSize(1);
-		assertThat(workFlowTaskDefinitionRepository.findAll()).hasSize(1);
-		assertThat(workFlowCheckerMappingDefinitionRepository.findAll()).hasSize(1);
-		assertThat(workFlowWorkRepository.findAll()).hasSize(1);
+		assertThat(workFlowDefinitionRepository.findAll(), hasSize(1));
+		assertThat(workFlowTaskDefinitionRepository.findAll(), hasSize(1));
+		assertThat(workFlowCheckerMappingDefinitionRepository.findAll(), hasSize(1));
+		assertThat(workFlowWorkRepository.findAll(), hasSize(1));
 
 		workFlowDefinitionService.cleanAllDefinitionMappings();
 
-		assertThat(workFlowDefinitionRepository.findAll()).hasSize(1);
-		assertThat(workFlowTaskDefinitionRepository.findAll()).hasSize(1);
-		assertThat(workFlowCheckerMappingDefinitionRepository.findAll()).isEmpty();
-		assertThat(workFlowWorkRepository.findAll()).isEmpty();
+		assertThat(workFlowDefinitionRepository.findAll(), hasSize(1));
+		assertThat(workFlowTaskDefinitionRepository.findAll(), hasSize(1));
+		assertThat(workFlowCheckerMappingDefinitionRepository.findAll(), empty());
+		assertThat(workFlowWorkRepository.findAll(), empty());
 	}
 
 }

@@ -17,7 +17,8 @@ import org.mockito.Mock;
 
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -88,16 +89,16 @@ class WorkParameterServiceImplTest {
 	@Test
 	void updateValue_when_dataProviderIsNotFound_then_returnEmptyList() {
 		assertThat(
-				workFlowParameterService.getValues(WORKFLOW_NAME, INVALID_DATA_PROVIDER, workParameterValueRequestDTOs))
-						.isEmpty();
+				workFlowParameterService.getValues(WORKFLOW_NAME, INVALID_DATA_PROVIDER, workParameterValueRequestDTOs),
+				empty());
 	}
 
 	@Test
 	void updateValue_when_workIsNotFound_then_returnEmptyList() {
 		when(workFlowDefinitionService.getWorkParametersByWorkName(anyString())).thenReturn(null);
 		assertThat(
-				workFlowParameterService.getValues(WORKFLOW_NAME, INVALID_DATA_PROVIDER, workParameterValueRequestDTOs))
-						.isEmpty();
+				workFlowParameterService.getValues(WORKFLOW_NAME, INVALID_DATA_PROVIDER, workParameterValueRequestDTOs),
+				empty());
 	}
 
 	@Test
@@ -105,8 +106,8 @@ class WorkParameterServiceImplTest {
 		when(workFlowDefinitionService.getWorkParametersByWorkName(anyString()))
 				.thenReturn(Map.of(TEST_INVALID_RESPONSE_KEY, "test-value"));
 		assertThat(
-				workFlowParameterService.getValues(WORKFLOW_NAME, INVALID_DATA_PROVIDER, workParameterValueRequestDTOs))
-						.isEmpty();
+				workFlowParameterService.getValues(WORKFLOW_NAME, INVALID_DATA_PROVIDER, workParameterValueRequestDTOs),
+				empty());
 	}
 
 	private static List<WorkParameterValueRequestDTO> getSampleParameterValueRequestDTOs() {

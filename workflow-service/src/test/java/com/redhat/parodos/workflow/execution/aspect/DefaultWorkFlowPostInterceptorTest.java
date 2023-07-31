@@ -9,7 +9,9 @@ import org.mockito.Mock;
 
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 @ExtendWith(SpringExtension.class)
 public class DefaultWorkFlowPostInterceptorTest {
@@ -30,7 +32,7 @@ public class DefaultWorkFlowPostInterceptorTest {
 		WorkReport workReport = underTest.handlePostWorkFlowExecution();
 
 		// then
-		assertThat(workReport).isNull();
+		assertThat(workReport, is(nullValue()));
 	}
 
 }

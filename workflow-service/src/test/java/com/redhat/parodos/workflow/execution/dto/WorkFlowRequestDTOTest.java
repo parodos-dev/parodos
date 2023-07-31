@@ -20,8 +20,11 @@ import java.util.List;
 import com.redhat.parodos.workflow.enums.WorkType;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
@@ -56,15 +59,14 @@ class WorkFlowRequestDTOTest {
 		assertNull(request.findFirstWorkByName("test"));
 		assertNull(subWorkflow.findFirstWorkByName("test"));
 
-		assertThat(subWorkflow).isNotNull().satisfies(work -> {
-			assertEquals(WorkType.WORKFLOW, work.getType());
-			assertEquals(0, work.getArguments().size());
-		});
+		assertThat(subWorkflow, is(notNullValue()));
+		assertThat(subWorkflow.getType(), equalTo((WorkType.WORKFLOW)));
+		assertThat(subWorkflow.getArguments(), hasSize(0));
 
-		assertThat(task).isNotNull().satisfies(work -> {
-			assertEquals(WorkType.TASK, work.getType());
-			assertEquals(1, work.getArguments().size());
-		});
+		assertThat(task, is(notNullValue()));
+		assertThat(task.getType(), equalTo(WorkType.TASK));
+		assertThat(task.getArguments(), hasSize(1));
+
 	}
 
 	private WorkFlowRequestDTO getSimpleWorkFlowRequestDTO() {

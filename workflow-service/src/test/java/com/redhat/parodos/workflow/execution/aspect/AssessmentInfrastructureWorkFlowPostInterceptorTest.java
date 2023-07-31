@@ -23,7 +23,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static com.redhat.parodos.workflow.execution.aspect.WorkFlowExecutionAspectTest.getSampleWorkFlowDefinition;
 import static com.redhat.parodos.workflow.execution.aspect.WorkFlowExecutionAspectTest.getSampleWorkFlowExecution;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -93,7 +94,7 @@ class AssessmentInfrastructureWorkFlowPostInterceptorTest {
 		// when
 		underTest.handlePostWorkFlowExecution();
 		// then
-		assertThat(workFlowExecution.getStatus()).isEqualTo(WorkStatus.FAILED);
+		assertThat(workFlowExecution.getStatus(), equalTo(WorkStatus.FAILED));
 	}
 
 	@Test
@@ -103,7 +104,7 @@ class AssessmentInfrastructureWorkFlowPostInterceptorTest {
 		// when
 		underTest.handlePostWorkFlowExecution();
 		// then
-		assertThat(workFlowExecution.getStatus()).isEqualTo(WorkStatus.IN_PROGRESS);
+		assertThat(workFlowExecution.getStatus(), equalTo(WorkStatus.IN_PROGRESS));
 	}
 
 }

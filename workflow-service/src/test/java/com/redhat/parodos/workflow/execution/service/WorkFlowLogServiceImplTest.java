@@ -24,7 +24,9 @@ import org.mockito.Mock;
 
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -110,8 +112,9 @@ class WorkFlowLogServiceImplTest {
 
 		ArgumentCaptor<WorkFlowTaskExecution> argument = ArgumentCaptor.forClass(WorkFlowTaskExecution.class);
 		verify(workFlowTaskRepository, times(1)).save(argument.capture());
-		assertThat(argument.getValue().getWorkFlowTaskExecutionLog().getLog()).startsWith("test-log\n")
-				.endsWith("\u001B[32mINFO\u001B[39m test-log1");
+		assertThat(argument.getValue().getWorkFlowTaskExecutionLog().getLog(), startsWith("test-log\n"));
+		assertThat(argument.getValue().getWorkFlowTaskExecutionLog().getLog(),
+				endsWith("\u001B[32mINFO\u001B[39m test-log1"));
 
 	}
 
@@ -133,8 +136,9 @@ class WorkFlowLogServiceImplTest {
 
 		ArgumentCaptor<WorkFlowTaskExecution> argument = ArgumentCaptor.forClass(WorkFlowTaskExecution.class);
 		verify(workFlowTaskRepository, times(1)).save(argument.capture());
-		assertThat(argument.getValue().getWorkFlowTaskExecutionLog().getLog()).startsWith("test-log\n")
-				.endsWith("\u001B[32mINFO\u001B[39m test-log1");
+		assertThat(argument.getValue().getWorkFlowTaskExecutionLog().getLog(), startsWith("test-log\n"));
+		assertThat(argument.getValue().getWorkFlowTaskExecutionLog().getLog(),
+				endsWith("\u001B[32mINFO\u001B[39m test-log1"));
 
 	}
 

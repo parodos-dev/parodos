@@ -38,7 +38,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -260,11 +262,10 @@ class ProjectServiceImplTest {
 				List.of(UserRoleRequestDTO.builder().roles(List.of(com.redhat.parodos.project.enums.Role.OWNER))
 						.username(user.getUsername()).build()));
 
-		assertEquals(project.getName(), projectUserRoleResponseDTO.getProjectName());
-		assertThat(projectUserRoleResponseDTO.getUserResponseDTOList()).hasSize(1)
-				.satisfies(dto -> assertEquals(com.redhat.parodos.project.enums.Role.valueOf(role.getName()),
-						dto.get(0).getRoles().toArray()[0]));
-
+		assertThat(projectUserRoleResponseDTO.getProjectName(), equalTo(project.getName()));
+		assertThat(projectUserRoleResponseDTO.getUserResponseDTOList(), hasSize(1));
+		assertThat(projectUserRoleResponseDTO.getUserResponseDTOList().get(0).getRoles().toArray()[0],
+				equalTo(com.redhat.parodos.project.enums.Role.valueOf(role.getName())));
 	}
 
 	@Test
@@ -287,13 +288,12 @@ class ProjectServiceImplTest {
 		ProjectUserRoleResponseDTO projectUserRoleResponseDTO = projectService.removeUsersFromProject(project.getId(),
 				List.of(TEST_USERNAME));
 
-		assertEquals(project.getName(), projectUserRoleResponseDTO.getProjectName());
-		assertThat(projectUserRoleResponseDTO.getUserResponseDTOList()).hasSize(1).satisfies(dto -> {
-			assertEquals(com.redhat.parodos.project.enums.Role.valueOf(role.getName()),
-					dto.get(0).getRoles().toArray()[0]);
-			assertEquals(testUser, dto.get(0).getUsername());
-		});
+		assertThat(projectUserRoleResponseDTO.getProjectName(), equalTo(project.getName()));
 
+		assertThat(projectUserRoleResponseDTO.getUserResponseDTOList(), hasSize(1));
+		assertThat(projectUserRoleResponseDTO.getUserResponseDTOList().get(0).getRoles().toArray()[0],
+				equalTo(com.redhat.parodos.project.enums.Role.valueOf(role.getName())));
+		assertThat(projectUserRoleResponseDTO.getUserResponseDTOList().get(0).getUsername(), equalTo(testUser));
 	}
 
 	@Test
@@ -331,9 +331,9 @@ class ProjectServiceImplTest {
 
 		assertEquals(project.getId(), accessResponseDTO.getProject().getId());
 		assertEquals(project.getName(), accessResponseDTO.getProject().getName());
-		assertThat(accessResponseDTO.getApprovalSentTo()).hasSize(1).satisfies(dto -> {
-			assertEquals(projectAdmin.getUsername(), dto.get(0));
-		});
+
+		assertThat(accessResponseDTO.getApprovalSentTo(), hasSize(1));
+		assertThat(accessResponseDTO.getApprovalSentTo().get(0), equalTo(projectAdmin.getUsername()));
 		assertEquals(projectOwner.getUsername(), accessResponseDTO.getEscalationSentTo());
 	}
 

@@ -32,7 +32,10 @@ import org.mockito.Mock;
 
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -157,10 +160,10 @@ class WorkFlowExecutionAspectTest {
 		assertNotNull(workReport);
 		assertEquals(workReport.getStatus().toString(), FAILED);
 		assertNotNull(workReport.getError());
-		assertThat(workReport.getError()).isInstanceOf(ResourceNotFoundException.class);
+		assertThat(workReport.getError(), is(instanceOf(ResourceNotFoundException.class)));
 		// To validate that is workflow definition with type Name and the correct name
-		assertThat(workReport.getError().getMessage())
-				.contains("Workflow definition with Name: testWorkFlow not found");
+		assertThat(workReport.getError().getMessage(),
+				containsString("Workflow definition with Name: testWorkFlow not found"));
 		verify(this.workFlowDefinitionRepository, times(1)).findFirstByName(TEST_WORK_FLOW);
 	}
 
