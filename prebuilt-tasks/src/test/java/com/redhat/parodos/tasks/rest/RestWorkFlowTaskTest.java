@@ -1,9 +1,11 @@
 package com.redhat.parodos.tasks.rest;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
+import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
@@ -33,22 +35,19 @@ public class RestWorkFlowTaskTest {
 
 	private RestWorkFlowTask task = new RestWorkFlowTask("Test", restService);
 
-	private WorkContext workContext;
-
 	HashMap<String, String> map;
 
 	@BeforeEach
 	public void setUp() {
-		this.workContext = new WorkContext();
-
 		map = new HashMap<>();
 	}
 
 	@Test
 	public void missingUrl() {
 		map.put("method", "get");
-
-		WorkReport result = task.execute(createWorkContext(map));
+		WorkContext workContext = createWorkContext(map);
+		task.preExecute(workContext);
+		WorkReport result = task.execute(workContext);
 
 		assertEquals(WorkStatus.FAILED, result.getStatus());
 		assertEquals(MissingParameterException.class, result.getError().getClass());
@@ -57,8 +56,9 @@ public class RestWorkFlowTaskTest {
 	@Test
 	public void missingMethod() {
 		map.put("url", "http://localhost");
-
-		WorkReport result = task.execute(createWorkContext(map));
+		WorkContext workContext = createWorkContext(map);
+		task.preExecute(workContext);
+		WorkReport result = task.execute(workContext);
 
 		assertEquals(WorkStatus.FAILED, result.getStatus());
 		assertEquals(MissingParameterException.class, result.getError().getClass());
@@ -68,8 +68,9 @@ public class RestWorkFlowTaskTest {
 	public void invalidMethod() {
 		map.put("url", "http://localhost");
 		map.put("method", "drop");
-
-		WorkReport result = task.execute(createWorkContext(map));
+		WorkContext workContext = createWorkContext(map);
+		task.preExecute(workContext);
+		WorkReport result = task.execute(workContext);
 
 		assertEquals(WorkStatus.FAILED, result.getStatus());
 		assertEquals(IllegalArgumentException.class, result.getError().getClass());
@@ -85,12 +86,12 @@ public class RestWorkFlowTaskTest {
 
 		doReturn(obj).when(restService).exchange(any(), any(), any());
 
-		WorkContext ctx = createWorkContext(map);
-
-		WorkReport result = task.execute(ctx);
+		WorkContext workContext = createWorkContext(map);
+		task.preExecute(workContext);
+		WorkReport result = task.execute(workContext);
 
 		assertEquals(WorkStatus.COMPLETED, result.getStatus());
-		assertEquals(obj.getBody(), ctx.get("http-body"));
+		assertEquals(obj.getBody(), workContext.get("http-body"));
 	}
 
 	@Test
@@ -118,9 +119,9 @@ public class RestWorkFlowTaskTest {
 			}
 		}).when(restService).exchange(any(), any(), any());
 
-		WorkContext ctx = createWorkContext(map);
-
-		WorkReport result = task.execute(ctx);
+		WorkContext workContext = createWorkContext(map);
+		task.preExecute(workContext);
+		WorkReport result = task.execute(workContext);
 
 		assertEquals(WorkStatus.COMPLETED, result.getStatus());
 	}
@@ -134,13 +135,14 @@ public class RestWorkFlowTaskTest {
 
 		doReturn(obj).when(restService).exchange(any(), any(), any());
 
-		WorkContext ctx = createWorkContext(map);
-
-		assertThrows(RestClientException.class, () -> task.execute(ctx));
+		WorkContext workContext = createWorkContext(map);
+		task.preExecute(workContext);
+		assertThrows(RestClientException.class, () -> task.execute(workContext));
 	}
 
 	private WorkContext createWorkContext(HashMap<String, String> map) {
 		WorkContext ctx = new WorkContext();
+		WorkContextUtils.setMainExecutionId(ctx, UUID.randomUUID());
 		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION, task.getName(),
 				WorkContextDelegate.Resource.ARGUMENTS, map);
 		return ctx;
