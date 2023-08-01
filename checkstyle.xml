@@ -22,7 +22,11 @@
         <!--  Import should be explicit, really needed and only from pure java packages -->
         <module name="AvoidStarImport" />
         <module name="UnusedImports" />
-        <module name="IllegalImport" />
+        <module name="IllegalImport" >
+            <property name="regexp" value="true"/>
+            <!-- Reject any org.junit import that's not also org.junit.jupiter: -->
+            <property name="illegalClasses" value="^org\.junit\.(?!jupiter\.).+"/>
+        </module>
 
         <!-- TODO: Find how to exclude spring application classes and uncomment -->
         <!-- Check https://checkstyle.org/config_filters.html#SuppressionXpathSingleFilter -->
