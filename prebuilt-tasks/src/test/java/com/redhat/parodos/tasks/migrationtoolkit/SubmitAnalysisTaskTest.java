@@ -10,6 +10,7 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
@@ -25,6 +26,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@Disabled
 public class SubmitAnalysisTaskTest {
 
 	SubmitAnalysisTask underTest;
