@@ -15,7 +15,7 @@
             </column>
             <column name="password" type="varchar(255)"/>
             <column name="authority" type="varchar(255)"/>
-            <column name="enabled" type="tinyint"/>
+            <column name="enabled" type="BOOLEAN"/>
             <column name="first_name" type="varchar(255)"/>
             <column name="last_name" type="varchar(255)"/>
             <column name="email" type="varchar(255)"/>

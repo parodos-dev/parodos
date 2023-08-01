@@ -17,6 +17,7 @@ package com.redhat.parodos;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -31,7 +32,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
  * @author Richard Wang (Github: richardW98)
  *
  */
-@SpringBootApplication(scanBasePackages = { "com.redhat.parodos", "${scan.packages}" })
+@SpringBootApplication(scanBasePackages = { "com.redhat.parodos", "${scan.packages}" },
+		exclude = { UserDetailsServiceAutoConfiguration.class })
 @EnableAsync(proxyTargetClass = true)
 @EnableScheduling
 @EnableWebSecurity
