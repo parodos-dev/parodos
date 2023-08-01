@@ -3,9 +3,11 @@ package com.redhat.parodos.tasks.jdbc;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
+import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
@@ -77,6 +79,7 @@ public class JdbcWorkFlowTaskTest {
 
 		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_TASK_EXECUTION, task.getName(),
 				WorkContextDelegate.Resource.ARGUMENTS, map);
+		WorkContextUtils.setMainExecutionId(ctx, UUID.randomUUID());
 		return ctx;
 	}
 
