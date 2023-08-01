@@ -321,7 +321,7 @@ public class SimpleRestartWorkFlowTest {
 		assertEquals(WorkFlowStatusResponseDTO.StatusEnum.COMPLETED, workFlowStatusResponseDTO.getStatus());
 		log.info("Onboarding workflow execution completed with status {}", workFlowStatusResponseDTO.getStatus());
 		List<UUID> restartedIds = new ArrayList<>(5);
-		for (int i = 1; i <= 5; i++) {
+		for (int i = 1; i <= 20; i++) {
 			log.info("********  Restarting the onboarding WorkFlow - {} ******** ", i);
 			WorkFlowExecutionResponseDTO restartedWorkFlowResponseDTO = workflowApi
 					.restartWorkFlow(workFlowResponseDTO.getWorkFlowExecutionId());
