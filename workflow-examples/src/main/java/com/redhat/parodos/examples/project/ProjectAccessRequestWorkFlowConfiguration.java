@@ -1,14 +1,14 @@
-package com.redhat.parodos.examples.prebuilt.project;
+package com.redhat.parodos.examples.project;
 
 import java.util.Date;
 import java.util.List;
 
+import com.redhat.parodos.examples.project.checker.ProjectAccessRequestApprovalWorkFlowCheckerTask;
+import com.redhat.parodos.examples.project.client.ProjectRequester;
+import com.redhat.parodos.examples.project.escalation.ProjectAccessRequestEscalationWorkFlowTask;
+import com.redhat.parodos.examples.project.task.ProjectAccessRequestApprovalWorkFlowTask;
+import com.redhat.parodos.examples.project.task.ProjectAccessRequestWorkFlowTask;
 import com.redhat.parodos.infrastructure.Notifier;
-import com.redhat.parodos.infrastructure.ProjectRequester;
-import com.redhat.parodos.tasks.project.ProjectAccessRequestApprovalWorkFlowTask;
-import com.redhat.parodos.tasks.project.ProjectAccessRequestWorkFlowTask;
-import com.redhat.parodos.tasks.project.checker.ProjectAccessRequestApprovalWorkFlowCheckerTask;
-import com.redhat.parodos.tasks.project.escalation.ProjectAccessRequestEscalationWorkFlowTask;
 import com.redhat.parodos.workflow.annotation.Checker;
 import com.redhat.parodos.workflow.annotation.Escalation;
 import com.redhat.parodos.workflow.annotation.Infrastructure;

@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.tasks.project.escalation;
+package com.redhat.parodos.examples.project.task;
 
+import java.util.Arrays;
 import java.util.UUID;
 
+import com.redhat.parodos.examples.project.client.ProjectRequester;
+import com.redhat.parodos.examples.project.consts.ProjectAccessRequestConstant;
 import com.redhat.parodos.infrastructure.Notifier;
-import com.redhat.parodos.infrastructure.ProjectRequester;
 import com.redhat.parodos.notification.sdk.model.NotificationMessageCreateRequestDTO;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
@@ -28,24 +30,20 @@ import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.extern.slf4j.Slf4j;
 
-import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_ESCALATION_USERNAME;
-import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_ID;
-import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.NOTIFICATION_SUBJECT_ACCESS_REQUEST_ESCALATION;
-
 /**
- * Project access request escalation workflow task
+ * Project access request approval workflow task
  *
  * @author Annel Ketcha (Github: anludke)
  */
 
 @Slf4j
-public class ProjectAccessRequestEscalationWorkFlowTask extends BaseWorkFlowTask {
+public class ProjectAccessRequestApprovalWorkFlowTask extends BaseWorkFlowTask {
 
 	private final ProjectRequester projectRequester;
 
 	private final Notifier notifier;
 
-	public ProjectAccessRequestEscalationWorkFlowTask(ProjectRequester projectRequester, Notifier notifier) {
+	public ProjectAccessRequestApprovalWorkFlowTask(ProjectRequester projectRequester, Notifier notifier) {
 		super();
 		this.projectRequester = projectRequester;
 		this.notifier = notifier;
@@ -53,28 +51,33 @@ public class ProjectAccessRequestEscalationWorkFlowTask extends BaseWorkFlowTask
 
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		log.info("Start projectAccessRequestEscalationWorkFlowTask...");
-		String escalationUsername;
+		log.info("Start projectAccessRequestApprovalWorkFlowTask...");
 		UUID accessRequestId;
+		String approvalUsernames;
 		try {
-			accessRequestId = UUID.fromString(getRequiredParameterValue(ACCESS_REQUEST_ID));
-			escalationUsername = getRequiredParameterValue(ACCESS_REQUEST_ESCALATION_USERNAME);
+			accessRequestId = UUID
+					.fromString(getRequiredParameterValue(ProjectAccessRequestConstant.ACCESS_REQUEST_ID));
+			approvalUsernames = getRequiredParameterValue(
+					ProjectAccessRequestConstant.ACCESS_REQUEST_APPROVAL_USERNAMES);
 		}
 		catch (MissingParameterException e) {
 			log.error("Exception when trying to get required parameter(s): {}", e.getMessage());
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
 		}
+
 		NotificationMessageCreateRequestDTO notificationMessageCreateRequestDTO = new NotificationMessageCreateRequestDTO();
-		notificationMessageCreateRequestDTO.setSubject(NOTIFICATION_SUBJECT_ACCESS_REQUEST_ESCALATION);
-		notificationMessageCreateRequestDTO.addUsernamesItem(escalationUsername);
+		notificationMessageCreateRequestDTO
+				.setSubject(ProjectAccessRequestConstant.NOTIFICATION_SUBJECT_ACCESS_REQUEST_APPROVAL);
+		notificationMessageCreateRequestDTO.setUsernames(Arrays.stream(approvalUsernames.split(",")).toList());
 		notificationMessageCreateRequestDTO.setBody(getMessage(
-				String.format("%s/api/v1/projects/access/%s/status", projectRequester.getBasePath(), accessRequestId)));
+				String.format("%s/api/v1/projects/access/%s", projectRequester.getBasePath(), accessRequestId)));
 		notifier.send(notificationMessageCreateRequestDTO);
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}
 
 	private String getMessage(String url) {
-		return "Hi there," + "\n" + "A project request below has been escalated as being pending for a while." + "\n"
+		return "Hi there," + "\n"
+				+ "A project request awaits your approval. Use the url below to approve or reject the request." + "\n"
 				+ "Url: " + url + "\n" + "Thank you," + "\n" + "The Parodos Team";
 	}
 

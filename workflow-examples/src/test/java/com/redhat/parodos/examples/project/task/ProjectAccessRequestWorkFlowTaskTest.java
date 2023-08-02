@@ -1,8 +1,8 @@
-package com.redhat.parodos.tasks.project;
+package com.redhat.parodos.examples.project.task;
 
 import java.util.UUID;
 
-import com.redhat.parodos.infrastructure.ProjectRequester;
+import com.redhat.parodos.examples.project.client.ProjectRequester;
 import com.redhat.parodos.sdk.model.AccessResponseDTO;
 import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.WorkContext;

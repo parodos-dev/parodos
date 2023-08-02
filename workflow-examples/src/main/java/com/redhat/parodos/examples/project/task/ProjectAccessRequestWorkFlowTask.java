@@ -1,9 +1,9 @@
-package com.redhat.parodos.tasks.project;
+package com.redhat.parodos.examples.project.task;
 
 import java.util.List;
 import java.util.Objects;
 
-import com.redhat.parodos.infrastructure.ProjectRequester;
+import com.redhat.parodos.examples.project.client.ProjectRequester;
 import com.redhat.parodos.sdk.invoker.ApiException;
 import com.redhat.parodos.sdk.model.AccessRequestDTO;
 import com.redhat.parodos.sdk.model.AccessResponseDTO;
@@ -18,12 +18,12 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
-import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_APPROVAL_USERNAMES;
-import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_ESCALATION_USERNAME;
-import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_ID;
-import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.PARAMETER_ROLE;
-import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.PARAMETER_ROLE_DEFAULT;
-import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.PARAMETER_USERNAME;
+import static com.redhat.parodos.examples.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_APPROVAL_USERNAMES;
+import static com.redhat.parodos.examples.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_ESCALATION_USERNAME;
+import static com.redhat.parodos.examples.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_ID;
+import static com.redhat.parodos.examples.project.consts.ProjectAccessRequestConstant.PARAMETER_ROLE;
+import static com.redhat.parodos.examples.project.consts.ProjectAccessRequestConstant.PARAMETER_ROLE_DEFAULT;
+import static com.redhat.parodos.examples.project.consts.ProjectAccessRequestConstant.PARAMETER_USERNAME;
 
 @Slf4j
 public class ProjectAccessRequestWorkFlowTask extends BaseWorkFlowTask {

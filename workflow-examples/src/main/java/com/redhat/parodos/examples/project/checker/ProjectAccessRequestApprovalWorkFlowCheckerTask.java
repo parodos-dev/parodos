@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.parodos.tasks.project.checker;
+package com.redhat.parodos.examples.project.checker;
 
 import java.util.Objects;
 import java.util.UUID;
 
-import com.redhat.parodos.infrastructure.ProjectRequester;
+import com.redhat.parodos.examples.project.client.ProjectRequester;
+import com.redhat.parodos.examples.project.consts.ProjectAccessRequestConstant;
 import com.redhat.parodos.sdk.invoker.ApiException;
 import com.redhat.parodos.sdk.model.AccessStatusResponseDTO;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
@@ -29,8 +30,6 @@ import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import lombok.extern.slf4j.Slf4j;
-
-import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_ID;
 
 /**
  * Project access request approval workflow checker task
@@ -54,7 +53,8 @@ public class ProjectAccessRequestApprovalWorkFlowCheckerTask extends BaseWorkFlo
 		log.info("Start projectAccessRequestApprovalWorkFlowCheckerTask...");
 		UUID accessRequestId;
 		try {
-			accessRequestId = UUID.fromString(getRequiredParameterValue(ACCESS_REQUEST_ID));
+			accessRequestId = UUID
+					.fromString(getRequiredParameterValue(ProjectAccessRequestConstant.ACCESS_REQUEST_ID));
 		}
 		catch (MissingParameterException e) {
 			log.error("Exception when trying to get required parameter: {}", e.getMessage());

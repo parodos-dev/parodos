@@ -92,7 +92,6 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-inline</artifactId>
         </dependency>
-
         <!-- This specific version is needed for openshift server mock -->
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
@@ -110,7 +109,6 @@
             <groupId>dev.parodos</groupId>
             <artifactId>workflow-service-sdk</artifactId>
             <version>${revision}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>dev.parodos</groupId>
@@ -140,6 +138,7 @@
             <version>${markdowngenerator.version}</version>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>

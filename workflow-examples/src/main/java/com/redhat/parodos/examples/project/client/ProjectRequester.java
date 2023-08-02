@@ -1,4 +1,4 @@
-package com.redhat.parodos.infrastructure;
+package com.redhat.parodos.examples.project.client;
 
 import java.util.UUID;
 

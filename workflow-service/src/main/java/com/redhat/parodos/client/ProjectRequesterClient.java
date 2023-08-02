@@ -3,7 +3,7 @@ package com.redhat.parodos.client;
 import java.util.Base64;
 import java.util.UUID;
 
-import com.redhat.parodos.infrastructure.ProjectRequester;
+import com.redhat.parodos.examples.project.client.ProjectRequester;
 import com.redhat.parodos.sdk.api.ProjectAccessApi;
 import com.redhat.parodos.sdk.api.ProjectApi;
 import com.redhat.parodos.sdk.invoker.ApiClient;

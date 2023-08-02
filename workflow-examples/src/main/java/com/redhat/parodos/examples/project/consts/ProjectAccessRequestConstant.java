@@ -1,4 +1,4 @@
-package com.redhat.parodos.tasks.project.consts;
+package com.redhat.parodos.examples.project.consts;
 
 public class ProjectAccessRequestConstant {
 
