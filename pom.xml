@@ -62,7 +62,7 @@
         <mockito.version>5.2.0</mockito.version>
         <byte.buddy.version>1.14.5</byte.buddy.version>
         <assertj.version>3.24.2</assertj.version>
-        <okhttp-version>4.9.2</okhttp-version>
+        <okhttp-version>4.11.0</okhttp-version>
         <openapi.generator.version>6.6.0</openapi.generator.version>
         <springdoc-openapi-ui.version>2.1.0</springdoc-openapi-ui.version>
         <spring-cloud.version>2022.0.3</spring-cloud.version>
@@ -309,6 +309,7 @@
                                         <excludes>
                                             <exclude>junit:junit</exclude>
                                         </excludes>
+                                        <searchTransitive>false</searchTransitive>
                                     </bannedDependencies>
                                 </rules>
                             </configuration>
