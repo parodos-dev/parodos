@@ -218,6 +218,36 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.3.0</version> <!-- Adjust version as needed -->
+                <executions>
+                    <execution>
+                        <id>enforce-no-unwanted-dependency</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <bannedDependencies>
+                                    <excludes>
+                                        <!--
+                                         IMPORTANT NOTE: This module (prebuilt-tasks) must not depend on workflow-service-sdk,
+                                         as it is already dependent on workflow-service. workflow-service depends on
+                                         prebuilt-tasks. Adding workflow-service-sdk here will create a circular
+                                         dependency, and workflow-service won't be able to generate the openapi.json file anymore.
+                                          -->
+                                        <exclude>dev.parodos:workflow-service-sdk</exclude>
+                                    </excludes>
+                                </bannedDependencies>
+                            </rules>
+                            <fail>true</fail>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>
