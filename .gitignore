@@ -83,3 +83,8 @@ notification-service-sdk/.openapi-generator
 ##############################
 manifests.yaml
 hack/manifests/release
+
+##############################
+## Security checks
+##############################
+clair

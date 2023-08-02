@@ -2,6 +2,8 @@
 DOCKER ?= docker
 DOCKER-COMPOSE ?= docker-compose
 
+CLAIR_TMP_DIR := .
+
 TESTDBPASS := parodos
 TESTDBNAME := parodos
 TESTDBUSER := parodos
@@ -146,6 +148,81 @@ tag-images: ## Tag docker images with git hash and branch name
 
 	$(DOCKER) tag docker-compose_workflow-service:latest $(ORG)$(WORKFLOW_SERVICE_IMAGE):$(GIT_BRANCH)
 	$(DOCKER) tag docker-compose_notification-service:latest $(ORG)$(NOTIFICATION_SERVICE_IMAGE):$(GIT_BRANCH)
+
+deploy-local-registry:
+ifneq ($(shell $(DOCKER) container inspect -f '{{.State.Running}}' registry 2> /dev/null), true)
+	$(DOCKER) run -d -p 5000:5000 --restart=always --name registry registry:2
+endif
+	$(DOCKER) tag docker-compose_workflow-service:latest localhost:5000/docker-compose_workflow-service:latest
+	$(DOCKER) tag docker-compose_notification-service:latest localhost:5000/docker-compose_notification-service:latest
+	$(DOCKER) push  localhost:5000/docker-compose_workflow-service:latest
+	$(DOCKER) push  localhost:5000/docker-compose_notification-service:latest
+
+stop-local-registry:
+	$(DOCKER) stop registry
+	$(DOCKER) rm registry
+
+deploy-clair: deploy-local-registry
+	cd $(CLAIR_TMP_DIR) ;	git clone https://github.com/quay/clair ;	cd clair; $(DOCKER) compose up -d
+	sleep 15m
+	@echo "Clair is up and running"
+
+stop-clair:
+	cd $(CLAIR_TMP_DIR)/clair ; $(DOCKER) compose down
+
+.PHONY: clairctl
+CLAIRCTL = $(shell pwd)/bin/clairctl
+clairctl: ## Download clairctl locally if necessary.
+ifeq (,$(wildcard $(CLAIRCTL)))
+ifeq (,$(shell which clairctl 2>/dev/null))
+	@{ \
+	go install github.com/quay/clair/v4/cmd/clairctl@latest ;\
+	}
+endif
+CLAIRCTL = $(shell which clairctl)
+endif
+
+run-images-analysis: clairctl
+	$(eval BRIDGE=$(shell $(DOCKER) network inspect -f '{{json .IPAM.Config}}' bridge | jq -r .[].Gateway))
+	$(CLAIRCTL) --config $(CLAIR_TMP_DIR)/clair/local-dev/clair/config.yaml report -o json $(BRIDGE):5000/docker-compose_notification-service:latest   | jq .vulnerabilities > $(CLAIR_TMP_DIR)/docker-compose_notification-service_report.json
+	$(CLAIRCTL) --config $(CLAIR_TMP_DIR)/clair/local-dev/clair/config.yaml report -o json $(BRIDGE):5000/docker-compose_workflow-service:latest   | jq .vulnerabilities > $(CLAIR_TMP_DIR)/docker-compose_workflow-service_report.json
+
+.SILENT: analyse-images
+analyse-images: deploy-clair run-images-analysis analyse-images-fast
+	#
+
+.SILENT: analyse-images-fast
+analyse-images-fast:
+	$(eval FIXABLE_CRITICAL_NOTIFICATION?=$(shell cat $(CLAIR_TMP_DIR)/docker-compose_notification-service_report.json | jq '[.[] | select(.normalized_severity=="Critical") | select(.fixed_in_version!="")] | length'))
+	$(eval FIXABLE_HIGH_NOTIFICATION?=$(shell cat $(CLAIR_TMP_DIR)/docker-compose_notification-service_report.json | jq '[.[] | select(.normalized_severity=="High") | select(.fixed_in_version!="")] | length'))
+	$(eval FIXABLE_CRITICAL_WORKFLOW?=$(shell cat $(CLAIR_TMP_DIR)/docker-compose_workflow-service_report.json | jq '[.[] | select(.normalized_severity=="Critical") | select(.fixed_in_version!="")] | length'))
+	$(eval FIXABLE_HIGH_WORKFLOW?=$(shell cat $(CLAIR_TMP_DIR)/docker-compose_workflow-service_report.json | jq '[.[] | select(.normalized_severity=="High") | select(.fixed_in_version!="")] | length'))
+	$(eval CRITICAL_NOTIFICATION?=$(shell cat $(CLAIR_TMP_DIR)/docker-compose_notification-service_report.json |jq '[.[] | select(.normalized_severity=="Critical")] | length'))
+	$(eval HIGH_NOTIFICATION?=$(shell cat $(CLAIR_TMP_DIR)/docker-compose_notification-service_report.json | jq '[.[] | select(.normalized_severity=="High")] | length'))
+	$(eval CRITICAL_WORKFLOW?=$(shell cat $(CLAIR_TMP_DIR)/docker-compose_workflow-service_report.json | jq '[.[] | select(.normalized_severity=="Critical")] | length'))
+	$(eval HIGH_WORKFLOW?=$(shell cat $(CLAIR_TMP_DIR)/docker-compose_workflow-service_report.json | jq '[.[] | select(.normalized_severity=="High")] | length'))
+
+	$(eval FIXABLE_CRITICAL_NOTIFICATION=$(shell [ $(FIXABLE_CRITICAL_NOTIFICATION) > 0 ] && echo "$(FIXABLE_CRITICAL_NOTIFICATION)" || echo "0"))
+	$(eval FIXABLE_HIGH_NOTIFICATION=$(shell [ $(FIXABLE_HIGH_NOTIFICATION) > 0 ] && echo "$(FIXABLE_HIGH_NOTIFICATION)" || echo "0"))
+	$(eval FIXABLE_CRITICAL_WORKFLOW=$(shell [ $(FIXABLE_CRITICAL_WORKFLOW) > 0 ] && echo "$(FIXABLE_CRITICAL_WORKFLOW)" || echo "0"))
+	$(eval FIXABLE_HIGH_WORKFLOW=$(shell [ $(FIXABLE_HIGH_WORKFLOW) > 0 ] && echo "$(FIXABLE_HIGH_WORKFLOW)" || echo "0"))
+
+	echo -e "Notification service: \n\t$(CRITICAL_NOTIFICATION) critical issues found; $(FIXABLE_CRITICAL_NOTIFICATION) fixable\n\t$(HIGH_NOTIFICATION) high issues found; $(FIXABLE_HIGH_NOTIFICATION) fixable\n\
+Workflow service:\n\t$(CRITICAL_WORKFLOW) critical issues found; $(FIXABLE_CRITICAL_WORKFLOW) fixable\n\t$(HIGH_WORKFLOW) high issues found; $(FIXABLE_HIGH_WORKFLOW) fixable\n"
+	if [ "${FIXABLE_CRITICAL_NOTIFICATION}" -gt 0 ] ; then \
+		echo "$(FIXABLE_CRITICAL_NOTIFICATION) fixable critical issues found for notification service" ; \
+		exit 1 ; \
+	elif [ "${FIXABLE_CRITICAL_WORKFLOW}" -gt 0 ] ; then \
+		echo "$(FIXABLE_CRITICAL_WORKFLOW) fixable critical issues found for workflow service" ; \
+		exit 1 ; \
+	elif [ "${FIXABLE_HIGH_NOTIFICATION}" -gt 0 ] ; then \
+		echo "$(FIXABLE_HIGH_NOTIFICATION) fixable high issues found for notification service" ; \
+		exit 1 ; \
+	elif [ "${FIXABLE_HIGH_WORKFLOW}" -gt 0 ] ; then \
+		echo "$(FIXABLE_HIGH_WORKFLOW) fixable high issues found for workflow service" ; \
+		exit 1 ; \
+	fi
+	@echo "Remember to clean $(CLAIR_TMP_DIR)!"
 
 push-images: ## Push docker images to quay.io registry
 	$(eval TAG?=$(GIT_HASH))

@@ -18,6 +18,11 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Setup Go environment
+        uses: actions/setup-go@v4.0.1
+        with:
+          go-version: 'stable'
+
       - name: Maven Verify
         run: mvn clean verify
 
@@ -30,6 +35,10 @@ jobs:
         run: |
           make build-images GIT_BRANCH=${GITHUB_REF##*/}
           make tag-images GIT_BRANCH=${GITHUB_REF##*/}
+
+      - name: "Security analysis of images"
+        run: |
+          make analyse-images stop-local-registry stop-clair
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
