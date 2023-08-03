@@ -69,7 +69,7 @@ public class ProjectAccessRequestApprovalWorkFlowCheckerTask extends BaseWorkFlo
 		}
 
 		try {
-			String urlString = "%s/api/v1/projects/access/%s".formatted(serviceUrl, accessRequestId);
+			String urlString = "%s/api/v1/projects/access/%s/status".formatted(serviceUrl, accessRequestId);
 			ResponseEntity<AccessStatusResponseDTO> responseDTO = RestUtils.restExchange(urlString, serviceUsername,
 					servicePassword, AccessStatusResponseDTO.class);
 			if (!responseDTO.getStatusCode().is2xxSuccessful()) {
