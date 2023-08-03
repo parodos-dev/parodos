@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.redhat.parodos.infrastructure.Notifier;
-import com.redhat.parodos.infrastructure.ProjectRequester;
 import com.redhat.parodos.tasks.project.ProjectAccessRequestApprovalWorkFlowTask;
 import com.redhat.parodos.tasks.project.ProjectAccessRequestWorkFlowTask;
 import com.redhat.parodos.tasks.project.checker.ProjectAccessRequestApprovalWorkFlowCheckerTask;
@@ -17,6 +16,7 @@ import com.redhat.parodos.workflows.workflow.WorkFlow;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,8 +26,8 @@ public class ProjectAccessRequestWorkFlowConfiguration {
 
 	@Bean
 	ProjectAccessRequestEscalationWorkFlowTask projectAccessRequestEscalationWorkFlowTask(
-			ProjectRequester projectRequester, Notifier notifier) {
-		return new ProjectAccessRequestEscalationWorkFlowTask(projectRequester, notifier);
+			@Value("${SERVICE_URL:http://localhost:8080}") String serviceUrl, Notifier notifier) {
+		return new ProjectAccessRequestEscalationWorkFlowTask(serviceUrl, notifier);
 	}
 
 	@Bean(name = "projectAccessRequestEscalationWorkFlow")
@@ -41,9 +41,11 @@ public class ProjectAccessRequestWorkFlowConfiguration {
 	@Bean
 	ProjectAccessRequestApprovalWorkFlowCheckerTask projectAccessRequestApprovalWorkFlowCheckerTask(
 			@Qualifier("projectAccessRequestEscalationWorkFlow") WorkFlow projectAccessRequestEscalationWorkFlow,
-			ProjectRequester projectRequester) {
+			@Value("${SERVICE_URL:http://localhost:8080}") String serviceUrl,
+			@Value("${SERVICE_USERNAME:test}") String serviceUsername,
+			@Value("${SERVICE_PASSWORD:test}") String servicePassword) {
 		return new ProjectAccessRequestApprovalWorkFlowCheckerTask(projectAccessRequestEscalationWorkFlow,
-				new Date().getTime() / 1000 + 30, projectRequester);
+				new Date().getTime() / 1000 + 30, serviceUrl, serviceUsername, servicePassword);
 	}
 
 	@Bean(name = "projectAccessRequestApprovalWorkFlowChecker")
@@ -55,16 +57,19 @@ public class ProjectAccessRequestWorkFlowConfiguration {
 	}
 
 	@Bean
-	ProjectAccessRequestWorkFlowTask projectAccessRequestWorkFlowTask(ProjectRequester projectRequester) {
-		return new ProjectAccessRequestWorkFlowTask(projectRequester);
+	ProjectAccessRequestWorkFlowTask projectAccessRequestWorkFlowTask(
+			@Value("${SERVICE_URL:http://localhost:8080}") String serviceUrl,
+			@Value("${SERVICE_USERNAME:test}") String serviceUsername,
+			@Value("${SERVICE_PASSWORD:test}") String servicePassword) {
+		return new ProjectAccessRequestWorkFlowTask(serviceUrl, serviceUsername, servicePassword);
 	}
 
 	@Bean
 	ProjectAccessRequestApprovalWorkFlowTask projectAccessRequestApprovalWorkFlowTask(
-			@Qualifier("projectAccessRequestApprovalWorkFlowChecker") WorkFlow projectAccessRequestApprovalWorkFlowChecker,
-			ProjectRequester projectRequester, Notifier notifier) {
+			@Value("${SERVICE_URL:http://localhost:8080}") String serviceUrl, Notifier notifier,
+			@Qualifier("projectAccessRequestApprovalWorkFlowChecker") WorkFlow projectAccessRequestApprovalWorkFlowChecker) {
 		ProjectAccessRequestApprovalWorkFlowTask projectAccessRequestApprovalWorkFlowTask = new ProjectAccessRequestApprovalWorkFlowTask(
-				projectRequester, notifier);
+				serviceUrl, notifier);
 		projectAccessRequestApprovalWorkFlowTask
 				.setWorkFlowCheckers(List.of(projectAccessRequestApprovalWorkFlowChecker));
 		return projectAccessRequestApprovalWorkFlowTask;

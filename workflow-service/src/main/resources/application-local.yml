@@ -40,13 +40,6 @@ notification:
       user: test
       password: test
 
-workflow:
-  url: "${WORKFLOW_SERVER_URL:http://localhost:8080}"
-  auth:
-    basic:
-      user: test
-      password: test
-
 workflows:
   mta:
     url: "${MTA_URL:https://mta-openshift-mta.apps.parodos-dev.projects.ecosystem.sysdeseng.com}"
