@@ -29,7 +29,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.not;
 
 /**
  * @author Richard Wang (Github: RichardW98)
@@ -38,7 +41,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
 @ActiveProfiles("test")
-public class NotificationUserServiceTests extends AbstractNotificationsIntegrationTest {
+public class NotificationUserServiceTest extends AbstractNotificationsIntegrationTest {
 
 	@Autowired
 	private NotificationUserRepository notificationUserRepository;
@@ -57,8 +60,8 @@ public class NotificationUserServiceTests extends AbstractNotificationsIntegrati
 		usernames.add(NotificationsDataCreator.USER_A_1);
 		usernames.add(NotificationsDataCreator.USER_A_2);
 		List<NotificationUser> usersToNotify = this.notificationUserService.findUsers(usernames);
-		assertThat(usersToNotify).isNotEmpty();
-		assertThat(usersToNotify).hasSize(2);
+		assertThat(usersToNotify, not(empty()));
+		assertThat(usersToNotify, hasSize(2));
 	}
 
 }

@@ -29,7 +29,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 /**
  * @author Richard Wang (Github: RichardW98)
@@ -37,7 +43,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
 @ActiveProfiles("test")
-public class NotificationUserRecordRelationshipTests extends AbstractNotificationsIntegrationTest {
+public class NotificationUserRecordRelationshipTest extends AbstractNotificationsIntegrationTest {
 
 	@Autowired
 	private NotificationUserRepository notificationUserRepository;
@@ -53,11 +59,11 @@ public class NotificationUserRecordRelationshipTests extends AbstractNotificatio
 		// Sanity check
 		Optional<NotificationUser> userOptional = this.notificationUserRepository
 				.findByUsername(NotificationsDataCreator.USERNAME);
-		assertThat(userOptional.isPresent());
+		assertThat(userOptional.isPresent(), is(true));
 
 		List<NotificationRecord> notificationRecords = this.notificationRecordRepository.findAll();
-		assertThat(notificationRecords).isNotEmpty();
-		assertThat(notificationRecords).hasSize(1);
+		assertThat(notificationRecords, not(empty()));
+		assertThat(notificationRecords, hasSize(1));
 
 		NotificationUser user = userOptional.get();
 
@@ -68,11 +74,12 @@ public class NotificationUserRecordRelationshipTests extends AbstractNotificatio
 
 		Optional<NotificationUser> u2 = this.notificationUserRepository
 				.findByUsername(NotificationsDataCreator.USERNAME);
-		assertThat(u2.isPresent());
+		assertThat(u2.isPresent(), is(true));
 		List<NotificationRecord> notificationRecordList = u2.get().getNotificationRecordList();
-		assertThat(notificationRecordList).hasSize(1);
-		assertThat(notificationRecordList.get(0).getFolder()).isEqualTo(NotificationsDataCreator.ARCHIVE_FOLDER);
-		assertThat(notificationRecordList.get(0).getTags()).hasSameElementsAs(NotificationsDataCreator.getTags());
+		assertThat(notificationRecordList, hasSize(1));
+		assertThat(notificationRecordList.get(0).getFolder(), equalTo(NotificationsDataCreator.ARCHIVE_FOLDER));
+		assertThat(notificationRecordList.get(0).getTags(),
+				containsInAnyOrder(NotificationsDataCreator.getTags().toArray()));
 	}
 
 }

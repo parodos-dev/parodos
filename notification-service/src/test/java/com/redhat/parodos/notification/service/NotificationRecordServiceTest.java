@@ -57,7 +57,7 @@ import static org.mockito.Mockito.when;
 
 @Transactional
 @ActiveProfiles("test")
-public class NotificationRecordServiceTests {
+public class NotificationRecordServiceTest {
 
 	private NotificationRecordRepository notificationRecordRepository;
 

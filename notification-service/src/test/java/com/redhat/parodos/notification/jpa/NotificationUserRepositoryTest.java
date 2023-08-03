@@ -27,7 +27,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 /**
  * @author Richard Wang (Github: RichardW98)
@@ -35,7 +40,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
 @ActiveProfiles("test")
-public class NotificationUserRepositoryTests extends AbstractNotificationsIntegrationTest {
+public class NotificationUserRepositoryTest extends AbstractNotificationsIntegrationTest {
 
 	@Autowired
 	private NotificationUserRepository notificationUserRepository;
@@ -46,25 +51,25 @@ public class NotificationUserRepositoryTests extends AbstractNotificationsIntegr
 
 		List<NotificationUser> users = this.notificationUserRepository.findAll();
 
-		assertThat(users).isNotEmpty();
-		assertThat(users).hasSize(1);
+		assertThat(users, not(empty()));
+		assertThat(users, hasSize(1));
 
 		NotificationUser user = users.get(0);
-		assertThat(user.getUsername()).isEqualTo(NotificationsDataCreator.USERNAME);
+		assertThat(user.getUsername(), equalTo(NotificationsDataCreator.USERNAME));
 
 		Optional<NotificationUser> u = this.notificationUserRepository.findById(user.getId());
-		assertThat(u.isPresent());
-		assertThat(u.get().getUsername()).isEqualTo(NotificationsDataCreator.USERNAME);
+		assertThat(u.isPresent(), is(true));
+		assertThat(u.get().getUsername(), equalTo(NotificationsDataCreator.USERNAME));
 
 		Optional<NotificationUser> u2 = this.notificationUserRepository
 				.findByUsername(NotificationsDataCreator.USERNAME);
-		assertThat(u2.isPresent());
-		assertThat(u2.get().getUsername()).isEqualTo(NotificationsDataCreator.USERNAME);
+		assertThat(u2.isPresent(), is(true));
+		assertThat(u2.get().getUsername(), equalTo(NotificationsDataCreator.USERNAME));
 
 		this.notificationUserRepository.deleteById(u2.get().getId());
 
 		Optional<NotificationUser> u3 = this.notificationUserRepository.findById(user.getId());
-		assertThat(u3.isEmpty());
+		assertThat(u3.isEmpty(), is(true));
 	}
 
 }
