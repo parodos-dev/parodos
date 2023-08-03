@@ -28,10 +28,6 @@ import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.extern.slf4j.Slf4j;
 
-import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_APPROVAL_USERNAMES;
-import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_ID;
-import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.NOTIFICATION_SUBJECT_ACCESS_REQUEST_APPROVAL;
-
 /**
  * Project access request approval workflow task
  *
@@ -40,6 +36,12 @@ import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConsta
 
 @Slf4j
 public class ProjectAccessRequestApprovalWorkFlowTask extends BaseWorkFlowTask {
+
+	private static final String ACCESS_REQUEST_ID = "ACCESS_REQUEST_ID";
+
+	private static final String ACCESS_REQUEST_APPROVAL_USERNAMES = "ACCESS_REQUEST_APPROVAL_USERNAMES";
+
+	private static final String NOTIFICATION_SUBJECT_ACCESS_REQUEST_APPROVAL = "Project Access Request Approval";
 
 	private final String serviceUrl;
 

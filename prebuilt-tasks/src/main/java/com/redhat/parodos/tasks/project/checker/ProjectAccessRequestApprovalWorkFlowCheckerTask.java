@@ -31,8 +31,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.ResponseEntity;
 
-import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_ID;
-
 /**
  * Project access request approval workflow checker task
  *
@@ -41,6 +39,8 @@ import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConsta
 
 @Slf4j
 public class ProjectAccessRequestApprovalWorkFlowCheckerTask extends BaseWorkFlowCheckerTask {
+
+	private static final String ACCESS_REQUEST_ID = "ACCESS_REQUEST_ID";
 
 	private final String serviceUrl;
 
