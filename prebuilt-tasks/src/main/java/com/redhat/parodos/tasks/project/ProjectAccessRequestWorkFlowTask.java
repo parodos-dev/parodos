@@ -20,15 +20,20 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.ResponseEntity;
 
-import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_APPROVAL_USERNAMES;
-import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_ESCALATION_USERNAME;
-import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_ID;
-import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.PARAMETER_ROLE;
-import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.PARAMETER_ROLE_DEFAULT;
-import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.PARAMETER_USERNAME;
-
 @Slf4j
 public class ProjectAccessRequestWorkFlowTask extends BaseWorkFlowTask {
+
+	private static final String PARAMETER_USERNAME = "USERNAME";
+
+	private static final String PARAMETER_ROLE = "ROLE";
+
+	private static final String PARAMETER_ROLE_DEFAULT = "DEVELOPER";
+
+	private static final String ACCESS_REQUEST_ID = "ACCESS_REQUEST_ID";
+
+	private static final String ACCESS_REQUEST_APPROVAL_USERNAMES = "ACCESS_REQUEST_APPROVAL_USERNAMES";
+
+	private static final String ACCESS_REQUEST_ESCALATION_USERNAME = "ACCESS_REQUEST_ESCALATION_USERNAME";
 
 	private final String serviceUrl;
 

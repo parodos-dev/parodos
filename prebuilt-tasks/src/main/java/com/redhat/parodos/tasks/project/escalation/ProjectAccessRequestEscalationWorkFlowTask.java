@@ -27,10 +27,6 @@ import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.extern.slf4j.Slf4j;
 
-import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_ESCALATION_USERNAME;
-import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_ID;
-import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.NOTIFICATION_SUBJECT_ACCESS_REQUEST_ESCALATION;
-
 /**
  * Project access request escalation workflow task
  *
@@ -39,6 +35,12 @@ import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConsta
 
 @Slf4j
 public class ProjectAccessRequestEscalationWorkFlowTask extends BaseWorkFlowTask {
+
+	private static final String ACCESS_REQUEST_ID = "ACCESS_REQUEST_ID";
+
+	private static final String ACCESS_REQUEST_ESCALATION_USERNAME = "ACCESS_REQUEST_ESCALATION_USERNAME";
+
+	private static final String NOTIFICATION_SUBJECT_ACCESS_REQUEST_ESCALATION = "Project Access Request Escalation";
 
 	private final String serviceUrl;
 
