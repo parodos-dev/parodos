@@ -31,6 +31,7 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.ldap.userdetails.InetOrgPersonContextMapper;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
 
 /**
@@ -64,9 +65,9 @@ public class SecurityConfiguration {
 		// @formatter:off
 		http
 				.authorizeHttpRequests(auth ->auth
-						.requestMatchers(HttpMethod.OPTIONS, "/**")
+						.requestMatchers(new AntPathRequestMatcher("/**", HttpMethod.OPTIONS.name()))
 						.permitAll()
-						.requestMatchers("/api/**")
+						.requestMatchers(new AntPathRequestMatcher("/api/**"))
 						.fullyAuthenticated()
 						.anyRequest().permitAll())
 				.httpBasic(Customizer.withDefaults())

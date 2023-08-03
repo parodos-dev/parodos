@@ -32,6 +32,7 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.ldap.userdetails.InetOrgPersonContextMapper;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
 
 /**
@@ -70,12 +71,14 @@ public class SecurityConfiguration {
         http
                 .authorizeHttpRequests(auth ->
                         auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**")
+                        .requestMatchers(new AntPathRequestMatcher("/**", HttpMethod.OPTIONS.name()))
                         .permitAll()
-                        .requestMatchers("/api/**", "/actuator/shutdown")
+                        .requestMatchers(new AntPathRequestMatcher("/api/**"))
+                        .fullyAuthenticated()
+		                .requestMatchers(new AntPathRequestMatcher("/actuator/shutdown"))
                         .fullyAuthenticated()
 						.anyRequest().permitAll())
-                .httpBasic(Customizer.withDefaults())
+		        .httpBasic(Customizer.withDefaults())
                 .headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .formLogin(form -> form.loginProcessingUrl("/login"))
                 .logout(httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer
