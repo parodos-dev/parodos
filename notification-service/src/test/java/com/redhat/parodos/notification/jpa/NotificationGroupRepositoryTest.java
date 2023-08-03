@@ -27,14 +27,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 /**
  * @author Richard Wang (Github: RichardW98)
  */
 @Transactional
 @ActiveProfiles("test")
-public class NotificationGroupRepositoryTests extends AbstractNotificationsIntegrationTest {
+public class NotificationGroupRepositoryTest extends AbstractNotificationsIntegrationTest {
 
 	@Autowired
 	private NotificationGroupRepository notificationGroupRepository;
@@ -43,20 +48,20 @@ public class NotificationGroupRepositoryTests extends AbstractNotificationsInteg
 	void createFindDelete() {
 		NotificationsDataCreator.createNotificationsGroup(notificationGroupRepository);
 		List<NotificationGroup> groups = this.notificationGroupRepository.findAll();
-		assertThat(groups).isNotEmpty();
-		assertThat(groups).hasSize(1);
+		assertThat(groups, not(empty()));
+		assertThat(groups, hasSize(1));
 		NotificationGroup group = groups.get(0);
-		assertThat(group.getGroupname()).isEqualTo(NotificationsDataCreator.ADMIN_GROUP);
+		assertThat(group.getGroupname(), equalTo(NotificationsDataCreator.ADMIN_GROUP));
 		Optional<NotificationGroup> g = this.notificationGroupRepository.findById(group.getId());
-		assertThat(g.isPresent());
-		assertThat(g.get().getGroupname()).isEqualTo(NotificationsDataCreator.ADMIN_GROUP);
+		assertThat(g.isPresent(), is(true));
+		assertThat(g.get().getGroupname(), equalTo(NotificationsDataCreator.ADMIN_GROUP));
 		Optional<NotificationGroup> g2 = this.notificationGroupRepository
 				.findByGroupname(NotificationsDataCreator.ADMIN_GROUP);
-		assertThat(g2.isPresent());
-		assertThat(g2.get().getGroupname()).isEqualTo(NotificationsDataCreator.ADMIN_GROUP);
+		assertThat(g2.isPresent(), is(true));
+		assertThat(g2.get().getGroupname(), equalTo(NotificationsDataCreator.ADMIN_GROUP));
 		this.notificationGroupRepository.deleteById(g2.get().getId());
 		Optional<NotificationGroup> g3 = this.notificationGroupRepository.findById(group.getId());
-		assertThat(g3.isEmpty());
+		assertThat(g3.isEmpty(), is(true));
 	}
 
 }

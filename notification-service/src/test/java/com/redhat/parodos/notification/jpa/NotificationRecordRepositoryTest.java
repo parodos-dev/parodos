@@ -30,7 +30,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
 
 /**
  * @author Richard Wang (Github: RichardW98)
@@ -38,7 +44,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
 @ActiveProfiles("test")
-public class NotificationRecordRepositoryTests extends AbstractNotificationsIntegrationTest {
+public class NotificationRecordRepositoryTest extends AbstractNotificationsIntegrationTest {
 
 	@Autowired
 	private NotificationRecordRepository notificationRecordRepository;
@@ -49,21 +55,21 @@ public class NotificationRecordRepositoryTests extends AbstractNotificationsInte
 
 		List<NotificationRecord> records = this.notificationRecordRepository.findAll();
 
-		assertThat(records).isNotEmpty();
-		assertThat(records).hasSize(1);
+		assertThat(records, not(empty()));
+		assertThat(records, hasSize(1));
 
 		NotificationRecord record = records.get(0);
-		assertThat(record.getFolder()).isEqualTo(NotificationsDataCreator.ARCHIVE_FOLDER);
+		assertThat(record.getFolder(), equalTo(NotificationsDataCreator.ARCHIVE_FOLDER));
 
 		Optional<NotificationRecord> r = this.notificationRecordRepository.findById(record.getId());
-		assertThat(r.isPresent());
-		assertThat(r.get().getFolder()).isEqualTo(NotificationsDataCreator.ARCHIVE_FOLDER);
-		assertThat(r.get().getTags()).hasSize(2);
+		assertThat(r.isPresent(), is(true));
+		assertThat(r.get().getFolder(), equalTo(NotificationsDataCreator.ARCHIVE_FOLDER));
+		assertThat(r.get().getTags(), hasSize(2));
 
 		this.notificationRecordRepository.deleteById(r.get().getId());
 
 		Optional<NotificationRecord> r2 = this.notificationRecordRepository.findById(r.get().getId());
-		assertThat(r2.isEmpty());
+		assertThat(r2.isEmpty(), is(true));
 	}
 
 	@Test
@@ -74,13 +80,13 @@ public class NotificationRecordRepositoryTests extends AbstractNotificationsInte
 		Page<NotificationRecord> records = this.notificationRecordRepository.search(notificationUser, "test",
 				PageRequest.of(0, 10));
 
-		assertThat(records.getContent()).isNotNull();
-		assertThat(records.getContent()).hasSize(1);
+		assertThat(records.getContent(), is(notNullValue()));
+		assertThat(records.getContent(), hasSize(1));
 
 		records = this.notificationRecordRepository.search(notificationUser, "invalid-test-test",
 				PageRequest.of(0, 10));
-		assertThat(records.getContent()).isNotNull();
-		assertThat(records.getContent()).isEmpty();
+		assertThat(records.getContent(), is(notNullValue()));
+		assertThat(records.getContent(), is(empty()));
 	}
 
 }

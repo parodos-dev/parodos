@@ -28,7 +28,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
 
 /**
  * @author Richard Wang (Github: RichardW98)
@@ -36,7 +41,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
 @ActiveProfiles("test")
-public class NotificationMessageRecordRelationshipTests extends AbstractNotificationsIntegrationTest {
+public class NotificationMessageRecordRelationshipTest extends AbstractNotificationsIntegrationTest {
 
 	@Autowired
 	private NotificationRecordRepository notificationRecordRepository;
@@ -50,12 +55,12 @@ public class NotificationMessageRecordRelationshipTests extends AbstractNotifica
 		NotificationsDataCreator.createAndSaveNotificationsMessage(notificationMessageRepository);
 
 		List<NotificationRecord> notificationRecords = this.notificationRecordRepository.findAll();
-		assertThat(notificationRecords).isNotEmpty();
-		assertThat(notificationRecords).hasSize(1);
+		assertThat(notificationRecords, not(empty()));
+		assertThat(notificationRecords, hasSize(1));
 
 		List<NotificationMessage> notificationMessages = this.notificationMessageRepository.findAll();
-		assertThat(notificationMessages).isNotEmpty();
-		assertThat(notificationMessages).hasSize(1);
+		assertThat(notificationMessages, not(empty()));
+		assertThat(notificationMessages, hasSize(1));
 
 		// associate the message with the notifications record (so the same message can be
 		// across multiple notification records
@@ -70,10 +75,10 @@ public class NotificationMessageRecordRelationshipTests extends AbstractNotifica
 		this.notificationRecordRepository.save(notificationRecord);
 
 		List<NotificationRecord> notificationRecords2 = this.notificationRecordRepository.findAll();
-		assertThat(notificationRecords2).isNotEmpty();
-		assertThat(notificationRecords2).hasSize(1);
+		assertThat(notificationRecords2, not(empty()));
+		assertThat(notificationRecords2, hasSize(1));
 		NotificationRecord notificationRecord2 = notificationRecords2.get(0);
-		assertThat(notificationRecord2.getNotificationMessage()).isNotNull();
+		assertThat(notificationRecord2.getNotificationMessage(), is(notNullValue()));
 		// TODO
 		// - notificationsRecord=null inside NotificationsMessage, why not bidirectional
 		// - probably use @MapIds to be more efficient...

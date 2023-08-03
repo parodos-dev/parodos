@@ -5,10 +5,11 @@ import java.util.List;
 import jakarta.validation.ConstraintValidatorContext;
 
 import com.redhat.parodos.notification.dto.NotificationMessageCreateRequestDTO;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 
 public class ValidNotificationMessageUserOrGroupValidatorTest {
@@ -17,7 +18,7 @@ public class ValidNotificationMessageUserOrGroupValidatorTest {
 
 	private ConstraintValidatorContext constraintValidatorContext;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		validator = new ValidNotificationMessageUserOrGroupValidator();
 		constraintValidatorContext = mock(ConstraintValidatorContext.class);
@@ -28,7 +29,7 @@ public class ValidNotificationMessageUserOrGroupValidatorTest {
 		NotificationMessageCreateRequestDTO notificationMessage = new NotificationMessageCreateRequestDTO();
 		notificationMessage.setUsernames(List.of("test"));
 
-		assertThat(validator.isValid(notificationMessage, constraintValidatorContext)).isTrue();
+		assertThat(validator.isValid(notificationMessage, constraintValidatorContext), is(true));
 	}
 
 	@Test
@@ -36,7 +37,7 @@ public class ValidNotificationMessageUserOrGroupValidatorTest {
 		NotificationMessageCreateRequestDTO notificationMessage = new NotificationMessageCreateRequestDTO();
 		notificationMessage.setGroupNames(List.of("test"));
 
-		assertThat(validator.isValid(notificationMessage, constraintValidatorContext)).isTrue();
+		assertThat(validator.isValid(notificationMessage, constraintValidatorContext), is(true));
 	}
 
 	@Test
@@ -45,19 +46,19 @@ public class ValidNotificationMessageUserOrGroupValidatorTest {
 		notificationMessage.setUsernames(List.of("test"));
 		notificationMessage.setGroupNames(List.of("test"));
 
-		assertThat(validator.isValid(notificationMessage, constraintValidatorContext)).isTrue();
+		assertThat(validator.isValid(notificationMessage, constraintValidatorContext), is(true));
 	}
 
 	@Test
 	public void shouldReturnFalseWhenBothEmpty() {
 		NotificationMessageCreateRequestDTO notificationMessage = new NotificationMessageCreateRequestDTO();
 
-		assertThat(validator.isValid(notificationMessage, constraintValidatorContext)).isFalse();
+		assertThat(validator.isValid(notificationMessage, constraintValidatorContext), is(false));
 	}
 
 	@Test
 	public void shouldReturnFalseWhenNotificationMessageEmpty() {
-		assertThat(validator.isValid(null, constraintValidatorContext)).isFalse();
+		assertThat(validator.isValid(null, constraintValidatorContext), is(false));
 	}
 
 }

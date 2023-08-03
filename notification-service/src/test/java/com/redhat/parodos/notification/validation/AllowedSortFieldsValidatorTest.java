@@ -2,14 +2,15 @@ package com.redhat.parodos.notification.validation;
 
 import jakarta.validation.ConstraintValidatorContext;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -22,7 +23,7 @@ public class AllowedSortFieldsValidatorTest {
 
 	private AllowedSortFields constraintAnnotation;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		validator = new AllowedSortFieldsValidator();
 		constraintValidatorContext = mock(ConstraintValidatorContext.class);
@@ -34,7 +35,7 @@ public class AllowedSortFieldsValidatorTest {
 	@Test
 	public void shouldReturnTrueWhenPageableEmpty() {
 		// when
-		assertThat(validator.isValid(null, constraintValidatorContext)).isTrue();
+		assertThat(validator.isValid(null, constraintValidatorContext), is(true));
 	}
 
 	@Test
@@ -45,7 +46,7 @@ public class AllowedSortFieldsValidatorTest {
 		Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Order.asc("test1"), Sort.Order.desc("test2")));
 
 		// when
-		assertThat(validator.isValid(pageable, constraintValidatorContext)).isTrue();
+		assertThat(validator.isValid(pageable, constraintValidatorContext), is(true));
 	}
 
 	@Test
@@ -56,7 +57,7 @@ public class AllowedSortFieldsValidatorTest {
 		when(sort.isUnsorted()).thenReturn(true);
 
 		// when
-		assertThat(validator.isValid(pageable, constraintValidatorContext)).isTrue();
+		assertThat(validator.isValid(pageable, constraintValidatorContext), is(true));
 	}
 
 	@Test
@@ -65,7 +66,7 @@ public class AllowedSortFieldsValidatorTest {
 		Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Order.asc("test1"), Sort.Order.desc("test2")));
 
 		// when
-		assertThat(validator.isValid(pageable, constraintValidatorContext)).isTrue();
+		assertThat(validator.isValid(pageable, constraintValidatorContext), is(true));
 	}
 
 	@Test
@@ -79,7 +80,7 @@ public class AllowedSortFieldsValidatorTest {
 		when(constraintViolationBuilder.addConstraintViolation()).thenReturn(constraintValidatorContext);
 
 		// when
-		assertThat(validator.isValid(pageable, constraintValidatorContext)).isFalse();
+		assertThat(validator.isValid(pageable, constraintValidatorContext), is(false));
 	}
 
 }
