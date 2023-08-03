@@ -1,9 +1,11 @@
 package com.redhat.parodos.tasks.project;
 
+import java.util.List;
 import java.util.UUID;
 
-import com.redhat.parodos.infrastructure.ProjectRequester;
-import com.redhat.parodos.sdk.model.AccessResponseDTO;
+import com.redhat.parodos.tasks.project.dto.AccessResponseDTO;
+import com.redhat.parodos.utils.RestUtils;
+import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.utils.WorkContextUtils;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -12,19 +14,28 @@ import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import org.springframework.http.ResponseEntity;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProjectAccessRequestWorkFlowTaskTest {
+
+	private static final String SERVICE_URL_TEST = "service-url-test";
+
+	private static final String SERVICE_USERNAME_TEST = "service-username-test";
+
+	private static final String SERVICE_PASSWORD_TEST = "service-password-test";
 
 	private static final String USERNAME_PARAMETER_NAME = "USERNAME";
 
@@ -42,16 +53,14 @@ public class ProjectAccessRequestWorkFlowTaskTest {
 
 	private static final String ESCALATION_USERNAME_TEST = "test";
 
-	@Mock
-	private ProjectRequester projectRequester;
-
 	private WorkContext workContext;
 
 	private ProjectAccessRequestWorkFlowTask projectAccessRequestWorkFlowTask;
 
 	@Before
 	public void setUp() {
-		this.projectAccessRequestWorkFlowTask = spy(new ProjectAccessRequestWorkFlowTask(projectRequester));
+		this.projectAccessRequestWorkFlowTask = spy(
+				new ProjectAccessRequestWorkFlowTask(SERVICE_URL_TEST, SERVICE_USERNAME_TEST, SERVICE_PASSWORD_TEST));
 		this.projectAccessRequestWorkFlowTask.setBeanName("projectAccessRequestWorkFlowTask");
 		workContext = new WorkContext();
 		WorkContextUtils.setProjectId(workContext, UUID.randomUUID());
@@ -65,17 +74,16 @@ public class ProjectAccessRequestWorkFlowTaskTest {
 		doReturn(ROLE_VALUE_TEST).when(this.projectAccessRequestWorkFlowTask)
 				.getOptionalParameterValue(eq(ROLE_PARAMETER_NAME), eq(ROLE_DEFAULT_VALUE), eq(false));
 
-		AccessResponseDTO accessResponseDTO = new AccessResponseDTO();
-		accessResponseDTO.setAccessRequestId(UUID.randomUUID());
-		accessResponseDTO.addApprovalSentToItem(APPROVAL_USERNAME_TEST);
-		accessResponseDTO.setEscalationSentTo(ESCALATION_USERNAME_TEST);
-
-		when(projectRequester.createAccess(any(), any())).thenReturn(accessResponseDTO);
-
-		doNothing().when(projectAccessRequestWorkFlowTask).addParameter(any(), any());
-
-		WorkReport workReport = projectAccessRequestWorkFlowTask.execute(workContext);
-		assertEquals(WorkStatus.COMPLETED, workReport.getStatus());
+		try (MockedStatic<RestUtils> restUtilsMockedStatic = mockStatic(RestUtils.class)) {
+			restUtilsMockedStatic.when(
+					() -> RestUtils.executePost(any(String.class), any(), any(String.class), any(String.class), any()))
+					.thenReturn(ResponseEntity.ok(AccessResponseDTO.builder().accessRequestId(UUID.randomUUID())
+							.approvalSentTo(List.of(APPROVAL_USERNAME_TEST)).escalationSentTo(ESCALATION_USERNAME_TEST)
+							.build()));
+			doNothing().when(projectAccessRequestWorkFlowTask).addParameter(any(), any());
+			WorkReport workReport = projectAccessRequestWorkFlowTask.execute(workContext);
+			assertEquals(WorkStatus.COMPLETED, workReport.getStatus());
+		}
 	}
 
 	@Test
@@ -85,6 +93,15 @@ public class ProjectAccessRequestWorkFlowTaskTest {
 				.getRequiredParameterValue(eq(USERNAME_PARAMETER_NAME));
 		doReturn(INVALID_ROLE_VALUE_TEST).when(this.projectAccessRequestWorkFlowTask)
 				.getOptionalParameterValue(eq(ROLE_PARAMETER_NAME), eq(ROLE_DEFAULT_VALUE), eq(false));
+		WorkReport workReport = projectAccessRequestWorkFlowTask.execute(workContext);
+		assertEquals(WorkStatus.FAILED, workReport.getStatus());
+	}
+
+	@Test
+	@SneakyThrows
+	public void executeFailForMissingRequiredParameter() {
+		doThrow(MissingParameterException.class).when(this.projectAccessRequestWorkFlowTask)
+				.getRequiredParameterValue(eq(USERNAME_PARAMETER_NAME));
 		WorkReport workReport = projectAccessRequestWorkFlowTask.execute(workContext);
 		assertEquals(WorkStatus.FAILED, workReport.getStatus());
 	}

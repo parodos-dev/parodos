@@ -18,9 +18,8 @@ package com.redhat.parodos.tasks.project.checker;
 import java.util.Objects;
 import java.util.UUID;
 
-import com.redhat.parodos.infrastructure.ProjectRequester;
-import com.redhat.parodos.sdk.invoker.ApiException;
-import com.redhat.parodos.sdk.model.AccessStatusResponseDTO;
+import com.redhat.parodos.tasks.project.dto.AccessStatusResponseDTO;
+import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.checker.BaseWorkFlowCheckerTask;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
@@ -29,6 +28,8 @@ import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import com.redhat.parodos.workflows.workflow.WorkFlow;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.http.ResponseEntity;
 
 import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_ID;
 
@@ -41,12 +42,18 @@ import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConsta
 @Slf4j
 public class ProjectAccessRequestApprovalWorkFlowCheckerTask extends BaseWorkFlowCheckerTask {
 
-	private final ProjectRequester projectRequester;
+	private final String serviceUrl;
+
+	private final String serviceUsername;
+
+	private final String servicePassword;
 
 	public ProjectAccessRequestApprovalWorkFlowCheckerTask(WorkFlow projectAccessRequestApprovalEscalationWorkFlow,
-			long sla, ProjectRequester projectRequester) {
+			long sla, String serviceUrl, String serviceUsername, String servicePassword) {
 		super(projectAccessRequestApprovalEscalationWorkFlow, sla);
-		this.projectRequester = projectRequester;
+		this.serviceUrl = serviceUrl;
+		this.serviceUsername = serviceUsername;
+		this.servicePassword = servicePassword;
 	}
 
 	@Override
@@ -62,22 +69,30 @@ public class ProjectAccessRequestApprovalWorkFlowCheckerTask extends BaseWorkFlo
 		}
 
 		try {
-			AccessStatusResponseDTO accessStatusResponseDTO = projectRequester.getAccessStatus(accessRequestId);
-			switch (Objects.requireNonNull(accessStatusResponseDTO.getStatus())) {
-				case REJECTED -> {
-					log.info("Project access request {} is rejected!", accessStatusResponseDTO.getAccessRequestId());
-					return new DefaultWorkReport(WorkStatus.REJECTED, workContext);
+			String urlString = "%s/api/v1/projects/access/%s".formatted(serviceUrl, accessRequestId);
+			ResponseEntity<AccessStatusResponseDTO> responseDTO = RestUtils.restExchange(urlString, serviceUsername,
+					servicePassword, AccessStatusResponseDTO.class);
+			if (!responseDTO.getStatusCode().is2xxSuccessful()) {
+				log.error("Call to the api was not successful: {}", responseDTO.getStatusCode());
+			}
+			else {
+				log.info("Rest call completed with response: {}", responseDTO.getBody());
+				switch (Objects.requireNonNull(responseDTO.getBody()).getStatus()) {
+					case APPROVED -> {
+						log.info("Project access request {} is approved", responseDTO.getBody().getAccessRequestId());
+						return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
+					}
+					case REJECTED -> {
+						log.info("Project access request {} is rejected", responseDTO.getBody().getAccessRequestId());
+						return new DefaultWorkReport(WorkStatus.REJECTED, workContext);
+					}
+					default -> log.info("Project access request {} is waiting for approval",
+							responseDTO.getBody().getAccessRequestId());
 				}
-				case APPROVED -> {
-					log.info("Project access request {} is completed!", accessStatusResponseDTO.getAccessRequestId());
-					return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
-				}
-				default -> log.info("Project access request {} awaits for approval",
-						accessStatusResponseDTO.getAccessRequestId());
 			}
 		}
-		catch (ApiException e) {
-			log.error("There was an issue with the api call: {}", e.getMessage());
+		catch (Exception e) {
+			log.error("There was an issue with the REST call: {}", e.getMessage());
 		}
 		return new DefaultWorkReport(WorkStatus.FAILED, workContext);
 	}

@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.UUID;
 
 import com.redhat.parodos.infrastructure.Notifier;
-import com.redhat.parodos.infrastructure.ProjectRequester;
 import com.redhat.parodos.notification.sdk.model.NotificationMessageCreateRequestDTO;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
@@ -42,13 +41,13 @@ import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConsta
 @Slf4j
 public class ProjectAccessRequestApprovalWorkFlowTask extends BaseWorkFlowTask {
 
-	private final ProjectRequester projectRequester;
+	private final String serviceUrl;
 
 	private final Notifier notifier;
 
-	public ProjectAccessRequestApprovalWorkFlowTask(ProjectRequester projectRequester, Notifier notifier) {
+	public ProjectAccessRequestApprovalWorkFlowTask(String serviceUrl, Notifier notifier) {
 		super();
-		this.projectRequester = projectRequester;
+		this.serviceUrl = serviceUrl;
 		this.notifier = notifier;
 	}
 
@@ -69,8 +68,8 @@ public class ProjectAccessRequestApprovalWorkFlowTask extends BaseWorkFlowTask {
 		NotificationMessageCreateRequestDTO notificationMessageCreateRequestDTO = new NotificationMessageCreateRequestDTO();
 		notificationMessageCreateRequestDTO.setSubject(NOTIFICATION_SUBJECT_ACCESS_REQUEST_APPROVAL);
 		notificationMessageCreateRequestDTO.setUsernames(Arrays.stream(approvalUsernames.split(",")).toList());
-		notificationMessageCreateRequestDTO.setBody(getMessage(
-				String.format("%s/api/v1/projects/access/%s", projectRequester.getBasePath(), accessRequestId)));
+		notificationMessageCreateRequestDTO
+				.setBody(getMessage("%s/api/v1/projects/access/%s".formatted(serviceUrl, accessRequestId)));
 		notifier.send(notificationMessageCreateRequestDTO);
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}

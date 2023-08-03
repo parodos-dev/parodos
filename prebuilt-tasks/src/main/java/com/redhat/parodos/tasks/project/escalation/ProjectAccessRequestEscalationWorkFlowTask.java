@@ -18,7 +18,6 @@ package com.redhat.parodos.tasks.project.escalation;
 import java.util.UUID;
 
 import com.redhat.parodos.infrastructure.Notifier;
-import com.redhat.parodos.infrastructure.ProjectRequester;
 import com.redhat.parodos.notification.sdk.model.NotificationMessageCreateRequestDTO;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.BaseWorkFlowTask;
@@ -41,13 +40,13 @@ import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConsta
 @Slf4j
 public class ProjectAccessRequestEscalationWorkFlowTask extends BaseWorkFlowTask {
 
-	private final ProjectRequester projectRequester;
+	private final String serviceUrl;
 
 	private final Notifier notifier;
 
-	public ProjectAccessRequestEscalationWorkFlowTask(ProjectRequester projectRequester, Notifier notifier) {
+	public ProjectAccessRequestEscalationWorkFlowTask(String serviceUrl, Notifier notifier) {
 		super();
-		this.projectRequester = projectRequester;
+		this.serviceUrl = serviceUrl;
 		this.notifier = notifier;
 	}
 
@@ -67,8 +66,8 @@ public class ProjectAccessRequestEscalationWorkFlowTask extends BaseWorkFlowTask
 		NotificationMessageCreateRequestDTO notificationMessageCreateRequestDTO = new NotificationMessageCreateRequestDTO();
 		notificationMessageCreateRequestDTO.setSubject(NOTIFICATION_SUBJECT_ACCESS_REQUEST_ESCALATION);
 		notificationMessageCreateRequestDTO.addUsernamesItem(escalationUsername);
-		notificationMessageCreateRequestDTO.setBody(getMessage(
-				String.format("%s/api/v1/projects/access/%s/status", projectRequester.getBasePath(), accessRequestId)));
+		notificationMessageCreateRequestDTO
+				.setBody(getMessage("%s/api/v1/projects/access/%s/status".formatted(serviceUrl, accessRequestId)));
 		notifier.send(notificationMessageCreateRequestDTO);
 		return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 	}

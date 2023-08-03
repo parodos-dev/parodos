@@ -3,10 +3,10 @@ package com.redhat.parodos.tasks.project;
 import java.util.List;
 import java.util.Objects;
 
-import com.redhat.parodos.infrastructure.ProjectRequester;
-import com.redhat.parodos.sdk.invoker.ApiException;
-import com.redhat.parodos.sdk.model.AccessRequestDTO;
-import com.redhat.parodos.sdk.model.AccessResponseDTO;
+import com.redhat.parodos.project.enums.Role;
+import com.redhat.parodos.tasks.project.dto.AccessRequestDTO;
+import com.redhat.parodos.tasks.project.dto.AccessResponseDTO;
+import com.redhat.parodos.utils.RestUtils;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
@@ -18,6 +18,8 @@ import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.http.ResponseEntity;
+
 import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_APPROVAL_USERNAMES;
 import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_ESCALATION_USERNAME;
 import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConstant.ACCESS_REQUEST_ID;
@@ -28,10 +30,16 @@ import static com.redhat.parodos.tasks.project.consts.ProjectAccessRequestConsta
 @Slf4j
 public class ProjectAccessRequestWorkFlowTask extends BaseWorkFlowTask {
 
-	private final ProjectRequester projectRequester;
+	private final String serviceUrl;
 
-	public ProjectAccessRequestWorkFlowTask(ProjectRequester projectRequester) {
-		this.projectRequester = projectRequester;
+	private final String serviceUsername;
+
+	private final String servicePassword;
+
+	public ProjectAccessRequestWorkFlowTask(String serviceUrl, String serviceUsername, String servicePassword) {
+		this.serviceUrl = serviceUrl;
+		this.serviceUsername = serviceUsername;
+		this.servicePassword = servicePassword;
 	}
 
 	@Override
@@ -48,30 +56,35 @@ public class ProjectAccessRequestWorkFlowTask extends BaseWorkFlowTask {
 		}
 
 		try {
-			AccessRequestDTO.RoleEnum.valueOf(role.toUpperCase());
+			Role.valueOf(role.toUpperCase());
 		}
 		catch (IllegalArgumentException e) {
 			log.error("Exception when trying to convert role requested: {}", e.getMessage());
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
 		}
 
-		AccessRequestDTO accessRequestDTO = new AccessRequestDTO();
-		accessRequestDTO.setUsername(username);
-		accessRequestDTO.setRole(AccessRequestDTO.RoleEnum.valueOf(role.toUpperCase()));
-		accessRequestDTO.setUsername(username);
 		try {
-			AccessResponseDTO accessResponseDTO = projectRequester.createAccess(getProjectId(workContext),
-					accessRequestDTO);
-			addParameter(ACCESS_REQUEST_ID, Objects.requireNonNull(accessResponseDTO.getAccessRequestId()).toString());
-			addParameter(ACCESS_REQUEST_APPROVAL_USERNAMES,
-					String.join(",", Objects.requireNonNull(accessResponseDTO.getApprovalSentTo())));
-			addParameter(ACCESS_REQUEST_ESCALATION_USERNAME, String.join(",", accessResponseDTO.getEscalationSentTo()));
-			return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
+			String urlString = "%s/api/v1/projects/%s/access".formatted(serviceUrl, getProjectId(workContext));
+			AccessRequestDTO requestDTO = AccessRequestDTO.builder().username(username)
+					.role(Role.valueOf(role.toUpperCase())).build();
+			ResponseEntity<AccessResponseDTO> responseDTO = RestUtils.executePost(urlString, requestDTO,
+					serviceUsername, servicePassword, AccessResponseDTO.class);
+			if (responseDTO.getStatusCode().is2xxSuccessful()) {
+				log.info("Rest call completed with response: {}", responseDTO.getBody());
+				addParameter(ACCESS_REQUEST_ID,
+						Objects.requireNonNull(responseDTO.getBody()).getAccessRequestId().toString());
+				addParameter(ACCESS_REQUEST_APPROVAL_USERNAMES,
+						String.join(",", Objects.requireNonNull(responseDTO.getBody()).getApprovalSentTo()));
+				addParameter(ACCESS_REQUEST_ESCALATION_USERNAME,
+						String.join(",", Objects.requireNonNull(responseDTO.getBody()).getEscalationSentTo()));
+				return new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
+			}
+			log.error("Call to the api was not successful with status code: {}", responseDTO.getStatusCode());
 		}
-		catch (ApiException e) {
-			log.error("There was an issue with the api call: {}", e.getMessage());
-			return new DefaultWorkReport(WorkStatus.FAILED, workContext);
+		catch (Exception e) {
+			log.error("There was an issue with the REST call: {}", e.getMessage());
 		}
+		return new DefaultWorkReport(WorkStatus.FAILED, workContext);
 	}
 
 	@Override
