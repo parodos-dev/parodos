@@ -10,7 +10,6 @@ import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -66,8 +65,6 @@ public class RestWorkFlowTaskTest {
 	}
 
 	@Test
-	@Disabled
-	// FIXME
 	public void invalidMethod() {
 		map.put("url", "http://localhost");
 		map.put("method", "drop");
