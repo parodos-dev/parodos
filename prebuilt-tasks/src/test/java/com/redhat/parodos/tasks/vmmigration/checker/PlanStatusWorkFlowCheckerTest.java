@@ -1,5 +1,6 @@
 package com.redhat.parodos.tasks.vmmigration.checker;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +20,6 @@ import io.fabric8.kubernetes.api.model.StatusDetails;
 import io.fabric8.openshift.client.server.mock.OpenShiftServer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static java.net.HttpURLConnection.HTTP_OK;
@@ -127,8 +127,6 @@ public class PlanStatusWorkFlowCheckerTest {
 	}
 
 	@Test
-	@Disabled
-	// FIXME
 	public void executeRejected() {
 
 		// given
@@ -154,8 +152,6 @@ public class PlanStatusWorkFlowCheckerTest {
 	}
 
 	@Test
-	@Disabled
-	// FIXME
 	public void executeTimeoutRejected() {
 
 		// given
@@ -163,14 +159,17 @@ public class PlanStatusWorkFlowCheckerTest {
 				Constants.NETWORK_NAME_PARAMETER_NAME, Constants.NAMESPACE_NAME_PARAMETER_NAME,
 				Constants.DESTINATION_PROVIDER_TYPE_PARAMETER_NAME, Constants.SOURCE_PROVIDER_TYPE_PARAMETER_NAME);
 		plan.getMetadata().setName(Constants.PLAN_NAME_PARAMETER_NAME);
+		plan.getMetadata().setCreationTimestamp(Instant.now().plusSeconds(300).toString());
 		PlanStatus status = new PlanStatus();
 		Conditions condition = new Conditions();
 		condition.setType("Ready");
-		condition.setStatus("True");
+		condition.setStatus("False");
 		status.setConditions(List.of(condition));
 		plan.setStatus(status);
-		mockServer.expect().post().withPath("/apis/forklift.konveyor.io/v1beta1/namespaces/%s/plans/"
-				.formatted(Constants.NAMESPACE_NAME_PARAMETER_NAME)).andReturn(HTTP_OK, plan).always();
+		mockServer.expect().get()
+				.withPath("/apis/forklift.konveyor.io/v1beta1/namespaces/%s/plans/%s"
+						.formatted(Constants.NAMESPACE_NAME_PARAMETER_NAME, Constants.PLAN_NAME_PARAMETER_NAME))
+				.andReturn(HTTP_OK, plan).always();
 
 		// when
 		planStatusWorkFlowChecker.preExecute(ctx);
