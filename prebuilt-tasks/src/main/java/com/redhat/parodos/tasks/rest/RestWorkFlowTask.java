@@ -1,5 +1,6 @@
 package com.redhat.parodos.tasks.rest;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -66,7 +67,9 @@ public class RestWorkFlowTask extends BaseWorkFlowTask {
 			url = getRequiredParameterValue("url");
 			String method = getRequiredParameterValue("method");
 
-			HttpMethod httpMethod = HttpMethod.valueOf(method.toUpperCase());
+			HttpMethod httpMethod = Arrays.stream(HttpMethod.values())
+					.filter(m -> m.name().equals(method.toUpperCase())).findFirst()
+					.orElseThrow(() -> new IllegalArgumentException("Invalid HTTP method: " + method));
 
 			ResponseEntity<String> responseEntity = restService.exchange(url, httpMethod,
 					buildRequestEntity(workContext));
