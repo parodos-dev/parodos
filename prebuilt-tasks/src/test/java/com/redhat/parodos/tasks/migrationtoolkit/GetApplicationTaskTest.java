@@ -31,7 +31,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@Disabled
 public class GetApplicationTaskTest {
 
 	GetApplicationTask underTest;
@@ -64,7 +63,6 @@ public class GetApplicationTaskTest {
 
 	@Test
 	@SneakyThrows
-	@Disabled // FIXME
 	public void failsGettingAppNotFound() {
 		when(mockClient.get(anyString())).thenReturn(new Result.Failure<>(new Exception("not found")));
 		ctx.put("applicationName", APP_NAME);
@@ -81,8 +79,6 @@ public class GetApplicationTaskTest {
 
 	@Test
 	@SneakyThrows
-	@Disabled
-	// FIXME
 	public void getByName() {
 		when(mockClient.get(anyString())).thenReturn(
 				new Result.Success<>(new App(APP_ID, APP_NAME, new Repository("git", REPO_URL, REPO_BRANCH), null)));
