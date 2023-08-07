@@ -21,6 +21,7 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
@@ -98,7 +99,7 @@ public class GetAnalysisTaskTest {
 		assertThat(execute.getStatus(), equalTo(WorkStatus.COMPLETED));
 		assertThat(execute.getWorkContext().getEntrySet(), hasItem(entry("taskGroupID", taskGroupID)));
 		verify(mockClient, times(1)).get(eq(Integer.parseInt(taskGroupID)));
-		verify(mockClient, times(0)).create(anyInt());
+		verify(mockClient, times(0)).create(anyString());
 	}
 
 	static TaskGroup successfulGet() {

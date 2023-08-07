@@ -43,9 +43,9 @@ public class SubmitAnalysisTask extends BaseInfrastructureWorkFlowTask {
 	 */
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		int applicationID;
+		String applicationID;
 		try {
-			applicationID = Integer.parseInt(getRequiredParameterValue("applicationID"));
+			applicationID = getRequiredParameterValue("applicationID");
 			if (mtaClient == null) {
 				var serverUrl = getOptionalParameterValue("serverURL", null);
 				var bearerToken = getOptionalParameterValue("bearerToken", null);
