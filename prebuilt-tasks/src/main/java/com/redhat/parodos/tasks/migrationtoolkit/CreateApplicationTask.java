@@ -69,7 +69,7 @@ public class CreateApplicationTask extends BaseInfrastructureWorkFlowTask {
 		}
 
 		Result<App> result = mtaClient
-				.create(new App(0, appName, new Repository("git", repo, branch), new Identity[] { identity }));
+				.create(new App("0", appName, new Repository("git", repo, branch), new Identity[] { identity }));
 
 		if (result == null) {
 			taskLogger.logErrorWithSlf4j("MTA client returned empty result with no error");

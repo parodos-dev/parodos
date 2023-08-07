@@ -3,7 +3,7 @@ package com.redhat.parodos.tasks.migrationtoolkit;
 record Repository(String kind, String url, String branch) {
 }
 
-record App(int id, String name, Repository repository, Identity[] identities) {
+record App(String id, String name, Repository repository, Identity[] identities) {
 }
 
 record Identity(int id, String name) {
@@ -28,7 +28,7 @@ record Task(App application, String state, String name, String addon, Data data,
 }
 
 record TaskGroup(int id, String name, String state, String addon, Data data, Object bucket, Task[] tasks) {
-	static TaskGroup ofCloudReadiness(int appID) {
+	static TaskGroup ofCloudReadiness(String appID) {
 		return new TaskGroup(0, "taskgroups.windup", null, "windup",
 				new Data(new Mode(false, false, false, ""), "/windup/report", new Rules("", null),
 						new Scope(false, new Packages(new String[] {}, new String[] {})), new String[] {},
@@ -60,7 +60,7 @@ interface MTAApplicationClient {
 
 interface MTATaskGroupClient {
 
-	Result<TaskGroup> create(int appId);
+	Result<TaskGroup> create(String appId);
 
 	Result<TaskGroup> get(int id);
 
