@@ -70,13 +70,13 @@ public class GetApplicationTaskTest {
 
 		assertThat(execute.getError(), is(instanceOf(MissingParameterException.class)));
 		assertThat(execute.getStatus(), equalTo(WorkStatus.FAILED));
-		verify(this.mockClient, times(0)).get(anyString());
+		verify(this.mockClient, times(0)).getApp(anyString());
 	}
 
 	@Test
 	@SneakyThrows
 	public void failsGettingAppNotFound() {
-		when(mockClient.get(anyString())).thenReturn(new Result.Failure<>(new Exception("not found")));
+		when(mockClient.getApp(anyString())).thenReturn(new Result.Failure<>(new Exception("not found")));
 		doReturn(APP_NAME).when(this.underTest).getRequiredParameterValue(eq("applicationName"));
 		doNothing().when(taskLoggerMock).logErrorWithSlf4j(any());
 
@@ -89,13 +89,13 @@ public class GetApplicationTaskTest {
 		assertThat(execute.getError(), is(instanceOf(Exception.class)));
 		assertThat(execute.getError(), is(not(instanceOf(MissingParameterException.class))));
 		assertThat(execute.getStatus(), equalTo(WorkStatus.FAILED));
-		verify(mockClient, times(1)).get(anyString());
+		verify(mockClient, times(1)).getApp(anyString());
 	}
 
 	@Test
 	@SneakyThrows
 	public void getByName() {
-		when(mockClient.get(anyString())).thenReturn(
+		when(mockClient.getApp(anyString())).thenReturn(
 				new Result.Success<>(new App(APP_ID, APP_NAME, new Repository("git", REPO_URL, REPO_BRANCH), null)));
 		doReturn(APP_NAME).when(this.underTest).getRequiredParameterValue(eq("applicationName"));
 		doNothing().when(taskLoggerMock).logErrorWithSlf4j(anyString(), anyString());
@@ -119,7 +119,7 @@ public class GetApplicationTaskTest {
 
 		assertThat(workflowExecutionArguments, hasKey("applicationID"));
 		assertThat(workflowExecutionArguments.get("applicationID"), equalTo((APP_ID)));
-		verify(mockClient, times(1)).get(anyString());
+		verify(mockClient, times(1)).getApp(anyString());
 		verify(mockClient, times(0)).create(any());
 
 	}

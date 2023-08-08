@@ -76,15 +76,15 @@ public class GetAnalysisTask extends BaseInfrastructureWorkFlowTask {
 			mtaClient = new MTAClient(serverUrl, bearerToken);
 		}
 
-		int taskGroupID;
+		String taskGroupID;
 		try {
-			taskGroupID = Integer.parseInt(getRequiredParameterValue("taskGroupID"));
+			taskGroupID = getRequiredParameterValue("taskGroupID");
 		}
 		catch (MissingParameterException | NumberFormatException e) {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
 		}
 
-		Result<TaskGroup> result = mtaClient.get(taskGroupID);
+		Result<TaskGroup> result = mtaClient.getTaskGroup(taskGroupID);
 
 		if (result == null) {
 			taskLogger.logErrorWithSlf4j("MTA client returned empty result with no error.");
@@ -99,7 +99,7 @@ public class GetAnalysisTask extends BaseInfrastructureWorkFlowTask {
 		else if (result instanceof Result.Success<TaskGroup> success) {
 			if ("Ready".equals(success.value().state()) && success.value().tasks() != null
 					&& "Succeeded".equals(success.value().tasks()[0].state())) {
-				String reportURL = "%s/hub/applications/%d/bucket%s".formatted(serverUrl,
+				String reportURL = "%s/hub/applications/%s/bucket%s".formatted(serverUrl,
 						success.value().tasks()[0].application().id(), success.value().data().output());
 				taskLogger.logInfoWithSlf4j("MTA client returned success result with report url: {}", reportURL);
 				addParameter("reportURL", reportURL);

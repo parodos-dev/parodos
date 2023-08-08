@@ -50,7 +50,7 @@ sealed interface Result<V> {
 
 interface MTAApplicationClient {
 
-	Result<App> get(String name);
+	Result<App> getApp(String name);
 
 	Result<App> create(App app);
 
@@ -62,6 +62,6 @@ interface MTATaskGroupClient {
 
 	Result<TaskGroup> create(String appId);
 
-	Result<TaskGroup> get(int id);
+	Result<TaskGroup> getTaskGroup(String id);
 
 }
