@@ -22,6 +22,7 @@ import com.redhat.parodos.project.dto.request.AccessRequestDTO;
 import com.redhat.parodos.project.dto.request.ProjectRequestDTO;
 import com.redhat.parodos.project.dto.request.UserRoleRequestDTO;
 import com.redhat.parodos.project.dto.response.AccessResponseDTO;
+import com.redhat.parodos.project.dto.response.ProjectMemberResponseDTO;
 import com.redhat.parodos.project.dto.response.ProjectResponseDTO;
 import com.redhat.parodos.project.dto.response.ProjectUserRoleResponseDTO;
 
@@ -34,7 +35,7 @@ public interface ProjectService {
 
 	ProjectResponseDTO createProject(ProjectRequestDTO projectRequestDTO);
 
-	ProjectResponseDTO getProjectById(UUID id);
+	ProjectResponseDTO getProjectById(UUID projectId);
 
 	List<ProjectResponseDTO> getProjects();
 
@@ -42,10 +43,12 @@ public interface ProjectService {
 
 	List<ProjectResponseDTO> getProjectByIdAndUserId(UUID projectId, UUID userId);
 
-	ProjectUserRoleResponseDTO updateUserRolesToProject(UUID id, List<UserRoleRequestDTO> userRoleRequestDTOs);
+	ProjectUserRoleResponseDTO updateUserRolesToProject(UUID projectId, List<UserRoleRequestDTO> userRoleRequestDTOs);
 
-	ProjectUserRoleResponseDTO removeUsersFromProject(UUID id, List<String> usernames);
+	ProjectUserRoleResponseDTO removeUsersFromProject(UUID projectId, List<String> usernames);
 
-	AccessResponseDTO createAccessRequestToProject(UUID id, AccessRequestDTO accessRequestDTO);
+	AccessResponseDTO createAccessRequestToProject(UUID projectId, AccessRequestDTO accessRequestDTO);
+
+	List<ProjectMemberResponseDTO> getProjectMembersById(UUID projectId);
 
 }

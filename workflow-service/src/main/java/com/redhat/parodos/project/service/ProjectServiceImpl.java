@@ -16,11 +16,13 @@
 package com.redhat.parodos.project.service;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -34,6 +36,7 @@ import com.redhat.parodos.project.dto.request.AccessRequestDTO;
 import com.redhat.parodos.project.dto.request.ProjectRequestDTO;
 import com.redhat.parodos.project.dto.request.UserRoleRequestDTO;
 import com.redhat.parodos.project.dto.response.AccessResponseDTO;
+import com.redhat.parodos.project.dto.response.ProjectMemberResponseDTO;
 import com.redhat.parodos.project.dto.response.ProjectResponseDTO;
 import com.redhat.parodos.project.dto.response.ProjectUserRoleResponseDTO;
 import com.redhat.parodos.project.dto.response.UserRoleResponseDTO;
@@ -49,7 +52,6 @@ import com.redhat.parodos.project.repository.RoleRepository;
 import com.redhat.parodos.security.SecurityUtils;
 import com.redhat.parodos.user.entity.User;
 import com.redhat.parodos.user.service.UserService;
-import org.modelmapper.ModelMapper;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,18 +78,14 @@ public class ProjectServiceImpl implements ProjectService {
 
 	private final UserService userService;
 
-	private final ModelMapper modelMapper;
-
 	public ProjectServiceImpl(ProjectRepository projectRepository, RoleRepository roleRepository,
 			ProjectUserRoleRepository projectUserRoleRepository,
-			ProjectAccessRequestRepository projectAccessRequestRepository, UserService userService,
-			ModelMapper modelMapper) {
+			ProjectAccessRequestRepository projectAccessRequestRepository, UserService userService) {
 		this.projectRepository = projectRepository;
 		this.roleRepository = roleRepository;
 		this.projectUserRoleRepository = projectUserRoleRepository;
 		this.projectAccessRequestRepository = projectAccessRequestRepository;
 		this.userService = userService;
-		this.modelMapper = modelMapper;
 	}
 
 	@Override
@@ -109,28 +107,37 @@ public class ProjectServiceImpl implements ProjectService {
 				.builder().projectId(project.getId()).userId(user.getId()).roleId(role.getId()).build())
 				.project(project).user(user).role(role).build());
 
-		return buildProjectReponseDTO(user, projectUserRole);
+		return buildProjectResponseDTO(project, List.of(projectUserRole));
 	}
 
 	@Override
-	public ProjectResponseDTO getProjectById(UUID id) {
+	public ProjectResponseDTO getProjectById(UUID projectId) {
 		User user = userService.getUserEntityByUsername(SecurityUtils.getUsername());
-		ProjectUserRole projectUserRole = projectUserRoleRepository.findByProjectId(id)
-				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.PROJECT, id));
-		return buildProjectReponseDTO(user, projectUserRole);
+		Project project = projectRepository.findById(projectId)
+				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.PROJECT, projectId));
+		List<ProjectUserRole> projectUserRole = projectUserRoleRepository.findByProjectIdAndUserId(projectId,
+				user.getId());
+		return buildProjectResponseDTO(project, projectUserRole);
 	}
 
 	@Override
 	public List<ProjectResponseDTO> getProjects() {
 		User user = userService.getUserEntityByUsername(SecurityUtils.getUsername());
-		Map<UUID, ProjectUserRole> hm = new HashMap<>();
-		projectUserRoleRepository.findByUserId(user.getId())
-				.forEach(projectUserRole -> hm.put(projectUserRole.getProject().getId(), projectUserRole));
+		Map<UUID, List<ProjectUserRole>> hm = new HashMap<>();
+		projectUserRoleRepository.findByUserId(user.getId()).forEach(projectUserRole -> {
+			UUID key = projectUserRole.getProject().getId();
+			if (hm.containsKey(key)) {
+				hm.get(key).add(projectUserRole);
+			}
+			else {
+				hm.put(key, List.of(projectUserRole));
+			}
+		});
 		return projectRepository.findAll().stream().map(project -> {
 			if (hm.containsKey(project.getId())) {
-				return buildProjectReponseDTO(user, hm.get(project.getId()));
+				return buildProjectResponseDTO(project, hm.get(project.getId()));
 			}
-			return buildProjectReponseDTO(project);
+			return buildProjectResponseDTO(project);
 		}).collect(Collectors.toList());
 	}
 
@@ -138,20 +145,19 @@ public class ProjectServiceImpl implements ProjectService {
 	public List<ProjectResponseDTO> getProjectByIdAndUserId(UUID projectId, UUID userId) {
 		User user = userService.getUserEntityByUsername(SecurityUtils.getUsername());
 		return projectUserRoleRepository.findByProjectIdAndUserId(projectId, userId).stream()
-				.map(projectUserRole -> buildProjectReponseDTO(user, projectUserRole)).toList();
+				.map(this::buildProjectResponseDTO).toList();
 	}
 
 	@Override
 	public List<ProjectResponseDTO> getProjectsByUserId(UUID userId) {
-		User user = userService.getUserEntityByUsername(SecurityUtils.getUsername());
-		return projectUserRoleRepository.findByUserId(userId).stream()
-				.map(projectUserRole -> buildProjectReponseDTO(user, projectUserRole)).toList();
+		return projectUserRoleRepository.findByUserId(userId).stream().map(this::buildProjectResponseDTO).toList();
 	}
 
 	@Transactional
-	public ProjectUserRoleResponseDTO updateUserRolesToProject(UUID id, List<UserRoleRequestDTO> userRoleRequestDTOs) {
-		Project project = projectRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.PROJECT, id));
+	public ProjectUserRoleResponseDTO updateUserRolesToProject(UUID projectId,
+			List<UserRoleRequestDTO> userRoleRequestDTOs) {
+		Project project = projectRepository.findById(projectId)
+				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.PROJECT, projectId));
 
 		Set<ProjectUserRole> projectUserRoles = userRoleRequestDTOs.stream()
 				.map(userRoleRequestDTO -> userRoleRequestDTO.getRoles().stream()
@@ -175,9 +181,9 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Transactional
 	@Override
-	public ProjectUserRoleResponseDTO removeUsersFromProject(UUID id, List<String> usernames) {
-		Project project = projectRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.PROJECT, id));
+	public ProjectUserRoleResponseDTO removeUsersFromProject(UUID projectId, List<String> usernames) {
+		Project project = projectRepository.findById(projectId)
+				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.PROJECT, projectId));
 
 		projectUserRoleRepository.deleteAllByIdProjectIdAndIdUserIdIn(project.getId(),
 				userService.findAllUserEntitiesByUsernameIn(usernames).stream().map(AbstractEntity::getId).toList());
@@ -187,9 +193,9 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public AccessResponseDTO createAccessRequestToProject(UUID id, AccessRequestDTO accessRequestDTO) {
-		Project project = projectRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.PROJECT, id));
+	public AccessResponseDTO createAccessRequestToProject(UUID projectId, AccessRequestDTO accessRequestDTO) {
+		Project project = projectRepository.findById(projectId)
+				.orElseThrow(() -> new ResourceNotFoundException(ResourceType.PROJECT, projectId));
 		if (isNull(accessRequestDTO.getUsername()) || accessRequestDTO.getUsername().isEmpty()) {
 			accessRequestDTO.setUsername(SecurityUtils.getUsername());
 		}
@@ -220,6 +226,30 @@ public class ProjectServiceImpl implements ProjectService {
 				.escalationSentTo(projectOwner.getUsername()).build();
 	}
 
+	@Override
+	public List<ProjectMemberResponseDTO> getProjectMembersById(UUID projectId) {
+		List<ProjectUserRole> projectUserRoles = projectUserRoleRepository.findByProjectId(projectId);
+		if (projectUserRoles.isEmpty()) {
+			throw new ResourceNotFoundException(ResourceType.PROJECT, projectId);
+		}
+		Map<UUID, ProjectMemberResponseDTO> hm = new HashMap<>();
+		projectUserRoles.forEach(projectUserRole -> {
+			UUID key = projectUserRole.getUser().getId();
+			if (hm.containsKey(key)) {
+				hm.get(key).getRoles().add(projectUserRole.getRole().getName());
+			}
+			else {
+				Set<String> hs = new TreeSet<>();
+				hs.add(projectUserRole.getRole().getName());
+				hm.put(key,
+						ProjectMemberResponseDTO.builder().username(projectUserRole.getUser().getUsername())
+								.firstName(projectUserRole.getUser().getFirstName())
+								.lastName(projectUserRole.getUser().getLastName()).roles(hs).build());
+			}
+		});
+		return hm.values().stream().sorted(Comparator.comparing(ProjectMemberResponseDTO::getUsername)).toList();
+	}
+
 	private ProjectUserRoleResponseDTO getProjectUserRoleResponseDTOFromProject(Project project) {
 		return ProjectUserRoleResponseDTO.builder().id(project.getId()).projectName(project.getName())
 				.userResponseDTOList(project.getProjectUserRoles().stream()
@@ -236,27 +266,37 @@ public class ProjectServiceImpl implements ProjectService {
 				.build();
 	}
 
-	private ProjectResponseDTO buildProjectReponseDTO(User user, ProjectUserRole projectUserRole) {
-		return ProjectResponseDTO.builder().id(projectUserRole.getProject().getId())
-				.name(projectUserRole.getProject().getName()).description(projectUserRole.getProject().getDescription())
-				.createdDate(projectUserRole.getProject().getCreatedDate())
-				.createdBy(projectUserRole.getUser().getUsername())
-				.modifiedDate(projectUserRole.getProject().getModifiedDate())
-				.modifiedBy(projectUserRole.getProject().getModifiedBy() != null
-						? userService.getUserEntityById(projectUserRole.getProject().getModifiedBy()).getUsername()
-						: null)
-				.accessRole(projectUserRole.getUser().getId().equals(user.getId()) ? projectUserRole.getRole().getName()
+	private ProjectResponseDTO buildProjectResponseDTO(Project project, List<ProjectUserRole> projectUserRoles) {
+		User createdByUser = userService.getUserEntityById(project.getCreatedBy());
+		return ProjectResponseDTO.builder().id(project.getId()).name(project.getName())
+				.description(project.getDescription()).createdDate(project.getCreatedDate())
+				.createdBy(createdByUser.getUsername()).modifiedDate(project.getModifiedDate())
+				.modifiedBy(project.getModifiedBy() != null
+						? userService.getUserEntityById(project.getModifiedBy()).getUsername() : null)
+				.accessRoles((projectUserRoles != null && !projectUserRoles.isEmpty()) ? projectUserRoles.stream()
+						.map(projectUserRole -> projectUserRole.getRole().getName()).collect(Collectors.toList())
 						: null)
 				.build();
 	}
 
-	private ProjectResponseDTO buildProjectReponseDTO(Project project) {
+	private ProjectResponseDTO buildProjectResponseDTO(Project project) {
 		User createdByUser = userService.getUserEntityById(project.getCreatedBy());
 		User modifiedByUser = userService.getUserEntityById(project.getModifiedBy());
 		return ProjectResponseDTO.builder().id(project.getId()).name(project.getName())
 				.description(project.getDescription()).createdDate(project.getCreatedDate())
 				.createdBy(createdByUser.getUsername()).modifiedDate(project.getModifiedDate())
 				.modifiedBy(modifiedByUser.getUsername()).build();
+	}
+
+	private ProjectResponseDTO buildProjectResponseDTO(ProjectUserRole projectUserRole) {
+		User createdByUser = userService.getUserEntityById(projectUserRole.getProject().getCreatedBy());
+		User modifiedByUser = userService.getUserEntityById(projectUserRole.getProject().getModifiedBy());
+		return ProjectResponseDTO.builder().id(projectUserRole.getProject().getId())
+				.name(projectUserRole.getProject().getName()).description(projectUserRole.getProject().getDescription())
+				.createdDate(projectUserRole.getProject().getCreatedDate()).createdBy(createdByUser.getUsername())
+				.modifiedDate(projectUserRole.getProject().getModifiedDate())
+				.modifiedBy(modifiedByUser != null ? modifiedByUser.getUsername() : null)
+				.accessRoles(List.of(projectUserRole.getRole().getName())).build();
 	}
 
 	private List<User> getProjectUsersByRoleName(UUID projectId, com.redhat.parodos.project.enums.Role roleName) {

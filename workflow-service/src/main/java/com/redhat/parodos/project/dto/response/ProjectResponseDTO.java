@@ -16,6 +16,7 @@
 package com.redhat.parodos.project.dto.response;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -51,6 +52,6 @@ public class ProjectResponseDTO {
 
 	private String modifiedBy;
 
-	private String accessRole;
+	private List<String> accessRoles;
 
 }

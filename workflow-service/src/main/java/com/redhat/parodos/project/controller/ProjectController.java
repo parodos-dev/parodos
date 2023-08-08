@@ -26,6 +26,7 @@ import com.redhat.parodos.project.dto.request.AccessRequestDTO;
 import com.redhat.parodos.project.dto.request.ProjectRequestDTO;
 import com.redhat.parodos.project.dto.request.UserRoleRequestDTO;
 import com.redhat.parodos.project.dto.response.AccessResponseDTO;
+import com.redhat.parodos.project.dto.response.ProjectMemberResponseDTO;
 import com.redhat.parodos.project.dto.response.ProjectResponseDTO;
 import com.redhat.parodos.project.dto.response.ProjectUserRoleResponseDTO;
 import com.redhat.parodos.project.service.ProjectServiceImpl;
@@ -94,8 +95,8 @@ public class ProjectController {
 					@ApiResponse(responseCode = "304", description = "Not Modified", content = @Content) })
 	@GetMapping
 	public ResponseEntity<List<ProjectResponseDTO>> getProjects() {
-		List<ProjectResponseDTO> projects = projectService.getProjects();
-		return ResponseEntity.ok().eTag(String.valueOf(projects.hashCode())).body(projects);
+		List<ProjectResponseDTO> projectResponseDTOs = projectService.getProjects();
+		return ResponseEntity.ok().eTag(String.valueOf(projectResponseDTOs.hashCode())).body(projectResponseDTOs);
 	}
 
 	@Operation(summary = "Returns information about a specified project")
@@ -112,7 +113,7 @@ public class ProjectController {
 		return ResponseEntity.ok().eTag(String.valueOf(projectResponseDTO.hashCode())).body(projectResponseDTO);
 	}
 
-	@Operation(summary = "Update user roles in project")
+	@Operation(summary = "Updates user roles in project")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Succeeded",
 					content = { @Content(mediaType = "application/json",
@@ -127,7 +128,7 @@ public class ProjectController {
 		return ResponseEntity.ok(projectResponseDTO);
 	}
 
-	@Operation(summary = "Remove users from project")
+	@Operation(summary = "Removes users from project")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Succeeded",
 					content = { @Content(mediaType = "application/json",
@@ -141,7 +142,7 @@ public class ProjectController {
 		return ResponseEntity.ok(projectUserRoleResponseDTO);
 	}
 
-	@Operation(summary = "Request user access to project")
+	@Operation(summary = "Requests user access to project")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Succeeded",
 					content = { @Content(mediaType = "application/json",
@@ -153,6 +154,21 @@ public class ProjectController {
 			@Valid @RequestBody AccessRequestDTO accessRequestDTO) {
 		AccessResponseDTO accessResponseDTO = projectService.createAccessRequestToProject(id, accessRequestDTO);
 		return ResponseEntity.ok(accessResponseDTO);
+	}
+
+	@Operation(summary = "Returns members of project")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Succeeded",
+					content = { @Content(mediaType = "application/json",
+							schema = @Schema(implementation = ProjectResponseDTO.class)) }),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+			@ApiResponse(responseCode = "304", description = "Not Modified", content = @Content) })
+	@GetMapping("/{id}/members")
+	public ResponseEntity<List<ProjectMemberResponseDTO>> getProjectMembersById(@PathVariable UUID id) {
+		List<ProjectMemberResponseDTO> projectMemberResponseDTOs = projectService.getProjectMembersById(id);
+		return ResponseEntity.ok().eTag(String.valueOf(projectMemberResponseDTOs.hashCode()))
+				.body(projectMemberResponseDTOs);
 	}
 
 }

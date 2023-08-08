@@ -25,8 +25,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProjectUserRoleRepository extends JpaRepository<ProjectUserRole, ProjectUserRole.Id> {
 
-	Optional<ProjectUserRole> findByProjectId(UUID projectId);
-
 	Optional<ProjectUserRole> findByProjectIdAndUserIdAndRoleId(UUID projectId, UUID userId, UUID roleId);
 
 	List<ProjectUserRole> findByProjectIdAndUserId(UUID projectId, UUID userId);
@@ -36,5 +34,7 @@ public interface ProjectUserRoleRepository extends JpaRepository<ProjectUserRole
 	List<ProjectUserRole> findByUserId(UUID userId);
 
 	List<ProjectUserRole> deleteAllByIdProjectIdAndIdUserIdIn(UUID projectId, List<UUID> userIds);
+
+	List<ProjectUserRole> findByProjectId(UUID projectId);
 
 }

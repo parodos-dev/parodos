@@ -1,6 +1,8 @@
 package com.redhat.parodos.project.controller;
 
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,6 +13,7 @@ import com.redhat.parodos.project.dto.request.AccessRequestDTO;
 import com.redhat.parodos.project.dto.request.ProjectRequestDTO;
 import com.redhat.parodos.project.dto.request.UserRoleRequestDTO;
 import com.redhat.parodos.project.dto.response.AccessResponseDTO;
+import com.redhat.parodos.project.dto.response.ProjectMemberResponseDTO;
 import com.redhat.parodos.project.dto.response.ProjectResponseDTO;
 import com.redhat.parodos.project.dto.response.ProjectUserRoleResponseDTO;
 import com.redhat.parodos.project.enums.Role;
@@ -42,9 +45,15 @@ import static org.mockito.Mockito.when;
 @DirtiesContext
 public class ProjectControllerTest extends ControllerMockClient {
 
+	private static final String TEST_ROLE_ADMIN = "ADMIN";
+
 	private static final String TEST_ROLE_DEVELOPER = "DEVELOPER";
 
-	private static final String TEST_USERNAME = "test-username";
+	private static final String TEST_ROLE_OWNER = "OWNER";
+
+	private static final String TEST_USERNAME_1 = "test-username-1";
+
+	private static final String TEST_USERNAME_2 = "test-username-1";
 
 	private static final String TEST_PROJECT_NAME_1 = "test-project-1";
 
@@ -230,7 +239,7 @@ public class ProjectControllerTest extends ControllerMockClient {
 	public void testCreateAccessRequestToProject() throws Exception {
 		// given
 		UUID projectId = UUID.randomUUID();
-		AccessRequestDTO accessRequestDTO = AccessRequestDTO.builder().username(TEST_USERNAME)
+		AccessRequestDTO accessRequestDTO = AccessRequestDTO.builder().username(TEST_USERNAME_1)
 				.role(Role.valueOf(TEST_ROLE_DEVELOPER)).build();
 		AccessResponseDTO accessResponseDTO = AccessResponseDTO.builder().accessRequestId(UUID.randomUUID())
 				.project(AccessResponseDTO.ProjectDTO.builder().id(projectId).build()).build();
@@ -255,7 +264,7 @@ public class ProjectControllerTest extends ControllerMockClient {
 	public void testCreateAccessRequestToProjectWhenNotFoundProjectOrRoleOrUser() throws Exception {
 		// given
 		UUID projectId = UUID.randomUUID();
-		AccessRequestDTO accessRequestDTO = AccessRequestDTO.builder().username(TEST_USERNAME)
+		AccessRequestDTO accessRequestDTO = AccessRequestDTO.builder().username(TEST_USERNAME_1)
 				.role(Role.valueOf(TEST_ROLE_DEVELOPER)).build();
 
 		// When
@@ -274,7 +283,7 @@ public class ProjectControllerTest extends ControllerMockClient {
 	public void testCreateAccessRequestToProjectWhenUserAlreadyAssignedToProject() throws Exception {
 		// given
 		UUID projectId = UUID.randomUUID();
-		AccessRequestDTO accessRequestDTO = AccessRequestDTO.builder().username(TEST_USERNAME)
+		AccessRequestDTO accessRequestDTO = AccessRequestDTO.builder().username(TEST_USERNAME_1)
 				.role(Role.valueOf(TEST_ROLE_DEVELOPER)).build();
 
 		// When
@@ -289,10 +298,64 @@ public class ProjectControllerTest extends ControllerMockClient {
 		verify(projectService, times(1)).createAccessRequestToProject(eq(projectId), eq(accessRequestDTO));
 	}
 
+	@Test
+	public void testGetProjectMembersById() throws Exception {
+		UUID projectId = UUID.randomUUID();
+		ProjectMemberResponseDTO projectMemberResponseDTO1 = createSampleProjectMember(TEST_USERNAME_1,
+				TEST_ROLE_OWNER);
+		ProjectMemberResponseDTO projectMemberResponseDTO2 = createSampleProjectMember(TEST_USERNAME_2, TEST_ROLE_ADMIN,
+				TEST_ROLE_DEVELOPER);
+
+		// When
+		when(projectService.getProjectMembersById(eq(projectId)))
+				.thenReturn(List.of(projectMemberResponseDTO1, projectMemberResponseDTO2));
+
+		mockMvc.perform(this.getRequestWithValidCredentials(String.format("/api/v1/projects/%s/members", projectId)))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[0].username", Matchers.is(TEST_USERNAME_1)))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[0].firstName", Matchers.is(TEST_USERNAME_1)))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[0].lastName", Matchers.is(TEST_USERNAME_1)))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[0].roles", Matchers.hasSize(1)))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[0].roles[0]", Matchers.is(TEST_ROLE_OWNER)))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[1].username", Matchers.is(TEST_USERNAME_2)))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[1].firstName", Matchers.is(TEST_USERNAME_2)))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[1].lastName", Matchers.is(TEST_USERNAME_2)))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[1].roles[0]", Matchers.is(TEST_ROLE_ADMIN)))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[1].roles[1]", Matchers.is(TEST_ROLE_DEVELOPER)))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[1].roles", Matchers.hasSize(2)));
+
+		// Then
+		verify(projectService, times(1)).getProjectMembersById(any());
+	}
+
+	@Test
+	public void testGetProjectMembersByIdWithInvalidId() throws Exception {
+		when(projectService.getProjectMembersById(any()))
+				.thenThrow(new ResourceNotFoundException("Project members not found"));
+
+		// When
+		mockMvc.perform(
+				this.getRequestWithValidCredentials(String.format("/api/v1/projects/%s/members", UUID.randomUUID())))
+				.andExpect(MockMvcResultMatchers.status().isNotFound());
+		// Then
+		verify(projectService, times(1)).getProjectMembersById(any());
+	}
+
 	ProjectResponseDTO createSampleProject(String name) {
 		ProjectResponseDTO responseDTO = new ProjectResponseDTO();
 		responseDTO.setId(UUID.randomUUID());
 		responseDTO.setName(name);
+		return responseDTO;
+	}
+
+	ProjectMemberResponseDTO createSampleProjectMember(String name, String... roles) {
+		ProjectMemberResponseDTO responseDTO = new ProjectMemberResponseDTO();
+		responseDTO.setUsername(name);
+		responseDTO.setFirstName(name);
+		responseDTO.setLastName(name);
+		responseDTO.setRoles(new TreeSet<>(Set.of(roles)));
 		return responseDTO;
 	}
 
