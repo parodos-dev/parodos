@@ -11,7 +11,7 @@ import java.util.concurrent.TimeoutException;
 
 public class RetryExecutorService<T> implements AutoCloseable {
 
-	private static final int MAX_RETRY_TIME = 2 * 60 * 1000; // 2 minutes
+	private static final int MAX_RETRY_TIME = 4 * 60 * 1000; // 4 minutes
 
 	public static final int RETRY_DELAY = 5 * 1000; // 5 seconds
 
