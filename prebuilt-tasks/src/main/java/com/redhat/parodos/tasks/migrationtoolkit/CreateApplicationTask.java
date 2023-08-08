@@ -4,6 +4,7 @@ import java.net.URI;
 
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
+import com.redhat.parodos.workflow.task.log.WorkFlowTaskLogger;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -26,7 +27,11 @@ public class CreateApplicationTask extends BaseInfrastructureWorkFlowTask {
 	// This method is useful for testing as well.
 	protected MTAApplicationClient mtaClient;
 
+	// For testing purposes
+	protected WorkFlowTaskLogger taskLogger;
+
 	public CreateApplicationTask() {
+		super();
 	}
 
 	public CreateApplicationTask(URI serverURL, String bearerToken) {
