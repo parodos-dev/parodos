@@ -56,7 +56,7 @@ public class GetApplicationTask extends BaseInfrastructureWorkFlowTask {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
 		}
 
-		Result<App> result = mtaClient.get(applicationName);
+		Result<App> result = mtaClient.getApp(applicationName);
 
 		if (result == null) {
 			taskLogger.logErrorWithSlf4j("MTA client returned empty result with no error");

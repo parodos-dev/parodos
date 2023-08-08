@@ -79,7 +79,7 @@ public class SubmitAnalysisTaskTest {
 	@Test
 	@SneakyThrows
 	public void createCompletes() {
-		int taskGroupID = 1;
+		String taskGroupID = "1";
 		ctx.put("applicationID", APP_ID);
 		when(mockClient.create(APP_ID)).thenReturn(new Result.Success<>(of(taskGroupID, APP_ID)));
 		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
@@ -95,7 +95,7 @@ public class SubmitAnalysisTaskTest {
 	}
 
 	@NotNull
-	private static TaskGroup of(int id, String appID) {
+	private static TaskGroup of(String id, String appID) {
 		return new TaskGroup(id, "", "", "", null, null,
 				new Task[] { new Task(new App(appID, "", null, null), "", "", "", null, "") });
 	}
