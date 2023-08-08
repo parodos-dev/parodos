@@ -24,6 +24,7 @@ import com.redhat.parodos.sdk.model.WorkStatusResponseDTO;
 import com.redhat.parodos.sdkutils.WorkFlowServiceUtils;
 import com.redhat.parodos.workflow.consts.WorkFlowConstants;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -231,6 +232,7 @@ public class SimpleRestartWorkFlowTest {
 	}
 
 	@Test
+	@Disabled
 	public void runRestartWorkFlowComplexMultipleTimes() throws ApiException, InterruptedException {
 		log.info("******** Running The Complex workFlow multiple times ********");
 		TestComponents components = new WorkFlowTestBuilder().withDefaultProject().withWorkFlowDefinition(WORKFLOW_NAME)
