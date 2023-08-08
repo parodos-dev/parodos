@@ -2,14 +2,15 @@ package com.redhat.parodos.tasks.migrationtoolkit;
 
 import java.util.UUID;
 
+import com.redhat.parodos.infrastructure.Notifier;
 import com.redhat.parodos.workflow.context.WorkContextDelegate;
 import com.redhat.parodos.workflow.exception.MissingParameterException;
+import com.redhat.parodos.workflow.task.log.WorkFlowTaskLogger;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
 import com.redhat.parodos.workflows.work.WorkStatus;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static com.redhat.parodos.tasks.migrationtoolkit.TestConsts.APP_ID;
@@ -21,35 +22,41 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.Mockito.anyInt;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@Disabled
 public class GetAnalysisTaskTest {
 
 	GetAnalysisTask underTest;
 
 	MTATaskGroupClient mockClient;
 
+	WorkFlowTaskLogger taskLoggerMock;
+
 	WorkContext ctx;
 
 	@BeforeEach
 	public void setUp() {
 		this.mockClient = mock(MTATaskGroupClient.class);
-		underTest = new GetAnalysisTask(null, null, null);
+		taskLoggerMock = mock(WorkFlowTaskLogger.class);
+		Notifier notifier = mock(Notifier.class);
+		underTest = spy(new GetAnalysisTask(null, null, notifier));
 		underTest.mtaClient = mockClient;
+		underTest.taskLogger = taskLoggerMock;
 		underTest.setBeanName("MTATaskGroupClient");
 		ctx = new WorkContext();
 	}
 
 	@Test
 	@SneakyThrows
-	@Disabled
-	// FIXME
 	public void missingMandatoryParams() {
 		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
 				WorkContextDelegate.Resource.ID, UUID.randomUUID());
@@ -59,15 +66,14 @@ public class GetAnalysisTaskTest {
 		assertThat(execute.getError(), is(instanceOf(MissingParameterException.class)));
 		assertThat(execute.getStatus(), equalTo(WorkStatus.FAILED));
 		assertThat(execute.getWorkContext().get("taskGroupID"), is(nullValue()));
-		verify(mockClient, times(0)).get(anyInt());
+		verify(mockClient, times(0)).getTaskGroup(anyString());
 	}
 
 	@Test
 	@SneakyThrows
-	@Disabled
-	// FIXME
 	public void failsGetTaskGroup() {
-		when(mockClient.get(anyInt())).thenReturn(new Result.Failure<>(new Exception("not found")));
+		when(mockClient.getTaskGroup(anyString())).thenReturn(new Result.Failure<>(new Exception("not found")));
+		doReturn("123").when(this.underTest).getRequiredParameterValue(eq("taskGroupID"));
 
 		ctx.put("taskGroupID", "123");
 		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
@@ -78,17 +84,18 @@ public class GetAnalysisTaskTest {
 		assertThat(execute.getError(), is(not(instanceOf(MissingParameterException.class))));
 		assertThat(execute.getStatus(), equalTo(WorkStatus.FAILED));
 		assertThat(execute.getWorkContext().get("taskGroupID"), equalTo("123"));
-		verify(mockClient, times(1)).get(anyInt());
+		verify(mockClient, times(1)).getTaskGroup(anyString());
 	}
 
 	@Test
 	@SneakyThrows
-	@Disabled
-	// FIXME
 	public void getByID() {
 		var taskGroupID = "1";
 		ctx.put("taskGroupID", taskGroupID);
-		when(mockClient.get(Integer.parseInt(taskGroupID))).thenReturn(new Result.Success<>(successfulGet()));
+		doReturn(taskGroupID).when(this.underTest).getRequiredParameterValue(eq("taskGroupID"));
+		when(mockClient.getTaskGroup(taskGroupID)).thenReturn(new Result.Success<>(successfulGet()));
+		doNothing().when(taskLoggerMock).logErrorWithSlf4j(any());
+
 		WorkContextDelegate.write(ctx, WorkContextDelegate.ProcessType.WORKFLOW_EXECUTION,
 				WorkContextDelegate.Resource.ID, UUID.randomUUID());
 		underTest.preExecute(ctx);
@@ -97,12 +104,12 @@ public class GetAnalysisTaskTest {
 		assertThat(execute.getError(), is(nullValue()));
 		assertThat(execute.getStatus(), equalTo(WorkStatus.COMPLETED));
 		assertThat(execute.getWorkContext().getEntrySet(), hasItem(entry("taskGroupID", taskGroupID)));
-		verify(mockClient, times(1)).get(eq(Integer.parseInt(taskGroupID)));
-		verify(mockClient, times(0)).create(anyInt());
+		verify(mockClient, times(1)).getTaskGroup(eq(taskGroupID));
+		verify(mockClient, times(0)).create(anyString());
 	}
 
 	static TaskGroup successfulGet() {
-		return new TaskGroup(0, "taskgroups.windup", "Ready", "windup",
+		return new TaskGroup("0", "taskgroups.windup", "Ready", "windup",
 				new Data(new Mode(false, false, false, ""), "/windup/report", new Rules("", null),
 						new Scope(false, new Packages(new String[] {}, new String[] {})), new String[] {},
 						new String[] { "cloud-readiness" }),

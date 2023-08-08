@@ -12,6 +12,7 @@ import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.parameter.WorkParameter;
 import com.redhat.parodos.workflow.parameter.WorkParameterType;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
+import com.redhat.parodos.workflow.task.log.WorkFlowTaskLogger;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -41,7 +42,11 @@ public class GetAnalysisTask extends BaseInfrastructureWorkFlowTask {
 	@Inject
 	private Notifier notificationSender;
 
+	// For testing purposes
+	protected WorkFlowTaskLogger taskLogger;
+
 	public GetAnalysisTask(URI serverURL, String bearerToken, Notifier notifier) {
+		super();
 		this.serverUrl = serverURL;
 		this.mtaClient = new MTAClient(serverURL, bearerToken);
 		this.notificationSender = notifier;
@@ -76,15 +81,15 @@ public class GetAnalysisTask extends BaseInfrastructureWorkFlowTask {
 			mtaClient = new MTAClient(serverUrl, bearerToken);
 		}
 
-		int taskGroupID;
+		String taskGroupID;
 		try {
-			taskGroupID = Integer.parseInt(getRequiredParameterValue("taskGroupID"));
+			taskGroupID = getRequiredParameterValue("taskGroupID");
 		}
 		catch (MissingParameterException | NumberFormatException e) {
 			return new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
 		}
 
-		Result<TaskGroup> result = mtaClient.get(taskGroupID);
+		Result<TaskGroup> result = mtaClient.getTaskGroup(taskGroupID);
 
 		if (result == null) {
 			taskLogger.logErrorWithSlf4j("MTA client returned empty result with no error.");
@@ -99,7 +104,7 @@ public class GetAnalysisTask extends BaseInfrastructureWorkFlowTask {
 		else if (result instanceof Result.Success<TaskGroup> success) {
 			if ("Ready".equals(success.value().state()) && success.value().tasks() != null
 					&& "Succeeded".equals(success.value().tasks()[0].state())) {
-				String reportURL = "%s/hub/applications/%d/bucket%s".formatted(serverUrl,
+				String reportURL = "%s/hub/applications/%s/bucket%s".formatted(serverUrl,
 						success.value().tasks()[0].application().id(), success.value().data().output());
 				taskLogger.logInfoWithSlf4j("MTA client returned success result with report url: {}", reportURL);
 				addParameter("reportURL", reportURL);

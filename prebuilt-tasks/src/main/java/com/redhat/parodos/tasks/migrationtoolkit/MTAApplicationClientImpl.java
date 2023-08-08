@@ -59,7 +59,7 @@ class MTAClient implements MTAApplicationClient, MTATaskGroupClient {
 	}
 
 	@Override
-	public Result<App> get(String name) {
+	public Result<App> getApp(String name) {
 		// apps in MTA have unique constraints on name.
 		try {
 			HttpResponse<String> getAll = client.send(
@@ -132,7 +132,7 @@ class MTAClient implements MTAApplicationClient, MTATaskGroupClient {
 	}
 
 	@Override
-	public Result<TaskGroup> create(int appId) {
+	public Result<TaskGroup> create(String appId) {
 
 		try {
 			var tgnew = TaskGroup.ofCloudReadiness(appId);
@@ -167,7 +167,7 @@ class MTAClient implements MTAApplicationClient, MTATaskGroupClient {
 	}
 
 	@Override
-	public Result<TaskGroup> get(int id) {
+	public Result<TaskGroup> getTaskGroup(String id) {
 		try {
 			var getTG = client.send(
 					HttpRequest.newBuilder().GET().uri(serverURI.resolve("/hub/taskgroups/" + id)).build(),

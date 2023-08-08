@@ -4,6 +4,7 @@ import java.net.URI;
 
 import com.redhat.parodos.workflow.exception.MissingParameterException;
 import com.redhat.parodos.workflow.task.infrastructure.BaseInfrastructureWorkFlowTask;
+import com.redhat.parodos.workflow.task.log.WorkFlowTaskLogger;
 import com.redhat.parodos.workflows.work.DefaultWorkReport;
 import com.redhat.parodos.workflows.work.WorkContext;
 import com.redhat.parodos.workflows.work.WorkReport;
@@ -30,7 +31,11 @@ public class SubmitAnalysisTask extends BaseInfrastructureWorkFlowTask {
 	// This method is useful for testing as well.
 	protected MTATaskGroupClient mtaClient;
 
+	// For testing purposes
+	protected WorkFlowTaskLogger taskLogger;
+
 	public SubmitAnalysisTask() {
+		super();
 	}
 
 	public SubmitAnalysisTask(URI serverURL, String bearerToken) {
@@ -43,9 +48,9 @@ public class SubmitAnalysisTask extends BaseInfrastructureWorkFlowTask {
 	 */
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		int applicationID;
+		String applicationID;
 		try {
-			applicationID = Integer.parseInt(getRequiredParameterValue("applicationID"));
+			applicationID = getRequiredParameterValue("applicationID");
 			if (mtaClient == null) {
 				var serverUrl = getOptionalParameterValue("serverURL", null);
 				var bearerToken = getOptionalParameterValue("bearerToken", null);
