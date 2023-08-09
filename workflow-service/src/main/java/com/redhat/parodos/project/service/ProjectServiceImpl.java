@@ -15,6 +15,7 @@
  */
 package com.redhat.parodos.project.service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -130,7 +131,9 @@ public class ProjectServiceImpl implements ProjectService {
 				hm.get(key).add(projectUserRole);
 			}
 			else {
-				hm.put(key, List.of(projectUserRole));
+				List<ProjectUserRole> pur = new ArrayList<>();
+				pur.add(projectUserRole);
+				hm.put(key, pur);
 			}
 		});
 		return projectRepository.findAll().stream().map(project -> {
@@ -172,8 +175,9 @@ public class ProjectServiceImpl implements ProjectService {
 						.project(project).user(userRoleMap.getKey()).role(userRoleMap.getValue().get()).build())
 				.collect(Collectors.toSet());
 
-		projectUserRoleRepository.deleteAllByIdProjectIdAndIdUserIdIn(project.getId(),
-				projectUserRoles.stream().map(projectUserRole -> projectUserRole.getUser().getId()).toList());
+		// projectUserRoleRepository.deleteAllByIdProjectIdAndIdUserIdIn(project.getId(),
+		// projectUserRoles.stream().map(projectUserRole ->
+		// projectUserRole.getUser().getId()).toList());
 		project.setProjectUserRoles(projectUserRoles);
 		projectUserRoleRepository.saveAll(projectUserRoles);
 		return getProjectUserRoleResponseDTOFromProject(project);
