@@ -160,7 +160,7 @@ public class ProjectController {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Succeeded",
 					content = { @Content(mediaType = "application/json",
-							schema = @Schema(implementation = ProjectResponseDTO.class)) }),
+							schema = @Schema(implementation = ProjectMemberResponseDTO.class)) }),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Not found", content = @Content),
 			@ApiResponse(responseCode = "304", description = "Not Modified", content = @Content) })

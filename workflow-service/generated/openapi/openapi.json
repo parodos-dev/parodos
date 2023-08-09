@@ -513,7 +513,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ProjectResponseDTO"
+                  "$ref" : "#/components/schemas/ProjectMemberResponseDTO"
                 }
               }
             },
@@ -1625,6 +1625,27 @@
             "format" : "uuid"
           },
           "name" : {
+            "type" : "string"
+          }
+        }
+      },
+      "ProjectMemberResponseDTO" : {
+        "type" : "object",
+        "properties" : {
+          "firstName" : {
+            "type" : "string"
+          },
+          "lastName" : {
+            "type" : "string"
+          },
+          "roles" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "username" : {
             "type" : "string"
           }
         }
