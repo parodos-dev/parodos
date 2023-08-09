@@ -112,12 +112,13 @@ All URIs are relative to *http://localhost:8080*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *LoginApi* | [**login**](docs/LoginApi.md#login) | **GET** /api/v1/login | Login
-*ProjectApi* | [**createAccessRequestToProject**](docs/ProjectApi.md#createAccessRequestToProject) | **POST** /api/v1/projects/{id}/access | Request user access to project
+*ProjectApi* | [**createAccessRequestToProject**](docs/ProjectApi.md#createAccessRequestToProject) | **POST** /api/v1/projects/{id}/access | Requests user access to project
 *ProjectApi* | [**createProject**](docs/ProjectApi.md#createProject) | **POST** /api/v1/projects | Creates a new project
 *ProjectApi* | [**getProjectById**](docs/ProjectApi.md#getProjectById) | **GET** /api/v1/projects/{id} | Returns information about a specified project
+*ProjectApi* | [**getProjectMembersById**](docs/ProjectApi.md#getProjectMembersById) | **GET** /api/v1/projects/{id}/members | Returns members of project
 *ProjectApi* | [**getProjects**](docs/ProjectApi.md#getProjects) | **GET** /api/v1/projects | Returns a list of project
-*ProjectApi* | [**removeUsersFromProject**](docs/ProjectApi.md#removeUsersFromProject) | **DELETE** /api/v1/projects/{id}/users | Remove users from project
-*ProjectApi* | [**updateUserRolesToProject**](docs/ProjectApi.md#updateUserRolesToProject) | **POST** /api/v1/projects/{id}/users | Update user roles in project
+*ProjectApi* | [**removeUsersFromProject**](docs/ProjectApi.md#removeUsersFromProject) | **DELETE** /api/v1/projects/{id}/users | Removes users from project
+*ProjectApi* | [**updateUserRolesToProject**](docs/ProjectApi.md#updateUserRolesToProject) | **POST** /api/v1/projects/{id}/users | Updates user roles in project
 *ProjectAccessApi* | [**getProjectAccessStatus**](docs/ProjectAccessApi.md#getProjectAccessStatus) | **GET** /api/v1/projects/access/{id}/status | Returns status about a specified project access request
 *ProjectAccessApi* | [**updateProjectAccessStatus**](docs/ProjectAccessApi.md#updateProjectAccessStatus) | **POST** /api/v1/projects/access/{id}/status | Update status of a specified project access request
 *WorkflowApi* | [**execute**](docs/WorkflowApi.md#execute) | **POST** /api/v1/workflows | Executes a workflow
@@ -142,6 +143,7 @@ Class | Method | HTTP request | Description
  - [ArgumentRequestDTO](docs/ArgumentRequestDTO.md)
  - [ErrorMessageDTO](docs/ErrorMessageDTO.md)
  - [ProjectDTO](docs/ProjectDTO.md)
+ - [ProjectMemberResponseDTO](docs/ProjectMemberResponseDTO.md)
  - [ProjectRequestDTO](docs/ProjectRequestDTO.md)
  - [ProjectResponseDTO](docs/ProjectResponseDTO.md)
  - [ProjectUserRoleResponseDTO](docs/ProjectUserRoleResponseDTO.md)

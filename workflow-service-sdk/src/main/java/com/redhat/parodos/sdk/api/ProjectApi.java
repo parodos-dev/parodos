@@ -28,6 +28,7 @@ import com.redhat.parodos.sdk.invoker.Configuration;
 import com.redhat.parodos.sdk.invoker.Pair;
 import com.redhat.parodos.sdk.model.AccessRequestDTO;
 import com.redhat.parodos.sdk.model.AccessResponseDTO;
+import com.redhat.parodos.sdk.model.ProjectMemberResponseDTO;
 import com.redhat.parodos.sdk.model.ProjectRequestDTO;
 import com.redhat.parodos.sdk.model.ProjectResponseDTO;
 import com.redhat.parodos.sdk.model.ProjectUserRoleResponseDTO;
@@ -186,7 +187,7 @@ public class ProjectApi {
 	}
 
 	/**
-	 * Request user access to project
+	 * Requests user access to project
 	 * @param id (required)
 	 * @param accessRequestDTO (required)
 	 * @return AccessResponseDTO
@@ -238,7 +239,7 @@ public class ProjectApi {
 	}
 
 	/**
-	 * Request user access to project
+	 * Requests user access to project
 	 * @param id (required)
 	 * @param accessRequestDTO (required)
 	 * @return ApiResponse&lt;AccessResponseDTO&gt;
@@ -292,7 +293,7 @@ public class ProjectApi {
 	}
 
 	/**
-	 * Request user access to project (asynchronously)
+	 * Requests user access to project (asynchronously)
 	 * @param id (required)
 	 * @param accessRequestDTO (required)
 	 * @param _callback The callback to be executed when the API call finishes
@@ -892,6 +893,287 @@ public class ProjectApi {
 	}
 
 	/**
+	 * Build call for getProjectMembersById
+	 * @param id (required)
+	 * @param _callback Callback for upload/download progress
+	 * @return Call to execute
+	 * @throws ApiException If fail to serialize the request body object
+	 * @http.response.details
+	 * <table summary="Response Details" border="1">
+	 * <tr>
+	 * <td>Status Code</td>
+	 * <td>Description</td>
+	 * <td>Response Headers</td>
+	 * </tr>
+	 * <tr>
+	 * <td>200</td>
+	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>304</td>
+	 * <td>Not Modified</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
+	 * </table>
+	 */
+	public okhttp3.Call getProjectMembersByIdCall(UUID id, final ApiCallback _callback) throws ApiException {
+		String basePath = null;
+		// Operation Servers
+		String[] localBasePaths = new String[] {};
+
+		// Determine Base Path to Use
+		if (localCustomBaseUrl != null) {
+			basePath = localCustomBaseUrl;
+		}
+		else if (localBasePaths.length > 0) {
+			basePath = localBasePaths[localHostIndex];
+		}
+		else {
+			basePath = null;
+		}
+
+		Object localVarPostBody = null;
+
+		// create path and map variables
+		String localVarPath = "/api/v1/projects/{id}/members".replace("{" + "id" + "}",
+				localVarApiClient.escapeString(id.toString()));
+
+		List<Pair> localVarQueryParams = new ArrayList<Pair>();
+		List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+		Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+		Map<String, String> localVarCookieParams = new HashMap<String, String>();
+		Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+		final String[] localVarAccepts = { "application/json", "*/*" };
+		final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+		if (localVarAccept != null) {
+			localVarHeaderParams.put("Accept", localVarAccept);
+		}
+
+		final String[] localVarContentTypes = {};
+		final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+		if (localVarContentType != null) {
+			localVarHeaderParams.put("Content-Type", localVarContentType);
+		}
+
+		String[] localVarAuthNames = new String[] {};
+		return localVarApiClient.buildCall(basePath, localVarPath, "GET", localVarQueryParams,
+				localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams,
+				localVarFormParams, localVarAuthNames, _callback);
+	}
+
+	@SuppressWarnings("rawtypes")
+	private okhttp3.Call getProjectMembersByIdValidateBeforeCall(UUID id, final ApiCallback _callback)
+			throws ApiException {
+		// verify the required parameter 'id' is set
+		if (id == null) {
+			throw new ApiException("Missing the required parameter 'id' when calling getProjectMembersById(Async)");
+		}
+
+		return getProjectMembersByIdCall(id, _callback);
+
+	}
+
+	/**
+	 * Returns members of project
+	 * @param id (required)
+	 * @return ProjectMemberResponseDTO
+	 * @throws ApiException If fail to call the API, e.g. server error or cannot
+	 * deserialize the response body
+	 * @http.response.details
+	 * <table summary="Response Details" border="1">
+	 * <tr>
+	 * <td>Status Code</td>
+	 * <td>Description</td>
+	 * <td>Response Headers</td>
+	 * </tr>
+	 * <tr>
+	 * <td>200</td>
+	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>304</td>
+	 * <td>Not Modified</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
+	 * </table>
+	 */
+	public ProjectMemberResponseDTO getProjectMembersById(UUID id) throws ApiException {
+		ApiResponse<ProjectMemberResponseDTO> localVarResp = getProjectMembersByIdWithHttpInfo(id);
+		return localVarResp.getData();
+	}
+
+	/**
+	 * Returns members of project
+	 * @param id (required)
+	 * @return ApiResponse&lt;ProjectMemberResponseDTO&gt;
+	 * @throws ApiException If fail to call the API, e.g. server error or cannot
+	 * deserialize the response body
+	 * @http.response.details
+	 * <table summary="Response Details" border="1">
+	 * <tr>
+	 * <td>Status Code</td>
+	 * <td>Description</td>
+	 * <td>Response Headers</td>
+	 * </tr>
+	 * <tr>
+	 * <td>200</td>
+	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>304</td>
+	 * <td>Not Modified</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
+	 * </table>
+	 */
+	public ApiResponse<ProjectMemberResponseDTO> getProjectMembersByIdWithHttpInfo(UUID id) throws ApiException {
+		okhttp3.Call localVarCall = getProjectMembersByIdValidateBeforeCall(id, null);
+		Type localVarReturnType = new TypeToken<ProjectMemberResponseDTO>() {
+		}.getType();
+		return localVarApiClient.execute(localVarCall, localVarReturnType);
+	}
+
+	/**
+	 * Returns members of project (asynchronously)
+	 * @param id (required)
+	 * @param _callback The callback to be executed when the API call finishes
+	 * @return The request call
+	 * @throws ApiException If fail to process the API call, e.g. serializing the request
+	 * body object
+	 * @http.response.details
+	 * <table summary="Response Details" border="1">
+	 * <tr>
+	 * <td>Status Code</td>
+	 * <td>Description</td>
+	 * <td>Response Headers</td>
+	 * </tr>
+	 * <tr>
+	 * <td>200</td>
+	 * <td>Succeeded</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>304</td>
+	 * <td>Not Modified</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>400</td>
+	 * <td>Bad Request</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>401</td>
+	 * <td>Unauthorized</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>404</td>
+	 * <td>Not found</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>409</td>
+	 * <td>Conflict</td>
+	 * <td>-</td>
+	 * </tr>
+	 * <tr>
+	 * <td>500</td>
+	 * <td>Internal Server Error</td>
+	 * <td>-</td>
+	 * </tr>
+	 * </table>
+	 */
+	public okhttp3.Call getProjectMembersByIdAsync(UUID id, final ApiCallback<ProjectMemberResponseDTO> _callback)
+			throws ApiException {
+
+		okhttp3.Call localVarCall = getProjectMembersByIdValidateBeforeCall(id, _callback);
+		Type localVarReturnType = new TypeToken<ProjectMemberResponseDTO>() {
+		}.getType();
+		localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+		return localVarCall;
+	}
+
+	/**
 	 * Build call for getProjects
 	 * @param _callback Callback for upload/download progress
 	 * @return Call to execute
@@ -1292,7 +1574,7 @@ public class ProjectApi {
 	}
 
 	/**
-	 * Remove users from project
+	 * Removes users from project
 	 * @param id (required)
 	 * @param requestBody (required)
 	 * @return ProjectUserRoleResponseDTO
@@ -1343,7 +1625,7 @@ public class ProjectApi {
 	}
 
 	/**
-	 * Remove users from project
+	 * Removes users from project
 	 * @param id (required)
 	 * @param requestBody (required)
 	 * @return ApiResponse&lt;ProjectUserRoleResponseDTO&gt;
@@ -1397,7 +1679,7 @@ public class ProjectApi {
 	}
 
 	/**
-	 * Remove users from project (asynchronously)
+	 * Removes users from project (asynchronously)
 	 * @param id (required)
 	 * @param requestBody (required)
 	 * @param _callback The callback to be executed when the API call finishes
@@ -1565,7 +1847,7 @@ public class ProjectApi {
 	}
 
 	/**
-	 * Update user roles in project
+	 * Updates user roles in project
 	 * @param id (required)
 	 * @param userRoleRequestDTO (required)
 	 * @return ProjectUserRoleResponseDTO
@@ -1618,7 +1900,7 @@ public class ProjectApi {
 	}
 
 	/**
-	 * Update user roles in project
+	 * Updates user roles in project
 	 * @param id (required)
 	 * @param userRoleRequestDTO (required)
 	 * @return ApiResponse&lt;ProjectUserRoleResponseDTO&gt;
@@ -1672,7 +1954,7 @@ public class ProjectApi {
 	}
 
 	/**
-	 * Update user roles in project (asynchronously)
+	 * Updates user roles in project (asynchronously)
 	 * @param id (required)
 	 * @param userRoleRequestDTO (required)
 	 * @param _callback The callback to be executed when the API call finishes

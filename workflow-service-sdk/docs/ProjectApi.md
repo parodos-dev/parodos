@@ -4,19 +4,20 @@ All URIs are relative to *http://localhost:8080*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**createAccessRequestToProject**](ProjectApi.md#createAccessRequestToProject) | **POST** /api/v1/projects/{id}/access | Request user access to project |
+| [**createAccessRequestToProject**](ProjectApi.md#createAccessRequestToProject) | **POST** /api/v1/projects/{id}/access | Requests user access to project |
 | [**createProject**](ProjectApi.md#createProject) | **POST** /api/v1/projects | Creates a new project |
 | [**getProjectById**](ProjectApi.md#getProjectById) | **GET** /api/v1/projects/{id} | Returns information about a specified project |
+| [**getProjectMembersById**](ProjectApi.md#getProjectMembersById) | **GET** /api/v1/projects/{id}/members | Returns members of project |
 | [**getProjects**](ProjectApi.md#getProjects) | **GET** /api/v1/projects | Returns a list of project |
-| [**removeUsersFromProject**](ProjectApi.md#removeUsersFromProject) | **DELETE** /api/v1/projects/{id}/users | Remove users from project |
-| [**updateUserRolesToProject**](ProjectApi.md#updateUserRolesToProject) | **POST** /api/v1/projects/{id}/users | Update user roles in project |
+| [**removeUsersFromProject**](ProjectApi.md#removeUsersFromProject) | **DELETE** /api/v1/projects/{id}/users | Removes users from project |
+| [**updateUserRolesToProject**](ProjectApi.md#updateUserRolesToProject) | **POST** /api/v1/projects/{id}/users | Updates user roles in project |
 
 
 <a id="createAccessRequestToProject"></a>
 # **createAccessRequestToProject**
 > AccessResponseDTO createAccessRequestToProject(id, accessRequestDTO)
 
-Request user access to project
+Requests user access to project
 
 ### Example
 ```java
@@ -210,6 +211,72 @@ No authorization required
 | **409** | Conflict |  -  |
 | **500** | Internal Server Error |  -  |
 
+<a id="getProjectMembersById"></a>
+# **getProjectMembersById**
+> ProjectMemberResponseDTO getProjectMembersById(id)
+
+Returns members of project
+
+### Example
+```java
+// Import classes:
+import com.redhat.parodos.sdk.invoker.ApiClient;
+import com.redhat.parodos.sdk.invoker.ApiException;
+import com.redhat.parodos.sdk.invoker.Configuration;
+import com.redhat.parodos.sdk.invoker.models.*;
+import com.redhat.parodos.sdk.api.ProjectApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("http://localhost:8080");
+
+    ProjectApi apiInstance = new ProjectApi(defaultClient);
+    UUID id = UUID.randomUUID(); // UUID | 
+    try {
+      ProjectMemberResponseDTO result = apiInstance.getProjectMembersById(id);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling ProjectApi#getProjectMembersById");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **id** | **UUID**|  | |
+
+### Return type
+
+[**ProjectMemberResponseDTO**](ProjectMemberResponseDTO.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json, */*
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Succeeded |  -  |
+| **304** | Not Modified |  -  |
+| **400** | Bad Request |  -  |
+| **401** | Unauthorized |  -  |
+| **404** | Not found |  -  |
+| **409** | Conflict |  -  |
+| **500** | Internal Server Error |  -  |
+
 <a id="getProjects"></a>
 # **getProjects**
 > List&lt;ProjectResponseDTO&gt; getProjects()
@@ -277,7 +344,7 @@ No authorization required
 # **removeUsersFromProject**
 > ProjectUserRoleResponseDTO removeUsersFromProject(id, requestBody)
 
-Remove users from project
+Removes users from project
 
 ### Example
 ```java
@@ -344,7 +411,7 @@ No authorization required
 # **updateUserRolesToProject**
 > ProjectUserRoleResponseDTO updateUserRolesToProject(id, userRoleRequestDTO)
 
-Update user roles in project
+Updates user roles in project
 
 ### Example
 ```java

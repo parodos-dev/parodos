@@ -7,7 +7,7 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**accessRole** | **String** |  |  [optional] |
+|**accessRoles** | **List&lt;String&gt;** |  |  [optional] |
 |**createdBy** | **String** |  |  [optional] |
 |**createdDate** | **Date** |  |  [optional] |
 |**description** | **String** |  |  [optional] |
