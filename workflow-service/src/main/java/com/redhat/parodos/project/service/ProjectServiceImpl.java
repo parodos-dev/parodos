@@ -175,6 +175,8 @@ public class ProjectServiceImpl implements ProjectService {
 						.project(project).user(userRoleMap.getKey()).role(userRoleMap.getValue().get()).build())
 				.collect(Collectors.toSet());
 
+		projectUserRoleRepository.deleteAllByIdProjectIdAndIdUserIdIn(project.getId(),
+				projectUserRoles.stream().map(projectUserRole -> projectUserRole.getUser().getId()).toList());
 		project.setProjectUserRoles(projectUserRoles);
 		projectUserRoleRepository.saveAll(projectUserRoles);
 		return getProjectUserRoleResponseDTOFromProject(project);
