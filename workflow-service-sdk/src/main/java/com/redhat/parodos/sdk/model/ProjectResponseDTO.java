@@ -13,8 +13,10 @@
 package com.redhat.parodos.sdk.model;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
@@ -37,10 +39,10 @@ import com.redhat.parodos.sdk.invoker.JSON;
 @jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class ProjectResponseDTO {
 
-	public static final String SERIALIZED_NAME_ACCESS_ROLE = "accessRole";
+	public static final String SERIALIZED_NAME_ACCESS_ROLES = "accessRoles";
 
-	@SerializedName(SERIALIZED_NAME_ACCESS_ROLE)
-	private String accessRole;
+	@SerializedName(SERIALIZED_NAME_ACCESS_ROLES)
+	private List<String> accessRoles;
 
 	public static final String SERIALIZED_NAME_CREATED_BY = "createdBy";
 
@@ -80,23 +82,31 @@ public class ProjectResponseDTO {
 	public ProjectResponseDTO() {
 	}
 
-	public ProjectResponseDTO accessRole(String accessRole) {
+	public ProjectResponseDTO accessRoles(List<String> accessRoles) {
 
-		this.accessRole = accessRole;
+		this.accessRoles = accessRoles;
+		return this;
+	}
+
+	public ProjectResponseDTO addAccessRolesItem(String accessRolesItem) {
+		if (this.accessRoles == null) {
+			this.accessRoles = new ArrayList<>();
+		}
+		this.accessRoles.add(accessRolesItem);
 		return this;
 	}
 
 	/**
-	 * Get accessRole
-	 * @return accessRole
+	 * Get accessRoles
+	 * @return accessRoles
 	 **/
 	@jakarta.annotation.Nullable
-	public String getAccessRole() {
-		return accessRole;
+	public List<String> getAccessRoles() {
+		return accessRoles;
 	}
 
-	public void setAccessRole(String accessRole) {
-		this.accessRole = accessRole;
+	public void setAccessRoles(List<String> accessRoles) {
+		this.accessRoles = accessRoles;
 	}
 
 	public ProjectResponseDTO createdBy(String createdBy) {
@@ -241,7 +251,7 @@ public class ProjectResponseDTO {
 			return false;
 		}
 		ProjectResponseDTO projectResponseDTO = (ProjectResponseDTO) o;
-		return Objects.equals(this.accessRole, projectResponseDTO.accessRole)
+		return Objects.equals(this.accessRoles, projectResponseDTO.accessRoles)
 				&& Objects.equals(this.createdBy, projectResponseDTO.createdBy)
 				&& Objects.equals(this.createdDate, projectResponseDTO.createdDate)
 				&& Objects.equals(this.description, projectResponseDTO.description)
@@ -253,14 +263,14 @@ public class ProjectResponseDTO {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(accessRole, createdBy, createdDate, description, id, modifiedBy, modifiedDate, name);
+		return Objects.hash(accessRoles, createdBy, createdDate, description, id, modifiedBy, modifiedDate, name);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("class ProjectResponseDTO {\n");
-		sb.append("    accessRole: ").append(toIndentedString(accessRole)).append("\n");
+		sb.append("    accessRoles: ").append(toIndentedString(accessRoles)).append("\n");
 		sb.append("    createdBy: ").append(toIndentedString(createdBy)).append("\n");
 		sb.append("    createdDate: ").append(toIndentedString(createdDate)).append("\n");
 		sb.append("    description: ").append(toIndentedString(description)).append("\n");
@@ -290,7 +300,7 @@ public class ProjectResponseDTO {
 	static {
 		// a set of all properties/fields (JSON key names)
 		openapiFields = new HashSet<String>();
-		openapiFields.add("accessRole");
+		openapiFields.add("accessRoles");
 		openapiFields.add("createdBy");
 		openapiFields.add("createdDate");
 		openapiFields.add("description");
@@ -329,11 +339,11 @@ public class ProjectResponseDTO {
 						entry.getKey(), jsonObj.toString()));
 			}
 		}
-		if ((jsonObj.get("accessRole") != null && !jsonObj.get("accessRole").isJsonNull())
-				&& !jsonObj.get("accessRole").isJsonPrimitive()) {
-			throw new IllegalArgumentException(String.format(
-					"Expected the field `accessRole` to be a primitive type in the JSON string but got `%s`",
-					jsonObj.get("accessRole").toString()));
+		// ensure the optional json data is an array if present
+		if (jsonObj.get("accessRoles") != null && !jsonObj.get("accessRoles").isJsonArray()) {
+			throw new IllegalArgumentException(
+					String.format("Expected the field `accessRoles` to be an array in the JSON string but got `%s`",
+							jsonObj.get("accessRoles").toString()));
 		}
 		if ((jsonObj.get("createdBy") != null && !jsonObj.get("createdBy").isJsonNull())
 				&& !jsonObj.get("createdBy").isJsonPrimitive()) {
