@@ -18,17 +18,17 @@
 
         <!-- insert to prds_role table -->
         <insert tableName="prds_role">
-            <column name="name" value="Owner"/>
+            <column name="name" value="OWNER"/>
             <column name="description" value="Owner of the project"/>
             <column name="object_version" value="1"/>
         </insert>
         <insert tableName="prds_role">
-            <column name="name" value="Developer"/>
+            <column name="name" value="DEVELOPER"/>
             <column name="description" value="Developer in the project"/>
             <column name="object_version" value="1"/>
         </insert>
         <insert tableName="prds_role">
-            <column name="name" value="Admin"/>
+            <column name="name" value="ADMIN"/>
             <column name="description" value="Admin of the project"/>
             <column name="object_version" value="1"/>
         </insert>
