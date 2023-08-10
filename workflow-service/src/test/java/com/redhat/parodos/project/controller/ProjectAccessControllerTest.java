@@ -1,5 +1,6 @@
 package com.redhat.parodos.project.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,6 +8,7 @@ import com.redhat.parodos.ControllerMockClient;
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 import com.redhat.parodos.project.dto.request.AccessStatusRequestDTO;
 import com.redhat.parodos.project.dto.response.AccessStatusResponseDTO;
+import com.redhat.parodos.project.dto.response.ProjectAccessRequestDTO;
 import com.redhat.parodos.project.enums.ProjectAccessStatus;
 import com.redhat.parodos.project.service.ProjectAccessServiceImpl;
 import org.hamcrest.Matchers;
@@ -152,6 +154,26 @@ public class ProjectAccessControllerTest extends ControllerMockClient {
 				.content(jsonPayload)).andExpect(MockMvcResultMatchers.status().isUnauthorized());
 		// Then
 		verify(projectAccessService, never()).updateProjectAccessStatusById(eq(TEST_ACCESS_REQUEST_ID), any());
+	}
+
+	@Test
+	void testGetPendingProjectAccessRequests() throws Exception {
+		UUID projectId = UUID.randomUUID();
+		UUID id = UUID.randomUUID();
+		String username = "test-user";
+		// given
+		List<ProjectAccessRequestDTO> projectAccessRequestDTOList = List.of(
+				ProjectAccessRequestDTO.builder().projectId(projectId).username(username).accessRequestId(id).build());
+
+		when(projectAccessService.getPendingProjectAccessRequests()).thenReturn(projectAccessRequestDTOList);
+
+		// When
+		mockMvc.perform(this.getRequestWithValidCredentials("/api/v1/projects/access/pending"))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$[0].accessRequestId",
+						Matchers.is(projectAccessRequestDTOList.get(0).getAccessRequestId().toString())));
+		// Then
+		verify(projectAccessService, times(1)).getPendingProjectAccessRequests();
 	}
 
 }

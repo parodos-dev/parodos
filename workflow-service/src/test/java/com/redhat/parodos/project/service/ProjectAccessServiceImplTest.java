@@ -2,6 +2,7 @@ package com.redhat.parodos.project.service;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -9,6 +10,7 @@ import com.redhat.parodos.common.exceptions.OperationDeniedException;
 import com.redhat.parodos.common.exceptions.ResourceNotFoundException;
 import com.redhat.parodos.project.dto.request.AccessStatusRequestDTO;
 import com.redhat.parodos.project.dto.response.AccessStatusResponseDTO;
+import com.redhat.parodos.project.dto.response.ProjectAccessRequestDTO;
 import com.redhat.parodos.project.entity.Project;
 import com.redhat.parodos.project.entity.ProjectAccessRequest;
 import com.redhat.parodos.project.entity.ProjectUserRole;
@@ -29,6 +31,7 @@ import org.mockito.Mock;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -184,6 +187,29 @@ class ProjectAccessServiceImplTest {
 		// then
 		assertThrows(OperationDeniedException.class, () -> {
 			projectAccessService.updateProjectAccessStatusById(TEST_ACCESS_REQUEST_ID, accessStatusRequestDTO);
+		});
+	}
+
+	@Test
+	@WithMockUser(username = TEST_USERNAME)
+	void getPendingAccessRequests() {
+		// given
+		Project project = getProject(TEST_PROJECT_NAME, TEST_PROJECT_DESCRIPTION);
+		User user = getUser(TEST_USER_DEVELOPER_ID, TEST_USERNAME_DEVELOPER);
+		Role role = getRole(TEST_ROLE_DEVELOPER_NAME);
+		ProjectAccessRequest projectAccessRequest = getProjectAccessRequest(TEST_ACCESS_REQUEST_ID, project, user,
+				role);
+
+		// when
+		when(projectAccessRequestRepository.findAll()).thenReturn(List.of(projectAccessRequest));
+
+		// then
+		List<ProjectAccessRequestDTO> projectAccessRequestDTOList = projectAccessService
+				.getPendingProjectAccessRequests();
+
+		assertThat(projectAccessRequestDTOList).hasSize(1).satisfies(projectAccessRequestDTO -> {
+			assertEquals(TEST_USERNAME_DEVELOPER, projectAccessRequestDTO.get(0).getUsername());
+			assertEquals(project.getId(), projectAccessRequestDTO.get(0).getProjectId());
 		});
 	}
 

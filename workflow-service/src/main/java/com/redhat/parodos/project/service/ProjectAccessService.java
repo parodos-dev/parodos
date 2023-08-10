@@ -15,10 +15,12 @@
  */
 package com.redhat.parodos.project.service;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.redhat.parodos.project.dto.request.AccessStatusRequestDTO;
 import com.redhat.parodos.project.dto.response.AccessStatusResponseDTO;
+import com.redhat.parodos.project.dto.response.ProjectAccessRequestDTO;
 
 /**
  * Project access service
@@ -31,5 +33,7 @@ public interface ProjectAccessService {
 	AccessStatusResponseDTO getProjectAccessStatusById(UUID id);
 
 	void updateProjectAccessStatusById(UUID id, AccessStatusRequestDTO accessStatusRequestDTO);
+
+	List<ProjectAccessRequestDTO> getPendingProjectAccessRequests();
 
 }
