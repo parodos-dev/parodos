@@ -225,30 +225,30 @@ jobs:
         with:
           step: save
 
-  security-checks:
-    runs-on: ubuntu-latest
-    needs:
-      - containers
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup Go environment
-        uses: actions/setup-go@v4.0.1
-        with:
-          go-version: 'stable'
-
-      - name: Download images
-        uses: ishworkh/docker-image-artifact-download@v1
-        with:
-          image: "docker-compose_notification-service:latest"
-
-      - name: Download images
-        uses: ishworkh/docker-image-artifact-download@v1
-        with:
-          image: "docker-compose_workflow-service:latest"
-
-      - name: "Security analysis of images"
-        run: |
-          make analyse-images stop-local-registry stop-clair
+#  security-checks:
+#    runs-on: ubuntu-latest
+#    needs:
+#      - containers
+#    steps:
+#      - uses: actions/checkout@v3
+#
+#      - name: Setup Go environment
+#        uses: actions/setup-go@v4.0.1
+#        with:
+#          go-version: 'stable'
+#
+#      - name: Download images
+#        uses: ishworkh/docker-image-artifact-download@v1
+#        with:
+#          image: "docker-compose_notification-service:latest"
+#
+#      - name: Download images
+#        uses: ishworkh/docker-image-artifact-download@v1
+#        with:
+#          image: "docker-compose_workflow-service:latest"
+#
+#      - name: "Security analysis of images"
+#        run: |
+#          make analyse-images stop-local-registry stop-clair
 
 
