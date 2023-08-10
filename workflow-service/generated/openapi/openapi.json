@@ -222,6 +222,65 @@
         "tags" : [ "Project" ]
       }
     },
+    "/api/v1/projects/access/pending" : {
+      "get" : {
+        "operationId" : "getPendingProjectAccessRequests",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/ProjectAccessRequestDTO"
+                  }
+                }
+              }
+            },
+            "description" : "Succeeded"
+          },
+          "400" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "content" : { },
+            "description" : "Not found"
+          },
+          "409" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Conflict"
+          },
+          "500" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        },
+        "summary" : "Return all pending project access requests",
+        "tags" : [ "Project Access" ]
+      }
+    },
     "/api/v1/projects/access/{id}/status" : {
       "get" : {
         "operationId" : "getProjectAccessStatus",
@@ -1607,6 +1666,42 @@
           "status" : {
             "type" : "integer",
             "format" : "int32"
+          }
+        }
+      },
+      "ProjectAccessRequestDTO" : {
+        "type" : "object",
+        "properties" : {
+          "accessRequestId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "comment" : {
+            "type" : "string"
+          },
+          "createDate" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "firstname" : {
+            "type" : "string"
+          },
+          "lastname" : {
+            "type" : "string"
+          },
+          "projectId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "role" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string",
+            "enum" : [ "APPROVED", "PENDING", "REJECTED" ]
+          },
+          "username" : {
+            "type" : "string"
           }
         }
       },

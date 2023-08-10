@@ -15,12 +15,15 @@
  */
 package com.redhat.parodos.project.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.redhat.parodos.project.dto.request.AccessStatusRequestDTO;
 import com.redhat.parodos.project.dto.response.AccessStatusResponseDTO;
+import com.redhat.parodos.project.dto.response.ProjectAccessRequestDTO;
 import com.redhat.parodos.project.service.ProjectAccessServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -77,6 +80,20 @@ public class ProjectAccessController {
 			@RequestBody AccessStatusRequestDTO accessStatusRequestDTO) {
 		projectAccessService.updateProjectAccessStatusById(id, accessStatusRequestDTO);
 		return ResponseEntity.noContent().build();
+	}
+
+	@Operation(summary = "Return all pending project access requests")
+	@ApiResponses(
+			value = {
+					@ApiResponse(responseCode = "200", description = "Succeeded",
+							content = { @Content(mediaType = "application/json",
+									array = @ArraySchema(
+											schema = @Schema(implementation = ProjectAccessRequestDTO.class))) }),
+					@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+					@ApiResponse(responseCode = "404", description = "Not found", content = @Content) })
+	@GetMapping("/pending")
+	public ResponseEntity<List<ProjectAccessRequestDTO>> getPendingProjectAccessRequests() {
+		return ResponseEntity.ok(projectAccessService.getPendingProjectAccessRequests());
 	}
 
 }

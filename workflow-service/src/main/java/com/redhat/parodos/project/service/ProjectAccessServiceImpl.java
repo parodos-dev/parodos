@@ -26,6 +26,7 @@ import com.redhat.parodos.common.exceptions.ResourceType;
 import com.redhat.parodos.project.dto.request.AccessStatusRequestDTO;
 import com.redhat.parodos.project.dto.request.UserRoleRequestDTO;
 import com.redhat.parodos.project.dto.response.AccessStatusResponseDTO;
+import com.redhat.parodos.project.dto.response.ProjectAccessRequestDTO;
 import com.redhat.parodos.project.entity.ProjectAccessRequest;
 import com.redhat.parodos.project.entity.ProjectUserRole;
 import com.redhat.parodos.project.enums.ProjectAccessStatus;
@@ -102,6 +103,22 @@ public class ProjectAccessServiceImpl implements ProjectAccessService {
 			throw new OperationDeniedException(String.format("User: %s cannot update access request on project: %s",
 					user.getUsername(), projectAccessRequest.getProject().getName()));
 		}
+	}
+
+	@Override
+	public List<ProjectAccessRequestDTO> getPendingProjectAccessRequests() {
+		return projectAccessRequestRepository.findAll().stream()
+				.filter(projectAccessRequest -> ProjectAccessStatus.PENDING == projectAccessRequest.getStatus())
+				.map(projectAccessRequest -> ProjectAccessRequestDTO.builder()
+						.accessRequestId(projectAccessRequest.getId())
+						.projectId(projectAccessRequest.getProject().getId())
+						.role(projectAccessRequest.getRole().getName())
+						.username(projectAccessRequest.getUser().getUsername())
+						.firstname(projectAccessRequest.getUser().getFirstName())
+						.lastname(projectAccessRequest.getUser().getLastName())
+						.createDate(projectAccessRequest.getCreatedDate()).comment(projectAccessRequest.getComment())
+						.status(projectAccessRequest.getStatus()).build())
+				.toList();
 	}
 
 	private Boolean canUserUpdateProjectAccessStatus(UUID projectId, UUID userId) {
