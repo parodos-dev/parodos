@@ -1,7 +1,8 @@
-package com.redhat.parodos.workflow.task.shell;
+package com.redhat.parodos.tasks.shell;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
@@ -49,8 +50,7 @@ public class ShellRunnerTask extends BaseWorkFlowTask {
 			if (command == null || command.isBlank()) {
 				throw new IllegalArgumentException("argument 'command' is empty or blank");
 			}
-			this.cmdline = new ArrayList<>() {
-			};
+			this.cmdline = new ArrayList<>();
 			this.cmdline.add(command);
 			if (workContext.get("args") != null) {
 				this.cmdline.addAll(List.of(workContext.get("args").toString().split(" ")));
@@ -64,17 +64,28 @@ public class ShellRunnerTask extends BaseWorkFlowTask {
 
 	@Override
 	public WorkReport execute(WorkContext workContext) {
-		var params = new ShellRunnerTaskParams(workContext);
-		var pb = new ProcessBuilder(params.cmdline);
-		File tmpDir = null;
 		try {
-			tmpDir = Files
-					.createTempDirectory("parodos-shelltask-runner",
+			workContext.put("command", workContext.get("command"));
+		}
+		catch (Exception e) {
+			log.error("error command");
+		}
+		var params = new ShellRunnerTaskParams(workContext);
+		File tmpFile = null;
+		try {
+			tmpFile = Files
+					.createTempFile("parodos-shelltask-runner", "",
 							PosixFilePermissions.asFileAttribute(EnumSet.of(OWNER_READ, OWNER_WRITE, OWNER_EXECUTE)))
 					.toFile();
-			pb.directory(tmpDir);
-			pb.redirectErrorStream(true);
-
+			FileWriter writer = new FileWriter(tmpFile.getAbsolutePath(), true);
+			writer.append((String) workContext.get("command"));
+			writer.close();
+		}
+		catch (Exception e) {
+			log.error("file write failed");
+		}
+		try {
+			var pb = new ProcessBuilder(tmpFile.getAbsolutePath());
 			log.info("begin shell task invocation");
 			Process p = pb.start();
 			var elapsed = !p.waitFor(params.timeoutInSeconds, TimeUnit.SECONDS);
@@ -87,6 +98,9 @@ public class ShellRunnerTask extends BaseWorkFlowTask {
 			try (var r = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
 				r.lines().forEach(outputConsumer);
 			}
+			try (var r = new BufferedReader(new InputStreamReader(p.getErrorStream()))) {
+				r.lines().forEach(outputConsumer);
+			}
 			log.info("ended shell task invocation");
 			return new DefaultWorkReport(p.exitValue() == 0 ? WorkStatus.COMPLETED : WorkStatus.FAILED, workContext);
 		}
@@ -94,8 +108,8 @@ public class ShellRunnerTask extends BaseWorkFlowTask {
 			throw new RuntimeException(e);
 		}
 		finally {
-			if (tmpDir != null) {
-				tmpDir.delete();
+			if (tmpFile != null) {
+				tmpFile.delete();
 			}
 		}
 	}
