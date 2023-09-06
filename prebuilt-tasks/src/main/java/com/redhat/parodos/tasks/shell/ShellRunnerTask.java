@@ -65,7 +65,7 @@ public class ShellRunnerTask extends BaseWorkFlowTask {
 	@Override
 	public WorkReport execute(WorkContext workContext) {
 		try {
-			workContext.put("command", workContext.get("command"));
+			workContext.put("command", getRequiredParameterValue("command"));
 		}
 		catch (Exception e) {
 			log.error("error command");
