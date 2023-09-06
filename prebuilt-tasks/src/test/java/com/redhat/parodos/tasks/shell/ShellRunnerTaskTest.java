@@ -1,4 +1,4 @@
-package com.redhat.parodos.workflow.task.shell;
+package com.redhat.parodos.tasks.shell;
 
 import java.util.UUID;
 
@@ -26,11 +26,9 @@ public class ShellRunnerTaskTest {
 	@Test
 	public void executeWithOutput() {
 		UUID randomUUID = UUID.randomUUID();
-		ctx.put("command", "echo");
-		ctx.put("args", randomUUID);
+		ctx.put("command", "#!/bin/bash\n echo \"%s\"\n".formatted(randomUUID));
 		var output = new StringBuilder();
 		underTest.outputConsumer = output::append;
-
 		assertThat(underTest.execute(ctx).getStatus(), equalTo(WorkStatus.COMPLETED));
 		assertThat(output.toString(), equalTo(randomUUID.toString()));
 	}
